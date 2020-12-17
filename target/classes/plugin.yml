@@ -1,0 +1,7 @@
+main: me.array.ArrayPractice.Array
+name: Array
+version: 1.9
+author: Zentil, Nick, Joeleoli and Drizzy
+depends: [ProtocolLib]
+softdepend: [HolographicDisplays]
+description: A fork of Praxi

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="Array:jar" />
+    </artifacts-to-build>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4d42f2e5-f6ce-4299-96df-ab93a02e3ed9" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2020.2.2\plugins\maven\lib\maven3" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
+  <component name="ProjectId" id="1jTYwCnhpFxYUL759whiWMwkvNr" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.4948216" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RunManager" selected="Ant Target.Array Compile with Depends">
+    <configuration name="Array Compile with Depends" type="AntRunConfiguration">
+      <method v="2">
+        <option name="Make" enabled="true" />
+        <option name="BuildArtifacts" enabled="true">
+          <artifact name="Array:jar" />
+        </option>
+      </method>
+    </configuration>
+    <configuration name="Array [install]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="install" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Ant Target.Array Compile with Depends" />
+      <item itemvalue="Maven.Array [install]" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4d42f2e5-f6ce-4299-96df-ab93a02e3ed9" name="Default Changelist" comment="" />
+      <created>1603829799816</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1603829799816</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="432" y="284" key="#BuildArtifactsBeforeRunChooser" timestamp="1608028491660">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="432" y="284" key="#BuildArtifactsBeforeRunChooser/0.0.1440.860@0.0.1440.860" timestamp="1608028491660" />
+    <state x="200" y="4" key="#Project_Structure" timestamp="1607931272782">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="200" y="4" key="#Project_Structure/0.0.1440.860@0.0.1440.860" timestamp="1607931272782" />
+    <state x="106" y="98" width="1092" height="762" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1608028524322">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="94" y="147" width="1092" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.984@0.0.1280.984" timestamp="1606574595674" />
+    <state x="106" y="98" width="1092" height="762" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.860@0.0.1440.860" timestamp="1608028524322" />
+    <state x="580" y="225" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1607844296068">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="580" y="225" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1440.860@0.0.1440.860" timestamp="1607844296068" />
+    <state x="197" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1607844598578">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="197" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1440.860@0.0.1440.860" timestamp="1607844598578" />
+    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1605614245671">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1605614245671" />
+    <state x="690" y="267" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1605614203801">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="690" y="267" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1605614203801" />
+    <state x="580" y="189" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog" timestamp="1608027806278">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="580" y="189" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog/0.0.1440.860@0.0.1440.860" timestamp="1608027806278" />
+    <state x="500" y="185" key="FileChooserDialogImpl" timestamp="1608089471424">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="500" y="185" key="FileChooserDialogImpl/0.0.1440.860@0.0.1440.860" timestamp="1608089471424" />
+    <state width="1397" height="227" key="GridCell.Tab.0.bottom" timestamp="1607563939497">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state width="1237" height="269" key="GridCell.Tab.0.bottom/0.0.1280.984@0.0.1280.984" timestamp="1606574699701" />
+    <state width="1397" height="227" key="GridCell.Tab.0.bottom/0.0.1440.860@0.0.1440.860" timestamp="1607563939497" />
+    <state width="1877" height="288" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1605617979547" />
+    <state width="1397" height="227" key="GridCell.Tab.0.center" timestamp="1607563939497">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state width="1237" height="269" key="GridCell.Tab.0.center/0.0.1280.984@0.0.1280.984" timestamp="1606574699701" />
+    <state width="1397" height="227" key="GridCell.Tab.0.center/0.0.1440.860@0.0.1440.860" timestamp="1607563939497" />
+    <state width="1877" height="288" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1605617979547" />
+    <state width="1397" height="227" key="GridCell.Tab.0.left" timestamp="1607563939497">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state width="1237" height="269" key="GridCell.Tab.0.left/0.0.1280.984@0.0.1280.984" timestamp="1606574699701" />
+    <state width="1397" height="227" key="GridCell.Tab.0.left/0.0.1440.860@0.0.1440.860" timestamp="1607563939497" />
+    <state width="1877" height="288" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1605617979435" />
+    <state width="1397" height="227" key="GridCell.Tab.0.right" timestamp="1607563939497">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state width="1237" height="269" key="GridCell.Tab.0.right/0.0.1280.984@0.0.1280.984" timestamp="1606574699701" />
+    <state width="1397" height="227" key="GridCell.Tab.0.right/0.0.1440.860@0.0.1440.860" timestamp="1607563939497" />
+    <state width="1877" height="288" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1605617979547" />
+    <state x="300" y="173" key="IDE.errors.dialog" timestamp="1607916144281">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="300" y="173" key="IDE.errors.dialog/0.0.1440.860@0.0.1440.860" timestamp="1607916144281" />
+    <state x="490" y="175" key="Maven.ArtifactSearchDialog" timestamp="1605615788707">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="490" y="175" key="Maven.ArtifactSearchDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1605615788707" />
+    <state x="330" y="9" key="SettingsEditor" timestamp="1608105909026">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="330" y="9" key="SettingsEditor/0.0.1440.860@0.0.1440.860" timestamp="1608105909026" />
+    <state x="440" y="94" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1605617187942" />
+    <state width="501" height="446" key="SwitcherDM" timestamp="1607997914636">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state width="501" height="446" key="SwitcherDM/0.0.1440.860@0.0.1440.860" timestamp="1607997914636" />
+    <state x="501" y="185" width="628" height="596" key="find.popup" timestamp="1608188324328">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="445" y="212" width="555" height="561" key="find.popup/0.0.1280.984@0.0.1280.984" timestamp="1607193936882" />
+    <state x="501" y="185" width="628" height="596" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1608188324328" />
+    <state x="667" y="224" width="585" height="592" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1605615943951" />
+    <state x="376" y="195" key="run.anything.popup" timestamp="1607913306014">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="376" y="195" key="run.anything.popup/0.0.1440.860@0.0.1440.860" timestamp="1607913306014" />
+    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1608187059539">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1608187059539" />
+    <state x="442" y="342" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1608013193606">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="442" y="342" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.0.1440.860@0.0.1440.860" timestamp="1608013193606" />
+  </component>
+</project>

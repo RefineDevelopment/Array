@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Array:jar">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="Array Practice 1.0-SNAPSHOT.jar">
+      <element id="module-output" name="Array" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/mongodb/mongo-java-driver/3.11.0-beta2/mongo-java-driver-3.11.0-beta2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/phoenix-lang-1.0-SNAPSHOT.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-collections4/4.0/commons-collections4-4.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/honcho-1.0-SNAPSHOT.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/ziggurat.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
