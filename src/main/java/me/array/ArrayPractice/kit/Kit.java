@@ -20,7 +20,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class Kit {
 
-	@Getter private static List<Kit> kits = new ArrayList<>();
+	@Getter private static final List<Kit> kits = new ArrayList<>();
 
 	@Getter private final String name;
 	@Getter @Setter private boolean enabled;
@@ -29,9 +29,7 @@ public class Kit {
 	@Getter private final KitLoadout kitLoadout = new KitLoadout();
 	@Getter private final KitEditRules editRules = new KitEditRules();
 	@Getter private final KitGameRules gameRules = new KitGameRules();
-	@Getter private List<KitLeaderboards> rankedEloLeaderboards = new ArrayList<>();
-	@Getter private List<KitLeaderboards> rankedWinsLeaderboards = new ArrayList<>();
-	@Getter private List<KitLeaderboards> unrankedWinsLeaderboards = new ArrayList<>();
+	@Getter private final List<KitLeaderboards> rankedEloLeaderboards = new ArrayList<>();
 
 	public Kit(String name, String knockbackProfile) {
 		this.name = name;
@@ -150,7 +148,7 @@ public class Kit {
 
 	public void updateKitLeaderboards() {
 		if (!this.getRankedEloLeaderboards().isEmpty()) this.getRankedEloLeaderboards().clear();
-		for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("kitStatistics." + getName() + ".elo")).limit(10).into(new ArrayList<Document>())) {
+		for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("kitStatistics." + getName() + ".elo")).limit(10).into(new ArrayList<>())) {
 			Document kitStatistics = (Document) document.get("kitStatistics");
 			if (kitStatistics.containsKey(getName())) {
 				Document kitDocument = (Document) kitStatistics.get(getName());
@@ -158,28 +156,6 @@ public class Kit {
 				kitLeaderboards.setName((String) document.get("name"));
 				kitLeaderboards.setElo((Integer) kitDocument.get("elo"));
 				this.getRankedEloLeaderboards().add(kitLeaderboards);
-			}
-		}
-		if (!this.getRankedWinsLeaderboards().isEmpty()) this.getRankedWinsLeaderboards().clear();
-		for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("kitStatistics." + getName() + ".rankedWon")).limit(10).into(new ArrayList<Document>())) {
-			Document kitStatistics = (Document) document.get("kitStatistics");
-			if (kitStatistics.containsKey(getName())) {
-				Document kitDocument = (Document) kitStatistics.get(getName());
-				KitLeaderboards kitLeaderboards = new KitLeaderboards();
-				kitLeaderboards.setName((String) document.get("name"));
-				kitLeaderboards.setElo((Integer) kitDocument.get("rankedWon"));
-				this.getRankedWinsLeaderboards().add(kitLeaderboards);
-			}
-		}
-		if (!this.getUnrankedWinsLeaderboards().isEmpty()) this.getUnrankedWinsLeaderboards().clear();
-		for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("kitStatistics." + getName() + ".unrankedWon")).limit(10).into(new ArrayList<Document>())) {
-			Document kitStatistics = (Document) document.get("kitStatistics");
-			if (kitStatistics.containsKey(getName())) {
-				Document kitDocument = (Document) kitStatistics.get(getName());
-				KitLeaderboards kitLeaderboards = new KitLeaderboards();
-				kitLeaderboards.setName((String) document.get("name"));
-				kitLeaderboards.setElo((Integer) kitDocument.get("unrankedWon"));
-				this.getUnrankedWinsLeaderboards().add(kitLeaderboards);
 			}
 		}
 	}

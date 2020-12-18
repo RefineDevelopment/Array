@@ -19,13 +19,13 @@ public class Essentials extends Bootstrapped {
     public Essentials(Array Array) {
         super(Array);
 
-        spawn = LocationUtil.deserialize(Array.getMainConfig().getStringOrDefault("ESSENTIAL.SPAWN_LOCATION", null));
+        spawn = LocationUtil.deserialize(Array.getMainConfig().getStringOrDefault("ARRAY.SPAWN", null));
     }
 
     public void setSpawn(Location location) {
         spawn = location;
 
-        Array.getMainConfig().getConfiguration().set("ESSENTIAL.SPAWN_LOCATION", LocationUtil.serialize(this.spawn));
+        Array.getMainConfig().getConfiguration().set("ARRAY.SPAWN", LocationUtil.serialize(this.spawn));
 
         try {
             Array.getMainConfig().getConfiguration().save(Array.getMainConfig().getFile());

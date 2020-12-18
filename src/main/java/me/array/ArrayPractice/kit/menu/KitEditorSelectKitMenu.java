@@ -16,7 +16,7 @@ public class KitEditorSelectKitMenu extends Menu {
 
 	@Override
 	public String getTitle(Player player) {
-		return "&6Select a kit";
+		return "&7Select a kit";
 	}
 
 	@Override

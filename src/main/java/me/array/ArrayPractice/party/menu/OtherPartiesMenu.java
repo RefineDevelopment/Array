@@ -1,7 +1,6 @@
 package me.array.ArrayPractice.party.menu;
 
 import java.beans.ConstructorProperties;
-
 import me.array.ArrayPractice.match.team.TeamPlayer;
 import me.array.ArrayPractice.party.Party;
 import me.array.ArrayPractice.profile.Profile;
@@ -17,32 +16,28 @@ import java.util.HashMap;
 import me.array.ArrayPractice.util.external.menu.Button;
 import java.util.Map;
 import org.bukkit.entity.Player;
-import me.array.ArrayPractice.util.external.menu.pagination.PaginatedMenu;
 
-public class OtherPartiesMenu extends PaginatedMenu
+public class OtherPartiesMenu extends Menu
 {
     @Override
-    public String getPrePaginatedTitle(final Player player) {
+    public String getTitle(final Player player) {
         return "&bOther Parties";
     }
     
     @Override
-    public Map<Integer, Button> getAllPagesButtons(final Player player) {
-        final Map<Integer, Button> buttons = new HashMap<Integer, Button>();
-        final Profile profile = Profile.getByUuid(player.getUniqueId());
-        final Map<Integer, OtherPartyButton> map;
-        final OtherPartyButton otherPartyButton;
+    public Map<Integer, Button> getButtons(final Player player) {
+        final Map<Integer, Button> buttons =new HashMap<>();
         Party.getParties().forEach(party -> buttons.put(buttons.size(), new OtherPartyButton(party)));
         return buttons;
     }
 
     public static class OtherPartyButton extends Button
     {
-        private Party party;
+        private final Party party;
         
         @Override
         public ItemStack getButtonItem(final Player player) {
-            final List<String> lore = new ArrayList<String>();
+            final List<String> lore = new ArrayList<>();
             int added = 0;
             for (final TeamPlayer teamPlayer : this.party.getTeamPlayers()) {
                 if (added >= 10) {
@@ -51,13 +46,18 @@ public class OtherPartiesMenu extends PaginatedMenu
                 if (teamPlayer.getPlayer() == null) {
                     continue;
                 }
-                lore.add(CC.GRAY + " * " + CC.RESET + teamPlayer.getPlayer().getName());
+                lore.add(" &7" + (party.isLeader(teamPlayer.getUuid()) ? "*" : "-") + " &r" + teamPlayer.getUsername());
                 ++added;
             }
             if (this.party.getTeamPlayers().size() != added) {
                 lore.add(CC.GRAY + " and " + (this.party.getTeamPlayers().size() - added) + " others...");
             }
-            return new ItemBuilder(Material.SKULL_ITEM).name("&bParty of " + this.party.getLeader().getPlayer().getName()).amount(this.party.getTeamPlayers().size()).durability(3).lore(lore).build();
+            return new ItemBuilder(Material.SKULL_ITEM)
+                    .name("&bParty of &r" + party.getLeader().getPlayer().getName())
+                    .amount(this.party.getPlayers().size())
+                    .durability(3)
+                    .lore(lore)
+                    .build();
         }
         
         @Override
@@ -93,7 +93,7 @@ public class OtherPartiesMenu extends PaginatedMenu
                 player.sendMessage(CC.RED + "You cannot duel yourself.");
                 return;
             }
-            new OtherPartiesSelectEventMenu(player, this.party.getLeader().getPlayer(), this.party).openMenu(player);
+            player.chat("/duel " + party.getLeader().getPlayer().getName());
         }
         
         @ConstructorProperties({ "party" })

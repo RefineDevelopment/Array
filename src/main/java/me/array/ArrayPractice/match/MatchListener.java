@@ -454,7 +454,7 @@ public class MatchListener implements Listener {
                         double range = Math.ceil(event.getEntity().getLocation().distance(attacker.getLocation()));
                         double health = Math.ceil(damaged.getHealth() - event.getFinalDamage()) / 2.0D;
 
-                        attacker.sendMessage(CC.translate("&c" + damaged.getName() + " is now at &c" + health + " &4" + StringEscapeUtils.unescapeJava("\u2764")));
+                        attacker.sendMessage(CC.translate("&b" + damaged.getName() + "&e is now at &b" + health + " &4" + StringEscapeUtils.unescapeJava("\u2764")));
                     }
                 } else if (match.isTeamMatch() || match.isHCFMatch() || match.isKoTHMatch()) {
                     Team attackerTeam = match.getTeam(attacker);
@@ -473,7 +473,7 @@ public class MatchListener implements Listener {
                                 double range = Math.ceil(event.getEntity().getLocation().distance(attacker.getLocation()));
                                 double health = Math.ceil(damaged.getHealth() - event.getFinalDamage()) / 2.0D;
 
-                                attacker.sendMessage(CC.translate("&c" + damaged.getName() + " is now at &c" + health + " &4" + StringEscapeUtils.unescapeJava("\u2764")));
+                                attacker.sendMessage(CC.translate("&b" + damaged.getName() + "&e is now at &b" + health + " &4" + StringEscapeUtils.unescapeJava("\u2764")));
                             }
                         }
                     }
@@ -527,7 +527,7 @@ public class MatchListener implements Listener {
 
     @EventHandler
     public void onFoodLevelChange(PlayerItemConsumeEvent event) {
-        Player player = (Player) event.getPlayer();
+        Player player = event.getPlayer();
         Profile profile = Profile.getByUuid(player.getUniqueId());
 
         if (profile.isInFight()) {
@@ -636,7 +636,6 @@ public class MatchListener implements Listener {
                         event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                         event.getPlayer().getInventory().setContents(kitLoadout.getContents());
                         event.getPlayer().updateInventory();
-                        Array.get().getArmorClassManager().attemptEquip(event.getPlayer());
                         event.setCancelled(true);
                         return;
                     } else if (event.getItem().equals(Hotbar.getItems().get(HotbarItem.BARD_KIT))) {
@@ -644,7 +643,6 @@ public class MatchListener implements Listener {
                         event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                         event.getPlayer().getInventory().setContents(kitLoadout.getContents());
                         event.getPlayer().updateInventory();
-                        Array.get().getArmorClassManager().attemptEquip(event.getPlayer());
                         event.setCancelled(true);
                         return;
                     }else if (event.getItem().equals(Hotbar.getItems().get(HotbarItem.ARCHER_KIT))) {
@@ -652,7 +650,6 @@ public class MatchListener implements Listener {
                         event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                         event.getPlayer().getInventory().setContents(kitLoadout.getContents());
                         event.getPlayer().updateInventory();
-                        Array.get().getArmorClassManager().attemptEquip(event.getPlayer());
                         event.setCancelled(true);
                         return;
                     }else if (event.getItem().equals(Hotbar.getItems().get(HotbarItem.ROGUE_KIT))) {
@@ -660,7 +657,6 @@ public class MatchListener implements Listener {
                         event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                         event.getPlayer().getInventory().setContents(kitLoadout.getContents());
                         event.getPlayer().updateInventory();
-                        Array.get().getArmorClassManager().attemptEquip(event.getPlayer());
                         event.setCancelled(true);
                         return;
                     }
@@ -670,11 +666,8 @@ public class MatchListener implements Listener {
                     if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
                         String displayName = ChatColor.stripColor(event.getItem().getItemMeta().getDisplayName());
 
-                        if (displayName.startsWith("Kit: ")) {
-                            String kitName = displayName.replace("Kit: ", "");
-
                             for (KitLoadout kitLoadout : profile.getKitData().get(profile.getMatch().getKit()).getLoadouts()) {
-                                if (kitLoadout != null && ChatColor.stripColor(kitLoadout.getCustomName()).equals(kitName)) {
+                                if (kitLoadout != null && ChatColor.stripColor(kitLoadout.getCustomName()).equals(displayName)) {
                                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());
                                     event.getPlayer().updateInventory();
@@ -717,12 +710,10 @@ public class MatchListener implements Listener {
 
                     if (profile.getMatch().isStarting()) {
                         event.setCancelled(true);
-                        return;
                     }
                 }
             }
         }
-    }
 
     @EventHandler
     public void onPressurePlate(PlayerInteractEvent e) {

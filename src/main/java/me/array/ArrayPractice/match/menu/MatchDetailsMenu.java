@@ -28,7 +28,7 @@ public class MatchDetailsMenu extends Menu {
 
 	@Override
 	public String getTitle(Player player) {
-		return "&e&lInventory of &6" + snapshot.getTeamPlayer().getUsername();
+		return "&7&lInventory of &b" + snapshot.getTeamPlayer().getUsername();
 	}
 
 	@Override
@@ -73,8 +73,8 @@ public class MatchDetailsMenu extends Menu {
 
 	@Override
 	public void onOpen(Player player) {
-		player.sendMessage(CC.YELLOW + "You are viewing " + CC.GOLD + snapshot.getTeamPlayer().getUsername() +
-		                   CC.YELLOW + "'s inventory.");
+		player.sendMessage(CC.GRAY + "You are viewing " + CC.GRAY + snapshot.getTeamPlayer().getUsername() +
+		                   CC.GRAY + "'s inventory.");
 	}
 
 	@AllArgsConstructor
@@ -84,9 +84,9 @@ public class MatchDetailsMenu extends Menu {
 
 		@Override
 		public ItemStack getButtonItem(Player player) {
-			return new ItemBuilder(Material.LEVER)
-					.name("&6Opponent's Inventory")
-					.lore("&fSwitch to &e" + switchTo.getUsername() + "&f's inventory")
+			return new ItemBuilder(Material.REDSTONE_TORCH_ON)
+					.name("&dOpponent's Inventory")
+					.lore("&fSwitch to &d" + switchTo.getUsername() + "&f's inventory")
 					.build();
 		}
 
@@ -118,7 +118,7 @@ public class MatchDetailsMenu extends Menu {
 		@Override
 		public ItemStack getButtonItem(Player player) {
 			return new ItemBuilder(Material.MELON)
-					.name("&6Health: &7" + health + "/10&c" + StringEscapeUtils.unescapeJava("\u2764"))
+					.name("&bHealth: &7" + health + "/10&c" + StringEscapeUtils.unescapeJava("\u2764"))
 					.amount(health == 0 ? 1 : health)
 					.build();
 		}
@@ -133,7 +133,7 @@ public class MatchDetailsMenu extends Menu {
 		@Override
 		public ItemStack getButtonItem(Player player) {
 			return new ItemBuilder(Material.COOKED_BEEF)
-					.name("&6Hunger: &7" + hunger + "/20")
+					.name("&bHunger: &7" + hunger + "/20")
 					.amount(hunger == 0 ? 1 : hunger)
 					.build();
 		}
@@ -150,7 +150,7 @@ public class MatchDetailsMenu extends Menu {
 			ItemBuilder builder = new ItemBuilder(Material.POTION).name("&bPotion Effects");
 
 			if (effects.isEmpty()) {
-				builder.lore("&6No potion effects");
+				builder.lore("&eNo potion effects");
 			} else {
 				List<String> lore = new ArrayList<>();
 
@@ -179,7 +179,7 @@ public class MatchDetailsMenu extends Menu {
 			return new ItemBuilder(Material.POTION)
 					.durability(16421)
 					.amount(potions == 0 ? 1 : potions)
-					.name("&6Potions")
+					.name("&dPotions")
 					.lore("&f" + name + " had " + potions + " potion" + (potions == 1 ? "" : "s") + " left.")
 					.build();
 		}
@@ -194,13 +194,13 @@ public class MatchDetailsMenu extends Menu {
 		@Override
 		public ItemStack getButtonItem(Player player) {
 			return new ItemBuilder(Material.PAPER)
-					.name("&6Statistics")
+					.name("&dStatistics")
 					.lore(Arrays.asList(
-							"&eTotal Hits: &d" + teamPlayer.getHits(),
-							"&eLongest Combo: &d" + teamPlayer.getLongestCombo(),
-							"&ePotions Thrown: &d" + teamPlayer.getPotionsThrown(),
-							"&ePotions Missed: &d" + teamPlayer.getPotionsMissed(),
-							"&ePotion Accuracy: &d" + teamPlayer.getPotionAccuracy()
+							"&fTotal Hits: &d" + teamPlayer.getHits(),
+							"&fLongest Combo: &d" + teamPlayer.getLongestCombo(),
+							"&fPotions Thrown: &d" + teamPlayer.getPotionsThrown(),
+							"&fPotions Missed: &d" + teamPlayer.getPotionsMissed(),
+							"&fPotion Accuracy: &d" + teamPlayer.getPotionAccuracy()
 					))
 					.build();
 		}

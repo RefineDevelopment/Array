@@ -7,7 +7,7 @@ import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.CC;
 import me.array.ArrayPractice.util.external.ItemBuilder;
 import me.array.ArrayPractice.event.impl.brackets.Brackets;
-import me.array.ArrayPractice.event.impl.ffa.FFA;
+import me.array.ArrayPractice.event.impl.lms.FFA;
 import me.array.ArrayPractice.util.external.menu.Button;
 import me.array.ArrayPractice.util.external.menu.Menu;
 import org.bukkit.entity.Player;

@@ -64,9 +64,9 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: me.allen:ziggurat:1.0">
+      <library name="Maven: cc.outlast.tablist:Tablist:1.0">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/ziggurat.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/outlast.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

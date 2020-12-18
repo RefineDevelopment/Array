@@ -104,8 +104,6 @@ public abstract class Match {
 		arena.setActive(true);
 
 		new MatchStartTask(this).runTaskTimer(Array.get(), 20L, 20L);
-
-		getPlayers().forEach(player -> player.sendMessage(CC.translate("&b● &fPing: &b" + PlayerUtil.getPing(player))));
 		getPlayers().forEach(player -> player.sendMessage(CC.translate("&b● &fArena: &b" + arena.getName())));
 		getPlayers().forEach(player -> player.sendMessage(CC.translate("&b● &fKit: &b" + kit.getName())));
 		getPlayers().forEach(player -> player.sendMessage(CC.translate("")));
@@ -216,7 +214,7 @@ public abstract class Match {
 							Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer);
 						}
 					}
-				}.runTaskLaterAsynchronously(Array.get(), 40L);
+				}.runTaskLaterAsynchronously(Array.get(), 5000L);
 			}
 		} else {
 			if (canEnd()) {

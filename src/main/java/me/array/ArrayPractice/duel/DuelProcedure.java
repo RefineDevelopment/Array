@@ -35,9 +35,9 @@ public class DuelProcedure
         final Profile senderProfile = Profile.getByUuid(this.sender.getUniqueId());
         senderProfile.setDuelProcedure(null);
         senderProfile.getSentDuelRequests().put(this.target.getUniqueId(), request);
-        this.sender.sendMessage(CC.translate("&a&l(Duel) &fYou sent a duel request to &b" + this.target.getName() + "&f with kit &b" + (this.kit.getName().equals("HCFDIAMOND") ? "HCF Event Kits" : this.kit.getName())));
-        this.target.sendMessage(CC.translate("&a&l(Duel) &b" + this.sender.getName() + " &fhas sent you a duel request with kit &b" + (this.kit.getName().equals("HCFDIAMOND") ? "HCF Event Kits" : this.kit.getName())));
-        this.target.spigot().sendMessage(new ChatComponentBuilder("").parse("&a&l(Duel) &a(Click to accept)").attachToEachPart(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/duel accept " + this.sender.getName())).attachToEachPart(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentBuilder(CC.GREEN + "Click to accept this duel invite.").create())).create());
+        this.sender.sendMessage(CC.translate("&e&l(Duel) &fYou sent a duel request to &b" + this.target.getName() + "&f with kit &b" + (this.kit.getName())));
+        this.target.sendMessage(CC.translate("&e&l(Duel) &b" + this.sender.getName() + " &ehas sent you a duel request with kit &b" + (this.kit.getName())));
+        this.target.spigot().sendMessage(new ChatComponentBuilder("").parse("&a&l(Duel) &a(Click to accept)").attachToEachPart(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/duel accept " + this.sender.getName())).attachToEachPart(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentBuilder(CC.AQUA + "Click to accept this duel invite.").create())).create());
     }
     
     public Player getSender() {

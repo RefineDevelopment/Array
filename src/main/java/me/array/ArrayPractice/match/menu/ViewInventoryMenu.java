@@ -30,7 +30,7 @@ public class ViewInventoryMenu extends Menu {
 
 	@Override
 	public String getTitle(Player player) {
-		return CC.DARK_AQUA + target.getName() + "'s Inventory";
+		return CC.AQUA + target.getName() + "'s Inventory";
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class ViewInventoryMenu extends Menu {
 		@Override
 		public ItemStack getButtonItem(Player player) {
 			return new ItemBuilder(Material.MELON)
-					.name("&6Health: &7" + health + "/10 " + StringEscapeUtils.unescapeJava("\u2764"))
+					.name("&bHealth: &7" + health + "/10 " + StringEscapeUtils.unescapeJava("\u2764"))
 					.amount(health == 0 ? 1 : health)
 					.build();
 		}
@@ -96,7 +96,7 @@ public class ViewInventoryMenu extends Menu {
 		@Override
 		public ItemStack getButtonItem(Player player) {
 			return new ItemBuilder(Material.COOKED_BEEF)
-					.name("&6Hunger: &7e" + hunger + "/20")
+					.name("&bHunger: &7e" + hunger + "/20")
 					.amount(hunger == 0 ? 1 : hunger)
 					.build();
 		}
@@ -110,10 +110,10 @@ public class ViewInventoryMenu extends Menu {
 
 		@Override
 		public ItemStack getButtonItem(Player player) {
-			ItemBuilder builder = new ItemBuilder(Material.POTION).name("&6&lPotion Effects");
+			ItemBuilder builder = new ItemBuilder(Material.POTION).name("&bPotion Effects");
 
 			if (effects.isEmpty()) {
-				builder.lore(CC.YELLOW + "No effects");
+				builder.lore(CC.GRAY + "No effects");
 			} else {
 				List<String> lore = new ArrayList<>();
 

@@ -6,6 +6,7 @@ import me.array.ArrayPractice.Array;
 import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.match.Match;
 import me.array.ArrayPractice.profile.Profile;
+import me.array.ArrayPractice.util.PlayerUtil;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -62,12 +63,22 @@ public class QueueThread extends Thread
                             queue.getPlayers().remove(secondQueueProfile);
                             final TeamPlayer firstMatchPlayer = new TeamPlayer(firstPlayer);
                             final TeamPlayer secondMatchPlayer = new TeamPlayer(secondPlayer);
+                            firstPlayer.sendMessage(CC.AQUA + CC.BOLD + "Match Found!");
+                            secondPlayer.sendMessage(CC.AQUA + CC.BOLD + "Match Found!");
+                            firstPlayer.sendMessage("");
+                            firstPlayer.sendMessage("&b● &fType: &bParty");
+                            secondPlayer.sendMessage("");
+                            secondPlayer.sendMessage("&b● &fType: &bParty");
                             if (queue.getType() == QueueType.RANKED) {
                                 firstMatchPlayer.setElo(firstProfile.getKitData().get(queue.getKit()).getElo());
                                 secondMatchPlayer.setElo(secondProfile.getKitData().get(queue.getKit()).getElo());
                             }
                             final Match match = new SoloMatch(queue, firstMatchPlayer, secondMatchPlayer, queue.getKit(), arena, queue.getQueueType());
                             final String[] opponentMessages = this.formatMessages(firstPlayer.getName(), secondPlayer.getName(), firstMatchPlayer.getElo(), secondMatchPlayer.getElo(), queue.getQueueType());
+                            firstPlayer.sendMessage(CC.AQUA + CC.BOLD + "Match Found!");
+                            secondPlayer.sendMessage(CC.AQUA + CC.BOLD + "Match Found!");
+                            firstPlayer.sendMessage("");
+                            secondPlayer.sendMessage("");
                             firstPlayer.sendMessage(opponentMessages[0]);
                             secondPlayer.sendMessage(opponentMessages[1]);
                             new BukkitRunnable() {
@@ -113,6 +124,6 @@ public class QueueThread extends Thread
             player1Format = player1;
             player2Format = player2;
         }
-        return new String[] { CC.GOLD + "Found opponent: " + CC.GREEN + player1Format + CC.YELLOW + " vs " + CC.RED + player2Format, CC.GOLD + "Found opponent: " + CC.GREEN + player2Format + CC.YELLOW + " vs " + CC.RED + player1Format };
+        return new String[] { CC.translate( "&b● &fPlayers: &b" + CC.AQUA + player1Format + CC.GRAY + " vs " + CC.AQUA + player2Format), CC.translate("&b● &fPlayers: &b" + player2Format + "&7 vs " + "&b" + player1Format) };
     }
 }

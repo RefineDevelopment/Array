@@ -10,7 +10,7 @@ import me.array.ArrayPractice.arena.impl.*;
 
 import java.util.Set;
 
-@CommandMeta(label = { "arena setspawn" }, permission = "practice.admin.arena")
+@CommandMeta(label = { "arena setspawn" }, permission = "practice.staff")
 public class ArenaSetSpawnCommand
 {
     public void execute(final Player player, @CPL("arena") final Arena arena, @CPL("1/2") final Integer pos) {

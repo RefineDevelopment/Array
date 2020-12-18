@@ -1,8 +1,7 @@
 package com.bizarrealex.aether.scoreboard.cooldown;
 
-public enum BoardFormat
-{
-    SECONDS, 
-    MINUTES, 
-    HOURS;
+public enum  BoardFormat {
+    SECONDS,
+    MINUTES,
+    HOURS
 }

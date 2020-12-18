@@ -6,7 +6,7 @@ import me.array.ArrayPractice.party.Party;
 import me.array.ArrayPractice.party.PartyPrivacy;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.CC;
-import me.array.ArrayPractice.event.impl.tournament.Tournament;
+import me.array.ArrayPractice.tournament.Tournament;
 import org.bukkit.entity.Player;
 import com.qrakn.honcho.command.CommandMeta;
 

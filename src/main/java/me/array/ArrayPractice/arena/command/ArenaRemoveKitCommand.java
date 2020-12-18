@@ -6,7 +6,7 @@ import com.qrakn.honcho.command.*;
 import me.array.ArrayPractice.kit.*;
 import org.bukkit.*;
 
-@CommandMeta(label = { "arena removekit" }, permission = "practice.admin.arena")
+@CommandMeta(label = { "arena removekit" }, permission = "practice.staff")
 public class ArenaRemoveKitCommand
 {
     public void execute(final Player player, @CPL("arena") final Arena arena, @CPL("kit") final Kit kit) {

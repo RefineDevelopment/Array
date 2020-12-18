@@ -1,5 +1,3 @@
-
-
 package me.array.ArrayPractice.party.menu;
 
 import me.array.ArrayPractice.arena.Arena;
@@ -30,7 +28,7 @@ import me.array.ArrayPractice.util.external.menu.Menu;
 
 public class PartyEventSelectKitMenu extends Menu
 {
-    private PartyEvent partyEvent;
+    private final PartyEvent partyEvent;
     
     @Override
     public String getTitle(final Player player) {
@@ -39,9 +37,9 @@ public class PartyEventSelectKitMenu extends Menu
     
     @Override
     public Map<Integer, Button> getButtons(final Player player) {
-        final Map<Integer, Button> buttons = new HashMap<Integer, Button>();
+        final Map<Integer, Button> buttons =new HashMap<>();
         for (final Kit kit : Kit.getKits()) {
-            if (kit.isEnabled()) {
+            if (kit.isEnabled() && !kit.getGameRules().isSumo()) {
                 buttons.put(buttons.size(), new SelectKitButton(this.partyEvent, kit));
             }
         }
@@ -53,10 +51,10 @@ public class PartyEventSelectKitMenu extends Menu
         this.partyEvent = partyEvent;
     }
     
-    private class SelectKitButton extends Button
+    private static class SelectKitButton extends Button
     {
-        private PartyEvent partyEvent;
-        private Kit kit;
+        private final PartyEvent partyEvent;
+        private final Kit kit;
         
         @Override
         public ItemStack getButtonItem(final Player player) {
@@ -86,7 +84,7 @@ public class PartyEventSelectKitMenu extends Menu
             Match match;
             if (this.partyEvent == PartyEvent.FFA) {
                 final Team team = new Team(new TeamPlayer(party.getLeader().getPlayer()));
-                final List<Player> players = new ArrayList<Player>();
+                final List<Player> players = new ArrayList<>();
                 players.addAll(party.getPlayers());
                 match = new FFAMatch(team, this.kit, arena);
                 for (final Player otherPlayer : players) {
@@ -99,7 +97,7 @@ public class PartyEventSelectKitMenu extends Menu
             else {
                 final Team teamA = new Team(new TeamPlayer(party.getPlayers().get(0)));
                 final Team teamB = new Team(new TeamPlayer(party.getPlayers().get(1)));
-                final List<Player> players2 = new ArrayList<Player>();
+                final List<Player> players2 =new ArrayList<>();
                 players2.addAll(party.getPlayers());
                 Collections.shuffle(players2);
                 match = new TeamMatch(teamA, teamB, this.kit, arena);

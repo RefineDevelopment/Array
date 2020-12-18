@@ -25,14 +25,8 @@ public class StopSpectatingCommand {
 				profile.getBrackets().removeSpectator(player);
 			} else if (profile.getFfa() != null) {
 				profile.getFfa().removeSpectator(player);
-			} else if (profile.getJuggernaut() != null) {
-				profile.getJuggernaut().removeSpectator(player);
 			} else if (profile.getParkour() != null) {
 				profile.getParkour().removeSpectator(player);
-			} else if (profile.getWipeout() != null) {
-				profile.getWipeout().removeSpectator(player);
-			} else if (profile.getSkyWars() != null) {
-				profile.getSkyWars().removeSpectator(player);
 			} else if (profile.getSpleef() != null) {
 				profile.getSpleef().removeSpectator(player);
 			}

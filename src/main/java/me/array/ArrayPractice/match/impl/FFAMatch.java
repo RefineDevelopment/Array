@@ -91,12 +91,12 @@ public class FFAMatch extends Match {
 
 		Location spawn = getArena().getSpawn1();
 		Location spawn2 = getArena().getSpawn2();
-		Location sumospawn = getArena().getSpawn1();
-		sumospawn.setX(getAverage(spawn.getX(), spawn2.getX()));
-		sumospawn.setZ(getAverage(spawn.getZ(), spawn2.getZ()));
+		Location ffaspawn = getArena().getSpawn1();
+		ffaspawn.setX(getAverage(spawn.getX(), spawn2.getX()));
+		ffaspawn.setZ(getAverage(spawn.getZ(), spawn2.getZ()));
 
 		if (getKit().getGameRules().isFfacenter()) {
-			player.teleport(sumospawn);
+			player.teleport(ffaspawn);
 		} else {
 			player.teleport(spawn);
 		}
@@ -194,7 +194,8 @@ public class FFAMatch extends Match {
 
 		List<BaseComponent[]> components = new ArrayList<>();
 		components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());
-		components.add(new ChatComponentBuilder("").parse("&6&lMatch Summary &f⎜ &7&o(Click name to view)").create());
+		components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &f⎜ &7&o(Click name to view)").create());
+		components.add(new ChatComponentBuilder("").parse("").create());
 		components.add(winnerInventories.create());
 		components.add(loserInventories.create());
 		components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());
@@ -251,22 +252,22 @@ public class FFAMatch extends Match {
 
 	@Override
 	public Team getWinningTeam() {
-		throw new UnsupportedOperationException("Cannot get winning team from a Juggernaut match");
+		throw new UnsupportedOperationException("Cannot get winning team from a FFA match");
 	}
 
 	@Override
 	public TeamPlayer getTeamPlayerA() {
-		throw new UnsupportedOperationException("Cannot get team player from a Juggernaut match");
+		throw new UnsupportedOperationException("Cannot get team player from a FFA match");
 	}
 
 	@Override
 	public TeamPlayer getTeamPlayerB() {
-		throw new UnsupportedOperationException("Cannot get team player from a Juggernaut match");
+		throw new UnsupportedOperationException("Cannot get team player from a FFA match");
 	}
 
 	@Override
 	public List<TeamPlayer> getTeamPlayers() {
-		throw new UnsupportedOperationException("Cannot get team player from a Juggernaut match");
+		throw new UnsupportedOperationException("Cannot get team player from a FFA match");
 	}
 
 	@Override
@@ -286,12 +287,12 @@ public class FFAMatch extends Match {
 
 	@Override
 	public Team getTeamA() {
-		throw new UnsupportedOperationException("Cannot get team from a Juggernaut match");
+		throw new UnsupportedOperationException("Cannot get team from a FFA match");
 	}
 
 	@Override
 	public Team getTeamB() {
-		throw new UnsupportedOperationException("Cannot get team from a Juggernaut match");
+		throw new UnsupportedOperationException("Cannot get team from a FFA match");
 	}
 
 	@Override

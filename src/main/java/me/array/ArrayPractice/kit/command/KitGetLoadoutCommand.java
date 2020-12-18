@@ -5,7 +5,7 @@ import me.array.ArrayPractice.util.external.CC;
 import com.qrakn.honcho.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "kit getloadout", permission = "practice.kit.getloadout")
+@CommandMeta(label = "kit getloadout", permission = "practice.staff")
 public class KitGetLoadoutCommand {
 
 	public void execute(Player player, Kit kit) {

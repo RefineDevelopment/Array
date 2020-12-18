@@ -1,6 +1,5 @@
 package me.array.ArrayPractice.party;
 
-import me.array.ArrayPractice.Array;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.EventPriority;
@@ -13,17 +12,17 @@ import org.bukkit.event.Listener;
 
 public class PartyListener implements Listener
 {
-    @EventHandler(ignoreCancelled = true)
-    public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPartyChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         String chatMessage = event.getMessage();
         Profile profile = Profile.getByUuid(player.getUniqueId());
         Party party = profile.getParty();
 
         if (party != null) {
-            if (chatMessage.startsWith("!") || chatMessage.startsWith("@")) {
+            if (chatMessage.startsWith("@")) {
                 event.setCancelled(true);
-                String message=CC.translate("&b&lPARTY &8» ") + Array.get().getChat().getPlayerPrefix(player) + ChatColor.WHITE + player.getName() + ChatColor.GRAY + ": " + ChatColor.AQUA + chatMessage.replaceFirst("!", "").replaceFirst("@", "");
+                String message = CC.translate("&7» " + ChatColor.WHITE + player.getName() + ChatColor.GRAY + ": " + ChatColor.LIGHT_PURPLE + chatMessage.replace("@", ""));
                 party.broadcast(message);
             }
         }

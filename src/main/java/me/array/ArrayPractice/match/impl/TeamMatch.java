@@ -30,12 +30,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class TeamMatch extends Match {
+public class
+TeamMatch extends Match {
 
     private final Team teamA;
     private final Team teamB;
-    private int teamARoundWins = 0;
-    private int teamBRoundWins = 0;
+    private final int teamARoundWins = 0;
+    private final int teamBRoundWins = 0;
 
     public TeamMatch(Team teamA, Team teamB, Kit kit, Arena arena) {
         super(null, kit, arena, QueueType.UNRANKED);
@@ -95,7 +96,7 @@ public class TeamMatch extends Match {
         }
 
 		if (getKit().getKnockbackProfile() != null) {
-            KnockbackProfile knockbackProfile = (KnockbackProfile) KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
+            KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
             ((CraftPlayer)player).getHandle().setKnockback(knockbackProfile);
         }
 
@@ -184,7 +185,7 @@ public class TeamMatch extends Match {
 
                             Array.get().getEssentials().teleportToSpawn(player);
                         }
-                    }
+                    }runTaskLaterAsynchronously(Array.get(), 500L);
                 }
             }
         }.runTaskLater(Array.get(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
@@ -218,7 +219,8 @@ public class TeamMatch extends Match {
 
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());
-        components.add(new ChatComponentBuilder("").parse("&b&lMatch Summary &f⎜ &7&o(Click name to view)").create());
+        components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7⎜ &7&o(Click name to view)").create());
+        components.add(new ChatComponentBuilder("").parse("").create());
         components.add(winnerInventories.create());
         components.add(loserInventories.create());
         components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());
@@ -231,19 +233,11 @@ public class TeamMatch extends Match {
 
     @Override
     public boolean canEnd() {
-//		if (getKit().getGameRules().isSumo()) {
-//			return (teamA.getDeadCount() + teamA.getDisconnectedCount()) == teamA.getTeamPlayers().size() ||
-//			       (teamB.getDeadCount() + teamB.getDisconnectedCount()) == teamB.getTeamPlayers().size() ||
-//			       teamARoundWins == 3 || teamBRoundWins == 3;
-//		} else {
         return teamA.getAliveTeamPlayers().isEmpty() || teamB.getAliveTeamPlayers().isEmpty();
-//		}
     }
 
     @Override
     public void onDeath(Player player, Player killer) {
-        // TODO: request teams messages directly then request global messages to spectators
-        // Team roundLoser = this.getOpponentTeam(player);
         TeamPlayer teamPlayer = getTeamPlayer(player);
         getSnapshots().add(new MatchSnapshot(teamPlayer));
 
@@ -299,15 +293,6 @@ public class TeamMatch extends Match {
 
     @Override
     public Team getWinningTeam() {
-//		if (getKit().getGameRules().isSumo()) {
-//			if (teamA.getDisconnectedCount() == teamA.getTeamPlayers().size()) {
-//				return teamB;
-//			} else if (teamB.getDisconnectedCount() == teamB.getTeamPlayers().size()) {
-//				return teamA;
-//			}
-//
-//			return teamARoundWins == 3 ? teamA : teamB;
-//		} else {
         if (getKit().getGameRules().isParkour()) {
             if (teamA.getDeadCount() > 0) {
                 return teamA;

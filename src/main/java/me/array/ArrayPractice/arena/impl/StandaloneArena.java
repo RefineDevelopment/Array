@@ -9,11 +9,11 @@ import java.util.*;
 
 public class StandaloneArena extends Arena
 {
-    private List<Arena> duplicates;
+    private final List<Arena> duplicates;
     
     public StandaloneArena(final String name) {
         super(name);
-        this.duplicates = new ArrayList<Arena>();
+        this.duplicates = new ArrayList<>();
     }
     
     @Override
@@ -24,22 +24,22 @@ public class StandaloneArena extends Arena
     @Override
     public void save() {
         final String path = "arenas." + this.getName();
-        final FileConfiguration configuration = (FileConfiguration)Array.get().getArenasConfig().getConfiguration();
-        configuration.set(path, (Object)null);
-        configuration.set(path + ".type", (Object)this.getType().name());
+        final FileConfiguration configuration = Array.get().getArenasConfig().getConfiguration();
+        configuration.set(path, null);
+        configuration.set(path + ".type", this.getType().name());
         if (this.spawn1 != null) {
-            configuration.set(path + ".spawn1", (Object)LocationUtil.serialize(this.spawn1));
+            configuration.set(path + ".spawn1", LocationUtil.serialize(this.spawn1));
         }
         if (this.spawn2 != null) {
-            configuration.set(path + ".spawn2", (Object)LocationUtil.serialize(this.spawn2));
+            configuration.set(path + ".spawn2", LocationUtil.serialize(this.spawn2));
         }
-        configuration.set(path + ".kits", (Object)this.getKits());
+        configuration.set(path + ".kits", this.getKits());
         if (!this.duplicates.isEmpty()) {
             int i = 0;
             for (final Arena duplicate : this.duplicates) {
                 ++i;
-                configuration.set(path + ".duplicates." + i + ".spawn1", (Object)LocationUtil.serialize(duplicate.getSpawn1()));
-                configuration.set(path + ".duplicates." + i + ".spawn2", (Object)LocationUtil.serialize(duplicate.getSpawn2()));
+                configuration.set(path + ".duplicates." + i + ".spawn1", LocationUtil.serialize(duplicate.getSpawn1()));
+                configuration.set(path + ".duplicates." + i + ".spawn2", LocationUtil.serialize(duplicate.getSpawn2()));
             }
         }
         try {
@@ -52,8 +52,8 @@ public class StandaloneArena extends Arena
     
     @Override
     public void delete() {
-        final FileConfiguration configuration = (FileConfiguration)Array.get().getArenasConfig().getConfiguration();
-        configuration.set("arenas." + this.getName(), (Object)null);
+        final FileConfiguration configuration = Array.get().getArenasConfig().getConfiguration();
+        configuration.set("arenas." + this.getName(), null);
         try {
             configuration.save(Array.get().getArenasConfig().getFile());
         }

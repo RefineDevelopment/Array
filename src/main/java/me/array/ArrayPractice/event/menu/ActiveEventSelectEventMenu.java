@@ -6,14 +6,10 @@ import me.array.ArrayPractice.event.EventType;
 import me.array.ArrayPractice.util.external.CC;
 import me.array.ArrayPractice.util.external.ItemBuilder;
 import me.array.ArrayPractice.event.impl.brackets.command.BracketsJoinCommand;
-import me.array.ArrayPractice.event.impl.ffa.command.FFAJoinCommand;
-import me.array.ArrayPractice.event.impl.infected.command.InfectedJoinCommand;
-import me.array.ArrayPractice.event.impl.juggernaut.command.JuggernautJoinCommand;
+import me.array.ArrayPractice.event.impl.lms.command.FFAJoinCommand;
 import me.array.ArrayPractice.event.impl.parkour.command.ParkourJoinCommand;
-import me.array.ArrayPractice.event.impl.skywars.command.SkyWarsJoinCommand;
 import me.array.ArrayPractice.event.impl.spleef.command.SpleefJoinCommand;
 import me.array.ArrayPractice.event.impl.sumo.command.SumoJoinCommand;
-import me.array.ArrayPractice.event.impl.wipeout.command.WipeoutJoinCommand;
 import me.array.ArrayPractice.util.external.menu.Button;
 import me.array.ArrayPractice.util.external.menu.Menu;
 import org.bukkit.entity.Player;
@@ -29,7 +25,7 @@ public class ActiveEventSelectEventMenu extends Menu {
 
 	@Override
 	public String getTitle(Player player) {
-		return "&eSelect an active event";
+		return "&7Select an active tournament";
 	}
 
 	@Override
@@ -56,39 +52,15 @@ public class ActiveEventSelectEventMenu extends Menu {
 				i++;
 				}
 			}
-			if (eventType.getTitle().equals("Juggernaut")) {
-				if (Array.get().getJuggernautManager().getActiveJuggernaut() != null && Array.get().getJuggernautManager().getActiveJuggernaut().isWaiting()) {
-					buttons.put(i, new SelectEventButton(EventType.JUGGERNAUT));
-					i++;
-				}
-			}
 			if (eventType.getTitle().equals("Parkour")) {
 				if (Array.get().getParkourManager().getActiveParkour() != null && Array.get().getParkourManager().getActiveParkour().isWaiting()) {
 					buttons.put(i, new SelectEventButton(EventType.PARKOUR));
 					i++;
 				}
 			}
-			if (eventType.getTitle().equals("Wipeout")) {
-				if (Array.get().getWipeoutManager().getActiveWipeout() != null && Array.get().getWipeoutManager().getActiveWipeout().isWaiting()) {
-					buttons.put(i, new SelectEventButton(EventType.WIPEOUT));
-					i++;
-				}
-			}
-//			if (eventType.getTitle().equals("SkyWars")) {
-//				if (Array.get().getSkyWarsManager().getActiveSkyWars() != null && Array.get().getSkyWarsManager().getActiveSkyWars().isWaiting()) {
-//					buttons.put(i, new SelectEventButton(EventType.SKYWARS));
-//					i++;
-//				}
-//			}
 			if (eventType.getTitle().equals("Spleef")) {
 				if (Array.get().getSpleefManager().getActiveSpleef() != null && Array.get().getSpleefManager().getActiveSpleef().isWaiting()) {
 					buttons.put(i, new SelectEventButton(EventType.SPLEEF));
-					i++;
-				}
-			}
-			if (eventType.getTitle().equals("Infected")) {
-				if (Array.get().getInfectedManager().getActiveInfected() != null && Array.get().getInfectedManager().getActiveInfected().isWaiting()) {
-					buttons.put(i, new SelectEventButton(EventType.INFECTED));
 					i++;
 				}
 			}
@@ -97,40 +69,39 @@ public class ActiveEventSelectEventMenu extends Menu {
 	}
 
 	@AllArgsConstructor
-	private class SelectEventButton extends Button {
+	private static class SelectEventButton extends Button {
 
-		private EventType eventType;
+		private final EventType eventType;
 
 		@Override
 		public ItemStack getButtonItem(Player player) {
 			List<String> lore = new ArrayList<>();
 
-			if (eventType.getTitle().equals("Brackets")) {
-				lore = Array.get().getBracketsManager().getActiveBrackets().getLore();
-			} else if (eventType.getTitle().equals("Sumo")) {
-				lore = Array.get().getSumoManager().getActiveSumo().getLore();
-			} else if (eventType.getTitle().equals("FFA")) {
-				lore = Array.get().getFfaManager().getActiveFFA().getLore();
-			} else if (eventType.getTitle().equals("Juggernaut")) {
-				lore = Array.get().getJuggernautManager().getActiveJuggernaut().getLore();
-			} else if (eventType.getTitle().equals("Parkour")) {
-				lore = Array.get().getParkourManager().getActiveParkour().getLore();
-			} else if (eventType.getTitle().equals("Wipeout")) {
-				lore = Array.get().getWipeoutManager().getActiveWipeout().getLore();
-			} else if (eventType.getTitle().equals("SkyWars")) {
-				lore = Array.get().getSkyWarsManager().getActiveSkyWars().getLore();
-			} else if (eventType.getTitle().equals("Spleef")) {
-				lore = Array.get().getSpleefManager().getActiveSpleef().getLore();
-			} else if (eventType.getTitle().equals("Infected")) {
-				lore = Array.get().getInfectedManager().getActiveInfected().getLore();
+			switch (eventType.getTitle()) {
+				case "Brackets":
+					lore=Array.get().getBracketsManager().getActiveBrackets().getLore();
+					break;
+				case "Sumo":
+					lore=Array.get().getSumoManager().getActiveSumo().getLore();
+					break;
+				case "FFA":
+					lore=Array.get().getFfaManager().getActiveFFA().getLore();
+					break;
+				case "Parkour":
+					lore=Array.get().getParkourManager().getActiveParkour().getLore();
+					break;
+				case "Spleef":
+					lore=Array.get().getSpleefManager().getActiveSpleef().getLore();
+					break;
 			}
 
+			lore.add(CC.MENU_BAR);
 			lore.add("&7(Left-Click to join)");
 			lore.add(CC.MENU_BAR);
 
 
 			return new ItemBuilder(eventType.getMaterial())
-					.name("&6" + eventType.getTitle() + "&f Event")
+					.name("&b" + eventType.getTitle())
 					.lore(lore)
 					.build();
 		}
@@ -139,24 +110,22 @@ public class ActiveEventSelectEventMenu extends Menu {
 		public void clicked(Player player, ClickType clickType) {
 			Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
 			player.closeInventory();
-			if (eventType.getTitle().equals("Brackets")) {
-				BracketsJoinCommand.execute(player);
-			} else if (eventType.getTitle().equals("Sumo")) {
-				SumoJoinCommand.execute(player);
-			} else if (eventType.getTitle().equals("FFA")) {
-				FFAJoinCommand.execute(player);
-			} else if (eventType.getTitle().equals("Juggernaut")) {
-				JuggernautJoinCommand.execute(player);
-			} else if (eventType.getTitle().equals("Parkour")) {
-				ParkourJoinCommand.execute(player);
-			} else if (eventType.getTitle().equals("Wipeout")) {
-				WipeoutJoinCommand.execute(player);
-			} else if (eventType.getTitle().equals("SkyWars")) {
-				SkyWarsJoinCommand.execute(player);
-			} else if (eventType.getTitle().equals("Spleef")) {
-				SpleefJoinCommand.execute(player);
-			} else if (eventType.getTitle().equals("Infected")) {
-				InfectedJoinCommand.execute(player);
+			switch (eventType.getTitle()) {
+				case "Brackets":
+					BracketsJoinCommand.execute(player);
+					break;
+				case "Sumo":
+					SumoJoinCommand.execute(player);
+					break;
+				case "FFA":
+					FFAJoinCommand.execute(player);
+					break;
+				case "Parkour":
+					ParkourJoinCommand.execute(player);
+					break;
+				case "Spleef":
+					SpleefJoinCommand.execute(player);
+					break;
 			}
 		}
 

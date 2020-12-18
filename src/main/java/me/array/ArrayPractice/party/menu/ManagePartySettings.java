@@ -21,32 +21,32 @@ public class ManagePartySettings extends Menu
 {
     @Override
     public String getTitle(final Player player) {
-        return "&bParty Settings";
+        return "&7Party Settings";
     }
     
     @Override
     public Map<Integer, Button> getButtons(final Player player) {
-        final Map<Integer, Button> buttons = new HashMap<Integer, Button>();
-        buttons.put(2, new SelectManageButton(PartyManage.INCREMENTLIMIT));
+        final Map<Integer, Button> buttons = new HashMap<>();
+        buttons.put(2, new SelectManageButton(PartyManage.INCREASELIMIT));
         buttons.put(4, new SelectManageButton(PartyManage.PUBLIC));
         buttons.put(6, new SelectManageButton(PartyManage.DECREASELIMIT));
         return buttons;
     }
     
-    private class SelectManageButton extends Button
+    private static class SelectManageButton extends Button
     {
-        private PartyManage partyManage;
+        private final PartyManage partyManage;
         
         @Override
         public ItemStack getButtonItem(final Player player) {
             final Profile profile = Profile.getByUuid(player.getUniqueId());
-            if (this.partyManage == PartyManage.INCREMENTLIMIT) {
-                return new ItemBuilder(Material.INK_SACK).durability(10).name("&b" + this.partyManage.getName()).lore("&fLimit: " + profile.getParty().getLimit()).build();
+            if (this.partyManage == PartyManage.INCREASELIMIT) {
+                return new ItemBuilder(Material.WOOL).durability(5).name("&b" + this.partyManage.getName()).lore("&7Limit: " + profile.getParty().getLimit()).build();
             }
             if (this.partyManage == PartyManage.PUBLIC) {
-                return new ItemBuilder(Material.PAPER).name("&b" + this.partyManage.getName()).lore("&fPublic: " + profile.getParty().isPublic()).build();
+                return new ItemBuilder(Material.CHEST).name("&b" + this.partyManage.getName()).lore("&7Public: " + profile.getParty().isPublic()).build();
             }
-            return new ItemBuilder(Material.INK_SACK).durability(1).name("&b" + this.partyManage.getName()).lore("&fLimit: " + profile.getParty().getLimit()).build();
+            return new ItemBuilder(Material.WOOL).durability(14).name("&b" + this.partyManage.getName()).lore("&7Limit: " + profile.getParty().getLimit()).build();
         }
         
         @Override
@@ -64,7 +64,7 @@ public class ManagePartySettings extends Menu
                 player.closeInventory();
                 return;
             }
-            if (this.partyManage == PartyManage.INCREMENTLIMIT) {
+            if (this.partyManage == PartyManage.INCREASELIMIT) {
                 if (profile.getParty().getLimit() < 100) {
                     profile.getParty().setLimit(profile.getParty().getLimit() + 1);
                     new ManagePartySettings().openMenu(player);

@@ -91,11 +91,11 @@
 
         <!-- Tablist Handlers  -->
         <dependency>
-            <groupId>me.allen</groupId>
-            <artifactId>ziggurat</artifactId>
+            <groupId>cc.outlast.tablist</groupId>
+            <artifactId>Tablist</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/ziggurat.jar</systemPath>
+            <systemPath>${project.basedir}/lib/outlast.jar</systemPath>
         </dependency>
 
         <!-- Mongo -->

@@ -8,7 +8,7 @@ import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "kit remove", permission = "practice.kit.create")
+@CommandMeta(label = "kit remove", permission = "practice.staff")
 public class KitRemoveCommand {
     public void execute(final Player player, @CPL("name") final String name) {
         if (name == null) {

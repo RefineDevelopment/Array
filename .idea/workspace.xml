@@ -25,6 +25,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -42,11 +45,18 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/outlast.jar" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.4948216" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="me.array.ArrayPractice.tab" />
+      <recent name="me.array.ArrayPractice.tournament" />
+      <recent name="me.array.ArrayPractice.match.hcf" />
+    </key>
   </component>
   <component name="RunManager" selected="Ant Target.Array Compile with Depends">
     <configuration name="Array Compile with Depends" type="AntRunConfiguration">
@@ -112,10 +122,26 @@
     </state>
     <state x="94" y="147" width="1092" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.984@0.0.1280.984" timestamp="1606574595674" />
     <state x="106" y="98" width="1092" height="762" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.860@0.0.1440.860" timestamp="1608028524322" />
+    <state x="525" y="136" key="#com.intellij.ide.util.MemberChooser" timestamp="1608285546420">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="525" y="136" key="#com.intellij.ide.util.MemberChooser/0.0.1440.860@0.0.1440.860" timestamp="1608285546420" />
+    <state x="549" y="210" key="#com.intellij.ide.util.PackageChooserDialog" timestamp="1608292148295">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="549" y="210" key="#com.intellij.ide.util.PackageChooserDialog/0.0.1440.860@0.0.1440.860" timestamp="1608292148295" />
     <state x="580" y="225" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1607844296068">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="580" y="225" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1440.860@0.0.1440.860" timestamp="1607844296068" />
+    <state x="503" y="324" width="632" height="219" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1608292151739">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="503" y="324" width="632" height="219" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1440.860@0.0.1440.860" timestamp="1608292151739" />
+    <state x="516" y="337" width="583" height="186" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.packages" timestamp="1608292064412">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="516" y="337" width="583" height="186" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.packages/0.0.1440.860@0.0.1440.860" timestamp="1608292064412" />
     <state x="197" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1607844598578">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
@@ -132,10 +158,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="580" y="189" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog/0.0.1440.860@0.0.1440.860" timestamp="1608027806278" />
-    <state x="500" y="185" key="FileChooserDialogImpl" timestamp="1608089471424">
+    <state x="500" y="185" key="FileChooserDialogImpl" timestamp="1608287633394">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="500" y="185" key="FileChooserDialogImpl/0.0.1440.860@0.0.1440.860" timestamp="1608089471424" />
+    <state x="500" y="185" key="FileChooserDialogImpl/0.0.1440.860@0.0.1440.860" timestamp="1608287633394" />
     <state width="1397" height="227" key="GridCell.Tab.0.bottom" timestamp="1607563939497">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
@@ -168,29 +194,33 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="490" y="175" key="Maven.ArtifactSearchDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1605615788707" />
-    <state x="330" y="9" key="SettingsEditor" timestamp="1608105909026">
+    <state x="330" y="9" key="SettingsEditor" timestamp="1608287644764">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="330" y="9" key="SettingsEditor/0.0.1440.860@0.0.1440.860" timestamp="1608105909026" />
+    <state x="330" y="9" key="SettingsEditor/0.0.1440.860@0.0.1440.860" timestamp="1608287644764" />
     <state x="440" y="94" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1605617187942" />
     <state width="501" height="446" key="SwitcherDM" timestamp="1607997914636">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state width="501" height="446" key="SwitcherDM/0.0.1440.860@0.0.1440.860" timestamp="1607997914636" />
-    <state x="501" y="185" width="628" height="596" key="find.popup" timestamp="1608188324328">
+    <state x="537" y="344" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1608263503053">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="537" y="344" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1440.860@0.0.1440.860" timestamp="1608263503053" />
+    <state x="495" y="196" width="628" height="596" key="find.popup" timestamp="1608292276241">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="445" y="212" width="555" height="561" key="find.popup/0.0.1280.984@0.0.1280.984" timestamp="1607193936882" />
-    <state x="501" y="185" width="628" height="596" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1608188324328" />
+    <state x="495" y="196" width="628" height="596" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1608292276241" />
     <state x="667" y="224" width="585" height="592" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1605615943951" />
-    <state x="376" y="195" key="run.anything.popup" timestamp="1607913306014">
+    <state x="376" y="195" key="run.anything.popup" timestamp="1608285811436">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="376" y="195" key="run.anything.popup/0.0.1440.860@0.0.1440.860" timestamp="1607913306014" />
-    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1608187059539">
+    <state x="376" y="195" key="run.anything.popup/0.0.1440.860@0.0.1440.860" timestamp="1608285811436" />
+    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1608289891746">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1608187059539" />
+    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1608289891746" />
     <state x="442" y="342" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1608013193606">
       <screen x="0" y="0" width="1440" height="860" />
     </state>

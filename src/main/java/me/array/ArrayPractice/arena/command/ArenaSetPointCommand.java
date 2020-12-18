@@ -6,7 +6,7 @@ import me.array.ArrayPractice.arena.*;
 import com.qrakn.honcho.command.*;
 import org.bukkit.*;
 
-@CommandMeta(label = { "arena setpoint" }, permission = "practice.admin.arena")
+@CommandMeta(label = { "arena setpoint" }, permission = "practice.staff")
 public class ArenaSetPointCommand
 {
     public void execute(final Player player, @CPL("arena") final Arena arena, @CPL("1/2") final Integer pos) {

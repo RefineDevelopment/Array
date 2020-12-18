@@ -5,7 +5,7 @@ import com.qrakn.honcho.command.*;
 import me.array.ArrayPractice.arena.*;
 import org.bukkit.*;
 
-@CommandMeta(label = { "arena remove", "arena delete" }, permission = "practice.admin.arena")
+@CommandMeta(label = { "arena remove", "arena delete" }, permission = "practice.staff")
 public class ArenaRemoveCommand
 {
     public void execute(final Player player, @CPL("name") final String name) {

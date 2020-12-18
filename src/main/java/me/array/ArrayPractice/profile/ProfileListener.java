@@ -85,7 +85,7 @@ public class ProfileListener implements Listener {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
         if (profile.isInSomeSortOfFight()) {
-            if (!profile.isInSkyWars() && !profile.isInFight() && !profile.isInSpleef()) {
+            if (!profile.isInFight() && !profile.isInSpleef()) {
                 if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
                     if (!event.getPlayer().isOp()) {
                         event.setCancelled(true);
@@ -106,7 +106,7 @@ public class ProfileListener implements Listener {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
         if (profile.isInSomeSortOfFight()) {
-            if (!profile.isInSkyWars() && !profile.isInFight()) {
+            if (!profile.isInFight()) {
                 if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
                     if (!event.getPlayer().isOp()) {
                         event.setCancelled(true);
@@ -127,7 +127,7 @@ public class ProfileListener implements Listener {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
         if (profile.isInSomeSortOfFight()) {
-            if (!profile.isInSkyWars() && !profile.isInFight()) {
+            if (!profile.isInFight()) {
                 if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
                     if (!event.getPlayer().isOp()) {
                         event.setCancelled(true);

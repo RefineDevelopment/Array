@@ -10,11 +10,6 @@ import org.bukkit.entity.Player;
 public class SpectateCommand {
 
 	public void execute(Player player, Player target) {
-		if (player.hasMetadata("frozen")) {
-			player.sendMessage(CC.RED + "You cannot spectate whilst frozen.");
-			return;
-		}
-
 		if (target == null) {
 			player.sendMessage(CC.RED + "A player with that name could not be found.");
 			return;
@@ -61,14 +56,8 @@ public class SpectateCommand {
 			targetProfile.getBrackets().addSpectator(player);
 		} else if (targetProfile.isInFfa()) {
 			targetProfile.getFfa().addSpectator(player);
-		} else if (targetProfile.isInJuggernaut()) {
-			targetProfile.getJuggernaut().addSpectator(player);
 		} else if (targetProfile.isInParkour()) {
 			targetProfile.getParkour().addSpectator(player);
-		} else if (targetProfile.isInWipeout()) {
-			targetProfile.getWipeout().addSpectator(player);
-		} else if (targetProfile.isInSkyWars()) {
-			targetProfile.getSkyWars().addSpectator(player);
 		} else if (targetProfile.isInSpleef()) {
 			targetProfile.getSpleef().addSpectator(player);
 		} else {

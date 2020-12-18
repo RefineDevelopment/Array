@@ -7,7 +7,7 @@ import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "kit list", permission = "practice.kit.list")
+@CommandMeta(label = "kit list", permission = "practice.staff")
 public class KitListCommand {
 
 	public void execute(Player player) {

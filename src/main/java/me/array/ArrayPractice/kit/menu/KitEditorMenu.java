@@ -39,7 +39,7 @@ public class KitEditorMenu extends Menu {
 	@Override
 	public String getTitle(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		return "&6Editing &7(" + profile.getKitEditor().getSelectedKit().getName() + ")";
+		return "&7Editing &7(" + profile.getKitEditor().getSelectedKit().getName() + ")";
 	}
 
 	@Override

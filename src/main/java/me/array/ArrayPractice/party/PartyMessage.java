@@ -16,14 +16,14 @@ public enum PartyMessage
     PUBLIC("&b{0}&e is hosting a public party"),
     PRIVACY_CHANGED("&7Your party privacy has been changed to: &b{0}");
     
-    private String message;
+    private final String message;
     
     public String format(final Object... objects) {
         return CC.translate(new MessageFormat(this.message).format(objects));
     }
     
     @ConstructorProperties({ "message" })
-    private PartyMessage(final String message) {
+    PartyMessage(final String message) {
         this.message = message;
     }
 }

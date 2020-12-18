@@ -1,5 +1,3 @@
-
-
 package me.array.ArrayPractice.profile.hotbar;
 
 import me.array.ArrayPractice.Array;
@@ -10,7 +8,6 @@ import me.array.ArrayPractice.party.PartyMessage;
 import me.array.ArrayPractice.party.menu.ManagePartySettings;
 import me.array.ArrayPractice.party.menu.OtherPartiesMenu;
 import me.array.ArrayPractice.party.menu.PartyEventSelectEventMenu;
-import me.array.ArrayPractice.party.menu.PartyListMenu;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.profile.ProfileState;
 import me.array.ArrayPractice.profile.options.OptionsMenu;
@@ -20,16 +17,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.EventHandler;
 import me.array.ArrayPractice.profile.meta.ProfileRematchData;
 import me.array.ArrayPractice.event.impl.spleef.Spleef;
-import me.array.ArrayPractice.event.impl.skywars.SkyWars;
-import me.array.ArrayPractice.event.impl.wipeout.Wipeout;
 import me.array.ArrayPractice.event.impl.parkour.Parkour;
-import me.array.ArrayPractice.event.impl.juggernaut.Juggernaut;
-import me.array.ArrayPractice.event.impl.ffa.FFA;
+import me.array.ArrayPractice.event.impl.lms.FFA;
 import me.array.ArrayPractice.event.impl.brackets.Brackets;
 import me.array.ArrayPractice.event.impl.sumo.Sumo;
 import org.bukkit.entity.Player;
 import me.array.ArrayPractice.profile.stats.menu.RankedLeaderboardsMenu;
-import me.array.ArrayPractice.profile.stats.menu.StatsMenu;
 import me.array.ArrayPractice.queue.menu.QueueSelectKitMenu;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.Listener;
@@ -81,8 +74,8 @@ public class HotbarListener implements Listener
                     new OtherPartiesMenu().openMenu(event.getPlayer());
                     break;
                 }
-                case PARTY_MEMBERS: {
-                    new PartyListMenu().openMenu(event.getPlayer());
+                case PARTY_INFO: {
+                    player.performCommand("party info");
                     break;
                 }
                 case PARTY_SETTINGS: {
@@ -115,7 +108,7 @@ public class HotbarListener implements Listener
                     }
                     profile.setParty(new Party(player));
                     profile.refreshHotbar();
-                    player.sendMessage(PartyMessage.CREATED.format(new Object[0]));
+                    player.sendMessage(PartyMessage.CREATED.format());
                     break;
                 }
                 case PARTY_DISBAND: {
@@ -193,19 +186,6 @@ public class HotbarListener implements Listener
                     Array.get().getFfaManager().getActiveFFA().handleLeave(player);
                     break;
                 }
-                case JUGGERNAUT_LEAVE: {
-                    final Juggernaut activeJuggernaut = Array.get().getJuggernautManager().getActiveJuggernaut();
-                    if (activeJuggernaut == null) {
-                        player.sendMessage(CC.RED + "There is no active Juggernaut.");
-                        return;
-                    }
-                    if (!profile.isInJuggernaut() || !activeJuggernaut.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(CC.RED + "You are not apart of the active Juggernaut.");
-                        return;
-                    }
-                    Array.get().getJuggernautManager().getActiveJuggernaut().handleLeave(player);
-                    break;
-                }
                 case PARKOUR_LEAVE: {
                     final Parkour activeParkour = Array.get().getParkourManager().getActiveParkour();
                     if (activeParkour == null) {
@@ -217,32 +197,6 @@ public class HotbarListener implements Listener
                         return;
                     }
                     Array.get().getParkourManager().getActiveParkour().handleLeave(player);
-                    break;
-                }
-                case WIPEOUT_LEAVE: {
-                    final Wipeout activeWipeout = Array.get().getWipeoutManager().getActiveWipeout();
-                    if (activeWipeout == null) {
-                        player.sendMessage(CC.RED + "There is no active Wipeout.");
-                        return;
-                    }
-                    if (!profile.isInWipeout() || !activeWipeout.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(CC.RED + "You are not apart of the active Wipeout.");
-                        return;
-                    }
-                    Array.get().getWipeoutManager().getActiveWipeout().handleLeave(player);
-                    break;
-                }
-                case SKYWARS_LEAVE: {
-                    final SkyWars activeSkyWars = Array.get().getSkyWarsManager().getActiveSkyWars();
-                    if (activeSkyWars == null) {
-                        player.sendMessage(CC.RED + "There is no active SkyWars.");
-                        return;
-                    }
-                    if (!profile.isInSkyWars() || !activeSkyWars.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(CC.RED + "You are not apart of the active SkyWars.");
-                        return;
-                    }
-                    Array.get().getSkyWarsManager().getActiveSkyWars().handleLeave(player);
                     break;
                 }
                 case SPLEEF_LEAVE: {
@@ -285,20 +239,8 @@ public class HotbarListener implements Listener
                         profile.getFfa().removeSpectator(player);
                         break;
                     }
-                    if (profile.getJuggernaut() != null) {
-                        profile.getJuggernaut().removeSpectator(player);
-                        break;
-                    }
                     if (profile.getParkour() != null) {
                         profile.getParkour().removeSpectator(player);
-                        break;
-                    }
-                    if (profile.getWipeout() != null) {
-                        profile.getWipeout().removeSpectator(player);
-                        break;
-                    }
-                    if (profile.getSkyWars() != null) {
-                        profile.getSkyWars().removeSpectator(player);
                         break;
                     }
                     if (profile.getSpleef() != null) {
@@ -307,29 +249,7 @@ public class HotbarListener implements Listener
                     }
                     break;
                 }
-                case REMATCH_REQUEST: {
-                    if (profile.getRematchData() == null) {
-                        player.sendMessage(CC.RED + "You do not have anyone to re-match.");
-                        return;
-                    }
-                    profile.checkForHotbarUpdate();
-                    if (profile.getRematchData() == null) {
-                        player.sendMessage(CC.RED + "That player is no longer available.");
-                        return;
-                    }
-                    final ProfileRematchData profileRematchData = profile.getRematchData();
-                    if (profileRematchData.isReceive()) {
-                        profileRematchData.accept();
-                    }
-                    else {
-                        if (profileRematchData.isSent()) {
-                            player.sendMessage(CC.RED + "You have already sent a rematch request to that player.");
-                            return;
-                        }
-                        profileRematchData.request();
-                    }
-                    break;
-                }
+                case REMATCH_REQUEST:
                 case REMATCH_ACCEPT: {
                     if (profile.getRematchData() == null) {
                         player.sendMessage(CC.RED + "You do not have anyone to re-match.");

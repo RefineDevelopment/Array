@@ -1,5 +1,3 @@
-
-
 package me.array.ArrayPractice.duel.menu;
 
 import java.beans.ConstructorProperties;
@@ -23,7 +21,7 @@ public class DuelSelectArenaMenu extends Menu
 {
     @Override
     public String getTitle(final Player player) {
-        return "&bSelect an arena";
+        return "&7Select an arena";
     }
     
     @Override
@@ -62,7 +60,7 @@ public class DuelSelectArenaMenu extends Menu
         
         @Override
         public ItemStack getButtonItem(final Player player) {
-            return new ItemBuilder(Material.PAPER).name("&9" + this.arena.getName()).build();
+            return new ItemBuilder(Material.PAPER).name("&b&l" + this.arena.getName()).build();
         }
         
         @Override

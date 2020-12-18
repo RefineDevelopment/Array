@@ -7,7 +7,7 @@ kits:
       durability: 16421
     loadout:
       armor: t@313:e@0@2:e@34@3:e@2@4;t@312:e@0@2:e@34@3;t@311:e@0@2:e@34@3;t@310:e@0@2:e@34@3;
-      contents: t@276:e@16@3:e@34@3:e@20@2;t@368:a@16;t@373:d@8226:pd@2-2=1-1800-1;t@373:d@8259:pd@3-1=12-9600-0;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@364:a@64;t@373:d@8226:pd@2-2=1-1800-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@8226:pd@2-2=1-1800-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@8226:pd@2-2=1-1800-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;t@373:d@16421:pd@5-2=6-1-1;
+      contents: t@276:e@16@3:e@20@2:e@34@3;t@368:a@16;t@373:d@8226;t@373:d@8259;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@364:a@64;t@373:d@8226;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@8226;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@8226;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;
     game-rules:
       ranked: true
       editable: true
@@ -22,9 +22,11 @@ kits:
       lava-kill: false
       health-regeneration: true
       show-health: false
-      hit-delay: 19
+      hit-delay: 20
+      infinite-speed: false
+      infinite-strength: false
     edit-rules:
-      allow-potion-fill: true
+      allow-potion-fill: false
       items:
         '1':
           material: COOKED_BEEF
@@ -42,34 +44,51 @@ kits:
           material: POTION
           amount: 1
           durability: 8226
-  Sumo:
+  Debuff:
     enabled: true
-    knockback-profile: Sumo
+    knockback-profile: Practice
     icon:
-      material: LEASH
-      durability: 0
+      material: POTION
+      durability: 16452
     loadout:
-      armor: null;null;null;null;
-      contents: null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;
+      armor: t@313:e@0@2:e@34@3:e@2@4;t@312:e@0@2:e@34@3;t@311:e@0@2:e@34@3;t@310:e@0@2:e@34@3;
+      contents: t@276:e@16@3:e@20@2:e@34@3;t@368:a@16;t@373:d@8226;t@373:d@8259;t@373:d@16426;t@373:d@16452;t@373:d@16421;t@373:d@16421;t@364:a@64;t@373:d@8226;t@373:d@16426;t@373:d@16452;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@8226;t@373:d@16426;t@373:d@16452;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@8226;t@373:d@16426;t@373:d@16452;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;
     game-rules:
       ranked: true
-      editable: false
+      editable: true
       antifoodloss: false
       ffacenter: false
       noitems: false
       build: false
       spleef: false
       parkour: false
-      sumo: true
-      water-kill: true
+      sumo: false
+      water-kill: false
       lava-kill: false
-      health-regeneration: false
+      health-regeneration: true
       show-health: false
-      hit-delay: 20
+      hit-delay: 19
       infinite-speed: false
       infinite-strength: false
     edit-rules:
       allow-potion-fill: false
+      items:
+        '1':
+          material: COOKED_BEEF
+          amount: 64
+          durability: 0
+        '2':
+          material: GOLDEN_CARROT
+          amount: 64
+          durability: 0
+        '3':
+          material: POTION
+          amount: 1
+          durability: 16421
+        '4':
+          material: POTION
+          amount: 1
+          durability: 16452
   Combo:
     enabled: true
     knockback-profile: Combo
@@ -77,8 +96,8 @@ kits:
       material: GOLDEN_APPLE
       durability: 0
     loadout:
-      armor: t@313:e@0@3:e@34@4;t@312:e@0@3:e@34@4;t@311:e@0@3:e@34@4;t@310:e@0@3:e@34@4;
-      contents: t@276:e@16@2:e@34@4;t@322:d@1:a@64;t@310:e@0@3:e@34@4;t@311:e@0@3:e@34@4;t@312:e@0@3:e@34@4;t@313:e@0@3:e@34@4;null;t@373:d@8265;t@373:d@8226;null;null;null;null;null;null;null;t@373:d@8265;t@373:d@8226;null;null;null;null;null;null;null;t@373:d@8265;t@373:d@8226;null;null;null;null;null;null;null;t@373:d@8265;t@373:d@8226;
+      armor: t@313:e@0@3:e@34@5;t@312:e@0@3:e@34@5;t@311:e@0@3:e@34@5;t@310:e@0@3:e@34@5;
+      contents: t@276:e@34@4;t@322:d@1:a@64;t@310:e@0@3:e@34@5;t@311:e@0@3:e@34@5;t@312:e@0@3:e@34@5;t@313:e@0@3:e@34@5;t@0;t@0;t@373:d@8226;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@373:d@8226;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@373:d@8226;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@373:d@8226;
     game-rules:
       ranked: true
       editable: true
@@ -93,8 +112,92 @@ kits:
       lava-kill: false
       health-regeneration: false
       show-health: false
-      hit-delay: 2
+      hit-delay: 3
       infinite-speed: false
       infinite-strength: false
     edit-rules:
       allow-potion-fill: false
+  HCFBARD:
+    enabled: false
+    knockback-profile: Practice
+    icon:
+      material: DIAMOND_SWORD
+      durability: 0
+    loadout:
+      armor: t@313:e@0@2:e@34@2;t@312:e@0@2:e@34@2;t@311:e@0@2:e@34@2;t@310:e@0@2:e@34@2;
+      contents: t@276:e@16@2;t@261;t@368:a@16;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@322:a@16;t@262:a@64;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;
+    game-rules:
+      ranked: false
+      editable: false
+      antifoodloss: false
+      ffacenter: false
+      noitems: false
+      build: false
+      spleef: false
+      parkour: false
+      sumo: false
+      water-kill: false
+      lava-kill: false
+      health-regeneration: false
+      show-health: false
+      hit-delay: 20
+      infinite-speed: false
+      infinite-strength: false
+    edit-rules:
+      allow-potion-fill: false
+  BuildUHC:
+    enabled: true
+    knockback-profile: Practice
+    icon:
+      material: LAVA_BUCKET
+      durability: 0
+    loadout:
+      armor: t@313:e@0@2:e@34@4;t@312:e@0@2:e@34@4;t@311:e@0@2:e@34@4;t@310:e@0@2:e@34@4;
+      contents: t@276:e@16@2:e@34@4;t@346;t@326;t@327;t@322:a@6;t@4:a@64;t@5:a@64;t@322:a@3:dn@Golden Head;t@261:e@48@4:e@34@4;t@262:a@64;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;t@326;t@327;null;null;null;null;null;
+    game-rules:
+      ranked: true
+      editable: true
+      antifoodloss: true
+      ffacenter: false
+      noitems: false
+      build: true
+      spleef: false
+      parkour: false
+      sumo: false
+      water-kill: false
+      lava-kill: false
+      health-regeneration: false
+      show-health: true
+      hit-delay: 19
+      infinite-speed: false
+      infinite-strength: false
+    edit-rules:
+      allow-potion-fill: false
+  Sumo:
+    enabled: true
+    knockback-profile: Sumo
+    icon:
+      material: LEASH
+      durability: 0
+    loadout:
+      armor: t@0;t@0;t@0;t@0;
+      contents: t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;
+    game-rules:
+      ranked: true
+      editable: false
+      antifoodloss: true
+      ffacenter: false
+      noitems: true
+      build: false
+      spleef: false
+      parkour: false
+      sumo: true
+      water-kill: false
+      lava-kill: false
+      health-regeneration: false
+      show-health: false
+      hit-delay: 20
+      infinite-speed: false
+      infinite-strength: false
+    edit-rules:
+      allow-potion-fill: false      

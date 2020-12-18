@@ -1,12 +1,9 @@
-
-
 package me.array.ArrayPractice.party;
 
 import me.array.ArrayPractice.Array;
 import me.array.ArrayPractice.duel.DuelRequest;
 import me.array.ArrayPractice.util.ChatHelper;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import me.array.ArrayPractice.profile.ProfileState;
 import me.array.ArrayPractice.util.nametag.NameTags;
@@ -28,8 +25,8 @@ public class Party extends Team
     private int Limit;
     private boolean isPublic;
     private PartyPrivacy privacy;
-    private List<PartyInvite> invites;
-    private List<Player> banned;
+    private final List<PartyInvite> invites;
+    private final List<Player> banned;
     private boolean disbanded;
     
     public Party(final Player player) {
@@ -37,8 +34,8 @@ public class Party extends Team
         this.Limit = 10;
         this.isPublic = false;
         this.privacy = PartyPrivacy.CLOSED;
-        this.invites = new ArrayList<PartyInvite>();
-        this.banned = new ArrayList<Player>();
+        this.invites = new ArrayList<>();
+        this.banned = new ArrayList<>();
         Party.parties.add(this);
         player.sendMessage(CC.translate("&7&m-----------------------------------"));
         player.sendMessage(CC.translate("&7You have successfully created a new &dParty&7."));
@@ -72,7 +69,7 @@ public class Party extends Team
     public void invite(final Player target) {
         this.invites.add(new PartyInvite(target.getUniqueId()));
         target.sendMessage(PartyMessage.YOU_HAVE_BEEN_INVITED.format(this.getLeader().getUsername()));
-        target.spigot().sendMessage(new ChatComponentBuilder("").parse(PartyMessage.CLICK_TO_JOIN.format(new Object[0])).attachToEachPart(ChatHelper.click("/party join " + this.getLeader().getUsername())).attachToEachPart(ChatHelper.hover(CC.GREEN + "Click to to accept this party invite")).create());
+        target.spigot().sendMessage(new ChatComponentBuilder("").parse(PartyMessage.CLICK_TO_JOIN.format()).attachToEachPart(ChatHelper.click("/party join " + this.getLeader().getUsername())).attachToEachPart(ChatHelper.hover(CC.GREEN + "Click to to accept this party invite")).create());
         this.broadcast(PartyMessage.PLAYER_INVITED.format(target.getName()));
     }
     
@@ -169,12 +166,9 @@ public class Party extends Team
     public void disband() {
         Party.parties.remove(this);
         this.disbanded = true;
-        this.broadcast(PartyMessage.DISBANDED.format(new Object[0]));
+        this.broadcast(PartyMessage.DISBANDED.format());
         final Profile leaderProfile = Profile.getByUuid(this.getLeader().getUuid());
-        if (leaderProfile != null) {
-            leaderProfile.getSentDuelRequests().values().removeIf(DuelRequest::isParty);
-        }
-        final Profile profile ;
+        leaderProfile.getSentDuelRequests().values().removeIf(DuelRequest::isParty);
         this.getPlayers().forEach(player -> {
             Profile.getByUuid(player.getUniqueId());
             Profile.getByUuid(player.getUniqueId()).setParty(null);
@@ -211,17 +205,17 @@ public class Party extends Team
             public void run() {
                 Party.getParties().forEach(party -> party.getInvites().removeIf(PartyInvite::hasExpired));
             }
-        }.runTaskTimerAsynchronously((Plugin) Array.get(), 100L, 100L);
+        }.runTaskTimerAsynchronously(Array.get(), 100L, 100L);
         new BukkitRunnable() {
             public void run() {
                 for (final Party party : Party.getParties()) {
                     if (party.isPublic()) {
                         Bukkit.getServer().getOnlinePlayers().forEach(player -> player.sendMessage(PartyMessage.PUBLIC.format(party.getLeader().getUsername())));
-                        Bukkit.getServer().getOnlinePlayers().forEach(player -> player.spigot().sendMessage(new ChatComponentBuilder("").parse(PartyMessage.CLICK_TO_JOIN.format(new Object[0])).attachToEachPart(ChatHelper.click("/party join " + party.getLeader().getUsername())).attachToEachPart(ChatHelper.hover(PartyMessage.CLICK_TO_JOIN.format(new Object[0]))).create()));
+                        Bukkit.getServer().getOnlinePlayers().forEach(player -> player.spigot().sendMessage(new ChatComponentBuilder("").parse(PartyMessage.CLICK_TO_JOIN.format()).attachToEachPart(ChatHelper.click("/party join " + party.getLeader().getUsername())).attachToEachPart(ChatHelper.hover(PartyMessage.CLICK_TO_JOIN.format())).create()));
                     }
                 }
             }
-        }.runTaskTimerAsynchronously((Plugin) Array.get(), 1200L, 1200L);
+        }.runTaskTimerAsynchronously(Array.get(), 1200L, 1200L);
     }
     
     public PartyPrivacy getPrivacy() {
@@ -257,6 +251,6 @@ public class Party extends Team
     }
     
     static {
-        Party.parties = new ArrayList<Party>();
+        Party.parties = new ArrayList<>();
     }
 }

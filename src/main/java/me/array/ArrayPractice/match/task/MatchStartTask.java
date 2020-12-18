@@ -30,6 +30,8 @@ public class MatchStartTask extends BukkitRunnable {
 				match.setState(MatchState.FIGHTING);
 				match.setStartTimestamp(System.currentTimeMillis());
 				match.broadcastMessage(CC.GREEN + "Match Started!");
+				match.broadcastMessage("");
+				match.broadcastMessage(CC.AQUA + CC.BOLD + "Reminder: " + CC.WHITE + "Butterfly clicking is " + CC.AQUA + "discouraged" + CC.WHITE + " and could result in a" + CC.AQUA + " ban." + CC.AQUA + " Use at own risk.");
 				match.broadcastSound(Sound.LEVEL_UP);
 				cancel();
 				return;
@@ -44,7 +46,7 @@ public class MatchStartTask extends BukkitRunnable {
 					match.setState(MatchState.FIGHTING);
 					match.setStartTimestamp(System.currentTimeMillis());
 					match.broadcastMessage(CC.GREEN + "The round has started!");
-					match.broadcastSound(Sound.NOTE_BASS);
+					match.broadcastSound(Sound.LEVEL_UP);
 					cancel();
 					return;
 				}
@@ -56,7 +58,9 @@ public class MatchStartTask extends BukkitRunnable {
 					match.setState(MatchState.FIGHTING);
 					match.setStartTimestamp(System.currentTimeMillis());
 					match.broadcastMessage(CC.GREEN + "Match Started!");
-					match.broadcastSound(Sound.NOTE_BASS);
+					match.broadcastMessage("");
+					match.broadcastMessage(CC.AQUA + CC.BOLD + "Reminder: " + CC.WHITE + "Butterfly clicking is " + CC.AQUA + "discouraged" + CC.WHITE + " and could result in a" + CC.AQUA + " ban." + CC.AQUA + " Use at own risk.");
+					match.broadcastSound(Sound.LEVEL_UP);
 					cancel();
 					return;
 				}

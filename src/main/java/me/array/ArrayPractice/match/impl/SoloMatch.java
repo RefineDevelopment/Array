@@ -203,15 +203,16 @@ public class SoloMatch extends Match {
                 .setCurrentClickEvent(getClickEvent(losingTeamPlayer));
 
         List<BaseComponent[]> components = new ArrayList<>();
-        components.add(new ChatComponentBuilder("").parse("&b&lMatch Summary &7⎜ &7&o(Click name to view)").create());
+        components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7⎜ &7&o(Click name to view)").create());
+        components.add(new ChatComponentBuilder("").parse("").create());
         components.add(inventoriesBuilder.create());
 
         Profile winningProfile = Profile.getByUuid(winningPlayer.getUniqueId());
         Profile losingProfile = Profile.getByUuid(losingPlayer.getUniqueId());
 
         if (getQueueType() == QueueType.UNRANKED) {
-            winningProfile.getKitData().get(getKit()).incrementUnrankedWins();
-            losingProfile.getKitData().get(getKit()).incrementUnrankedLost();
+            winningProfile.getKitData().get(getKit()).incrementWon();
+            losingProfile.getKitData().get(getKit()).incrementLost();
         }
 
 
@@ -222,8 +223,8 @@ public class SoloMatch extends Match {
             int newLoserElo = EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
             winningProfile.getKitData().get(getKit()).setElo(newWinnerElo);
             losingProfile.getKitData().get(getKit()).setElo(newLoserElo);
-            winningProfile.getKitData().get(getKit()).incrementRankedWon();
-            losingProfile.getKitData().get(getKit()).incrementRankedLost();
+            winningProfile.getKitData().get(getKit()).incrementWon();
+            losingProfile.getKitData().get(getKit()).incrementWon();
 
             int winnerEloChange = newWinnerElo - oldWinnerElo;
             int loserEloChange = oldLoserElo - newLoserElo;

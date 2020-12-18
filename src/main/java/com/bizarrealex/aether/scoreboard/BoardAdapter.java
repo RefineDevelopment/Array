@@ -1,12 +1,14 @@
 package com.bizarrealex.aether.scoreboard;
 
-import org.bukkit.entity.*;
-import com.bizarrealex.aether.scoreboard.cooldown.*;
-import java.util.*;
+import com.bizarrealex.aether.scoreboard.cooldown.BoardCooldown;
+import org.bukkit.entity.Player;
 
-public interface BoardAdapter
-{
-    String getTitle(final Player p0);
-    
-    List<String> getScoreboard(final Player p0, final Board p1, final Set<BoardCooldown> p2);
+import java.util.List;
+import java.util.Set;
+
+public interface BoardAdapter {
+
+    String getTitle(Player player);
+    List<String> getScoreboard(Player player, Board board, Set<BoardCooldown> cooldowns);
+
 }

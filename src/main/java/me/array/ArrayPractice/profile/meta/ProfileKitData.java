@@ -17,36 +17,25 @@ import java.util.List;
 public class ProfileKitData
 {
     private int elo;
-    private int rankedWon;
-    private int rankedLost;
-    private int unrankedWon;
-    private int unrankedLost;
+    private int won;
+    private int lost;
     private KitLoadout[] loadouts;
     
     public ProfileKitData() {
         this.elo = 1000;
-        this.rankedWon = 0;
-        this.rankedLost = 0;
-        this.unrankedWon = 0;
-        this.unrankedLost = 0;
+        this.won = 0;
+        this.lost = 0;
         this.loadouts = new KitLoadout[4];
     }
-    
-    public void incrementRankedWon() {
-        ++this.rankedWon;
+
+    public void incrementWon() {
+        this.won++;
     }
-    
-    public void incrementRankedLost() {
-        ++this.rankedLost;
+
+    public void incrementLost() {
+        this.lost++;
     }
-    
-    public void incrementUnrankedWins() {
-        ++this.unrankedWon;
-    }
-    
-    public void incrementUnrankedLost() {
-        ++this.unrankedLost;
-    }
+
     
     public KitLoadout getLoadout(final int index) {
         return this.loadouts[index];
@@ -66,13 +55,13 @@ public class ProfileKitData
     }
     
     public List<ItemStack> getKitItems() {
-        final List<ItemStack> toReturn = new ArrayList<ItemStack>();
+        final List<ItemStack> toReturn = new ArrayList<>();
         toReturn.add(Hotbar.getItems().get(HotbarItem.DEFAULT_KIT));
         for (final KitLoadout loadout : this.loadouts) {
             if (loadout != null) {
                 final ItemStack itemStack = new ItemStack(Material.ENCHANTED_BOOK);
                 final ItemMeta itemMeta = itemStack.getItemMeta();
-                itemMeta.setDisplayName(ChatColor.AQUA + loadout.getCustomName());
+                itemMeta.setDisplayName(loadout.getCustomName());
                 itemMeta.setLore(Arrays.asList(ChatColor.GRAY + "Right-click with this book in your", ChatColor.GRAY + "hand to receive this kit."));
                 itemStack.setItemMeta(itemMeta);
                 toReturn.add(itemStack);
@@ -98,36 +87,20 @@ public class ProfileKitData
         this.elo = elo;
     }
     
-    public int getRankedWon() {
-        return this.rankedWon;
+    public int getWon() {
+        return this.won;
     }
     
-    public void setRankedWon(final int rankedWon) {
-        this.rankedWon = rankedWon;
+    public void setWon(final int won) {
+        this.won = won;
     }
     
-    public int getRankedLost() {
-        return this.rankedLost;
+    public int getLost() {
+        return this.lost;
     }
-    
-    public void setRankedLost(final int rankedLost) {
-        this.rankedLost = rankedLost;
-    }
-    
-    public int getUnrankedWon() {
-        return this.unrankedWon;
-    }
-    
-    public void setUnrankedWon(final int unrankedWon) {
-        this.unrankedWon = unrankedWon;
-    }
-    
-    public int getUnrankedLost() {
-        return this.unrankedLost;
-    }
-    
-    public void setUnrankedLost(final int unrankedLost) {
-        this.unrankedLost = unrankedLost;
+
+    public void setLost(final int lost) {
+        this.lost = lost;
     }
     
     public KitLoadout[] getLoadouts() {

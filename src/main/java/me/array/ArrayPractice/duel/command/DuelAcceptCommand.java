@@ -10,7 +10,7 @@ import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.queue.QueueType;
 import me.array.ArrayPractice.match.impl.SoloMatch;
 import me.array.ArrayPractice.match.impl.TeamMatch;
-import me.array.ArrayPractice.match.impl.HCFMatch;
+import me.array.ArrayPractice.match.hcf.HCFMatch;
 import me.array.ArrayPractice.match.team.Team;
 import me.array.ArrayPractice.match.team.TeamPlayer;
 import me.array.ArrayPractice.arena.impl.StandaloneArena;

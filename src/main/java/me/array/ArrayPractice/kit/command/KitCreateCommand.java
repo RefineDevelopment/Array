@@ -7,7 +7,7 @@ import com.qrakn.honcho.command.CommandMeta;
 import org.bukkit.entity.Player;
 import rip.verse.jupiter.knockback.KnockbackProfile;
 
-@CommandMeta(label = "kit create", permission = "practice.kit.create")
+@CommandMeta(label = "kit create", permission = "practice.staff")
 public class KitCreateCommand {
 
 	public void execute(Player player, @CPL("name") String kitName, @CPL("knockback-profile") String knockback) {

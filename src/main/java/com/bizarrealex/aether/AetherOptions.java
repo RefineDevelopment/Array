@@ -1,29 +1,21 @@
 package com.bizarrealex.aether;
 
-public class AetherOptions
-{
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+@Getter
+@Setter
+@Accessors(chain = true, fluent = true)
+public class AetherOptions {
+
+    static AetherOptions defaultOptions() {
+        return new AetherOptions()
+                .hook(false)
+                .scoreDirectionDown(false);
+    }
+
     private boolean hook;
     private boolean scoreDirectionDown;
-    
-    static AetherOptions defaultOptions() {
-        return new AetherOptions().hook(false).scoreDirectionDown(false);
-    }
-    
-    public boolean hook() {
-        return this.hook;
-    }
-    
-    public boolean scoreDirectionDown() {
-        return this.scoreDirectionDown;
-    }
-    
-    public AetherOptions hook(final boolean hook) {
-        this.hook = hook;
-        return this;
-    }
-    
-    public AetherOptions scoreDirectionDown(final boolean scoreDirectionDown) {
-        this.scoreDirectionDown = scoreDirectionDown;
-        return this;
-    }
+
 }

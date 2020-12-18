@@ -1,96 +1,93 @@
 package com.bizarrealex.aether.scoreboard;
 
-import org.bukkit.*;
-import org.bukkit.scoreboard.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import org.bukkit.ChatColor;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
-public class BoardEntry
-{
-    private Board board;
-    private String text;
-    private String originalText;
-    private String key;
-    private Team team;
+@Accessors(chain = true)
+public class BoardEntry {
     
-    public BoardEntry(final Board board, final String text) {
+    @Getter private final Board board;
+    @Getter @Setter private String text;
+    @Getter private final String originalText;
+    @Getter private final String key;
+    @Getter private Team team;
+
+    public BoardEntry(Board board, String text) {
         this.board = board;
         this.text = text;
         this.originalText = text;
         this.key = board.getNewKey(this);
-        this.setup();
+
+        setup();
     }
-    
+
     public BoardEntry setup() {
-        final Scoreboard scoreboard = this.board.getScoreboard();
-        this.text = ChatColor.translateAlternateColorCodes('&', this.text);
-        String teamName = this.key;
+        Scoreboard scoreboard = board.getScoreboard();
+
+        text = ChatColor.translateAlternateColorCodes('&', text);
+
+        String teamName = key;
+
         if (teamName.length() > 16) {
             teamName = teamName.substring(0, 16);
         }
+
         if (scoreboard.getTeam(teamName) != null) {
-            this.team = scoreboard.getTeam(teamName);
+            team = scoreboard.getTeam(teamName);
         }
         else {
-            this.team = scoreboard.registerNewTeam(teamName);
+            team = scoreboard.registerNewTeam(teamName);
         }
-        if (!this.team.getEntries().contains(this.key)) {
-            this.team.addEntry(this.key);
+
+        if (!(team.getEntries().contains(key))) {
+            team.addEntry(key);
         }
-        if (!this.board.getEntries().contains(this)) {
-            this.board.getEntries().add(this);
+
+        if (!(board.getEntries().contains(this))) {
+            board.getEntries().add(this);
         }
+
         return this;
     }
-    
-    public BoardEntry send(final int position) {
-        final Objective objective = this.board.getObjective();
-        if (this.text.length() > 16) {
-            final boolean fix = this.text.toCharArray()[15] == '§';
-            final String prefix = fix ? this.text.substring(0, 15) : this.text.substring(0, 16);
-            final String suffix = fix ? this.text.substring(15, this.text.length()) : (ChatColor.getLastColors(prefix) + this.text.substring(16, this.text.length()));
-            this.team.setPrefix(prefix);
+
+    public BoardEntry send(int position) {
+        Objective objective = board.getObjective();
+
+        if (text.length() > 16) {
+            boolean fix = text.toCharArray()[15] == ChatColor.COLOR_CHAR;
+
+            String prefix = fix ? text.substring(0, 15) : text.substring(0, 16);
+            String suffix = fix ? text.substring(15) : ChatColor.getLastColors(prefix) + text.substring(16);
+
+            team.setPrefix(prefix);
+
             if (suffix.length() > 16) {
-                this.team.setSuffix(suffix.substring(0, 16));
+                team.setSuffix(suffix.substring(0, 16));
             }
             else {
-                this.team.setSuffix(suffix);
+                team.setSuffix(suffix);
             }
         }
         else {
-            this.team.setPrefix(this.text);
-            this.team.setSuffix("");
+            team.setPrefix(text);
+            team.setSuffix("");
         }
-        final Score score = objective.getScore(this.key);
+
+        Score score = objective.getScore(key);
         score.setScore(position);
+
         return this;
     }
-    
+
     public void remove() {
-        this.board.getKeys().remove(this.key);
-        this.board.getScoreboard().resetScores(this.key);
+        board.getKeys().remove(key);
+        board.getScoreboard().resetScores(key);
     }
-    
-    public Board getBoard() {
-        return this.board;
-    }
-    
-    public String getText() {
-        return this.text;
-    }
-    
-    public BoardEntry setText(final String text) {
-        this.text = text;
-        return this;
-    }
-    
-    public String getOriginalText() {
-        return this.originalText;
-    }
-    
-    public String getKey() {
-        return this.key;
-    }
-    
-    public Team getTeam() {
-        return this.team;
-    }
+
 }

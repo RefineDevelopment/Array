@@ -32,7 +32,7 @@ public class KitManagementMenu extends Menu {
 
 	@Override
 	public String getTitle(Player player) {
-		return "&eManaging &7(" + kit.getName() + ")";
+		return "&7Editing &7[" + kit.getName() + "]";
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class KitManagementMenu extends Menu {
 							"",
 							"&cClick to delete this kit.",
 							"&cYou will &lNOT &cbe able to",
-							"&crecover this kitLoadout."
+							"&crecover this kit setup."
 					))
 					.build();
 		}
@@ -169,8 +169,7 @@ public class KitManagementMenu extends Menu {
 			profile.getKitEditor().setSelectedKitLoadout(kitLoadout);
 
 			player.closeInventory();
-			player.sendMessage(CC.YELLOW + "Renaming " + CC.GOLD + kitLoadout.getCustomName() + CC.YELLOW + ", " +
-			                    CC.GREEN + "Enter the new name now.");
+			player.sendMessage(CC.GREEN + "Enter the new name now, Color Codes can be used.");
 		}
 
 	}
@@ -225,7 +224,7 @@ public class KitManagementMenu extends Menu {
 		@Override
 		public ItemStack getButtonItem(Player player) {
 			return new ItemBuilder(Material.BOOK)
-					.name("&6&l" + kitLoadout.getCustomName())
+					.name("&a&l" + kitLoadout.getCustomName())
 					.build();
 		}
 

@@ -4,7 +4,7 @@ import org.bukkit.entity.*;
 import me.array.ArrayPractice.arena.*;
 import com.qrakn.honcho.command.*;
 
-@CommandMeta(label = { "arena tp" }, permission = "practice.admin.arena")
+@CommandMeta(label = { "arena tp" }, permission = "practice.staff")
 public class ArenaTpCommand
 {
     public void execute(final Player player, @CPL("Arena") final Arena arena) {

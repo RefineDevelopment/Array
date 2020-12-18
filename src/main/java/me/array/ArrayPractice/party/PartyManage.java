@@ -1,14 +1,13 @@
 package me.array.ArrayPractice.party;
 
+import me.array.ArrayPractice.util.CC;
 import java.beans.ConstructorProperties;
 
 public enum PartyManage
 {
-    LEADER("Make leader"), 
-    KICK("Kick player"), 
-    INCREMENTLIMIT("Increment limit by 1"), 
-    PUBLIC("Make Party as Public"),
-    DECREASELIMIT("Decrease limit by 1");
+    INCREASELIMIT(CC.GREEN + "Increase Limit"),
+    PUBLIC("Open or Close Party"),
+    DECREASELIMIT(CC.RED + "Decrease Limit");
     
     private final String name;
     

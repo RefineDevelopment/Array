@@ -30,7 +30,7 @@ public class PlayerMovementListener implements Listener {
                 return;
             }
 
-            if (match.getKit().getGameRules().isSumo() || match.getKit().getGameRules().isSpleef()) {
+            if (match.getKit().getGameRules().isSumo() || match.getKit().getGameRules().isSpleef() || match.getKit().getGameRules().isWaterkill() || match.isSoloMatch()) {
 
                 if (BlockUtil.isOnLiquid(to, 0) || BlockUtil.isOnLiquid(to, 1)) {
                     match.handleDeath(player, opponentPlayer, false);

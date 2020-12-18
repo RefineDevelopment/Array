@@ -5,7 +5,7 @@ import java.beans.ConstructorProperties;
 import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.match.Match;
-import me.array.ArrayPractice.match.impl.HCFMatch;
+import me.array.ArrayPractice.match.hcf.HCFMatch;
 import me.array.ArrayPractice.match.impl.KoTHMatch;
 import me.array.ArrayPractice.match.team.Team;
 import me.array.ArrayPractice.match.team.TeamPlayer;
@@ -37,20 +37,20 @@ public class PartyEventSelectEventMenu extends Menu
     
     @Override
     public Map<Integer, Button> getButtons(final Player player) {
-        final Map<Integer, Button> buttons = new HashMap<Integer, Button>();
+        final Map<Integer, Button> buttons = new HashMap<>();
         buttons.put(2, new SelectEventButton(PartyEvent.SPLIT));
         buttons.put(4, new SelectEventButton(PartyEvent.FFA));
         buttons.put(6, new SelectEventButton(PartyEvent.HCF));
         return buttons;
     }
     
-    private class SelectEventButton extends Button
+    private static class SelectEventButton extends Button
     {
-        private PartyEvent partyEvent;
+        private final PartyEvent partyEvent;
         
         @Override
         public ItemStack getButtonItem(final Player player) {
-            return new ItemBuilder(this.partyEvent.getMaterial()).name("&d" + this.partyEvent.getName()).lore("&f" + this.partyEvent.getLore()).build();
+            return new ItemBuilder(this.partyEvent.getMaterial()).name("&b" + this.partyEvent.getName()).lore("&f" + this.partyEvent.getLore()).build();
         }
         
         @Override
@@ -90,7 +90,7 @@ public class PartyEventSelectEventMenu extends Menu
                 arena.setActive(true);
                 final Team teamA = new Team(new TeamPlayer(party.getPlayers().get(0)));
                 final Team teamB = new Team(new TeamPlayer(party.getPlayers().get(1)));
-                final List<Player> players = new ArrayList<Player>();
+                final List<Player> players = new ArrayList<>();
                 players.addAll(party.getPlayers());
                 Collections.shuffle(players);
                 Match match;

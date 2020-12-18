@@ -6,7 +6,7 @@ import me.array.ArrayPractice.util.external.*;
 import me.array.ArrayPractice.arena.*;
 import java.util.*;
 
-@CommandMeta(label = { "arenas" }, permission = "practice.admin.arena")
+@CommandMeta(label = { "arenas" }, permission = "practice.staff")
 public class ArenasCommand
 {
     public void execute(final CommandSender sender) {

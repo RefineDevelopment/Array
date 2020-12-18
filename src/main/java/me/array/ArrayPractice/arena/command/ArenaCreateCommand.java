@@ -7,7 +7,7 @@ import org.bukkit.*;
 import me.array.ArrayPractice.arena.impl.*;
 import java.util.*;
 
-@CommandMeta(label = { "arena create" }, permission = "practice.admin.arena")
+@CommandMeta(label = { "arena create" }, permission = "practice.staff")
 public class ArenaCreateCommand
 {
     public void execute(final Player player, @CPL("name") final String name, @CPL("type: STANDALONE/SHARED") final String type) {

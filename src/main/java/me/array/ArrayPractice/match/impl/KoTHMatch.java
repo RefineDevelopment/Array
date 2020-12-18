@@ -236,7 +236,8 @@ public class KoTHMatch extends Match {
 
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());
-        components.add(new ChatComponentBuilder("").parse("&6Match Details").create());
+        components.add(new ChatComponentBuilder("").parse("&bMatch Details").create());
+        components.add(new ChatComponentBuilder("").parse("").create());
         components.add(winnerInventories.create());
         components.add(loserInventories.create());
         components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());

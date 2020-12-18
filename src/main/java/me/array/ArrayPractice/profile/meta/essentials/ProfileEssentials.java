@@ -1,5 +1,3 @@
-
-
 package me.array.ArrayPractice.profile.meta.essentials;
 
 public class ProfileEssentials
