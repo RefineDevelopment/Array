@@ -84,6 +84,12 @@ public class ProfileListener implements Listener {
     public void onBreak(BlockBreakEvent event) {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
+        if (profile.getState() == ProfileState.IN_LOBBY) {
+            if (event.getPlayer().getGameMode() != GameMode.CREATIVE && !event.getPlayer().isOp()) {
+                event.setCancelled(true);
+            }
+        }
+
         if (profile.isInSomeSortOfFight()) {
             if (!profile.isInFight() && !profile.isInSpleef()) {
                 if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {

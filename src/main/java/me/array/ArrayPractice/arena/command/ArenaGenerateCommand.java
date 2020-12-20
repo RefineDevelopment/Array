@@ -9,6 +9,8 @@ import me.array.ArrayPractice.arena.impl.StandaloneArena;
 import me.array.ArrayPractice.util.external.CC;
 import com.qrakn.honcho.command.CommandMeta;
 import java.io.File;
+import java.util.Objects;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -18,13 +20,18 @@ public class ArenaGenerateCommand {
 
 	public void execute(CommandSender sender) {
 		File schematicsFolder = new File(Array.get().getDataFolder().getPath() + File.separator + "schematics");
-
 		if (!schematicsFolder.exists()) {
 			sender.sendMessage(CC.RED + "The schematics folder does not exist.");
-			return;
+		} else {
+		 sender.sendMessage("Found Schematics folder, searching for schematics.");
 		}
 
-		for (File file : schematicsFolder.listFiles()) {
+		for (File file : Objects.requireNonNull(schematicsFolder.listFiles()) ) {
+			if (!file.exists()) {
+				sender.sendMessage("No schematics found!");
+				return;
+			}
+
 			if (!file.isDirectory() && file.getName().contains(".schematic")) {
 				boolean duplicate = file.getName().endsWith("_duplicate.schematic");
 

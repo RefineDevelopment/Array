@@ -6,7 +6,7 @@ import me.array.ArrayPractice.util.external.CC;
 import me.array.ArrayPractice.util.external.Cooldown;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "ffa cooldown", permission = "practice.ffa.cooldown")
+@CommandMeta(label = "ffa cooldown", permission = "practice.staff")
 public class FFACooldownCommand {
 
 	public void execute(CommandSender sender) {

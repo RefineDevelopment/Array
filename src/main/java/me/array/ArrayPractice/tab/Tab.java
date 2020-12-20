@@ -12,7 +12,7 @@ import me.array.ArrayPractice.event.impl.sumo.Sumo;
 import me.array.ArrayPractice.event.impl.brackets.Brackets;
 import me.array.ArrayPractice.match.team.Team;
 import java.util.List;
-import me.array.ArrayPractice.tournament.Tournament;
+import me.array.ArrayPractice.tournament.TournamentManager;
 import me.array.ArrayPractice.match.team.TeamPlayer;
 import org.bukkit.Bukkit;
 import java.util.ArrayList;
@@ -50,9 +50,9 @@ public class Tab implements ITablist {
         tabSlots.add(23);
         tabSlots.add(41);
         tabSlots.add(43);
-        elements.add(new TablistElement("&c&lWARNING!",67));
+        elements.add(new TablistElement("&c&lNOTICE",67));
         elements.add(new TablistElement("&fPlease use",68));
-        elements.add(new TablistElement("&f1.7 for the",69));
+        elements.add(new TablistElement("&f1.8+ for the",69));
         elements.add(new TablistElement("&foptimal gameplay",70));
         elements.add(new TablistElement("&fexperience",71));
         if (profile.isInLobby() || profile.isInQueue()) {
@@ -85,8 +85,8 @@ public class Tab implements ITablist {
             }
             else {
                 int added = 4;
-                elements.add(new TablistElement(CC.AQUA + CC.BOLD + "Tournament",23));
-                for (final Tournament.TournamentMatch match : Tournament.CURRENT_TOURNAMENT.getTournamentMatches()) {
+                elements.add(new TablistElement(CC.AQUA + CC.BOLD + "TournamentManager",23));
+                for (final TournamentManager.TournamentMatch match : TournamentManager.CURRENT_TOURNAMENT.getTournamentMatches()) {
                     elements.add(new TablistElement(CC.AQUA + match.getTeamA().getLeader().getPlayer().getName(),added));
                     elements.add(new TablistElement(CC.AQUA + "vs",added + 20));
                     elements.add(new TablistElement(CC.AQUA + match.getTeamB().getLeader().getPlayer().getName(),added + 40));

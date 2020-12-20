@@ -7,7 +7,7 @@ import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = { "spleef host" }, permission = "practice.spleef.host")
+@CommandMeta(label = { "spleef host" }, permission = "practice.host")
 public class SpleefHostCommand {
 
 	public static void execute(Player player) {

@@ -1,4 +1,4 @@
-package me.array.ArrayPractice.match.hcf;
+package me.array.ArrayPractice.match.impl;
 
 import lombok.Getter;
 import me.array.ArrayPractice.Array;
@@ -19,9 +19,12 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import rip.verse.jupiter.knockback.KnockbackModule;
+import rip.verse.jupiter.knockback.KnockbackProfile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +34,8 @@ public class HCFMatch extends Match {
 
 	private final Team teamA;
 	private final Team teamB;
-	private int teamARoundWins = 0;
-	private int teamBRoundWins = 0;
+	private final int teamARoundWins = 0;
+	private final int teamBRoundWins = 0;
 
 	public HCFMatch(Team teamA, Team teamB, Arena arena) {
 		super(null, null, arena, QueueType.UNRANKED);
@@ -66,7 +69,6 @@ public class HCFMatch extends Match {
 	public void setupPlayer(Player player) {
 		TeamPlayer teamPlayer = getTeamPlayer(player);
 
-		// If the player disconnected, skip any operations for them
 		if (teamPlayer.isDisconnected()) {
 			return;
 		}
@@ -74,6 +76,12 @@ public class HCFMatch extends Match {
 		teamPlayer.setAlive(true);
 
 		PlayerUtil.reset(player);
+
+		if (getKit().getKnockbackProfile() != null) {
+			KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get("Practice");
+			((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
+		}
+
 
 		for (ItemStack itemStack : Profile.getByUuid(player.getUniqueId()).getKitData().get(Kit.getByName("NoDebuff")).getHCFKitItems()) {
 			player.getInventory().addItem(itemStack);
@@ -155,7 +163,6 @@ public class HCFMatch extends Match {
 
 							player.setFireTicks(0);
 							player.updateInventory();
-							//player.setKnockbackProfile(null);
 
 							Profile profile = Profile.getByUuid(player.getUniqueId());
 							profile.setState(ProfileState.IN_LOBBY);

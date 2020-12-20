@@ -20,18 +20,18 @@ import java.util.Map;
 @AllArgsConstructor
 public class EventSelectKitMenu extends Menu {
 
-	private String event;
+	private final String event;
 
 	@Override
 	public String getTitle(Player player) {
-		return "&6Select a kit to host " + event;
+		return "&7Choose a kit for " + event;
 	}
 
 	@Override
 	public Map<Integer, Button> getButtons(Player player) {
 		Map<Integer, Button> buttons = new HashMap<>();
 		for ( Kit kit : Kit.getKits()) {
-			if (kit.isEnabled() && !kit.getGameRules().isNoitems() && !kit.getGameRules().isLavakill() && !kit.getGameRules().isWaterkill() && !kit.getGameRules().isSpleef() && !kit.getGameRules().isBuild() && !kit.getGameRules().isSumo()) {
+			if (kit.isEnabled() && !kit.getGameRules().isNoitems() && !kit.getGameRules().isLavakill() && !kit.getGameRules().isWaterkill() && !kit.getGameRules().isSpleef() && !kit.getGameRules().isSumo()) {
 				buttons.put(buttons.size(), new SelectKitButton(event, kit));
 			}
 		}
@@ -39,15 +39,15 @@ public class EventSelectKitMenu extends Menu {
 	}
 
 	@AllArgsConstructor
-	private class SelectKitButton extends Button {
+	private static class SelectKitButton extends Button {
 
-		private String event;
-		private Kit kit;
+		private final String event;
+		private final Kit kit;
 
 		@Override
 		public ItemStack getButtonItem(Player player) {
 			return new ItemBuilder(kit.getDisplayIcon())
-					.name("&3" + kit.getName())
+					.name("&b&l" + kit.getName())
 					.build();
 		}
 
@@ -60,7 +60,7 @@ public class EventSelectKitMenu extends Menu {
 				}
 
 				if (!Array.get().getBracketsManager().getCooldown().hasExpired()) {
-					player.sendMessage(CC.RED + "There is an active cooldown for the Brackets Event.");
+					player.sendMessage(CC.RED + "There is an active cool-down for the Brackets Event.");
 					return;
 				}
 
@@ -77,12 +77,12 @@ public class EventSelectKitMenu extends Menu {
 				}
 			} else {
 				if (Array.get().getFfaManager().getActiveFFA() != null) {
-					player.sendMessage(CC.RED + "There is already an active Brackets Event.");
+					player.sendMessage(CC.RED + "There is already an active FFA Event.");
 					return;
 				}
 
 				if (!Array.get().getFfaManager().getCooldown().hasExpired()) {
-					player.sendMessage(CC.RED + "There is an active cooldown for the Brackets Event.");
+					player.sendMessage(CC.RED + "There is an active cool-down for the FFA Event.");
 					return;
 				}
 

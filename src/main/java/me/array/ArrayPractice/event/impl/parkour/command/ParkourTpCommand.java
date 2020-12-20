@@ -5,7 +5,7 @@ import me.array.ArrayPractice.Array;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "parkour tp", permission = "practice.parkour.tp")
+@CommandMeta(label = "parkour tp", permission = "practice.staff")
 public class ParkourTpCommand {
 
 	public void execute(Player player) {

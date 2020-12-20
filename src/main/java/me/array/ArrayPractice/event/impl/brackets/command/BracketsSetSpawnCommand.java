@@ -6,7 +6,7 @@ import me.array.ArrayPractice.Array;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "brackets setspawn", permission = "practice.brackets.setspawn")
+@CommandMeta(label = "brackets setspawn", permission = "practice.staff")
 public class BracketsSetSpawnCommand {
 
 	public void execute(Player player, @CPL("one/two/spec") String position) {

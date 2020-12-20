@@ -38,9 +38,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class MatchListener implements Listener {
 
-    @Getter
-    private WaterCheckTask waterCheckTask;
-
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockPlaceEvent(BlockPlaceEvent event) {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
@@ -317,29 +314,6 @@ public class MatchListener implements Listener {
             }
         }
     }
-    @Getter
-    @RequiredArgsConstructor
-    public static class WaterCheckTask extends BukkitRunnable {
-        @Override
-        public void run() {
-            Player player = (Player) Bukkit.getOnlinePlayers();
-            Profile profile = Profile.getByUuid(player.getUniqueId());
-            Match match = profile.getMatch();
-
-            Bukkit.getOnlinePlayers().forEach(Player -> {
-
-                if (profile != null && profile.getMatch().getState() != MatchState.FIGHTING) {
-                    return;
-                }
-
-                Block legs = player.getLocation().getBlock();
-                Block head = legs.getRelative(BlockFace.UP);
-                if (legs.getType() == Material.WATER || legs.getType() == Material.STATIONARY_WATER || head.getType() == Material.WATER || head.getType() == Material.STATIONARY_WATER) {
-                    match.onEnd();
-                }
-            });
-        }
-    }
     @EventHandler(ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
@@ -495,7 +469,7 @@ public class MatchListener implements Listener {
             if (event.getItem().hasItemMeta() &&
                     event.getItem().getItemMeta().getDisplayName().contains("Golden Head")) {
                 Player player = event.getPlayer();
-                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 200, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 200, 2));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 2400, 0));
                 player.setFoodLevel(Math.min(player.getFoodLevel() + 6, 20));
             }
@@ -516,7 +490,8 @@ public class MatchListener implements Listener {
                 }
             }
 
-            if (profile.isInFight() && profile.getMatch().isFighting() && profile.getMatch().getKit().getGameRules().isAntifoodloss()) {
+            assert profile.getMatch() != null;
+            if (profile.getMatch().getKit().getGameRules().isAntifoodloss()) {
                 if (event.getFoodLevel() >= 20) {
                     event.setFoodLevel(20);
                     player.setSaturation(20);

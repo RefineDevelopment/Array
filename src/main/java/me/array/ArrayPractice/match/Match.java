@@ -3,7 +3,6 @@ package me.array.ArrayPractice.match;
 import me.array.ArrayPractice.Array;
 import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.kit.Kit;
-import org.bukkit.entity.Player.*;
 import me.array.ArrayPractice.match.task.MatchPearlCooldownTask;
 import me.array.ArrayPractice.match.task.MatchResetTask;
 import me.array.ArrayPractice.match.task.MatchSnapshotCleanupTask;
@@ -18,9 +17,7 @@ import me.array.ArrayPractice.queue.QueueType;
 import me.array.ArrayPractice.util.external.ChatComponentBuilder;
 import me.array.ArrayPractice.util.external.CC;
 import me.array.ArrayPractice.util.external.TimeUtil;
-
 import java.util.*;
-
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -50,11 +47,11 @@ public abstract class Match {
 	private final Arena arena;
 	private final QueueType queueType;
 	@Setter private MatchState state = MatchState.STARTING;
-	private List<MatchSnapshot> snapshots = new ArrayList<>();
-	private List<UUID> spectators = new ArrayList<>();
-	private List<Entity> entities = new ArrayList<>();
-	private List<Location> placedBlocks = new ArrayList<>();
-	private List<BlockState> changedBlocks = new ArrayList<>();
+	private final List<MatchSnapshot> snapshots = new ArrayList<>();
+	private final List<UUID> spectators = new ArrayList<>();
+	private final List<Entity> entities = new ArrayList<>();
+	private final List<Location> placedBlocks = new ArrayList<>();
+	private final List<BlockState> changedBlocks = new ArrayList<>();
 	@Setter private long startTimestamp;
 	public Map<UUID, EnderPearl> pearlMap = new HashMap<>();
 
@@ -89,7 +86,10 @@ public abstract class Match {
 				profile.handleVisibility(player, otherPlayer);
 			}
 			setupPlayer(player);
-		}
+		if (!profile.getMatch().getKit().getGameRules().isSumo() || !profile.getMatch().getKit().getGameRules().isParkour()) {
+			PlayerUtil.allowMovement(player);
+		    }
+	    }
 
 		onStart();
 
@@ -144,7 +144,7 @@ public abstract class Match {
 	public void removePearl(Player player) {
 		final EnderPearl pearl;
 		if (player != null) {
-			if ((pearl = (EnderPearl) this.pearlMap.remove(player.getUniqueId())) != null) {
+			if ((pearl = this.pearlMap.remove(player.getUniqueId())) != null) {
 				pearl.remove();
 			}
 		}
@@ -182,20 +182,15 @@ public abstract class Match {
 
 		for (Player player : playersAndSpectators) {
 			if (teamPlayer.isDisconnected()) {
-				player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() +
-				                   CC.YELLOW + " has disconnected.");
+				player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.YELLOW + " has disconnected.");
 				continue;
 			}
 			if ((!isHCFMatch() && !isKoTHMatch()) && getKit().getGameRules().isParkour()) {
-				player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() +
-						CC.YELLOW + " has won.");
+				player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.YELLOW + " has won.");
 			} else if (killerPlayer == null) {
-				player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() +
-				                   CC.YELLOW + " has died.");
+				player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() +	CC.YELLOW + " has died.");
 			} else {
-				player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() +
-				                   CC.YELLOW + " was killed by " + getRelationColor(player, killerPlayer) +
-				                   killerPlayer.getName() + CC.YELLOW + ".");
+				player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.YELLOW + " was killed by " + getRelationColor(player, killerPlayer) + killerPlayer.getName() + CC.YELLOW + ".");
 			}
 		}
 
@@ -214,7 +209,7 @@ public abstract class Match {
 							Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer);
 						}
 					}
-				}.runTaskLaterAsynchronously(Array.get(), 5000L);
+				}.runTaskLaterAsynchronously(Array.get(), 40L);
 			}
 		} else {
 			if (canEnd()) {

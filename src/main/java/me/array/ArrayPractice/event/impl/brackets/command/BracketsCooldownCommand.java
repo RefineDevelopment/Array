@@ -6,7 +6,7 @@ import me.array.ArrayPractice.util.external.CC;
 import me.array.ArrayPractice.util.external.Cooldown;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "brackets cooldown", permission = "practice.brackets.cooldown")
+@CommandMeta(label = "brackets cooldown", permission = "practice.staff")
 public class BracketsCooldownCommand {
 
 	public void execute(CommandSender sender) {

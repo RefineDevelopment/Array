@@ -5,7 +5,7 @@ import java.beans.ConstructorProperties;
 import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.match.Match;
-import me.array.ArrayPractice.match.hcf.HCFMatch;
+import me.array.ArrayPractice.match.impl.HCFMatch;
 import me.array.ArrayPractice.match.impl.KoTHMatch;
 import me.array.ArrayPractice.match.team.Team;
 import me.array.ArrayPractice.match.team.TeamPlayer;

@@ -5,7 +5,7 @@ import me.array.ArrayPractice.Array;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "ffa cancel", permission = "practice.ffa.cancel")
+@CommandMeta(label = "ffa cancel", permission = "practice.staff")
 public class FFACancelCommand {
 
 	public void execute(CommandSender sender) {

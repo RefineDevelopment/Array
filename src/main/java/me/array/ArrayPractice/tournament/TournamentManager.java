@@ -25,9 +25,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public class Tournament {
+public class TournamentManager
+{
     public static BukkitRunnable RUNNABLE = null;
-    public static Tournament CURRENT_TOURNAMENT = null;
+    public static TournamentManager CURRENT_TOURNAMENT = null;
 
     @Getter private final List<Party> participants = new ArrayList<Party>() {
         @Override
@@ -138,7 +139,7 @@ public class Tournament {
         if(participatingCount == 0){
             participatingCount = participants.size();
         }
-        Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "[Tournament] " + ChatColor.GOLD + "Round " + (round++ + 1) + ChatColor.WHITE + " has started!.");
+        Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "[Tournament] " + ChatColor.YELLOW + "Round " + (round++ + 1) + ChatColor.WHITE + " has started!.");
 
         Iterator<Party> iterator = participants.iterator();
         while (iterator.hasNext()){
@@ -217,7 +218,7 @@ public class Tournament {
                 if (tournamentMatches.isEmpty()) {
                     if (participants.size() <= 1) {
                         Bukkit.broadcastMessage(CC.BLUE + CC.BOLD + "");
-                        Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "[Tournament] " + CC.RESET + CC.translate(builder.toString()) + ChatColor.GOLD + "won the tournament");
+                        Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "[Tournament] " + CC.RESET + CC.translate(builder.toString()) + ChatColor.YELLOW + "won the tournament");
                         Bukkit.broadcastMessage(CC.BLUE + CC.BOLD + "");
                         CURRENT_TOURNAMENT = null;
                     } else {

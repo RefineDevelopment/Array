@@ -5,7 +5,7 @@ import me.array.ArrayPractice.Array;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "parkour cancel", permission = "practice.parkour.cancel")
+@CommandMeta(label = "parkour cancel", permission = "practice.staff")
 public class ParkourCancelCommand {
 
 	public void execute(CommandSender sender) {

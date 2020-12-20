@@ -5,7 +5,7 @@ import me.array.ArrayPractice.Array;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "spleef tp", permission = "practice.spleef.tp")
+@CommandMeta(label = "spleef tp", permission = "practice.staff")
 public class SpleefTpCommand {
 
 	public void execute(Player player) {

@@ -22,7 +22,7 @@ public class PartyListener implements Listener
         if (party != null) {
             if (chatMessage.startsWith("@")) {
                 event.setCancelled(true);
-                String message = CC.translate("&7» " + ChatColor.WHITE + player.getName() + ChatColor.GRAY + ": " + ChatColor.LIGHT_PURPLE + chatMessage.replace("@", ""));
+                String message = CC.translate("&7» " + ChatColor.AQUA + player.getName() + ChatColor.GRAY + ": " + ChatColor.LIGHT_PURPLE + chatMessage.replace("@", ""));
                 party.broadcast(message);
             }
         }

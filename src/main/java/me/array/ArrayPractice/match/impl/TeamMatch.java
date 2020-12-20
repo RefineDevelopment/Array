@@ -30,8 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class
-TeamMatch extends Match {
+public class TeamMatch extends Match {
 
     private final Team teamA;
     private final Team teamB;
@@ -74,7 +73,6 @@ TeamMatch extends Match {
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
-        // If the player disconnected, skip any operations for them
         if (teamPlayer.isDisconnected()) {
             return;
         }
@@ -95,7 +93,7 @@ TeamMatch extends Match {
             }
         }
 
-		if (getKit().getKnockbackProfile() != null) {
+        if (getKit().getKnockbackProfile() != null) {
             KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
             ((CraftPlayer)player).getHandle().setKnockback(knockbackProfile);
         }
@@ -185,7 +183,7 @@ TeamMatch extends Match {
 
                             Array.get().getEssentials().teleportToSpawn(player);
                         }
-                    }runTaskLaterAsynchronously(Array.get(), 500L);
+                    }
                 }
             }
         }.runTaskLater(Array.get(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 40L);

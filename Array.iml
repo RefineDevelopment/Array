@@ -17,6 +17,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.code.findbugs:jsr305:1.3.9" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.boydti:fawe-api:latest" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.18.8" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.0" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: rip.verse.jupiter:Jupiter:1.0-SNAPSHOT">
         <CLASSES>
@@ -35,7 +36,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.0" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: Lunar-Client:Lunar-Client:1.8.8-R0.1-SNAPSHOT">
         <CLASSES>
@@ -73,6 +73,5 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="Maven: org.mongodb:mongo-java-driver:3.11.0-beta2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0" level="project" />
   </component>
 </module>

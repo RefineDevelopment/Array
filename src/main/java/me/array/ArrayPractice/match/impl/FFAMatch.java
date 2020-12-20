@@ -83,7 +83,7 @@ public class FFAMatch extends Match {
 			}
 		}
 		if (getKit().getKnockbackProfile() != null) {
-			KnockbackProfile knockbackProfile = (KnockbackProfile) KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
+			KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
 			((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
 		}
 
@@ -194,7 +194,7 @@ public class FFAMatch extends Match {
 
 		List<BaseComponent[]> components = new ArrayList<>();
 		components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());
-		components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &f⎜ &7&o(Click name to view)").create());
+		components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7⎜ &7&o(Click name to view)").create());
 		components.add(new ChatComponentBuilder("").parse("").create());
 		components.add(winnerInventories.create());
 		components.add(loserInventories.create());

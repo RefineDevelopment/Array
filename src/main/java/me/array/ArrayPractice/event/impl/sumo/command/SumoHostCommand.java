@@ -7,7 +7,7 @@ import me.array.ArrayPractice.util.external.CC;
 import com.qrakn.honcho.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = { "sumo host" }, permission = "practice.sumo.host")
+@CommandMeta(label = { "sumo host" }, permission = "practice.host")
 public class SumoHostCommand {
 
 	public static void execute(Player player) {

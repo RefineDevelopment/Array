@@ -5,7 +5,7 @@ import me.array.ArrayPractice.Array;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "ffa setspawn", permission = "practice.ffa.setspawn")
+@CommandMeta(label = "ffa setspawn", permission = "practice.staff")
 public class FFASetSpawnCommand {
 
 	public void execute(Player player) {

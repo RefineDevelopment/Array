@@ -23,7 +23,7 @@ public class Queue
     
     public Queue(final Kit kit, final QueueType type) {
         this.uuid = UUID.randomUUID();
-        this.players = new LinkedList<QueueProfile>();
+        this.players = new LinkedList<>();
         this.kit = kit;
         this.type = type;
         Queue.queues.add(this);
@@ -112,6 +112,6 @@ public class Queue
     }
     
     static {
-        Queue.queues = new ArrayList<Queue>();
+        Queue.queues = new ArrayList<>();
     }
 }

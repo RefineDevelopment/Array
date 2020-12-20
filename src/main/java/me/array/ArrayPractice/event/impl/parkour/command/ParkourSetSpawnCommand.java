@@ -5,7 +5,7 @@ import me.array.ArrayPractice.Array;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "parkour setspawn", permission = "practice.parkour.setspawn")
+@CommandMeta(label = "parkour setspawn", permission = "practice.staff")
 public class ParkourSetSpawnCommand {
 
 	public void execute(Player player) {

@@ -46,12 +46,11 @@ public class MatchStartTask extends BukkitRunnable {
 					match.setState(MatchState.FIGHTING);
 					match.setStartTimestamp(System.currentTimeMillis());
 					match.broadcastMessage(CC.GREEN + "The round has started!");
-					match.broadcastSound(Sound.LEVEL_UP);
+					match.broadcastSound(Sound.NOTE_BASS);
 					cancel();
 					return;
 				}
-
-				match.broadcastMessage(CC.AQUA + (seconds - 2) + CC.WHITE + "...");
+				match.broadcastMessage(CC.AQUA + (seconds - 2) + "...");
 				match.broadcastSound(Sound.NOTE_PLING);
 			} else {
 				if (seconds == 0) {

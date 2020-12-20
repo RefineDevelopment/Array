@@ -13,6 +13,7 @@ import me.array.ArrayPractice.kit.KitLoadout;
 import me.array.ArrayPractice.match.Match;
 import me.array.ArrayPractice.party.Party;
 import me.array.ArrayPractice.queue.Queue;
+import me.array.ArrayPractice.tournament.TournamentManager;
 import me.array.ArrayPractice.util.InventoryUtil;
 import me.array.ArrayPractice.util.PlayerUtil;
 import me.array.ArrayPractice.util.external.CC;
@@ -40,7 +41,6 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 import me.array.ArrayPractice.profile.hotbar.HotbarItem;
 import me.array.ArrayPractice.profile.hotbar.Hotbar;
-import me.array.ArrayPractice.tournament.Tournament;
 import org.bukkit.Bukkit;
 import java.util.HashMap;
 import org.bukkit.entity.Player;
@@ -131,24 +131,19 @@ public class Profile {
     }
 
     public void calculateGlobalWins() {
-        int globalWins=0;
-        int kitCounter=0;
+        int globalWins = 0;
         for ( final Kit kit : this.kitData.keySet() ) {
-            globalWins+=this.kitData.get(kit).getWon();
-                ++kitCounter;
-
+            int wins = this.kitData.get(kit).getWon();
+            this.globalWins = globalWins + wins;
         }
-        this.globalWins = globalWins + kitCounter;
     }
 
     public void calculateGlobalLosses() {
         int globalLosses=0;
-        int kitCounter=0;
         for ( final Kit kit : this.kitData.keySet() ) {
-            globalLosses+=this.kitData.get(kit).getLost();
-                ++kitCounter;
+            int lost = this.kitData.get(kit).getLost();
+            this.globalLosses = globalLosses + lost;
         }
-        this.globalLosses = globalLosses + kitCounter;
     }
 
     public boolean canSendDuelRequest(final Player player) {
@@ -200,7 +195,7 @@ public class Profile {
     }
 
     public boolean isInTournament(final Player player) {
-        return Tournament.CURRENT_TOURNAMENT != null && Tournament.CURRENT_TOURNAMENT.isParticipating(player);
+        return TournamentManager.CURRENT_TOURNAMENT != null && TournamentManager.CURRENT_TOURNAMENT.isParticipating(player);
     }
 
     public boolean isInSumo() {
@@ -561,8 +556,9 @@ public class Profile {
         new BukkitRunnable() {
             public void run() {
                 Profile.loadGlobalLeaderboards();
+                Bukkit.broadcastMessage(CC.translate("&c&lWarning &7Updating Leaderboards, this might cause some lag!"));
             }
-        }.runTaskTimerAsynchronously(Array.get(), 20L, 600L);
+        }.runTaskTimerAsynchronously(Array.get(), 30L * 60L * 5L, 30L * 60L * 5L);
         new BukkitRunnable() {
             public void run() {
                 for ( final Profile profile : Profile.getProfiles().values() ) {

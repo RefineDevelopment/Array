@@ -20,35 +20,39 @@ public class PlayerMovementListener implements Listener {
         Player player = e.getPlayer();
         Location to = e.getTo();
         Location from = e.getFrom();
-        Profile playerData =Profile.getByUuid(player.getUniqueId());
+        Profile profile = Profile.getByUuid(player.getUniqueId());
 
-        if (playerData.getState() == ProfileState.IN_FIGHT) {
-            Match match = playerData.getMatch();
-            Player opponentPlayer = playerData.getMatch().getOpponentPlayer(player);
+        if (profile.getState() == ProfileState.IN_FIGHT) {
+            Match match = profile.getMatch();
+            Player opponentPlayer = profile.getMatch().getOpponentPlayer(player);
 
             if (match == null) {
                 return;
             }
+            if (match.getKit().getGameRules().isBuild()) {
+                return;
+            }
 
-            if (match.getKit().getGameRules().isSumo() || match.getKit().getGameRules().isSpleef() || match.getKit().getGameRules().isWaterkill() || match.isSoloMatch()) {
+            if (!match.isTeamMatch() && !match.isHCFMatch() && !match.isKoTHMatch() && !match.getKit().getGameRules().isBuild()) {
+                if (match.getKit().getGameRules().isSumo() || match.getKit().getGameRules().isSpleef()) {
+                    if (BlockUtil.isOnLiquid(to, 0) || BlockUtil.isOnLiquid(to, 1)) {
+                        match.handleDeath(player, opponentPlayer, false);
+                    }
 
-                if (BlockUtil.isOnLiquid(to, 0) || BlockUtil.isOnLiquid(to, 1)) {
-                    match.handleDeath(player, opponentPlayer, false);
-                }
 
-
-                if (to.getX() != from.getX() || to.getZ() != from.getZ()) {
-                    if (match.getState() == MatchState.STARTING) {
-                        player.teleport(from);
-                        ((CraftPlayer) player).getHandle().playerConnection.checkMovement = false;
+                    if (to.getX() != from.getX() || to.getZ() != from.getZ()) {
+                        if (match.getState() == MatchState.STARTING) {
+                            player.teleport(from);
+                            ((CraftPlayer) player).getHandle().playerConnection.checkMovement=false;
+                        }
                     }
                 }
             }
         }
-        if (playerData.isInEvent() && playerData.isInSumo()) {
-          if (playerData.getSumo().getState() == SumoState.ROUND_FIGHTING)
+        if (profile.isInEvent() && profile.isInSumo()) {
+          if (profile.getSumo().getState() == SumoState.ROUND_FIGHTING)
             if (BlockUtil.isOnLiquid(to, 0) || BlockUtil.isOnLiquid(to, 1)) {
-                playerData.getSumo().handleDeath(player);
+                profile.getSumo().handleDeath(player);
             }
         }
     }

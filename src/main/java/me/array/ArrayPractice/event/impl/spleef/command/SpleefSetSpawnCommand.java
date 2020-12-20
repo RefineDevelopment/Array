@@ -5,7 +5,7 @@ import me.array.ArrayPractice.Array;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "spleef setspawn", permission = "practice.spleef.setspawn")
+@CommandMeta(label = "spleef setspawn", permission = "practice.staff")
 public class SpleefSetSpawnCommand {
 
 	public void execute(Player player) {

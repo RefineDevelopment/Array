@@ -4,7 +4,7 @@ import com.qrakn.honcho.command.CommandMeta;
 import me.array.ArrayPractice.event.menu.EventSelectKitMenu;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = { "ffa host" }, permission = "practice.ffa.host")
+@CommandMeta(label = { "ffa host" }, permission = "practice.host")
 public class FFAHostCommand {
 
 	public static void execute(Player player) {

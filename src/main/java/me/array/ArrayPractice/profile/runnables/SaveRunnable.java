@@ -1,6 +1,5 @@
-package me.array.ArrayPractice.profile.stats.runnables;
+package me.array.ArrayPractice.profile.runnables;
 
-import com.sk89q.worldedit.bukkit.adapter.BukkitImplAdapter;
 import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.profile.Profile;

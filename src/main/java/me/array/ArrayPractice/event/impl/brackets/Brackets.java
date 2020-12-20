@@ -20,29 +20,39 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import rip.verse.jupiter.knockback.KnockbackModule;
+import rip.verse.jupiter.knockback.KnockbackProfile;
 
 import java.util.*;
 
 @Getter
 public class Brackets {
 
-	protected static String EVENT_PREFIX = CC.DARK_AQUA + CC.BOLD + "(Brackets) " + CC.RESET;
+	protected static String EVENT_PREFIX=CC.AQUA + CC.BOLD + "(Brackets) " + CC.RESET;
 
-	private String name;
-	@Setter private BracketsState state = BracketsState.WAITING;
-	@Getter @Setter static private Kit kit;
+	private final String name;
+	@Setter
+	private BracketsState state=BracketsState.WAITING;
+	@Getter
+	@Setter
+	static private Kit kit;
 	private BracketsTask eventTask;
-	private PlayerSnapshot host;
-	private LinkedHashMap<UUID, BracketsPlayer> eventPlayers = new LinkedHashMap<>();
-	@Getter private List<UUID> spectators = new ArrayList<>();
-	private int maxPlayers;
-	@Getter @Setter private int totalPlayers;
-	@Setter private Cooldown cooldown;
-	private List<Entity> entities = new ArrayList<>();
+	private final PlayerSnapshot host;
+	private final LinkedHashMap<UUID, BracketsPlayer> eventPlayers=new LinkedHashMap<>();
+	@Getter
+	private final List<UUID> spectators=new ArrayList<>();
+	private final int maxPlayers;
+	@Getter
+	@Setter
+	private int totalPlayers;
+	@Setter
+	private Cooldown cooldown;
+	private final List<Entity> entities=new ArrayList<>();
 	private BracketsPlayer roundPlayerA;
 	private BracketsPlayer roundPlayerB;
 	@Setter
@@ -50,12 +60,11 @@ public class Brackets {
 
 
 	public Brackets(Player player, Kit kit) {
-		this.name = player.getName();
-		this.host = new PlayerSnapshot(player.getUniqueId(), player.getName());
-		this.maxPlayers = 100;
-		this.kit = kit;
-	}
-
+		this.name=player.getName();
+		this.host=new PlayerSnapshot(player.getUniqueId(), player.getName());
+		this.maxPlayers=100;
+		Brackets.kit=kit;
+}
 	public List<String> getLore() {
 		List<String> toReturn = new ArrayList<>();
 
@@ -295,10 +304,13 @@ public class Brackets {
 		}
 	}
 
-	public void onJoin(Player player) {}
-
+	public void onJoin(Player player) {
+    KnockbackProfile profile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
+		((CraftPlayer)player).getHandle().setKnockback(profile);
+	}
 	public void onLeave(Player player) {
-		//player.setKnockbackProfile(null);
+		KnockbackProfile profile = KnockbackModule.INSTANCE.profiles.get("Practice");
+		((CraftPlayer)player).getHandle().setKnockback(profile);
 	}
 
 	public void onRound() {

@@ -1,7 +1,6 @@
 package me.array.ArrayPractice.event.menu;
 
 import lombok.AllArgsConstructor;
-import me.array.ArrayPractice.Array;
 import me.array.ArrayPractice.event.EventType;
 import me.array.ArrayPractice.util.external.CC;
 import me.array.ArrayPractice.util.external.ItemBuilder;
@@ -49,53 +48,52 @@ public class EventSelectEventMenu extends Menu {
 
 		@Override
 		public ItemStack getButtonItem(Player player) {
-			List<String> lore=new ArrayList<>();
-
+			List<String> lore = new ArrayList<>();
+			lore.add(CC.MENU_BAR);
 			switch (eventType.getTitle()) {
 				case "Brackets":
-					if (Array.get().getBracketsManager().getActiveBrackets() != null)
-						lore=Array.get().getBracketsManager().getActiveBrackets().getLore();
-					else lore=getDefaultLore("Brackets");
+					lore.add(CC.GRAY + "In this event, players 1v1 each other");
+					lore.add(CC.GRAY + "one by one, This event is a Mini-Tournament");
+					lore.add(CC.GRAY + "For other kits like Combo and BuildUHC etc.");
 					break;
 				case "Sumo":
-					if (Array.get().getSumoManager().getActiveSumo() != null)
-						lore=Array.get().getSumoManager().getActiveSumo().getLore();
-					else lore=getDefaultLore("Sumo");
+					lore.add(CC.GRAY + "This event is a Sumo Tournament");
+					lore.add(CC.GRAY + "One by one players fight in a sumo arena");
+					lore.add(CC.GRAY + "This is a fun tournament to host casually.");
 					break;
 				case "FFA":
-					if (Array.get().getFfaManager().getActiveFFA() != null)
-						lore=Array.get().getFfaManager().getActiveFFA().getLore();
-					else lore=getDefaultLore("FFA");
+					lore.add(CC.GRAY + "This event is a FFA or LMS Tournament");
+					lore.add(CC.GRAY + "Unleash all participants in a Free for All Match");
+					lore.add(CC.GRAY + "The last player remaining wins!");
 					break;
 				case "Parkour":
-					if (Array.get().getParkourManager().getActiveParkour() != null)
-						lore=Array.get().getParkourManager().getActiveParkour().getLore();
-					else lore=getDefaultLore("Parkour");
+					lore.add(CC.GRAY + "This event is a Parkour Race");
+					lore.add(CC.GRAY + "Compete other players in a parkour arena,");
+					lore.add(CC.GRAY + "The First player to reach the end wins!");
 					break;
 				case "Spleef":
-					if (Array.get().getSpleefManager().getActiveSpleef() != null)
-						lore=Array.get().getSpleefManager().getActiveSpleef().getLore();
-					else lore=getDefaultLore("Spleef");
+					lore.add(CC.GRAY + "This event is a Spleef FFA Tournament");
+					lore.add(CC.GRAY + "Compete other players in a spleef arena,");
+					lore.add(CC.GRAY + "The last player remaining wins!");
 					break;
 			}
+			    lore.add("");
+				lore.add("&7(Left-Click to host)");
+				lore.add("&7(Right-Click to join)");
+				lore.add(CC.MENU_BAR);
 
-			lore.add(CC.MENU_BAR);
-			lore.add("&7(Left-Click to join)");
-			lore.add("&7(Right-Click to host)");
-			lore.add(CC.MENU_BAR);
 
-
-			return new ItemBuilder(eventType.getMaterial())
-					.name("&b" + eventType.getTitle())
-					.lore(lore)
-					.build();
-		}
+				return new ItemBuilder(eventType.getMaterial())
+						.name("&b" + eventType.getTitle())
+						.lore(lore)
+						.build();
+			}
 
 		@Override
 		public void clicked(Player player, ClickType clickType) {
 			Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
 			player.closeInventory();
-			if (clickType.isLeftClick()) {
+			if (clickType.isRightClick()) {
 				switch (eventType.getTitle()) {
 					case "Brackets":
 						BracketsJoinCommand.execute(player);
@@ -112,56 +110,32 @@ public class EventSelectEventMenu extends Menu {
 					case "Spleef":
 						SpleefJoinCommand.execute(player);
 						break;
-					default:
-						switch (eventType.getTitle()) {
-							case "Brackets":
-								if (player.hasPermission("practice.brackets.host")) BracketsHostCommand.execute(player);
-								else player.sendMessage(ChatColor.RED + "No permission.");
-								break;
-							case "Sumo":
-								if (player.hasPermission("practice.sumo.host")) SumoHostCommand.execute(player);
-								else player.sendMessage(ChatColor.RED + "No permission.");
-								break;
-							case "FFA":
-								if (player.hasPermission("practice.ffa.host")) FFAHostCommand.execute(player);
-								else player.sendMessage(ChatColor.RED + "No permission.");
-								break;
-							case "Parkour":
-								if (player.hasPermission("practice.parkour.host")) ParkourHostCommand.execute(player);
-								else player.sendMessage(ChatColor.RED + "No permission.");
-								break;
-							case "Spleef":
-								if (player.hasPermission("practice.spleef.host")) SpleefHostCommand.execute(player);
-								else player.sendMessage(ChatColor.RED + "No permission.");
-								break;
-						}
+				}
+			} else if (clickType.isLeftClick()) {
+				switch (eventType.getTitle()) {
+					case "Brackets":
+						if (player.hasPermission("practice.host")) BracketsHostCommand.execute(player);
+						else player.sendMessage(ChatColor.RED + "No permission.");
+						break;
+					case "Sumo":
+						if (player.hasPermission("practice.host")) SumoHostCommand.execute(player);
+						else player.sendMessage(ChatColor.RED + "No permission.");
+						break;
+					case "FFA":
+						if (player.hasPermission("practice.host")) FFAHostCommand.execute(player);
+						else player.sendMessage(ChatColor.RED + "No permission.");
+						break;
+					case "Parkour":
+						if (player.hasPermission("practice.host")) ParkourHostCommand.execute(player);
+						else player.sendMessage(ChatColor.RED + "No permission.");
+						break;
+					case "Spleef":
+						if (player.hasPermission("practice.host")) SpleefHostCommand.execute(player);
+						else player.sendMessage(ChatColor.RED + "No permission.");
 						break;
 				}
 			}
 
-		}
-
-		private List<String> getDefaultLore(String name) {
-			List<String> toReturn=new ArrayList<>();
-			toReturn.add("&eState: &fNeeds to be hosted");
-			switch (name) {
-				case "FFA":
-					toReturn.add("&eRank to host: &fDonator");
-					break;
-				case "Brackets":
-					toReturn.add("&eRank to host: &fDonator+");
-					break;
-				case "Sumo":
-					toReturn.add("&eRank to host: &fElite");
-					break;
-				case "Parkour":
-					toReturn.add("&eRank to host: &fMaster");
-					break;
-				case "Spleef":
-					toReturn.add("&eRank to host: &fGod");
-					break;
-			}
-			return toReturn;
 		}
 	}
 }

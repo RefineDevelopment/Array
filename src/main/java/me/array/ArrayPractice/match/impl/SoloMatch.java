@@ -40,8 +40,8 @@ public class SoloMatch extends Match {
 
     private final TeamPlayer playerA;
     private final TeamPlayer playerB;
-    private int playerARoundWins = 0;
-    private int playerBRoundWins = 0;
+    private final int playerARoundWins = 0;
+    private final int playerBRoundWins = 0;
 
     public SoloMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
         super(queue, kit, arena, queueType);
@@ -78,7 +78,6 @@ public class SoloMatch extends Match {
     @Override
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
-        Profile player2 = Profile.getByUuid(player.getUniqueId());
 
         if (teamPlayer.isDisconnected()) {
             return;
@@ -99,6 +98,7 @@ public class SoloMatch extends Match {
                 player.getInventory().addItem(itemStack);
             }
         }
+
         if (getKit().getKnockbackProfile() != null) {
             KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
             ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
@@ -188,7 +188,7 @@ public class SoloMatch extends Match {
         inventoriesBuilder.append("Winner: ")
                 .color(ChatColor.GREEN)
                 .append(winningPlayer.getName())
-                .color(ChatColor.YELLOW);
+                .color(ChatColor.GRAY);
         inventoriesBuilder.setCurrentHoverEvent(getHoverEvent(winningTeamPlayer))
                 .setCurrentClickEvent(getClickEvent(winningTeamPlayer))
 
@@ -198,7 +198,7 @@ public class SoloMatch extends Match {
                 .append("Loser: ")
                 .color(ChatColor.RED)
                 .append(losingPlayer.getName())
-                .color(ChatColor.YELLOW);
+                .color(ChatColor.GRAY);
         inventoriesBuilder.setCurrentHoverEvent(getHoverEvent(losingTeamPlayer))
                 .setCurrentClickEvent(getClickEvent(losingTeamPlayer));
 

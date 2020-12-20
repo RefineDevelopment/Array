@@ -13,7 +13,7 @@ import me.array.ArrayPractice.event.impl.brackets.Brackets;
 import me.array.ArrayPractice.event.impl.lms.FFA;
 import me.array.ArrayPractice.event.impl.sumo.Sumo;
 import me.array.ArrayPractice.match.team.Team;
-import me.array.ArrayPractice.tournament.Tournament;
+import me.array.ArrayPractice.tournament.TournamentManager;
 import me.array.ArrayPractice.queue.QueueType;
 import me.array.ArrayPractice.match.team.TeamPlayer;
 import me.array.ArrayPractice.util.external.TimeUtil;
@@ -84,8 +84,8 @@ public class ScoreboardAdapter implements BoardAdapter {
                     lines.add("&fRange: &b" + profile.getQueueProfile().getMinRange() + " -> " + profile.getQueueProfile().getMaxRange());
                 }
             }
-            else if (Tournament.CURRENT_TOURNAMENT != null) {
-                final Tournament tournament = Tournament.CURRENT_TOURNAMENT;
+            else if (TournamentManager.CURRENT_TOURNAMENT != null) {
+                final TournamentManager tournament = TournamentManager.CURRENT_TOURNAMENT;
                 final String round = (tournament.getRound() > 0) ? Integer.toString(tournament.getRound()) : "&fStarting";
                 lines.add("");
                 lines.add("&b&lTournament: &r");

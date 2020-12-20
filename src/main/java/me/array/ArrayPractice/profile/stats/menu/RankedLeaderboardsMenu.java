@@ -43,10 +43,10 @@ public class RankedLeaderboardsMenu extends Menu
         @Override
         public ItemStack getButtonItem(final Player player) {
             final List<String> lore = new ArrayList<>();
-            int added = 1;
+            int pos = 1;
             for (final KitLeaderboards kitLeaderboards : this.kit.getRankedEloLeaderboards()) {
-                lore.add(" &f" + added + ". &b" + kitLeaderboards.getName() + ": &f" + kitLeaderboards.getElo());
-                ++added;
+                lore.add(" &b#" + pos + ". &7" + kitLeaderboards.getName() + ": &b" + kitLeaderboards.getElo() + " &7Elo");
+                ++pos;
             }
             return new ItemBuilder(this.kit.getDisplayIcon()).name("&b&l" + this.kit.getName()).lore(lore).build();
         }
@@ -62,12 +62,12 @@ public class RankedLeaderboardsMenu extends Menu
         @Override
         public ItemStack getButtonItem(final Player player) {
             final List<String> lore =new ArrayList<>();
-            int added = 1;
+            int pos = 1;
             for (final KitLeaderboards kitLeaderboards : Profile.getGlobalEloLeaderboards()) {
-                lore.add(" &f" + added + ". &b" + kitLeaderboards.getName() + ": &f" + kitLeaderboards.getElo());
-                ++added;
+                lore.add(" &b#" + pos + ". &7" + kitLeaderboards.getName() + ": &b" + kitLeaderboards.getElo() + " &7Elo");
+                ++pos;
             }
-            return new ItemBuilder(Material.QUARTZ).name("&b&lGlobal").lore(lore).build();
+            return new ItemBuilder(Material.TRIPWIRE_HOOK).name("&b&lGlobal").lore(lore).build();
         }
         
         public GlobalLeaderboardsButton() {

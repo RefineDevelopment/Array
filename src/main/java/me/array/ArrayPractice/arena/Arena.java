@@ -24,7 +24,7 @@ public class Arena {
     private List<String> kits;
 
     public Arena(final String name) {
-        this.kits=new ArrayList<String>();
+        this.kits=new ArrayList<>();
         this.name=name;
     }
 
@@ -105,7 +105,7 @@ public class Arena {
     }
     
     public static void init() {
-        final FileConfiguration configuration = (FileConfiguration)Array.get().getArenasConfig().getConfiguration();
+        final FileConfiguration configuration = Array.get().getArenasConfig().getConfiguration();
         if (configuration.contains("arenas")) {
             if (configuration.getConfigurationSection("arenas") == null) {
                 return;
@@ -132,26 +132,9 @@ public class Arena {
                 if (configuration.contains(path + ".spawn2")) {
                     arena.setSpawn2(LocationUtil.deserialize(configuration.getString(path + ".spawn2")));
                 }
-                if (configuration.contains(path + ".point1") && configuration.contains(path + ".point2")) {
-                    arena.setPoint1(LocationUtil.deserialize(configuration.getString(path + ".point1")));
-                    arena.setPoint2(LocationUtil.deserialize(configuration.getString(path + ".point2")));
-                    arena.setPoint(new KothPoint(arena.point1, arena.point2));
-                }
                 if (configuration.contains(path + ".kits")) {
                     for (final String kitName : configuration.getStringList(path + ".kits")) {
                         arena.getKits().add(kitName);
-                    }
-                }
-                if (arena instanceof StandaloneArena && configuration.contains(path + ".duplicates")) {
-                    for (final String duplicateId : configuration.getConfigurationSection(path + ".duplicates").getKeys(false)) {
-                        final Location spawn1 = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".spawn1"));
-                        final Location spawn2 = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".spawn2"));
-                        final Arena duplicate = new Arena(arenaName);
-                        duplicate.setSpawn1(spawn1);
-                        duplicate.setSpawn2(spawn2);
-                        duplicate.setKits(arena.getKits());
-                        ((StandaloneArena)arena).getDuplicates().add(duplicate);
-                        getArenas().add(duplicate);
                     }
                 }
                 getArenas().add(arena);
@@ -190,7 +173,7 @@ public class Arena {
             if (arena.getType() == ArenaType.KOTH) {
                 _arenas.add(arena);
             }
-            if (!arena.isActive() && (arena.getType() == ArenaType.STANDALONE || arena.getType() == ArenaType.DUPLICATE)) {
+            if (!arena.isActive() && (arena.getType() == ArenaType.STANDALONE)) {
                 _arenas.add(arena);
             }
             else {

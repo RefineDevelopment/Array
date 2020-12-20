@@ -5,7 +5,7 @@ import me.array.ArrayPractice.Array;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "brackets cancel", permission = "practice.brackets.cancel")
+@CommandMeta(label = "brackets cancel", permission = "practice.staff")
 public class BracketsCancelCommand {
 
 	public void execute(CommandSender sender) {

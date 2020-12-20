@@ -192,7 +192,7 @@ public class Party extends Team
                 builder.append(CC.RESET).append(member.getName()).append(CC.GRAY).append(", ");
             }
         }
-        final String[] lines = { CC.CHAT_BAR, CC.BLUE + "Party Information", CC.BLUE + "Privacy: " + CC.GRAY + this.privacy.getReadable(), CC.BLUE + "Leader: " + CC.RESET + this.getLeader().getUsername(), CC.BLUE + "Members: " + CC.GRAY + "(" + (this.getTeamPlayers().size() - 1) + ") " + builder.substring(0, builder.length() - 2), CC.CHAT_BAR };
+        final String[] lines = { CC.CHAT_BAR, CC.AQUA + "Party Information", CC.AQUA + "Privacy: " + CC.GRAY + this.privacy.getReadable(), CC.AQUA + "Leader: " + CC.RESET + this.getLeader().getUsername(), CC.AQUA + "Members: " + CC.GRAY + "(" + (this.getTeamPlayers().size() - 1) + ") " + builder.substring(0, builder.length() - 2), CC.CHAT_BAR };
         player.sendMessage(lines);
     }
     

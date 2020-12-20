@@ -5,7 +5,7 @@ import me.array.ArrayPractice.util.external.CC;
 import com.qrakn.honcho.command.CommandMeta;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "sumo cancel", permission = "practice.sumo.cancel")
+@CommandMeta(label = "sumo cancel", permission = "practice.staff")
 public class SumoCancelCommand {
 
 	public void execute(CommandSender sender) {

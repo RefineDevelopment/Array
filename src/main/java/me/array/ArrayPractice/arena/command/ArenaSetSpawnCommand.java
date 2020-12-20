@@ -2,6 +2,8 @@ package me.array.ArrayPractice.arena.command;
 
 import me.array.ArrayPractice.Array;
 import me.array.ArrayPractice.util.external.CC;
+import me.array.ArrayPractice.util.external.LocationUtil;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import me.array.ArrayPractice.arena.*;
 import com.qrakn.honcho.command.*;
@@ -11,20 +13,26 @@ import me.array.ArrayPractice.arena.impl.*;
 import java.util.Set;
 
 @CommandMeta(label = { "arena setspawn" }, permission = "practice.staff")
-public class ArenaSetSpawnCommand
-{
+public class ArenaSetSpawnCommand {
     public void execute(final Player player, @CPL("arena") final Arena arena, @CPL("1/2") final Integer pos) {
-            final Location loc = new Location(player.getLocation().getWorld(), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), player.getLocation().getYaw(), player.getLocation().getPitch());
-        if (pos >= 2) {
+        final Location loc = new Location(player.getLocation().getWorld(), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), player.getLocation().getYaw(), player.getLocation().getPitch());
+        final String path = "arenas." + arena.getName();
+        final FileConfiguration configuration = Array.get().getArenasConfig().getConfiguration();
+        if (pos > 2) {
             player.sendMessage(CC.translate("&cPlease Set Spawn 1 and 2!"));
-        }
+        } else {
             if (pos.equals(1)) {
                 arena.setSpawn1(loc);
-            }
-            else if (pos.equals(2)) {
+                configuration.set(path + ".spawn1", LocationUtil.serialize(loc));
+            } else if (pos.equals(2)) {
                 arena.setSpawn2(loc);
+                configuration.set(path + ".spawn2", LocationUtil.serialize(loc));
             }
             player.sendMessage(ChatColor.GREEN + "Successfully set the position of " + arena.getName() + " (Position: " + pos + ")");
             arena.save();
+            for (final Arena arenas : Arena.getArenas()) {
+                arenas.save();
+            }
         }
-     }
+    }
+}

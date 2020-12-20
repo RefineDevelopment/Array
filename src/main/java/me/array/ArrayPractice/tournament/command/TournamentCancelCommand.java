@@ -1,24 +1,24 @@
 package me.array.ArrayPractice.tournament.command;
 
-import me.array.ArrayPractice.tournament.Tournament;
+import me.array.ArrayPractice.tournament.TournamentManager;
 import com.qrakn.honcho.command.CommandMeta;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "tournament cancel", permission = "tournament.cancel")
+@CommandMeta(label = "tournament cancel", permission = "practice.staff")
 public class TournamentCancelCommand {
 
 	public void execute(Player player) {
-		if(Tournament.CURRENT_TOURNAMENT == null){
-			player.sendMessage(ChatColor.RED + "There isn't an active Tournament right now");
+		if(TournamentManager.CURRENT_TOURNAMENT == null){
+			player.sendMessage(ChatColor.RED + "There isn't an active TournamentManager right now");
 			return;
 		}
-		if(Tournament.RUNNABLE != null){
-			Tournament.RUNNABLE.cancel();
+		if(TournamentManager.RUNNABLE != null){
+			TournamentManager.RUNNABLE.cancel();
 		}
-		Tournament.CURRENT_TOURNAMENT.cancel();
-		Tournament.CURRENT_TOURNAMENT = null;
-		player.sendMessage(ChatColor.RED + "The Tournament has been cancelled");
+		TournamentManager.CURRENT_TOURNAMENT.cancel();
+		TournamentManager.CURRENT_TOURNAMENT = null;
+		player.sendMessage(ChatColor.RED + "The TournamentManager has been cancelled");
 	}
 }
 

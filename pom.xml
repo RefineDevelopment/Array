@@ -7,7 +7,7 @@
     <groupId>me.practice.array</groupId>
     <artifactId>Array</artifactId>
     <version>1.0</version>
-
+ <!--Repositories-->
     <repositories>
         <repository>
             <id>vault-repo</id>
@@ -28,6 +28,8 @@
     </repositories>
 
     <dependencies>
+
+        <!--World Edit for Arena Generators-->
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldedit</artifactId>
@@ -40,6 +42,8 @@
             <version>latest</version>
             <scope>provided</scope>
         </dependency>
+
+        <!--Command Annotations-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -47,12 +51,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.0</version>
+        </dependency>
+
+        <!--Spigot (credits to Chris)-->
+        <dependency>
             <groupId>rip.verse.jupiter</groupId>
             <artifactId>Jupiter</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/server.jar</systemPath>
         </dependency>
+
+        <!--Packet Handler-->
         <dependency>
             <groupId>com.comphenix</groupId>
             <artifactId>ProtocolLib</artifactId>
@@ -60,11 +73,8 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/ProtocolLib.jar</systemPath>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>4.0</version>
-        </dependency>
+
+        <!--LunarAPI Support-->
         <dependency>
             <groupId>Lunar-Client</groupId>
             <artifactId>Lunar-Client</artifactId>
@@ -105,15 +115,9 @@
             <version>3.11.0-beta2</version>
         </dependency>
 
-        <!--Hologram Leaderboards-->
-        <dependency>
-            <groupId>com.gmail.filoghost.holographicdisplays</groupId>
-            <artifactId>holographicdisplays-api</artifactId>
-            <version>2.4.0</version>
-            <scope>provided</scope>
-        </dependency>
-
     </dependencies>
+
+    <!--Maven Compiler (Depricated)-->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
