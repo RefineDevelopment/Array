@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public class PracticeCommand {
         public void execute(final Player player) {
             player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() + "------------------------------------------------");
-            player.sendMessage(CC.translate("         &b&lMoonNight Network " + ChatColor.GRAY + "(Practice)"));
+            player.sendMessage(CC.translate("         &b&lResolve Network " + ChatColor.GRAY + "(Practice)"));
             player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() +"------------------------------------------------");
             player.sendMessage(CC.translate("&bPractice Commands:"));
             player.sendMessage(CC.translate("&7/duel <Name> &8- &7Send a player a duel request"));
@@ -20,11 +20,11 @@ public class PracticeCommand {
             player.sendMessage(CC.translate("&7To send a message to your party do &7'&d@&7' <message>:"));
             player.sendMessage(" ");
             player.sendMessage(CC.translate("&bServer Links:"));
-            player.sendMessage(CC.translate("&7Website &8- &bwww.moonnight.rip"));
-            player.sendMessage(CC.translate("&7Discord &8- &bdiscord.moonnight.rip"));
-            player.sendMessage(CC.translate("&7Store &8- &bstore.moonnight.rip"));
+            player.sendMessage(CC.translate("&7Website &8- &bwww.Resolve.rip"));
+            player.sendMessage(CC.translate("&7Discord &8- &bdiscord.Resolve.rip"));
+            player.sendMessage(CC.translate("&7Store &8- &bstore.Resolve.rip"));
             player.sendMessage("");
-            player.sendMessage(CC.translate("&7Welcome to the &b&lMoonNight Practice Beta!"));
+            player.sendMessage(CC.translate("&7Welcome to the &b&lResolve Practice Beta!"));
             player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() + "------------------------------------------------");
         }
     }

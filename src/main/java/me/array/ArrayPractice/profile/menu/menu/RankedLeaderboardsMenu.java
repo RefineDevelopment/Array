@@ -1,4 +1,4 @@
-package me.array.ArrayPractice.profile.stats.menu;
+package me.array.ArrayPractice.profile.menu.menu;
 
 import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.kit.KitLeaderboards;

@@ -6,7 +6,6 @@ import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.match.Match;
 import me.array.ArrayPractice.match.impl.HCFMatch;
-import me.array.ArrayPractice.match.impl.KoTHMatch;
 import me.array.ArrayPractice.match.team.Team;
 import me.array.ArrayPractice.match.team.TeamPlayer;
 import me.array.ArrayPractice.party.Party;
@@ -81,7 +80,8 @@ public class PartyEventSelectEventMenu extends Menu
                     arena = Arena.getRandom(Kit.getByName("NoDebuff"));
                 }
                 else {
-                    arena = Arena.getRandom(Kit.getByName("KoTH"));
+                    player.sendMessage(CC.RED + "There are no available arenas.");
+                    return;
                 }
                 if (arena == null) {
                     player.sendMessage(CC.RED + "There are no available arenas.");
@@ -90,16 +90,10 @@ public class PartyEventSelectEventMenu extends Menu
                 arena.setActive(true);
                 final Team teamA = new Team(new TeamPlayer(party.getPlayers().get(0)));
                 final Team teamB = new Team(new TeamPlayer(party.getPlayers().get(1)));
-                final List<Player> players = new ArrayList<>();
-                players.addAll(party.getPlayers());
+                final List<Player> players = new ArrayList<>(party.getPlayers());
                 Collections.shuffle(players);
                 Match match;
-                if (this.partyEvent.equals(PartyEvent.HCF)) {
-                    match = new HCFMatch(teamA, teamB, arena);
-                }
-                else {
-                    match = new KoTHMatch(teamA, teamB, arena);
-                }
+                match = new HCFMatch(teamA, teamB, arena);
                 for (final Player otherPlayer : players) {
                     if (!teamA.getLeader().getUuid().equals(otherPlayer.getUniqueId())) {
                         if (teamB.getLeader().getUuid().equals(otherPlayer.getUniqueId())) {

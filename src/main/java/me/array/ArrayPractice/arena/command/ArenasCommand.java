@@ -21,7 +21,7 @@ public class ArenasCommand
             return;
         }
         for (final Arena arena : Arena.getArenas()) {
-                player.sendMessage(CC.GRAY + " - " + (arena.isSetup() ? CC.GREEN : CC.RED) + arena.getName() + CC.GRAY + " (" + arena.getType().name() + ")" + (arena.isActive() ? " &7[&eIn-Match&7]" : " &7[&aFree&7]"));
+                player.sendMessage(CC.GRAY + " - " + (arena.isSetup() ? CC.GREEN : CC.RED) + arena.getName() + CC.GRAY + " (" + arena.getType().name() + ")" + CC.translate((arena.isActive() ? " &7[&eIn-Match&7]" : " &7[&aFree&7]")));
         }
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
     }

@@ -22,7 +22,7 @@ kits:
       lava-kill: false
       health-regeneration: true
       show-health: false
-      hit-delay: 20
+      hit-delay: 19
       infinite-speed: false
       infinite-strength: false
     edit-rules:

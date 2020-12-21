@@ -263,7 +263,7 @@ public class ProfileListener implements Listener {
         Player player = event.getPlayer();
         if(player.hasPermission("practice.staff")) {
             try {
-                LunarClientAPI.getInstance().sendTitle(player, false, CC.AQUA + "MoonNight " + CC.AQUA + "Practice", 1f, 6, 3, 3);
+                LunarClientAPI.getInstance().sendTitle(player, false, CC.AQUA + "Resolve " + CC.AQUA + "Practice", 1f, 6, 3, 3);
                 LunarClientAPI.getInstance().sendTitle(player, true, CC.GREEN + "LCAPI " + CC.AQUA + "Authenticated!", 1f, 6, 3, 3);
             } catch (IOException e) {
                 //ignore

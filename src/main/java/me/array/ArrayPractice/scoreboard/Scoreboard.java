@@ -26,11 +26,11 @@ import java.util.Set;
 
 import org.bukkit.entity.Player;
 
-public class ScoreboardAdapter implements BoardAdapter {
+public class Scoreboard implements BoardAdapter {
 
     @Override
     public String getTitle(Player player) {
-        return "&b&lMoonNight &7(Practice)";
+        return "&b&lResolve &7(Practice)";
     }
 
     @Override
@@ -118,18 +118,6 @@ public class ScoreboardAdapter implements BoardAdapter {
                         lines.add("&fTeam: &a" + team.getAliveCount() + "/" + team.getTeamPlayers().size());
                         lines.add("&fOpponents: &c" + opponentTeam.getAliveCount() + "/" + opponentTeam.getTeamPlayers().size());
                     }
-                    lines.add("");
-                }
-                else if (match.isKoTHMatch()) {
-                    final Team team = match.getTeam(player);
-                    final Team opponentTeam = match.getOpponentTeam(player);
-                    lines.add("&fYour Points: &a" + team.getKothPoints() + "/5");
-                    lines.add("&fEnemy Points: &c" + opponentTeam.getKothPoints() + "/5");
-                    lines.add("");
-                    lines.add("&fCapTime: &d" + match.getTimer() + "s");
-                    lines.add("&fCapper: &r" + ((match.getCapper() != null) ? match.getCapper().getName() : "No-one"));
-                    lines.add("");
-                    lines.add("&fDuration: &b" + match.getDuration());
                 }
                 else if (match.isFreeForAllMatch()) {
                     final Team team = match.getTeam(player);
@@ -397,7 +385,7 @@ public class ScoreboardAdapter implements BoardAdapter {
             }
         }
         lines.add("");
-        lines.add(CC.translate("&7&omoonnight.rip"));
+        lines.add(CC.translate("&7&oresolve.rip"));
         lines.add(CC.SB_BAR);
         return lines;
     }

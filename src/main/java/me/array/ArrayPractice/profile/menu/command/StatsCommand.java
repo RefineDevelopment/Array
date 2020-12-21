@@ -1,6 +1,6 @@
-package me.array.ArrayPractice.profile.stats.command;
+package me.array.ArrayPractice.profile.menu.command;
 
-import me.array.ArrayPractice.profile.stats.menu.StatsMenu;
+import me.array.ArrayPractice.profile.menu.menu.StatsMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import com.qrakn.honcho.command.CommandMeta;

@@ -22,7 +22,7 @@ import me.array.ArrayPractice.event.impl.lms.FFA;
 import me.array.ArrayPractice.event.impl.brackets.Brackets;
 import me.array.ArrayPractice.event.impl.sumo.Sumo;
 import org.bukkit.entity.Player;
-import me.array.ArrayPractice.profile.stats.menu.RankedLeaderboardsMenu;
+import me.array.ArrayPractice.profile.menu.menu.RankedLeaderboardsMenu;
 import me.array.ArrayPractice.queue.menu.QueueSelectKitMenu;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.Listener;

@@ -20,16 +20,16 @@ public class SharedArena extends Arena
     @Override
     public void save() {
         final String path = "arenas." + this.getName();
-        final FileConfiguration configuration = (FileConfiguration)Array.get().getArenasConfig().getConfiguration();
-        configuration.set(path, (Object)null);
-        configuration.set(path + ".type", (Object)this.getType().name());
+        final FileConfiguration configuration = Array.get().getArenasConfig().getConfiguration();
+        configuration.set(path, null);
+        configuration.set(path + ".type", this.getType().name());
         if (this.spawn1 != null) {
-            configuration.set(path + ".spawn1", (Object)LocationUtil.serialize(this.spawn1));
+            configuration.set(path + ".spawn1", LocationUtil.serialize(this.spawn1));
         }
         if (this.spawn2 != null) {
-            configuration.set(path + ".spawn2", (Object)LocationUtil.serialize(this.spawn2));
+            configuration.set(path + ".spawn2", LocationUtil.serialize(this.spawn2));
         }
-        configuration.set(path + ".kits", (Object)this.getKits());
+        configuration.set(path + ".kits", this.getKits());
         try {
             configuration.save(Array.get().getArenasConfig().getFile());
         }
@@ -40,8 +40,8 @@ public class SharedArena extends Arena
     
     @Override
     public void delete() {
-        final FileConfiguration configuration = (FileConfiguration)Array.get().getArenasConfig().getConfiguration();
-        configuration.set("arenas." + this.getName(), (Object)null);
+        final FileConfiguration configuration = Array.get().getArenasConfig().getConfiguration();
+        configuration.set("arenas." + this.getName(), null);
         try {
             configuration.save(Array.get().getArenasConfig().getFile());
         }

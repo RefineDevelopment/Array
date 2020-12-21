@@ -150,9 +150,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1440.860@0.0.1440.860" timestamp="1608384765979" />
-    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1605614245671">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="518" y="221" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1608456301617">
+      <screen x="0" y="0" width="1440" height="860" />
     </state>
+    <state x="518" y="221" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1440.860@0.0.1440.860" timestamp="1608456301617" />
     <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1605614245671" />
     <state x="690" y="267" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1605614203801">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -215,11 +216,11 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="537" y="344" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1440.860@0.0.1440.860" timestamp="1608263503053" />
-    <state x="495" y="196" width="628" height="596" key="find.popup" timestamp="1608401333876">
+    <state x="495" y="196" width="628" height="596" key="find.popup" timestamp="1608456143061">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="445" y="212" width="555" height="561" key="find.popup/0.0.1280.984@0.0.1280.984" timestamp="1607193936882" />
-    <state x="495" y="196" width="628" height="596" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1608401333876" />
+    <state x="495" y="196" width="628" height="596" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1608456143061" />
     <state x="667" y="224" width="585" height="592" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1605615943951" />
     <state x="376" y="195" key="run.anything.popup" timestamp="1608285811436">
       <screen x="0" y="0" width="1440" height="860" />

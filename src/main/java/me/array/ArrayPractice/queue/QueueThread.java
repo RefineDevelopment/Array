@@ -3,15 +3,13 @@ package me.array.ArrayPractice.queue;
 import me.array.ArrayPractice.Array;
 import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.match.Match;
-import me.array.ArrayPractice.profile.Profile;
-import me.array.ArrayPractice.util.PlayerUtil;
-import me.array.ArrayPractice.util.external.CC;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import me.array.ArrayPractice.match.impl.SoloMatch;
 import me.array.ArrayPractice.match.team.TeamPlayer;
+import me.array.ArrayPractice.profile.Profile;
+import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class QueueThread extends Thread
 {
@@ -71,6 +69,7 @@ public class QueueThread extends Thread
                             firstPlayer.sendMessage(CC.GRAY + "");
                             secondPlayer.sendMessage(CC.AQUA + CC.BOLD + "Match Found!");
                             firstPlayer.sendMessage(CC.GRAY + "");
+                            firstPlayer.sendMessage(opponentMessages[0]);
                             secondPlayer.sendMessage(opponentMessages[1]);
                             new BukkitRunnable() {
                                 public void run() {

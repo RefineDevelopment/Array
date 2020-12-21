@@ -73,8 +73,6 @@ public class Profile {
     private final UUID uuid;
     String name;
     int globalElo;
-    int globalWins;
-    int globalLosses;
     private ProfileState state;
     private final ProfileEssentials essentials;
     private final ProfileOptions options;
@@ -96,8 +94,6 @@ public class Profile {
 
     public Profile(final UUID uuid) {
         this.globalElo=1000;
-        this.globalWins=0;
-        this.globalLosses=0;
         this.essentials=new ProfileEssentials();
         this.options=new ProfileOptions();
         this.kitEditor=new ProfileKitEditor();
@@ -110,8 +106,6 @@ public class Profile {
             this.kitData.put(kit, new ProfileKitData());
         }
         this.calculateGlobalElo();
-        this.calculateGlobalWins();
-        this.calculateGlobalLosses();
     }
 
     public Player getPlayer() {
@@ -128,22 +122,6 @@ public class Profile {
             }
         }
         this.globalElo=Math.round((float) (globalElo / kitCounter));
-    }
-
-    public void calculateGlobalWins() {
-        int globalWins = 0;
-        for ( final Kit kit : this.kitData.keySet() ) {
-            int wins = this.kitData.get(kit).getWon();
-            this.globalWins = globalWins + wins;
-        }
-    }
-
-    public void calculateGlobalLosses() {
-        int globalLosses=0;
-        for ( final Kit kit : this.kitData.keySet() ) {
-            int lost = this.kitData.get(kit).getLost();
-            this.globalLosses = globalLosses + lost;
-        }
     }
 
     public boolean canSendDuelRequest(final Player player) {
@@ -322,7 +300,7 @@ public class Profile {
         if (this.state == ProfileState.IN_LOBBY || this.state == ProfileState.IN_QUEUE) {
             if (this.party != null && this.party.containsPlayer(otherPlayer)) {
                 hide=false;
-                NameTags.color(player, otherPlayer, ChatColor.BLUE, false);
+                NameTags.color(player, otherPlayer, ChatColor.GREEN, false);
             }
         } else if (this.isInFight()) {
             final TeamPlayer teamPlayer=this.match.getTeamPlayer(otherPlayer);
@@ -427,8 +405,6 @@ public class Profile {
         }
 
         this.globalElo=document.getInteger("globalElo");
-        this.globalLosses=document.getInteger("globalLosses");
-        this.globalWins=document.getInteger("globalWins");
         final Document essentials=(Document) document.get("essentials");
         if (essentials == null) {
             final Document essentialsDocument=new Document();
@@ -488,8 +464,6 @@ public class Profile {
         document.put("uuid", this.uuid.toString());
         document.put("name", this.name);
         document.put("globalElo", this.globalElo);
-        document.put("globalWins", this.globalWins);
-        document.put("globalLosses", this.globalLosses);
         final Document essentialsDocument=new Document();
         essentialsDocument.put("nick", this.essentials.getNick());
         document.put("essentials", essentialsDocument);
@@ -623,22 +597,6 @@ public class Profile {
 
     public int getGlobalElo() {
         return this.globalElo;
-    }
-
-    public int getGlobalWins() {
-        return this.globalWins;
-    }
-
-    public void setGlobalWins(final int globalWins) {
-        this.globalWins = globalWins;
-    }
-
-    public int getGlobalLosses() {
-        return this.globalLosses;
-    }
-
-    public void setGlobalLosses(final int globalLosses) {
-        this.globalLosses = globalLosses;
     }
 
     public ProfileState getState() {

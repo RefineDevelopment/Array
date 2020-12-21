@@ -17,7 +17,7 @@ import me.array.ArrayPractice.profile.runnables.SaveRunnable;
 import me.array.ArrayPractice.tournament.command.*;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import me.array.ArrayPractice.queue.QueueThread;
-import me.array.ArrayPractice.scoreboard.ScoreboardAdapter;
+import me.array.ArrayPractice.scoreboard.Scoreboard;
 import me.array.ArrayPractice.tab.Tab;
 import org.bukkit.plugin.Plugin;
 import me.array.ArrayPractice.util.events.ArmorListener;
@@ -41,7 +41,6 @@ import org.bukkit.Material;
 import me.array.ArrayPractice.util.external.duration.DurationTypeAdapter;
 import me.array.ArrayPractice.util.external.duration.Duration;
 
-import java.io.File;
 import java.util.Arrays;
 
 import me.array.ArrayPractice.event.impl.parkour.command.ParkourTpCommand;
@@ -73,8 +72,8 @@ import me.array.ArrayPractice.duel.command.DuelCommand;
 import me.array.ArrayPractice.profile.command.donator.FlyCommand;
 import me.array.ArrayPractice.profile.command.chat.BroadcastCommand;
 import me.array.ArrayPractice.event.EventCommand;
-import me.array.ArrayPractice.profile.stats.command.LeaderboardsCommand;
-import me.array.ArrayPractice.profile.stats.command.StatsCommand;
+import me.array.ArrayPractice.profile.menu.command.LeaderboardsCommand;
+import me.array.ArrayPractice.profile.menu.command.StatsCommand;
 import me.array.ArrayPractice.profile.command.staff.RemoveProfileCommand;
 import me.array.ArrayPractice.profile.command.staff.SetSpawnCommand;
 import me.array.ArrayPractice.kit.KitTypeAdapter;
@@ -154,7 +153,7 @@ public class Array extends JavaPlugin
         });
         Arrays.asList(new PlayerMovementListener(), new ProfileListener(), new MenuListener(this), new EssentialsListener(this), (Listener) new SumoListener(), (Listener) new BracketsListener(), (Listener) new FFAListener(), (Listener) new ParkourListener(), (Listener) new SpleefListener(), (Listener) new KitEditorListener(), (Listener) new PartyListener(), (Listener) new HotbarListener(), (Listener) new MatchListener(), (Listener) new WorldListener(), (Listener) new QueueListener(), (Listener) new ArmorListener()).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, (Plugin) this));
         new OutlastTab(this, new Tab());
-        new Aether(this, new ScoreboardAdapter(), new AetherOptions().hook(true));
+        new Aether(this, new Scoreboard(), new AetherOptions().hook(true));
         new QueueThread().start();
         this.getServer().getScheduler().runTaskTimerAsynchronously(this, new SaveRunnable(), 10L * 40L * 5L, 10L * 40L * 5L);
     }

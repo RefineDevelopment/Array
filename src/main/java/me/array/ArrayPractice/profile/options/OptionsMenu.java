@@ -6,8 +6,12 @@ import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.ItemBuilder;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import me.array.ArrayPractice.util.external.menu.Button;
+
+import java.util.List;
 import java.util.Map;
 import org.bukkit.entity.Player;
 import me.array.ArrayPractice.util.external.menu.Menu;
@@ -32,24 +36,28 @@ public class OptionsMenu extends Menu
     private static class OptionsButton extends Button
     {
         private final OptionsType type;
-        
+
         @Override
         public ItemStack getButtonItem(final Player player) {
+            List<String> lines = new ArrayList<>();
             final Profile profile = Profile.getByUuid(player.getUniqueId());
-            boolean lore;
             if (this.type == OptionsType.TOGGLESCOREBOARD) {
-                lore = profile.getOptions().isShowScoreboard();
+                lines.add((profile.getOptions().isShowScoreboard() ? "&a&l■ " : "&c&l■ ") +  "&fShow scoreboard");
+                lines.add((!profile.getOptions().isShowScoreboard() ? "&a&l■ " : "&c&l■ ") + "&fHide scoreboard");
             }
             else if (this.type == OptionsType.TOGGLEDUELREQUESTS) {
-                lore = profile.getOptions().isReceiveDuelRequests();
+                lines.add((profile.getOptions().isReceiveDuelRequests() ? "&a&l■ " : "&c&l■ ") +  "&fAllow Duels");
+                lines.add((!profile.getOptions().isReceiveDuelRequests() ? "&a&l■ " : "&c&l■ ") + "&fDon't Allow Duels");
             }
             else if (this.type == OptionsType.TOGGLEPMS) {
-                lore = profile.getOptions().isPrivateMessages();
+                lines.add("&fCycle through enable and disable");
+                lines.add("&fPrivate messages by others.");
             }
             else {
-                lore = profile.getOptions().isAllowSpectators();
+                lines.add((profile.getOptions().isAllowSpectators() ? "&a&l■ " : "&c&l■ ") + "&fAllow Spectators");
+                lines.add((!profile.getOptions().isAllowSpectators() ? "&a&l■ " : "&c&l■ ") + "&fDon't Allow Spectators");
             }
-            return new ItemBuilder(this.type.getMaterial()).name("&b" + this.type.getName()).lore("&fEnabled: " + (lore ? "&a&l■ " : "&c&l■ ") + lore).build();
+            return new ItemBuilder(this.type.getMaterial()).name("&b" + this.type.getName()).lore(lines).build();
         }
         
         @Override
@@ -62,7 +70,7 @@ public class OptionsMenu extends Menu
                 profile.getOptions().setReceiveDuelRequests(!profile.getOptions().isReceiveDuelRequests());
             }
             else if (this.type == OptionsType.TOGGLEPMS) {
-                profile.getOptions().setPrivateMessages(!profile.getOptions().isPrivateMessages());
+                player.performCommand("togglepm");
             }
             else {
                 profile.getOptions().setAllowSpectators(!profile.getOptions().isAllowSpectators());

@@ -1,181 +1,149 @@
-[12:36:04] [Server thread/INFO]: This server is running Spigot version 1.8.8-R0.1-SNAPSHOT (MC: 1.8.8) (Implementing API version Unknown-Version)
-[12:36:04] [Server thread/INFO]: Spigot Timings: true - Verbose: true - Interval: 5m - Length: 60m
-[12:36:04] [Server thread/INFO]: Server Ping Player Sample Count: 12
-[12:36:04] [Server thread/INFO]: Using 4 threads for Netty based IO
-[12:36:04] [Server thread/INFO]: Debug logging is disabled
-[12:36:05] [Server thread/INFO]: [FastAsyncWorldEdit] Loading FastAsyncWorldEdit v19.07.12-5cc5ce5-1277-22.3.0
-[12:36:05] [Server thread/INFO]: [LunarClientAPI] Loading LunarClientAPI v1.0-b
-[12:36:05] [Server thread/INFO]: [Verus] Loading Verus vb2443
-[12:36:05] [Server thread/INFO]: [PlaceholderAPI] Loading PlaceholderAPI v2.10.6
-[12:36:05] [Server thread/INFO]: [VoidWorld] Loading VoidWorld v1.0
-[12:36:05] [Server thread/INFO]: [Array] Loading Array v2.0
-[12:36:05] [Server thread/INFO]: [AquaCore] Loading AquaCore v2.5.8
-[12:36:05] [Server thread/INFO]: [Vault] Loading Vault v1.5.6-b49
-[12:36:05] [Server thread/INFO]: [ConsoleSpamFix] Loading ConsoleSpamFix v1.8.2
-[12:36:05] [Server thread/INFO]: [FastPot] Loading FastPot v5.0
-[12:36:05] [Server thread/INFO]: [ProtocolSupport] Loading ProtocolSupport v4.23.dev
-[12:36:05] [Server thread/INFO]: [ProtocolSupport] Allocator: PooledByteBufAllocator(directByDefault: true), direct: true
-[12:36:05] [Server thread/INFO]: [ProtocolSupport] Compression level: 3
-[12:36:05] [Server thread/INFO]: [ProtocolSupport] Assume 1.5.2 ping delay: 100
-[12:36:05] [Server thread/INFO]: [ProtocolSupport] Assume legacy ping dealy: 200
-[12:36:05] [Server thread/INFO]: [ProtocolSupport] Login threads max count: 8, keep alive time: 60
-[12:36:05] [Server thread/WARN]: [ProtocolSupport] Native transport is enabled, this may causes issues. Disable it by setting use-native-transport in server.properties to false.
-[12:36:05] [Server thread/INFO]: [ProtocolSupport] Using injected ServerConnection
-[12:36:05] [Server thread/INFO]: [ProtocolLib] Loading ProtocolLib v4.5.0
-[12:36:06] [Server thread/INFO]: [Multiverse-Core] Loading Multiverse-Core v2.5-b699
-[12:36:06] [Server thread/INFO]: [ProtocolSupportLegacyHologram] Loading ProtocolSupportLegacyHologram v1.0
-[12:36:06] [Server thread/INFO]: [Citizens] Loading Citizens v2.0.16-SNAPSHOT (build 1267)
-[12:36:06] [Server thread/INFO]: [WorldEdit] Loading WorldEdit v6.1.7;dd00bb1
-[12:36:06] [Server thread/INFO]: [HolographicDisplays] Loading HolographicDisplays v2.2.6
-[12:36:06] [Server thread/INFO]: [WorldGuard] Loading WorldGuard v6.1
-[12:36:06] [Server thread/INFO]: [HolographicExtension] Loading HolographicExtension v1.10.9
-[12:36:06] [Server thread/INFO]: [FastAsyncWorldEdit] Enabling FastAsyncWorldEdit v19.07.12-5cc5ce5-1277-22.3.0
-[12:36:06] [Server thread/INFO]: [VoidWorld] Enabling VoidWorld v1.0
-[12:36:06] [Server thread/INFO]: [Vault] Enabling Vault v1.5.6-b49
-[12:36:06] [Server thread/INFO]: [Vault] [Permission] SuperPermissions loaded as backup permission system.
-[12:36:06] [Server thread/INFO]: [Vault] Enabled Version 1.5.6-b49
-[12:36:06] [Server thread/INFO]: [ConsoleSpamFix] Enabling ConsoleSpamFix v1.8.2
-[12:36:06] [Server thread/INFO]: [ConsoleSpamFix] Server version detected: Unknown
-[12:36:06] [Server thread/INFO]: [ConsoleSpamFix] Loading the config file...
-[12:36:06] [Server thread/INFO]: [ConsoleSpamFix] Config file loaded!
-[12:36:06] [Server thread/INFO]: [ConsoleSpamFix] ConsoleSpamFix loaded successfully!
-[12:36:06] [Server thread/INFO]: [ProtocolSupport] Enabling ProtocolSupport v4.23.dev
-[12:36:06] [Server thread/INFO]: [ProtocolLib] Enabling ProtocolLib v4.5.0
-[12:36:06] [Server thread/INFO]: [ProtocolLib] Started structure compiler thread.
-[12:36:07] [Server thread/INFO]: Preparing the starting region for 0
-[12:36:08] [Server thread/INFO]: Preparing the spawn area... (68%)
-[12:36:09] [Server thread/INFO]: [LunarClientAPI] Enabling LunarClientAPI v1.0-b
-[12:36:09] [Server thread/INFO]: [Verus] Enabling Verus vb2443
-[12:36:09] [Server thread/WARN]: [Verus] Check persistence is not enabled, it is recommended that you enable it to avoid relog bypasses
-[12:36:09] [Server thread/INFO]: [Verus] Using storage method MONGO handled by me.levansj01.verus.storage.database.impl.MongoDB
-[12:36:09] [Server thread/INFO]: [0;31;1m[VerusLoader] Loading CustomLoader by [0;36;1mxBrownieCodez[m
-[12:36:10] [Server thread/INFO]: [0;31;1m[VerusLoader] Loaded 6 Commands[m
-[12:36:10] [Server thread/INFO]: [0;31;1m[VerusLoader] Loaded 59 Basic Checks[m
-[12:36:10] [Server thread/INFO]: [0;31;1m[VerusLoader] Loaded 33 Premium Checks[m
-[12:36:10] [Server thread/INFO]: [Verus] Verus b2451 launched successfully in 1108ms
+[02:18:24] [Server thread/INFO]: This server is running Spigot version 1.8.8-R0.1-SNAPSHOT (MC: 1.8.8) (Implementing API version Unknown-Version)
+[02:18:24] [Server thread/INFO]: Spigot Timings: true - Verbose: true - Interval: 5m - Length: 60m
+[02:18:24] [Server thread/INFO]: Server Ping Player Sample Count: 12
+[02:18:24] [Server thread/INFO]: Using 4 threads for Netty based IO
+[02:18:24] [Server thread/INFO]: Debug logging is disabled
+[02:18:25] [Server thread/INFO]: [FastAsyncWorldEdit] Loading FastAsyncWorldEdit v19.07.12-5cc5ce5-1277-22.3.0
+[02:18:25] [Server thread/INFO]: [LunarClientAPI] Loading LunarClientAPI v1.0-b
+[02:18:25] [Server thread/INFO]: [Verus] Loading Verus vb2443
+[02:18:25] [Server thread/INFO]: [PlaceholderAPI] Loading PlaceholderAPI v2.10.6
+[02:18:25] [Server thread/INFO]: [VoidWorld] Loading VoidWorld v1.0
+[02:18:25] [Server thread/INFO]: [Array] Loading Array v2.0
+[02:18:25] [Server thread/INFO]: [AquaCore] Loading AquaCore v2.5.8
+[02:18:25] [Server thread/INFO]: [Vault] Loading Vault v1.5.6-b49
+[02:18:25] [Server thread/INFO]: [ConsoleSpamFix] Loading ConsoleSpamFix v1.8.2
+[02:18:25] [Server thread/INFO]: [FastPot] Loading FastPot v5.0
+[02:18:25] [Server thread/INFO]: [ProtocolSupport] Loading ProtocolSupport v4.23.dev
+[02:18:25] [Server thread/INFO]: [ProtocolSupport] Allocator: PooledByteBufAllocator(directByDefault: true), direct: true
+[02:18:25] [Server thread/INFO]: [ProtocolSupport] Compression level: 3
+[02:18:25] [Server thread/INFO]: [ProtocolSupport] Assume 1.5.2 ping delay: 100
+[02:18:25] [Server thread/INFO]: [ProtocolSupport] Assume legacy ping dealy: 200
+[02:18:25] [Server thread/INFO]: [ProtocolSupport] Login threads max count: 8, keep alive time: 60
+[02:18:25] [Server thread/WARN]: [ProtocolSupport] Native transport is enabled, this may causes issues. Disable it by setting use-native-transport in server.properties to false.
+[02:18:25] [Server thread/INFO]: [ProtocolSupport] Using injected ServerConnection
+[02:18:25] [Server thread/INFO]: [ProtocolLib] Loading ProtocolLib v4.5.0
+[02:18:25] [Server thread/INFO]: [Multiverse-Core] Loading Multiverse-Core v2.5-b699
+[02:18:25] [Server thread/INFO]: [ProtocolSupportLegacyHologram] Loading ProtocolSupportLegacyHologram v1.0
+[02:18:25] [Server thread/INFO]: [Citizens] Loading Citizens v2.0.16-SNAPSHOT (build 1267)
+[02:18:25] [Server thread/INFO]: [WorldEdit] Loading WorldEdit v6.1.7;dd00bb1
+[02:18:25] [Server thread/INFO]: [HolographicDisplays] Loading HolographicDisplays v2.2.6
+[02:18:25] [Server thread/INFO]: [WorldGuard] Loading WorldGuard v6.1
+[02:18:25] [Server thread/INFO]: [HolographicExtension] Loading HolographicExtension v1.10.9
+[02:18:25] [Server thread/INFO]: [FastAsyncWorldEdit] Enabling FastAsyncWorldEdit v19.07.12-5cc5ce5-1277-22.3.0
+[02:18:26] [Server thread/INFO]: [VoidWorld] Enabling VoidWorld v1.0
+[02:18:26] [Server thread/INFO]: [Vault] Enabling Vault v1.5.6-b49
+[02:18:26] [Server thread/INFO]: [Vault] [Permission] SuperPermissions loaded as backup permission system.
+[02:18:26] [Server thread/INFO]: [Vault] Enabled Version 1.5.6-b49
+[02:18:26] [Server thread/INFO]: [ConsoleSpamFix] Enabling ConsoleSpamFix v1.8.2
+[02:18:26] [Server thread/INFO]: [ConsoleSpamFix] Server version detected: Unknown
+[02:18:26] [Server thread/INFO]: [ConsoleSpamFix] Loading the config file...
+[02:18:26] [Server thread/INFO]: [ConsoleSpamFix] Config file loaded!
+[02:18:26] [Server thread/INFO]: [ConsoleSpamFix] ConsoleSpamFix loaded successfully!
+[02:18:26] [Server thread/INFO]: [ProtocolSupport] Enabling ProtocolSupport v4.23.dev
+[02:18:26] [Server thread/INFO]: [ProtocolLib] Enabling ProtocolLib v4.5.0
+[02:18:26] [Server thread/INFO]: [ProtocolLib] Started structure compiler thread.
+[02:18:26] [Server thread/INFO]: Preparing the starting region for 0
+[02:18:27] [Server thread/INFO]: Preparing the spawn area... (75%)
+[02:18:27] [Server thread/INFO]: [LunarClientAPI] Enabling LunarClientAPI v1.0-b
+[02:18:28] [Server thread/INFO]: [Verus] Enabling Verus vb2443
+[02:18:28] [Server thread/WARN]: [Verus] Check persistence is not enabled, it is recommended that you enable it to avoid relog bypasses
+[02:18:28] [Server thread/INFO]: [Verus] Using storage method MONGO handled by me.levansj01.verus.storage.database.impl.MongoDB
+[02:18:28] [Server thread/INFO]: [0;31;1m[VerusLoader] Loading CustomLoader by [0;36;1mxBrownieCodez[m
+[02:18:29] [Server thread/INFO]: [0;31;1m[VerusLoader] Loaded 6 Commands[m
+[02:18:29] [Server thread/INFO]: [0;31;1m[VerusLoader] Loaded 59 Basic Checks[m
+[02:18:29] [Server thread/INFO]: [0;31;1m[VerusLoader] Loaded 33 Premium Checks[m
+[02:18:29] [Server thread/INFO]: [Verus] Verus b2451 launched successfully in 1178ms
 By running this plugin, you agree to be bound by our TOS
-[12:36:10] [Server thread/INFO]: [PlaceholderAPI] Enabling PlaceholderAPI v2.10.6
-[12:36:10] [Server thread/INFO]: [PlaceholderAPI] Fetching available expansion information...
-[12:36:10] [Server thread/INFO]: [Array] Enabling Array v2.0
-[12:36:10] [Server thread/ERROR]: Error occurred while enabling Array v2.0 (Is it up to date?)
-java.lang.NullPointerException
-	at me.array.ArrayPractice.Array.onEnable(Array.java:123) ~[?:?]
-	at org.bukkit.plugin.java.JavaPlugin.setEnabled(JavaPlugin.java:321) ~[server.jar:1.8.8-R0.1-SNAPSHOT]
-	at org.bukkit.plugin.java.JavaPluginLoader.enablePlugin(JavaPluginLoader.java:328) [server.jar:1.8.8-R0.1-SNAPSHOT]
-	at org.bukkit.plugin.SimplePluginManager.enablePlugin(SimplePluginManager.java:407) [server.jar:1.8.8-R0.1-SNAPSHOT]
-	at org.bukkit.craftbukkit.v1_8_R3.CraftServer.loadPlugin(CraftServer.java:364) [server.jar:1.8.8-R0.1-SNAPSHOT]
-	at org.bukkit.craftbukkit.v1_8_R3.CraftServer.enablePlugins(CraftServer.java:323) [server.jar:1.8.8-R0.1-SNAPSHOT]
-	at net.minecraft.server.v1_8_R3.MinecraftServer.s(MinecraftServer.java:382) [server.jar:1.8.8-R0.1-SNAPSHOT]
-	at net.minecraft.server.v1_8_R3.MinecraftServer.k(MinecraftServer.java:346) [server.jar:1.8.8-R0.1-SNAPSHOT]
-	at net.minecraft.server.v1_8_R3.MinecraftServer.a(MinecraftServer.java:306) [server.jar:1.8.8-R0.1-SNAPSHOT]
-	at net.minecraft.server.v1_8_R3.DedicatedServer.init(DedicatedServer.java:233) [server.jar:1.8.8-R0.1-SNAPSHOT]
-	at net.minecraft.server.v1_8_R3.MinecraftServer.run(MinecraftServer.java:525) [server.jar:1.8.8-R0.1-SNAPSHOT]
-	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_265]
-[12:36:10] [Server thread/INFO]: [Array] Disabling Array v2.0
-[12:36:10] [Server thread/INFO]: [AquaCore] Enabling AquaCore v2.5.8
-[12:36:10] [MongoDB Executor Thread/INFO]: Cluster created with settings {hosts=[127.0.0.1:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
-[12:36:10] [MongoDB Executor Thread/INFO]: Cluster description not yet available. Waiting for 30000 ms before timing out
-[12:36:10] [cluster-ClusterId{value='5fde3a0a0a975a39f97cfcab', description='null'}-127.0.0.1:27017/INFO]: Opened connection [connectionId{localValue:1, serverValue:82}] to 127.0.0.1:27017
-[12:36:10] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;32;1mChecking AquaCore license..[m
-[12:36:10] [cluster-ClusterId{value='5fde3a0a0a975a39f97cfcab', description='null'}-127.0.0.1:27017/INFO]: Monitor thread successfully connected to server with description ServerDescription{address=127.0.0.1:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[2, 6, 10]}, minWireVersion=0, maxWireVersion=2, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=null, roundTripTimeNanos=2686663}
-[12:36:10] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;31;22m==========[0;37;22m=======[0;37;22m[[0;32;1m[21mActivated[0;37;22m]=======[0;31;22m==========[m
-[12:36:10] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;33;1mLicensed to[0;37;22m: [0;36;1mDirectLeaks[m
-[12:36:10] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;33;1mID[0;37;22m: [0;36;1mDirectLeaks[m
-[12:36:10] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;33;1mLicense generated on [0;36;1mN/A[m
-[12:36:10] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;31;22m==========[0;37;22m=======[0;37;22m[[0;32;1m[21mActivated[0;37;22m]=======[0;31;22m==========[m
-[12:36:10] [MongoDB Executor Thread/INFO]: Opened connection [connectionId{localValue:2, serverValue:83}] to 127.0.0.1:27017
-[12:36:11] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;32;1mLoaded 278 skin(s) from cache.[m
-[12:36:11] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;32;1mPlaceholder API expansion successfully registered.[m
-[12:36:11] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;32;1mVault Provider successfully registered.[m
-[12:36:11] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;33;1mTrying to connect redis [0;37;22m([0;36;1mredis-15142.c89.us-east-1-3.ec2.cloud.redislabs.com:15142[0;37;22m, [0;36;1mfoakk9F8uWEAjQil2SqDNOa3JhSS8cDf[0;37;22m)[m
-[12:36:13] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;32;1mRedis is now successfully connected and synchronization is ready![m
-[12:36:13] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;33;1mSuccessfully registered packets. [0;37;22m([0;36;1m30 total[0;37;22m)[m
-[12:36:13] [Server thread/INFO]: [0;31;22m==========[0;37;22m===================================[0;31;22m==========[m
-[12:36:13] [Server thread/INFO]: [0;33;1mName[0;37;22m: [0;36;1mAquaCore[m
-[12:36:13] [Server thread/INFO]: [0;33;1mAuthor[0;37;22m: [0;36;1m[FaceSlap_/Activated_][m
-[12:36:13] [Server thread/INFO]: [0;33;1mVersion[0;37;22m: [0;36;1m2.5.8[m
-[12:36:13] [Server thread/INFO]: [0;31;22m==========[0;37;22m===================================[0;31;22m==========[m
-[12:36:13] [Server thread/INFO]: [0;33;1mMongo[0;37;22m: [0;32;1m[0;32;1mEnabled[m
-[12:36:13] [Server thread/INFO]: [0;33;1mRedis[0;37;22m: [0;32;1m[0;32;1mEnabled[m
-[12:36:13] [Server thread/INFO]: [0;31;22m==========[0;37;22m===================================[0;31;22m==========[m
-[12:36:13] [Server thread/INFO]: [FastPot] Enabling FastPot v5.0
-[12:36:13] [Server thread/INFO]: [Multiverse-Core] Enabling Multiverse-Core v2.5-b699
-[12:36:13] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: Bedwars
-[12:36:13] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
-[12:36:13] [Server thread/INFO]: Preparing start region for level 1 (Seed: 789739396479891627)
-[12:36:14] [Redis Thread - 0/INFO]: [0;37;22m[[0;36;1mServerManager[0;37;22m] [0;37;1mPracticeBeta [0;36;1mhas just came [0;32;1monline [0;37;1mand will be joinable in [0;37;1m5 seconds[0;36;1m![m
-[12:36:14] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: Build-Maps
-[12:36:14] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
-[12:36:14] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: test
-[12:36:14] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
-[12:36:14] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: Events
-[12:36:14] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
-[12:36:14] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: Tournaments
-[12:36:14] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
-[12:36:14] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: Normal-Maps
-[12:36:14] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
-[12:36:14] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: event
-[12:36:14] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
-[12:36:14] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: Spawn
-[12:36:14] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
-[12:36:14] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: Arenas
-[12:36:14] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
-[12:36:14] [Server thread/INFO]: [Multiverse-Core] 2 - World(s) loaded.
-[12:36:14] [Server thread/INFO]: [Multiverse-Core] Version 2.5-b699 (API v19) Enabled - By Rigby, fernferret, lithium3141 and main--
-[12:36:14] [Server thread/INFO]: [ProtocolSupportLegacyHologram] Enabling ProtocolSupportLegacyHologram v1.0
-[12:36:14] [Server thread/INFO]: [Citizens] Enabling Citizens v2.0.16-SNAPSHOT (build 1267)
-[12:36:14] [Server thread/INFO]: [WorldEdit] Enabling WorldEdit v6.1.7;dd00bb1
-[12:36:15] [Server thread/INFO]: WEPIF: Using the Bukkit Permissions API.
-[12:36:15] [Server thread/INFO]: [WorldEdit] Using com.sk89q.worldedit.bukkit.adapter.impl.Spigot_v1_8_R3 as the Bukkit adapter
-[12:36:15] [Server thread/INFO]: [HolographicDisplays] Enabling HolographicDisplays v2.2.6
-[12:36:15] [Server thread/INFO]: [HolographicDisplays] Found ProtocolLib, using new version.
-[12:36:15] [Server thread/INFO]: [HolographicDisplays] Enabled player relative placeholders with ProtocolLib.
-[12:36:15] [Server thread/INFO]: [WorldGuard] Enabling WorldGuard v6.1
-[12:36:15] [Server thread/INFO]: [WorldGuard] (Lobby) TNT ignition is PERMITTED.
-[12:36:15] [Server thread/INFO]: [WorldGuard] (Lobby) Lighters are PERMITTED.
-[12:36:15] [Server thread/INFO]: [WorldGuard] (Lobby) Lava fire is blocked.
-[12:36:15] [Server thread/INFO]: [WorldGuard] (Lobby) Fire spread is UNRESTRICTED.
-[12:36:15] [Server thread/INFO]: [WorldGuard] Loaded configuration for world 'Lobby'
-[12:36:15] [Server thread/INFO]: [WorldGuard] (Maps) TNT ignition is PERMITTED.
-[12:36:15] [Server thread/INFO]: [WorldGuard] (Maps) Lighters are PERMITTED.
-[12:36:15] [Server thread/INFO]: [WorldGuard] (Maps) Lava fire is blocked.
-[12:36:15] [Server thread/INFO]: [WorldGuard] (Maps) Fire spread is UNRESTRICTED.
-[12:36:15] [Server thread/INFO]: [WorldGuard] Loaded configuration for world 'Maps'
-[12:36:15] [Server thread/INFO]: [WorldGuard] Loading region data...
-[12:36:15] [Server thread/INFO]: [HolographicExtension] Enabling HolographicExtension v1.10.9
-[12:36:15] [Server thread/INFO]: [0;33;1m[HolographicExtension] [0;37;1mStarting HolographicExtension v1.10.9[m
-[12:36:15] [Server thread/INFO]: [0;33;1m[HolographicExtension] [0;37;22mRegistering placeholder 'example' from config.[m
-[12:36:15] [Server thread/INFO]: [0;33;1m[HolographicExtension] [0;37;22mRegistering placeholder 'scroller' from config.[m
-[12:36:15] [Server thread/INFO]: [0;33;1m[HolographicExtension] [0;37;22mRegistering placeholder 'typing' from config.[m
-[12:36:15] [Server thread/INFO]: [0;33;1m[HolographicExtension] [0;37;22mRegistering placeholder 'rainbow' from config.[m
-[12:36:16] [Server thread/INFO]: Finished loading the server in 9.204s...
-[12:36:16] [Server thread/INFO]: Timings Reset
-[12:36:16] [Craft Scheduler Thread - 3/INFO]: [PlaceholderAPI] 180 placeholder expansions are available on the cloud.
-[12:36:17] [Server thread/INFO]: [0;30;1m([0;31;22m[21mFAWE[0;30;1m)[m[0;37;22m Detected class org.bukkit.event.block.BlockExplodeEvent[m
-[12:36:17] [Server thread/INFO]: [0;30;1m([0;31;22m[21mFAWE[0;30;1m)[m[0;37;22m Plugin 'WorldGuard' found. Using it now.[m
-[12:36:17] [Server thread/INFO]: [Citizens] Loaded 0 NPCs.
-[12:36:17] [Server thread/INFO]: [PlaceholderAPI] Placeholder expansion registration initializing...
-[12:36:50] [Server thread/INFO]: [0;30;1m[9m-----------------------------------------------------[m
-[12:36:50] [Server thread/INFO]: [0;37;22m[3mThis server is currently running [0;36;1m19 [0;37;22m[3mplugins![m
-[12:36:50] [Server thread/INFO]: [0;37;22m[m
-[12:36:50] [Server thread/INFO]: [0;30;1m • [0;32;1mFastAsyncWorldEdit[0;30;1m [[0;37;22m19.07.12-5cc5ce5-1277-22.3.0[0;30;1m]
-[0;30;1m • [0;32;1mLunarClientAPI[0;30;1m [[0;37;22m1.0-b[0;30;1m]
-[0;30;1m • [0;32;1mVerus[0;30;1m [[0;37;22mb2443[0;30;1m]
-[0;30;1m • [0;32;1mPlaceholderAPI[0;30;1m [[0;37;22m2.10.6[0;30;1m]
-[0;30;1m • [0;32;1mVoidWorld[0;30;1m [[0;37;22m1.0[0;30;1m]
-[0;30;1m • [0;31;1mArray[0;30;1m [[0;37;22m2.0[0;30;1m]
-[0;30;1m • [0;32;1mAquaCore[0;30;1m [[0;37;22m2.5.8[0;30;1m]
-[0;30;1m • [0;32;1mVault[0;30;1m [[0;37;22m1.5.6-b49[0;30;1m]
-[0;30;1m • [0;32;1mConsoleSpamFix[0;30;1m [[0;37;22m1.8.2[0;30;1m]
-[0;30;1m • [0;32;1mFastPot[0;30;1m [[0;37;22m5.0[0;30;1m]
-[0;30;1m • [0;32;1mProtocolSupport[0;30;1m [[0;37;22m4.23.dev[0;30;1m]
-[0;30;1m • [0;32;1mProtocolLib[0;30;1m [[0;37;22m4.5.0[0;30;1m]
-[0;30;1m • [0;32;1mMultiverse-Core[0;30;1m [[0;37;22m2.5-b699[0;30;1m]
-[0;30;1m • [0;32;1mProtocolSupportLegacyHologram[0;30;1m [[0;37;22m1.0[0;30;1m]
-[0;30;1m • [0;32;1mCitizens[0;30;1m [[0;37;22m2.0.16-SNAPSHOT (build 1267)[0;30;1m]
-[0;30;1m • [0;32;1mWorldEdit[0;30;1m [[0;37;22m6.1.7;dd00bb1[0;30;1m]
-[0;30;1m • [0;32;1mHolographicDisplays[0;30;1m [[0;37;22m2.2.6[0;30;1m]
-[0;30;1m • [0;32;1mWorldGuard[0;30;1m [[0;37;22m6.1[0;30;1m]
-[0;30;1m • [0;32;1mHolographicExtension[0;30;1m [[0;37;22m1.10.9[0;30;1m][m
-[12:36:50] [Server thread/INFO]: [0;37;22m[m
-[12:36:50] [Server thread/INFO]: [0;30;1m[9m-----------------------------------------------------[m
+[02:18:29] [Server thread/INFO]: [PlaceholderAPI] Enabling PlaceholderAPI v2.10.6
+[02:18:29] [Server thread/INFO]: [PlaceholderAPI] Fetching available expansion information...
+[02:18:29] [Server thread/INFO]: [Array] Enabling Array v2.0
+[02:18:29] [Server thread/WARN]: [Array] Could not save config.yml to plugins/Array/config.yml because config.yml already exists.
+[02:18:29] [Server thread/WARN]: [Array] Could not save arenas.yml to plugins/Array/arenas.yml because arenas.yml already exists.
+[02:18:29] [Server thread/WARN]: [Array] Could not save kits.yml to plugins/Array/kits.yml because kits.yml already exists.
+[02:18:29] [Server thread/WARN]: [Array] Could not save events.yml to plugins/Array/events.yml because events.yml already exists.
+[02:18:29] [MongoDB Executor Thread/INFO]: Cluster created with settings {hosts=[127.0.0.1:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
+[02:18:29] [Server thread/INFO]: [Array] Loaded 3 arenas
+[02:18:29] [MongoDB Executor Thread/INFO]: Cluster description not yet available. Waiting for 30000 ms before timing out
+[02:18:30] [cluster-ClusterId{value='5fdefac50a975a459e2e9c08', description='null'}-127.0.0.1:27017/INFO]: Opened connection [connectionId{localValue:1, serverValue:89}] to 127.0.0.1:27017
+[02:18:30] [cluster-ClusterId{value='5fdefac50a975a459e2e9c08', description='null'}-127.0.0.1:27017/INFO]: Monitor thread successfully connected to server with description ServerDescription{address=127.0.0.1:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[2, 6, 10]}, minWireVersion=0, maxWireVersion=2, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=null, roundTripTimeNanos=1236378}
+[02:18:30] [Server thread/INFO]: [AquaCore] Enabling AquaCore v2.5.8
+[02:18:30] [MongoDB Executor Thread/INFO]: Opened connection [connectionId{localValue:2, serverValue:90}] to 127.0.0.1:27017
+[02:18:31] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;32;1mChecking AquaCore license..[m
+[02:18:31] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;31;22m==========[0;37;22m=======[0;37;22m[[0;32;1m[21mActivated[0;37;22m]=======[0;31;22m==========[m
+[02:18:31] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;33;1mLicensed to[0;37;22m: [0;36;1mDirectLeaks[m
+[02:18:31] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;33;1mID[0;37;22m: [0;36;1mDirectLeaks[m
+[02:18:31] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;33;1mLicense generated on [0;36;1mN/A[m
+[02:18:31] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;31;22m==========[0;37;22m=======[0;37;22m[[0;32;1m[21mActivated[0;37;22m]=======[0;31;22m==========[m
+[02:18:31] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;32;1mLoaded 278 skin(s) from cache.[m
+[02:18:32] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;32;1mPlaceholder API expansion successfully registered.[m
+[02:18:32] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;32;1mVault Provider successfully registered.[m
+[02:18:32] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;33;1mTrying to connect redis [0;37;22m([0;36;1mredis-15142.c89.us-east-1-3.ec2.cloud.redislabs.com:15142[0;37;22m, [0;36;1mfoakk9F8uWEAjQil2SqDNOa3JhSS8cDf[0;37;22m)[m
+[02:18:35] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;32;1mRedis is now successfully connected and synchronization is ready![m
+[02:18:35] [Server thread/INFO]: [0;31;1m[[0;31;1mLog[0;31;1m] [0;33;1mSuccessfully registered packets. [0;37;22m([0;36;1m30 total[0;37;22m)[m
+[02:18:35] [Server thread/INFO]: [0;31;22m==========[0;37;22m===================================[0;31;22m==========[m
+[02:18:35] [Server thread/INFO]: [0;33;1mName[0;37;22m: [0;36;1mAquaCore[m
+[02:18:35] [Server thread/INFO]: [0;33;1mAuthor[0;37;22m: [0;36;1m[FaceSlap_/Activated_][m
+[02:18:35] [Server thread/INFO]: [0;33;1mVersion[0;37;22m: [0;36;1m2.5.8[m
+[02:18:35] [Server thread/INFO]: [0;31;22m==========[0;37;22m===================================[0;31;22m==========[m
+[02:18:35] [Server thread/INFO]: [0;33;1mMongo[0;37;22m: [0;32;1m[0;32;1mEnabled[m
+[02:18:35] [Server thread/INFO]: [0;33;1mRedis[0;37;22m: [0;32;1m[0;32;1mEnabled[m
+[02:18:35] [Server thread/INFO]: [0;31;22m==========[0;37;22m===================================[0;31;22m==========[m
+[02:18:35] [Server thread/INFO]: [FastPot] Enabling FastPot v5.0
+[02:18:35] [Server thread/INFO]: [Multiverse-Core] Enabling Multiverse-Core v2.5-b699
+[02:18:35] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: Bedwars
+[02:18:35] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
+[02:18:35] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: Build-Maps
+[02:18:35] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
+[02:18:35] [Server thread/INFO]: Preparing start region for level 1 (Seed: 789739396479891627)
+[02:18:36] [Redis Thread - 0/INFO]: [0;37;22m[[0;36;1mServerManager[0;37;22m] [0;37;1mPracticeBeta [0;36;1mhas just came [0;32;1monline [0;37;1mand will be joinable in [0;37;1m5 seconds[0;36;1m![m
+[02:18:36] [Server thread/INFO]: Preparing spawn area for Maps, 20%
+[02:18:37] [Server thread/INFO]: Preparing spawn area for Maps, 61%
+[02:18:38] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: test
+[02:18:38] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
+[02:18:38] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: Events
+[02:18:38] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
+[02:18:38] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: Tournaments
+[02:18:38] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
+[02:18:38] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: Normal-Maps
+[02:18:38] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
+[02:18:38] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: event
+[02:18:38] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
+[02:18:38] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: Arenas
+[02:18:38] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
+[02:18:38] [Server thread/WARN]: [Multiverse-Core] WorldManager: Can't load this world because the folder was deleted/moved: Spawn
+[02:18:38] [Server thread/WARN]: [Multiverse-Core] Use '/mv remove' to remove it from the config!
+[02:18:38] [Server thread/INFO]: [Multiverse-Core] 2 - World(s) loaded.
+[02:18:39] [Server thread/INFO]: [Multiverse-Core] Version 2.5-b699 (API v19) Enabled - By Rigby, fernferret, lithium3141 and main--
+[02:18:39] [Server thread/INFO]: [ProtocolSupportLegacyHologram] Enabling ProtocolSupportLegacyHologram v1.0
+[02:18:39] [Server thread/INFO]: [Citizens] Enabling Citizens v2.0.16-SNAPSHOT (build 1267)
+[02:18:40] [Server thread/INFO]: [WorldEdit] Enabling WorldEdit v6.1.7;dd00bb1
+[02:18:40] [Server thread/INFO]: WEPIF: Using the Bukkit Permissions API.
+[02:18:40] [Server thread/INFO]: [WorldEdit] Using com.sk89q.worldedit.bukkit.adapter.impl.Spigot_v1_8_R3 as the Bukkit adapter
+[02:18:40] [Server thread/INFO]: [HolographicDisplays] Enabling HolographicDisplays v2.2.6
+[02:18:40] [Server thread/INFO]: [HolographicDisplays] Found ProtocolLib, using new version.
+[02:18:40] [Server thread/INFO]: [HolographicDisplays] Enabled player relative placeholders with ProtocolLib.
+[02:18:41] [Server thread/INFO]: [WorldGuard] Enabling WorldGuard v6.1
+[02:18:41] [Server thread/INFO]: [WorldGuard] (Lobby) TNT ignition is PERMITTED.
+[02:18:41] [Server thread/INFO]: [WorldGuard] (Lobby) Lighters are PERMITTED.
+[02:18:41] [Server thread/INFO]: [WorldGuard] (Lobby) Lava fire is blocked.
+[02:18:41] [Server thread/INFO]: [WorldGuard] (Lobby) Fire spread is UNRESTRICTED.
+[02:18:41] [Server thread/INFO]: [WorldGuard] Loaded configuration for world 'Lobby'
+[02:18:41] [Server thread/INFO]: [WorldGuard] (Maps) TNT ignition is PERMITTED.
+[02:18:41] [Server thread/INFO]: [WorldGuard] (Maps) Lighters are PERMITTED.
+[02:18:41] [Server thread/INFO]: [WorldGuard] (Maps) Lava fire is blocked.
+[02:18:41] [Server thread/INFO]: [WorldGuard] (Maps) Fire spread is UNRESTRICTED.
+[02:18:41] [Server thread/INFO]: [WorldGuard] Loaded configuration for world 'Maps'
+[02:18:41] [Server thread/INFO]: [WorldGuard] Loading region data...
+[02:18:42] [Server thread/INFO]: [HolographicExtension] Enabling HolographicExtension v1.10.9
+[02:18:42] [Server thread/INFO]: [0;33;1m[HolographicExtension] [0;37;1mStarting HolographicExtension v1.10.9[m
+[02:18:42] [Server thread/INFO]: [0;33;1m[HolographicExtension] [0;37;22mRegistering placeholder 'example' from config.[m
+[02:18:42] [Server thread/INFO]: [0;33;1m[HolographicExtension] [0;37;22mRegistering placeholder 'scroller' from config.[m
+[02:18:42] [Server thread/INFO]: [0;33;1m[HolographicExtension] [0;37;22mRegistering placeholder 'typing' from config.[m
+[02:18:42] [Server thread/INFO]: [0;33;1m[HolographicExtension] [0;37;22mRegistering placeholder 'rainbow' from config.[m
+[02:18:43] [Server thread/INFO]: Finished loading the server in 16.534s...
+[02:18:43] [Server thread/INFO]: Timings Reset
+[02:18:43] [Craft Scheduler Thread - 3/INFO]: [PlaceholderAPI] 180 placeholder expansions are available on the cloud.
+[02:18:44] [Server thread/INFO]: [0;30;1m([0;31;22m[21mFAWE[0;30;1m)[m[0;37;22m Detected class org.bukkit.event.block.BlockExplodeEvent[m
+[02:18:44] [Server thread/INFO]: [0;30;1m([0;31;22m[21mFAWE[0;30;1m)[m[0;37;22m Plugin 'WorldGuard' found. Using it now.[m
+[02:18:44] [Server thread/INFO]: [Citizens] Loaded 0 NPCs.
+[02:18:44] [Server thread/INFO]: [PlaceholderAPI] Placeholder expansion registration initializing...

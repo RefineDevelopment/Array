@@ -1,4 +1,4 @@
-package me.array.ArrayPractice.profile.stats.menu;
+package me.array.ArrayPractice.profile.menu.menu;
 
 import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.profile.Profile;
@@ -44,8 +44,8 @@ public class StatsMenu extends Menu
             final List<String> lore = new ArrayList<>();
             final Profile profile = Profile.getByUuid(player.getUniqueId());
             final String elo = this.kit.getGameRules().isRanked() ? Integer.toString(profile.getKitData().get(this.kit).getElo()) : "N/A";
-            final String wins = this.kit.getGameRules().isRanked() ? Integer.toString(profile.getKitData().get(this.kit).getWon()) : "N/A";
-            final String losses = this.kit.getGameRules().isRanked() ? Integer.toString(profile.getKitData().get(this.kit).getLost()) : "N/A";
+            final String wins = Integer.toString(profile.getKitData().get(this.kit).getWon());
+            final String losses = Integer.toString(profile.getKitData().get(this.kit).getLost());
             lore.add(" &b&lStats:");
             lore.add("  &fELO: &b" + elo);
             lore.add("  &fWins: &b" + wins);
@@ -66,8 +66,6 @@ public class StatsMenu extends Menu
             final List<String> lore = new ArrayList<>();
             final Profile profile = Profile.getByUuid(player.getUniqueId());
             lore.add("  &fELO: &a" + profile.getGlobalElo());
-            lore.add("  &fWins: &a" + profile.getGlobalWins());
-            lore.add("  &fLosses: &a" + profile.getGlobalLosses());
             return new ItemBuilder(Material.QUARTZ).name("&b&lGlobal Stats").lore(lore).build();
         }
 

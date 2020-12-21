@@ -34,14 +34,6 @@ public class StandaloneArena extends Arena
             configuration.set(path + ".spawn2", LocationUtil.serialize(this.spawn2));
         }
         configuration.set(path + ".kits", this.getKits());
-        if (!this.duplicates.isEmpty()) {
-            int i = 0;
-            for (final Arena duplicate : this.duplicates) {
-                ++i;
-                configuration.set(path + ".duplicates." + i + ".spawn1", LocationUtil.serialize(duplicate.getSpawn1()));
-                configuration.set(path + ".duplicates." + i + ".spawn2", LocationUtil.serialize(duplicate.getSpawn2()));
-            }
-        }
         try {
             configuration.save(Array.get().getArenasConfig().getFile());
         }
@@ -61,7 +53,7 @@ public class StandaloneArena extends Arena
             e.printStackTrace();
         }
     }
-    
+
     public List<Arena> getDuplicates() {
         return this.duplicates;
     }

@@ -57,9 +57,9 @@ public class Arena {
     public boolean isSetup() {
         return this.spawn1 != null && this.spawn2 != null;
     }
-    
+
     public int getMaxBuildHeight() {
-        final int highest = (int)((this.spawn1.getY() >= this.spawn2.getY()) ? this.spawn1.getY() : this.spawn2.getY());
+        int highest = (int) (Math.max(this.spawn1.getY(), this.spawn2.getY()));
         return highest + 5;
     }
     
@@ -116,15 +116,12 @@ public class Arena {
                 Arena arena;
                 if (arenaType == ArenaType.STANDALONE) {
                     arena = new StandaloneArena(arenaName);
-                }
-                else if (arenaType == ArenaType.SHARED) {
+
+                } else if (arenaType == ArenaType.SHARED) {
                     arena = new SharedArena(arenaName);
-                }
-                else {
-                    if (arenaType != ArenaType.KOTH) {
-                        continue;
-                    }
-                    arena = new KoTHArena(arenaName);
+
+                } else {
+                    continue;
                 }
                 if (configuration.contains(path + ".spawn1")) {
                     arena.setSpawn1(LocationUtil.deserialize(configuration.getString(path + ".spawn1")));
@@ -234,6 +231,6 @@ public class Arena {
     }
     
     static {
-        Arena.arenas = new ArrayList<Arena>();
+        Arena.arenas = new ArrayList<>();
     }
 }

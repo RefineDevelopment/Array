@@ -10,7 +10,7 @@ public class ArrayCommand {
     public void execute(final Player player) {
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() + "------------------------------------------------");
         player.sendMessage(CC.translate("&7This server is running the &b&lArray Practice&7 on version 2.0"));
-        player.sendMessage(CC.translate("&7Forked By Drizzy for MoonNight Network!"));
+        player.sendMessage(CC.translate("&7Forked By Drizzy for Resolve Network!"));
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() + "------------------------------------------------");
     }
 }

@@ -52,29 +52,24 @@ public class EventSelectEventMenu extends Menu {
 			lore.add(CC.MENU_BAR);
 			switch (eventType.getTitle()) {
 				case "Brackets":
-					lore.add(CC.GRAY + "In this event, players 1v1 each other");
-					lore.add(CC.GRAY + "one by one, This event is a Mini-Tournament");
-					lore.add(CC.GRAY + "For other kits like Combo and BuildUHC etc.");
+					lore.add(CC.YELLOW + "A Mini-Tournament event for");
+					lore.add(CC.YELLOW + "other kits like Combo and BuildUHC etc.");
 					break;
 				case "Sumo":
-					lore.add(CC.GRAY + "This event is a Sumo Tournament");
-					lore.add(CC.GRAY + "One by one players fight in a sumo arena");
-					lore.add(CC.GRAY + "This is a fun tournament to host casually.");
+					lore.add(CC.YELLOW + "One by one players fight in a sumo arena");
+					lore.add(CC.YELLOW + "This is a fun tournament to host casually.");
 					break;
 				case "FFA":
-					lore.add(CC.GRAY + "This event is a FFA or LMS Tournament");
-					lore.add(CC.GRAY + "Unleash all participants in a Free for All Match");
-					lore.add(CC.GRAY + "The last player remaining wins!");
+					lore.add(CC.YELLOW + "Unleash all participants in a FFA Match");
+					lore.add(CC.YELLOW + "The last player remaining wins!");
 					break;
 				case "Parkour":
-					lore.add(CC.GRAY + "This event is a Parkour Race");
-					lore.add(CC.GRAY + "Compete other players in a parkour arena,");
-					lore.add(CC.GRAY + "The First player to reach the end wins!");
+					lore.add(CC.YELLOW + "Compete other players in a parkour arena,");
+					lore.add(CC.YELLOW + "The First player to reach the end wins!");
 					break;
 				case "Spleef":
-					lore.add(CC.GRAY + "This event is a Spleef FFA Tournament");
-					lore.add(CC.GRAY + "Compete other players in a spleef arena,");
-					lore.add(CC.GRAY + "The last player remaining wins!");
+					lore.add(CC.YELLOW + "Compete other players in a spleef arena,");
+					lore.add(CC.YELLOW + "The last player remaining wins!");
 					break;
 			}
 			    lore.add("");

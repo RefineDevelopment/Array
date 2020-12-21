@@ -24,12 +24,12 @@ public class Tab implements ITablist {
     
     @Override
     public String getHeader(Player player) {
-        return "" + CC.translate("&b&lMoonNight Practice");
+        return "" + CC.translate("&b&lResolve Practice");
     }
 
     @Override
     public String getFooter(Player player) {
-        return "" + CC.translate("&7store.moonnight.rip");
+        return "" + CC.translate("&7store.resolve.rip");
     }
 
     @Override
@@ -38,7 +38,7 @@ public class Tab implements ITablist {
         final Profile profile = Profile.getByUuid(player.getUniqueId());
         final List<Integer> tabSlots = new ArrayList<>();
         final int[] ipSlots = { 2, 22, 42, 20, 40, 60 };
-        elements.add(new TablistElement(CC.AQUA + CC.BOLD + "MoonNight " + CC.GRAY + "\u239c" + CC.WHITE + CC.BOLD + " Beta",21));
+        elements.add(new TablistElement(CC.AQUA + CC.BOLD + "Resolve " + CC.GRAY + "\u239c" + CC.WHITE + CC.BOLD + " Beta",21));
         for (final int ipSlot : ipSlots) {
             elements.add(new TablistElement("&7&m----------------", ipSlot));
             tabSlots.add(ipSlot);
