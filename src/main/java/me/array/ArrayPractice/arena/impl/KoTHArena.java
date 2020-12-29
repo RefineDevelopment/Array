@@ -23,11 +23,11 @@ public class KoTHArena extends Arena
         final FileConfiguration configuration = Array.get().getArenasConfig().getConfiguration();
         configuration.set(path, null);
         configuration.set(path + ".type", this.getType().name());
-        if (this.spawn1 != null) {
-            configuration.set(path + ".spawn1", LocationUtil.serialize(this.spawn1));
+        if (this.spawnA != null) {
+            configuration.set(path + ".spawn1", LocationUtil.serialize(this.spawnA));
         }
-        if (this.spawn2 != null) {
-            configuration.set(path + ".spawn2", LocationUtil.serialize(this.spawn2));
+        if (this.spawnB != null) {
+            configuration.set(path + ".spawn2", LocationUtil.serialize(this.spawnB));
         }
         if (this.point1 != null) {
             configuration.set(path + ".point1", LocationUtil.serialize(this.point1));

@@ -42,20 +42,20 @@ public class OptionsMenu extends Menu
             List<String> lines = new ArrayList<>();
             final Profile profile = Profile.getByUuid(player.getUniqueId());
             if (this.type == OptionsType.TOGGLESCOREBOARD) {
-                lines.add((profile.getOptions().isShowScoreboard() ? "&a&l■ " : "&c&l■ ") +  "&fShow scoreboard");
-                lines.add((!profile.getOptions().isShowScoreboard() ? "&a&l■ " : "&c&l■ ") + "&fHide scoreboard");
+                lines.add((profile.getOptions().isShowScoreboard() ? "&a&l● " : "&c&l● ") +  "&fShow scoreboard");
+                lines.add((!profile.getOptions().isShowScoreboard() ? "&a&l● " : "&c&l● ") + "&fHide scoreboard");
             }
             else if (this.type == OptionsType.TOGGLEDUELREQUESTS) {
-                lines.add((profile.getOptions().isReceiveDuelRequests() ? "&a&l■ " : "&c&l■ ") +  "&fAllow Duels");
-                lines.add((!profile.getOptions().isReceiveDuelRequests() ? "&a&l■ " : "&c&l■ ") + "&fDon't Allow Duels");
+                lines.add((profile.getOptions().isReceiveDuelRequests() ? "&a&l● " : "&c&l● ") +  "&fAllow Duels");
+                lines.add((!profile.getOptions().isReceiveDuelRequests() ? "&a&l● " : "&c&l● ") + "&fDon't Allow Duels");
             }
             else if (this.type == OptionsType.TOGGLEPMS) {
                 lines.add("&fCycle through enable and disable");
                 lines.add("&fPrivate messages by others.");
             }
             else {
-                lines.add((profile.getOptions().isAllowSpectators() ? "&a&l■ " : "&c&l■ ") + "&fAllow Spectators");
-                lines.add((!profile.getOptions().isAllowSpectators() ? "&a&l■ " : "&c&l■ ") + "&fDon't Allow Spectators");
+                lines.add((profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fAllow Spectators");
+                lines.add((!profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fDon't Allow Spectators");
             }
             return new ItemBuilder(this.type.getMaterial()).name("&b" + this.type.getName()).lore(lines).build();
         }

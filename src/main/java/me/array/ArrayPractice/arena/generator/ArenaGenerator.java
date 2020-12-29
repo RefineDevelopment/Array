@@ -104,9 +104,6 @@ public class ArenaGenerator {
 
 				if (type == ArenaType.STANDALONE) {
 					arena = new StandaloneArena(name);
-				} else if (this.type == ArenaType.DUPLICATE) {
-					arena = new Arena(name);
-					parentArena.getDuplicates().add(arena);
 				} else {
 					arena = new SharedArena(name);
 				}
@@ -126,8 +123,8 @@ public class ArenaGenerator {
 										continue;
 									}
 
-									float pitch = Float.valueOf(sign.getLine(0));
-									float yaw = Float.valueOf(sign.getLine(1));
+									float pitch = Float.parseFloat(sign.getLine(0));
+									float yaw = Float.parseFloat(sign.getLine(1));
 									Location loc = new Location(origin.getWorld(), origin.getX(), origin.getY(),
 											origin.getZ(), yaw, pitch);
 
@@ -139,10 +136,10 @@ public class ArenaGenerator {
 										}
 									}.runTask(Array.get());
 
-									if (arena.getSpawn1() == null) {
-										arena.setSpawn1(loc);
-									} else if (arena.getSpawn2() == null) {
-										arena.setSpawn2(loc);
+									if (arena.getSpawnA() == null) {
+										arena.setSpawnA(loc);
+									} else if (arena.getSpawnB() == null) {
+										arena.setSpawnB(loc);
 										break helper;
 									}
 								}

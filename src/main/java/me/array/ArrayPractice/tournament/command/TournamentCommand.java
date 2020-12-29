@@ -10,10 +10,10 @@ import org.bukkit.entity.Player;
 public class TournamentCommand {
     public void execute(Player player) {
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
-        player.sendMessage(CC.translate( "&bArray &7» TournamentManager Commands"));
+        player.sendMessage(CC.translate( "&bArray &7» Tournament Commands"));
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
         player.sendMessage(CC.translate("&7» &b/tournament list &7- Create a Kit."));
-        player.sendMessage(CC.translate("&7» &b/tournament host (kit) (team-size) &7- Host a tournament."));
+        player.sendMessage(CC.translate("&7» &b/tournament host (team-size(1/2)) &7- Host a tournament."));
         player.sendMessage(CC.translate("&7» &b/tournament cancel &7- Cancels a tournament."));
         player.sendMessage(CC.translate("&7» &b/tournament join &7- Join an on-going tournament."));
         player.sendMessage(CC.translate("&7» &b/tournament leave &7- Leave an on-going tournament."));

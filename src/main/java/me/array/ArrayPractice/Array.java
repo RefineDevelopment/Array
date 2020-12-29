@@ -13,13 +13,11 @@ import me.array.ArrayPractice.kit.KitEditorListener;
 import me.array.ArrayPractice.kit.command.*;
 import me.array.ArrayPractice.movement.PlayerMovementListener;
 import me.array.ArrayPractice.profile.command.*;
-import me.array.ArrayPractice.profile.runnables.SaveRunnable;
 import me.array.ArrayPractice.tournament.command.*;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import me.array.ArrayPractice.queue.QueueThread;
 import me.array.ArrayPractice.scoreboard.Scoreboard;
 import me.array.ArrayPractice.tab.Tab;
-import org.bukkit.plugin.Plugin;
 import me.array.ArrayPractice.util.events.ArmorListener;
 import me.array.ArrayPractice.queue.QueueListener;
 import me.array.ArrayPractice.util.events.WorldListener;
@@ -34,15 +32,12 @@ import me.array.ArrayPractice.event.impl.sumo.SumoListener;
 import me.array.ArrayPractice.util.essentials.listener.EssentialsListener;
 import me.array.ArrayPractice.util.external.menu.MenuListener;
 import me.array.ArrayPractice.profile.ProfileListener;
-import org.bukkit.event.Listener;
 import org.bukkit.Difficulty;
 import me.array.ArrayPractice.util.InventoryUtil;
 import org.bukkit.Material;
 import me.array.ArrayPractice.util.external.duration.DurationTypeAdapter;
 import me.array.ArrayPractice.util.external.duration.Duration;
-
 import java.util.Arrays;
-
 import me.array.ArrayPractice.event.impl.parkour.command.ParkourTpCommand;
 import me.array.ArrayPractice.event.impl.parkour.command.ParkourSetSpawnCommand;
 import me.array.ArrayPractice.event.impl.parkour.command.ParkourLeaveCommand;
@@ -136,7 +131,7 @@ public class Array extends JavaPlugin
         this.honcho.registerTypeAdapter(Arena.class, new ArenaTypeAdapter());
         this.honcho.registerTypeAdapter(ArenaType.class, new ArenaTypeTypeAdapter());
         this.honcho.registerTypeAdapter(Kit.class, new KitTypeAdapter());
-        for ( final Object command : Arrays.asList(new TournamentCommand(), new SpawnCommand(), new BracketsKnockbackCommand(), new FFAKnockbackCommand(), new SpleefKnockbackCommand(), new SumoKnockbackCommand(), new KitCommand(), new KitSaveCommand(), new KitRemoveCommand(), new SetSpawnCommand(), new ArrayCommand(), new StatsCommand(), new PracticeCommand(), new PingCommand(), new RemoveProfileCommand(), new TsbCommand(), new TduelCommand(), new TpmCommand(), new ArenaGenerateCommand(), new ArenaCommand(), new ArenaSaveCommand(), new LeaderboardsCommand(), new OptionsCommand(), new EventCommand(), new BroadcastCommand(), new FlyCommand(), new ArenaAddKitCommand(), new ArenaRemoveKitCommand(), new ArenaSetSpawnCommand(), new ArenaSetPointCommand(), new ArenaCreateCommand(), new ArenaRemoveCommand(), new ArenasCommand(), new ArenaTpCommand(), new DuelCommand(), new DuelAcceptCommand(), new RematchCommand(), new ViewInventoryCommand(), new SpectateCommand(), new StopSpectatingCommand(), new PartyCloseCommand(), new PartyCreateCommand(), new PartyDisbandCommand(), new PartyHelpCommand(), new PartyInfoCommand(), new PartyInviteCommand(), new PartyJoinCommand(), new PartyKickCommand(), new PartyLeaveCommand(), new PartyOpenCommand(), new PartyLeaderCommand(), new PartyUnbanCommand(), new PartyBanCommand(), new KitCreateCommand(), new KitGetLoadoutCommand(), new KitSetLoadoutCommand(), new KitListCommand(), new BracketsLeaveCommand(), new BracketsCancelCommand(), new BracketsCooldownCommand(), new BracketsJoinCommand(), new BracketsSetSpawnCommand(), new BracketsHostCommand(), new BracketsTpCommand(), new SumoCancelCommand(), new SumoCooldownCommand(), new SumoHostCommand(), new SumoJoinCommand(), new SumoLeaveCommand(), new SumoSetSpawnCommand(), new SumoTpCommand(), new FFACancelCommand(), new FFACooldownCommand(), new FFAHostCommand(), new FFAJoinCommand(), new FFALeaveCommand(), new FFASetSpawnCommand(), new FFATpCommand(), new ParkourCancelCommand(), new ParkourCooldownCommand(), new ParkourHostCommand(), new ParkourJoinCommand(), new ParkourLeaveCommand(), new ParkourSetSpawnCommand(), new ParkourTpCommand(), new SpleefCancelCommand(), new SpleefCooldownCommand(), new SpleefHostCommand(), new SpleefJoinCommand(), new SpleefLeaveCommand(), new SpleefSetSpawnCommand(), new SpleefTpCommand(), new TournamentListCommand(), new TournamentLeaveCommand(), new TournamentJoinCommand(), new TournamentHostCommand(), new TournamentCancelCommand()) ) {
+        for ( final Object command : Arrays.asList(new TournamentCommand(), new SpawnCommand(), new BracketsKnockbackCommand(), new FFAKnockbackCommand(), new SpleefKnockbackCommand(), new SumoKnockbackCommand(), new KitCommand(), new KitSaveCommand(), new KitRemoveCommand(), new SetSpawnCommand(), new ArrayCommand(), new StatsCommand(), new PracticeCommand(), new PingCommand(), new RemoveProfileCommand(), new TsbCommand(), new TduelCommand(), new TpmCommand(), new ArenaGenerateCommand(), new ArenaCommand(), new ArenaSaveCommand(), new LeaderboardsCommand(), new OptionsCommand(), new EventCommand(), new BroadcastCommand(), new FlyCommand(), new ArenaAddKitCommand(), new ArenaRemoveKitCommand(), new ArenaSetSpawnCommand(), new ArenaCreateCommand(), new ArenaRemoveCommand(), new ArenasCommand(), new ArenaTpCommand(), new DuelCommand(), new DuelAcceptCommand(), new RematchCommand(), new ViewInventoryCommand(), new SpectateCommand(), new StopSpectatingCommand(), new PartyCloseCommand(), new PartyCreateCommand(), new PartyDisbandCommand(), new PartyHelpCommand(), new PartyInfoCommand(), new PartyInviteCommand(), new PartyJoinCommand(), new PartyKickCommand(), new PartyLeaveCommand(), new PartyOpenCommand(), new PartyLeaderCommand(), new PartyUnbanCommand(), new PartyBanCommand(), new KitCreateCommand(), new KitGetLoadoutCommand(), new KitSetLoadoutCommand(), new KitListCommand(), new BracketsLeaveCommand(), new BracketsCancelCommand(), new BracketsCooldownCommand(), new BracketsJoinCommand(), new BracketsSetSpawnCommand(), new BracketsHostCommand(), new BracketsTpCommand(), new SumoCancelCommand(), new SumoCooldownCommand(), new SumoHostCommand(), new SumoJoinCommand(), new SumoLeaveCommand(), new SumoSetSpawnCommand(), new SumoTpCommand(), new FFACancelCommand(), new FFACooldownCommand(), new FFAHostCommand(), new FFAJoinCommand(), new FFALeaveCommand(), new FFASetSpawnCommand(), new FFATpCommand(), new ParkourCancelCommand(), new ParkourCooldownCommand(), new ParkourHostCommand(), new ParkourJoinCommand(), new ParkourLeaveCommand(), new ParkourSetSpawnCommand(), new ParkourTpCommand(), new SpleefCancelCommand(), new SpleefCooldownCommand(), new SpleefHostCommand(), new SpleefJoinCommand(), new SpleefLeaveCommand(), new SpleefSetSpawnCommand(), new SpleefTpCommand(), new TournamentListCommand(), new TournamentLeaveCommand(), new TournamentJoinCommand(), new TournamentHostCommand(), new TournamentCancelCommand()) ) {
             this.honcho.registerCommand(command);
         }
         this.honcho.registerTypeAdapter(Duration.class, new DurationTypeAdapter());
@@ -151,12 +146,11 @@ public class Array extends JavaPlugin
             world.setDifficulty(Difficulty.HARD);
             this.essentials.clearEntities(world);
         });
-        Arrays.asList(new PlayerMovementListener(), new ProfileListener(), new MenuListener(this), new EssentialsListener(this), (Listener) new SumoListener(), (Listener) new BracketsListener(), (Listener) new FFAListener(), (Listener) new ParkourListener(), (Listener) new SpleefListener(), (Listener) new KitEditorListener(), (Listener) new PartyListener(), (Listener) new HotbarListener(), (Listener) new MatchListener(), (Listener) new WorldListener(), (Listener) new QueueListener(), (Listener) new ArmorListener()).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, (Plugin) this));
+        Arrays.asList(new PlayerMovementListener(), new ProfileListener(), new MenuListener(this), new EssentialsListener(this),  new SumoListener(),  new BracketsListener(),  new FFAListener(),  new ParkourListener(),  new SpleefListener(),  new KitEditorListener(),  new PartyListener(),  new HotbarListener(),  new MatchListener(),  new WorldListener(),  new QueueListener(),  new ArmorListener()).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
         new OutlastTab(this, new Tab());
         new Aether(this, new Scoreboard(), new AetherOptions().hook(true));
         new QueueThread().start();
-        this.getServer().getScheduler().runTaskTimerAsynchronously(this, new SaveRunnable(), 10L * 40L * 5L, 10L * 40L * 5L);
-    }
+      }
 
     public void onDisable() {
         Match.cleanup();
@@ -174,7 +168,7 @@ public class Array extends JavaPlugin
     }
 
     public boolean setupChat() {
-        final RegisteredServiceProvider<Chat> rsp = (RegisteredServiceProvider<Chat>)this.getServer().getServicesManager().getRegistration((Class)Chat.class);
+        final RegisteredServiceProvider<Chat> rsp = this.getServer().getServicesManager().getRegistration(Chat.class);
         this.chat = rsp.getProvider();
         return this.chat != null;
     }

@@ -8,6 +8,24 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="4d42f2e5-f6ce-4299-96df-ab93a02e3ed9" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,6 +46,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/profile/Profile.java" root0="SKIP_INSPECTION" />
+  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -46,7 +67,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/outlast.jar" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.4948216" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
@@ -108,15 +129,27 @@
     </task>
     <servers />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
   <component name="WindowStateProjectService">
     <state x="432" y="284" key="#BuildArtifactsBeforeRunChooser" timestamp="1608028491660">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="432" y="284" key="#BuildArtifactsBeforeRunChooser/0.0.1440.860@0.0.1440.860" timestamp="1608028491660" />
-    <state x="200" y="4" key="#Project_Structure" timestamp="1607931272782">
+    <state x="200" y="4" key="#Project_Structure" timestamp="1608900404284">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="200" y="4" key="#Project_Structure/0.0.1440.860@0.0.1440.860" timestamp="1607931272782" />
+    <state x="200" y="4" key="#Project_Structure/0.0.1440.860@0.0.1440.860" timestamp="1608900404284" />
     <state x="106" y="98" width="1092" height="762" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1608028524322">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
@@ -216,11 +249,11 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="537" y="344" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1440.860@0.0.1440.860" timestamp="1608263503053" />
-    <state x="495" y="196" width="628" height="596" key="find.popup" timestamp="1608456143061">
+    <state x="495" y="196" width="628" height="596" key="find.popup" timestamp="1609230066782">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="445" y="212" width="555" height="561" key="find.popup/0.0.1280.984@0.0.1280.984" timestamp="1607193936882" />
-    <state x="495" y="196" width="628" height="596" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1608456143061" />
+    <state x="495" y="196" width="628" height="596" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1609230066782" />
     <state x="667" y="224" width="585" height="592" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1605615943951" />
     <state x="376" y="195" key="run.anything.popup" timestamp="1608285811436">
       <screen x="0" y="0" width="1440" height="860" />

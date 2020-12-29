@@ -72,6 +72,32 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Maven: org.mongodb:mongo-java-driver:3.11.0-beta2" level="project" />
+    <orderEntry type="module-library">
+      <library name="Maven: me.nametagedit:NameTagEdit:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/NametagEdit.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: me.activated.core:AquaCoreAPI:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/AquaCoreAPI.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: org.mongodb:mongodb-driver:3.12.3">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/mongo-java-driver-3.12.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class SpawnCommand {
     public void execute(Player player) {
         Profile profile=new Profile(player.getUniqueId());
-        if (profile.isInSomeSortOfFight()) {
+        if (profile.isInSomeSortOfFight() && !profile.isInLobby()) {
             player.sendMessage(CC.translate("Unable to teleport to spawn, Please finish your current task!"));
         }
 

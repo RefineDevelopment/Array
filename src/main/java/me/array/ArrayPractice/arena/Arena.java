@@ -1,12 +1,12 @@
 package me.array.ArrayPractice.arena;
 
+import lombok.Setter;
 import org.bukkit.*;
 import me.array.ArrayPractice.util.*;
 import me.array.ArrayPractice.*;
 import me.array.ArrayPractice.arena.impl.*;
 import me.array.ArrayPractice.util.external.*;
 import org.bukkit.configuration.file.*;
-
 import java.util.*;
 import me.array.ArrayPractice.kit.*;
 import java.util.concurrent.*;
@@ -15,66 +15,46 @@ public class Arena {
     private static List<Arena> arenas;
     protected String name;
     protected String type;
-    protected Location spawn1;
-    protected Location spawn2;
+    protected Location spawnA;
+    protected Location spawnB;
     protected Location point1;
     protected Location point2;
     private KothPoint point;
     protected boolean active;
     private List<String> kits;
 
-    public Arena(final String name) {
-        this.kits=new ArrayList<>();
-        this.name=name;
+    public Arena(String name) {
+        this.kits = new ArrayList<>();
+        this.name = name;
     }
 
     public ArenaType getType() {
-        final FileConfiguration configuration=Array.get().getArenasConfig().getConfiguration();
-        for ( final String arenaName : configuration.getConfigurationSection("arenas").getKeys(false) ) {
-            final String path="arenas." + arenaName;
-            final ArenaType arenaType=ArenaType.valueOf(configuration.getString(path + ".type"));
-            if (arenaType == ArenaType.DUPLICATE) {
-                return ArenaType.DUPLICATE;
-            }
-            if (arenaType == ArenaType.SHARED) {
-                return ArenaType.SHARED;
-            }
-            if (arenaType == ArenaType.STANDALONE) {
-                return ArenaType.STANDALONE;
-            }
-        }
-        return ArenaType.SHARED;
+        return ArenaType.DUPLICATE;
     }
 
-    public void setType(String type) {
-        FileConfiguration configuration = Array.get().getArenasConfig().getConfiguration();
-        for ( final String arenaName : configuration.getConfigurationSection("arenas").getKeys(false) ) {
-            String path = "arenas." + arenaName;
-            Array.get().getArenasConfig().getConfiguration().set(path + ".type", type.toUpperCase());
-        }
-
-    }
     public boolean isSetup() {
-        return this.spawn1 != null && this.spawn2 != null;
+        return this.spawnA != null && this.spawnB != null;
     }
 
     public int getMaxBuildHeight() {
-        int highest = (int) (Math.max(this.spawn1.getY(), this.spawn2.getY()));
+        int highest = (int) (Math.max(this.spawnA.getY(), this.spawnB.getY()));
         return highest + 5;
     }
-    
-    public Location getSpawn1() {
-        if (this.spawn1 == null) {
+
+    public Location getSpawnA() {
+        if (spawnA == null) {
             return null;
         }
-        return this.spawn1.clone();
+
+        return spawnA.clone();
     }
-    
-    public Location getSpawn2() {
-        if (this.spawn2 == null) {
+
+    public Location getSpawnB() {
+        if (spawnB == null) {
             return null;
         }
-        return this.spawn2.clone();
+
+        return spawnB.clone();
     }
     
     public Location getPoint1() {
@@ -103,41 +83,44 @@ public class Arena {
     public void delete() {
         arenas.remove(this);
     }
-    
+
     public static void init() {
-        final FileConfiguration configuration = Array.get().getArenasConfig().getConfiguration();
+        final FileConfiguration configuration=Array.get().getArenasConfig().getConfiguration();
         if (configuration.contains("arenas")) {
             if (configuration.getConfigurationSection("arenas") == null) {
                 return;
             }
-            for (final String arenaName : configuration.getConfigurationSection("arenas").getKeys(false)) {
-                final String path = "arenas." + arenaName;
-                final ArenaType arenaType = ArenaType.valueOf(configuration.getString(path + ".type"));
+            for ( final String arenaName : configuration.getConfigurationSection("arenas").getKeys(false) ) {
+                final String path="arenas." + arenaName;
+                final ArenaType arenaType=ArenaType.valueOf(configuration.getString(path + ".type"));
                 Arena arena;
+
                 if (arenaType == ArenaType.STANDALONE) {
-                    arena = new StandaloneArena(arenaName);
-
+                    arena=new StandaloneArena(arenaName);
                 } else if (arenaType == ArenaType.SHARED) {
-                    arena = new SharedArena(arenaName);
-
+                    arena=new SharedArena(arenaName);
                 } else {
                     continue;
                 }
-                if (configuration.contains(path + ".spawn1")) {
-                    arena.setSpawn1(LocationUtil.deserialize(configuration.getString(path + ".spawn1")));
+
+                if (configuration.contains(path + ".spawnA")) {
+                    arena.spawnA.add(LocationUtil.deserialize(configuration.getString(path + ".spawnA")));
                 }
-                if (configuration.contains(path + ".spawn2")) {
-                    arena.setSpawn2(LocationUtil.deserialize(configuration.getString(path + ".spawn2")));
+
+                if (configuration.contains(path + ".spawnB")) {
+                    arena.spawnA.add(LocationUtil.deserialize(configuration.getString(path + ".spawnB")));
                 }
+
                 if (configuration.contains(path + ".kits")) {
-                    for (final String kitName : configuration.getStringList(path + ".kits")) {
+                    for ( String kitName : configuration.getStringList(path + ".kits") ) {
                         arena.getKits().add(kitName);
                     }
+
                 }
                 getArenas().add(arena);
             }
+            Array.get().getLogger().info("Loaded " + getArenas().size() + " arenas");
         }
-        Array.get().getLogger().info("Loaded " + getArenas().size() + " arenas");
     }
     
     public static ArenaType getTypeByName(final String name) {
@@ -159,7 +142,7 @@ public class Arena {
     }
     
     public static Arena getRandom(final Kit kit) {
-        final List<Arena> _arenas = new ArrayList<Arena>();
+        final List<Arena> _arenas = new ArrayList<>();
         for (final Arena arena : Arena.arenas) {
             if (!arena.isSetup()) {
                 continue;
@@ -194,12 +177,12 @@ public class Arena {
         return this.name;
     }
     
-    public void setSpawn1(final Location spawn1) {
-        this.spawn1 = spawn1;
+    public void setSpawnA(final Location spawnA) {
+        this.spawnA = spawnA;
     }
     
-    public void setSpawn2(final Location spawn2) {
-        this.spawn2 = spawn2;
+    public void setSpawnB(final Location spawnB) {
+        this.spawnA = spawnB;
     }
     
     public void setPoint1(final Location point1) {

@@ -1,11 +1,13 @@
 package me.array.ArrayPractice.profile.menu.menu;
 
+import com.google.common.collect.Lists;
 import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.kit.KitLeaderboards;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.ItemBuilder;
 import me.array.ArrayPractice.util.external.menu.Button;
 import me.array.ArrayPractice.util.external.menu.Menu;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import java.beans.ConstructorProperties;
@@ -42,13 +44,16 @@ public class RankedLeaderboardsMenu extends Menu
         
         @Override
         public ItemStack getButtonItem(final Player player) {
-            final List<String> lore = new ArrayList<>();
-            int pos = 1;
+            List<String> description = Lists.newArrayList();
+            description.add(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "----------------");
+            int counter = 1;
             for (final KitLeaderboards kitLeaderboards : this.kit.getRankedEloLeaderboards()) {
-                lore.add(" &b#" + pos + ". &7" + kitLeaderboards.getName() + ": &b" + kitLeaderboards.getElo() + " &7Elo");
-                ++pos;
+                description.add(" &b&l" + counter + ". &f" + kitLeaderboards.getName() + ": &b" + kitLeaderboards.getElo());
+                ++counter;
             }
-            return new ItemBuilder(this.kit.getDisplayIcon()).name("&b&l" + this.kit.getName()).lore(lore).build();
+
+            description.add(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "----------------");
+            return new ItemBuilder(this.kit.getDisplayIcon()).name("&b&l" + this.kit.getName()).lore(description).build();
         }
         
         @ConstructorProperties({ "kit" })
@@ -64,7 +69,7 @@ public class RankedLeaderboardsMenu extends Menu
             final List<String> lore =new ArrayList<>();
             int pos = 1;
             for (final KitLeaderboards kitLeaderboards : Profile.getGlobalEloLeaderboards()) {
-                lore.add(" &b#" + pos + ". &7" + kitLeaderboards.getName() + ": &b" + kitLeaderboards.getElo() + " &7Elo");
+                lore.add(" &b" + pos + ". &f" + kitLeaderboards.getName() + ": &b" + kitLeaderboards.getElo() + " &fElo");
                 ++pos;
             }
             return new ItemBuilder(Material.TRIPWIRE_HOOK).name("&b&lGlobal").lore(lore).build();

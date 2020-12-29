@@ -1,5 +1,3 @@
-
-
 package me.array.ArrayPractice.profile.meta.option;
 
 public class ProfileOptions

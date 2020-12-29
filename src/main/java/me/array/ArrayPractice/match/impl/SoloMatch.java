@@ -104,7 +104,7 @@ public class SoloMatch extends Match {
             ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
         }
 
-        Location spawn = playerA.equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
+        Location spawn = playerA.equals(teamPlayer) ? getArena().getSpawnA() : getArena().getSpawnB();
 
         if (spawn.getBlock().getType() == Material.AIR) {
             player.teleport(spawn);

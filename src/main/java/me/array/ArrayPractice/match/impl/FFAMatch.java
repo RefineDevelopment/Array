@@ -89,11 +89,11 @@ public class FFAMatch extends Match {
 
 		Team team = getTeam(player);
 
-		Location spawn = getArena().getSpawn1();
-		Location spawn2 = getArena().getSpawn2();
-		Location ffaspawn = getArena().getSpawn1();
-		ffaspawn.setX(getAverage(spawn.getX(), spawn2.getX()));
-		ffaspawn.setZ(getAverage(spawn.getZ(), spawn2.getZ()));
+		Location spawn = getArena().getSpawnA();
+		Location spawnB = getArena().getSpawnB();
+		Location ffaspawn = getArena().getSpawnA();
+		ffaspawn.setX(getAverage(spawn.getX(), spawnB.getX()));
+		ffaspawn.setZ(getAverage(spawn.getZ(), spawnB.getZ()));
 
 		if (getKit().getGameRules().isFfacenter()) {
 			player.teleport(ffaspawn);
@@ -219,7 +219,7 @@ public class FFAMatch extends Match {
 		PlayerUtil.reset(player);
 
 		if (!canEnd() && !teamPlayer.isDisconnected()) {
-			player.teleport(getArena().getSpawn1());
+			player.teleport(getArena().getSpawnA());
 			Profile profile = Profile.getByUuid(player.getUniqueId());
 			profile.refreshHotbar();
 			player.setAllowFlight(true);

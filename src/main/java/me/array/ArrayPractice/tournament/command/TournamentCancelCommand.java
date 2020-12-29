@@ -10,7 +10,7 @@ public class TournamentCancelCommand {
 
 	public void execute(Player player) {
 		if(TournamentManager.CURRENT_TOURNAMENT == null){
-			player.sendMessage(ChatColor.RED + "There isn't an active TournamentManager right now");
+			player.sendMessage(ChatColor.RED + "There isn't an active Tournament right now");
 			return;
 		}
 		if(TournamentManager.RUNNABLE != null){
@@ -18,7 +18,7 @@ public class TournamentCancelCommand {
 		}
 		TournamentManager.CURRENT_TOURNAMENT.cancel();
 		TournamentManager.CURRENT_TOURNAMENT = null;
-		player.sendMessage(ChatColor.RED + "The TournamentManager has been cancelled");
+		player.sendMessage(ChatColor.RED + "The Tournament has been cancelled");
 	}
 }
 

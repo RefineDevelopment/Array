@@ -84,28 +84,14 @@ public class DuelAcceptCommand
                 return;
             }
             final StandaloneArena sarena = (StandaloneArena)arena;
-            if (sarena.getDuplicates() != null) {
-                boolean foundarena = false;
-                for (final Arena darena : sarena.getDuplicates()) {
-                    if (!darena.isActive()) {
-                        arena = darena;
-                        foundarena = true;
-                        break;
-                    }
-                }
-                if (!foundarena) {
-                    player.sendMessage(CC.RED + "The arena you were dueled was a build match and there were no arenas found.");
-                    return;
-                }
-            }
         }
         if (!arena.getType().equals(ArenaType.SHARED) && !arena.getType().equals(ArenaType.KOTH)) {
             arena.setActive(true);
         }
         Match match;
         if (request.isParty()) {
+            final Team teamA = new Team(new TeamPlayer(player));
             if (request.getKit().getName().equals("HCFDIAMOND")) {
-                final Team teamA = new Team(new TeamPlayer(player));
                 for (final Player partyMember : senderProfile.getParty().getPlayers()) {
                     if (!partyMember.getPlayer().equals(player)) {
                         teamA.getTeamPlayers().add(new TeamPlayer(partyMember));
@@ -120,7 +106,6 @@ public class DuelAcceptCommand
                 match = new HCFMatch(teamA, teamB, arena);
             }
             else {
-                final Team teamA = new Team(new TeamPlayer(player));
                 for (final Player partyMember : senderProfile.getParty().getPlayers()) {
                     if (!partyMember.getPlayer().equals(player)) {
                         teamA.getTeamPlayers().add(new TeamPlayer(partyMember));

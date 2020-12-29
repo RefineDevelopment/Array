@@ -85,7 +85,7 @@ public class Tab implements ITablist {
             }
             else {
                 int added = 4;
-                elements.add(new TablistElement(CC.AQUA + CC.BOLD + "TournamentManager",23));
+                elements.add(new TablistElement(CC.AQUA + CC.BOLD + "Tournament",23));
                 for (final TournamentManager.TournamentMatch match : TournamentManager.CURRENT_TOURNAMENT.getTournamentMatches()) {
                     elements.add(new TablistElement(CC.AQUA + match.getTeamA().getLeader().getPlayer().getName(),added));
                     elements.add(new TablistElement(CC.AQUA + "vs",added + 20));
@@ -106,8 +106,8 @@ public class Tab implements ITablist {
                     elements.add(new TablistElement("&cEnemy",44));
                     elements.add(new TablistElement(CC.AQUA + player.getName(),5));
                     elements.add(new TablistElement(CC.WHITE + "Duration:",24));
-                    elements.add(new TablistElement(CC.AQUA + match2.getDuration(),25));
-                    elements.add(new TablistElement(CC.AQUA + opponent.getUsername(),45));
+                    elements.add(new TablistElement(CC.WHITE + match2.getDuration(),25));
+                    elements.add(new TablistElement(CC.WHITE + opponent.getUsername(),45));
                 }
                 else if (match2.isTeamMatch() || match2.isHCFMatch() || match2.isKoTHMatch()) {
                     final Team team = match2.getTeam(player);

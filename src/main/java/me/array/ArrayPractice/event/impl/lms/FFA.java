@@ -377,6 +377,7 @@ public class FFA {
 		profile.setState(ProfileState.SPECTATE_MATCH);
 		profile.refreshHotbar();
 		profile.handleVisibility();
+		player.setFlying(true);
 
 		player.teleport(Array.get().getFfaManager().getFfaSpectator());
 	}

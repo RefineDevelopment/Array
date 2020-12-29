@@ -5,6 +5,7 @@ import com.mongodb.client.model.Sorts;
 import java.util.ArrayList;
 
 import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.duel.DuelProcedure;
 import me.array.ArrayPractice.duel.DuelRequest;
 import me.array.ArrayPractice.kit.Kit;
@@ -55,7 +56,6 @@ import me.array.ArrayPractice.event.impl.sumo.Sumo;
 import me.array.ArrayPractice.profile.meta.ProfileKitData;
 import me.array.ArrayPractice.profile.meta.ProfileKitEditor;
 import me.array.ArrayPractice.profile.meta.option.ProfileOptions;
-import me.array.ArrayPractice.profile.meta.essentials.ProfileEssentials;
 import org.bson.Document;
 import com.mongodb.client.MongoCollection;
 import rip.verse.jupiter.knockback.KnockbackModule;
@@ -74,7 +74,6 @@ public class Profile {
     String name;
     int globalElo;
     private ProfileState state;
-    private final ProfileEssentials essentials;
     private final ProfileOptions options;
     private final ProfileKitEditor kitEditor;
     private final Map<Kit, ProfileKitData> kitData;
@@ -94,7 +93,6 @@ public class Profile {
 
     public Profile(final UUID uuid) {
         this.globalElo=1000;
-        this.essentials=new ProfileEssentials();
         this.options=new ProfileOptions();
         this.kitEditor=new ProfileKitEditor();
         this.kitData=new HashMap<>();
@@ -117,7 +115,7 @@ public class Profile {
         int kitCounter=0;
         for ( final Kit kit : this.kitData.keySet() ) {
             if (kit.getGameRules().isRanked()) {
-                globalElo+=this.kitData.get(kit).getElo();
+                globalElo+= this.kitData.get(kit).getElo();
                 ++kitCounter;
             }
         }
@@ -403,41 +401,25 @@ public class Profile {
             this.save();
             return;
         }
-
+        this.name=document.getString("name");
         this.globalElo=document.getInteger("globalElo");
-        final Document essentials=(Document) document.get("essentials");
-        if (essentials == null) {
-            final Document essentialsDocument=new Document();
-            essentialsDocument.put("nick", null);
-            document.put("essentials", essentialsDocument);
-        } else {
-            this.essentials.setNick(essentials.getString("nick"));
-        }
-
-
         final Document options=(Document) document.get("options");
         this.options.setShowScoreboard(options.getBoolean("showScoreboard"));
         this.options.setAllowSpectators(options.getBoolean("allowSpectators"));
         this.options.setReceiveDuelRequests(options.getBoolean("receiveDuelRequests"));
         final Document kitStatistics=(Document) document.get("kitStatistics");
 
+        for (String key : kitStatistics.keySet()) {
+            Document kitDocument = (Document) kitStatistics.get(key);
+            Kit kit = Kit.getByName(key);
 
-        for ( final String key : kitStatistics.keySet() ) {
-            final Document kitDocument=(Document) kitStatistics.get(key);
-            final Kit kit=Kit.getByName(key);
             if (kit != null) {
-                final ProfileKitData profileKitData=new ProfileKitData();
+                ProfileKitData profileKitData = new ProfileKitData();
                 profileKitData.setElo(kitDocument.getInteger("elo"));
-                if (kitDocument.getInteger("won") != null || kitDocument.getInteger("lost") != null) {
-                    profileKitData.setWon(kitDocument.getInteger("won"));
-                    profileKitData.setLost(kitDocument.getInteger("lost"));
-                } else {
-                    for ( final Map.Entry<Kit, ProfileKitData> entry : this.kitData.entrySet()) {
-                        kitDocument.put("won", entry.getValue().getWon());
-                        kitDocument.put("lost", entry.getValue().getLost());
-                    }
-                    this.kitData.put(kit, profileKitData);
-                }
+                profileKitData.setWon(kitDocument.getInteger("won"));
+                profileKitData.setLost(kitDocument.getInteger("lost"));
+
+                kitData.put(kit, profileKitData);
             }
         }
 
@@ -454,7 +436,7 @@ public class Profile {
                     loadout.setContents(InventoryUtil.deserializeInventory(kitObject.get("contents").getAsString()));
                     loadouts[kitObject.get("index").getAsInt()]=loadout;
                 }
-                this.kitData.get(kit).setLoadouts(loadouts);
+                kitData.get(kit).setLoadouts(loadouts);
             }
         }
     }
@@ -464,30 +446,36 @@ public class Profile {
         document.put("uuid", this.uuid.toString());
         document.put("name", this.name);
         document.put("globalElo", this.globalElo);
-        final Document essentialsDocument=new Document();
-        essentialsDocument.put("nick", this.essentials.getNick());
-        document.put("essentials", essentialsDocument);
+
         final Document optionsDocument=new Document();
         optionsDocument.put("showScoreboard", this.options.isShowScoreboard());
         optionsDocument.put("allowSpectators", this.options.isAllowSpectators());
         optionsDocument.put("receiveDuelRequests", this.options.isReceiveDuelRequests());
         document.put("options", optionsDocument);
-        final Document kitStatisticsDocument=new Document();
-        for ( final Map.Entry<Kit, ProfileKitData> entry : this.kitData.entrySet() ) {
-            final Document kitDocument = new Document();
+
+
+        Document kitStatisticsDocument = new Document();
+
+        for (Map.Entry<Kit, ProfileKitData> entry : kitData.entrySet()) {
+            Document kitDocument = new Document();
             kitDocument.put("elo", entry.getValue().getElo());
             kitDocument.put("won", entry.getValue().getWon());
             kitDocument.put("lost", entry.getValue().getLost());
             kitStatisticsDocument.put(entry.getKey().getName(), kitDocument);
         }
+
         document.put("kitStatistics", kitStatisticsDocument);
-        final Document kitsDocument=new Document();
-        for ( final Map.Entry<Kit, ProfileKitData> entry2 : this.kitData.entrySet() ) {
-            final JsonArray kitsArray=new JsonArray();
-            for ( int i=0; i < 4; ++i ) {
-                final KitLoadout loadout=entry2.getValue().getLoadout(i);
+
+        Document kitsDocument = new Document();
+
+        for (Map.Entry<Kit, ProfileKitData> entry : kitData.entrySet()) {
+            JsonArray kitsArray = new JsonArray();
+
+            for (int i = 0; i < 4; i++) {
+                KitLoadout loadout = entry.getValue().getLoadout(i);
+
                 if (loadout != null) {
-                    final JsonObject kitObject=new JsonObject();
+                    JsonObject kitObject = new JsonObject();
                     kitObject.addProperty("index", i);
                     kitObject.addProperty("name", loadout.getCustomName());
                     kitObject.addProperty("armor", InventoryUtil.serializeInventory(loadout.getArmor()));
@@ -495,10 +483,13 @@ public class Profile {
                     kitsArray.add(kitObject);
                 }
             }
-            kitsDocument.put(entry2.getKey().getName(), kitsArray.toString());
+
+            kitsDocument.put(entry.getKey().getName(), kitsArray.toString());
         }
+
         document.put("loadouts", kitsDocument);
-        Profile.collection.replaceOne(Filters.eq("uuid", this.uuid.toString()), document, new ReplaceOptions().upsert(true));
+
+        collection.replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
     }
 
     public static void init() {
@@ -513,24 +504,23 @@ public class Profile {
             }
             Profile.profiles.put(player.getUniqueId(), profile);
         }
+
+        // Save every 30-60 seconds to prevent data loss
         new BukkitRunnable() {
+            @Override
             public void run() {
-                for ( final Profile profile : Profile.getProfiles().values() ) {
+                for (Profile profile : Profile.getProfiles().values()) {
                     profile.save();
                 }
             }
-        }.runTaskTimerAsynchronously(Array.get(), 10L * 40L * 5L, 10L * 40L * 5L);
-        loadAllProfiles();
+        }.runTaskTimerAsynchronously(Array.get(), 60L, 60L);
         new BukkitRunnable() {
             public void run() {
                 Profile.loadAllProfiles();
                 Kit.getKits().forEach(Kit::updateKitLeaderboards);
-            }
-        }.runTaskTimerAsynchronously(Array.get(), 30L * 60L * 5L, 30L * 60L * 5L);
-        new BukkitRunnable() {
-            public void run() {
                 Profile.loadGlobalLeaderboards();
-                Bukkit.broadcastMessage(CC.translate("&c&lWarning &7Updating Leaderboards, this might cause some lag!"));
+                Arena.getArenas().forEach(Arena::save);
+                Bukkit.broadcastMessage(CC.translate("&b&lWarning&7: &7Updating Leaderboards, this might cause some lag!"));
             }
         }.runTaskTimerAsynchronously(Array.get(), 30L * 60L * 5L, 30L * 60L * 5L);
         new BukkitRunnable() {
@@ -605,10 +595,6 @@ public class Profile {
 
     public void setState(final ProfileState state) {
         this.state=state;
-    }
-
-    public ProfileEssentials getEssentials() {
-        return this.essentials;
     }
 
     public ProfileOptions getOptions() {

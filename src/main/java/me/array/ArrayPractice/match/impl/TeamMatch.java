@@ -108,7 +108,7 @@ public class TeamMatch extends Match {
             NameTags.color(player, enemy, org.bukkit.ChatColor.RED, getKit().getGameRules().isShowHealth());
         }
 
-        Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
+        Location spawn = team.equals(teamA) ? getArena().getSpawnA() : getArena().getSpawnB();
 
         if (spawn.getBlock().getType() == Material.AIR) {
             player.teleport(spawn);
@@ -243,7 +243,7 @@ public class TeamMatch extends Match {
 
         if (!canEnd() && !teamPlayer.isDisconnected()) {
             Team team = getTeam(player);
-            Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
+            Location spawn = team.equals(teamA) ? getArena().getSpawnA() : getArena().getSpawnB();
             player.teleport(spawn);
             Profile profile = Profile.getByUuid(player.getUniqueId());
             profile.refreshHotbar();
@@ -264,7 +264,7 @@ public class TeamMatch extends Match {
                 Player toPlayer = teamPlayer.getPlayer();
 
                 if (toPlayer != null && toPlayer.isOnline()) {
-                    toPlayer.teleport(getArena().getSpawn1());
+                    toPlayer.teleport(getArena().getSpawnA());
                 }
             }
 
@@ -276,7 +276,7 @@ public class TeamMatch extends Match {
                 Player toPlayer = teamPlayer.getPlayer();
 
                 if (toPlayer != null && toPlayer.isOnline()) {
-                    toPlayer.teleport(getArena().getSpawn2());
+                    toPlayer.teleport(getArena().getSpawnB());
                 }
             }
         } else {

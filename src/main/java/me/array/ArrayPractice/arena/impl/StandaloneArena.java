@@ -9,11 +9,8 @@ import java.util.*;
 
 public class StandaloneArena extends Arena
 {
-    private final List<Arena> duplicates;
-    
     public StandaloneArena(final String name) {
         super(name);
-        this.duplicates = new ArrayList<>();
     }
     
     @Override
@@ -23,38 +20,35 @@ public class StandaloneArena extends Arena
     
     @Override
     public void save() {
-        final String path = "arenas." + this.getName();
-        final FileConfiguration configuration = Array.get().getArenasConfig().getConfiguration();
+        System.out.println("STANDALONE ARENA SAVE");
+        String path = "arenas." + getName();
+
+        FileConfiguration configuration = Array.get().getArenasConfig().getConfiguration();
         configuration.set(path, null);
-        configuration.set(path + ".type", this.getType().name());
-        if (this.spawn1 != null) {
-            configuration.set(path + ".spawn1", LocationUtil.serialize(this.spawn1));
-        }
-        if (this.spawn2 != null) {
-            configuration.set(path + ".spawn2", LocationUtil.serialize(this.spawn2));
-        }
-        configuration.set(path + ".kits", this.getKits());
+        configuration.set(path + ".type", getType().name());
+        configuration.set(path + ".spawnA", LocationUtil.serialize(spawnA));
+        configuration.set(path + ".spawnB", LocationUtil.serialize(spawnB));
+        configuration.set(path + ".kits", getKits());
+
         try {
             configuration.save(Array.get().getArenasConfig().getFile());
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    @Override
-    public void delete() {
-        final FileConfiguration configuration = Array.get().getArenasConfig().getConfiguration();
-        configuration.set("arenas." + this.getName(), null);
-        try {
-            configuration.save(Array.get().getArenasConfig().getFile());
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public List<Arena> getDuplicates() {
-        return this.duplicates;
+    @Override
+    public void delete() {
+        super.delete();
+
+        FileConfiguration configuration = Array.get().getArenasConfig().getConfiguration();
+        configuration.set("arenas." + getName(), null);
+
+        try {
+            configuration.save(Array.get().getArenasConfig().getFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 }

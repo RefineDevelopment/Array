@@ -108,11 +108,29 @@
             <systemPath>${project.basedir}/lib/outlast.jar</systemPath>
         </dependency>
 
+        <!-- Nametag Handlers cuz its interfering with match nametags -->
+        <dependency>
+          <groupId>me.nametagedit</groupId>
+          <artifactId>NameTagEdit</artifactId>
+          <version>1.0</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/NametagEdit.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>me.activated.core</groupId>
+            <artifactId>AquaCoreAPI</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/AquaCoreAPI.jar</systemPath>
+        </dependency>
+
         <!-- Mongo -->
         <dependency>
             <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>3.11.0-beta2</version>
+            <artifactId>mongodb-driver</artifactId>
+            <version>3.12.3</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/mongo-java-driver-3.12.3.jar</systemPath>
         </dependency>
 
     </dependencies>

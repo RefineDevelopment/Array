@@ -147,7 +147,7 @@ public class Kit {
 	}
 
 	public void updateKitLeaderboards() {
-		if (!this.getRankedEloLeaderboards().isEmpty()) this.getRankedEloLeaderboards().clear();
+		this.getRankedEloLeaderboards().clear();
 		for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("kitStatistics." + getName() + ".elo")).limit(10).into(new ArrayList<>())) {
 			Document kitStatistics = (Document) document.get("kitStatistics");
 			if (kitStatistics.containsKey(getName())) {

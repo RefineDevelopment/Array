@@ -1,10 +1,9 @@
-
-
 package me.array.ArrayPractice.profile.meta;
 
 import me.array.ArrayPractice.kit.KitLoadout;
 import me.array.ArrayPractice.profile.hotbar.Hotbar;
 import me.array.ArrayPractice.profile.hotbar.HotbarItem;
+import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Arrays;
 import org.bukkit.ChatColor;
@@ -61,7 +60,7 @@ public class ProfileKitData
             if (loadout != null) {
                 final ItemStack itemStack = new ItemStack(Material.ENCHANTED_BOOK);
                 final ItemMeta itemMeta = itemStack.getItemMeta();
-                itemMeta.setDisplayName(loadout.getCustomName());
+                itemMeta.setDisplayName(CC.translate(loadout.getCustomName()));
                 itemMeta.setLore(Arrays.asList(ChatColor.GRAY + "Right-click with this book in your", ChatColor.GRAY + "hand to receive this kit."));
                 itemStack.setItemMeta(itemMeta);
                 toReturn.add(itemStack);

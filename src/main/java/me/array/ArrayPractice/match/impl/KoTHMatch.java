@@ -103,7 +103,7 @@ public class KoTHMatch extends Match {
             profile1.handleVisibility();
         }
 
-        Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
+        Location spawn = team.equals(teamA) ? getArena().getSpawnA() : getArena().getSpawnB();
 
         if (spawn.getBlock().getType() == Material.AIR) {
             player.teleport(spawn);

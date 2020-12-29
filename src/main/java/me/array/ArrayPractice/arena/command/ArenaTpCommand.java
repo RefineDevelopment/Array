@@ -9,7 +9,7 @@ public class ArenaTpCommand
 {
     public void execute(final Player player, @CPL("Arena") final Arena arena) {
         if (arena != null) {
-            player.teleport(arena.getSpawn1());
+            player.teleport(arena.getSpawnA());
         }
     }
 }

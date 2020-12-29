@@ -433,6 +433,7 @@ public class Brackets {
 		profile.setState(ProfileState.SPECTATE_MATCH);
 		profile.refreshHotbar();
 		profile.handleVisibility();
+		player.setFlying(true);
 
 		player.teleport(Array.get().getBracketsManager().getBracketsSpawn1());
 	}

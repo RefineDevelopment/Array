@@ -29,8 +29,8 @@ public class ArenaCreateCommand {
                 arena=new SharedArena(name);
             }
             final Location loc1=new Location(player.getLocation().getWorld(), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), player.getLocation().getYaw(), player.getLocation().getPitch());
-            arena.setSpawn1(loc1);
-            arena.setSpawn2(loc1);
+            arena.setSpawnA(loc1);
+            arena.setSpawnB(loc1);
             player.sendMessage(ChatColor.GREEN + type + " Arena " + name + " saved.");
         }
         arena.save();

@@ -1,5 +1,5 @@
+/*
 package me.array.ArrayPractice.arena.command;
-
 import me.array.ArrayPractice.Array;
 import org.bukkit.entity.*;
 import me.array.ArrayPractice.arena.*;
@@ -25,3 +25,4 @@ public class ArenaSetPointCommand
         arena.save();
     }
 }
+*/

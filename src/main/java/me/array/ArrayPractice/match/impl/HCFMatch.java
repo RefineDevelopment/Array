@@ -97,7 +97,7 @@ public class HCFMatch extends Match {
 			NameTags.color(player, enemy, org.bukkit.ChatColor.RED, false);
 		}
 
-		Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
+		Location spawn = team.equals(teamA) ? getArena().getSpawnA() : getArena().getSpawnB();
 
 		if (spawn.getBlock().getType() == Material.AIR) {
 			player.teleport(spawn);

@@ -18,7 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 @CommandMeta(label = "tournament host", permission = "tournament.host")
 public class TournamentHostCommand {
 
-	public void execute(Player player, @CPL("team size") Integer size) {
+	public void execute(Player player, @CPL("1/2") Integer size) {
 		if(TournamentManager.CURRENT_TOURNAMENT != null){
 			player.sendMessage(ChatColor.RED + "The TournamentManager has already started");
 			return;
@@ -42,8 +42,8 @@ public class TournamentHostCommand {
 			return;
 		}
 		String type = TournamentManager.CURRENT_TOURNAMENT.getTeamCount() + "vs" + TournamentManager.CURRENT_TOURNAMENT.getTeamCount();
-		Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "(TournamentManager) " + CC.WHITE + "A " + ChatColor.GOLD + ChatColor.BOLD + type +  TournamentManager.CURRENT_TOURNAMENT.getLadder().getName() + ChatColor.WHITE + " tournament is being hosted by " + CC.translate(CC.AQUA + Array.get().getChat().getPlayerPrefix(player) + player.getName()));
-		broadcastMessage(CC.AQUA + CC.BOLD + "(TournamentManager) " + ChatColor.GREEN + "(Click to accept)");
+		Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "(Tournament) " + CC.WHITE + "A " + ChatColor.GOLD + ChatColor.BOLD + type +  TournamentManager.CURRENT_TOURNAMENT.getLadder().getName() + ChatColor.WHITE + " tournament is being hosted by " + CC.translate(CC.AQUA + Array.get().getChat().getPlayerPrefix(player) + player.getName()));
+		broadcastMessage(CC.AQUA + CC.BOLD + "(Tournament) " + ChatColor.GREEN + "(Click to accept)");
 
 		TournamentManager.RUNNABLE = new BukkitRunnable(){
 			private int countdown = 60;
@@ -52,15 +52,15 @@ public class TournamentHostCommand {
 				countdown--;
 				if(countdown % 10 == 0 || countdown <= 10){
 					if (countdown > 0) {
-						Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "(TournamentManager) "  + CC.WHITE + "The TournamentManager is starting in " + ChatColor.GOLD + countdown + ChatColor.WHITE + " seconds. ");
-						broadcastMessage(CC.AQUA + CC.BOLD + "(TournamentManager) " + ChatColor.GREEN + "(Click to accept)");
+						Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "(Tournament) "  + CC.WHITE + "The Tournament is starting in " + ChatColor.GOLD + countdown + ChatColor.WHITE + " seconds. ");
+						broadcastMessage(CC.AQUA + CC.BOLD + "(Tournament) " + ChatColor.GREEN + "(Click to accept)");
 					}
 				}
 				if(countdown <= 0){
 					TournamentManager.RUNNABLE = null;
 					cancel();
 					if(TournamentManager.CURRENT_TOURNAMENT.getParticipatingCount() < 2){
-						Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "(TournamentManager) " + CC.RED + "The TournamentManager has been cancelled .");
+						Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "(Tournament) " + CC.RED + "The Tournament has been cancelled .");
 						TournamentManager.CURRENT_TOURNAMENT.cancel();
 						TournamentManager.CURRENT_TOURNAMENT = null;
 					}else {
@@ -75,7 +75,7 @@ public class TournamentHostCommand {
 		BaseComponent[] component = TextComponent.fromLegacyText(message);
 		for(BaseComponent baseComponent : component){
 			baseComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND , "/tournament join"));
-			baseComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT , TextComponent.fromLegacyText(ChatColor.GREEN + "Click to join the TournamentManager")));
+			baseComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT , TextComponent.fromLegacyText(ChatColor.GREEN + "Click to join the Tournament")));
 		}
 		for(Player player : Bukkit.getOnlinePlayers()){
 			player.spigot().sendMessage(component);

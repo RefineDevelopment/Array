@@ -254,6 +254,7 @@ public abstract class Match {
 		profile.setState(ProfileState.SPECTATE_MATCH);
 		profile.refreshHotbar();
 		profile.handleVisibility();
+		player.setFlying(true);
 
 		player.teleport(target.getLocation().clone().add(0, 2, 0));
 
