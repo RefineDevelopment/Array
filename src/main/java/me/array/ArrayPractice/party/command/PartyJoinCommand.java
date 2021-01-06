@@ -5,8 +5,8 @@ package me.array.ArrayPractice.party.command;
 import me.array.ArrayPractice.party.Party;
 import me.array.ArrayPractice.party.PartyPrivacy;
 import me.array.ArrayPractice.profile.Profile;
+import me.array.ArrayPractice.tournament.Tournament;
 import me.array.ArrayPractice.util.external.CC;
-import me.array.ArrayPractice.tournament.TournamentManager;
 import org.bukkit.entity.Player;
 import com.qrakn.honcho.command.CommandMeta;
 
@@ -41,9 +41,9 @@ public class PartyJoinCommand
             player.sendMessage(CC.RED + "You have not been invited to that party.");
             return;
         }
-        if (TournamentManager.CURRENT_TOURNAMENT != null) {
+        if (Tournament.CURRENT_TOURNAMENT != null) {
             for (final Player pplayer : party.getPlayers()) {
-                if (TournamentManager.CURRENT_TOURNAMENT.isParticipating(pplayer)) {
+                if (Tournament.CURRENT_TOURNAMENT.isParticipating(pplayer)) {
                     player.sendMessage(CC.RED + "The party is in tournament");
                     return;
                 }

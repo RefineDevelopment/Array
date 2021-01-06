@@ -1,7 +1,7 @@
 package me.array.ArrayPractice.event.impl.parkour.command;
 
 import com.qrakn.honcho.command.CommandMeta;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.event.impl.parkour.Parkour;
 import me.array.ArrayPractice.event.impl.parkour.ParkourState;
 import me.array.ArrayPractice.profile.Profile;
@@ -13,7 +13,7 @@ public class ParkourJoinCommand {
 
 	public static void execute(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		Parkour activeParkour = Array.get().getParkourManager().getActiveParkour();
+		Parkour activeParkour = Practice.get().getParkourManager().getActiveParkour();
 
 		if (profile.isBusy(player) || profile.getParty() != null) {
 			player.sendMessage(CC.RED + "You cannot join the parkour right now.");
@@ -30,7 +30,7 @@ public class ParkourJoinCommand {
 			return;
 		}
 
-		Array.get().getParkourManager().getActiveParkour().handleJoin(player);
+		Practice.get().getParkourManager().getActiveParkour().handleJoin(player);
 	}
 
 }

@@ -8,6 +8,7 @@ public enum OptionsType
     TOGGLESCOREBOARD("&b&lToggle Scoreboard", Material.PAINTING),
     TOGGLEDUELREQUESTS("&b&lToggle Duel Requests", Material.DIAMOND_SWORD),
     TOGGLESPECTATORS("&b&lToggle Spectators", Material.ENDER_PEARL),
+    TOGGLELIGHTNING("&b&lToggle Lightning", Material.BLAZE_ROD),
     TOGGLEPMS("&b&lToggle Private Messages", Material.BOOK);
     
     private String name;

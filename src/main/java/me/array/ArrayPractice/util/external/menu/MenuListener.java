@@ -1,6 +1,6 @@
 package me.array.ArrayPractice.util.external.menu;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.util.bootstrap.BootstrappedListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,8 +12,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 
 public class MenuListener extends BootstrappedListener {
 
-    public MenuListener(Array Array) {
-        super(Array);
+    public MenuListener(Practice Practice) {
+        super(Practice);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -53,7 +53,7 @@ public class MenuListener extends BootstrappedListener {
                     if (newMenu == openMenu) {
                         boolean buttonUpdate = button.shouldUpdate(player, event.getClick());
 
-                        if ((newMenu.isUpdateAfterClick() && buttonUpdate) || buttonUpdate) {
+                        if (buttonUpdate) {
                             openMenu.setClosedByMenu(true);
                             newMenu.openMenu(player);
                         }
@@ -64,7 +64,7 @@ public class MenuListener extends BootstrappedListener {
                 }
 
                 if (event.isCancelled()) {
-                    Bukkit.getScheduler().runTaskLater(Array, player::updateInventory, 1L);
+                    Bukkit.getScheduler().runTaskLater(Practice, player::updateInventory, 1L);
                 }
             } else {
                 if (event.getCurrentItem() != null) {

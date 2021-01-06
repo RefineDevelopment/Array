@@ -1,6 +1,6 @@
 package me.array.ArrayPractice.util.external.menu;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.util.external.CC;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +21,7 @@ public abstract class Menu {
     public static Map<String, Menu> currentlyOpenedMenus = new HashMap<>();
 
     @Getter
-    protected Array zoot = Array.get();
+    protected Practice zoot = Practice.get();
     private Map<Integer, Button> buttons = new HashMap<>();
     private boolean autoUpdate = false;
     private boolean updateAfterClick = true;

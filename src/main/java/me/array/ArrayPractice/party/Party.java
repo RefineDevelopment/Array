@@ -1,8 +1,10 @@
 package me.array.ArrayPractice.party;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.duel.DuelRequest;
 import me.array.ArrayPractice.util.ChatHelper;
+import me.array.ArrayPractice.match.team.Team;
+import me.array.ArrayPractice.match.team.TeamPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import me.array.ArrayPractice.profile.ProfileState;
@@ -14,10 +16,9 @@ import me.array.ArrayPractice.util.external.ChatComponentBuilder;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.ArrayList;
-import me.array.ArrayPractice.match.team.TeamPlayer;
+
 import org.bukkit.entity.Player;
 import java.util.List;
-import me.array.ArrayPractice.match.team.Team;
 
 public class Party extends Team
 {
@@ -37,13 +38,13 @@ public class Party extends Team
         this.invites = new ArrayList<>();
         this.banned = new ArrayList<>();
         Party.parties.add(this);
-        player.sendMessage(CC.translate("&7&m-----------------------------------"));
-        player.sendMessage(CC.translate("&7You have successfully created a new &dParty&7."));
+        player.sendMessage(CC.translate("&8&m-----------------------------------------"));
+        player.sendMessage(CC.translate("&7You have successfully created a new &bParty&7."));
         player.sendMessage(CC.translate("&7To invite your friends do &b/party invite &7."));
         player.sendMessage(CC.translate(" "));
-        player.sendMessage(CC.translate("&7Remember to tell them to join!"));
-        player.sendMessage(CC.translate("&7&o/party for information on all commands, to use party chat do '&d@&7' <messsage>"));
-        player.sendMessage(CC.translate("&7&m-----------------------------------"));
+        player.sendMessage(CC.translate("&7&oTo use party chat do '&b&o@&7&o'&7&o <messsage>."));
+        player.sendMessage(CC.translate("&7&o/party help for information on all commands."));
+        player.sendMessage(CC.translate("&8&m-----------------------------------------"));
     }
     
     public void setPrivacy(final PartyPrivacy privacy) {
@@ -134,7 +135,7 @@ public class Party extends Team
             profile.setMatch(null);
             profile.refreshHotbar();
             profile.handleVisibility();
-            Array.get().getEssentials().teleportToSpawn(player);
+            Practice.get().getEssentials().teleportToSpawn(player);
         }
         for (final TeamPlayer teamPlayer : this.getTeamPlayers()) {
             final Player otherPlayer = teamPlayer.getPlayer();
@@ -205,7 +206,7 @@ public class Party extends Team
             public void run() {
                 Party.getParties().forEach(party -> party.getInvites().removeIf(PartyInvite::hasExpired));
             }
-        }.runTaskTimerAsynchronously(Array.get(), 100L, 100L);
+        }.runTaskTimerAsynchronously(Practice.get(), 100L, 100L);
         new BukkitRunnable() {
             public void run() {
                 for (final Party party : Party.getParties()) {
@@ -215,7 +216,7 @@ public class Party extends Team
                     }
                 }
             }
-        }.runTaskTimerAsynchronously(Array.get(), 1200L, 1200L);
+        }.runTaskTimerAsynchronously(Practice.get(), 1200L, 1200L);
     }
     
     public PartyPrivacy getPrivacy() {

@@ -22,7 +22,7 @@ public class AllowSpectatorsOptionButton extends ProfileOptionButton
     
     @Override
     public String getOptionName() {
-        return "&a&lSpectators";
+        return "&b&lSpectators";
     }
     
     @Override

@@ -1,6 +1,6 @@
 package me.array.ArrayPractice.profile.menu.command;
 
-import me.array.ArrayPractice.profile.menu.menu.RankedLeaderboardsMenu;
+import me.array.ArrayPractice.profile.stats.menu.RankedLeaderboardsMenu;
 import org.bukkit.entity.Player;
 import com.qrakn.honcho.command.CommandMeta;
 

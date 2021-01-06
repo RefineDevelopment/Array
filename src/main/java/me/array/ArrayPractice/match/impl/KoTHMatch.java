@@ -1,12 +1,13 @@
 package me.array.ArrayPractice.match.impl;
 
-import lombok.Getter;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.match.Match;
 import me.array.ArrayPractice.match.MatchSnapshot;
 import me.array.ArrayPractice.match.MatchState;
+import me.array.ArrayPractice.match.team.Team;
+import me.array.ArrayPractice.match.team.TeamPlayer;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.profile.ProfileState;
 import me.array.ArrayPractice.queue.QueueType;
@@ -14,14 +15,12 @@ import me.array.ArrayPractice.util.PlayerUtil;
 import me.array.ArrayPractice.util.external.CC;
 import me.array.ArrayPractice.util.external.ChatComponentBuilder;
 import me.array.ArrayPractice.util.nametag.NameTags;
-import me.array.ArrayPractice.match.team.Team;
-import me.array.ArrayPractice.match.team.TeamPlayer;
+import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -50,6 +49,11 @@ public class KoTHMatch extends Match {
     }
 
     @Override
+    public boolean isSumoTeamMatch() {
+        return false;
+    }
+
+    @Override
     public boolean isTeamMatch() {
         return false;
     }
@@ -70,6 +74,11 @@ public class KoTHMatch extends Match {
     }
 
     @Override
+    public boolean isSumoMatch() {
+        return false;
+    }
+
+    @Override
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
@@ -82,9 +91,7 @@ public class KoTHMatch extends Match {
 
         PlayerUtil.reset(player);
 
-        for (ItemStack itemStack : Profile.getByUuid(player.getUniqueId()).getKitData().get(Kit.getByName("NoDebuff")).getKitItems()) {
-            player.getInventory().addItem(itemStack);
-        }
+        Profile.getByUuid(player.getUniqueId()).getKitData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
 
         Profile.getByUuid(player.getUniqueId()).setState(ProfileState.IN_FIGHT);
 
@@ -103,7 +110,7 @@ public class KoTHMatch extends Match {
             profile1.handleVisibility();
         }
 
-        Location spawn = team.equals(teamA) ? getArena().getSpawnA() : getArena().getSpawnB();
+        Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
 
         if (spawn.getBlock().getType() == Material.AIR) {
             player.teleport(spawn);
@@ -141,7 +148,7 @@ public class KoTHMatch extends Match {
                     }
                 }
             }
-        }.runTaskTimerAsynchronously(Array.get(), 2L, 20L);
+        }.runTaskTimerAsynchronously(Practice.get(), 2L, 20L);
     }
 
     private boolean isCapperOnline() {
@@ -151,7 +158,7 @@ public class KoTHMatch extends Match {
     }
 
     @Override
-    public void onEnd() {
+    public boolean onEnd() {
         for (TeamPlayer teamPlayer : getTeamPlayers()) {
             if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
                 Player player = teamPlayer.getPlayer();
@@ -205,12 +212,12 @@ public class KoTHMatch extends Match {
                             profile.refreshHotbar();
                             profile.handleVisibility();
 
-                            Array.get().getEssentials().teleportToSpawn(player);
+                            Practice.get().getEssentials().teleportToSpawn(player);
                         }
                     }
                 }
             }
-        }.runTaskLater(Array.get(), 40L);
+        }.runTaskLater(Practice.get(), 40L);
 
         Team winningTeam = getWinningTeam();
         Team losingTeam = getOpponentTeam(winningTeam);
@@ -236,16 +243,15 @@ public class KoTHMatch extends Match {
 
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());
-        components.add(new ChatComponentBuilder("").parse("&bMatch Details").create());
-        components.add(new ChatComponentBuilder("").parse("").create());
+        components.add(new ChatComponentBuilder("").parse("&cPost Match Inventories &7(Click to view)").create());
         components.add(winnerInventories.create());
         components.add(loserInventories.create());
         components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());
 
         for (Player player : getPlayersAndSpectators()) {
-            Player.Spigot spigot = player.spigot();
-            components.forEach(spigot::sendMessage);
+            components.forEach(components1 -> player.spigot().sendMessage(components1));
         }
+        return true;
     }
 
     @Override
@@ -278,7 +284,7 @@ public class KoTHMatch extends Match {
                         canEnd();
                     }
                 }
-            }.runTaskLater(Array.get(), 160L);
+            }.runTaskLater(Practice.get(), 160L);
         } else {
             canEnd();
         }

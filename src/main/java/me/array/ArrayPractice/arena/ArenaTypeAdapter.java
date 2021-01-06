@@ -1,11 +1,13 @@
 package me.array.ArrayPractice.arena;
 
-import com.qrakn.honcho.command.adapter.*;
+import com.qrakn.honcho.command.adapter.CommandTypeAdapter;
 
-public class ArenaTypeAdapter implements CommandTypeAdapter
-{
+public class ArenaTypeAdapter implements CommandTypeAdapter {
+
     @Override
-    public <T> T convert(final String string, final Class<T> type) {
+    public <T> T convert(String string, Class<T> type) {
         return type.cast(Arena.getByName(string));
     }
+
 }
+

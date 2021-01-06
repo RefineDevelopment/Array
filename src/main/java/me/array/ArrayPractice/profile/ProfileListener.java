@@ -1,17 +1,27 @@
 package me.array.ArrayPractice.profile;
 
-import me.array.ArrayPractice.Array;
-import me.array.ArrayPractice.util.TaskUtil;
+import me.array.ArrayPractice.Practice;
+import me.array.ArrayPractice.match.Match;
+import me.array.ArrayPractice.match.events.MatchEvent;
+import me.array.ArrayPractice.match.events.MatchStartEvent;
 import me.array.ArrayPractice.profile.meta.option.button.AllowSpectatorsOptionButton;
 import me.array.ArrayPractice.profile.meta.option.button.DuelRequestsOptionButton;
 import me.array.ArrayPractice.profile.meta.option.button.ShowScoreboardOptionButton;
+import me.array.ArrayPractice.util.PlayerUtil;
+import me.array.ArrayPractice.util.TaskUtil;
 import me.array.ArrayPractice.util.essentials.event.SpawnTeleportEvent;
-import me.array.ArrayPractice.util.external.CC;
 import me.array.ArrayPractice.util.external.profile.option.event.OptionsOpenedEvent;
-import net.mineaus.lunar.LunarClientAPI;
-import net.mineaus.lunar.event.impl.AuthenticateEvent;
-import net.mineaus.lunar.util.type.StaffModule;
-import org.bukkit.*;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityEquipment;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.Sign;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,17 +32,61 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.StringUtil;
 
-import java.io.IOException;
+import java.util.List;
 
 public class ProfileListener implements Listener {
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onPlayerMatchStart(MatchEvent e) {
+        if (e instanceof MatchStartEvent) {
+            Match match = e.getMatch();
+            Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.get(), () -> match.getPlayers().forEach(player -> {
+                Profile profile = Profile.getByUuid(player.getUniqueId());
+                List<Player> followers = profile.getFollower();
+                for (Player follower : followers) {
+                    if (follower != null) {
+                        follower.chat("/spec " + profile.getName());
+                    }
+                }
+            }), 20L);
+        }
+    }
+
     @EventHandler
-    public void onChat(AsyncPlayerChatEvent e) {
-        Player p=e.getPlayer();
-        if (p.hasPermission("practice.color")) {
-            e.setMessage(ChatColor.translateAlternateColorCodes('&', e.getMessage()));
+    public void onInteract(PlayerInteractEvent e) {
+        if (e.getItem() == null || e.getClickedBlock() == null) {
+            return;
+        }
+
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (e.getItem().getType() == Material.PAINTING) {
+                if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
+                    if (!e.getPlayer().isOp())
+                        e.setCancelled(true);
+                }
+            }
+
+            if (e.getClickedBlock().getState() instanceof ItemFrame) {
+                if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
+                    if (!e.getPlayer().isOp()) {
+                        e.setCancelled(true);
+                        return;
+                    }
+                }
+            }
+
+            if (e.getClickedBlock().getState() instanceof Sign) {
+                Sign sign = (Sign) e.getClickedBlock().getState();
+                if (sign.getLine(1) != null && sign.getLine(1).contains("[Click Here]")) {
+                    if (sign.getLine(2).toLowerCase().contains("back to spawn")) {
+                        Practice.get().getEssentials().teleportToSpawn(e.getPlayer());
+                    }
+                }
+            }
+
         }
     }
 
@@ -46,24 +100,15 @@ public class ProfileListener implements Listener {
     }
 
     @EventHandler
-    public void onBlockPlaceEvent(BlockPlaceEvent event) {
-        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
-
-        if (profile.getState() == ProfileState.IN_LOBBY) {
-            if (event.getPlayer().getGameMode() != GameMode.CREATIVE && !event.getPlayer().isOp()) {
-                event.setCancelled(true);
-            }
-        }
-    }
-
-
-
-    @EventHandler
     public void onPlayerPickupItemEvent(PlayerPickupItemEvent event) {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
         if (!profile.isInSomeSortOfFight()) {
-            if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+            if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+                if (!event.getPlayer().isOp()) {
+                    event.setCancelled(true);
+                }
+            } else {
                 event.setCancelled(true);
             }
         }
@@ -74,7 +119,11 @@ public class ProfileListener implements Listener {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
         if (!(profile.isInSomeSortOfFight())) {
-            if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+            if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+                if (!event.getPlayer().isOp()) {
+                    event.setCancelled(true);
+                }
+            } else {
                 event.setCancelled(true);
             }
         }
@@ -84,14 +133,8 @@ public class ProfileListener implements Listener {
     public void onBreak(BlockBreakEvent event) {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
-        if (profile.getState() == ProfileState.IN_LOBBY) {
-            if (event.getPlayer().getGameMode() != GameMode.CREATIVE && !event.getPlayer().isOp()) {
-                event.setCancelled(true);
-            }
-        }
-
         if (profile.isInSomeSortOfFight()) {
-            if (!profile.isInFight() && !profile.isInSpleef()) {
+            if (!profile.isInSkyWars() && !profile.isInFight() && !profile.isInSpleef()) {
                 if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
                     if (!event.getPlayer().isOp()) {
                         event.setCancelled(true);
@@ -101,7 +144,11 @@ public class ProfileListener implements Listener {
                 }
             }
         } else {
-            if (event.getPlayer().getGameMode() != GameMode.CREATIVE && !event.getPlayer().isOp()) {
+            if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+                if (!event.getPlayer().isOp()) {
+                    event.setCancelled(true);
+                }
+            } else {
                 event.setCancelled(true);
             }
         }
@@ -112,7 +159,7 @@ public class ProfileListener implements Listener {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
         if (profile.isInSomeSortOfFight()) {
-            if (!profile.isInFight()) {
+            if (!profile.isInSkyWars() && !profile.isInFight()) {
                 if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
                     if (!event.getPlayer().isOp()) {
                         event.setCancelled(true);
@@ -122,9 +169,20 @@ public class ProfileListener implements Listener {
                 }
             }
         } else {
-            if (event.getPlayer().getGameMode() != GameMode.CREATIVE && !event.getPlayer().isOp()) {
+            if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+                if (!event.getPlayer().isOp()) {
+                    event.setCancelled(true);
+                }
+            } else {
                 event.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void itemFrameItemRemoval(EntityDamageEvent e) {
+        if (e.getEntity() instanceof ItemFrame) {
+            e.setCancelled(true);
         }
     }
 
@@ -133,7 +191,7 @@ public class ProfileListener implements Listener {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
         if (profile.isInSomeSortOfFight()) {
-            if (!profile.isInFight()) {
+            if (!profile.isInSkyWars() && !profile.isInFight()) {
                 if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
                     if (!event.getPlayer().isOp()) {
                         event.setCancelled(true);
@@ -143,7 +201,11 @@ public class ProfileListener implements Listener {
                 }
             }
         } else {
-            if (event.getPlayer().getGameMode() != GameMode.CREATIVE && !event.getPlayer().isOp()) {
+            if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+                if (!event.getPlayer().isOp()) {
+                    event.setCancelled(true);
+                }
+            } else {
                 event.setCancelled(true);
             }
         }
@@ -167,7 +229,7 @@ public class ProfileListener implements Listener {
                 event.setCancelled(true);
 
                 if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                    Array.get().getEssentials().teleportToSpawn((Player) event.getEntity());
+                    Practice.get().getEssentials().teleportToSpawn((Player) event.getEntity());
                 }
             }
         }
@@ -212,7 +274,7 @@ public class ProfileListener implements Listener {
 
             profile.setName(p.getName());
 
-            Array.get().getEssentials().teleportToSpawn(p);
+            Practice.get().getEssentials().teleportToSpawn(p);
 
             profile.refreshHotbar();
             profile.handleVisibility();
@@ -232,8 +294,11 @@ public class ProfileListener implements Listener {
 
             profile.save();
 
+            // TODO: Use some type of 'rematch token' and task instead of manually
+            // TODO: checking when a hotbar needs to be refreshed
+            // Remove rematch data
             if (profile.getRematchData() != null) {
-                Player target = Array.get().getServer().getPlayer(profile.getRematchData().getTarget());
+                Player target = Practice.get().getServer().getPlayer(profile.getRematchData().getTarget());
 
                 if (target != null && target.isOnline()) {
                     Profile.getByUuid(target.getUniqueId()).checkForHotbarUpdate();
@@ -258,51 +323,48 @@ public class ProfileListener implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerChatTabComplete(PlayerChatTabCompleteEvent event) {
+        List<String> completions = (List<String>) event.getTabCompletions();
+        completions.clear();
+        String token = event.getLastToken();
+        for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+            if (StringUtil.startsWithIgnoreCase(p.getName(), token)) {
+                completions.add(p.getName());
+            }
+        }
+    }
+
     @EventHandler
-    public void onAuth(AuthenticateEvent event){
-        Player player = event.getPlayer();
-        if(player.hasPermission("practice.staff")) {
-            try {
-                LunarClientAPI.getInstance().sendTitle(player, false, CC.AQUA + "Resolve " + CC.AQUA + "Practice", 1f, 6, 3, 3);
-                LunarClientAPI.getInstance().sendTitle(player, true, CC.GREEN + "LCAPI " + CC.AQUA + "Authenticated!", 1f, 6, 3, 3);
-            } catch (IOException e) {
-                //ignore
-            }
-        }
+    public void click(NPCRightClickEvent event) {
+        if (event.getNPC().getEntity().getType() == EntityType.ZOMBIE) {
+            TaskUtil.runAsync(() -> {
+                Profile profile = Profile.getByUuid(event.getClicker());
 
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                if(player.isOp()) {
-                    try {
-                        LunarClientAPI.getInstance().toggleStaffModule(player, StaffModule.BUNNY_HOP, true);
-                        LunarClientAPI.getInstance().toggleStaffModule(player, StaffModule.NAME_TAGS, true);
-                        LunarClientAPI.getInstance().toggleStaffModule(player, StaffModule.XRAY, true);
-                    } catch (Exception e){
-                        //ignore
-                    }
-                }
-            }
-        }.runTaskLater(Array.get(), 20L);
+                ItemStack[] items = PlayerUtil.getNextSet(profile.getPlayer());
+
+                ItemStack hand = items[0];
+                ItemStack helm = items[1];
+                ItemStack chest = items[2];
+                ItemStack legs = items[3];
+                ItemStack boot = items[4];
+
+                PacketPlayOutEntityEquipment helmP = new PacketPlayOutEntityEquipment(event.getNPC().getEntity().getEntityId(), 4, CraftItemStack.asNMSCopy(helm));
+                PacketPlayOutEntityEquipment chestP = new PacketPlayOutEntityEquipment(event.getNPC().getEntity().getEntityId(), 3, CraftItemStack.asNMSCopy(chest));
+                PacketPlayOutEntityEquipment legsP = new PacketPlayOutEntityEquipment(event.getNPC().getEntity().getEntityId(), 2, CraftItemStack.asNMSCopy(legs));
+                PacketPlayOutEntityEquipment bootP = new PacketPlayOutEntityEquipment(event.getNPC().getEntity().getEntityId(), 1, CraftItemStack.asNMSCopy(boot));
+                PacketPlayOutEntityEquipment swordP = new PacketPlayOutEntityEquipment(event.getNPC().getEntity().getEntityId(), 0, CraftItemStack.asNMSCopy(hand));
+
+                ((CraftPlayer) event.getClicker()).getHandle().playerConnection.sendPacket(helmP);
+                ((CraftPlayer) event.getClicker()).getHandle().playerConnection.sendPacket(chestP);
+                ((CraftPlayer) event.getClicker()).getHandle().playerConnection.sendPacket(legsP);
+                ((CraftPlayer) event.getClicker()).getHandle().playerConnection.sendPacket(bootP);
+                ((CraftPlayer) event.getClicker()).getHandle().playerConnection.sendPacket(swordP);
+
+            });
+
+            event.getClicker().playSound(event.getNPC().getEntity().getLocation(), Sound.IRONGOLEM_HIT, 10.0F, 0.5F);
+        }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onLogin(org.bukkit.event.player.AsyncPlayerPreLoginEvent event){
-        if (!Bukkit.getServer().hasWhitelist()){
-            return;
-        }
-
-        for (OfflinePlayer player : Bukkit.getServer().getWhitelistedPlayers()){
-            if (player.hasPlayedBefore()) {
-                if (player.getUniqueId().equals(event.getUniqueId())) {
-                    return;
-                }
-            } else {
-                if (player.getName().equals(event.getName())) {
-                    return;
-                }
-            }
-        }
-        event.disallow(org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, ChatColor.WHITE + "You are not whitelisted.");
-    }
 }

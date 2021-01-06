@@ -2,7 +2,7 @@ package me.array.ArrayPractice.event.impl.brackets.command;
 
 import com.qrakn.honcho.command.CommandMeta;
 import me.array.ArrayPractice.event.impl.brackets.Brackets;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.entity.Player;
@@ -12,7 +12,7 @@ public class BracketsLeaveCommand {
 
 	public void execute(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		Brackets activeBrackets = Array.get().getBracketsManager().getActiveBrackets();
+		Brackets activeBrackets = Practice.get().getBracketsManager().getActiveBrackets();
 
 		if (activeBrackets == null) {
 			player.sendMessage(CC.RED + "There isn't any active Brackets Events.");
@@ -24,7 +24,7 @@ public class BracketsLeaveCommand {
 			return;
 		}
 
-		Array.get().getBracketsManager().getActiveBrackets().handleLeave(player);
+		Practice.get().getBracketsManager().getActiveBrackets().handleLeave(player);
 	}
 
 }

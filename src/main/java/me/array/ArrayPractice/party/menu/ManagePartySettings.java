@@ -41,12 +41,12 @@ public class ManagePartySettings extends Menu
         public ItemStack getButtonItem(final Player player) {
             final Profile profile = Profile.getByUuid(player.getUniqueId());
             if (this.partyManage == PartyManage.INCREASELIMIT) {
-                return new ItemBuilder(Material.WOOL).durability(5).name("&b" + this.partyManage.getName()).lore("&7Limit: " + profile.getParty().getLimit()).build();
+                return new ItemBuilder(Material.SKULL_ITEM).durability(5).name("&b" + this.partyManage.getName()).lore("&7Limit: " + profile.getParty().getLimit()).build();
             }
             if (this.partyManage == PartyManage.PUBLIC) {
                 return new ItemBuilder(Material.CHEST).name("&b" + this.partyManage.getName()).lore("&7Public: " + profile.getParty().isPublic()).build();
             }
-            return new ItemBuilder(Material.WOOL).durability(14).name("&b" + this.partyManage.getName()).lore("&7Limit: " + profile.getParty().getLimit()).build();
+            return new ItemBuilder(Material.SKULL).durability(14).name("&b" + this.partyManage.getName()).lore("&7Limit: " + profile.getParty().getLimit()).build();
         }
         
         @Override

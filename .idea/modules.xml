@@ -2,7 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Array.iml" filepath="$PROJECT_DIR$/Array.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../AquaCoreBridge/AquaCoreBridge.iml" filepath="$PROJECT_DIR$/../AquaCoreBridge/AquaCoreBridge.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Array 3.0.iml" filepath="$PROJECT_DIR$/Array 3.0.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../LunarClient-API/LunarClient-API.iml" filepath="$PROJECT_DIR$/../LunarClient-API/LunarClient-API.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../ServerStatusBot/ServerStatusBot.iml" filepath="$PROJECT_DIR$/../ServerStatusBot/ServerStatusBot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../SmokCore/SmokCore.iml" filepath="$PROJECT_DIR$/../SmokCore/SmokCore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../SmokDisguise/SmokDisguise.iml" filepath="$PROJECT_DIR$/../SmokDisguise/SmokDisguise.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../SmokHub/SmokHub.iml" filepath="$PROJECT_DIR$/../SmokHub/SmokHub.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../SmokKits/SmokKits.iml" filepath="$PROJECT_DIR$/../SmokKits/SmokKits.iml" />
     </modules>
   </component>
 </project>

@@ -6,12 +6,14 @@ public class ProfileOptions
     private boolean receiveDuelRequests;
     private boolean allowSpectators;
     private boolean privateMessages;
+    private boolean lightning;
     
     public ProfileOptions() {
         this.showScoreboard = true;
         this.receiveDuelRequests = true;
         this.allowSpectators = true;
         this.privateMessages = true;
+        this.lightning = true;
     }
     
     public boolean isShowScoreboard() {
@@ -44,5 +46,12 @@ public class ProfileOptions
     
     public void setPrivateMessages(final boolean privateMessages) {
         this.privateMessages = privateMessages;
+    }
+
+    public boolean isLightning() {
+        return this.lightning;
+    }
+    public void setLightning(final boolean lightning) {
+        this.lightning = lightning;
     }
 }

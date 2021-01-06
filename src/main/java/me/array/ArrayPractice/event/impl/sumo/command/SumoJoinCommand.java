@@ -1,6 +1,6 @@
 package me.array.ArrayPractice.event.impl.sumo.command;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.event.impl.sumo.Sumo;
 import me.array.ArrayPractice.event.impl.sumo.SumoState;
 import me.array.ArrayPractice.profile.Profile;
@@ -13,7 +13,7 @@ public class SumoJoinCommand {
 
 	public static void execute(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		Sumo activeSumo = Array.get().getSumoManager().getActiveSumo();
+		Sumo activeSumo = Practice.get().getSumoManager().getActiveSumo();
 
 		if (profile.isBusy(player) || profile.getParty() != null) {
 			player.sendMessage(CC.RED + "You cannot join the Sumo Event right now.");
@@ -30,7 +30,7 @@ public class SumoJoinCommand {
 			return;
 		}
 
-		Array.get().getSumoManager().getActiveSumo().handleJoin(player);
+		Practice.get().getSumoManager().getActiveSumo().handleJoin(player);
 	}
 
 }

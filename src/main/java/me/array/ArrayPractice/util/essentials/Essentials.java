@@ -1,6 +1,6 @@
 package me.array.ArrayPractice.util.essentials;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.util.bootstrap.Bootstrapped;
 import me.array.ArrayPractice.util.external.LocationUtil;
 import me.array.ArrayPractice.util.essentials.event.SpawnTeleportEvent;
@@ -16,19 +16,19 @@ public class Essentials extends Bootstrapped {
 
     private Location spawn;
 
-    public Essentials(Array Array) {
-        super(Array);
+    public Essentials(Practice Practice) {
+        super(Practice);
 
-        spawn = LocationUtil.deserialize(Array.getMainConfig().getStringOrDefault("ARRAY.SPAWN", null));
+        spawn = LocationUtil.deserialize(Practice.getMainConfig().getStringOrDefault("ARRAY.SPAWN", null));
     }
 
     public void setSpawn(Location location) {
         spawn = location;
 
-        Array.getMainConfig().getConfiguration().set("ARRAY.SPAWN", LocationUtil.serialize(this.spawn));
+        Practice.getMainConfig().getConfiguration().set("ARRAY.SPAWN", LocationUtil.serialize(this.spawn));
 
         try {
-            Array.getMainConfig().getConfiguration().save(Array.getMainConfig().getFile());
+            Practice.getMainConfig().getConfiguration().save(Practice.getMainConfig().getFile());
         } catch (IOException e) {
             e.printStackTrace();
         }

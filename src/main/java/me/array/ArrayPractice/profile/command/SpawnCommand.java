@@ -1,7 +1,7 @@
 package me.array.ArrayPractice.profile.command;
 
 import com.qrakn.honcho.command.CommandMeta;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.entity.Player;
@@ -17,7 +17,7 @@ public class SpawnCommand {
         Profile.getProfiles().put(player.getUniqueId(), profile);
 
         profile.setName(player.getName());
-        Array.get().getEssentials().teleportToSpawn(player);
+        Practice.get().getEssentials().teleportToSpawn(player);
 
         profile.refreshHotbar();
         profile.handleVisibility();

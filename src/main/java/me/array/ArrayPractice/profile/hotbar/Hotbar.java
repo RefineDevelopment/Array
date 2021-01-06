@@ -1,10 +1,8 @@
-
-
 package me.array.ArrayPractice.profile.hotbar;
 
 import java.util.HashMap;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.CC;
 import me.array.ArrayPractice.util.external.ItemBuilder;
@@ -34,7 +32,7 @@ public class Hotbar
         Hotbar.items.put(HotbarItem.PARTY_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Party" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.PARTY_INFO, new ItemBuilder(Material.PAPER).durability(3).name(CC.AQUA + "Party Information" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.OTHER_PARTIES, new ItemBuilder(Material.REDSTONE_TORCH_ON).name(CC.AQUA + "Fight Other Parties" + CC.GRAY + " (Right-Click)").build());
-        Hotbar.items.put(HotbarItem.LEADERBOARDS_MENU, new ItemBuilder(Material.EMERALD).name(CC.AQUA + "View Leaderboards" + CC.GRAY + " (Right-Click)").build());
+        Hotbar.items.put(HotbarItem.LEADERBOARDS_MENU, new ItemBuilder(Material.EMERALD).name(CC.AQUA + "Main Menu" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.SETTINGS_MENU, new ItemBuilder(Material.ANVIL).name(CC.AQUA + "Settings" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.KIT_EDITOR, new ItemBuilder(Material.BOOK).name(CC.AQUA + "Kit Editor" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.SPECTATE_STOP, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.AQUA + CC.BOLD + "Stop Spectating" + CC.GRAY + " (Right-Click)").build());
@@ -42,8 +40,9 @@ public class Hotbar
         Hotbar.items.put(HotbarItem.EVENT_JOIN, new ItemBuilder(Material.NETHER_STAR).name(CC.AQUA + "Join Event" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.SUMO_LEAVE, new ItemBuilder(Material.INK_SACK).name(CC.RED + "Leave Sumo" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.BRACKETS_LEAVE, new ItemBuilder(Material.INK_SACK).name(CC.RED + "Leave Brackets" + CC.GRAY + " (Right-Click)").build());
-        Hotbar.items.put(HotbarItem.FFA_LEAVE, new ItemBuilder(Material.INK_SACK).name(CC.RED + "Leave FFA" + CC.GRAY + " (Right-Click)").build());
+        Hotbar.items.put(HotbarItem.LMS_LEAVE, new ItemBuilder(Material.INK_SACK).name(CC.RED + "Leave FFA" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.PARKOUR_LEAVE, new ItemBuilder(Material.INK_SACK).name(CC.RED + "Leave Parkour" + CC.GRAY + " (Right-Click)").build());
+        Hotbar.items.put(HotbarItem.SKYWARS_LEAVE, new ItemBuilder(Material.INK_SACK).name(CC.RED + "Leave Skywars" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.SPLEEF_LEAVE, new ItemBuilder(Material.INK_SACK).name(CC.RED + "Leave Spleef" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.REMATCH_REQUEST, new ItemBuilder(Material.BLAZE_POWDER).name(CC.AQUA + "Request Rematch" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.REMATCH_ACCEPT, new ItemBuilder(Material.DIAMOND).name(CC.AQUA + "Accept Rematch" + CC.GRAY + " (Right-Click)").build());
@@ -60,7 +59,7 @@ public class Hotbar
         switch (layout) {
             case LOBBY: {
                 if (profile.getParty() == null) {
-                    final boolean activeEvent = (Array.get().getSumoManager().getActiveSumo() != null && Array.get().getSumoManager().getActiveSumo().isWaiting()) || (Array.get().getBracketsManager().getActiveBrackets() != null && Array.get().getBracketsManager().getActiveBrackets().isWaiting()) || (Array.get().getFfaManager().getActiveFFA() != null && Array.get().getFfaManager().getActiveFFA().isWaiting()) || (Array.get().getParkourManager().getActiveParkour() != null && Array.get().getParkourManager().getActiveParkour().isWaiting()) || (Array.get().getSpleefManager().getActiveSpleef() != null && Array.get().getSpleefManager().getActiveSpleef().isWaiting());
+                    final boolean activeEvent = (Practice.get().getSumoManager().getActiveSumo() != null && Practice.get().getSumoManager().getActiveSumo().isWaiting()) || (Practice.get().getBracketsManager().getActiveBrackets() != null && Practice.get().getBracketsManager().getActiveBrackets().isWaiting()) || (Practice.get().getLMSManager().getActiveLMS() != null && Practice.get().getLMSManager().getActiveLMS().isWaiting()) || (Practice.get().getParkourManager().getActiveParkour() != null && Practice.get().getParkourManager().getActiveParkour().isWaiting()) || (Practice.get().getSpleefManager().getActiveSpleef() != null && Practice.get().getSpleefManager().getActiveSpleef().isWaiting());
                     toReturn[0] = Hotbar.items.get(HotbarItem.QUEUE_JOIN_UNRANKED);
                     toReturn[1] = Hotbar.items.get(HotbarItem.QUEUE_JOIN_RANKED);
                     toReturn[2] = Hotbar.items.get(HotbarItem.QUEUE_JOIN_KITPVP);
@@ -103,8 +102,8 @@ public class Hotbar
                 toReturn[0] = Hotbar.items.get(HotbarItem.BRACKETS_LEAVE);
                 break;
             }
-            case FFA_SPECTATE: {
-                toReturn[0] = Hotbar.items.get(HotbarItem.FFA_LEAVE);
+            case LMS_SPECTATE: {
+                toReturn[0] = Hotbar.items.get(HotbarItem.LMS_LEAVE);
                 break;
             }
             case PARKOUR_SPECTATE: {
@@ -118,6 +117,9 @@ public class Hotbar
             case MATCH_SPECTATE: {
                 toReturn[0] = Hotbar.items.get(HotbarItem.SPECTATE_STOP);
                 break;
+            }
+            case SKYWARS_SPECTATE: {
+                toReturn[0] = Hotbar.items.get(HotbarItem.SKYWARS_LEAVE);
             }
         }
         return toReturn;

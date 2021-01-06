@@ -1,6 +1,6 @@
 package me.array.ArrayPractice.event.impl.parkour;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.event.impl.parkour.player.ParkourPlayerState;
 import org.bukkit.Material;
@@ -30,7 +30,7 @@ public class ParkourListener implements Listener {
 						if (profile.getParkour().getEventPlayer(player).getLastLocation() != null) {
 							player.teleport(profile.getParkour().getEventPlayer(player).getLastLocation());
 						} else {
-							player.teleport(Array.get().getParkourManager().getParkourSpawn());
+							player.teleport(Practice.get().getParkourManager().getParkourSpawn());
 						}
 					}
 				}

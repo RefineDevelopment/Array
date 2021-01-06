@@ -9,7 +9,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 @Data
 public class ChatComponentExtras {
 
-	private HoverEvent hoverEvent;
-	private ClickEvent clickEvent;
+    private HoverEvent hoverEvent;
+    private ClickEvent clickEvent;
 
 }

@@ -7,12 +7,12 @@ import me.array.ArrayPractice.match.Match;
 import me.array.ArrayPractice.party.Party;
 import me.array.ArrayPractice.event.impl.spleef.Spleef;
 import me.array.ArrayPractice.event.impl.parkour.Parkour;
-import me.array.ArrayPractice.event.impl.lms.FFA;
+import me.array.ArrayPractice.event.impl.lms.LMS;
 import me.array.ArrayPractice.event.impl.sumo.Sumo;
 import me.array.ArrayPractice.event.impl.brackets.Brackets;
 import me.array.ArrayPractice.match.team.Team;
 import java.util.List;
-import me.array.ArrayPractice.tournament.TournamentManager;
+import me.array.ArrayPractice.tournament.Tournament;
 import me.array.ArrayPractice.match.team.TeamPlayer;
 import org.bukkit.Bukkit;
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ public class Tab implements ITablist {
             else {
                 int added = 4;
                 elements.add(new TablistElement(CC.AQUA + CC.BOLD + "Tournament",23));
-                for (final TournamentManager.TournamentMatch match : TournamentManager.CURRENT_TOURNAMENT.getTournamentMatches()) {
+                for (final Tournament.TournamentMatch match : Tournament.CURRENT_TOURNAMENT.getTournamentMatches()) {
                     elements.add(new TablistElement(CC.AQUA + match.getTeamA().getLeader().getPlayer().getName(),added));
                     elements.add(new TablistElement(CC.AQUA + "vs",added + 20));
                     elements.add(new TablistElement(CC.AQUA + match.getTeamB().getLeader().getPlayer().getName(),added + 40));
@@ -173,8 +173,8 @@ public class Tab implements ITablist {
                 }
             }
         }
-        else if (profile.isInFfa()) {
-            final FFA ffa = profile.getFfa();
+        else if (profile.isInLMS()) {
+            final LMS ffa = profile.getLms();
             elements.add(new TablistElement(CC.AQUA + CC.BOLD + "FFA",23));
             int pl = 0;
             for (int added4 = 4; added4 < 60; ++added4) {
@@ -215,6 +215,39 @@ public class Tab implements ITablist {
                     final Player spleefPlayer = spleef.getRemainingPlayers().get(pl).getPlayer();
                     ++pl;
                     elements.add(new TablistElement(CC.AQUA + spleefPlayer.getName(),added4));
+                }
+            }
+        }
+        else if (profile.isSpectating()) {
+            final Match match2=profile.getMatch();
+            final Sumo sumo=profile.getSumo();
+            final LMS ffa=profile.getLms();
+            final Brackets brackets=profile.getBrackets();
+            final Parkour parkour=profile.getParkour();
+            final Spleef spleef=profile.getSpleef();
+            if (match2 != null) {
+                if (match2.isSoloMatch()) {
+                    elements.add(new TablistElement("&eTeam A", 4));
+                    elements.add(new TablistElement(CC.AQUA + CC.BOLD + "Match Info", 23));
+                    elements.add(new TablistElement("&eTeam B", 44));
+                    elements.add(new TablistElement(CC.AQUA + match2.getTeamPlayerA().getUsername(), 5));
+                    elements.add(new TablistElement(CC.WHITE + "Duration:", 24));
+                    elements.add(new TablistElement(CC.WHITE + match2.getDuration(), 25));
+                    elements.add(new TablistElement(CC.WHITE + match2.getTeamPlayerB().getUsername(), 45));
+                } else if (match2.isTeamMatch() || match2.isHCFMatch() || match2.isKoTHMatch()) {
+                    elements.add(new TablistElement("&eTeam A", 4));
+                    elements.add(new TablistElement(CC.AQUA + CC.BOLD + "Match Info", 23));
+                    elements.add(new TablistElement("&eTeam B", 44));
+                    elements.add(new TablistElement(CC.AQUA + match2.getTeamA().getLeader().getUsername(), 5));
+                    elements.add(new TablistElement(CC.WHITE + "Duration:", 24));
+                    elements.add(new TablistElement(CC.WHITE + match2.getDuration(), 25));
+                    elements.add(new TablistElement(CC.WHITE + match2.getTeamB().getLeader().getUsername(), 45));
+                } else if (match2.isFreeForAllMatch()) {
+                    final int team=match2.getPlayers().size();
+                    elements.add(new TablistElement(CC.AQUA + CC.BOLD + "&lFFA Match Info", 23));
+                    elements.add(new TablistElement(CC.WHITE + "Players: " + CC.AQUA + team, 25));
+                    elements.add(new TablistElement(CC.WHITE + "Duration:", 27));
+                    elements.add(new TablistElement(CC.AQUA + match2.getDuration(), 28));
                 }
             }
         }

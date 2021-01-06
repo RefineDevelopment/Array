@@ -1,15 +1,16 @@
 package me.array.ArrayPractice.profile.command.staff;
 
-import me.array.ArrayPractice.Array;
+import com.qrakn.honcho.command.CommandMeta;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.entity.Player;
-import com.qrakn.honcho.command.CommandMeta;
 
-@CommandMeta(label = { "setspawn" }, permission = "practice.setspawn")
+@CommandMeta(label = { "setspawn" }, permission = "practice.staff")
 public class SetSpawnCommand
 {
     public void execute(final Player player) {
-        Array.get().getEssentials().setSpawn(player.getLocation());
+        Practice.get().getEssentials().setSpawn(player.getLocation());
         player.sendMessage(CC.translate("&aSuccefully set the lobby spawn!"));
     }
 }
+

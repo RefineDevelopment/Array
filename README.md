@@ -1,6 +1,6 @@
 # Array
 
-A fork of Praxi Standalone and very little wPrac (Fork of Praxi)
+A fork of Praxi Standalone (Fork of Praxi)
 
 ## Terms of Use
 
@@ -14,8 +14,10 @@ You are NOT allowed to:
 - Attempt to sell the plugin
 - Rename the plugin
 
- By joining this repo, you automatically accept all these terms!
+ By using this Plugin, you automatically accept all these terms!
 
 ## Credits
 
-Drizzy, Zentil, Nick, Joeloeli
+Drizzy, Chris, Zentil, Nick, Joeloeli
+
+> Leak this, and you are fucked nigga

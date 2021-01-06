@@ -1,6 +1,6 @@
 package me.array.ArrayPractice.event.impl.sumo;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.profile.ProfileState;
 import me.array.ArrayPractice.util.PlayerSnapshot;
@@ -22,21 +22,24 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import rip.verse.jupiter.knockback.KnockbackModule;
+import rip.verse.jupiter.knockback.KnockbackProfile;
 
 @Getter
 public class Sumo {
 
-	protected static String EVENT_PREFIX = CC.BLUE + CC.BOLD + "(Sumo) " + CC.RESET;
+	protected static String EVENT_PREFIX = CC.AQUA + CC.BOLD + "(Sumo) " + CC.RESET;
 
-	private String name;
+	private final String name;
 	@Setter private SumoState state = SumoState.WAITING;
 	private SumoTask eventTask;
-	private PlayerSnapshot host;
-	private LinkedHashMap<UUID, SumoPlayer> eventPlayers = new LinkedHashMap<>();
-	@Getter private List<UUID> spectators = new ArrayList<>();
-	private int maxPlayers;
+	private final PlayerSnapshot host;
+	private final LinkedHashMap<UUID, SumoPlayer> eventPlayers = new LinkedHashMap<>();
+	@Getter private final List<UUID> spectators = new ArrayList<>();
+	private final int maxPlayers;
 	@Getter @Setter private int totalPlayers;
 	@Setter private Cooldown cooldown;
 	private SumoPlayer roundPlayerA;
@@ -54,7 +57,7 @@ public class Sumo {
 	public List<String> getLore() {
 		List<String> toReturn = new ArrayList<>();
 
-		Sumo sumo = Array.get().getSumoManager().getActiveSumo();
+		Sumo sumo = Practice.get().getSumoManager().getActiveSumo();
 
 		toReturn.add(CC.MENU_BAR);
 		toReturn.add(CC.translate("&e&lHost: &r" + sumo.getName()));
@@ -95,7 +98,7 @@ public class Sumo {
 		eventTask = task;
 
 		if (eventTask != null) {
-			eventTask.runTaskTimer(Array.get(), 0L, 20L);
+			eventTask.runTaskTimer(Practice.get(), 0L, 20L);
 		}
 	}
 
@@ -143,7 +146,7 @@ public class Sumo {
 	public void handleJoin(Player player) {
 		eventPlayers.put(player.getUniqueId(), new SumoPlayer(player));
 
-		broadcastMessage(CC.GREEN + Array.get().getChat().getPlayerPrefix(player) + player.getName() + CC.YELLOW + " joined the sumo " + CC.GRAY + "(" + getRemainingPlayers().size() + "/" + getMaxPlayers() + ")");
+		broadcastMessage(CC.GREEN + Practice.get().getCoreHook().getPlayerPrefix(player) + player.getName() + CC.YELLOW + " joined the sumo " + CC.GRAY + "(" + getRemainingPlayers().size() + "/" + getMaxPlayers() + ")");
 
 		onJoin(player);
 
@@ -152,7 +155,7 @@ public class Sumo {
 		profile.setState(ProfileState.IN_EVENT);
 		profile.refreshHotbar();
 
-		player.teleport(Array.get().getSumoManager().getSumoSpectator());
+		player.teleport(Practice.get().getSumoManager().getSumoSpectator());
 
 		new BukkitRunnable() {
 			@Override
@@ -163,7 +166,7 @@ public class Sumo {
 					profile.handleVisibility(player, otherPlayer);
 				}
 			}
-		}.runTaskAsynchronously(Array.get());
+		}.runTaskAsynchronously(Practice.get());
 	}
 
 	public void handleLeave(Player player) {
@@ -185,7 +188,7 @@ public class Sumo {
 		profile.setSumo(null);
 		profile.refreshHotbar();
 
-		Array.get().getEssentials().teleportToSpawn(player);
+		Practice.get().getEssentials().teleportToSpawn(player);
 
 		new BukkitRunnable() {
 			@Override
@@ -196,7 +199,7 @@ public class Sumo {
 					profile.handleVisibility(player, otherPlayer);
 				}
 			}
-		}.runTaskAsynchronously(Array.get());
+		}.runTaskAsynchronously(Practice.get());
 	}
 
 	protected List<Player> getSpectatorsList() {
@@ -211,8 +214,8 @@ public class Sumo {
 	}
 
 	public void end() {
-		Array.get().getSumoManager().setActiveSumo(null);
-		Array.get().getSumoManager().setCooldown(new Cooldown(60_000L * 10));
+		Practice.get().getSumoManager().setActiveSumo(null);
+		Practice.get().getSumoManager().setCooldown(new Cooldown(60_000L * 10));
 
 		setEventTask(null);
 
@@ -233,7 +236,7 @@ public class Sumo {
 				profile.setSumo(null);
 				profile.refreshHotbar();
 
-				Array.get().getEssentials().teleportToSpawn(player);
+				Practice.get().getEssentials().teleportToSpawn(player);
 			}
 		}
 
@@ -290,13 +293,13 @@ public class Sumo {
 	}
 
 	public void onJoin(Player player) {
-	Profile profile = Profile.getByUuid(player.getUniqueId());
-	profile.setKnockback("Sumo");
+	KnockbackProfile knockbackProfile =KnockbackModule.INSTANCE.profiles.get("Sumo");
+	((CraftPlayer)player).getHandle().setKnockback(knockbackProfile);
 	}
 
 	public void onLeave(Player player) {
-		Profile profile = Profile.getByUuid(player.getUniqueId());
-		profile.setKnockback("Practice");
+		KnockbackProfile knockbackProfile =KnockbackModule.INSTANCE.profiles.get("Practice");
+		((CraftPlayer)player).getHandle().setKnockback(knockbackProfile);
 	}
 
 	public void onRound() {
@@ -306,7 +309,7 @@ public class Sumo {
 			Player player = roundPlayerA.getPlayer();
 
 			if (player != null) {
-				player.teleport(Array.get().getSumoManager().getSumoSpectator());
+				player.teleport(Practice.get().getSumoManager().getSumoSpectator());
 
 				Profile profile = Profile.getByUuid(player.getUniqueId());
 
@@ -322,7 +325,7 @@ public class Sumo {
 			Player player = roundPlayerB.getPlayer();
 
 			if (player != null) {
-				player.teleport(Array.get().getSumoManager().getSumoSpectator());
+				player.teleport(Practice.get().getSumoManager().getSumoSpectator());
 
 				Profile profile = Profile.getByUuid(player.getUniqueId());
 
@@ -346,8 +349,8 @@ public class Sumo {
 		PlayerUtil.denyMovement(playerA);
 		PlayerUtil.denyMovement(playerB);
 
-		playerA.teleport(Array.get().getSumoManager().getSumoSpawn1());
-		playerB.teleport(Array.get().getSumoManager().getSumoSpawn2());
+		playerA.teleport(Practice.get().getSumoManager().getSumoSpawn1());
+		playerB.teleport(Practice.get().getSumoManager().getSumoSpawn2());
 
 		setEventTask(new SumoRoundStartTask(this));
 	}
@@ -356,7 +359,7 @@ public class Sumo {
 		SumoPlayer winner = roundPlayerA.getUuid().equals(player.getUniqueId()) ? roundPlayerB : roundPlayerA;
 		winner.setState(SumoPlayerState.WAITING);
 		winner.incrementRoundWins();
-		winner.getPlayer().teleport(Array.get().getSumoManager().getSumoSpectator());
+		winner.getPlayer().teleport(Practice.get().getSumoManager().getSumoSpectator());
 
 		broadcastMessage("&c" + player.getName() + "&e was eliminated by &a" + winner.getUsername() + "&e!");
 
@@ -415,7 +418,7 @@ public class Sumo {
 		profile.refreshHotbar();
 		profile.handleVisibility();
 		player.setFlying(true);
-		player.teleport(Array.get().getSumoManager().getSumoSpawn1());
+		player.teleport(Practice.get().getSumoManager().getSumoSpawn1());
 	}
 
 	public void removeSpectator(Player player) {
@@ -427,7 +430,7 @@ public class Sumo {
 		profile.refreshHotbar();
 		profile.handleVisibility();
 
-		Array.get().getEssentials().teleportToSpawn(player);
+		Practice.get().getEssentials().teleportToSpawn(player);
 	}
 
 }

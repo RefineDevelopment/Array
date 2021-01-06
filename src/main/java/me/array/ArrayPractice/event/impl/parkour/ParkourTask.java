@@ -1,7 +1,7 @@
 package me.array.ArrayPractice.event.impl.parkour;
 
 import lombok.Getter;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import org.bukkit.scheduler.BukkitRunnable;
 
 @Getter
@@ -18,8 +18,8 @@ public abstract class ParkourTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		if (Array.get().getParkourManager().getActiveParkour() == null ||
-		    !Array.get().getParkourManager().getActiveParkour().equals(parkour) || parkour.getState() != eventState) {
+		if (Practice.get().getParkourManager().getActiveParkour() == null ||
+		    !Practice.get().getParkourManager().getActiveParkour().equals(parkour) || parkour.getState() != eventState) {
 			cancel();
 			return;
 		}

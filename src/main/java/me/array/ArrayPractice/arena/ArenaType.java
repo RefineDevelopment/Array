@@ -1,9 +1,13 @@
 package me.array.ArrayPractice.arena;
 
-public enum ArenaType
-{
-    STANDALONE, 
-    SHARED, 
-    DUPLICATE, 
-    KOTH;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
+public enum ArenaType {
+    STANDALONE,
+    SHARED,
+    DUPLICATE,
+    KOTH
 }

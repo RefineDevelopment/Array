@@ -3,7 +3,7 @@ package me.array.ArrayPractice.event.impl.brackets.command;
 import com.qrakn.honcho.command.CommandMeta;
 import me.array.ArrayPractice.event.impl.brackets.Brackets;
 import me.array.ArrayPractice.event.impl.brackets.BracketsState;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.entity.Player;
@@ -13,7 +13,7 @@ public class BracketsJoinCommand {
 
 	public static void execute(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		Brackets activeBrackets = Array.get().getBracketsManager().getActiveBrackets();
+		Brackets activeBrackets = Practice.get().getBracketsManager().getActiveBrackets();
 
 		if (profile.isBusy(player) || profile.getParty() != null) {
 			player.sendMessage(CC.RED + "You cannot join the brackets right now.");
@@ -30,7 +30,7 @@ public class BracketsJoinCommand {
 			return;
 		}
 
-		Array.get().getBracketsManager().getActiveBrackets().handleJoin(player);
+		Practice.get().getBracketsManager().getActiveBrackets().handleJoin(player);
 	}
 
 }

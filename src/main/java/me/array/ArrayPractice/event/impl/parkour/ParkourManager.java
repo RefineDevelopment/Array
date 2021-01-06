@@ -2,7 +2,7 @@ package me.array.ArrayPractice.event.impl.parkour;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.util.external.Cooldown;
 import me.array.ArrayPractice.util.external.LocationUtil;
 import me.array.ArrayPractice.event.impl.parkour.task.ParkourStartTask;
@@ -36,7 +36,7 @@ public class ParkourManager {
 	}
 
 	public void load() {
-		FileConfiguration configuration = Array.get().getEventsConfig().getConfiguration();
+		FileConfiguration configuration = Practice.get().getEventsConfig().getConfiguration();
 
 		if (configuration.contains("events.parkour.spectator")) {
 			parkourSpawn = LocationUtil.deserialize(configuration.getString("events.parkour.spectator"));
@@ -44,14 +44,14 @@ public class ParkourManager {
 	}
 
 	public void save() {
-		FileConfiguration configuration = Array.get().getEventsConfig().getConfiguration();
+		FileConfiguration configuration = Practice.get().getEventsConfig().getConfiguration();
 
 		if (parkourSpawn != null) {
 			configuration.set("events.parkour.spectator", LocationUtil.serialize(parkourSpawn));
 		}
 
 		try {
-			configuration.save(Array.get().getEventsConfig().getFile());
+			configuration.save(Practice.get().getEventsConfig().getFile());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -1,81 +1,123 @@
-
-
 package me.array.ArrayPractice.duel.menu;
-
-import java.beans.ConstructorProperties;
 
 import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.CC;
-import org.bukkit.event.inventory.ClickType;
 import me.array.ArrayPractice.util.external.ItemBuilder;
+import me.array.ArrayPractice.util.external.menu.Button;
+import me.array.ArrayPractice.util.external.menu.Menu;
+import lombok.AllArgsConstructor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
-import me.array.ArrayPractice.util.external.menu.Button;
 import java.util.Map;
-import org.bukkit.entity.Player;
-import me.array.ArrayPractice.util.external.menu.Menu;
 
-public class DuelSelectKitMenu extends Menu
-{
-    @Override
-    public String getTitle(final Player player) {
-        return "&bSelect a kit";
+public class DuelSelectKitMenu extends Menu {
+
+    String type;
+
+    public DuelSelectKitMenu(String type) {
+        this.type = type;
     }
-    
+
     @Override
-    public Map<Integer, Button> getButtons(final Player player) {
-        final Map<Integer, Button> buttons = new HashMap<Integer, Button>();
-        for (final Kit kit : Kit.getKits()) {
+    public String getTitle(Player player) {
+        return "&7Select a kit";
+    }
+
+    @Override
+    public Map<Integer, Button> getButtons(Player player) {
+        Map<Integer, Button> buttons = new HashMap<>();
+
+        boolean party = Profile.getByUuid(player.getUniqueId()).getParty() != null;
+
+        for ( Kit kit : Kit.getKits()) {
             if (kit.isEnabled()) {
-                buttons.put(buttons.size(), new SelectKitButton(kit));
+                if (!(kit.getGameRules().isTimed() && party))
+                    buttons.put(buttons.size(), new SelectKitButton(kit));
             }
         }
+
         return buttons;
     }
-    
+
     @Override
-    public void onClose(final Player player) {
-        if (!this.isClosedByMenu()) {
-            final Profile profile = Profile.getByUuid(player.getUniqueId());
+    public void onClose(Player player) {
+        if (!isClosedByMenu()) {
+            Profile profile = Profile.getByUuid(player.getUniqueId());
             profile.setDuelProcedure(null);
         }
     }
-    
-    private class SelectKitButton extends Button
-    {
-        private Kit kit;
-        
+
+    @AllArgsConstructor
+    private class SelectKitButton extends Button {
+
+        private final Kit kit;
+
         @Override
-        public ItemStack getButtonItem(final Player player) {
-            return new ItemBuilder(this.kit.getDisplayIcon()).name("&9&l" + this.kit.getName()).build();
+        public ItemStack getButtonItem(Player player) {
+            return new ItemBuilder(kit.getDisplayIcon())
+                    .name("&b&l" + kit.getName())
+                    .clearFlags()
+                    .build();
         }
-        
+
         @Override
-        public void clicked(final Player player, final ClickType clickType) {
-            final Profile profile = Profile.getByUuid(player.getUniqueId());
-            if (profile.getDuelProcedure() == null) {
-                player.sendMessage(CC.RED + "Could not find duel procedure.");
-                return;
-            }
-            final Arena arena = Arena.getRandom(this.kit);
-            profile.getDuelProcedure().setKit(this.kit);
-            profile.getDuelProcedure().setArena(arena);
-            Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
-            player.closeInventory();
-            if (player.hasPermission("practice.selectarena")) {
-                new DuelSelectArenaMenu().openMenu(player);
-            }
-            else {
-                profile.getDuelProcedure().send();
+        public void clicked(Player player, ClickType clickType) {
+            Profile profile = Profile.getByUuid(player.getUniqueId());
+
+            if (type.equalsIgnoreCase("normal")) {
+
+                if (profile.getDuelProcedure() == null) {
+                    player.sendMessage(CC.RED + "Could not find duel procedure.");
+                    return;
+                }
+
+                Arena arena = Arena.getRandom(kit);
+                // Update duel procedure
+                profile.getDuelProcedure().setKit(kit);
+                profile.getDuelProcedure().setArena(arena);
+
+                // Set closed by menu
+                Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
+
+                // Force close inventory
+                player.closeInventory();
+
+                if (player.hasPermission("practice.donator")) {
+                    new DuelSelectArenaMenu("normal").openMenu(player);
+                } else {
+                    profile.getDuelProcedure().send();
+                }
+            } else if (type.equalsIgnoreCase("rematch")) {
+                if (profile.getRematchData() == null) {
+                    player.sendMessage(CC.RED + "Could not find rematch data.");
+                    return;
+                }
+
+                Profile targetProfile = Profile.getByUuid(profile.getRematchData().getTarget());
+
+                Arena arena = Arena.getRandom(kit);
+                // Update rematch data
+                profile.getRematchData().setKit(kit);
+                profile.getRematchData().setArena(arena);
+                targetProfile.getRematchData().setKit(kit);
+                targetProfile.getRematchData().setArena(arena);
+
+                // Force close inventory
+                player.closeInventory();
+
+                if (player.hasPermission("practice.donator")) {
+                    new DuelSelectArenaMenu("rematch").openMenu(player);
+                } else {
+                    profile.getRematchData().request();
+                }
             }
         }
-        
-        @ConstructorProperties({ "kit" })
-        public SelectKitButton(final Kit kit) {
-            this.kit = kit;
-        }
+
     }
+
 }

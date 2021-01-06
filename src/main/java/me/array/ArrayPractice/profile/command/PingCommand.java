@@ -3,10 +3,8 @@ package me.array.ArrayPractice.profile.command;
 import com.qrakn.honcho.command.CPL;
 import com.qrakn.honcho.command.CommandMeta;
 import me.array.ArrayPractice.match.Match;
-import me.array.ArrayPractice.match.MatchState;
 import me.array.ArrayPractice.match.team.TeamPlayer;
 import me.array.ArrayPractice.profile.Profile;
-import me.array.ArrayPractice.queue.QueueType;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -18,7 +16,7 @@ public class PingCommand
     public void execute(final Player player, @CPL("player") final Player target) {
         final Profile profile = Profile.getByUuid(player.getUniqueId());;
         if (target == null) {
-            player.sendMessage(CC.RED + "A player with that name could not be found.");
+            player.sendMessage(ChatColor.AQUA + player.getName() + "'s Ping: " + CC.YELLOW + PlayerUtil.getPing(player) + "ms");
             return;
         }
         else {
@@ -27,7 +25,7 @@ public class PingCommand
         final Match match = profile.getMatch();
         if (profile.isInSomeSortOfFight()) {
             if (match != null) {
-                if (match.isSoloMatch()) {
+                if (match.isSoloMatch() && match.isSumoMatch()) {
                     final TeamPlayer self = match.getTeamPlayer(player);
                     final TeamPlayer opponent = match.getOpponentTeamPlayer(player);
                     player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() + "------------------------------------------------");

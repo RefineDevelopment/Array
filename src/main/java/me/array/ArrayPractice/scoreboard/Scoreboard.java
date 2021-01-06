@@ -4,21 +4,22 @@ import com.bizarrealex.aether.scoreboard.Board;
 import com.bizarrealex.aether.scoreboard.BoardAdapter;
 import com.bizarrealex.aether.scoreboard.cooldown.BoardCooldown;
 import me.array.ArrayPractice.match.Match;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.party.Party;
 import me.array.ArrayPractice.queue.Queue;
 import me.array.ArrayPractice.event.impl.spleef.Spleef;
 import me.array.ArrayPractice.event.impl.parkour.Parkour;
 import me.array.ArrayPractice.event.impl.brackets.Brackets;
-import me.array.ArrayPractice.event.impl.lms.FFA;
+import me.array.ArrayPractice.event.impl.lms.LMS;
 import me.array.ArrayPractice.event.impl.sumo.Sumo;
 import me.array.ArrayPractice.match.team.Team;
-import me.array.ArrayPractice.tournament.TournamentManager;
+import me.array.ArrayPractice.tournament.Tournament;
 import me.array.ArrayPractice.queue.QueueType;
 import me.array.ArrayPractice.match.team.TeamPlayer;
 import me.array.ArrayPractice.util.external.TimeUtil;
 import org.bukkit.Bukkit;
 import me.array.ArrayPractice.util.external.CC;
+
 import java.util.ArrayList;
 import me.array.ArrayPractice.profile.Profile;
 import java.util.List;
@@ -47,20 +48,20 @@ public class Scoreboard implements BoardAdapter {
             lines.add(CC.translate("&fOnline: &b" + Bukkit.getServer().getOnlinePlayers().size()));
             lines.add(CC.translate("&fIn Fights: &b" + this.getInFights()));
             lines.add(CC.translate("&fIn Queue: &b" + this.getInQueues()));
-            if (!Array.get().getSumoManager().getCooldown().hasExpired()) {
-                lines.add("&fSumo: &b" + TimeUtil.millisToTimer(Array.get().getSumoManager().getCooldown().getRemaining()));
+            if (!Practice.get().getSumoManager().getCooldown().hasExpired()) {
+                lines.add("&fSumo: &b" + TimeUtil.millisToTimer(Practice.get().getSumoManager().getCooldown().getRemaining()));
             }
-            if (!Array.get().getBracketsManager().getCooldown().hasExpired()) {
-                lines.add("&fBrackets: &b" + TimeUtil.millisToTimer(Array.get().getBracketsManager().getCooldown().getRemaining()));
+            if (!Practice.get().getBracketsManager().getCooldown().hasExpired()) {
+                lines.add("&fBrackets: &b" + TimeUtil.millisToTimer(Practice.get().getBracketsManager().getCooldown().getRemaining()));
             }
-            if (!Array.get().getFfaManager().getCooldown().hasExpired()) {
-                lines.add("&fFFA: &b" + TimeUtil.millisToTimer(Array.get().getFfaManager().getCooldown().getRemaining()));
+            if (!Practice.get().getLMSManager().getCooldown().hasExpired()) {
+                lines.add("&fFFA: &b" + TimeUtil.millisToTimer(Practice.get().getLMSManager().getCooldown().getRemaining()));
             }
-            if (!Array.get().getParkourManager().getCooldown().hasExpired()) {
-                lines.add("&fParkour: &b" + TimeUtil.millisToTimer(Array.get().getParkourManager().getCooldown().getRemaining()));
+            if (!Practice.get().getParkourManager().getCooldown().hasExpired()) {
+                lines.add("&fParkour: &b" + TimeUtil.millisToTimer(Practice.get().getParkourManager().getCooldown().getRemaining()));
             }
-            if (!Array.get().getSpleefManager().getCooldown().hasExpired()) {
-                lines.add("&fSpleef: &b" + TimeUtil.millisToTimer(Array.get().getSpleefManager().getCooldown().getRemaining()));
+            if (!Practice.get().getSpleefManager().getCooldown().hasExpired()) {
+                lines.add("&fSpleef: &b" + TimeUtil.millisToTimer(Practice.get().getSpleefManager().getCooldown().getRemaining()));
             }
             if (profile.getParty() != null) {
                 final Party party = profile.getParty();
@@ -69,7 +70,7 @@ public class Scoreboard implements BoardAdapter {
                 int added = 0;
                 for (final TeamPlayer teamPlayer : party.getTeamPlayers()) {
                     ++added;
-                    lines.add(" &7" + (party.isLeader(teamPlayer.getUuid()) ? "*" : "-") + " &r" + teamPlayer.getUsername());
+                    lines.add(" &b" + (party.getLeader().equals(teamPlayer) ? "*" : "-") + " &r" + teamPlayer.getUsername());
                     if (added >= 4) {
                         break;
                     }
@@ -84,14 +85,14 @@ public class Scoreboard implements BoardAdapter {
                     lines.add("&fRange: &b" + profile.getQueueProfile().getMinRange() + " -> " + profile.getQueueProfile().getMaxRange());
                 }
             }
-            else if (TournamentManager.CURRENT_TOURNAMENT != null) {
-                final TournamentManager tournament = TournamentManager.CURRENT_TOURNAMENT;
+            else if (Tournament.CURRENT_TOURNAMENT != null) {
+                final Tournament tournament = Tournament.CURRENT_TOURNAMENT;
                 final String round = (tournament.getRound() > 0) ? Integer.toString(tournament.getRound()) : "&fStarting";
                 lines.add("");
                 lines.add("&b&lTournament: &r");
                 lines.add("&fKit: &b" + tournament.getLadder().getName() + " &7(" + tournament.getTeamCount() + "v" + tournament.getTeamCount() + ")");
                 lines.add("&fRound: &b" + round);
-                lines.add(((tournament.getTeamCount() > 1) ? "&fParties: &b" : "&fPlayers: &b") + tournament.getParticipatingCount() + "/" + tournament.getStartingParticipatingCount());
+                lines.add(((tournament.getTeamCount() > 1) ? "&fParties: &b" : "&fPlayers: &b") + tournament.getParticipatingCount() + "/" + tournament.getParticipants().size());
             }
         }
         else if (profile.isInFight()) {
@@ -129,7 +130,7 @@ public class Scoreboard implements BoardAdapter {
         else if (profile.isSpectating()) {
             final Match match = profile.getMatch();
             final Sumo sumo = profile.getSumo();
-            final FFA ffa = profile.getFfa();
+            final LMS ffa = profile.getLms();
             final Brackets brackets = profile.getBrackets();
             final Parkour parkour = profile.getParkour();
             final Spleef spleef = profile.getSpleef();
@@ -138,8 +139,10 @@ public class Scoreboard implements BoardAdapter {
                     lines.add("&fKit: &b" + match.getKit().getName());
                 }
                 lines.add("&fDuration: &b" + match.getDuration());
+                lines.add("");
                 if (match.isSoloMatch()) {
                     lines.add(match.getTeamPlayerA().getUsername());
+                    lines.add("&7vs");
                     lines.add(match.getTeamPlayerB().getUsername());
                 }
                 else if (match.isTeamMatch() || match.isHCFMatch() || match.isKoTHMatch()) {
@@ -318,8 +321,8 @@ public class Scoreboard implements BoardAdapter {
                 lines.add("&b" + brackets2.getRoundPlayerB().getUsername());
             }
         }
-        else if (profile.isInFfa()) {
-            final FFA ffa2 = profile.getFfa();
+        else if (profile.isInLMS()) {
+            final LMS ffa2 = profile.getLms();
             lines.add(CC.translate("&fHost: &b" + ffa2.getName()));
             if (ffa2.isWaiting()) {
                 lines.add("&fPlayers: &b" + ffa2.getEventPlayers().size() + "/" + ffa2.getMaxPlayers());

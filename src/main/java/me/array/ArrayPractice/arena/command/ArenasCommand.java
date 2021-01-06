@@ -1,13 +1,10 @@
 package me.array.ArrayPractice.arena.command;
 
 import com.qrakn.honcho.command.*;
+import me.array.ArrayPractice.arena.Arena;
+import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.ChatColor;
-import org.bukkit.command.*;
-import me.array.ArrayPractice.util.external.*;
-import me.array.ArrayPractice.arena.*;
 import org.bukkit.entity.Player;
-
-import java.util.*;
 
 @CommandMeta(label = { "arenas", "arena list" }, permission = "practice.staff")
 public class ArenasCommand
@@ -17,7 +14,9 @@ public class ArenasCommand
         player.sendMessage(CC.translate( "&bArray &7» All Arenas"));
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
         if (Arena.getArenas().isEmpty()) {
-            player.sendMessage(CC.RED + "There are no arenas.");
+            player.sendMessage("");
+            player.sendMessage(CC.GRAY + CC.ITALIC + "There are no arenas.");
+            player.sendMessage("");
             return;
         }
         for (final Arena arena : Arena.getArenas()) {

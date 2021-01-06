@@ -1,6 +1,6 @@
 package me.array.ArrayPractice.event.impl.sumo.task;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.event.impl.sumo.Sumo;
 import me.array.ArrayPractice.event.impl.sumo.SumoState;
 import me.array.ArrayPractice.event.impl.sumo.SumoTask;
@@ -9,8 +9,6 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import rip.verse.jupiter.knockback.KnockbackModule;
 import rip.verse.jupiter.knockback.KnockbackProfile;
-
-import java.util.List;
 
 public class SumoStartTask extends SumoTask {
 
@@ -34,7 +32,7 @@ public class SumoStartTask extends SumoTask {
 			if (this.getSumo().getCooldown() == null) {
 				this.getSumo().setCooldown(new Cooldown(11_000));
 				this.getSumo().broadcastMessage("&eThe sumo event will start in &610 seconds&e...");
-				KnockbackProfile profile =KnockbackModule.INSTANCE.profiles.get(Array.get().getSumoManager().getSumoKnockbackProfile());
+				KnockbackProfile profile =KnockbackModule.INSTANCE.profiles.get(Practice.get().getSumoManager().getSumoKnockbackProfile());
 				Player player = (Player) this.getSumo().getPlayers();
 				((CraftPlayer)player).getHandle().setKnockback(profile);
 			} else {

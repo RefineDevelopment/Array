@@ -7,14 +7,24 @@
       <option name="url" value="http://nexus.hc.to/content/repositories/pub_releases" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="google-gson" />
+      <option name="name" value="google-gson" />
+      <option name="url" value="https://mvnrepository.com/artifact/com.google.code.gson/gson" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="Central Repository" />
       <option name="url" value="https://repo.maven.apache.org/maven2" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="fawe-repo" />
-      <option name="name" value="fawe-repo" />
-      <option name="url" value="http://ci.athion.net/job/FastAsyncWorldEdit/ws/mvn/" />
+      <option name="id" value="jcenter" />
+      <option name="name" value="jcenter-bintray" />
+      <option name="url" value="https://jcenter.bintray.com" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jitpack.io" />
+      <option name="name" value="jitpack.io" />
+      <option name="url" value="https://jitpack.io" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="codemc-repo" />
@@ -27,14 +37,49 @@
       <option name="url" value="https://repo1.maven.org/maven2" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="placeholderapi" />
+      <option name="name" value="placeholderapi" />
+      <option name="url" value="https://repo.extendedclip.com/content/repositories/placeholderapi/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="placeholderapi" />
+      <option name="name" value="placeholderapi" />
+      <option name="url" value="http://repo.extendedclip.com/content/repositories/placeholderapi/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="viaversion-repo" />
+      <option name="name" value="viaversion-repo" />
+      <option name="url" value="https://repo.viaversion.com" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="spigot" />
       <option name="name" value="spigot" />
       <option name="url" value="https://hub.spigotmc.org/nexus/content/groups/public/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="apache-commons-lang" />
+      <option name="name" value="apache-commons-lang" />
+      <option name="url" value="https://mvnrepository.com/artifact/org.apache.commons/commons-lang3" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="jboss.community" />
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="dmulloy2-repo" />
+      <option name="name" value="dmulloy2-repo" />
+      <option name="url" value="http://repo.dmulloy2.net/nexus/repository/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="apache-commons-text" />
+      <option name="name" value="apache-commons-text" />
+      <option name="url" value="https://mvnrepository.com/artifact/org.apache.commons/commons-text" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="dmulloy2-repo" />
+      <option name="name" value="dmulloy2-repo" />
+      <option name="url" value="https://repo.dmulloy2.net/nexus/repository/public/" />
     </remote-repository>
   </component>
 </project>

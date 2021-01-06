@@ -1,6 +1,6 @@
 package me.array.ArrayPractice.event.impl.brackets;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.kit.KitLoadout;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.profile.hotbar.Hotbar;
@@ -40,7 +40,7 @@ public class BracketsListener implements Listener {
 				Profile profile = Profile.getProfiles().get(event.getEntity().getUniqueId());
 				if (profile.isInBrackets()) {
 				profile.getBrackets().handleDeath(player);
-				player.teleport(Array.get().getBracketsManager().getBracketsSpectator());
+				player.teleport(Practice.get().getBracketsManager().getBracketsSpectator());
 				event.getDrops().clear();
 				PlayerUtil.reset(player);
 			}

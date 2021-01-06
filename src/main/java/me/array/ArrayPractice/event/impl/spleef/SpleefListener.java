@@ -1,6 +1,6 @@
 package me.array.ArrayPractice.event.impl.spleef;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.kit.KitLoadout;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.profile.hotbar.Hotbar;
@@ -58,11 +58,11 @@ public class SpleefListener implements Listener {
 					event.setCancelled(true);
 					event.getEntity().setFireTicks(0);
 					if (!profile.getSpleef().isFighting() || !profile.getSpleef().isFighting(player)) {
-						player.teleport(Array.get().getSpleefManager().getSpleefSpectator());
+						player.teleport(Practice.get().getSpleefManager().getSpleefSpectator());
 						return;
 					}
 					PlayerUtil.spectator(player);
-					player.teleport(Array.get().getSpleefManager().getSpleefSpectator());
+					player.teleport(Practice.get().getSpleefManager().getSpleefSpectator());
 					profile.getSpleef().handleDeath(player);
 					return;
 				}

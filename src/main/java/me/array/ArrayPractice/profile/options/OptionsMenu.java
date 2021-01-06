@@ -3,6 +3,7 @@ package me.array.ArrayPractice.profile.options;
 import java.beans.ConstructorProperties;
 
 import me.array.ArrayPractice.profile.Profile;
+import me.array.ArrayPractice.profile.command.TpmCommand;
 import me.array.ArrayPractice.util.external.ItemBuilder;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -26,10 +27,11 @@ public class OptionsMenu extends Menu
     @Override
     public Map<Integer, Button> getButtons(final Player player) {
         final Map<Integer, Button> buttons = new HashMap<>();
-        buttons.put(1, new OptionsButton(OptionsType.TOGGLESCOREBOARD));
-        buttons.put(3, new OptionsButton(OptionsType.TOGGLEDUELREQUESTS));
-        buttons.put(5, new OptionsButton(OptionsType.TOGGLESPECTATORS));
-        buttons.put(7, new OptionsButton(OptionsType.TOGGLEPMS));
+        buttons.put(0, new OptionsButton(OptionsType.TOGGLESCOREBOARD));
+        buttons.put(2, new OptionsButton(OptionsType.TOGGLEDUELREQUESTS));
+        buttons.put(4, new OptionsButton(OptionsType.TOGGLESPECTATORS));
+        buttons.put(6, new OptionsButton(OptionsType.TOGGLEPMS));
+        buttons.put(8, new OptionsButton(OptionsType.TOGGLELIGHTNING));
         return buttons;
     }
     
@@ -50,8 +52,12 @@ public class OptionsMenu extends Menu
                 lines.add((!profile.getOptions().isReceiveDuelRequests() ? "&a&l● " : "&c&l● ") + "&fDon't Allow Duels");
             }
             else if (this.type == OptionsType.TOGGLEPMS) {
-                lines.add("&fCycle through enable and disable");
-                lines.add("&fPrivate messages by others.");
+                lines.add((profile.getOptions().isPrivateMessages() ? "&a&l● " : "&c&l● ") + "&fAllow PM");
+                lines.add((!profile.getOptions().isPrivateMessages() ? "&a&l● " : "&c&l● ") + "&fDon't Allow PM");
+            }
+            else if (this.type == OptionsType.TOGGLELIGHTNING) {
+                lines.add((profile.getOptions().isPrivateMessages() ? "&a&l● " : "&c&l● ") + "&fEnable Lightning Death");
+                lines.add((!profile.getOptions().isPrivateMessages() ? "&a&l● " : "&c&l● ") + "&fDisable Lightning Death");
             }
             else {
                 lines.add((profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fAllow Spectators");
@@ -70,7 +76,8 @@ public class OptionsMenu extends Menu
                 profile.getOptions().setReceiveDuelRequests(!profile.getOptions().isReceiveDuelRequests());
             }
             else if (this.type == OptionsType.TOGGLEPMS) {
-                player.performCommand("togglepm");
+                profile.getOptions().setPrivateMessages(!profile.getOptions().isPrivateMessages());
+                new TpmCommand().execute(player);
             }
             else {
                 profile.getOptions().setAllowSpectators(!profile.getOptions().isAllowSpectators());

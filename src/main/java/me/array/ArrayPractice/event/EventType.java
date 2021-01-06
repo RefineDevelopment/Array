@@ -1,18 +1,19 @@
 package me.array.ArrayPractice.event;
 
+import me.array.ArrayPractice.Practice;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import me.array.ArrayPractice.Array;
 import org.bukkit.Material;
 
 @AllArgsConstructor
 @Getter
 public enum EventType {
-    BRACKETS(Array.get().getBracketsManager().getActiveBrackets(), "Brackets", Material.IRON_SWORD),
-    SUMO(Array.get().getSumoManager().getActiveSumo(), "Sumo", Material.LEASH),
-    FFA(Array.get().getFfaManager().getActiveFFA(), "FFA", Material.DIAMOND_AXE),
-    PARKOUR(Array.get().getParkourManager().getActiveParkour(), "Parkour", Material.DIAMOND_BOOTS),
-    SPLEEF(Array.get().getSpleefManager().getActiveSpleef(), "Spleef", Material.DIAMOND_SPADE);
+    BRACKETS(Practice.get().getBracketsManager().getActiveBrackets(), "Brackets", Material.IRON_SWORD),
+    SUMO(Practice.get().getSumoManager().getActiveSumo(), "Sumo", Material.LEASH),
+    LMS(Practice.get().getLMSManager().getActiveLMS(), "LMS", Material.DIAMOND_AXE),
+    PARKOUR(Practice.get().getParkourManager().getActiveParkour(), "Parkour", Material.DIAMOND_BOOTS),
+    SPLEEF(Practice.get().getSpleefManager().getActiveSpleef(), "Spleef", Material.DIAMOND_SPADE),
+    SKYWARS(Practice.get().getSkyWarsManager().getActiveSkyWars(), "Skywars", Material.DIAMOND_AXE);
 
     private final Object object;
     private final String title;

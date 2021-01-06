@@ -1,6 +1,6 @@
 package me.array.ArrayPractice.event.impl.sumo.command;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.util.external.CC;
 import com.qrakn.honcho.command.CommandMeta;
 import org.bukkit.command.CommandSender;
@@ -9,12 +9,12 @@ import org.bukkit.command.CommandSender;
 public class SumoCancelCommand {
 
 	public void execute(CommandSender sender) {
-		if (Array.get().getSumoManager().getActiveSumo() == null) {
+		if (Practice.get().getSumoManager().getActiveSumo() == null) {
 			sender.sendMessage(CC.RED + "There isn't an active Sumo Event.");
 			return;
 		}
 
-		Array.get().getSumoManager().getActiveSumo().end();
+		Practice.get().getSumoManager().getActiveSumo().end();
 	}
 
 }

@@ -1,15 +1,15 @@
 package me.array.ArrayPractice.util.bootstrap;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import lombok.Getter;
 
 @Getter
 public class Bootstrapped {
 
-    protected final Array Array;
+    protected final Practice Practice;
 
-    public Bootstrapped(Array Array) {
-        this.Array=Array;
+    public Bootstrapped(Practice Practice) {
+        this.Practice = Practice;
     }
 
 }

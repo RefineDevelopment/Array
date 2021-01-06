@@ -1,7 +1,7 @@
 package me.array.ArrayPractice.event.impl.spleef.command;
 
 import com.qrakn.honcho.command.CommandMeta;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.event.impl.spleef.Spleef;
 import me.array.ArrayPractice.event.impl.spleef.SpleefState;
 import me.array.ArrayPractice.profile.Profile;
@@ -13,7 +13,7 @@ public class SpleefJoinCommand {
 
 	public static void execute(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		Spleef activeSpleef = Array.get().getSpleefManager().getActiveSpleef();
+		Spleef activeSpleef = Practice.get().getSpleefManager().getActiveSpleef();
 
 		if (profile.isBusy(player) || profile.getParty() != null) {
 			player.sendMessage(CC.RED + "You cannot join the spleef right now.");
@@ -30,7 +30,7 @@ public class SpleefJoinCommand {
 			return;
 		}
 
-		Array.get().getSpleefManager().getActiveSpleef().handleJoin(player);
+		Practice.get().getSpleefManager().getActiveSpleef().handleJoin(player);
 	}
 
 }

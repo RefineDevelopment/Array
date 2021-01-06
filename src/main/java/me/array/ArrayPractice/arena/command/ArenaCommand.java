@@ -13,11 +13,10 @@ public class ArenaCommand {
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
         player.sendMessage(CC.translate("&7» &b/arena create (name) (SHARED/STANDALONE) &7- Create an Arena"));
         player.sendMessage(CC.translate("&7» &b/arena remove (name) &7- Delete an Arena"));
-        player.sendMessage(CC.translate("&7» &b/arena setspawn (1/2) &7- Set 1/2 spawn of arena"));
+        player.sendMessage(CC.translate("&7» &b/arena setspawn (1/2) (1/2) &7- Set 1/2 spawn of arena"));
         player.sendMessage(CC.translate("&7» &b/arena setpoint (1/2) (KOTH ARENA) &7- Set 1/2 point of Koth Area of arena"));
         player.sendMessage(CC.translate("&7» &b/arena addkit (Arena) (Kit) &7- Add a kit to the arena."));
         player.sendMessage(CC.translate("&7» &b/arena removekit (Arena) (Kit) &7- Remove a kit from the arena."));
-        player.sendMessage(CC.translate("&7» &b/arena generate &7- Generate an Arena from schematic in Array folder."));
         player.sendMessage(CC.translate("&7» &b/arena save &7- Save Arenas"));
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
     }

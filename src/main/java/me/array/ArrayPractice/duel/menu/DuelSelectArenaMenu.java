@@ -1,80 +1,123 @@
 package me.array.ArrayPractice.duel.menu;
 
-import java.beans.ConstructorProperties;
-
 import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.arena.ArenaType;
 import me.array.ArrayPractice.profile.Profile;
-import org.bukkit.event.inventory.ClickType;
 import me.array.ArrayPractice.util.external.ItemBuilder;
+import me.array.ArrayPractice.util.external.menu.Button;
+import me.array.ArrayPractice.util.external.menu.Menu;
+import lombok.AllArgsConstructor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
-
-import me.array.ArrayPractice.util.external.menu.Button;
 import java.util.Map;
-import org.bukkit.entity.Player;
-import me.array.ArrayPractice.util.external.menu.Menu;
 
-public class DuelSelectArenaMenu extends Menu
-{
-    @Override
-    public String getTitle(final Player player) {
-        return "&7Select an arena";
+public class DuelSelectArenaMenu extends Menu {
+
+    String type;
+
+    public DuelSelectArenaMenu(String type) {
+        this.type = type;
     }
-    
+
     @Override
-    public Map<Integer, Button> getButtons(final Player player) {
-        final Profile profile = Profile.getByUuid(player.getUniqueId());
-        final Map<Integer, Button> buttons = new HashMap<Integer, Button>();
-        for (final Arena arena : Arena.getArenas()) {
+    public String getTitle(Player player) {
+        return "&cSelect an arena";
+    }
+
+    @Override
+    public Map<Integer, Button> getButtons(Player player) {
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+
+        Map<Integer, Button> buttons = new HashMap<>();
+
+        for (Arena arena : Arena.getArenas()) {
             if (!arena.isSetup()) {
                 continue;
             }
-            if (!arena.getKits().contains(profile.getDuelProcedure().getKit().getName())) {
-                continue;
+
+            if (type.equalsIgnoreCase("normal")) {
+                if (!arena.getKits().contains(profile.getDuelProcedure().getKit().getName())) {
+                    continue;
+                }
+
+                if (profile.getDuelProcedure().getKit().getGameRules().isBuild() && arena.getType() == ArenaType.SHARED) {
+                    continue;
+                }
+
+                if (arena.getType() == ArenaType.DUPLICATE) {
+                    continue;
+                }
+            } else if (type.equalsIgnoreCase("rematch")) {
+                if (!arena.getKits().contains(profile.getRematchData().getKit().getName())) {
+                    continue;
+                }
+
+                if (profile.getRematchData().getKit().getGameRules().isBuild() && arena.getType() == ArenaType.SHARED) {
+                    continue;
+                }
+
+                if (arena.getType() == ArenaType.DUPLICATE) {
+                    continue;
+                }
             }
-            if (profile.getDuelProcedure().getKit().getGameRules().isBuild() && arena.getType() == ArenaType.SHARED) {
-                continue;
-            }
-            if (arena.getType() == ArenaType.DUPLICATE) {
-                continue;
-            }
+
             buttons.put(buttons.size(), new SelectArenaButton(arena));
         }
+
         return buttons;
     }
-    
+
     @Override
-    public void onClose(final Player player) {
-        if (!this.isClosedByMenu()) {
-            final Profile profile = Profile.getByUuid(player.getUniqueId());
+    public void onClose(Player player) {
+        if (!isClosedByMenu()) {
+            Profile profile = Profile.getByUuid(player.getUniqueId());
             profile.setDuelProcedure(null);
         }
     }
-    
-    private class SelectArenaButton extends Button
-    {
-        private Arena arena;
-        
+
+    @AllArgsConstructor
+    private class SelectArenaButton extends Button {
+
+        private final Arena arena;
+
         @Override
-        public ItemStack getButtonItem(final Player player) {
-            return new ItemBuilder(Material.PAPER).name("&b&l" + this.arena.getName()).build();
+        public ItemStack getButtonItem(Player player) {
+            return new ItemBuilder(Material.PAPER)
+                    .name("&4" + arena.getName())
+                    .build();
         }
-        
+
         @Override
-        public void clicked(final Player player, final ClickType clickType) {
-            final Profile profile = Profile.getByUuid(player.getUniqueId());
-            profile.getDuelProcedure().setArena(this.arena);
-            profile.getDuelProcedure().send();
-            Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
-            player.closeInventory();
+        public void clicked(Player player, ClickType clickType) {
+            Profile profile = Profile.getByUuid(player.getUniqueId());
+
+            if (type.equalsIgnoreCase("normal")) {
+                // Update and request the procedure
+                profile.getDuelProcedure().setArena(arena);
+                profile.getDuelProcedure().send();
+
+                // Set closed by menu
+                Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
+
+                // Force close inventory
+                player.closeInventory();
+            } else if (type.equalsIgnoreCase("rematch")) {
+
+                Profile targetProfile = Profile.getByUuid(profile.getRematchData().getTarget());
+                // Update and request the procedure
+                profile.getRematchData().setArena(arena);
+                targetProfile.getRematchData().setArena(arena);
+                profile.getRematchData().request();
+
+                // Force close inventory
+                player.closeInventory();
+            }
         }
-        
-        @ConstructorProperties({ "arena" })
-        public SelectArenaButton(final Arena arena) {
-            this.arena = arena;
-        }
+
     }
+
 }

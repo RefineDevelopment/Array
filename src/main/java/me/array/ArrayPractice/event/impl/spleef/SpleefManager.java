@@ -2,7 +2,7 @@ package me.array.ArrayPractice.event.impl.spleef;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.util.external.Cooldown;
 import me.array.ArrayPractice.util.external.LocationUtil;
 import me.array.ArrayPractice.event.impl.spleef.task.SpleefStartTask;
@@ -37,7 +37,7 @@ public class SpleefManager {
 	}
 
 	public void load() {
-		FileConfiguration configuration = Array.get().getEventsConfig().getConfiguration();
+		FileConfiguration configuration = Practice.get().getEventsConfig().getConfiguration();
 
 		if (configuration.contains("events.spleef.spectator")) {
 			spleefSpectator = LocationUtil.deserialize(configuration.getString("events.spleef.spectator"));
@@ -49,7 +49,7 @@ public class SpleefManager {
 	}
 
 	public void save() {
-		FileConfiguration configuration = Array.get().getEventsConfig().getConfiguration();
+		FileConfiguration configuration = Practice.get().getEventsConfig().getConfiguration();
 
 		if (spleefSpectator != null) {
 			configuration.set("events.spleef.spectator", LocationUtil.serialize(spleefSpectator));
@@ -60,7 +60,7 @@ public class SpleefManager {
 		}
 
 		try {
-			configuration.save(Array.get().getEventsConfig().getFile());
+			configuration.save(Practice.get().getEventsConfig().getFile());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

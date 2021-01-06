@@ -1,7 +1,7 @@
 package me.array.ArrayPractice.event.impl.spleef;
 
 import lombok.Getter;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import org.bukkit.scheduler.BukkitRunnable;
 
 @Getter
@@ -18,8 +18,8 @@ public abstract class SpleefTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		if (Array.get().getSpleefManager().getActiveSpleef() == null ||
-		    !Array.get().getSpleefManager().getActiveSpleef().equals(spleef) || spleef.getState() != eventState) {
+		if (Practice.get().getSpleefManager().getActiveSpleef() == null ||
+		    !Practice.get().getSpleefManager().getActiveSpleef().equals(spleef) || spleef.getState() != eventState) {
 			cancel();
 			return;
 		}

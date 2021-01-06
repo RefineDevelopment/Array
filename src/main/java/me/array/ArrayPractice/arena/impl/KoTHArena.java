@@ -1,58 +1,71 @@
 package me.array.ArrayPractice.arena.impl;
 
-import me.array.ArrayPractice.arena.*;
-import me.array.ArrayPractice.*;
-import me.array.ArrayPractice.util.external.*;
-import java.io.*;
-import org.bukkit.configuration.file.*;
+import me.array.ArrayPractice.Practice;
+import me.array.ArrayPractice.arena.Arena;
+import me.array.ArrayPractice.arena.ArenaType;
+import me.array.ArrayPractice.util.external.LocationUtil;
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.configuration.file.FileConfiguration;
 
-public class KoTHArena extends Arena
-{
-    public KoTHArena(final String name) {
+import java.io.IOException;
+
+@Getter
+@Setter
+public class KoTHArena extends Arena {
+
+    public KoTHArena(String name) {
         super(name);
     }
-    
+
     @Override
     public ArenaType getType() {
         return ArenaType.KOTH;
     }
-    
+
     @Override
     public void save() {
-        final String path = "arenas." + this.getName();
-        final FileConfiguration configuration = Array.get().getArenasConfig().getConfiguration();
+        String path = "arenas." + getName();
+
+        FileConfiguration configuration = Practice.get().getArenasConfig().getConfiguration();
         configuration.set(path, null);
-        configuration.set(path + ".type", this.getType().name());
-        if (this.spawnA != null) {
-            configuration.set(path + ".spawn1", LocationUtil.serialize(this.spawnA));
+        configuration.set(path + ".type", getType().name());
+
+        if (spawn1 != null) {
+            configuration.set(path + ".spawn1", LocationUtil.serialize(spawn1));
         }
-        if (this.spawnB != null) {
-            configuration.set(path + ".spawn2", LocationUtil.serialize(this.spawnB));
+
+        if (spawn2 != null) {
+            configuration.set(path + ".spawn2", LocationUtil.serialize(spawn2));
         }
-        if (this.point1 != null) {
-            configuration.set(path + ".point1", LocationUtil.serialize(this.point1));
+
+        if (point1 != null) {
+            configuration.set(path + ".point1", LocationUtil.serialize(point1));
         }
-        if (this.point2 != null) {
-            configuration.set(path + ".point2", LocationUtil.serialize(this.point2));
+
+        if (point2 != null) {
+            configuration.set(path + ".point2", LocationUtil.serialize(point2));
         }
-        configuration.set(path + ".kits", this.getKits());
+
+        configuration.set(path + ".kits", getKits());
+
         try {
-            configuration.save(Array.get().getArenasConfig().getFile());
-        }
-        catch (IOException e) {
+            configuration.save(Practice.get().getArenasConfig().getFile());
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     @Override
     public void delete() {
-        final FileConfiguration configuration = Array.get().getArenasConfig().getConfiguration();
-        configuration.set("arenas." + this.getName(), null);
+        FileConfiguration configuration = Practice.get().getArenasConfig().getConfiguration();
+        configuration.set("arenas." + getName(), null);
+
         try {
-            configuration.save(Array.get().getArenasConfig().getFile());
-        }
-        catch (IOException e) {
+            configuration.save(Practice.get().getArenasConfig().getFile());
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }

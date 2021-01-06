@@ -1,9 +1,10 @@
 package me.array.ArrayPractice.queue;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.match.Match;
 import me.array.ArrayPractice.match.impl.SoloMatch;
+import me.array.ArrayPractice.match.impl.SumoMatch;
 import me.array.ArrayPractice.match.team.TeamPlayer;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.CC;
@@ -11,71 +12,108 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class QueueThread extends Thread
-{
+public class QueueThread extends Thread {
+
     @Override
     public void run() {
         while (true) {
             try {
-                for (final Queue queue : Queue.getQueues()) {
+                for (Queue queue : Queue.getQueues()) {
                     queue.getPlayers().forEach(QueueProfile::tickRange);
+
                     if (queue.getPlayers().size() < 2) {
                         continue;
                     }
-                    for (final QueueProfile firstQueueProfile : queue.getPlayers()) {
+
+                    for (QueueProfile firstQueueProfile : queue.getPlayers()) {
                         final Player firstPlayer = Bukkit.getPlayer(firstQueueProfile.getPlayerUuid());
+
                         if (firstPlayer == null) {
                             continue;
                         }
+
                         final Profile firstProfile = Profile.getByUuid(firstQueueProfile.getPlayerUuid());
-                        for (final QueueProfile secondQueueProfile : queue.getPlayers()) {
+
+                        for (QueueProfile secondQueueProfile : queue.getPlayers()) {
                             if (firstQueueProfile.equals(secondQueueProfile)) {
                                 continue;
                             }
-                            final Player secondPlayer = Bukkit.getPlayer(secondQueueProfile.getPlayerUuid());
-                            final Profile secondProfile = Profile.getByUuid(secondQueueProfile.getPlayerUuid());
+
+                            Player secondPlayer = Bukkit.getPlayer(secondQueueProfile.getPlayerUuid());
+                            Profile secondProfile = Profile.getByUuid(secondQueueProfile.getPlayerUuid());
+
                             if (secondPlayer == null) {
                                 continue;
                             }
+
+//							if (firstProfile.getOptions().isUsingPingFactor() ||
+//							    secondProfile.getOptions().isUsingPingFactor()) {
+//								if (firstPlayer.getPing() >= secondPlayer.getPing()) {
+//									if (firstPlayer.getPing() - secondPlayer.getPing() >= 50) {
+//										continue;
+//									}
+//								} else {
+//									if (secondPlayer.getPing() - firstPlayer.getPing() >= 50) {
+//										continue;
+//									}
+//								}
+//							}
+
                             if (queue.getType() == QueueType.RANKED) {
-                                if (!firstQueueProfile.isInRange(secondQueueProfile.getElo())) {
-                                    continue;
-                                }
-                                if (!secondQueueProfile.isInRange(firstQueueProfile.getElo())) {
+                                if (!firstQueueProfile.isInRange(secondQueueProfile.getElo()) ||
+                                        !secondQueueProfile.isInRange(firstQueueProfile.getElo())) {
                                     continue;
                                 }
                             }
+                            // Find arena
                             final Arena arena = Arena.getRandom(queue.getKit());
+
                             if (arena == null) {
                                 continue;
                             }
-                            if (arena.isActive()) {
-                                continue;
-                            }
-                            if (queue.getKit().getGameRules().isBuild()) {
-                                arena.setActive(true);
-                            }
+
+                            if (arena.isActive()) continue;
+
+                            if (queue.getKit().getGameRules().isBuild()) arena.setActive(true);
+
+                            // Remove players from queue
                             queue.getPlayers().remove(firstQueueProfile);
                             queue.getPlayers().remove(secondQueueProfile);
-                            final TeamPlayer firstMatchPlayer = new TeamPlayer(firstPlayer);
-                            final TeamPlayer secondMatchPlayer = new TeamPlayer(secondPlayer);
+
+                            TeamPlayer firstMatchPlayer = new TeamPlayer(firstPlayer);
+                            TeamPlayer secondMatchPlayer = new TeamPlayer(secondPlayer);
+
                             if (queue.getType() == QueueType.RANKED) {
                                 firstMatchPlayer.setElo(firstProfile.getKitData().get(queue.getKit()).getElo());
                                 secondMatchPlayer.setElo(secondProfile.getKitData().get(queue.getKit()).getElo());
                             }
-                            final Match match = new SoloMatch(queue, firstMatchPlayer, secondMatchPlayer, queue.getKit(), arena, queue.getQueueType());
-                            final String[] opponentMessages = this.formatMessages(firstPlayer.getName(), secondPlayer.getName(), firstMatchPlayer.getElo(), secondMatchPlayer.getElo(), queue.getQueueType());
+
+                            // Create match
+                            Match match;
+                            if(queue.getKit().getGameRules().isSumo()) {
+                                match = new SumoMatch(queue, firstMatchPlayer, secondMatchPlayer,
+                                        queue.getKit(), arena, queue.getQueueType());
+                            } else {
+                                match = new SoloMatch(queue, firstMatchPlayer, secondMatchPlayer,
+                                        queue.getKit(), arena, queue.getQueueType(),0,0);
+                            }
+
+
+                            String[] opponentMessages = formatMessages(firstPlayer.getName(),
+                                    secondPlayer.getName(), firstMatchPlayer.getElo(), secondMatchPlayer.getElo(),
+                                    queue.getQueueType());
+
                             firstPlayer.sendMessage(CC.AQUA + CC.BOLD + "Match Found!");
                             firstPlayer.sendMessage(CC.GRAY + "");
                             secondPlayer.sendMessage(CC.AQUA + CC.BOLD + "Match Found!");
-                            firstPlayer.sendMessage(CC.GRAY + "");
-                            firstPlayer.sendMessage(opponentMessages[0]);
+                            secondPlayer.sendMessage(CC.GRAY + "");
+                            firstPlayer.sendMessage(opponentMessages[1]);
                             secondPlayer.sendMessage(opponentMessages[1]);
                             new BukkitRunnable() {
                                 public void run() {
                                     match.start();
                                 }
-                            }.runTask(Array.get());
+                            }.runTask(Practice.get());
                         }
                     }
                 }

@@ -4,7 +4,6 @@ import com.qrakn.honcho.command.CommandMeta;
 import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 @CommandMeta(label = "kit save", permission = "practice.kit.create")
 public class KitSaveCommand {

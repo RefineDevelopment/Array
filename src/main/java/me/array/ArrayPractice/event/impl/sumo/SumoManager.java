@@ -1,6 +1,6 @@
 package me.array.ArrayPractice.event.impl.sumo;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.util.external.Cooldown;
 import me.array.ArrayPractice.util.external.LocationUtil;
 import me.array.ArrayPractice.event.impl.sumo.task.SumoStartTask;
@@ -39,7 +39,7 @@ public class SumoManager {
 	}
 
 	public void load() {
-		FileConfiguration configuration = Array.get().getEventsConfig().getConfiguration();
+		FileConfiguration configuration = Practice.get().getEventsConfig().getConfiguration();
 
 		if (configuration.contains("events.sumo.spectator")) {
 			sumoSpectator = LocationUtil.deserialize(configuration.getString("events.sumo.spectator"));
@@ -59,7 +59,7 @@ public class SumoManager {
 	}
 
 	public void save() {
-		FileConfiguration configuration = Array.get().getEventsConfig().getConfiguration();
+		FileConfiguration configuration = Practice.get().getEventsConfig().getConfiguration();
 
 		if (sumoSpectator != null) {
 			configuration.set("events.sumo.spectator", LocationUtil.serialize(sumoSpectator));
@@ -78,7 +78,7 @@ public class SumoManager {
 		}
 
 		try {
-			configuration.save(Array.get().getEventsConfig().getFile());
+			configuration.save(Practice.get().getEventsConfig().getFile());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

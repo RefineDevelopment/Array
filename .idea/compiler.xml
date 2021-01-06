@@ -7,11 +7,27 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Array" />
+        <module name="AquaCoreBridge" />
+        <module name="SmokCore" />
+        <module name="LunarClient-API" />
+        <module name="Array 3.0" />
+        <module name="ServerStatusBot" />
+        <module name="SmokKits" />
+        <module name="SmokHub" />
+        <module name="SmokDisguise" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Array" target="1.8" />
+      <module name="AquaCoreBridge" target="1.8" />
+      <module name="Array 3.0" target="1.8" />
+      <module name="Bridge" target="1.8" />
+      <module name="LunarClient-API" target="1.8" />
+      <module name="ServerStatusBot" target="1.8" />
+      <module name="SmokCore" target="1.8" />
+      <module name="SmokDisguise" target="1.8" />
+      <module name="SmokHub" target="1.8" />
+      <module name="SmokKits" target="1.8" />
+      <module name="SmokRegistration" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

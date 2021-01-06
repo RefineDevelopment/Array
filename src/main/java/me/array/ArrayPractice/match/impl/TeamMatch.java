@@ -1,11 +1,13 @@
 package me.array.ArrayPractice.match.impl;
 
-import lombok.Getter;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.match.Match;
 import me.array.ArrayPractice.match.MatchSnapshot;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.match.MatchState;
+import me.array.ArrayPractice.match.team.Team;
+import me.array.ArrayPractice.match.team.TeamPlayer;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.profile.ProfileState;
 import me.array.ArrayPractice.queue.QueueType;
@@ -13,15 +15,13 @@ import me.array.ArrayPractice.util.PlayerUtil;
 import me.array.ArrayPractice.util.external.CC;
 import me.array.ArrayPractice.util.external.ChatComponentBuilder;
 import me.array.ArrayPractice.util.nametag.NameTags;
-import me.array.ArrayPractice.match.team.Team;
-import me.array.ArrayPractice.match.team.TeamPlayer;
+import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import rip.verse.jupiter.knockback.KnockbackModule;
 import rip.verse.jupiter.knockback.KnockbackProfile;
@@ -50,6 +50,11 @@ public class TeamMatch extends Match {
     }
 
     @Override
+    public boolean isSumoTeamMatch() {
+        return false;
+    }
+
+    @Override
     public boolean isTeamMatch() {
         return true;
     }
@@ -70,9 +75,15 @@ public class TeamMatch extends Match {
     }
 
     @Override
+    public boolean isSumoMatch() {
+        return false;
+    }
+
+    @Override
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
+        // If the player disconnected, skip any operations for them
         if (teamPlayer.isDisconnected()) {
             return;
         }
@@ -85,17 +96,18 @@ public class TeamMatch extends Match {
             PlayerUtil.denyMovement(player);
         }
 
-        player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
+		player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         if (!getKit().getGameRules().isNoitems()) {
-            for (ItemStack itemStack : Profile.getByUuid(player.getUniqueId()).getKitData().get(getKit()).getKitItems()) {
-                player.getInventory().addItem(itemStack);
-            }
+            Profile.getByUuid(player.getUniqueId()).getKitData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
         }
 
-        if (getKit().getKnockbackProfile() != null) {
-            KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
-            ((CraftPlayer)player).getHandle().setKnockback(knockbackProfile);
+        if (getKit().getKnockbackProfile() != null && KnockbackModule.INSTANCE.profiles.containsKey(getKit().getKnockbackProfile())) {
+            KnockbackProfile kbprofile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
+            ((CraftPlayer) player).getHandle().setKnockback(kbprofile);
+        } else {
+            KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get("Practice");
+            ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
         }
 
         Team team = getTeam(player);
@@ -108,7 +120,7 @@ public class TeamMatch extends Match {
             NameTags.color(player, enemy, org.bukkit.ChatColor.RED, getKit().getGameRules().isShowHealth());
         }
 
-        Location spawn = team.equals(teamA) ? getArena().getSpawnA() : getArena().getSpawnB();
+        Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
 
         if (spawn.getBlock().getType() == Material.AIR) {
             player.teleport(spawn);
@@ -124,11 +136,23 @@ public class TeamMatch extends Match {
 
     @Override
     public void onStart() {
+        if (getKit().getGameRules().isTimed())
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (!getState().equals(MatchState.FIGHTING))
+                        return;
 
+                    if (getDuration().equalsIgnoreCase("01:00")) {
+                        onEnd();
+                        cancel();
+                    }
+                }
+            }.runTaskTimer(Practice.get(), 20L, 20L);
     }
 
     @Override
-    public void onEnd() {
+    public boolean onEnd() {
         for (TeamPlayer teamPlayer : getTeamPlayers()) {
             if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
                 Player player = teamPlayer.getPlayer();
@@ -180,13 +204,16 @@ public class TeamMatch extends Match {
                             profile.setMatch(null);
                             profile.refreshHotbar();
                             profile.handleVisibility();
+                            KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get("Practice");
+                            ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
 
-                            Array.get().getEssentials().teleportToSpawn(player);
+                            Practice.get().getEssentials().teleportToSpawn(player);
+                            profile.refreshHotbar();
                         }
                     }
                 }
             }
-        }.runTaskLater(Array.get(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
+        }.runTaskLater(Practice.get(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
 
         Team winningTeam = getWinningTeam();
         Team losingTeam = getOpponentTeam(winningTeam);
@@ -198,16 +225,16 @@ public class TeamMatch extends Match {
         loserInventories.append("Losers: ").color(ChatColor.RED);
 
         for (TeamPlayer teamPlayer : winningTeam.getTeamPlayers()) {
-            winnerInventories.append(teamPlayer.getUsername()).color(ChatColor.WHITE);
+            winnerInventories.append(teamPlayer.getUsername()).color(ChatColor.GREEN);
             winnerInventories.setCurrentHoverEvent(getHoverEvent(teamPlayer)).setCurrentClickEvent(getClickEvent(teamPlayer)).append(", ").color(ChatColor.AQUA);
         }
 
         for (TeamPlayer teamPlayer : losingTeam.getTeamPlayers()) {
-            loserInventories.append(teamPlayer.getUsername()).color(ChatColor.WHITE);
+            loserInventories.append(teamPlayer.getUsername()).color(ChatColor.RED);
             loserInventories.setCurrentHoverEvent(getHoverEvent(teamPlayer))
                     .setCurrentClickEvent(getClickEvent(teamPlayer))
                     .append(", ")
-                    .color(ChatColor.WHITE);
+                    .color(ChatColor.GRAY);
         }
 
         winnerInventories.getCurrent().setText(winnerInventories.getCurrent().getText().substring(0,
@@ -217,25 +244,32 @@ public class TeamMatch extends Match {
 
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());
-        components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7⎜ &7&o(Click name to view)").create());
-        components.add(new ChatComponentBuilder("").parse("").create());
+        components.add(new ChatComponentBuilder("").parse("&cPost-match Inventories &7(click name to view)").create());
         components.add(winnerInventories.create());
         components.add(loserInventories.create());
         components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());
 
         for (Player player : getPlayersAndSpectators()) {
-            Player.Spigot spigot = player.spigot();
-            components.forEach(spigot::sendMessage);
+            components.forEach(components1 -> player.spigot().sendMessage(components1));
         }
+        return true;
     }
 
     @Override
     public boolean canEnd() {
+//		if (getKit().getGameRules().isSumo()) {
+//			return (teamA.getDeadCount() + teamA.getDisconnectedCount()) == teamA.getTeamPlayers().size() ||
+//			       (teamB.getDeadCount() + teamB.getDisconnectedCount()) == teamB.getTeamPlayers().size() ||
+//			       teamARoundWins == 3 || teamBRoundWins == 3;
+//		} else {
         return teamA.getAliveTeamPlayers().isEmpty() || teamB.getAliveTeamPlayers().isEmpty();
+//		}
     }
 
     @Override
     public void onDeath(Player player, Player killer) {
+        // TODO: request teams messages directly then request global messages to spectators
+        // Team roundLoser = this.getOpponentTeam(player);
         TeamPlayer teamPlayer = getTeamPlayer(player);
         getSnapshots().add(new MatchSnapshot(teamPlayer));
 
@@ -243,7 +277,7 @@ public class TeamMatch extends Match {
 
         if (!canEnd() && !teamPlayer.isDisconnected()) {
             Team team = getTeam(player);
-            Location spawn = team.equals(teamA) ? getArena().getSpawnA() : getArena().getSpawnB();
+            Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
             player.teleport(spawn);
             Profile profile = Profile.getByUuid(player.getUniqueId());
             profile.refreshHotbar();
@@ -264,7 +298,7 @@ public class TeamMatch extends Match {
                 Player toPlayer = teamPlayer.getPlayer();
 
                 if (toPlayer != null && toPlayer.isOnline()) {
-                    toPlayer.teleport(getArena().getSpawnA());
+                    toPlayer.teleport(getArena().getSpawn1());
                 }
             }
 
@@ -276,7 +310,7 @@ public class TeamMatch extends Match {
                 Player toPlayer = teamPlayer.getPlayer();
 
                 if (toPlayer != null && toPlayer.isOnline()) {
-                    toPlayer.teleport(getArena().getSpawnB());
+                    toPlayer.teleport(getArena().getSpawn2());
                 }
             }
         } else {
@@ -291,7 +325,26 @@ public class TeamMatch extends Match {
 
     @Override
     public Team getWinningTeam() {
-        if (getKit().getGameRules().isParkour()) {
+//		if (getKit().getGameRules().isSumo()) {
+//			if (teamA.getDisconnectedCount() == teamA.getTeamPlayers().size()) {
+//				return teamB;
+//			} else if (teamB.getDisconnectedCount() == teamB.getTeamPlayers().size()) {
+//				return teamA;
+//			}
+//
+//			return teamARoundWins == 3 ? teamA : teamB;
+//		} else {
+        if (getKit().getGameRules().isTimed()) {
+            if (teamA.getAliveTeamPlayers().isEmpty()) {
+                return teamB;
+            } else if (teamB.getAliveTeamPlayers().isEmpty()) {
+                return teamA;
+            } else if (teamA.getTotalHits() > teamB.getTotalHits()) {
+                return teamA;
+            } else {
+                return teamB;
+            }
+        } else if (getKit().getGameRules().isParkour()) {
             if (teamA.getDeadCount() > 0) {
                 return teamA;
             } else {

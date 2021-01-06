@@ -2,7 +2,7 @@ package me.array.ArrayPractice.event.impl.spleef;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.profile.ProfileState;
@@ -23,7 +23,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -36,16 +35,16 @@ public class Spleef {
 
 	protected static String EVENT_PREFIX = CC.DARK_AQUA + CC.BOLD + "(Spleef) " + CC.RESET;
 
-	private String name;
+	private final String name;
 	@Setter private SpleefState state = SpleefState.WAITING;
 	@Getter @Setter static private Kit kit = Kit.getByName("Spleef");
 	private SpleefTask eventTask;
-	private PlayerSnapshot host;
-	private LinkedHashMap<UUID, SpleefPlayer> eventPlayers = new LinkedHashMap<>();
-	@Getter private List<UUID> spectators = new ArrayList<>();
-	private List<Location> placedBlocks = new ArrayList<>();
-	private List<BlockState> changedBlocks = new ArrayList<>();
-	private int maxPlayers;
+	private final PlayerSnapshot host;
+	private final LinkedHashMap<UUID, SpleefPlayer> eventPlayers = new LinkedHashMap<>();
+	@Getter private final List<UUID> spectators = new ArrayList<>();
+	private final List<Location> placedBlocks = new ArrayList<>();
+	private final List<BlockState> changedBlocks = new ArrayList<>();
+	private final int maxPlayers;
 	@Getter @Setter private int totalPlayers;
 	@Setter private Cooldown cooldown;
 	@Setter private long roundStart;
@@ -60,7 +59,7 @@ public class Spleef {
 	public List<String> getLore() {
 		List<String> toReturn = new ArrayList<>();
 
-		Spleef spleef = Array.get().getSpleefManager().getActiveSpleef();
+		Spleef spleef = Practice.get().getSpleefManager().getActiveSpleef();
 
 		toReturn.add(CC.MENU_BAR);
 		toReturn.add(CC.translate("&bHost: &r" + spleef.getName()));
@@ -97,7 +96,7 @@ public class Spleef {
 		eventTask = task;
 
 		if (eventTask != null) {
-			eventTask.runTaskTimer(Array.get(), 0L, 20L);
+			eventTask.runTaskTimer(Practice.get(), 0L, 20L);
 		}
 	}
 
@@ -162,7 +161,7 @@ public class Spleef {
 		profile.setState(ProfileState.IN_EVENT);
 		profile.refreshHotbar();
 
-		player.teleport(Array.get().getSpleefManager().getSpleefSpectator());
+		player.teleport(Practice.get().getSpleefManager().getSpleefSpectator());
 
 		new BukkitRunnable() {
 			@Override
@@ -173,7 +172,7 @@ public class Spleef {
 					profile.handleVisibility(player, otherPlayer);
 				}
 			}
-		}.runTaskAsynchronously(Array.get());
+		}.runTaskAsynchronously(Practice.get());
 	}
 
 	public void handleLeave(Player player) {
@@ -197,7 +196,7 @@ public class Spleef {
 		profile.setSpleef(null);
 		profile.refreshHotbar();
 
-		Array.get().getEssentials().teleportToSpawn(player);
+		Practice.get().getEssentials().teleportToSpawn(player);
 
 		new BukkitRunnable() {
 			@Override
@@ -208,7 +207,7 @@ public class Spleef {
 					profile.handleVisibility(player, otherPlayer);
 				}
 			}
-		}.runTaskAsynchronously(Array.get());
+		}.runTaskAsynchronously(Practice.get());
 	}
 
 	protected List<Player> getSpectatorsList() {
@@ -223,12 +222,12 @@ public class Spleef {
 	}
 
 	public void end() {
-		Array.get().getSpleefManager().setActiveSpleef(null);
-		Array.get().getSpleefManager().setCooldown(new Cooldown(60_000L * 10));
+		Practice.get().getSpleefManager().setActiveSpleef(null);
+		Practice.get().getSpleefManager().setCooldown(new Cooldown(60_000L * 10));
 
 		setEventTask(null);
 
-		new SpleefResetTask(this).runTask(Array.get());
+		new SpleefResetTask(this).runTask(Practice.get());
 
 		Player winner = this.getWinner();
 
@@ -247,7 +246,7 @@ public class Spleef {
 				profile.setSpleef(null);
 				profile.refreshHotbar();
 
-				Array.get().getEssentials().teleportToSpawn(player);
+				Practice.get().getEssentials().teleportToSpawn(player);
 			}
 		}
 
@@ -303,7 +302,9 @@ public class Spleef {
 		}
 	}
 
-	public void onJoin(Player player) {}
+	public void onJoin(Player player) {
+		//player.setKnockbackProfile(null);
+	}
 
 	public void onLeave(Player player) {
 		//player.setKnockbackProfile(null);
@@ -315,7 +316,7 @@ public class Spleef {
 		int i = 0;
 		for (Player player : this.getRemainingPlayers()) {
 			if (player != null) {
-				player.teleport(Array.get().getSpleefManager().getSpleefSpectator());
+				player.teleport(Practice.get().getSpleefManager().getSpleefSpectator());
 				i++;
 
 				Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -326,9 +327,8 @@ public class Spleef {
 				PlayerUtil.reset(player);
 			}
 
-			for (ItemStack itemStack : Profile.getByUuid(player.getUniqueId()).getKitData().get(getKit()).getKitItems()) {
-				player.getInventory().addItem(itemStack);
-			}
+			assert player != null;
+			Profile.getByUuid(player.getUniqueId()).getKitData().get(getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
 		}
 		setEventTask(new SpleefRoundStartTask(this));
 	}
@@ -336,7 +336,7 @@ public class Spleef {
 	public void onDeath(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 
-		broadcastMessage("&c" + player.getName() + "&f died!");
+		broadcastMessage("&c" + player.getName() + "&7 died!");
 
 
 		if (canEnd()) {
@@ -353,14 +353,14 @@ public class Spleef {
 					profile.handleVisibility(player, otherPlayer);
 				}
 			}
-		}.runTaskAsynchronously(Array.get());
+		}.runTaskAsynchronously(Practice.get());
 
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				profile.refreshHotbar();
 			}
-		}.runTask(Array.get());
+		}.runTask(Practice.get());
 	}
 
 	public String getRoundDuration() {
@@ -384,7 +384,7 @@ public class Spleef {
 		player.setFlying(true);
 
 
-		player.teleport(Array.get().getSpleefManager().getSpleefSpectator());
+		player.teleport(Practice.get().getSpleefManager().getSpleefSpectator());
 	}
 
 	public void removeSpectator(Player player) {
@@ -396,6 +396,6 @@ public class Spleef {
 		profile.refreshHotbar();
 		profile.handleVisibility();
 
-		Array.get().getEssentials().teleportToSpawn(player);
+		Practice.get().getEssentials().teleportToSpawn(player);
 	}
 }

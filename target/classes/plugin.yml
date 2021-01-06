@@ -1,6 +1,8 @@
-main: me.array.ArrayPractice.Array
+main: me.array.ArrayPractice.Practice
 name: Array
-version: 2.0
-author: Joeleoli and Drizzy
-depends: [ProtocolLib, LunarClientAPI]
-description: A fork of Praxi
+version: 3.0
+authors: ["Nick", "Drizzy", "Chris", "Zentil"]
+depend:
+  - ProtocolLib
+  - PlaceholderAPI
+  - HolographicDisplays

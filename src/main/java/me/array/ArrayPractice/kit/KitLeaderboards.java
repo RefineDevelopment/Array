@@ -5,6 +5,11 @@ import lombok.Setter;
 
 public class KitLeaderboards {
 
-    @Getter @Setter private String name;
-    @Getter @Setter private int elo;
+    @Getter
+    @Setter
+    private String name;
+    @Getter
+    @Setter
+    private int elo;
+
 }

@@ -1,6 +1,6 @@
 package me.array.ArrayPractice.event.impl.sumo.command;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.event.impl.sumo.Sumo;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.CC;
@@ -11,19 +11,19 @@ import org.bukkit.entity.Player;
 public class SumoHostCommand {
 
 	public static void execute(Player player) {
-		if (Array.get().getSumoManager().getActiveSumo() != null) {
+		if (Practice.get().getSumoManager().getActiveSumo() != null) {
 			player.sendMessage(CC.RED + "There is already an active Sumo Event.");
 			return;
 		}
 
-		if (!Array.get().getSumoManager().getCooldown().hasExpired()) {
+		if (!Practice.get().getSumoManager().getCooldown().hasExpired()) {
 			player.sendMessage(CC.RED + "There is a Sumo Event cooldown active.");
 			return;
 		}
 
-		Array.get().getSumoManager().setActiveSumo(new Sumo(player));
+		Practice.get().getSumoManager().setActiveSumo(new Sumo(player));
 
-		for (Player other : Array.get().getServer().getOnlinePlayers()) {
+		for (Player other : Practice.get().getServer().getOnlinePlayers()) {
 			Profile profile = Profile.getByUuid(other.getUniqueId());
 
 			if (profile.isInLobby()) {

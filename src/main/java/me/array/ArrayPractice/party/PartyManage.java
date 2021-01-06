@@ -1,6 +1,6 @@
 package me.array.ArrayPractice.party;
 
-import me.array.ArrayPractice.util.CC;
+import me.array.ArrayPractice.util.external.CC;
 import java.beans.ConstructorProperties;
 
 public enum PartyManage

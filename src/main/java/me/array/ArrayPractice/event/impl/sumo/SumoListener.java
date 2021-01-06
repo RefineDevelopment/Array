@@ -1,6 +1,6 @@
 package me.array.ArrayPractice.event.impl.sumo;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.PlayerUtil;
 import org.bukkit.entity.Player;
@@ -36,11 +36,11 @@ public class SumoListener implements Listener {
 					event.setCancelled(true);
 					event.getEntity().setFireTicks(0);
 					if (!profile.getSumo().isFighting() || !profile.getSumo().isFighting(player.getUniqueId())) {
-						player.teleport(Array.get().getSumoManager().getSumoSpectator());
+						player.teleport(Practice.get().getSumoManager().getSumoSpectator());
 						return;
 					}
 					PlayerUtil.spectator(player);
-					player.teleport(Array.get().getSumoManager().getSumoSpectator());
+					player.teleport(Practice.get().getSumoManager().getSumoSpectator());
 					profile.getSumo().handleDeath(player);
 					return;
 				}

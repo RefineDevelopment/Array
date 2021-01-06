@@ -1,7 +1,7 @@
 package me.array.ArrayPractice.event.impl.parkour.command;
 
 import com.qrakn.honcho.command.CommandMeta;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.command.CommandSender;
 
@@ -9,12 +9,12 @@ import org.bukkit.command.CommandSender;
 public class ParkourCancelCommand {
 
 	public void execute(CommandSender sender) {
-		if (Array.get().getParkourManager().getActiveParkour() == null) {
+		if (Practice.get().getParkourManager().getActiveParkour() == null) {
 			sender.sendMessage(CC.RED + "There isn't an active Parkour event.");
 			return;
 		}
 
-		Array.get().getParkourManager().getActiveParkour().end(null);
+		Practice.get().getParkourManager().getActiveParkour().end(null);
 	}
 
 }

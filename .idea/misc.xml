@@ -4,8 +4,19 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/pom.properties" />
+        <option value="$PROJECT_DIR$/../SmokCore/pom.xml" />
+        <option value="$PROJECT_DIR$/../SmokHub/pom.xml" />
+        <option value="$PROJECT_DIR$/../SmokDisguise/pom.xml" />
+        <option value="$PROJECT_DIR$/../LunarClient-API/pom.xml" />
+        <option value="$PROJECT_DIR$/../SmokKits/pom.xml" />
+        <option value="$PROJECT_DIR$/../AquaCoreBridge/pom.xml" />
+        <option value="$PROJECT_DIR$/../ServerStatusBot/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/../SmokCore/Bridge/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK" />

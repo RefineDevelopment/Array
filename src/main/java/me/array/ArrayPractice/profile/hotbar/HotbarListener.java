@@ -1,6 +1,12 @@
 package me.array.ArrayPractice.profile.hotbar;
 
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
+import me.array.ArrayPractice.event.impl.brackets.Brackets;
+import me.array.ArrayPractice.event.impl.lms.LMS;
+import me.array.ArrayPractice.event.impl.parkour.Parkour;
+import me.array.ArrayPractice.event.impl.skywars.SkyWars;
+import me.array.ArrayPractice.event.impl.spleef.Spleef;
+import me.array.ArrayPractice.event.impl.sumo.Sumo;
 import me.array.ArrayPractice.event.menu.ActiveEventSelectEventMenu;
 import me.array.ArrayPractice.kit.menu.KitEditorSelectKitMenu;
 import me.array.ArrayPractice.party.Party;
@@ -10,22 +16,17 @@ import me.array.ArrayPractice.party.menu.OtherPartiesMenu;
 import me.array.ArrayPractice.party.menu.PartyEventSelectEventMenu;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.profile.ProfileState;
+import me.array.ArrayPractice.profile.menu.PlayerMenu;
+import me.array.ArrayPractice.profile.meta.ProfileRematchData;
 import me.array.ArrayPractice.profile.options.OptionsMenu;
 import me.array.ArrayPractice.queue.QueueType;
-import me.array.ArrayPractice.util.external.CC;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.EventHandler;
-import me.array.ArrayPractice.profile.meta.ProfileRematchData;
-import me.array.ArrayPractice.event.impl.spleef.Spleef;
-import me.array.ArrayPractice.event.impl.parkour.Parkour;
-import me.array.ArrayPractice.event.impl.lms.FFA;
-import me.array.ArrayPractice.event.impl.brackets.Brackets;
-import me.array.ArrayPractice.event.impl.sumo.Sumo;
-import org.bukkit.entity.Player;
-import me.array.ArrayPractice.profile.menu.menu.RankedLeaderboardsMenu;
 import me.array.ArrayPractice.queue.menu.QueueSelectKitMenu;
-import org.bukkit.event.player.PlayerInteractEvent;
+import me.array.ArrayPractice.util.external.CC;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 public class HotbarListener implements Listener
 {
@@ -87,7 +88,7 @@ public class HotbarListener implements Listener
                     break;
                 }
                 case LEADERBOARDS_MENU: {
-                    new RankedLeaderboardsMenu().openMenu(event.getPlayer());
+                    new PlayerMenu().openMenu(event.getPlayer());
                     break;
                 }
                 case KIT_EDITOR: {
@@ -148,7 +149,7 @@ public class HotbarListener implements Listener
                     break;
                 }
                 case SUMO_LEAVE: {
-                    final Sumo activeSumo = Array.get().getSumoManager().getActiveSumo();
+                    final Sumo activeSumo = Practice.get().getSumoManager().getActiveSumo();
                     if (activeSumo == null) {
                         player.sendMessage(CC.RED + "There is no active sumo.");
                         return;
@@ -157,11 +158,11 @@ public class HotbarListener implements Listener
                         player.sendMessage(CC.RED + "You are not apart of the active sumo.");
                         return;
                     }
-                    Array.get().getSumoManager().getActiveSumo().handleLeave(player);
+                    Practice.get().getSumoManager().getActiveSumo().handleLeave(player);
                     break;
                 }
                 case BRACKETS_LEAVE: {
-                    final Brackets activeBrackets = Array.get().getBracketsManager().getActiveBrackets();
+                    final Brackets activeBrackets = Practice.get().getBracketsManager().getActiveBrackets();
                     if (activeBrackets == null) {
                         player.sendMessage(CC.RED + "There is no active brackets.");
                         return;
@@ -170,24 +171,37 @@ public class HotbarListener implements Listener
                         player.sendMessage(CC.RED + "You are not apart of the active brackets.");
                         return;
                     }
-                    Array.get().getBracketsManager().getActiveBrackets().handleLeave(player);
+                    Practice.get().getBracketsManager().getActiveBrackets().handleLeave(player);
                     break;
                 }
-                case FFA_LEAVE: {
-                    final FFA activeFfa = Array.get().getFfaManager().getActiveFFA();
-                    if (activeFfa == null) {
-                        player.sendMessage(CC.RED + "There is no active Juggernaut.");
+                case SKYWARS_LEAVE: {
+                    final SkyWars activeSkywars = Practice.get().getSkyWarsManager().getActiveSkyWars();
+                    if (activeSkywars == null) {
+                        player.sendMessage(CC.RED + "There is no active skywars event.");
                         return;
                     }
-                    if (!profile.isInFfa() || !activeFfa.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(CC.RED + "You are not apart of the active Juggernaut.");
+                    if (!profile.isInSkyWars() || !activeSkywars.getEventPlayers().containsKey(player.getUniqueId())) {
+                        player.sendMessage(CC.RED + "You are not apart of the active skywars event.");
                         return;
                     }
-                    Array.get().getFfaManager().getActiveFFA().handleLeave(player);
+                    Practice.get().getSkyWarsManager().getActiveSkyWars().handleLeave(player);
+                    break;
+                }
+                case LMS_LEAVE: {
+                    final LMS activeLMS = Practice.get().getLMSManager().getActiveLMS();
+                    if (activeLMS == null) {
+                        player.sendMessage(CC.RED + "There is no active LMS.");
+                        return;
+                    }
+                    if (!profile.isInLMS() || !activeLMS.getEventPlayers().containsKey(player.getUniqueId())) {
+                        player.sendMessage(CC.RED + "You are not apart of the active LMS.");
+                        return;
+                    }
+                    Practice.get().getLMSManager().getActiveLMS().handleLeave(player);
                     break;
                 }
                 case PARKOUR_LEAVE: {
-                    final Parkour activeParkour = Array.get().getParkourManager().getActiveParkour();
+                    final Parkour activeParkour = Practice.get().getParkourManager().getActiveParkour();
                     if (activeParkour == null) {
                         player.sendMessage(CC.RED + "There is no active Parkour.");
                         return;
@@ -196,11 +210,11 @@ public class HotbarListener implements Listener
                         player.sendMessage(CC.RED + "You are not apart of the active Parkour.");
                         return;
                     }
-                    Array.get().getParkourManager().getActiveParkour().handleLeave(player);
+                    Practice.get().getParkourManager().getActiveParkour().handleLeave(player);
                     break;
                 }
                 case SPLEEF_LEAVE: {
-                    final Spleef activeSpleef = Array.get().getSpleefManager().getActiveSpleef();
+                    final Spleef activeSpleef = Practice.get().getSpleefManager().getActiveSpleef();
                     if (activeSpleef == null) {
                         player.sendMessage(CC.RED + "There is no active Spleef.");
                         return;
@@ -209,7 +223,7 @@ public class HotbarListener implements Listener
                         player.sendMessage(CC.RED + "You are not apart of the active Spleef.");
                         return;
                     }
-                    Array.get().getSpleefManager().getActiveSpleef().handleLeave(player);
+                    Practice.get().getSpleefManager().getActiveSpleef().handleLeave(player);
                     break;
                 }
                 case SPECTATE_STOP: {
@@ -235,8 +249,8 @@ public class HotbarListener implements Listener
                         profile.getBrackets().removeSpectator(player);
                         break;
                     }
-                    if (profile.getFfa() != null) {
-                        profile.getFfa().removeSpectator(player);
+                    if (profile.getLms() != null) {
+                        profile.getLms().removeSpectator(player);
                         break;
                     }
                     if (profile.getParkour() != null) {
@@ -245,6 +259,10 @@ public class HotbarListener implements Listener
                     }
                     if (profile.getSpleef() != null) {
                         profile.getSpleef().removeSpectator(player);
+                        break;
+                    }
+                    if (profile.getSkyWars() != null) {
+                        profile.getSkyWars().removeSpectator(player);
                         break;
                     }
                     break;
@@ -278,3 +296,4 @@ public class HotbarListener implements Listener
         }
     }
 }
+

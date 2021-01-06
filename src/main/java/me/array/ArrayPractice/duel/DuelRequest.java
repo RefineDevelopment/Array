@@ -1,51 +1,33 @@
-
-
 package me.array.ArrayPractice.duel;
 
-import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.arena.Arena;
+import me.array.ArrayPractice.kit.Kit;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
-public class DuelRequest
-{
+public class DuelRequest {
+
+    @Getter
     private final UUID sender;
+    @Getter
     private final boolean party;
+    @Getter
+    @Setter
     private Kit kit;
+    @Getter
+    @Setter
     private Arena arena;
-    private long timestamp;
-    
-    DuelRequest(final UUID sender, final boolean party) {
-        this.timestamp = System.currentTimeMillis();
+    private final long timestamp = System.currentTimeMillis();
+
+    DuelRequest(UUID sender, boolean party) {
         this.sender = sender;
         this.party = party;
     }
-    
+
     public boolean isExpired() {
-        return System.currentTimeMillis() - this.timestamp >= 30000L;
+        return System.currentTimeMillis() - this.timestamp >= 30_000;
     }
-    
-    public UUID getSender() {
-        return this.sender;
-    }
-    
-    public boolean isParty() {
-        return this.party;
-    }
-    
-    public Kit getKit() {
-        return this.kit;
-    }
-    
-    public void setKit(final Kit kit) {
-        this.kit = kit;
-    }
-    
-    public Arena getArena() {
-        return this.arena;
-    }
-    
-    public void setArena(final Arena arena) {
-        this.arena = arena;
-    }
+
 }

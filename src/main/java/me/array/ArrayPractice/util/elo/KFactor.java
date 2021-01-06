@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class KFactor {
 
-	private final int startIndex;
-	private final int endIndex;
-	private final double value;
+    private final int startIndex;
+    private final int endIndex;
+    private final double value;
 
 }

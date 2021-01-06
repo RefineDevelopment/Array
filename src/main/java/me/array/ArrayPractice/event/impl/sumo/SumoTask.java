@@ -1,7 +1,7 @@
 package me.array.ArrayPractice.event.impl.sumo;
 
 import lombok.Getter;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import org.bukkit.scheduler.BukkitRunnable;
 
 @Getter
@@ -18,8 +18,8 @@ public abstract class SumoTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		if (Array.get().getSumoManager().getActiveSumo() == null ||
-		    !Array.get().getSumoManager().getActiveSumo().equals(sumo) || sumo.getState() != eventState) {
+		if (Practice.get().getSumoManager().getActiveSumo() == null ||
+		    !Practice.get().getSumoManager().getActiveSumo().equals(sumo) || sumo.getState() != eventState) {
 			cancel();
 			return;
 		}

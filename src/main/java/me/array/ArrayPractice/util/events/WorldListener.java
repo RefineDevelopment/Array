@@ -16,57 +16,57 @@ import org.bukkit.event.world.WorldLoadEvent;
 
 public class WorldListener implements Listener {
 
-	@EventHandler
-	public void onChunkUnload(ChunkUnloadEvent event) {
-		event.setCancelled(true);
-	}
+    @EventHandler
+    public void onChunkUnload(ChunkUnloadEvent event) {
+        event.setCancelled(true);
+    }
 
-	@EventHandler
-	public void onWorldLoad(WorldLoadEvent event) {
-		event.getWorld().getEntities().clear();
-		event.getWorld().setDifficulty(Difficulty.HARD);
-	}
+    @EventHandler
+    public void onWorldLoad(WorldLoadEvent event) {
+        event.getWorld().getEntities().clear();
+        event.getWorld().setDifficulty(Difficulty.HARD);
+    }
 
-	@EventHandler
-	public void onWeatherChange(WeatherChangeEvent event) {
-		event.setCancelled(true);
-	}
+    @EventHandler
+    public void onWeatherChange(WeatherChangeEvent event) {
+        event.setCancelled(true);
+    }
 
-	@EventHandler
-	public void onCreatureSpawn(CreatureSpawnEvent event) {
-		event.setCancelled(true);
-	}
+    @EventHandler
+    public void onCreatureSpawn(CreatureSpawnEvent event) {
+        event.setCancelled(true);
+    }
 
-	@EventHandler
-	public void onBlockIgnite(BlockIgniteEvent event) {
-		if (event.getCause() == BlockIgniteEvent.IgniteCause.LIGHTNING) {
-			event.setCancelled(true);
-		}
-	}
+    @EventHandler
+    public void onBlockIgnite(BlockIgniteEvent event) {
+        if (event.getCause() == BlockIgniteEvent.IgniteCause.LIGHTNING) {
+            event.setCancelled(true);
+        }
+    }
 
-	@EventHandler
-	public void onLeavesDecay(LeavesDecayEvent event) {
-		event.setCancelled(true);
-	}
+    @EventHandler
+    public void onLeavesDecay(LeavesDecayEvent event) {
+        event.setCancelled(true);
+    }
 
-	@EventHandler
-	public void onHangingBreak(HangingBreakEvent event) {
-		event.setCancelled(true);
-	}
+    @EventHandler
+    public void onHangingBreak(HangingBreakEvent event) {
+        event.setCancelled(true);
+    }
 
-	@EventHandler
-	public void onBlockBurn(BlockBurnEvent event) {
-		event.setCancelled(true);
-	}
+    @EventHandler
+    public void onBlockBurn(BlockBurnEvent event) {
+        event.setCancelled(true);
+    }
 
-	@EventHandler
-	public void onBlockSpread(BlockSpreadEvent event) {
-		event.setCancelled(true);
-	}
+    @EventHandler
+    public void onBlockSpread(BlockSpreadEvent event) {
+        event.setCancelled(true);
+    }
 
-	@EventHandler
-	public void onPrime(ExplosionPrimeEvent event) {
-		event.setCancelled(true);
-	}
+    @EventHandler
+    public void onPrime(ExplosionPrimeEvent event) {
+        event.setCancelled(true);
+    }
 
 }

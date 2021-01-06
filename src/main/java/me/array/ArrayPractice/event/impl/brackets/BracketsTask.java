@@ -1,7 +1,7 @@
 package me.array.ArrayPractice.event.impl.brackets;
 
 import lombok.Getter;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import org.bukkit.scheduler.BukkitRunnable;
 
 @Getter
@@ -18,8 +18,8 @@ public abstract class BracketsTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		if (Array.get().getBracketsManager().getActiveBrackets() == null ||
-		    !Array.get().getBracketsManager().getActiveBrackets().equals(brackets) || brackets.getState() != eventState) {
+		if (Practice.get().getBracketsManager().getActiveBrackets() == null ||
+		    !Practice.get().getBracketsManager().getActiveBrackets().equals(brackets) || brackets.getState() != eventState) {
 			cancel();
 			return;
 		}

@@ -1,62 +1,73 @@
 package me.array.ArrayPractice.util.nametag;
 
 import me.array.ArrayPractice.util.external.CC;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 public class NameTags {
 
-	public static void color(Player player, Player other, ChatColor color, boolean showHealth) {
-		color(player , other , color.toString() , "" , showHealth);
-	}
-	public static synchronized void color(Player player, Player other, String prefix , String suffix ,  boolean showHealth) {
-		if (player.equals(other)) {
-			return;
-		}
+    private static final String PREFIX = "nt_team_";
 
-		Team team = player.getScoreboard().getTeam(other.getName());
+    public static void color(Player player, Player other, ChatColor color, boolean showHealth) {
+        Scoreboard scoreboard = player.getScoreboard();
 
-		if (team == null) {
-			team = player.getScoreboard().registerNewTeam(other.getName());
-		}
-		team.setPrefix(prefix);
-		team.setSuffix(suffix);
+        if (scoreboard.equals(Bukkit.getServer().getScoreboardManager().getMainScoreboard())) {
+            scoreboard = Bukkit.getServer().getScoreboardManager().getNewScoreboard();
+        }
 
-		if (!team.hasEntry(other.getName())) {
-			reset(player, other);
+        Team team = player.getScoreboard().getTeam(getTeamName(color));
 
-			team.addEntry(other.getName());
+        if (team == null) {
+            team = player.getScoreboard().registerNewTeam(getTeamName(color));
+            team.setPrefix(color.toString());
+        }
 
-			if (showHealth) {
-				Objective objective = player.getScoreboard().getObjective(DisplaySlot.BELOW_NAME);
+        if (!team.hasEntry(other.getName())) {
+            reset(player, other);
 
-				if (objective == null) {
-					objective = player.getScoreboard().registerNewObjective("showhealth", "health");
-				}
+            team.addEntry(other.getName());
 
-				objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
-				objective.setDisplayName(CC.RED + StringEscapeUtils.unescapeJava("\u2764"));
-				objective.getScore(other.getName()).setScore((int) other.getHealth());
-			}
-		}
-	}
+            if (showHealth) {
+                Objective objective = player.getScoreboard().getObjective(DisplaySlot.BELOW_NAME);
 
-	public static void reset(Player player, Player other) {
-		if (player != null && other != null && !player.equals(other)) {
-			Objective objective = player.getScoreboard().getObjective(DisplaySlot.BELOW_NAME);
+                if (objective == null) {
+                    objective = player.getScoreboard().registerNewObjective("showhealth", "health");
+                }
 
-			if (objective != null) {
-				objective.unregister();
-			}
+                objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
+                objective.setDisplayName(CC.RED + StringEscapeUtils.unescapeJava("\u2764"));
+                objective.getScore(other.getName()).setScore((int) Math.floor(other.getHealth() / 2));
+            }
+        }
 
-			for (Team team : player.getScoreboard().getTeams()) {
-				team.removeEntry(other.getName());
-			}
-		}
-	}
+        player.setScoreboard(scoreboard);
+    }
 
+    public static void reset(Player player, Player other) {
+        if (player != null && other != null && !player.equals(other)) {
+            Objective objective = player.getScoreboard().getObjective(DisplaySlot.BELOW_NAME);
+
+            if (objective != null) {
+                objective.unregister();
+            }
+
+            for (ChatColor chatColor : ChatColor.values()) {
+                Team team = player.getScoreboard().getTeam(getTeamName(chatColor));
+
+                if (team != null) {
+                    team.removeEntry(other.getName());
+                }
+            }
+        }
+    }
+
+    private static String getTeamName(ChatColor color) {
+        return PREFIX + color.ordinal();
+    }
 }

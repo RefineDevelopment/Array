@@ -1,7 +1,7 @@
 package me.array.ArrayPractice.event.impl.parkour.command;
 
 import com.qrakn.honcho.command.CommandMeta;
-import me.array.ArrayPractice.Array;
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.event.impl.parkour.Parkour;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.CC;
@@ -12,7 +12,7 @@ public class ParkourLeaveCommand {
 
 	public void execute(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		Parkour activeParkour = Array.get().getParkourManager().getActiveParkour();
+		Parkour activeParkour = Practice.get().getParkourManager().getActiveParkour();
 
 		if (activeParkour == null) {
 			player.sendMessage(CC.RED + "There isn't any active Parkour Events.");
@@ -24,7 +24,7 @@ public class ParkourLeaveCommand {
 			return;
 		}
 
-		Array.get().getParkourManager().getActiveParkour().handleLeave(player);
+		Practice.get().getParkourManager().getActiveParkour().handleLeave(player);
 	}
 
 }
