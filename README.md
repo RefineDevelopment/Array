@@ -1,6 +1,6 @@
 # Array
 
-A fork of Praxi Standalone and wPrac (Fork of Praxi)
+A fork of Praxi Standalone and very little wPrac (Fork of Praxi)
 
 ## Terms of Use
 
