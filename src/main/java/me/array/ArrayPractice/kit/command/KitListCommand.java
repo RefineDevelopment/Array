@@ -21,7 +21,7 @@ public class KitListCommand {
 			} else {
 				player.sendMessage(CC.translate("&7» &b" + kit.getName() + (kit.isEnabled() ? " &7[&aEnabled&7]" : " &7[&cDisabled&7]")));
 			}
-			player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
 		}
+		player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
 	}
 }

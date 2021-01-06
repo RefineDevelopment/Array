@@ -3,7 +3,6 @@ package me.array.ArrayPractice.profile.options;
 import java.beans.ConstructorProperties;
 
 import me.array.ArrayPractice.profile.Profile;
-import me.array.ArrayPractice.profile.command.TpmCommand;
 import me.array.ArrayPractice.util.external.ItemBuilder;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -56,12 +55,14 @@ public class OptionsMenu extends Menu
                 lines.add((!profile.getOptions().isPrivateMessages() ? "&a&l● " : "&c&l● ") + "&fDon't Allow PM");
             }
             else if (this.type == OptionsType.TOGGLELIGHTNING) {
-                lines.add((profile.getOptions().isPrivateMessages() ? "&a&l● " : "&c&l● ") + "&fEnable Lightning Death");
-                lines.add((!profile.getOptions().isPrivateMessages() ? "&a&l● " : "&c&l● ") + "&fDisable Lightning Death");
-            }
-            else {
                 lines.add((profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fAllow Spectators");
                 lines.add((!profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fDon't Allow Spectators");
+
+            } else {
+                lines.add("&7&m----------------------------");
+                lines.add("&fClick to Toggle Private Messages");
+                lines.add("&fCycle Through Enable & Disable");
+                lines.add("&7&m----------------------------");
             }
             return new ItemBuilder(this.type.getMaterial()).name("&b" + this.type.getName()).lore(lines).build();
         }
@@ -76,8 +77,9 @@ public class OptionsMenu extends Menu
                 profile.getOptions().setReceiveDuelRequests(!profile.getOptions().isReceiveDuelRequests());
             }
             else if (this.type == OptionsType.TOGGLEPMS) {
-                profile.getOptions().setPrivateMessages(!profile.getOptions().isPrivateMessages());
-                new TpmCommand().execute(player);
+                player.performCommand("togglepm");
+            } else if (this.type == OptionsType.TOGGLELIGHTNING) {
+                profile.getOptions().setLightning(!profile.getOptions().isLightning());
             }
             else {
                 profile.getOptions().setAllowSpectators(!profile.getOptions().isAllowSpectators());

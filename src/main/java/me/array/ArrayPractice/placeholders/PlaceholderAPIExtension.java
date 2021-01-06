@@ -1,13 +1,12 @@
 package me.array.ArrayPractice.placeholders;
 
+import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.kit.KitLeaderboards;
 import me.array.ArrayPractice.profile.Profile;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import java.util.UUID;
 
 public class PlaceholderAPIExtension extends PlaceholderExpansion {
     @Override
@@ -17,7 +16,7 @@ public class PlaceholderAPIExtension extends PlaceholderExpansion {
 
     @Override
     public String getAuthor() {
-        return "Drizzy";
+        return "iMoltres";
     }
 
     @Override
@@ -32,28 +31,31 @@ public class PlaceholderAPIExtension extends PlaceholderExpansion {
         }
 
         if (identifier.contains("global")) { //practice_global_1
-            String[] split = identifier.split("_");
-            int number = Integer.parseInt(split[1]) - 1;
+            String[] splittedShit = identifier.split("_");
+            int number = Integer.parseInt(splittedShit[1]) - 1;
             KitLeaderboards kitLeaderboards;
 
             try {
                 kitLeaderboards = Profile.getGlobalEloLeaderboards().get(number);
             } catch (Exception e) {
-                return "&7Not Available";
+                return "&7Not Available &7[&cError&7]";
             }
 
             if (kitLeaderboards == null) {
                 return "&7Not Available";
             }
-            UUID player1 = Bukkit.getPlayer(kitLeaderboards.getName()).getUniqueId();
-            Profile profile = Profile.getByUuid(player1);
-            return "&b#" + (number + 1) + " &8- &7" + kitLeaderboards.getName() + " &8- &b" + kitLeaderboards.getElo() + " &8[&r" + profile.getEloLeague() + "&8]";
+
+            Player player1 = Bukkit.getPlayer(kitLeaderboards.getName());
+            Profile profile = Profile.getByUuid(player1.getUniqueId());
+            String elorank = profile.getEloLeague();
+
+            return "&b#" + (number + 1) + " &8- &7" + Practice.get().getCoreHook().getPlayerPrefix(player1) + kitLeaderboards.getName() + " &8- &b" + kitLeaderboards.getElo() + "&8[" + elorank + "&8]" ;
         }
 
         if (identifier.contains("lb")) { //practice_lb_NoDebuff_1
-            String[] split = identifier.split("_");
-            String kitString = split[1];
-            int number = Integer.parseInt(split[2]) - 1;
+            String[] splittedShit = identifier.split("_");
+            String kitString = splittedShit[1];
+            int number = Integer.parseInt(splittedShit[2]) - 1;
             Kit kit = Kit.getByName(kitString);
 
             if (kit == null) return "&7";
@@ -63,17 +65,20 @@ public class PlaceholderAPIExtension extends PlaceholderExpansion {
             try {
                 kitLeaderboards = kit.getRankedEloLeaderboards().get(number);
             } catch (Exception e) {
-                return "&7Not Available";
+                return "&7Not Available &7[&cError&7]";
             }
 
             if (kitLeaderboards == null) {
                 return "&7Not Available";
             }
-            UUID player1 = Bukkit.getPlayer(kitLeaderboards.getName()).getUniqueId();
-            Profile profile = Profile.getByUuid(player1);
-            return "&b#" + (number + 1) + " &8- &7" + kitLeaderboards.getName() + " &8- &b" + kitLeaderboards.getElo() + " &8[&r" + profile.getEloLeague() + "&8]";
+
+            Player player1 = Bukkit.getPlayer(kitLeaderboards.getName());
+            Profile profile = Profile.getByUuid(player1.getUniqueId());
+            String elorank = profile.getEloLeague();
+
+            return "&b#" + (number + 1) + " &8- &7" + Practice.get().getCoreHook().getPlayerPrefix(player1) + kitLeaderboards.getName() + " &8- &b" + kitLeaderboards.getElo() + "&8[" + elorank + "&8]" ;
         }
 
-        return "&7Not Available";
+        return null;
     }
 }

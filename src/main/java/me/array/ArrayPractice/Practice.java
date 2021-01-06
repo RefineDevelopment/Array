@@ -181,7 +181,6 @@ public class Practice extends JavaPlugin {
                 //Player commands
                 new TsbCommand(),
                 new TduelCommand(),
-                new TpmCommand(),
                 new StatsCommand(),
                 new LeaderboardsCommand(),
                 new OptionsCommand(),

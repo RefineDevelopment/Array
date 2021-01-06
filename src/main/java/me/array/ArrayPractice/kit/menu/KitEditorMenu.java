@@ -40,7 +40,7 @@ public class KitEditorMenu extends Menu {
     @Override
     public String getTitle(Player player) {
         Profile profile = Profile.getByUuid(player.getUniqueId());
-        return "&cEditing &7(" + profile.getKitEditor().getSelectedKit().getName() + ")";
+        return "&bEditing &7(" + profile.getKitEditor().getSelectedKit().getName() + ")";
     }
 
     @Override
@@ -109,7 +109,7 @@ public class KitEditorMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private class ArmorDisplayButton extends Button {
+    private static class ArmorDisplayButton extends Button {
 
         private final ItemStack itemStack;
 
@@ -121,37 +121,37 @@ public class KitEditorMenu extends Menu {
 
             return new ItemBuilder(itemStack.clone())
                     .name(CC.RED + BukkitReflection.getItemStackName(itemStack))
-                    .lore(CC.RED + "This is automatically equipped.")
+                    .lore(CC.YELLOW + "This is automatically equipped.")
                     .build();
         }
 
     }
 
     @AllArgsConstructor
-    private class CurrentKitButton extends Button {
+    private static class CurrentKitButton extends Button {
 
         @Override
         public ItemStack getButtonItem(Player player) {
             Profile profile = Profile.getByUuid(player.getUniqueId());
 
             return new ItemBuilder(Material.NAME_TAG)
-                    .name("&cEditing &r" + profile.getKitEditor().getSelectedKit().getName())
+                    .name("&bEditing &r" + profile.getKitEditor().getSelectedKit().getName())
                     .build();
         }
 
     }
 
     @AllArgsConstructor
-    private class ClearInventoryButton extends Button {
+    private static class ClearInventoryButton extends Button {
 
         @Override
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(Material.STAINED_CLAY)
                     .durability(7)
-                    .name("&4&lClear Inventory")
+                    .name("&b&lClear Inventory")
                     .lore(Arrays.asList(
-                            "&cThis will clear your inventory",
-                            "&cso you can start over."
+                            "&fThis will clear your inventory",
+                            "&fso you can start over."
                     ))
                     .build();
         }
@@ -171,16 +171,16 @@ public class KitEditorMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private class LoadDefaultKitButton extends Button {
+    private static class LoadDefaultKitButton extends Button {
 
         @Override
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(Material.STAINED_CLAY)
                     .durability(7)
-                    .name(CC.RED + CC.BOLD + "&4Load default kit")
+                    .name(CC.RED + CC.BOLD + "&bLoad default kit")
                     .lore(Arrays.asList(
-                            CC.RED + "&cClick this to load the default kit",
-                            CC.RED + "&cinto the kit editing menu."
+                            CC.RED + "&fClick this to load the default kit",
+                            CC.RED + "&finto the kit editing menu."
                     ))
                     .build();
         }
@@ -204,14 +204,14 @@ public class KitEditorMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private class SaveButton extends Button {
+    private static class SaveButton extends Button {
 
         @Override
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(Material.STAINED_CLAY)
                     .durability(5)
                     .name("&a&lSave")
-                    .lore("&7Click this to save your kit.")
+                    .lore("&fClick this to save your kit.")
                     .build();
         }
 
@@ -234,16 +234,16 @@ public class KitEditorMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private class CancelButton extends Button {
+    private static class CancelButton extends Button {
 
         @Override
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(Material.STAINED_CLAY)
                     .durability(14)
-                    .name("&c&lCancel")
+                    .name("&b&lCancel")
                     .lore(Arrays.asList(
-                            "&4Click this to abort editing your kit,",
-                            "&4and return to the kit menu."
+                            "&fClick this to abort editing your kit,",
+                            "&fand return to the kit menu."
                     ))
                     .build();
         }
@@ -261,7 +261,7 @@ public class KitEditorMenu extends Menu {
 
     }
 
-    private class InfiniteItemButton extends DisplayButton {
+    private static class InfiniteItemButton extends DisplayButton {
 
         InfiniteItemButton(ItemStack itemStack) {
             super(itemStack, false);

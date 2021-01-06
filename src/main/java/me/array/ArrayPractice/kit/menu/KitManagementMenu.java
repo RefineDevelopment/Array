@@ -33,7 +33,7 @@ public class KitManagementMenu extends Menu {
 
     @Override
     public String getTitle(Player player) {
-        return "&cManaging &7(" + kit.getName() + ")";
+        return "&bManaging &7(" + kit.getName() + ")";
     }
 
     @Override
@@ -102,7 +102,7 @@ public class KitManagementMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private class CreateKitButton extends Button {
+    private static class CreateKitButton extends Button {
 
         private final int index;
 
@@ -118,7 +118,6 @@ public class KitManagementMenu extends Menu {
             Profile profile = Profile.getByUuid(player.getUniqueId());
             Kit kit = profile.getKitEditor().getSelectedKit();
 
-            // TODO: this shouldn't be null but sometimes it is?
             if (kit == null) {
                 player.closeInventory();
                 return;
@@ -144,17 +143,17 @@ public class KitManagementMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private class RenameKitButton extends Button {
+    private static class RenameKitButton extends Button {
 
         private final KitLoadout kitLoadout;
 
         @Override
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(Material.SIGN)
-                    .name("&4&lRename")
+                    .name("&a&lRename")
                     .lore(Arrays.asList(
                             "",
-                            "&cClick to rename this kit."
+                            "&aClick to rename this kit."
                     ))
                     .build();
         }
@@ -169,14 +168,14 @@ public class KitManagementMenu extends Menu {
             profile.getKitEditor().setSelectedKitLoadout(kitLoadout);
 
             player.closeInventory();
-            player.sendMessage(CC.RED + "Renaming " + CC.RED + kitLoadout.getCustomName() + CC.RED + "," +
-                    CC.GREEN + "Enter the new name now.");
+            player.sendMessage(CC.GREEN + "Renaming " + CC.GREEN + kitLoadout.getCustomName() + CC.GREEN + "," +
+                    CC.GREEN + "Enter the new name now (Don't use Color Codes).");
         }
 
     }
 
     @AllArgsConstructor
-    private class LoadKitButton extends Button {
+    private static class LoadKitButton extends Button {
 
         private final int index;
 
@@ -218,7 +217,7 @@ public class KitManagementMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private class KitDisplayButton extends Button {
+    private static class KitDisplayButton extends Button {
 
         private final KitLoadout kitLoadout;
 

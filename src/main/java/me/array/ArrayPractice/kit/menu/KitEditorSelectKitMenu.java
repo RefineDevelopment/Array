@@ -17,7 +17,7 @@ public class KitEditorSelectKitMenu extends Menu {
 
     @Override
     public String getTitle(Player player) {
-        return "&cSelect a kit";
+        return "&7Select a kit";
     }
 
     @Override
@@ -43,7 +43,7 @@ public class KitEditorSelectKitMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(kit.getDisplayIcon())
-                    .name("&4" + kit.getName())
+                    .name("&b" + kit.getName())
                     .build();
         }
 

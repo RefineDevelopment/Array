@@ -5,7 +5,7 @@ import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = {"tournament", "tournament help"}, permission="practice.staff")
+@CommandMeta(label = {"tournament", "tournament help"}, permission="practice.tournament")
 public class TournamentCommand {
 
     public void execute(Player player) {

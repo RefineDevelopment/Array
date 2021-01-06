@@ -7,34 +7,23 @@ import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.util.TaskUtil;
 import me.array.ArrayPractice.util.external.CC;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
 @Getter
 public class HologramUtils {
 
-    private Location holoLoc;
+    private final Location holoLoc;
     private Hologram hologram;
 
-    public void HologramUtils(Location location) {
+    public HologramUtils(Location location) {
         this.holoLoc = location;
         TaskUtil.runSync(() -> HologramUtils.this.hologram = HologramsAPI.createHologram(Practice.get(), holoLoc));
+
+
         switchLadderHolo();
 
-    }
-
-    public void HologramLadder(String Ladder, Location Location) {
-        this.holoLoc = Location;
-        TaskUtil.runAsync(() -> HologramUtils.this.hologram = HologramsAPI.createHologram(Practice.get(), holoLoc));
-
-        ladderHolo(Ladder);
-    }
-
-    public void HologramDefault(Location Location) {
-        this.holoLoc = Location;
-        TaskUtil.runAsync(() -> HologramUtils.this.hologram = HologramsAPI.createHologram(Practice.get(), holoLoc));
-
-       createDefaultLadderHolo();
     }
 
     public void createDefaultLadderHolo() {
@@ -56,7 +45,6 @@ public class HologramUtils {
 
     public void switchLadderHolo() {
         TaskUtil.runSync(() -> {
-
             String ladder = getNextLadder();
 
             hologram.clearLines();
@@ -65,19 +53,6 @@ public class HologramUtils {
             hologram.appendTextLine(CC.translate("&7"));
             for (int i = 1; i <= 10; i++) {
                 hologram.appendTextLine(CC.translate("%practice_lb_" + ladder + "_" + i + "%"));
-            }
-        });
-    }
-
-    public void ladderHolo(String Ladder) {
-        TaskUtil.runSync(() -> {
-
-            hologram.clearLines();
-
-            hologram.appendTextLine(CC.translate("&b&l" + Ladder + " &7Leaderboards"));
-            hologram.appendTextLine(CC.translate("&7"));
-            for (int i = 1; i <= 10; i++) {
-                hologram.appendTextLine(CC.translate("%practice_lb_" + Ladder + "_" + i + "%"));
             }
         });
     }

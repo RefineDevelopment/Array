@@ -25,13 +25,16 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/match/Match.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/event/impl/spleef/Spleef.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/Practice.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/party/Party.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/match/Match.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/profile/Profile.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/duel/command/DuelAcceptCommand.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/Practice.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -51,6 +54,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.16113281" />
     <property name="project.structure.side.proportion" value="0.15034965" />
@@ -106,10 +110,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state width="498" height="446" key="SwitcherDM/0.0.1440.860@0.0.1440.860" timestamp="1609941511753" />
-    <state x="427" y="163" width="595" height="592" key="find.popup" timestamp="1609960629629">
+    <state x="427" y="163" width="595" height="592" key="find.popup" timestamp="1609968215233">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="427" y="163" width="595" height="592" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1609960629629" />
+    <state x="427" y="163" width="595" height="592" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1609968215233" />
     <state x="383" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1609961813014">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
