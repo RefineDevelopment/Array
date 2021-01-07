@@ -42,14 +42,14 @@ public class PlaceholderAPIExtension extends PlaceholderExpansion {
             }
 
             if (kitLeaderboards == null) {
-                return "&7Not Available";
+                return "&7";
             }
 
             Player player1 = Bukkit.getPlayer(kitLeaderboards.getName());
             Profile profile = Profile.getByUuid(player1.getUniqueId());
             String elorank = profile.getEloLeague();
 
-            return "&b#" + (number + 1) + " &8- &7" + Practice.get().getCoreHook().getPlayerPrefix(player1) + kitLeaderboards.getName() + " &8- &b" + kitLeaderboards.getElo() + "&8[" + elorank + "&8]" ;
+            return "&b#" + (number + 1) + " &8- &7" + Practice.get().getCoreHook().getPlayerPrefix(player1) + kitLeaderboards.getName() + " &8- &b" + kitLeaderboards.getElo() + " &8[" + elorank + "&8]" ;
         }
 
         if (identifier.contains("lb")) { //practice_lb_NoDebuff_1
@@ -69,14 +69,14 @@ public class PlaceholderAPIExtension extends PlaceholderExpansion {
             }
 
             if (kitLeaderboards == null) {
-                return "&7Not Available";
+                return "&7";
             }
 
             Player player1 = Bukkit.getPlayer(kitLeaderboards.getName());
             Profile profile = Profile.getByUuid(player1.getUniqueId());
             String elorank = profile.getEloLeague();
 
-            return "&b#" + (number + 1) + " &8- &7" + Practice.get().getCoreHook().getPlayerPrefix(player1) + kitLeaderboards.getName() + " &8- &b" + kitLeaderboards.getElo() + "&8[" + elorank + "&8]" ;
+            return "&b#" + (number + 1) + " &8- &7" + Practice.get().getCoreHook().getPlayerPrefix(player1) + kitLeaderboards.getName() + " &8- &b" + kitLeaderboards.getElo() + " &8[" + elorank + "&8]" ;
         }
 
         return null;

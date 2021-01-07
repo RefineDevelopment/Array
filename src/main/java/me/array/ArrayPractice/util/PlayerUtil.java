@@ -14,9 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.spigotmc.AsyncCatcher;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -29,6 +28,7 @@ public class PlayerUtil {
     }
 
     public static void reset(Player player, boolean resetHeldSlot) {
+        AsyncCatcher.enabled = false;
         if (!player.hasMetadata("frozen")) {
             player.setWalkSpeed(0.2F);
             player.setFlySpeed(0.1F);
@@ -54,6 +54,11 @@ public class PlayerUtil {
         }
 
         player.updateInventory();
+    }
+
+    public static int getPing(Player player) {
+
+        return ((CraftPlayer)player).getHandle().ping;
     }
 
     public static void spectator(Player player) {
@@ -84,23 +89,6 @@ public class PlayerUtil {
 
     public static List<Player> convertUUIDListToPlayerList(List<UUID> list) {
         return list.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).collect(Collectors.toList());
-    }
-
-
-    public static int getPing(Player p) {
-        final String bpName = Bukkit.getServer().getClass().getPackage().getName();
-        final String version = bpName.substring(bpName.lastIndexOf(".") + 1);
-        try {
-            final Class<?> CPClass = Class.forName("org.bukkit.craftbukkit." + version + ".entity.CraftPlayer");
-            final Object CraftPlayer = CPClass.cast(p);
-            final Method getHandle = CraftPlayer.getClass().getMethod("getHandle", new Class[0]);
-            final Object EntityPlayer = getHandle.invoke(CraftPlayer);
-            final Field ping = EntityPlayer.getClass().getDeclaredField("ping");
-            return ping.getInt(EntityPlayer);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
     }
 
     public static CraftEntity getLastDamager(final Player p) {

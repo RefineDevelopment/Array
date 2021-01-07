@@ -1,3 +1,7 @@
+#Array is forked by Drizzy
+#For URL in Mongo put it like this:
+#Local Host: URL:"mongodb://127.0.0.1:27017"
+#Hosting Services Like Clevercloud: URL:"mongodb://<username>:<password>@<host>:<port>/<database>"
 MONGO:
   DATABASE: "Practice"
   URL: ""
