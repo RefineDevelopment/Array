@@ -30,7 +30,7 @@ public class Hotbar
         Hotbar.items.put(HotbarItem.PARTY_DISBAND, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Disband Party" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.PARTY_SETTINGS, new ItemBuilder(Material.ANVIL).name(CC.AQUA + "Party Settings" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.PARTY_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Party" + CC.GRAY + " (Right-Click)").build());
-        Hotbar.items.put(HotbarItem.PARTY_INFO, new ItemBuilder(Material.PAPER).durability(3).name(CC.AQUA + "Party Information" + CC.GRAY + " (Right-Click)").build());
+        Hotbar.items.put(HotbarItem.PARTY_INFO, new ItemBuilder(Material.PAPER).name(CC.AQUA + "Party Information" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.OTHER_PARTIES, new ItemBuilder(Material.REDSTONE_TORCH_ON).name(CC.AQUA + "Fight Other Parties" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.LEADERBOARDS_MENU, new ItemBuilder(Material.EMERALD).name(CC.AQUA + "Main Menu" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.SETTINGS_MENU, new ItemBuilder(Material.ANVIL).name(CC.AQUA + "Settings" + CC.GRAY + " (Right-Click)").build());

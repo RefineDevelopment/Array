@@ -45,11 +45,8 @@ public class ProfileMenu extends Menu {
             lore.add(" &bELO: &r" + profile.getGlobalElo());
             lore.add(" &bLeague: &r" + profile.getEloLeague());
             lore.add("&8&m--------------------------");
-            lore.add(" &bRanked Wins: &r" + profile.getTotalRankedWins());
-            lore.add(" &bRanked Losses: &r" + profile.getTotalRankedLosses());
-            lore.add("&8&m--------------------------");
-            lore.add(" &bUnranked Wins: &r" + profile.getTotalUnrankedWins());
-            lore.add(" &bUnranked Losses: &r" + profile.getTotalUnrankedLosses());
+            lore.add(" &bTotal Wins: &f" + profile.getTotalWins());
+            lore.add(" &bTotal Losses: &f" + profile.getTotalLost());
             lore.add("&8&m-------------------------------");
 
             return new ItemBuilder(Material.BEACON)

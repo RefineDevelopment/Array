@@ -22,7 +22,7 @@ public class ELOMenu extends Menu {
 
     @Override
     public String getTitle(Player player) {
-        return "&b" + target.getName() + "'s ELO Statistics";
+        return "&b" + target.getName() + "'s Statistics";
     }
 
     @Override
@@ -49,20 +49,14 @@ public class ELOMenu extends Menu {
             List<String> lore = new ArrayList<>();
             Profile profile = Profile.getByUuid(target.getUniqueId());
             String elo = kit.getGameRules().isRanked() ? Integer.toString(profile.getKitData().get(kit).getElo()) : "N/A";
-            String rwins = kit.getGameRules().isRanked() ? Integer.toString(profile.getKitData().get(kit).getRankedWon()) : "N/A";
-            String rlosses = kit.getGameRules().isRanked() ? Integer.toString(profile.getKitData().get(kit).getRankedLost()) : "N/A";
-            String uwins = Integer.toString(profile.getKitData().get(kit).getUnrankedWon());
-            String ulosses = Integer.toString(profile.getKitData().get(kit).getUnrankedLost());
+            String wins = Integer.toString(profile.getKitData().get(kit).getWon());
+            String losses = Integer.toString(profile.getKitData().get(kit).getLost());
 
             lore.add("&8&m--------------------------");
-            lore.add(" &b&lRanked:");
-            lore.add("  &bELO: &r" + elo);
-            lore.add("  &bWins: &r" + rwins);
-            lore.add("  &bLosses: &r" + rlosses);
-            lore.add("");
-            lore.add(" &b&lUnranked:");
-            lore.add("  &bWins: &r" + uwins);
-            lore.add("  &bLosses: &r" + ulosses);
+            lore.add(" &b&lStats:");
+            lore.add("  &fELO: &b" + elo);
+            lore.add("  &fWins: &b" + wins);
+            lore.add("  &fLosses: &b" + losses);
             lore.add("&8&m--------------------------");
 
             return new ItemBuilder(kit.getDisplayIcon())
@@ -83,8 +77,10 @@ public class ELOMenu extends Menu {
 
             lore.add("&8&m--------------------------");
             lore.add(" &b&lGlobal:");
-            lore.add("  &bELO: &r" + profile.getGlobalElo());
-            lore.add("  &bLeague: &r" + profile.getEloLeague());
+            lore.add("  &fELO: &b" + profile.getGlobalElo());
+            lore.add("  &fTotal Wins: &b" + profile.getTotalWins());
+            lore.add("  &fTotal Losses: &b" + profile.getTotalLost());
+            lore.add("  &fLeague: &r" + profile.getEloLeague());
             lore.add("&8&m--------------------------");
 
             return new ItemBuilder(Material.COMPASS)

@@ -235,8 +235,8 @@ public class SoloMatch extends Match {
         Profile losingProfile = Profile.getByUuid(losingPlayer.getUniqueId());
 
         if (getQueueType() == QueueType.UNRANKED) {
-            winningProfile.getKitData().get(getKit()).incrementUnrankedWins();
-            losingProfile.getKitData().get(getKit()).incrementUnrankedLost();
+            winningProfile.getKitData().get(getKit()).incrementWon();
+            losingProfile.getKitData().get(getKit()).incrementLost();
 
             ProfileMatchHistory winnerProfileMatchHistory = new ProfileMatchHistory(getSnapshotOfPlayer(winningPlayer), getSnapshotOfPlayer(losingPlayer), true, "UNRANKED", getKit().getName(), 0, 0, new Date());
             ProfileMatchHistory loserProfileMatchHistory = new ProfileMatchHistory(getSnapshotOfPlayer(winningPlayer), getSnapshotOfPlayer(losingPlayer), false, "UNRANKED", getKit().getName(), 0, 0, new Date());
@@ -253,8 +253,8 @@ public class SoloMatch extends Match {
             int newLoserElo = EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
             winningProfile.getKitData().get(getKit()).setElo(newWinnerElo);
             losingProfile.getKitData().get(getKit()).setElo(newLoserElo);
-            winningProfile.getKitData().get(getKit()).incrementRankedWon();
-            losingProfile.getKitData().get(getKit()).incrementRankedLost();
+            winningProfile.getKitData().get(getKit()).incrementWon();
+            losingProfile.getKitData().get(getKit()).incrementLost();
             winningProfile.calculateGlobalElo();
             losingProfile.calculateGlobalElo();
 

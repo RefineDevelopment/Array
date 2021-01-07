@@ -5,9 +5,11 @@ import java.beans.ConstructorProperties;
 
 public enum PartyManage
 {
-    INCREASELIMIT(CC.GREEN + "Increase Limit"),
+    LIMIT(CC.GREEN + "Increase or Decrease Limit"),
     PUBLIC("Open or Close Party"),
-    DECREASELIMIT(CC.RED + "Decrease Limit");
+    LEADER("Make Leader"),
+    KICK("Kick from Party"),
+    MANAGE_MEMBERS(CC.AQUA + "Manage Members");
     
     private final String name;
     

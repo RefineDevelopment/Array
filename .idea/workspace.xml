@@ -55,7 +55,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.16113281" />
     <property name="project.structure.side.proportion" value="0.15034965" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
@@ -86,6 +86,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="500" y="259" key="#BuildArtifactsBeforeRunChooser/0.0.1440.860@0.0.1440.860" timestamp="1609858147664" />
+    <state x="487" y="254" key="#Notifications" timestamp="1610015669436">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="487" y="254" key="#Notifications/0.0.1440.860@0.0.1440.860" timestamp="1610015669436" />
     <state x="174" y="85" width="1092" height="762" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1609959621601">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
@@ -102,10 +106,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="278" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1440.860@0.0.1440.860" timestamp="1609959118797" />
-    <state x="221" y="9" key="SettingsEditor" timestamp="1609962529162">
+    <state x="221" y="9" key="SettingsEditor" timestamp="1610015724702">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="221" y="9" key="SettingsEditor/0.0.1440.860@0.0.1440.860" timestamp="1609962529162" />
+    <state x="221" y="9" key="SettingsEditor/0.0.1440.860@0.0.1440.860" timestamp="1610015724702" />
     <state width="498" height="446" key="SwitcherDM" timestamp="1609941511753">
       <screen x="0" y="0" width="1440" height="860" />
     </state>

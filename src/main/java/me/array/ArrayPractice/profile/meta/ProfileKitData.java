@@ -20,34 +20,20 @@ public class ProfileKitData {
     private int elo = 1000;
     @Getter
     @Setter
-    private int rankedWon = 0;
+    private int won = 0;
     @Getter
     @Setter
-    private int rankedLost = 0;
-    @Getter
-    @Setter
-    private int unrankedWon = 0;
-    @Getter
-    @Setter
-    private int unrankedLost = 0;
+    private int lost = 0;
     @Getter
     @Setter
     private KitLoadout[] loadouts = new KitLoadout[4];
 
-    public void incrementRankedWon() {
-        this.rankedWon++;
+    public void incrementWon() {
+        this.won++;
     }
 
-    public void incrementRankedLost() {
-        this.rankedLost++;
-    }
-
-    public void incrementUnrankedWins() {
-        this.unrankedWon++;
-    }
-
-    public void incrementUnrankedLost() {
-        this.unrankedLost++;
+    public void incrementLost() {
+        this.lost++;
     }
 
     public KitLoadout getLoadout(int index) {

@@ -27,9 +27,9 @@ public class ManagePartySettings extends Menu
     @Override
     public Map<Integer, Button> getButtons(final Player player) {
         final Map<Integer, Button> buttons = new HashMap<>();
-        buttons.put(2, new SelectManageButton(PartyManage.INCREASELIMIT));
+        buttons.put(2, new SelectManageButton(PartyManage.LIMIT));
         buttons.put(4, new SelectManageButton(PartyManage.PUBLIC));
-        buttons.put(6, new SelectManageButton(PartyManage.DECREASELIMIT));
+        buttons.put(6, new SelectManageButton(PartyManage.MANAGE_MEMBERS));
         return buttons;
     }
     
@@ -40,13 +40,13 @@ public class ManagePartySettings extends Menu
         @Override
         public ItemStack getButtonItem(final Player player) {
             final Profile profile = Profile.getByUuid(player.getUniqueId());
-            if (this.partyManage == PartyManage.INCREASELIMIT) {
-                return new ItemBuilder(Material.SKULL_ITEM).durability(5).name("&b" + this.partyManage.getName()).lore("&7Limit: " + profile.getParty().getLimit()).build();
+            if (this.partyManage == PartyManage.LIMIT) {
+                return new ItemBuilder(Material.REDSTONE_TORCH_ON).name("&b" + this.partyManage.getName()).lore("&7Limit: " + profile.getParty().getLimit()).build();
             }
             if (this.partyManage == PartyManage.PUBLIC) {
                 return new ItemBuilder(Material.CHEST).name("&b" + this.partyManage.getName()).lore("&7Public: " + profile.getParty().isPublic()).build();
             }
-            return new ItemBuilder(Material.SKULL).durability(14).name("&b" + this.partyManage.getName()).lore("&7Limit: " + profile.getParty().getLimit()).build();
+            return new ItemBuilder(Material.SKULL_ITEM).name("&b" + this.partyManage.getName()).lore("&7Click to Manage Members").build();
         }
         
         @Override
@@ -64,10 +64,18 @@ public class ManagePartySettings extends Menu
                 player.closeInventory();
                 return;
             }
-            if (this.partyManage == PartyManage.INCREASELIMIT) {
-                if (profile.getParty().getLimit() < 100) {
-                    profile.getParty().setLimit(profile.getParty().getLimit() + 1);
-                    new ManagePartySettings().openMenu(player);
+            if (this.partyManage == PartyManage.LIMIT) {
+                if (clickType.isLeftClick()) {
+                    if (profile.getParty().getLimit() < 100) {
+                        profile.getParty().setLimit(profile.getParty().getLimit() + 1);
+                        new ManagePartySettings().openMenu(player);
+                    }
+                }
+                if (clickType.isRightClick()) {
+                    if (profile.getParty().getLimit() > 1) {
+                        profile.getParty().setLimit(profile.getParty().getLimit() - 1);
+                        new ManagePartySettings().openMenu(player);
+                    }
                 }
             }
             else if (this.partyManage == PartyManage.PUBLIC) {
@@ -80,10 +88,8 @@ public class ManagePartySettings extends Menu
                     profile.getParty().setPrivacy(PartyPrivacy.CLOSED);
                 }
                 new ManagePartySettings().openMenu(player);
-            }
-            else if (profile.getParty().getLimit() > 1) {
-                profile.getParty().setLimit(profile.getParty().getLimit() - 1);
-                new ManagePartySettings().openMenu(player);
+            } else if (this.partyManage == PartyManage.MANAGE_MEMBERS) {
+                new PartyListMenu().openMenu(player);
             }
         }
         

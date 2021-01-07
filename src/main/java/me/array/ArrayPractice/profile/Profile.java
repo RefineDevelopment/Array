@@ -345,10 +345,8 @@ public class Profile {
             if (kit != null) {
                 ProfileKitData profileKitData = new ProfileKitData();
                 profileKitData.setElo(kitDocument.getInteger("elo"));
-                profileKitData.setRankedWon(kitDocument.getInteger("rankedWon"));
-                profileKitData.setRankedLost(kitDocument.getInteger("rankedLost"));
-                profileKitData.setUnrankedWon(kitDocument.getInteger("unrankedWon"));
-                profileKitData.setUnrankedLost(kitDocument.getInteger("unrankedLost"));
+                profileKitData.setWon(kitDocument.getInteger("unrankedWon"));
+                profileKitData.setLost(kitDocument.getInteger("unrankedLost"));
 
                 kitData.put(kit, profileKitData);
             }
@@ -414,10 +412,8 @@ public class Profile {
         for (Map.Entry<Kit, ProfileKitData> entry : kitData.entrySet()) {
             Document kitDocument = new Document();
             kitDocument.put("elo", entry.getValue().getElo());
-            kitDocument.put("rankedWon", entry.getValue().getRankedWon());
-            kitDocument.put("rankedLost", entry.getValue().getRankedLost());
-            kitDocument.put("unrankedWon", entry.getValue().getUnrankedWon());
-            kitDocument.put("unrankedLost", entry.getValue().getUnrankedLost());
+            kitDocument.put("unrankedWon", entry.getValue().getWon());
+            kitDocument.put("unrankedLost", entry.getValue().getLost());
             kitStatisticsDocument.put(entry.getKey().getName(), kitDocument);
         }
         document.put("kitStatistics", kitStatisticsDocument);
@@ -478,20 +474,12 @@ public class Profile {
         return toReturn;
     }
 
-    public Integer getTotalUnrankedWins() {
-        return this.kitData.values().stream().mapToInt(ProfileKitData::getUnrankedWon).sum();
+    public Integer getTotalWins() {
+        return this.kitData.values().stream().mapToInt(ProfileKitData::getWon).sum();
     }
 
-    public Integer getTotalRankedWins() {
-        return this.kitData.values().stream().mapToInt(ProfileKitData::getRankedWon).sum();
-    }
-
-    public Integer getTotalUnrankedLosses() {
-        return this.kitData.values().stream().mapToInt(ProfileKitData::getUnrankedLost).sum();
-    }
-
-    public Integer getTotalRankedLosses() {
-        return this.kitData.values().stream().mapToInt(ProfileKitData::getRankedLost).sum();
+    public Integer getTotalLost() {
+        return this.kitData.values().stream().mapToInt(ProfileKitData::getLost).sum();
     }
 
     public void addMatchHistory(ProfileMatchHistory profileMatchHistory) {

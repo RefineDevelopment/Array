@@ -23,7 +23,7 @@ public class PlayerMenu extends Menu {
 
     @Override
     public String getTitle(Player player) {
-        return "&cOptions";
+        return "&bMain Menu";
     }
 
     @Override

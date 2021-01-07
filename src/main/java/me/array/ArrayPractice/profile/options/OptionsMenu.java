@@ -1,28 +1,20 @@
 package me.array.ArrayPractice.profile.options;
 
-import java.beans.ConstructorProperties;
-
-import me.array.ArrayPractice.profile.Profile;
-import me.array.ArrayPractice.util.external.ItemBuilder;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import me.array.ArrayPractice.util.external.menu.Button;
-
-import java.util.List;
-import java.util.Map;
-import org.bukkit.entity.Player;
-import me.array.ArrayPractice.util.external.menu.Menu;
+import org.bukkit.entity.*;
+import me.array.ArrayPractice.util.external.menu.*;
+import java.util.*;
+import org.bukkit.inventory.*;
+import me.array.ArrayPractice.profile.*;
+import me.array.ArrayPractice.util.external.*;
+import org.bukkit.event.inventory.*;
 
 public class OptionsMenu extends Menu
 {
     @Override
     public String getTitle(final Player player) {
-        return "&bOptions";
+        return "&4Options";
     }
-    
+
     @Override
     public Map<Integer, Button> getButtons(final Player player) {
         final Map<Integer, Button> buttons = new HashMap<>();
@@ -33,15 +25,15 @@ public class OptionsMenu extends Menu
         buttons.put(8, new OptionsButton(OptionsType.TOGGLELIGHTNING));
         return buttons;
     }
-    
+
     private static class OptionsButton extends Button
     {
         private final OptionsType type;
 
         @Override
         public ItemStack getButtonItem(final Player player) {
-            List<String> lines = new ArrayList<>();
             final Profile profile = Profile.getByUuid(player.getUniqueId());
+            List<String> lines = new ArrayList<>();
             if (this.type == OptionsType.TOGGLESCOREBOARD) {
                 lines.add((profile.getOptions().isShowScoreboard() ? "&a&l● " : "&c&l● ") +  "&fShow scoreboard");
                 lines.add((!profile.getOptions().isShowScoreboard() ? "&a&l● " : "&c&l● ") + "&fHide scoreboard");
@@ -51,22 +43,21 @@ public class OptionsMenu extends Menu
                 lines.add((!profile.getOptions().isReceiveDuelRequests() ? "&a&l● " : "&c&l● ") + "&fDon't Allow Duels");
             }
             else if (this.type == OptionsType.TOGGLEPMS) {
-                lines.add((profile.getOptions().isPrivateMessages() ? "&a&l● " : "&c&l● ") + "&fAllow PM");
-                lines.add((!profile.getOptions().isPrivateMessages() ? "&a&l● " : "&c&l● ") + "&fDon't Allow PM");
-            }
-            else if (this.type == OptionsType.TOGGLELIGHTNING) {
-                lines.add((profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fAllow Spectators");
-                lines.add((!profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fDon't Allow Spectators");
-
-            } else {
                 lines.add("&7&m----------------------------");
                 lines.add("&fClick to Toggle Private Messages");
                 lines.add("&fCycle Through Enable & Disable");
                 lines.add("&7&m----------------------------");
             }
+            else if (this.type == OptionsType.TOGGLESPECTATORS) {
+                lines.add((profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fAllow Spectators");
+                lines.add((!profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fDon't Allow Spectators");
+            } else {
+                lines.add((profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fEnable Lightning Death Effect");
+                lines.add((!profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fDisable Lightning Death Effect");
+            }
             return new ItemBuilder(this.type.getMaterial()).name("&b" + this.type.getName()).lore(lines).build();
         }
-        
+
         @Override
         public void clicked(final Player player, final ClickType clickType) {
             final Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -78,20 +69,20 @@ public class OptionsMenu extends Menu
             }
             else if (this.type == OptionsType.TOGGLEPMS) {
                 player.performCommand("togglepm");
-            } else if (this.type == OptionsType.TOGGLELIGHTNING) {
-                profile.getOptions().setLightning(!profile.getOptions().isLightning());
             }
-            else {
+            else if (this.type == OptionsType.TOGGLESPECTATORS) {
                 profile.getOptions().setAllowSpectators(!profile.getOptions().isAllowSpectators());
             }
+            else if (this.type == OptionsType.TOGGLELIGHTNING) {
+                profile.getOptions().setLightning(!profile.getOptions().isLightning());
+            }
         }
-        
+
         @Override
         public boolean shouldUpdate(final Player player, final ClickType clickType) {
             return true;
         }
-        
-        @ConstructorProperties({ "type" })
+
         public OptionsButton(final OptionsType type) {
             this.type = type;
         }
