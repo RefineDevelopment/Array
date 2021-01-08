@@ -288,15 +288,9 @@ public class ProfileListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         event.setQuitMessage(null);
-
         TaskUtil.runAsync(() -> {
             Profile profile = Profile.getProfiles().get(event.getPlayer().getUniqueId());
-
             profile.save();
-
-            // TODO: Use some type of 'rematch token' and task instead of manually
-            // TODO: checking when a hotbar needs to be refreshed
-            // Remove rematch data
             if (profile.getRematchData() != null) {
                 Player target = Practice.get().getServer().getPlayer(profile.getRematchData().getTarget());
 

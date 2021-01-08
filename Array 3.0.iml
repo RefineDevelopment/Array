@@ -10,9 +10,13 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.18.10" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.18.8" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-text:1.8" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.5" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.1" level="project" />
     <orderEntry type="module-library">
-      <library name="Maven: rip.resolve.spigot:resolve-server:1.0">
+      <library name="Maven: rip.verse.jupiter:Jupiter:1.0-SNAPSHOT">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/server.jar!/" />
         </CLASSES>
@@ -21,7 +25,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: com.qrakn:honcho:1.0-SNAPSHOT">
+      <library name="Maven: com.qrakn:honcho:1.0">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/honcho-1.0-SNAPSHOT.jar!/" />
         </CLASSES>
@@ -30,7 +34,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: com.qrakn:phoenix-lang:1.0-SNAPSHOT">
+      <library name="Maven: com.qrakn:phoenix:1.0">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/phoenix-lang-1.0-SNAPSHOT.jar!/" />
         </CLASSES>
@@ -49,7 +53,16 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: com.comphenix.protocol:AquaCore:2.5.8">
+      <library name="Maven: com.comphenix:ProtocolLib:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/ProtocolLib.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: me.activated:AquaCore:2.5.8">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/Aquacore.jar!/" />
         </CLASSES>
@@ -58,7 +71,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: outlast.tab:Outlast:1.0-SNAPSHOT">
+      <library name="Maven: cc.outlast.tablist:Tablist:1.0">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/outlast.jar!/" />
         </CLASSES>
@@ -66,7 +79,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.1" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: com.moonsworth:LunarClient-API:LATEST">
         <CLASSES>
@@ -76,8 +88,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-text:1.8" level="project" />
-    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.5" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: me.clip:placeholderapi:2.10.3">
         <CLASSES>

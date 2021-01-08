@@ -2,6 +2,8 @@ package me.array.ArrayPractice.tournament;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import lombok.Getter;
+import lombok.Setter;
 import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.kit.Kit;
@@ -13,8 +15,6 @@ import me.array.ArrayPractice.party.Party;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.profile.ProfileState;
 import me.array.ArrayPractice.util.external.CC;
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -85,13 +85,6 @@ public class Tournament {
         return round != 0;
     }
 
-/*    public int getStartingParticipatingCount() {
-        if (participatingCount == 0) {
-            return getParticipatingCount();
-        }
-        return participatingCount;
-    }*/
-
     public int getParticipatingCount() {
         return participants.size();
     }
@@ -107,29 +100,25 @@ public class Tournament {
         return round;
     }
 
-    public void leave(Party party) {
-        Preconditions.checkState(round == 0, "Can not join after start.");
-        if (participants.contains(party)) {
+    public void leave(Party party){
+        Preconditions.checkState(round == 0  , "Can not join after start.");
+        if(participants.contains(party)) {
             for (Party partyparticipants : participants) {
                 for (Player player : partyparticipants.getPlayers()) {
-                    player.sendMessage(
-                            CC.RED + CC.translate(Practice.get().getCoreHook().getPlayerColor(party.getLeader().getPlayer()))
-                                    + CC.GRAY + " has left the tournament. " + CC.RED + "(" + participants.size() + "/500)");
+                    player.sendMessage(CC.AQUA + CC.BOLD + "[Tournament] " + CC.RED + CC.translate(Practice.get().getCoreHook().getPlayerPrefix(party.getLeader().getPlayer()) + party.getLeader().getPlayer().getName()) + CC.WHITE + " has left " + CC.GRAY + "(" + participants.size() + "/" + "50" + ")");
                 }
             }
             participants.remove(party);
         }
     }
 
-    public void participate(Party party) {
-        Preconditions.checkState(round == 0, "Can not join after start.");
-        if (!participants.contains(party)) {
+    public void participate(Party party){
+        Preconditions.checkState(round == 0  , "Can not join after start.");
+        if(!participants.contains(party)) {
             participants.add(party);
             for (Party partyparticipants : participants) {
                 for (Player player : partyparticipants.getPlayers()) {
-                    player.sendMessage(
-                            CC.RED + CC.translate(Practice.get().getCoreHook().getPlayerColor(party.getLeader().getPlayer()))
-                                    + CC.GRAY + " has joined the tournament. " + CC.RED + "(" + participants.size() + "/500)");
+                    player.sendMessage(CC.AQUA + CC.BOLD + "[Tournament] " + CC.GREEN + CC.translate(Practice.get().getCoreHook().getPlayerPrefix(party.getLeader().getPlayer()) + party.getLeader().getPlayer().getName()) + CC.WHITE + " has joined " + CC.GRAY + "(" + participants.size() + "/" + "50" + ")");
                 }
             }
         }
@@ -142,18 +131,18 @@ public class Tournament {
         sumoTournamentMatches.clear();
     }
 
-    public void tournamentstart() {
+    public void tournamentstart(){
         Collections.shuffle(participants);
-        if (participatingCount == 0) {
+        if(participatingCount == 0){
             participatingCount = participants.size();
         }
-        Bukkit.broadcastMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Round #" + CC.RED + (round++ + 1) + ChatColor.GRAY + " has started.");
+        Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "[Tournament] " + ChatColor.YELLOW + "Round " + (round++ + 1) + ChatColor.WHITE + " has started!.");
 
         Iterator<Party> iterator = participants.iterator();
-        while (iterator.hasNext()) {
+        while (iterator.hasNext()){
             Party player = iterator.next();
-            if (!iterator.hasNext()) {
-                player.broadcast(ChatColor.RED + "You do not have an opponent this round. Skipping...");
+            if(!iterator.hasNext()){
+                player.broadcast(CC.AQUA + CC.BOLD + "[Tournament] " + ChatColor.RED + "You do not have any player to fight! Please wait for the next round");
                 break;
             }
             Party other = iterator.next();
@@ -252,19 +241,17 @@ public class Tournament {
                     builder.setLength(builder.length() - 2);
                 }
 
-                Bukkit.broadcastMessage(CC.translate(builders.toString()) + ChatColor.GRAY + " has been eliminated. " + "(" + participants.size() + "/" + participatingCount + ")");
+                Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "[Tournament] " +  CC.RESET + CC.translate(builders.toString()) + ChatColor.WHITE + "has been eliminated. " + ChatColor.GRAY + "(" + participants.size() + "/" + participatingCount + ")");
                 if (tournamentMatches.isEmpty()) {
                     if (participants.size() <= 1) {
-                        Bukkit.broadcastMessage(CC.RED + CC.BOLD + "");
-                        Bukkit.broadcastMessage(CC.translate(builder.toString()) + ChatColor.GRAY + " has won the tournament!");
-                        Bukkit.broadcastMessage(CC.RED + CC.BOLD + "");
+                        Bukkit.broadcastMessage(CC.BLUE + CC.BOLD + "");
+                        Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "[Tournament] " + CC.RESET + CC.translate(builder.toString()) + ChatColor.YELLOW + "won the tournament");
+                        Bukkit.broadcastMessage(CC.BLUE + CC.BOLD + "");
                         if (participants.get(0) != null) {
                             if (getTeamCount() == 1) {
-                                if (getHostType().equalsIgnoreCase("console")) {
                                     Party winner = participants.get(0);
                                     Profile winnerProfile = Profile.getByUuid(winner.getLeader().getUuid());
                                     winnerProfile.getKitData().get(getKit()).setElo(winnerProfile.getKitData().get(getKit()).getElo() + 10);
-                                }
                             }
                         }
                         CURRENT_TOURNAMENT = null;
@@ -322,19 +309,17 @@ public class Tournament {
                     builder.setLength(builder.length() - 2);
                 }
 
-                Bukkit.broadcastMessage(CC.translate(builders.toString()) + ChatColor.GRAY + " has been eliminated. " + "(" + participants.size() + "/" + participatingCount + ")");
-                if (sumoTournamentMatches.isEmpty()) {
+                Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "[Tournament] " +  CC.RESET + CC.translate(builders.toString()) + ChatColor.WHITE + "has been eliminated. " + ChatColor.GRAY + "(" + participants.size() + "/" + participatingCount + ")");
+                if (tournamentMatches.isEmpty()) {
                     if (participants.size() <= 1) {
-                        Bukkit.broadcastMessage(CC.RED + CC.BOLD + "");
-                        Bukkit.broadcastMessage(CC.translate(builder.toString()) + ChatColor.GRAY + " has won the tournament!");
-                        Bukkit.broadcastMessage(CC.RED + CC.BOLD + "");
+                        Bukkit.broadcastMessage(CC.BLUE + CC.BOLD + "");
+                        Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "[Tournament] " + CC.RESET + CC.translate(builder.toString()) + ChatColor.YELLOW + "won the tournament");
+                        Bukkit.broadcastMessage(CC.BLUE + CC.BOLD + "");
                         if (participants.get(0) != null) {
                             if (getTeamCount() == 1) {
-                                if (getHostType().equalsIgnoreCase("console")) {
                                     Party winner = participants.get(0);
                                     Profile winnerProfile = Profile.getByUuid(winner.getLeader().getUuid());
                                     winnerProfile.getKitData().get(getKit()).setElo(winnerProfile.getKitData().get(getKit()).getElo() + 10);
-                                }
                             }
                         }
                         CURRENT_TOURNAMENT = null;

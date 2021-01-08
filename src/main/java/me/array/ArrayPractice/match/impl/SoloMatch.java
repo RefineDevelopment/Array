@@ -101,13 +101,11 @@ public class SoloMatch extends Match {
         if (getKit().getGameRules().isSumo() || getKit().getGameRules().isParkour()) {
             PlayerUtil.denyMovement(player);
         }
-        if (!getKit().getName().equalsIgnoreCase("Combo")) {
-            player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
-        }
 
         if (!getKit().getGameRules().isNoitems()) {
             TaskUtil.runLater(() -> Profile.getByUuid(player.getUniqueId()).getKitData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
         }
+        player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         if (getKit().getKnockbackProfile() != null && KnockbackModule.INSTANCE.profiles.containsKey(getKit().getKnockbackProfile())) {
             KnockbackProfile kbprofile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
@@ -211,7 +209,7 @@ public class SoloMatch extends Match {
                     }
                 }
             }
-        }.runTaskLaterAsynchronously(Practice.get(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
+        }.runTaskLaterAsynchronously(Practice.get(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 70L);
 
         Player winningPlayer = getWinningPlayer();
         Player losingPlayer = getOpponentPlayer(winningPlayer);
@@ -227,7 +225,8 @@ public class SoloMatch extends Match {
         inventoriesBuilder.setCurrentHoverEvent(getHoverEvent(losingTeamPlayer)).setCurrentClickEvent(getClickEvent(losingTeamPlayer));
 
         List<BaseComponent[]> components = new ArrayList<>();
-        components.add(new ChatComponentBuilder("").parse("&cPost-Match Inventories &7(Click name to view)").create());
+        components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7(Click name to view)").create());
+        components.add(new ChatComponentBuilder("").parse("").create());
         components.add(inventoriesBuilder.create());
 
 

@@ -1,13 +1,13 @@
 package me.array.ArrayPractice.profile.menu;
 
+import lombok.AllArgsConstructor;
 import me.array.ArrayPractice.event.EventCommand;
 import me.array.ArrayPractice.profile.options.OptionsMenu;
-import me.array.ArrayPractice.profile.stats.menu.ProfileMenu;
+import me.array.ArrayPractice.profile.stats.menu.ELOMenu;
 import me.array.ArrayPractice.profile.stats.menu.RankedLeaderboardsMenu;
 import me.array.ArrayPractice.util.external.ItemBuilder;
 import me.array.ArrayPractice.util.external.menu.Button;
 import me.array.ArrayPractice.util.external.menu.Menu;
-import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -44,9 +44,10 @@ public class PlayerMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
-            lore.add("&8&m-------------------------------");
-            lore.add("&7Click here to go to the leaderboards");
-            lore.add("&8&m-------------------------------");
+            lore.add("&7&m-----------------------------");
+            lore.add("&7Click here to view every kit's");
+            lore.add("&7Top 10 ELO Leaderboards");
+            lore.add("&7&m-----------------------------");
             return new ItemBuilder(Material.ITEM_FRAME)
                     .name("&bLeaderboards")
                     .lore(lore)
@@ -68,9 +69,10 @@ public class PlayerMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
-            lore.add("&8&m-------------------------------");
-            lore.add("&7Click here to go to your statistics");
-            lore.add("&8&m-------------------------------");
+            lore.add("&7&m-----------------------------");
+            lore.add("&7Click here to view complete");
+            lore.add("&7Statistics of your Profile");
+            lore.add("&7&m-----------------------------");
             return new ItemBuilder(Material.PAPER)
                     .name("&bStatistics")
                     .lore(lore)
@@ -81,7 +83,7 @@ public class PlayerMenu extends Menu {
         public void clicked(Player player, ClickType clickType) {
             player.closeInventory();
 
-            new ProfileMenu(player).openMenu(player);
+            new ELOMenu(player).openMenu(player);
         }
 
     }
@@ -92,9 +94,10 @@ public class PlayerMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
-            lore.add("&8&m-------------------------------");
-            lore.add("&7Click here to go change your preferences");
-            lore.add("&8&m-------------------------------");
+            lore.add("&7&m-----------------------------");
+            lore.add("&7Click here to view the settings menu");
+            lore.add("&7Here you can change your Profile Settings");
+            lore.add("&7&m-----------------------------");
             return new ItemBuilder(Material.ANVIL)
                     .name("&bSettings")
                     .lore(lore)
@@ -116,9 +119,10 @@ public class PlayerMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
-            lore.add("&8&m-------------------------------");
-            lore.add("&7Click here to view all events");
-            lore.add("&8&m-------------------------------");
+            lore.add("&7&m-----------------------------");
+            lore.add("&7Click here to view the events menu");
+            lore.add("&7Here you can either join or host events");
+            lore.add("&7&m-----------------------------");
             return new ItemBuilder(Material.ENDER_PEARL)
                     .name("&bView Events")
                     .lore(lore)

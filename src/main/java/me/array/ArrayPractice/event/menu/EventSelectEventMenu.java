@@ -1,6 +1,6 @@
 package me.array.ArrayPractice.event.menu;
 
-import me.array.ArrayPractice.Practice;
+import lombok.AllArgsConstructor;
 import me.array.ArrayPractice.event.EventType;
 import me.array.ArrayPractice.event.impl.brackets.command.BracketsHostCommand;
 import me.array.ArrayPractice.event.impl.brackets.command.BracketsJoinCommand;
@@ -18,7 +18,6 @@ import me.array.ArrayPractice.util.external.CC;
 import me.array.ArrayPractice.util.external.ItemBuilder;
 import me.array.ArrayPractice.util.external.menu.Button;
 import me.array.ArrayPractice.util.external.menu.Menu;
-import lombok.AllArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -32,7 +31,7 @@ public class EventSelectEventMenu extends Menu {
 
     @Override
     public String getTitle(Player player) {
-        return "&eSelect an event";
+        return "&bSelect an event";
     }
 
     @Override
@@ -119,38 +118,36 @@ public class EventSelectEventMenu extends Menu {
                         SkyWarsJoinCommand.execute(player);
                 }
             } else if (clickType.isLeftClick()) {
-                String store =Practice.get().getMainConfig().getString("ESSENTIALS.STORE");
-                String color  = Practice.get().getMainConfig().getString("ESSENTIALS.COLOR");
                 switch (eventType.getTitle()) {
                     case "Brackets":
                         if (player.hasPermission("practice.host")) BracketsHostCommand.execute(player);
                         else player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                        player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at" + color + "&o" + store + "&7!"));
+                             player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
                         break;
                     case "Sumo":
                         if (player.hasPermission("practice.host")) SumoHostCommand.execute(player);
                         else player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                        player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at" + color + "&o" + store + "&7!"));
+                             player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
                         break;
                     case "LMS":
                         if (player.hasPermission("practice.host")) LMSHostCommand.execute(player);
                         else player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                        player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at" + color + "&o" + store + "&7!"));
+                             player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
                         break;
                     case "Parkour":
                         if (player.hasPermission("practice.host")) ParkourHostCommand.execute(player);
                         else player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                        player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at" + color + "&o" + store + "&7!"));
+                             player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
                         break;
                     case "Spleef":
                         if (player.hasPermission("practice.host")) SpleefHostCommand.execute(player);
                         else player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                        player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at" + color + "&o" + store + "&7!"));
+                             player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
                         break;
                     case "Skywars":
                         if (player.hasPermission("practice.host")) SkyWarsHostCommand.execute(player);
                         else player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                             player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at" + color + "&o" + store + "&7!"));
+                             player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
                         break;
                 }
             }

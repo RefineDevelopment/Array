@@ -230,7 +230,8 @@ public class SumoTeamMatch extends Match {
 
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());
-        components.add(new ChatComponentBuilder("").parse("&cPost-match Inventories &7(click name to view)").create());
+        components.add(new ChatComponentBuilder("").parse("&bPost-match Inventories &7(click name to view)").create());
+        components.add(new ChatComponentBuilder("").parse("").create());
         components.add(winnerInventories.create());
         components.add(loserInventories.create());
         components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());

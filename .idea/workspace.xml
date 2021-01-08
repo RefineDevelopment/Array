@@ -31,10 +31,13 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/event/impl/spleef/Spleef.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/Practice.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/util/BlockUtil.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/pom.xml" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/party/Party.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/match/Match.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/profile/Profile.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/duel/command/DuelAcceptCommand.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/party/menu/ManagePartySettings.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -114,13 +117,13 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state width="498" height="446" key="SwitcherDM/0.0.1440.860@0.0.1440.860" timestamp="1609941511753" />
-    <state x="427" y="163" width="595" height="592" key="find.popup" timestamp="1609968215233">
+    <state x="427" y="163" width="595" height="592" key="find.popup" timestamp="1610063801628">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="427" y="163" width="595" height="592" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1609968215233" />
-    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1609961813014">
+    <state x="427" y="163" width="595" height="592" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1610063801628" />
+    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1610065833969">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1609961813014" />
+    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1610065833969" />
   </component>
 </project>

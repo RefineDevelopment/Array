@@ -11,6 +11,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import me.array.ArrayPractice.util.external.menu.Button;
 import java.util.Map;
@@ -41,7 +42,12 @@ public class ManagePartySettings extends Menu
         public ItemStack getButtonItem(final Player player) {
             final Profile profile = Profile.getByUuid(player.getUniqueId());
             if (this.partyManage == PartyManage.LIMIT) {
-                return new ItemBuilder(Material.REDSTONE_TORCH_ON).name("&b" + this.partyManage.getName()).lore("&7Limit: " + profile.getParty().getLimit()).build();
+                ArrayList<String> lore = new ArrayList<>();
+                lore.add("&7Limit: " + profile.getParty().getLimit());
+                lore.add("");
+                lore.add("Left-Click to Increase Limit");
+                lore.add("Right-Click to Decrease Limit");
+                return new ItemBuilder(Material.REDSTONE_TORCH_ON).name("&b" + this.partyManage.getName()).lore(lore).build();
             }
             if (this.partyManage == PartyManage.PUBLIC) {
                 return new ItemBuilder(Material.CHEST).name("&b" + this.partyManage.getName()).lore("&7Public: " + profile.getParty().isPublic()).build();
@@ -59,7 +65,8 @@ public class ManagePartySettings extends Menu
                 return;
             }
             if (!player.hasPermission("practice.donator")) {
-                player.sendMessage(CC.RED + "You need a Donator Rank for this");
+                player.sendMessage(CC.translate("&7You do not have permission to use Party Settings."));
+                player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
                 Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
                 player.closeInventory();
                 return;

@@ -16,6 +16,7 @@ import me.array.ArrayPractice.match.team.Team;
 import me.array.ArrayPractice.tournament.Tournament;
 import me.array.ArrayPractice.queue.QueueType;
 import me.array.ArrayPractice.match.team.TeamPlayer;
+import me.array.ArrayPractice.util.PlayerUtil;
 import me.array.ArrayPractice.util.external.TimeUtil;
 import org.bukkit.Bukkit;
 import me.array.ArrayPractice.util.external.CC;
@@ -63,6 +64,10 @@ public class Scoreboard implements BoardAdapter {
             if (!Practice.get().getSpleefManager().getCooldown().hasExpired()) {
                 lines.add("&fSpleef: &b" + TimeUtil.millisToTimer(Practice.get().getSpleefManager().getCooldown().getRemaining()));
             }
+            lines.add("");
+            lines.add(CC.translate("&fELO: &b" + profile.getGlobalElo()));
+            lines.add(CC.translate("&fLeague: &b" + profile.getEloLeague()));
+
             if (profile.getParty() != null) {
                 final Party party = profile.getParty();
                 lines.add(CC.SB_BAR);
@@ -141,9 +146,11 @@ public class Scoreboard implements BoardAdapter {
                 lines.add("&fDuration: &b" + match.getDuration());
                 lines.add("");
                 if (match.isSoloMatch()) {
-                    lines.add(match.getTeamPlayerA().getUsername());
+                    int playera = PlayerUtil.getPing(match.getTeamPlayerA().getPlayer());
+                    int playerb = PlayerUtil.getPing(match.getTeamPlayerB().getPlayer());
+                    lines.add(CC.AQUA + match.getTeamPlayerA().getUsername() + CC.GRAY + " (" + playera + ")");
                     lines.add("&7vs");
-                    lines.add(match.getTeamPlayerB().getUsername());
+                    lines.add(CC.AQUA + match.getTeamPlayerB().getUsername() + CC.GRAY + " (" + playerb + ")");
                 }
                 else if (match.isTeamMatch() || match.isHCFMatch() || match.isKoTHMatch()) {
                     lines.add("&b" + match.getTeamA().getLeader().getUsername() + "'s Team");
@@ -389,6 +396,16 @@ public class Scoreboard implements BoardAdapter {
         }
         lines.add("");
         lines.add(CC.translate("&7&oresolve.rip"));
+        if (profile.isSilent() && !profile.isFollowMode()) {
+            lines.add("");
+            lines.add(CC.GRAY + CC.BOLD + "Silent-Mode");
+        } else if (profile.isSilent() && profile.isFollowMode()) {
+                String Following=profile.getFollowing().getPlayer().getName();
+                lines.add(CC.GRAY + CC.BOLD + "Following: " + Following);
+                lines.add("");
+                lines.add(CC.GRAY + CC.BOLD + "Silent-Mode");
+            }
+
         lines.add(CC.SB_BAR);
         return lines;
     }

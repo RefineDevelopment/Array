@@ -10,12 +10,12 @@ import org.bukkit.entity.Player;
 public class SumoSetSpawnCommand {
 
 	public void execute(Player player, @CPL("one/two/spec") String position) {
-		if (!(position.equals("one") || position.equals("two") || position.equals("spec"))) {
+		if (!(position.equals("one") || position.equals("two") || position.equals("spec") || position.equals("1") || position.equals("2"))) {
 			player.sendMessage(CC.RED + "The position must be 1 or 2.");
 		} else {
-			if (position.equals("one")) {
+			if (position.equals("one") || position.equals("1")) {
 				Practice.get().getSumoManager().setSumoSpawn1(player.getLocation());
-			} else if (position.equals("two")) {
+			} else if (position.equals("two")|| position.equals("2")) {
 				Practice.get().getSumoManager().setSumoSpawn2(player.getLocation());
 			} else {
 				Practice.get().getSumoManager().setSumoSpectator(player.getLocation());

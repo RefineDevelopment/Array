@@ -43,9 +43,10 @@ import me.array.ArrayPractice.match.command.StopSpectatingCommand;
 import me.array.ArrayPractice.match.command.ViewInventoryCommand;
 import me.array.ArrayPractice.match.kits.utils.ArmorClassManager;
 import me.array.ArrayPractice.match.kits.utils.bard.EffectRestorer;
+import me.array.ArrayPractice.movement.PlayerMovementListener;
 import me.array.ArrayPractice.party.Party;
 import me.array.ArrayPractice.party.PartyListener;
-import me.array.ArrayPractice.placeholders.PlaceholderAPIExtension;
+import me.array.ArrayPractice.hologram.PlaceholderAPIExtension;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.profile.ProfileListener;
 import me.array.ArrayPractice.profile.command.donator.FlyCommand;
@@ -97,6 +98,8 @@ public class Practice extends JavaPlugin {
     private BasicConfigurationFile eventsConfig;
     @Getter
     private BasicConfigurationFile chestsConfig;
+    @Getter
+    private BasicConfigurationFile lanuageConfig;
 
     @Getter
     private MongoDatabase mongoDatabase;
@@ -150,6 +153,7 @@ public class Practice extends JavaPlugin {
         kitsConfig = new BasicConfigurationFile(this, "kits");
         eventsConfig = new BasicConfigurationFile(this, "events");
         chestsConfig = new BasicConfigurationFile(this, "chests");
+        lanuageConfig = new BasicConfigurationFile(this, "lang");
 
         loadMongo();
 
@@ -175,7 +179,6 @@ public class Practice extends JavaPlugin {
                 new FollowCommand(),
                 new UnFollowCommand(),
                 new GetLocationCommand(),
-                new HologramCommand(),
                 new SaveCommand(),
 
                 //Player commands
@@ -356,6 +359,7 @@ public class Practice extends JavaPlugin {
                 new MatchListener(),
                 new WorldListener(),
                 new QueueListener(),
+                new PlayerMovementListener(),
                 new ArmorListener()
         )) {
             getServer().getPluginManager().registerEvents(listener, this);

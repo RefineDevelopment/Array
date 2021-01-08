@@ -31,7 +31,7 @@ import java.util.*;
 @Getter
 public class SkyWars {
 
-    protected static String EVENT_PREFIX = CC.RED + CC.BOLD + "* " + CC.RESET;
+    protected static String EVENT_PREFIX = CC.AQUA + CC.BOLD + "[Skywars] " + CC.RESET;
 
     private final String name;
     @Setter
@@ -252,7 +252,7 @@ public class SkyWars {
             Bukkit.broadcastMessage(CC.GRAY + "");
         } else {
             Bukkit.broadcastMessage(CC.GRAY + "");
-            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the skywars event!");
+            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.WHITE + " has won the skywars event!");
             Bukkit.broadcastMessage(CC.GRAY + "");
         }
 
@@ -300,7 +300,7 @@ public class SkyWars {
 
     public void announce() {
         BaseComponent[] components = new ChatComponentBuilder("")
-                .parse(EVENT_PREFIX + CC.RED + getHost().getUsername() + CC.GRAY + " is hosting a skywars event! " + CC.GREEN + "(Click to join)")
+                .parse(CC.AQUA + "[Skywars] " + CC.AQUA + getHost().getUsername() + CC.GRAY + " is hosting a skywars event! " + CC.GREEN + "(Click to join)")
                 .attachToEachPart(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentBuilder("")
                         .parse(CC.GREEN + "Click to join.").create()))
                 .attachToEachPart(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/skywars join"))
@@ -354,7 +354,7 @@ public class SkyWars {
         Profile profile = Profile.getByUuid(player.getUniqueId());
 
         if (killer != null) {
-            broadcastMessage("&c" + player.getName() + "&7 was eliminated by &c" + killer.getName() + "&7!");
+            broadcastMessage("&c" + player.getName() + "&e was eliminated by &c" + killer.getName() + "&e!");
         }
 
 

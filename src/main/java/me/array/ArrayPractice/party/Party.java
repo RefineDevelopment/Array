@@ -102,7 +102,7 @@ public class Party extends Team
             }
         }
     }
-    
+
     public void leave(final Player player, final boolean kick) {
         this.broadcast(PartyMessage.PLAYER_LEFT.format(player.getName(), kick ? "been kicked from" : "left"));
         this.getTeamPlayers().removeIf(member -> member.getUuid().equals(player.getUniqueId()));
@@ -176,6 +176,7 @@ public class Party extends Team
             if (Profile.getByUuid(player.getUniqueId()).isInLobby() || Profile.getByUuid(player.getUniqueId()).isInQueue()) {
                 Profile.getByUuid(player.getUniqueId()).refreshHotbar();
                 Profile.getByUuid(player.getUniqueId()).handleVisibility();
+                NameTags.reset(player, this.getLeader().getPlayer());
             }
         });
     }

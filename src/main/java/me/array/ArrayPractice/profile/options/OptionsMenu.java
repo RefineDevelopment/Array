@@ -1,5 +1,7 @@
 package me.array.ArrayPractice.profile.options;
 
+import me.activated.core.data.other.systems.MessageSystem;
+import me.activated.core.plugin.AquaCoreAPI;
 import org.bukkit.entity.*;
 import me.array.ArrayPractice.util.external.menu.*;
 import java.util.*;
@@ -33,6 +35,7 @@ public class OptionsMenu extends Menu
         @Override
         public ItemStack getButtonItem(final Player player) {
             final Profile profile = Profile.getByUuid(player.getUniqueId());
+            final MessageSystem messages =AquaCoreAPI.INSTANCE.getGlobalPlayer(player.getUniqueId()).getMessageSystem();
             List<String> lines = new ArrayList<>();
             if (this.type == OptionsType.TOGGLESCOREBOARD) {
                 lines.add((profile.getOptions().isShowScoreboard() ? "&a&l● " : "&c&l● ") +  "&fShow scoreboard");
@@ -43,10 +46,8 @@ public class OptionsMenu extends Menu
                 lines.add((!profile.getOptions().isReceiveDuelRequests() ? "&a&l● " : "&c&l● ") + "&fDon't Allow Duels");
             }
             else if (this.type == OptionsType.TOGGLEPMS) {
-                lines.add("&7&m----------------------------");
-                lines.add("&fClick to Toggle Private Messages");
-                lines.add("&fCycle Through Enable & Disable");
-                lines.add("&7&m----------------------------");
+                lines.add((messages.isMessagesToggled() ? "&a&l● " : "&c&l● ") + "&fAllow Private Messages");
+                lines.add((!messages.isMessagesToggled() ? "&a&l● " : "&c&l● ") + "&fDon't Allow Private Messages");
             }
             else if (this.type == OptionsType.TOGGLESPECTATORS) {
                 lines.add((profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fAllow Spectators");
@@ -76,6 +77,7 @@ public class OptionsMenu extends Menu
             else if (this.type == OptionsType.TOGGLELIGHTNING) {
                 profile.getOptions().setLightning(!profile.getOptions().isLightning());
             }
+
         }
 
         @Override

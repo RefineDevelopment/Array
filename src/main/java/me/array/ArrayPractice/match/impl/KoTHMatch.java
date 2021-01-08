@@ -243,7 +243,8 @@ public class KoTHMatch extends Match {
 
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());
-        components.add(new ChatComponentBuilder("").parse("&cPost Match Inventories &7(Click to view)").create());
+        components.add(new ChatComponentBuilder("").parse("&bPost Match Inventories &7(Click to view)").create());
+        components.add(new ChatComponentBuilder("").parse("").create());
         components.add(winnerInventories.create());
         components.add(loserInventories.create());
         components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());

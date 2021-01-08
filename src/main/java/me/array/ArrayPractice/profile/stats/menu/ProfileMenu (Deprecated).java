@@ -1,4 +1,4 @@
-package me.array.ArrayPractice.profile.stats.menu;
+/*package me.array.ArrayPractice.profile.stats.menu;
 
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.ItemBuilder;
@@ -26,9 +26,9 @@ public class ProfileMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        buttons.put(1, new GlobalStatsButton());
-        buttons.put(3, new EloStatsButton());
-        buttons.put(5, new MatchStatsButton());
+        buttons.put(2, new GlobalStatsButton());
+        buttons.put(4, new EloStatsButton());
+        buttons.put(6, new MatchStatsButton());
 
         return buttons;
     }
@@ -41,15 +41,15 @@ public class ProfileMenu extends Menu {
             List<String> lore = new ArrayList<>();
             Profile profile = Profile.getByUuid(target.getUniqueId());
 
-            lore.add("&8&m-------------------------------");
+            lore.add("&7&m-------------------------------");
             lore.add(" &bELO: &r" + profile.getGlobalElo());
             lore.add(" &bLeague: &r" + profile.getEloLeague());
-            lore.add("&8&m--------------------------");
+            lore.add("&7&m--------------------------");
             lore.add(" &bTotal Wins: &f" + profile.getTotalWins());
             lore.add(" &bTotal Losses: &f" + profile.getTotalLost());
-            lore.add("&8&m-------------------------------");
+            lore.add("&7&m-------------------------------");
 
-            return new ItemBuilder(Material.BEACON)
+            return new ItemBuilder(Material.COMPASS)
                     .name("&b&lGlobal Stats")
                     .lore(lore)
                     .build();
@@ -63,10 +63,10 @@ public class ProfileMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
-            lore.add("&8&m-------------------------------");
+            lore.add("&7&m-------------------------------");
             lore.add("&7Left-Click to view your elo stats");
-            lore.add("&8&m-------------------------------");
-            return new ItemBuilder(Material.PAPER)
+            lore.add("&7&m-------------------------------");
+            return new ItemBuilder(Material.DIAMOND_SWORD)
                     .name("&b&lElo Stats")
                     .lore(lore)
                     .build();
@@ -87,11 +87,11 @@ public class ProfileMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
-            lore.add("&8&m-------------------------------");
+            lore.add("&7&m-------------------------------");
             lore.add("&7Left-Click to view recent Unranked matches");
             lore.add("&7Right-Click to view recent Ranked matches");
-            lore.add("&8&m-------------------------------");
-            return new ItemBuilder(Material.BOOK)
+            lore.add("&7&m-------------------------------");
+            return new ItemBuilder(Material.BOOK_AND_QUILL)
                     .name("&b&lMatch History")
                     .lore(lore)
                     .build();
@@ -108,3 +108,4 @@ public class ProfileMenu extends Menu {
     }
 
 }
+*/

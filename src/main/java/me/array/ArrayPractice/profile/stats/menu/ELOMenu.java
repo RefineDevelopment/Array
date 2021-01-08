@@ -52,12 +52,12 @@ public class ELOMenu extends Menu {
             String wins = Integer.toString(profile.getKitData().get(kit).getWon());
             String losses = Integer.toString(profile.getKitData().get(kit).getLost());
 
-            lore.add("&8&m--------------------------");
+            lore.add("&7&m--------------------------");
             lore.add(" &b&lStats:");
             lore.add("  &fELO: &b" + elo);
             lore.add("  &fWins: &b" + wins);
             lore.add("  &fLosses: &b" + losses);
-            lore.add("&8&m--------------------------");
+            lore.add("&7&m--------------------------");
 
             return new ItemBuilder(kit.getDisplayIcon())
                     .name("&b&l" + kit.getName())
@@ -75,16 +75,16 @@ public class ELOMenu extends Menu {
             List<String> lore = new ArrayList<>();
             Profile profile = Profile.getByUuid(target.getUniqueId());
 
-            lore.add("&8&m--------------------------");
-            lore.add(" &b&lGlobal:");
-            lore.add("  &fELO: &b" + profile.getGlobalElo());
-            lore.add("  &fTotal Wins: &b" + profile.getTotalWins());
-            lore.add("  &fTotal Losses: &b" + profile.getTotalLost());
-            lore.add("  &fLeague: &r" + profile.getEloLeague());
-            lore.add("&8&m--------------------------");
+            lore.add("&7&m--------------------------");
+            lore.add(" &a&lGlobal:");
+            lore.add("  &bELO: &e" + profile.getGlobalElo());
+            lore.add("  &bLeague: &r" + profile.getEloLeague());
+            lore.add("  &bTotal Wins: &e" + profile.getTotalWins());
+            lore.add("  &bTotal Losses: &e" + profile.getTotalLost());
+            lore.add("&7&m--------------------------");
 
             return new ItemBuilder(Material.COMPASS)
-                    .name("&b&lGlobal")
+                    .name("&a&lGlobal")
                     .lore(lore)
                     .build();
         }

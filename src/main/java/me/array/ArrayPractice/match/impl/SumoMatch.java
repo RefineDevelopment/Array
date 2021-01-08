@@ -206,7 +206,8 @@ public class SumoMatch extends Match {
         inventoriesBuilder.setCurrentHoverEvent(getHoverEvent(losingTeamPlayer)).setCurrentClickEvent(getClickEvent(losingTeamPlayer));
 
         List<BaseComponent[]> components = new ArrayList<>();
-        components.add(new ChatComponentBuilder("").parse("&cPost-Match Inventories &7(Click name to view)").create());
+        components.add(new ChatComponentBuilder("").parse("&bPost-Match Inventories &7(Click name to view)").create());
+        components.add(new ChatComponentBuilder("").parse("").create());
         components.add(inventoriesBuilder.create());
 
 

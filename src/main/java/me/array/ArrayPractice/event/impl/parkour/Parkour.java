@@ -30,7 +30,7 @@ import java.util.UUID;
 @Getter
 public class Parkour {
 
-	protected static String EVENT_PREFIX = CC.DARK_AQUA + CC.BOLD + "(Parkour) " + CC.RESET;
+	protected static String EVENT_PREFIX = CC.AQUA + CC.BOLD + "(Parkour) " + CC.RESET;
 
 	private String name;
 	@Setter private ParkourState state = ParkourState.WAITING;

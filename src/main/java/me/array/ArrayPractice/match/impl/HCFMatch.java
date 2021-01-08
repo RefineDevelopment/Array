@@ -174,7 +174,6 @@ public class HCFMatch extends Match {
 
                             player.setFireTicks(0);
                             player.updateInventory();
-//							player.setKnockbackProfile(null);
 
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
@@ -190,7 +189,7 @@ public class HCFMatch extends Match {
                     }
                 }
             }
-        }.runTaskLater(Practice.get(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
+        }.runTaskLater(Practice.get(), 40L);
 
         Team winningTeam = getWinningTeam();
         Team losingTeam = getOpponentTeam(winningTeam);
@@ -221,7 +220,8 @@ public class HCFMatch extends Match {
 
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());
-        components.add(new ChatComponentBuilder("").parse("&cPost-match Inventories &7(click name to view)").create());
+        components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7(click name to view)").create());
+        components.add(new ChatComponentBuilder("").parse("").create());
         components.add(winnerInventories.create());
         components.add(loserInventories.create());
         components.add(new ChatComponentBuilder("").parse(CC.CHAT_BAR).create());

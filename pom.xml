@@ -4,9 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>gg.smok</groupId>
-    <artifactId>SmokPractice</artifactId>
-    <version>1.0</version>
+    <groupId>me.array.ArrayPractice</groupId>
+    <artifactId>Array</artifactId>
+    <version>3.0</version>
+
+    <!--Repositories-->
 
     <repositories>
         <repository>
@@ -49,40 +51,63 @@
     </repositories>
 
     <dependencies>
+        <!--Command Annotations-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.10</version>
+            <version>1.18.8</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
-            <groupId>rip.resolve.spigot</groupId>
-            <artifactId>resolve-server</artifactId>
-            <version>1.0</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.8</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.5</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.1</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!--Spigot (credits to Chris)-->
+        <dependency>
+            <groupId>rip.verse.jupiter</groupId>
+            <artifactId>Jupiter</artifactId>
+            <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/server.jar</systemPath>
         </dependency>
 
-        <!-- CommandAnnotation shit -->
+        <!-- Command Handlers  -->
         <dependency>
             <groupId>com.qrakn</groupId>
             <artifactId>honcho</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/honcho-1.0-SNAPSHOT.jar</systemPath>
         </dependency>
-
-        <!-- Config shit -->
         <dependency>
             <groupId>com.qrakn</groupId>
-            <artifactId>phoenix-lang</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>phoenix</artifactId>
+            <version>1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/phoenix-lang-1.0-SNAPSHOT.jar</systemPath>
         </dependency>
 
-        <!-- Mongo shit -->
+        <!-- Mongo Driver -->
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
@@ -97,29 +122,34 @@
             <systemPath>${project.basedir}/lib/ProtocolLib.jar</systemPath>
         </dependency>
 
+        <!--Packet Handler-->
         <dependency>
-            <groupId>com.comphenix.protocol</groupId>
+            <groupId>com.comphenix</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/ProtocolLib.jar</systemPath>
+        </dependency>
+
+        <!--Core Hook-->
+        <dependency>
+            <groupId>me.activated</groupId>
             <artifactId>AquaCore</artifactId>
             <version>2.5.8</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/Aquacore.jar</systemPath>
         </dependency>
 
+        <!-- Tablist Handlers  -->
         <dependency>
-            <groupId>outlast.tab</groupId>
-            <artifactId>Outlast</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>cc.outlast.tablist</groupId>
+            <artifactId>Tablist</artifactId>
+            <version>1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/outlast.jar</systemPath>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.1</version>
-            <scope>compile</scope>
-        </dependency>
-
+        <!--LunarAPI Support-->
         <dependency>
             <groupId>com.moonsworth</groupId>
             <artifactId>LunarClient-API</artifactId>
@@ -128,20 +158,7 @@
             <systemPath>${project.basedir}/lib/bukkitapi-1.0-20200213.200536-3.jar</systemPath>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>1.8</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.8.5</version>
-            <scope>compile</scope>
-        </dependency>
-
+        <!--Hologram Leaderboards Handler-->
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
@@ -166,6 +183,7 @@
             <systemPath>${project.basedir}/lib/TouchscreenHolograms.jar</systemPath>
         </dependency>
 
+        <!--Citizens (To Fix NPC's Dissapearing)-->
         <dependency>
             <groupId>Citizens</groupId>
             <artifactId>citizens-api</artifactId>
@@ -173,8 +191,11 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/Citizens.jar</systemPath>
         </dependency>
-
     </dependencies>
+
+
+    <!--Maven Compiler (Depricated)-->
+    <!--Use Artifact to compile please!-->
 
     <build>
         <defaultGoal>clean install</defaultGoal>

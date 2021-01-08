@@ -224,7 +224,7 @@ public class KitManagementMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(Material.BOOK)
-                    .name("&4&l" + kitLoadout.getCustomName())
+                    .name("&b&l" + kitLoadout.getCustomName())
                     .build();
         }
 
