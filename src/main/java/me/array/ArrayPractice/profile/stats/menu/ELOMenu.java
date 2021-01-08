@@ -75,16 +75,16 @@ public class ELOMenu extends Menu {
             List<String> lore = new ArrayList<>();
             Profile profile = Profile.getByUuid(target.getUniqueId());
 
+            lore.add("&7&m-------------------------------");
+            lore.add(" &bELO: &r" + profile.getGlobalElo());
+            lore.add(" &bLeague: &r" + profile.getEloLeague());
             lore.add("&7&m--------------------------");
-            lore.add(" &a&lGlobal:");
-            lore.add("  &bELO: &e" + profile.getGlobalElo());
-            lore.add("  &bLeague: &r" + profile.getEloLeague());
-            lore.add("  &bTotal Wins: &e" + profile.getTotalWins());
-            lore.add("  &bTotal Losses: &e" + profile.getTotalLost());
-            lore.add("&7&m--------------------------");
+            lore.add(" &bTotal Wins: &f" + profile.getTotalWins());
+            lore.add(" &bTotal Losses: &f" + profile.getTotalLost());
+            lore.add("&7&m-------------------------------");
 
             return new ItemBuilder(Material.COMPASS)
-                    .name("&a&lGlobal")
+                    .name("&e&lGlobal")
                     .lore(lore)
                     .build();
         }

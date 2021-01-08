@@ -20,7 +20,7 @@ public class MatchStartTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        int seconds = 3 - ticks;
+        int seconds = 5 - ticks;
 
         if (match.isEnding()) {
             cancel();
@@ -38,9 +38,14 @@ public class MatchStartTask extends BukkitRunnable {
                 cancel();
                 return;
             }
+            if (match.isTeamMatch()) {
+                match.broadcastMessage(CC.AQUA + CC.BOLD + "Match Found!");
+                match.broadcastMessage("");
+                match.broadcastMessage(("&b● &fTeams: &b" + match.getTeamA().getLeader().getDisplayName() + CC.GRAY + " vs " + CC.AQUA + match.getTeamB().getLeader().getDisplayName()));
+            }
+                match.broadcastMessage(CC.WHITE + "Starting in " + CC.AQUA + seconds + CC.WHITE + "...");
+                match.broadcastSound(Sound.NOTE_PLING);
 
-            match.broadcastMessage(CC.WHITE + "Starting in " + CC.AQUA + seconds + CC.WHITE +  "...");
-            match.broadcastSound(Sound.NOTE_PLING);
         } else {
             if (match.getKit().getGameRules().isSumo() || match.getKit().getGameRules().isParkour()) {
                 if (seconds == 0) {

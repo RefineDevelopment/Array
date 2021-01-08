@@ -44,7 +44,7 @@ public class PlaceholderAPIExtension extends PlaceholderExpansion {
             }
 
 
-            return "&b#" + (number + 1) + " &8- &7" + kitLeaderboards.getName() + " &8- &b" + kitLeaderboards.getElo();
+            return "&b#" + (number + 1) + " &8- &f" + kitLeaderboards.getName() + " &8- &b" + kitLeaderboards.getElo();
         }
 
         if (identifier.contains("lb")) { //practice_lb_NoDebuff_1
@@ -67,7 +67,7 @@ public class PlaceholderAPIExtension extends PlaceholderExpansion {
                 return "&7";
             }
 
-            return "&b#" + (number + 1) + " &8- &7" + kitLeaderboards.getName() + " &8- &b" + kitLeaderboards.getElo();
+            return "&b#" + (number + 1) + " &8- &f" + kitLeaderboards.getName() + " &8- &b" + kitLeaderboards.getElo();
         }
 
         if (identifier.contains("switch")) { //practice_switch_NoDebuff_1
@@ -89,7 +89,7 @@ public class PlaceholderAPIExtension extends PlaceholderExpansion {
                 return "&7";
             }
 
-            return "&b#" + (number + 1) + " &8- &7" + kitLeaderboards.getName() + " &8- &b" + kitLeaderboards.getElo();
+            return "&b#" + (number + 1) + " &8- &f" + kitLeaderboards.getName() + " &8- &b" + kitLeaderboards.getElo();
         }
 
         return null;

@@ -1,20 +1,24 @@
 package me.array.ArrayPractice.profile.options;
 
-import me.activated.core.data.other.systems.MessageSystem;
-import me.activated.core.plugin.AquaCoreAPI;
-import org.bukkit.entity.*;
-import me.array.ArrayPractice.util.external.menu.*;
-import java.util.*;
-import org.bukkit.inventory.*;
-import me.array.ArrayPractice.profile.*;
-import me.array.ArrayPractice.util.external.*;
-import org.bukkit.event.inventory.*;
+import me.array.ArrayPractice.profile.Profile;
+import me.array.ArrayPractice.util.external.CC;
+import me.array.ArrayPractice.util.external.ItemBuilder;
+import me.array.ArrayPractice.util.external.menu.Button;
+import me.array.ArrayPractice.util.external.menu.Menu;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class OptionsMenu extends Menu
 {
     @Override
     public String getTitle(final Player player) {
-        return "&4Options";
+        return "&7Settings";
     }
 
     @Override
@@ -23,7 +27,7 @@ public class OptionsMenu extends Menu
         buttons.put(0, new OptionsButton(OptionsType.TOGGLESCOREBOARD));
         buttons.put(2, new OptionsButton(OptionsType.TOGGLEDUELREQUESTS));
         buttons.put(4, new OptionsButton(OptionsType.TOGGLESPECTATORS));
-        buttons.put(6, new OptionsButton(OptionsType.TOGGLEPMS));
+        buttons.put(6, new OptionsButton(OptionsType.TOGGLEPINGFACTOR));
         buttons.put(8, new OptionsButton(OptionsType.TOGGLELIGHTNING));
         return buttons;
     }
@@ -35,7 +39,6 @@ public class OptionsMenu extends Menu
         @Override
         public ItemStack getButtonItem(final Player player) {
             final Profile profile = Profile.getByUuid(player.getUniqueId());
-            final MessageSystem messages =AquaCoreAPI.INSTANCE.getGlobalPlayer(player.getUniqueId()).getMessageSystem();
             List<String> lines = new ArrayList<>();
             if (this.type == OptionsType.TOGGLESCOREBOARD) {
                 lines.add((profile.getOptions().isShowScoreboard() ? "&a&l● " : "&c&l● ") +  "&fShow scoreboard");
@@ -45,16 +48,16 @@ public class OptionsMenu extends Menu
                 lines.add((profile.getOptions().isReceiveDuelRequests() ? "&a&l● " : "&c&l● ") +  "&fAllow Duels");
                 lines.add((!profile.getOptions().isReceiveDuelRequests() ? "&a&l● " : "&c&l● ") + "&fDon't Allow Duels");
             }
-            else if (this.type == OptionsType.TOGGLEPMS) {
-                lines.add((messages.isMessagesToggled() ? "&a&l● " : "&c&l● ") + "&fAllow Private Messages");
-                lines.add((!messages.isMessagesToggled() ? "&a&l● " : "&c&l● ") + "&fDon't Allow Private Messages");
+            else if (this.type == OptionsType.TOGGLEPINGFACTOR) {
+                lines.add((profile.getOptions().isUsingPingFactor() ? "&a&l● " : "&c&l● ") +  "&fUse Ping Factor");
+                lines.add((!profile.getOptions().isUsingPingFactor() ? "&a&l● " : "&c&l● ") + "&fDon't Use Ping Factor");
             }
             else if (this.type == OptionsType.TOGGLESPECTATORS) {
                 lines.add((profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fAllow Spectators");
                 lines.add((!profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fDon't Allow Spectators");
             } else {
-                lines.add((profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fEnable Lightning Death Effect");
-                lines.add((!profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fDisable Lightning Death Effect");
+                lines.add((profile.getOptions().isLightning() ? "&a&l● " : "&c&l● ") + "&fEnable Lightning Death Effect");
+                lines.add((!profile.getOptions().isLightning() ? "&a&l● " : "&c&l● ") + "&fDisable Lightning Death Effect");
             }
             return new ItemBuilder(this.type.getMaterial()).name("&b" + this.type.getName()).lore(lines).build();
         }
@@ -68,16 +71,25 @@ public class OptionsMenu extends Menu
             else if (this.type == OptionsType.TOGGLEDUELREQUESTS) {
                 profile.getOptions().setReceiveDuelRequests(!profile.getOptions().isReceiveDuelRequests());
             }
-            else if (this.type == OptionsType.TOGGLEPMS) {
-                player.performCommand("togglepm");
+            else if (this.type == OptionsType.TOGGLEPINGFACTOR) {
+                if (player.hasPermission("practice.donator")) {
+                    profile.getOptions().setUsingPingFactor(!profile.getOptions().isUsingPingFactor());
+                } else {
+                    player.sendMessage(CC.translate("&7You do not have permission to use this setting."));
+                    player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
+                }
             }
             else if (this.type == OptionsType.TOGGLESPECTATORS) {
                 profile.getOptions().setAllowSpectators(!profile.getOptions().isAllowSpectators());
             }
             else if (this.type == OptionsType.TOGGLELIGHTNING) {
-                profile.getOptions().setLightning(!profile.getOptions().isLightning());
+                if (player.hasPermission("practice.donator")) {
+                    profile.getOptions().setLightning(!profile.getOptions().isLightning());
+                } else {
+                    player.sendMessage(CC.translate("&7You do not have permission to use this setting."));
+                    player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
+                }
             }
-
         }
 
         @Override

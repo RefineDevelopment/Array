@@ -104,7 +104,7 @@ public class Tab implements ITablist {
                     elements.add(new TablistElement("&aYou",4));
                     elements.add(new TablistElement(CC.AQUA + CC.BOLD + "Match Info",23));
                     elements.add(new TablistElement("&cEnemy",44));
-                    elements.add(new TablistElement(CC.AQUA + player.getName(),5));
+                    elements.add(new TablistElement(CC.WHITE + player.getName(),5));
                     elements.add(new TablistElement(CC.WHITE + "Duration:",24));
                     elements.add(new TablistElement(CC.WHITE + match2.getDuration(),25));
                     elements.add(new TablistElement(CC.WHITE + opponent.getUsername(),45));
@@ -175,7 +175,7 @@ public class Tab implements ITablist {
         }
         else if (profile.isInLMS()) {
             final LMS ffa = profile.getLms();
-            elements.add(new TablistElement(CC.AQUA + CC.BOLD + "FFA",23));
+            elements.add(new TablistElement(CC.AQUA + CC.BOLD + "LMS",23));
             int pl = 0;
             for (int added4 = 4; added4 < 60; ++added4) {
                 if (!tabSlots.contains(added4)) {
@@ -244,7 +244,7 @@ public class Tab implements ITablist {
                     elements.add(new TablistElement(CC.WHITE + match2.getTeamB().getLeader().getUsername(), 45));
                 } else if (match2.isFreeForAllMatch()) {
                     final int team=match2.getPlayers().size();
-                    elements.add(new TablistElement(CC.AQUA + CC.BOLD + "&lFFA Match Info", 23));
+                    elements.add(new TablistElement(CC.AQUA + CC.BOLD + "FFA Match Info", 23));
                     elements.add(new TablistElement(CC.WHITE + "Players: " + CC.AQUA + team, 25));
                     elements.add(new TablistElement(CC.WHITE + "Duration:", 27));
                     elements.add(new TablistElement(CC.AQUA + match2.getDuration(), 28));

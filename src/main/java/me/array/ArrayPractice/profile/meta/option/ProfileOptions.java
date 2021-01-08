@@ -16,8 +16,8 @@ public class ProfileOptions {
     private boolean allowSpectators=true;
     @Getter
     @Setter
-    private boolean privateMessages=true;
+    private boolean lightning=true;
     @Getter
     @Setter
-    private boolean lightning=true;
+    private boolean usingPingFactor=true;
 }

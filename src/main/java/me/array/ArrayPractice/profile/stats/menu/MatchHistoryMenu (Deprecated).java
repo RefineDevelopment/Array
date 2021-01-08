@@ -1,4 +1,4 @@
-package me.array.ArrayPractice.profile.stats.menu;
+/*package me.array.ArrayPractice.profile.stats.menu;
 
 import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.match.menu.MatchDetailsMenu;
@@ -94,3 +94,4 @@ public class MatchHistoryMenu extends Menu {
     }
 
 }
+*/

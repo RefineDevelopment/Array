@@ -7,6 +7,7 @@ import me.array.ArrayPractice.match.impl.SoloMatch;
 import me.array.ArrayPractice.match.impl.SumoMatch;
 import me.array.ArrayPractice.match.team.TeamPlayer;
 import me.array.ArrayPractice.profile.Profile;
+import me.array.ArrayPractice.util.PlayerUtil;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -46,18 +47,17 @@ public class QueueThread extends Thread {
                                 continue;
                             }
 
-//							if (firstProfile.getOptions().isUsingPingFactor() ||
-//							    secondProfile.getOptions().isUsingPingFactor()) {
-//								if (firstPlayer.getPing() >= secondPlayer.getPing()) {
-//									if (firstPlayer.getPing() - secondPlayer.getPing() >= 50) {
-//										continue;
-//									}
-//								} else {
-//									if (secondPlayer.getPing() - firstPlayer.getPing() >= 50) {
-//										continue;
-//									}
-//								}
-//							}
+							if (firstProfile.getOptions().isUsingPingFactor() ||
+						    secondProfile.getOptions().isUsingPingFactor()) {
+								if (PlayerUtil.getPing(firstPlayer) >= PlayerUtil.getPing(secondPlayer)) {
+									if (PlayerUtil.getPing(firstPlayer) - PlayerUtil.getPing(secondPlayer) >= 50) {
+										continue;
+									}
+								} else {
+									if (PlayerUtil.getPing(secondPlayer) - PlayerUtil.getPing(firstPlayer) >= 50) {
+										continue;
+									}	                        }
+							}
 
                             if (queue.getType() == QueueType.RANKED) {
                                 if (!firstQueueProfile.isInRange(secondQueueProfile.getElo()) ||

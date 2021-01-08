@@ -333,7 +333,7 @@ public class Profile {
         this.options.setShowScoreboard(options.getBoolean("showScoreboard"));
         this.options.setAllowSpectators(options.getBoolean("allowSpectators"));
         this.options.setReceiveDuelRequests(options.getBoolean("receiveDuelRequests"));
-        this.options.setPrivateMessages(options.getBoolean("togglePM"));
+        this.options.setUsingPingFactor(options.getBoolean("usingPingFactor"));
         this.options.setLightning(options.getBoolean("toggleLightning"));
 
         Document kitStatistics = (Document) document.get("kitStatistics");
@@ -403,7 +403,7 @@ public class Profile {
         optionsDocument.put("showScoreboard", options.isShowScoreboard());
         optionsDocument.put("allowSpectators", options.isAllowSpectators());
         optionsDocument.put("receiveDuelRequests", options.isReceiveDuelRequests());
-        optionsDocument.put("togglePM", options.isPrivateMessages());
+        optionsDocument.put("usingPingFactor", options.isUsingPingFactor());
         optionsDocument.put("toggleLightning", options.isLightning());
         document.put("options", optionsDocument);
 
