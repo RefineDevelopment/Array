@@ -3,8 +3,8 @@
 #Local Host: URL:"mongodb://127.0.0.1:27017"
 #Hosting Services Like Clevercloud: URL:"mongodb://<username>:<password>@<host>:<port>/<database>"
 Mongo:
-  Database: "Practice"
-  URL: ""
+  Database: Array
+  URL: 
 ARRAY:
   SPAWN: world:0.5:101.0:0.5:181.29625:1.3300086
   
