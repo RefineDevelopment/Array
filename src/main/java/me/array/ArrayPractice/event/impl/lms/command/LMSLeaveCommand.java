@@ -12,7 +12,7 @@ public class LMSLeaveCommand {
 
     public void execute(Player player) {
         Profile profile = Profile.getByUuid(player.getUniqueId());
-        LMS activeLMS = Practice.get().getLMSManager().getActiveLMS();
+        LMS activeLMS = Practice.getInstance().getLMSManager().getActiveLMS();
 
         if (activeLMS == null) {
             player.sendMessage(CC.RED + "There isn't any active LMS Events.");
@@ -24,7 +24,7 @@ public class LMSLeaveCommand {
             return;
         }
 
-        Practice.get().getLMSManager().getActiveLMS().handleLeave(player);
+        Practice.getInstance().getLMSManager().getActiveLMS().handleLeave(player);
     }
 
 }

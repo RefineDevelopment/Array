@@ -1,0 +1,12 @@
+Array:
+  Colors:
+    Main: "&b"
+    Secondary: "&7"
+  Tab:
+    ElementsColor: "&b"
+    ValuesColor: "&f"
+    Header: "&bResolve Practice"
+    1.7_Header: "&b&lResolve &7\u239c &f&lBeta"
+    Footer: "&7store.resolve.rip"
+
+

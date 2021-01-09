@@ -14,7 +14,7 @@ public class SumoKnockbackCommand {
               player.sendMessage(CC.RED + "Please Specify a Knockback Profile.");
           }
           else {
-              Practice.get().getSumoManager().setSumoKnockbackProfile(kb);
+              Practice.getInstance().getSumoManager().setSumoKnockbackProfile(kb);
               player.sendMessage(CC.GREEN + "Successfully set the knockback profile!");
           }
     }

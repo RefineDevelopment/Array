@@ -10,11 +10,11 @@ import org.bukkit.entity.Player;
 public class SkyWarsSetSpawnCommand {
 
     public void execute(Player player) {
-        Practice.get().getSkyWarsManager().getSkyWarsSpectators().add(LocationUtil.serialize(player.getLocation()));
+        Practice.getInstance().getSkyWarsManager().getSkyWarsSpectators().add(LocationUtil.serialize(player.getLocation()));
 
         player.sendMessage(CC.GREEN + "Added skywars's spawn location.");
 
-        Practice.get().getSkyWarsManager().save();
+        Practice.getInstance().getSkyWarsManager().save();
     }
 
 }

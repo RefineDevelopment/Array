@@ -23,7 +23,7 @@ public class SkyWarsChest {
 
     public static Map<Location, SkyWarsChest> chests = new HashMap<>();
 
-    private static YamlConfiguration config = Practice.get().getChestsConfig().getConfiguration();
+    private static YamlConfiguration config = Practice.getInstance().getChestsConfig().getConfiguration();
 
     public SkyWarsChest(UUID uuid, Location location, ChestType type) {
         this.uuid = uuid;
@@ -36,7 +36,7 @@ public class SkyWarsChest {
     public void save() {
         config.set(uuid.toString(), location.getWorld().getName() + "@" + location.getX() + "@" + location.getY() + "@" + location.getZ() + "#" + type.name());
         try {
-            config.save(Practice.get().getChestsConfig().getFile());
+            config.save(Practice.getInstance().getChestsConfig().getFile());
         } catch (Exception ignored) {}
     }
 

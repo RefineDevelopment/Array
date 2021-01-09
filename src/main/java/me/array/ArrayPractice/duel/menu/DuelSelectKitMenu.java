@@ -86,12 +86,8 @@ public class DuelSelectKitMenu extends Menu {
 
                 // Force close inventory
                 player.closeInventory();
+                new DuelSelectArenaMenu("normal").openMenu(player);
 
-                if (player.hasPermission("practice.donator")) {
-                    new DuelSelectArenaMenu("normal").openMenu(player);
-                } else {
-                    profile.getDuelProcedure().send();
-                }
             } else if (type.equalsIgnoreCase("rematch")) {
                 if (profile.getRematchData() == null) {
                     player.sendMessage(CC.RED + "Could not find rematch data.");
@@ -109,12 +105,7 @@ public class DuelSelectKitMenu extends Menu {
 
                 // Force close inventory
                 player.closeInventory();
-
-                if (player.hasPermission("practice.donator")) {
-                    new DuelSelectArenaMenu("rematch").openMenu(player);
-                } else {
-                    profile.getRematchData().request();
-                }
+                new DuelSelectArenaMenu("normal").openMenu(player);
             }
         }
 

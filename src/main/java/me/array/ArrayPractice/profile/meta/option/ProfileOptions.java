@@ -19,5 +19,5 @@ public class ProfileOptions {
     private boolean lightning=true;
     @Getter
     @Setter
-    private boolean usingPingFactor=true;
+    private boolean usingPingFactor=false;
 }

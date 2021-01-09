@@ -298,7 +298,7 @@ public class InventoryUtil {
     }
 
     public static void removeCrafting(Material material) {
-        Iterator<Recipe> iterator = Practice.get().getServer().recipeIterator();
+        Iterator<Recipe> iterator = Practice.getInstance().getServer().recipeIterator();
 
         while (iterator.hasNext()) {
             Recipe recipe = iterator.next();

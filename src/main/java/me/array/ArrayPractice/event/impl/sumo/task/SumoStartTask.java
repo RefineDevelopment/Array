@@ -7,8 +7,8 @@ import me.array.ArrayPractice.event.impl.sumo.SumoTask;
 import me.array.ArrayPractice.util.external.Cooldown;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import rip.verse.jupiter.knockback.KnockbackModule;
-import rip.verse.jupiter.knockback.KnockbackProfile;
+import pt.foxspigot.jar.knockback.KnockbackModule;
+import pt.foxspigot.jar.knockback.KnockbackProfile;
 
 public class SumoStartTask extends SumoTask {
 
@@ -31,8 +31,8 @@ public class SumoStartTask extends SumoTask {
 		if (this.getSumo().getPlayers().size() == this.getSumo().getMaxPlayers() || (getTicks() >= 30 && this.getSumo().getPlayers().size() >= 2)) {
 			if (this.getSumo().getCooldown() == null) {
 				this.getSumo().setCooldown(new Cooldown(11_000));
-				this.getSumo().broadcastMessage("&eThe sumo event will start in &610 seconds&e...");
-				KnockbackProfile profile =KnockbackModule.INSTANCE.profiles.get(Practice.get().getSumoManager().getSumoKnockbackProfile());
+				this.getSumo().broadcastMessage("&fThe sumo event will start in &b10 seconds&f...");
+				KnockbackProfile profile =KnockbackModule.INSTANCE.profiles.get(Practice.getInstance().getSumoManager().getSumoKnockbackProfile());
 				Player player = (Player) this.getSumo().getPlayers();
 				((CraftPlayer)player).getHandle().setKnockback(profile);
 			} else {

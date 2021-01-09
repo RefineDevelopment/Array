@@ -12,7 +12,7 @@ public class BracketsLeaveCommand {
 
 	public void execute(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		Brackets activeBrackets = Practice.get().getBracketsManager().getActiveBrackets();
+		Brackets activeBrackets = Practice.getInstance().getBracketsManager().getActiveBrackets();
 
 		if (activeBrackets == null) {
 			player.sendMessage(CC.RED + "There isn't any active Brackets Events.");
@@ -24,7 +24,7 @@ public class BracketsLeaveCommand {
 			return;
 		}
 
-		Practice.get().getBracketsManager().getActiveBrackets().handleLeave(player);
+		Practice.getInstance().getBracketsManager().getActiveBrackets().handleLeave(player);
 	}
 
 }

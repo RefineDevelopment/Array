@@ -6,12 +6,14 @@ import me.array.ArrayPractice.arena.impl.SharedArena;
 import me.array.ArrayPractice.arena.impl.StandaloneArena;
 import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.util.KothPoint;
+import me.array.ArrayPractice.util.external.ItemBuilder;
 import me.array.ArrayPractice.util.external.LocationUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-
+import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -39,13 +41,16 @@ public class Arena {
     @Getter
     @Setter
     private List<String> kits = new ArrayList<>();
+    @Setter
+    public org.bukkit.inventory.ItemStack displayIcon;
 
     public Arena(String name) {
         this.name = name;
+        this.displayIcon = new ItemStack(Material.PAPER);
     }
 
     public static void init() {
-        FileConfiguration configuration = Practice.get().getArenasConfig().getConfiguration();
+        FileConfiguration configuration = Practice.getInstance().getArenasConfig().getConfiguration();
 
         if (configuration.contains("arenas")) {
             if (configuration.getConfigurationSection("arenas") == null) return;
@@ -65,6 +70,10 @@ public class Arena {
                 } else {
                     continue;
                 }
+
+                arena.setDisplayIcon(new ItemBuilder(Material.valueOf(configuration.getString(path + ".icon.material")))
+                        .durability(configuration.getInt(path + ".icon.durability"))
+                        .build());
 
                 if (configuration.contains(path + ".spawn1")) {
                     arena.setSpawn1(LocationUtil.deserialize(configuration.getString(path + ".spawn1")));
@@ -108,7 +117,7 @@ public class Arena {
             }
         }
 
-        Practice.get().getLogger().info("Loaded " + Arena.getArenas().size() + " arenas");
+        Practice.getInstance().getLogger().info("Loaded " + Arena.getArenas().size() + " arenas");
     }
 
     public static ArenaType getTypeByName(String name) {
@@ -129,6 +138,10 @@ public class Arena {
         }
 
         return null;
+    }
+
+    public ItemStack getDisplayIcon() {
+        return this.displayIcon.clone();
     }
 
     public static Arena getRandom(Kit kit) {

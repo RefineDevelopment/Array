@@ -7,7 +7,6 @@ import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.util.TaskUtil;
 import me.array.ArrayPractice.util.external.CC;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
@@ -19,7 +18,7 @@ public class HologramUtils {
 
     public HologramUtils(Location location) {
         this.holoLoc = location;
-        TaskUtil.runSync(() -> HologramUtils.this.hologram = HologramsAPI.createHologram(Practice.get(), holoLoc));
+        TaskUtil.runSync(() -> HologramUtils.this.hologram = HologramsAPI.createHologram(Practice.getInstance(), holoLoc));
 
 
         switchLadderHolo();

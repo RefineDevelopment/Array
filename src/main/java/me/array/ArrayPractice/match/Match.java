@@ -74,8 +74,8 @@ public abstract class Match {
     }
 
     public static void init() {
-        new MatchPearlCooldownTask().runTaskTimerAsynchronously(Practice.get(), 2L, 2L);
-        new MatchSnapshotCleanupTask().runTaskTimerAsynchronously(Practice.get(), 20L * 5, 20L * 5);
+        new MatchPearlCooldownTask().runTaskTimerAsynchronously(Practice.getInstance(), 2L, 2L);
+        new MatchSnapshotCleanupTask().runTaskTimerAsynchronously(Practice.getInstance(), 20L * 5, 20L * 5);
         new BukkitRunnable(){
             @Override
             public void run() {
@@ -84,7 +84,7 @@ public abstract class Match {
                     world.setThundering(false);
                 }
             }
-        }.runTaskTimer(Practice.get() , 20 , 20);
+        }.runTaskTimer(Practice.getInstance() , 20 , 20);
     }
 
     public static void cleanup() {
@@ -150,11 +150,11 @@ public abstract class Match {
 
         if (getKit() != null) {
             if (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isParkour() || getKit().getGameRules().isSumo()) {
-                matchWaterCheck = new MatchWaterCheckTask(this).runTaskTimer(Practice.get(), 60L, 20L);
+                matchWaterCheck = new MatchWaterCheckTask(this).runTaskTimer(Practice.getInstance(), 60L, 20L);
             }
         }
 
-        new MatchStartTask(this).runTaskTimer(Practice.get(), 20L, 20L);
+        new MatchStartTask(this).runTaskTimer(Practice.getInstance(), 20L, 20L);
         getPlayers().forEach(player -> player.sendMessage(CC.translate("&b● &fArena: &b" + arena.getName())));
         getPlayers().forEach(player -> player.sendMessage(CC.translate("&b● &fKit: &b" + kit.getName())));
         getPlayers().forEach(player -> player.sendMessage(CC.translate("")));
@@ -183,7 +183,7 @@ public abstract class Match {
                     }
 
                 }
-            }.runTaskTimerAsynchronously(Practice.get(), 0L, 5L);
+            }.runTaskTimerAsynchronously(Practice.getInstance(), 0L, 5L);
         }
         final MatchStartEvent event = new MatchStartEvent(this);
         Bukkit.getPluginManager().callEvent(event);
@@ -209,7 +209,7 @@ public abstract class Match {
         getSpectators().forEach(this::removeSpectator);
         entities.forEach(Entity::remove);
 
-        new MatchResetTask(this).runTask(Practice.get());
+        new MatchResetTask(this).runTask(Practice.getInstance());
 
         getArena().setActive(false);
 
@@ -218,8 +218,8 @@ public abstract class Match {
         final MatchEndEvent event = new MatchEndEvent(this);
         Bukkit.getPluginManager().callEvent(event);
 
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.get(), () -> getPlayers().forEach(player -> ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) 0)), 10L);
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.get(), () -> getPlayers().forEach(player -> ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) 0)), 20L);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.getInstance(), () -> getPlayers().forEach(player -> ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) 0)), 10L);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.getInstance(), () -> getPlayers().forEach(player -> ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) 0)), 20L);
     }
 
     public void handleRespawn(Player player) {
@@ -301,7 +301,7 @@ public abstract class Match {
                             Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer);
                         }
                     }
-                }.runTaskLaterAsynchronously(Practice.get(), 40L);
+                }.runTaskLaterAsynchronously(Practice.getInstance(), 40L);
             }
         } else {
             if (canEnd()) {
@@ -375,7 +375,7 @@ public abstract class Match {
         }
     
 
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.get(), () -> {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.getInstance(), () -> {
             if (this.isSoloMatch()) {
                 NameTags.color(player, target, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
                 NameTags.color(player, this.getOpponentPlayer(target), ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
@@ -416,7 +416,7 @@ public abstract class Match {
         profile.refreshHotbar();
         profile.handleVisibility();
 
-        Practice.get().getEssentials().teleportToSpawn(player);
+        Practice.getInstance().getEssentials().teleportToSpawn(player);
 
         player.spigot().setCollidesWithEntities(true);
 

@@ -49,10 +49,11 @@ public class Kit {
     public Kit(String name) {
         this.name = name;
         this.displayIcon = new ItemStack(Material.DIAMOND_SWORD);
+        this.knockbackProfile = "strafe";
     }
 
     public static void init() {
-        FileConfiguration config = Practice.get().getKitsConfig().getConfiguration();
+        FileConfiguration config = Practice.getInstance().getKitsConfig().getConfiguration();
 
         for (String key : config.getConfigurationSection("kits").getKeys(false)) {
             String path = "kits." + key;
@@ -142,7 +143,7 @@ public class Kit {
     public void save() {
         String path = "kits." + name;
 
-        BasicConfigurationFile configFile = Practice.get().getKitsConfig();
+        BasicConfigurationFile configFile = Practice.getInstance().getKitsConfig();
         configFile.getConfiguration().set(path + ".enabled", enabled);
         configFile.getConfiguration().set(path + ".knockback-profile", knockbackProfile);
         configFile.getConfiguration().set(path + ".icon.material", displayIcon.getType().name());

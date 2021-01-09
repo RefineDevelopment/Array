@@ -9,12 +9,12 @@ import org.bukkit.command.CommandSender;
 public class LMSCancelCommand {
 
     public void execute(CommandSender sender) {
-        if (Practice.get().getLMSManager().getActiveLMS() == null) {
+        if (Practice.getInstance().getLMSManager().getActiveLMS() == null) {
             sender.sendMessage(CC.RED + "There isn't an active LMS event.");
             return;
         }
 
-        Practice.get().getLMSManager().getActiveLMS().end();
+        Practice.getInstance().getLMSManager().getActiveLMS().end();
     }
 
 }

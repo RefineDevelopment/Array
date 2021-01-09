@@ -29,6 +29,7 @@ public class Tournament {
     public static BukkitRunnable RUNNABLE = null;
     public static Tournament CURRENT_TOURNAMENT = null;
 
+
     @Getter
     private final List<Party> participants = new ArrayList<Party>() {
         @Override
@@ -105,7 +106,7 @@ public class Tournament {
         if(participants.contains(party)) {
             for (Party partyparticipants : participants) {
                 for (Player player : partyparticipants.getPlayers()) {
-                    player.sendMessage(CC.AQUA + CC.BOLD + "[Tournament] " + CC.RED + CC.translate(Practice.get().getCoreHook().getPlayerPrefix(party.getLeader().getPlayer()) + party.getLeader().getPlayer().getName()) + CC.WHITE + " has left " + CC.GRAY + "(" + participants.size() + "/" + "50" + ")");
+                    player.sendMessage(CC.AQUA + CC.BOLD + "(Tournament) " + CC.RED + CC.translate(Practice.getInstance().getCoreHook().getPlayerPrefix(party.getLeader().getPlayer()) + party.getLeader().getPlayer().getName()) + CC.WHITE + " has left " + CC.GRAY + "(" + participants.size() + "/" + "50" + ")");
                 }
             }
             participants.remove(party);
@@ -118,7 +119,7 @@ public class Tournament {
             participants.add(party);
             for (Party partyparticipants : participants) {
                 for (Player player : partyparticipants.getPlayers()) {
-                    player.sendMessage(CC.AQUA + CC.BOLD + "[Tournament] " + CC.GREEN + CC.translate(Practice.get().getCoreHook().getPlayerPrefix(party.getLeader().getPlayer()) + party.getLeader().getPlayer().getName()) + CC.WHITE + " has joined " + CC.GRAY + "(" + participants.size() + "/" + "50" + ")");
+                    player.sendMessage(CC.AQUA + CC.BOLD + "(Tournament) " + CC.GREEN + CC.translate(Practice.getInstance().getCoreHook().getPlayerPrefix(party.getLeader().getPlayer()) + party.getLeader().getPlayer().getName()) + CC.WHITE + " has joined " + CC.GRAY + "(" + participants.size() + "/" + "50" + ")");
                 }
             }
         }
@@ -136,13 +137,13 @@ public class Tournament {
         if(participatingCount == 0){
             participatingCount = participants.size();
         }
-        Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "[Tournament] " + ChatColor.YELLOW + "Round " + (round++ + 1) + ChatColor.WHITE + " has started!.");
+        Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "(Tournament) " + ChatColor.GREEN + "Round " + (round++ + 1) + ChatColor.WHITE + " has started!.");
 
         Iterator<Party> iterator = participants.iterator();
         while (iterator.hasNext()){
             Party player = iterator.next();
             if(!iterator.hasNext()){
-                player.broadcast(CC.AQUA + CC.BOLD + "[Tournament] " + ChatColor.RED + "You do not have any player to fight! Please wait for the next round");
+                player.broadcast(CC.AQUA + CC.BOLD + "(Tournament) " + ChatColor.RED + "You do not have any player to fight! Please wait for the next round");
                 break;
             }
             Party other = iterator.next();
@@ -225,13 +226,13 @@ public class Tournament {
                 StringBuilder builder = new StringBuilder();
 
                 for (TeamPlayer matchPlayer : winningTeam.getTeamPlayers()) {
-                    builder.append(CC.translate(Practice.get().getCoreHook().getPlayerColor(matchPlayer.getPlayer())));
+                    builder.append(CC.translate(Practice.getInstance().getCoreHook().getPlayerColor(matchPlayer.getPlayer())));
 
                     builder.append("&7, ");
                 }
                 StringBuilder builders = new StringBuilder();
                 for (TeamPlayer matchPlayer : losingTeam.getTeamPlayers()) {
-                    builders.append(CC.translate(Practice.get().getCoreHook().getPlayerColor(matchPlayer.getPlayer())));
+                    builders.append(CC.translate(Practice.getInstance().getCoreHook().getPlayerColor(matchPlayer.getPlayer())));
                     builders.append("&7, ");
                 }
                 if (builders.length() > 0) {
@@ -241,11 +242,11 @@ public class Tournament {
                     builder.setLength(builder.length() - 2);
                 }
 
-                Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "[Tournament] " +  CC.RESET + CC.translate(builders.toString()) + ChatColor.WHITE + "has been eliminated. " + ChatColor.GRAY + "(" + participants.size() + "/" + participatingCount + ")");
+                Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "(Tournament) " +  CC.RESET + CC.translate(builders.toString()) + ChatColor.WHITE + " has been eliminated. " + ChatColor.GRAY + "(" + participants.size() + "/" + participatingCount + ")");
                 if (tournamentMatches.isEmpty()) {
                     if (participants.size() <= 1) {
                         Bukkit.broadcastMessage(CC.BLUE + CC.BOLD + "");
-                        Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "[Tournament] " + CC.RESET + CC.translate(builder.toString()) + ChatColor.YELLOW + "won the tournament");
+                        Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "(Tournament) " + CC.RESET + CC.translate(builder.toString()) + ChatColor.YELLOW + " won the tournament");
                         Bukkit.broadcastMessage(CC.BLUE + CC.BOLD + "");
                         if (participants.get(0) != null) {
                             if (getTeamCount() == 1) {
@@ -261,7 +262,7 @@ public class Tournament {
                             public void run() {
                                 tournamentstart();
                             }
-                        }.runTaskLater(Practice.get(), 100L);
+                        }.runTaskLater(Practice.getInstance(), 100L);
                     }
                 }
             }
@@ -293,13 +294,13 @@ public class Tournament {
                 StringBuilder builder = new StringBuilder();
 
                 for (TeamPlayer matchPlayer : winningTeam.getTeamPlayers()) {
-                    builder.append(CC.translate(Practice.get().getCoreHook().getPlayerColor(matchPlayer.getPlayer())));
+                    builder.append(CC.translate(Practice.getInstance().getCoreHook().getPlayerColor(matchPlayer.getPlayer())));
 
                     builder.append("&7, ");
                 }
                 StringBuilder builders = new StringBuilder();
                 for (TeamPlayer matchPlayer : losingTeam.getTeamPlayers()) {
-                    builders.append(CC.translate(Practice.get().getCoreHook().getPlayerColor(matchPlayer.getPlayer())));
+                    builders.append(CC.translate(Practice.getInstance().getCoreHook().getPlayerColor(matchPlayer.getPlayer())));
                     builders.append("&7, ");
                 }
                 if (builders.length() > 0) {
@@ -309,11 +310,11 @@ public class Tournament {
                     builder.setLength(builder.length() - 2);
                 }
 
-                Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "[Tournament] " +  CC.RESET + CC.translate(builders.toString()) + ChatColor.WHITE + "has been eliminated. " + ChatColor.GRAY + "(" + participants.size() + "/" + participatingCount + ")");
+                Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "(Tournament) " +  CC.RESET + CC.translate(builders.toString()) + ChatColor.RED + " has been eliminated. " + ChatColor.GRAY + "(" + participants.size() + "/" + participatingCount + ")");
                 if (tournamentMatches.isEmpty()) {
                     if (participants.size() <= 1) {
                         Bukkit.broadcastMessage(CC.BLUE + CC.BOLD + "");
-                        Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "[Tournament] " + CC.RESET + CC.translate(builder.toString()) + ChatColor.YELLOW + "won the tournament");
+                        Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "(Tournament) " + CC.RESET + CC.translate(builder.toString()) + ChatColor.GREEN + " won the tournament");
                         Bukkit.broadcastMessage(CC.BLUE + CC.BOLD + "");
                         if (participants.get(0) != null) {
                             if (getTeamCount() == 1) {
@@ -329,7 +330,7 @@ public class Tournament {
                             public void run() {
                                 tournamentstart();
                             }
-                        }.runTaskLater(Practice.get(), 100L);
+                        }.runTaskLater(Practice.getInstance(), 100L);
                     }
                 }
             }

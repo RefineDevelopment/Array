@@ -20,7 +20,7 @@ public class MatchStartTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        int seconds = 5 - ticks;
+        int seconds= 5 - ticks;
 
         if (match.isEnding()) {
             cancel();
@@ -28,6 +28,13 @@ public class MatchStartTask extends BukkitRunnable {
         }
 
         if (match.isHCFMatch() || match.isKoTHMatch()) {
+            if (seconds > 0) {
+                if (match.isTeamMatch() || match.isSumoTeamMatch() || match.isKoTHMatch() || match.isHCFMatch()) {
+                    match.broadcastMessage(CC.AQUA + CC.BOLD + "Match Found!");
+                    match.broadcastMessage("");
+                    match.broadcastMessage(("&b● &fTeams: &b" + match.getTeamA().getLeader().getDisplayName() + CC.GRAY + " vs " + CC.AQUA + match.getTeamB().getLeader().getDisplayName()));
+                }
+            }
             if (seconds == 0) {
                 match.setState(MatchState.FIGHTING);
                 match.setStartTimestamp(System.currentTimeMillis());
@@ -38,17 +45,11 @@ public class MatchStartTask extends BukkitRunnable {
                 cancel();
                 return;
             }
-            if (match.isTeamMatch()) {
-                match.broadcastMessage(CC.AQUA + CC.BOLD + "Match Found!");
-                match.broadcastMessage("");
-                match.broadcastMessage(("&b● &fTeams: &b" + match.getTeamA().getLeader().getDisplayName() + CC.GRAY + " vs " + CC.AQUA + match.getTeamB().getLeader().getDisplayName()));
-            }
-                match.broadcastMessage(CC.WHITE + "Starting in " + CC.AQUA + seconds + CC.WHITE + "...");
-                match.broadcastSound(Sound.NOTE_PLING);
-
+            match.broadcastMessage(CC.WHITE + "Starting in " + CC.AQUA + seconds + CC.WHITE +  "...");
+            match.broadcastSound(Sound.NOTE_PLING);
         } else {
             if (match.getKit().getGameRules().isSumo() || match.getKit().getGameRules().isParkour()) {
-                if (seconds == 0) {
+                if (seconds == 2) {
                     match.getPlayers().forEach(PlayerUtil::allowMovement);
                     match.setState(MatchState.FIGHTING);
                     match.setStartTimestamp(System.currentTimeMillis());
@@ -67,7 +68,6 @@ public class MatchStartTask extends BukkitRunnable {
                     cancel();
                     return;
                 }
-
                 match.broadcastMessage(CC.AQUA + (seconds - 2) + "...");
                 match.broadcastSound(Sound.NOTE_PLING);
             } else {

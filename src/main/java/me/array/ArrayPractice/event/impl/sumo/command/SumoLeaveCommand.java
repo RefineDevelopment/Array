@@ -12,7 +12,7 @@ public class SumoLeaveCommand {
 
 	public void execute(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		Sumo activeSumo = Practice.get().getSumoManager().getActiveSumo();
+		Sumo activeSumo = Practice.getInstance().getSumoManager().getActiveSumo();
 
 		if (activeSumo == null) {
 			player.sendMessage(CC.RED + "There isn't an active Sumo Event.");
@@ -24,7 +24,7 @@ public class SumoLeaveCommand {
 			return;
 		}
 
-		Practice.get().getSumoManager().getActiveSumo().handleLeave(player);
+		Practice.getInstance().getSumoManager().getActiveSumo().handleLeave(player);
 	}
 
 }

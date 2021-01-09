@@ -82,8 +82,7 @@ public class Tab implements ITablist {
                         }
                     }
                 }
-            }
-            else {
+            } else if (profile.isInTournament(player)) {
                 int added = 4;
                 elements.add(new TablistElement(CC.AQUA + CC.BOLD + "Tournament",23));
                 for (final Tournament.TournamentMatch match : Tournament.CURRENT_TOURNAMENT.getTournamentMatches()) {
@@ -99,7 +98,7 @@ public class Tab implements ITablist {
         else if (profile.isInFight()) {
             final Match match2 = profile.getMatch();
             if (match2 != null) {
-                if (match2.isSoloMatch()) {
+                if (match2.isSoloMatch() || match2.isSumoMatch()) {
                     final TeamPlayer opponent = match2.getOpponentTeamPlayer(player);
                     elements.add(new TablistElement("&aYou",4));
                     elements.add(new TablistElement(CC.AQUA + CC.BOLD + "Match Info",23));
@@ -109,7 +108,7 @@ public class Tab implements ITablist {
                     elements.add(new TablistElement(CC.WHITE + match2.getDuration(),25));
                     elements.add(new TablistElement(CC.WHITE + opponent.getUsername(),45));
                 }
-                else if (match2.isTeamMatch() || match2.isHCFMatch() || match2.isKoTHMatch()) {
+                else if (match2.isTeamMatch() || match2.isHCFMatch() || match2.isKoTHMatch() || match2.isSumoTeamMatch()) {
                     final Team team = match2.getTeam(player);
                     final Team opponentTeam = match2.getOpponentTeam(player);
                     if (team.getTeamPlayers().size() + opponentTeam.getTeamPlayers().size() <= 30) {
@@ -132,6 +131,12 @@ public class Tab implements ITablist {
                                 break;
                             }
                         }
+                    }
+                    if (match2.isSumoTeamMatch()) {
+                        elements.add(new TablistElement("&b&lPoints",27));
+                        elements.add(new TablistElement("&aTeam &8- &f" + team.getSumoRounds(),8));
+                        elements.add(new TablistElement("&cOpponents &8- &f" + opponentTeam.getSumoRounds(),28));
+
                     }
                 }
                 else if (match2.isFreeForAllMatch()) {

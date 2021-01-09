@@ -13,7 +13,7 @@ public class SumoJoinCommand {
 
 	public static void execute(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		Sumo activeSumo = Practice.get().getSumoManager().getActiveSumo();
+		Sumo activeSumo = Practice.getInstance().getSumoManager().getActiveSumo();
 
 		if (profile.isBusy(player) || profile.getParty() != null) {
 			player.sendMessage(CC.RED + "You cannot join the Sumo Event right now.");
@@ -30,7 +30,7 @@ public class SumoJoinCommand {
 			return;
 		}
 
-		Practice.get().getSumoManager().getActiveSumo().handleJoin(player);
+		Practice.getInstance().getSumoManager().getActiveSumo().handleJoin(player);
 	}
 
 }

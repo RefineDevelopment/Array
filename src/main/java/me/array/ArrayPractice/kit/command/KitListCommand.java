@@ -19,7 +19,7 @@ public class KitListCommand {
 				player.sendMessage(CC.translate("&7&oThere are no kits"));
 				player.sendMessage(CC.translate(""));
 			} else {
-				player.sendMessage(CC.translate("&7» &b" + kit.getName() + (kit.isEnabled() ? " &7[&aEnabled&7]" : " &7[&cDisabled&7]")));
+				player.sendMessage(CC.translate("&7» &b" + kit.getName() + (kit.isEnabled() ? " &7[&aEnabled&7] " : " &7[&cDisabled&7] ") + (kit.getGameRules().isRanked() ? "&7[&aRanked]" : "&7[&eNot-Ranked]")));
 			}
 		}
 		player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");

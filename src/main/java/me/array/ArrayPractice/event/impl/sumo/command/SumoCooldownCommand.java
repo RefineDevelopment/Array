@@ -10,14 +10,14 @@ import org.bukkit.command.CommandSender;
 public class SumoCooldownCommand {
 
 	public void execute(CommandSender sender) {
-		if (Practice.get().getSumoManager().getCooldown().hasExpired()) {
+		if (Practice.getInstance().getSumoManager().getCooldown().hasExpired()) {
 			sender.sendMessage(CC.RED + "There isn't any cooldown for the Sumo Event.");
 			return;
 		}
 
 		sender.sendMessage(CC.GREEN + "You reset the Sumo Event cooldown.");
 
-		Practice.get().getSumoManager().setCooldown(new Cooldown(0));
+		Practice.getInstance().getSumoManager().setCooldown(new Cooldown(0));
 	}
 
 }

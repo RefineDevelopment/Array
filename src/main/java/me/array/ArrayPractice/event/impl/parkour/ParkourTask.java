@@ -18,8 +18,8 @@ public abstract class ParkourTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		if (Practice.get().getParkourManager().getActiveParkour() == null ||
-		    !Practice.get().getParkourManager().getActiveParkour().equals(parkour) || parkour.getState() != eventState) {
+		if (Practice.getInstance().getParkourManager().getActiveParkour() == null ||
+		    !Practice.getInstance().getParkourManager().getActiveParkour().equals(parkour) || parkour.getState() != eventState) {
 			cancel();
 			return;
 		}

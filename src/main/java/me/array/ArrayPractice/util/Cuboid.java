@@ -501,7 +501,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
     /**
      * Get the Cuboid representing the face of this Cuboid.  The resulting Cuboid will be one block thick in the axis perpendicular to the requested face.
      *
-     * @param dir - which face of the Cuboid to get
+     * @param dir - which face of the Cuboid to getInstance
      * @return The Cuboid representing this Cuboid's requested face
      */
     public Cuboid getFace(CuboidDirection dir) {

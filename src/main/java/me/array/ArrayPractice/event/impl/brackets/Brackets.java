@@ -24,8 +24,8 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import rip.verse.jupiter.knockback.KnockbackModule;
-import rip.verse.jupiter.knockback.KnockbackProfile;
+import pt.foxspigot.jar.knockback.KnockbackModule;
+import pt.foxspigot.jar.knockback.KnockbackProfile;
 
 import java.util.*;
 
@@ -67,7 +67,7 @@ public class Brackets {
 	public List<String> getLore() {
 		List<String> toReturn = new ArrayList<>();
 
-		Brackets brackets = Practice.get().getBracketsManager().getActiveBrackets();
+		Brackets brackets = Practice.getInstance().getBracketsManager().getActiveBrackets();
 
 		toReturn.add(CC.MENU_BAR);
 		toReturn.add(CC.translate("&bHost: &r" + brackets.getName()));
@@ -109,7 +109,7 @@ public class Brackets {
 		eventTask = task;
 
 		if (eventTask != null) {
-			eventTask.runTaskTimer(Practice.get(), 0L, 20L);
+			eventTask.runTaskTimer(Practice.getInstance(), 0L, 20L);
 		}
 	}
 
@@ -166,7 +166,7 @@ public class Brackets {
 		profile.setState(ProfileState.IN_EVENT);
 		profile.refreshHotbar();
 
-		player.teleport(Practice.get().getBracketsManager().getBracketsSpectator());
+		player.teleport(Practice.getInstance().getBracketsManager().getBracketsSpectator());
 
 		new BukkitRunnable() {
 			@Override
@@ -177,7 +177,7 @@ public class Brackets {
 					profile.handleVisibility(player, otherPlayer);
 				}
 			}
-		}.runTaskAsynchronously(Practice.get());
+		}.runTaskAsynchronously(Practice.getInstance());
 	}
 
 	public void handleLeave(Player player) {
@@ -199,7 +199,7 @@ public class Brackets {
 		profile.setBrackets(null);
 		profile.refreshHotbar();
 
-		Practice.get().getEssentials().teleportToSpawn(player);
+		Practice.getInstance().getEssentials().teleportToSpawn(player);
 
 		new BukkitRunnable() {
 			@Override
@@ -210,7 +210,7 @@ public class Brackets {
 					profile.handleVisibility(player, otherPlayer);
 				}
 			}
-		}.runTaskAsynchronously(Practice.get());
+		}.runTaskAsynchronously(Practice.getInstance());
 	}
 
 	protected List<Player> getSpectatorsList() {
@@ -225,8 +225,8 @@ public class Brackets {
 	}
 
 	public void end() {
-		Practice.get().getBracketsManager().setActiveBrackets(null);
-		Practice.get().getBracketsManager().setCooldown(new Cooldown(60_000L * 10));
+		Practice.getInstance().getBracketsManager().setActiveBrackets(null);
+		Practice.getInstance().getBracketsManager().setCooldown(new Cooldown(60_000L * 10));
 
 		setEventTask(null);
 
@@ -247,7 +247,7 @@ public class Brackets {
 				profile.setBrackets(null);
 				profile.refreshHotbar();
 
-				Practice.get().getEssentials().teleportToSpawn(player);
+				Practice.getInstance().getEssentials().teleportToSpawn(player);
 			}
 		}
 
@@ -308,7 +308,7 @@ public class Brackets {
 		((CraftPlayer)player).getHandle().setKnockback(profile);
 	}
 	public void onLeave(Player player) {
-		KnockbackProfile profile = KnockbackModule.INSTANCE.profiles.get("Practice");
+		KnockbackProfile profile = KnockbackModule.INSTANCE.profiles.get("strafe");
 		((CraftPlayer)player).getHandle().setKnockback(profile);
 	}
 
@@ -319,7 +319,7 @@ public class Brackets {
 			Player player = roundPlayerA.getPlayer();
 
 			if (player != null) {
-				player.teleport(Practice.get().getBracketsManager().getBracketsSpectator());
+				player.teleport(Practice.getInstance().getBracketsManager().getBracketsSpectator());
 
 				Profile profile = Profile.getByUuid(player.getUniqueId());
 
@@ -335,7 +335,7 @@ public class Brackets {
 			Player player = roundPlayerB.getPlayer();
 
 			if (player != null) {
-				player.teleport(Practice.get().getBracketsManager().getBracketsSpectator());
+				player.teleport(Practice.getInstance().getBracketsManager().getBracketsSpectator());
 
 				Profile profile = Profile.getByUuid(player.getUniqueId());
 
@@ -359,10 +359,10 @@ public class Brackets {
 		PlayerUtil.denyMovement(playerA);
 		PlayerUtil.denyMovement(playerB);
 
-		playerA.teleport(Practice.get().getBracketsManager().getBracketsSpawn1());
+		playerA.teleport(Practice.getInstance().getBracketsManager().getBracketsSpawn1());
 
 		Profile.getByUuid(playerA.getUniqueId()).getKitData().get(getKit()).getKitItems().forEach((integer, itemStack) -> playerA.getInventory().setItem(integer, itemStack));
-		playerB.teleport(Practice.get().getBracketsManager().getBracketsSpawn2());
+		playerB.teleport(Practice.getInstance().getBracketsManager().getBracketsSpawn2());
 		Profile.getByUuid(playerB.getUniqueId()).getKitData().get(getKit()).getKitItems().forEach((integer, itemStack) -> playerB.getInventory().setItem(integer, itemStack));
 		setEventTask(new BracketsRoundStartTask(this));
 	}
@@ -430,7 +430,7 @@ public class Brackets {
 		profile.handleVisibility();
 		player.setFlying(true);
 
-		player.teleport(Practice.get().getBracketsManager().getBracketsSpawn1());
+		player.teleport(Practice.getInstance().getBracketsManager().getBracketsSpawn1());
 	}
 
 	public void removeSpectator(Player player) {
@@ -442,6 +442,6 @@ public class Brackets {
 		profile.refreshHotbar();
 		profile.handleVisibility();
 
-		Practice.get().getEssentials().teleportToSpawn(player);
+		Practice.getInstance().getEssentials().teleportToSpawn(player);
 	}
 }

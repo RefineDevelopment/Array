@@ -39,7 +39,7 @@ public class BracketsManager {
 	}
 
 	public void load() {
-		FileConfiguration configuration = Practice.get().getEventsConfig().getConfiguration();
+		FileConfiguration configuration = Practice.getInstance().getEventsConfig().getConfiguration();
 
 		if (configuration.contains("events.brackets.spectator")) {
 			bracketsSpectator = LocationUtil.deserialize(configuration.getString("events.brackets.spectator"));
@@ -59,7 +59,7 @@ public class BracketsManager {
 	}
 
 	public void save() {
-		FileConfiguration configuration = Practice.get().getEventsConfig().getConfiguration();
+		FileConfiguration configuration = Practice.getInstance().getEventsConfig().getConfiguration();
 
 		if (bracketsSpectator != null) {
 			configuration.set("events.brackets.spectator", LocationUtil.serialize(bracketsSpectator));
@@ -78,7 +78,7 @@ public class BracketsManager {
 		}
 
 		try {
-			configuration.save(Practice.get().getEventsConfig().getFile());
+			configuration.save(Practice.getInstance().getEventsConfig().getFile());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

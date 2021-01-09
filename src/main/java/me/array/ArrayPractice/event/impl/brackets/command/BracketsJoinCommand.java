@@ -13,7 +13,7 @@ public class BracketsJoinCommand {
 
 	public static void execute(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		Brackets activeBrackets = Practice.get().getBracketsManager().getActiveBrackets();
+		Brackets activeBrackets = Practice.getInstance().getBracketsManager().getActiveBrackets();
 
 		if (profile.isBusy(player) || profile.getParty() != null) {
 			player.sendMessage(CC.RED + "You cannot join the brackets right now.");
@@ -30,7 +30,7 @@ public class BracketsJoinCommand {
 			return;
 		}
 
-		Practice.get().getBracketsManager().getActiveBrackets().handleJoin(player);
+		Practice.getInstance().getBracketsManager().getActiveBrackets().handleJoin(player);
 	}
 
 }

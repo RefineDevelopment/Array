@@ -14,16 +14,16 @@ public class BracketsSetSpawnCommand {
 			player.sendMessage(CC.RED + "The position must be one/two/spec.");
 		} else {
 			if (position.equals("one")) {
-				Practice.get().getBracketsManager().setBracketsSpawn1(player.getLocation());
+				Practice.getInstance().getBracketsManager().setBracketsSpawn1(player.getLocation());
 			} else if (position.equals("two")){
-				Practice.get().getBracketsManager().setBracketsSpawn2(player.getLocation());
+				Practice.getInstance().getBracketsManager().setBracketsSpawn2(player.getLocation());
 			} else {
-				Practice.get().getBracketsManager().setBracketsSpectator(player.getLocation());
+				Practice.getInstance().getBracketsManager().setBracketsSpectator(player.getLocation());
 			}
 
 			player.sendMessage(CC.GREEN + "Updated brackets's spawn location " + position + ".");
 
-			Practice.get().getBracketsManager().save();
+			Practice.getInstance().getBracketsManager().save();
 		}
 	}
 

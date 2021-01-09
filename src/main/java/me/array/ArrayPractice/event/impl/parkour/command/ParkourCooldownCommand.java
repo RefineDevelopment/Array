@@ -10,14 +10,14 @@ import org.bukkit.command.CommandSender;
 public class ParkourCooldownCommand {
 
 	public void execute(CommandSender sender) {
-		if (Practice.get().getParkourManager().getCooldown().hasExpired()) {
+		if (Practice.getInstance().getParkourManager().getCooldown().hasExpired()) {
 			sender.sendMessage(CC.RED + "There isn't a Parkour Event cooldown.");
 			return;
 		}
 
 		sender.sendMessage(CC.GREEN + "You reset the Parkour Event cooldown.");
 
-		Practice.get().getParkourManager().setCooldown(new Cooldown(0));
+		Practice.getInstance().getParkourManager().setCooldown(new Cooldown(0));
 	}
 
 }

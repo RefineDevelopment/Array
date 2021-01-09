@@ -20,8 +20,8 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import rip.verse.jupiter.knockback.KnockbackModule;
-import rip.verse.jupiter.knockback.KnockbackProfile;
+import pt.foxspigot.jar.knockback.KnockbackModule;
+import pt.foxspigot.jar.knockback.KnockbackProfile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +98,7 @@ public class FFAMatch extends Match {
             KnockbackProfile kbprofile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
             ((CraftPlayer) player).getHandle().setKnockback(kbprofile);
         } else {
-            KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get("Practice");
+            KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get("strafe");
             ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
         }
 
@@ -174,15 +174,15 @@ public class FFAMatch extends Match {
                             profile.setMatch(null);
                             profile.refreshHotbar();
                             profile.handleVisibility();
-                            KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get("Practice");
+                            KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get("strafe");
                             ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
 
-                            Practice.get().getEssentials().teleportToSpawn(player);
+                            Practice.getInstance().getEssentials().teleportToSpawn(player);
                         }
                     }
                 }
             }
-        }.runTaskLater(Practice.get(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
+        }.runTaskLater(Practice.getInstance(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
 
         Player winningTeam = getWinningPlayer();
 
@@ -267,22 +267,22 @@ public class FFAMatch extends Match {
 
     @Override
     public Team getWinningTeam() {
-        throw new UnsupportedOperationException("Cannot get winning team from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance winning team from a Juggernaut match");
     }
 
     @Override
     public TeamPlayer getTeamPlayerA() {
-        throw new UnsupportedOperationException("Cannot get team player from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance team player from a Juggernaut match");
     }
 
     @Override
     public TeamPlayer getTeamPlayerB() {
-        throw new UnsupportedOperationException("Cannot get team player from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance team player from a Juggernaut match");
     }
 
     @Override
     public List<TeamPlayer> getTeamPlayers() {
-        throw new UnsupportedOperationException("Cannot get team player from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance team player from a Juggernaut match");
     }
 
     @Override
@@ -302,12 +302,12 @@ public class FFAMatch extends Match {
 
     @Override
     public Team getTeamA() {
-        throw new UnsupportedOperationException("Cannot get team from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance team from a Juggernaut match");
     }
 
     @Override
     public Team getTeamB() {
-        throw new UnsupportedOperationException("Cannot get team from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance team from a Juggernaut match");
     }
 
     @Override
@@ -328,22 +328,22 @@ public class FFAMatch extends Match {
 
     @Override
     public Team getOpponentTeam(Team team) {
-        throw new UnsupportedOperationException("Cannot get opponent team from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance opponent team from a Juggernaut match");
     }
 
     @Override
     public Team getOpponentTeam(Player player) {
-        throw new UnsupportedOperationException("Cannot get opponent team from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance opponent team from a Juggernaut match");
     }
 
     @Override
     public Player getOpponentPlayer(Player player) {
-        throw new IllegalStateException("Cannot get opponent player in Juggernaut match");
+        throw new IllegalStateException("Cannot getInstance opponent player in Juggernaut match");
     }
 
     @Override
     public TeamPlayer getOpponentTeamPlayer(Player player) {
-        throw new UnsupportedOperationException("Cannot get opponent team from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance opponent team from a Juggernaut match");
     }
 
     @Override

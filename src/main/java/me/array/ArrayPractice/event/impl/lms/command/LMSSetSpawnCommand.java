@@ -9,11 +9,11 @@ import org.bukkit.entity.Player;
 public class LMSSetSpawnCommand {
 
     public void execute(Player player) {
-        Practice.get().getLMSManager().setLmsSpectator(player.getLocation());
+        Practice.getInstance().getLMSManager().setLmsSpectator(player.getLocation());
 
         player.sendMessage(CC.GREEN + "Updated lms's spawn location.");
 
-        Practice.get().getLMSManager().save();
+        Practice.getInstance().getLMSManager().save();
     }
 
 }

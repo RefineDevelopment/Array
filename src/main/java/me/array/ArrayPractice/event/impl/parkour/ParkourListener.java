@@ -31,7 +31,7 @@ public class ParkourListener implements Listener {
 						if (profile.getParkour().getEventPlayer(player).getLastLocation() != null) {
 							player.teleport(profile.getParkour().getEventPlayer(player).getLastLocation());
 						} else {
-							player.teleport(Practice.get().getParkourManager().getParkourSpawn());
+							player.teleport(Practice.getInstance().getParkourManager().getParkourSpawn());
 						}
 					}
 				}

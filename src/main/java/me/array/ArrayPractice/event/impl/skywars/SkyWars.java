@@ -23,8 +23,8 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
-import rip.verse.jupiter.knockback.KnockbackModule;
-import rip.verse.jupiter.knockback.KnockbackProfile;
+import pt.foxspigot.jar.knockback.KnockbackModule;
+import pt.foxspigot.jar.knockback.KnockbackProfile;
 
 import java.util.*;
 
@@ -57,7 +57,7 @@ public class SkyWars {
     public SkyWars(Player player) {
         this.name = player.getName();
         this.host = new PlayerSnapshot(player.getUniqueId(), player.getName());
-        this.maxPlayers = Practice.get().getSkyWarsManager().getSkyWarsSpectators().size();
+        this.maxPlayers = Practice.getInstance().getSkyWarsManager().getSkyWarsSpectators().size();
 
         for (SkyWarsChest chest : SkyWarsChest.chests.values()) {
             Inventory cInv = chest.getBlock().getInventory();
@@ -70,7 +70,7 @@ public class SkyWars {
     public List<String> getLore() {
         List<String> toReturn = new ArrayList<>();
 
-        SkyWars skyWars = Practice.get().getSkyWarsManager().getActiveSkyWars();
+        SkyWars skyWars = Practice.getInstance().getSkyWarsManager().getActiveSkyWars();
 
         toReturn.add(CC.MENU_BAR);
         toReturn.add(CC.translate("&bHost: &r" + skyWars.getName()));
@@ -107,7 +107,7 @@ public class SkyWars {
         eventTask = task;
 
         if (eventTask != null) {
-            eventTask.runTaskTimer(Practice.get(), 0L, 20L);
+            eventTask.runTaskTimer(Practice.getInstance(), 0L, 20L);
         }
     }
 
@@ -176,7 +176,7 @@ public class SkyWars {
         profile.setState(ProfileState.IN_EVENT);
         profile.refreshHotbar();
 
-        player.teleport(LocationUtil.deserialize(Practice.get().getSkyWarsManager().getSkyWarsSpectators().get(0)));
+        player.teleport(LocationUtil.deserialize(Practice.getInstance().getSkyWarsManager().getSkyWarsSpectators().get(0)));
 
         new BukkitRunnable() {
             @Override
@@ -187,7 +187,7 @@ public class SkyWars {
                     profile.handleVisibility(player, otherPlayer);
                 }
             }
-        }.runTaskAsynchronously(Practice.get());
+        }.runTaskAsynchronously(Practice.getInstance());
     }
 
     public void handleLeave(Player player) {
@@ -211,7 +211,7 @@ public class SkyWars {
         profile.setSkyWars(null);
         profile.refreshHotbar();
 
-        Practice.get().getEssentials().teleportToSpawn(player);
+        Practice.getInstance().getEssentials().teleportToSpawn(player);
 
         new BukkitRunnable() {
             @Override
@@ -222,7 +222,7 @@ public class SkyWars {
                     profile.handleVisibility(player, otherPlayer);
                 }
             }
-        }.runTaskAsynchronously(Practice.get());
+        }.runTaskAsynchronously(Practice.getInstance());
     }
 
     protected List<Player> getSpectatorsList() {
@@ -237,12 +237,12 @@ public class SkyWars {
     }
 
     public void end() {
-        Practice.get().getSkyWarsManager().setActiveSkyWars(null);
-        Practice.get().getSkyWarsManager().setCooldown(new Cooldown(60_000L * 10));
+        Practice.getInstance().getSkyWarsManager().setActiveSkyWars(null);
+        Practice.getInstance().getSkyWarsManager().setCooldown(new Cooldown(60_000L * 10));
 
         setEventTask(null);
 
-        new SkyWarsResetTask(this).runTask(Practice.get());
+        new SkyWarsResetTask(this).runTask(Practice.getInstance());
 
         Player winner = this.getWinner();
 
@@ -265,7 +265,7 @@ public class SkyWars {
                 profile.setSkyWars(null);
                 profile.refreshHotbar();
 
-                Practice.get().getEssentials().teleportToSpawn(player);
+                Practice.getInstance().getEssentials().teleportToSpawn(player);
             }
         }
 
@@ -322,11 +322,11 @@ public class SkyWars {
     }
 
     public void onJoin(Player player) {
-        KnockbackProfile profile = KnockbackModule.INSTANCE.profiles.get("Practice");
+        KnockbackProfile profile = KnockbackModule.INSTANCE.profiles.get("strafe");
         ((CraftPlayer)player).getHandle().setKnockback(profile);
     }
     public void onLeave(Player player) {
-        KnockbackProfile profile = KnockbackModule.INSTANCE.profiles.get("Practice");
+        KnockbackProfile profile = KnockbackModule.INSTANCE.profiles.get("strafe");
         ((CraftPlayer)player).getHandle().setKnockback(profile);
     }
 
@@ -336,7 +336,7 @@ public class SkyWars {
         int i = 0;
         for (Player player : this.getRemainingPlayers()) {
             if (player != null) {
-                player.teleport(LocationUtil.deserialize(Practice.get().getSkyWarsManager().getSkyWarsSpectators().get(i)));
+                player.teleport(LocationUtil.deserialize(Practice.getInstance().getSkyWarsManager().getSkyWarsSpectators().get(i)));
                 i++;
 
                 Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -372,14 +372,14 @@ public class SkyWars {
                     profile.handleVisibility(player, otherPlayer);
                 }
             }
-        }.runTaskAsynchronously(Practice.get());
+        }.runTaskAsynchronously(Practice.getInstance());
 
         new BukkitRunnable() {
             @Override
             public void run() {
                 profile.refreshHotbar();
             }
-        }.runTask(Practice.get());
+        }.runTask(Practice.getInstance());
     }
 
     public String getRoundDuration() {
@@ -402,7 +402,7 @@ public class SkyWars {
         profile.refreshHotbar();
         profile.handleVisibility();
 
-        player.teleport(LocationUtil.deserialize(Practice.get().getSkyWarsManager().getSkyWarsSpectators().get(0)));
+        player.teleport(LocationUtil.deserialize(Practice.getInstance().getSkyWarsManager().getSkyWarsSpectators().get(0)));
     }
 
     public void removeSpectator(Player player) {
@@ -415,6 +415,6 @@ public class SkyWars {
         profile.refreshHotbar();
         profile.handleVisibility();
 
-        Practice.get().getEssentials().teleportToSpawn(player);
+        Practice.getInstance().getEssentials().teleportToSpawn(player);
     }
 }

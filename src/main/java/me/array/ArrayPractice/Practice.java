@@ -6,6 +6,7 @@ import com.bizarrealex.aether.AetherOptions;
 import com.mongodb.*;
 import com.mongodb.client.MongoDatabase;
 import com.qrakn.honcho.Honcho;
+import com.qrakn.phoenix.lang.file.language.LanguageConfigurationFile;
 import com.qrakn.phoenix.lang.file.type.BasicConfigurationFile;
 import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.arena.ArenaType;
@@ -77,6 +78,7 @@ import me.array.ArrayPractice.party.command.*;
 import me.array.ArrayPractice.profile.command.*;
 import me.array.ArrayPractice.profile.command.staff.*;
 import me.array.ArrayPractice.tournament.command.*;
+import org.apache.commons.codec.language.bm.Lang;
 import org.bukkit.Difficulty;
 import org.bukkit.Material;
 import org.bukkit.event.Listener;
@@ -99,7 +101,7 @@ public class Practice extends JavaPlugin {
     @Getter
     private BasicConfigurationFile chestsConfig;
     @Getter
-    private BasicConfigurationFile lanuageConfig;
+    private LanguageConfigurationFile lanuageConfig;
 
     @Getter
     private MongoDatabase mongoDatabase;
@@ -138,7 +140,7 @@ public class Practice extends JavaPlugin {
     @Getter
     private EntityHider entityHider;
 
-    public static Practice get() {
+    public static Practice getInstance() {
         return Practice;
     }
 
@@ -153,7 +155,7 @@ public class Practice extends JavaPlugin {
         kitsConfig = new BasicConfigurationFile(this, "kits");
         eventsConfig = new BasicConfigurationFile(this, "events");
         chestsConfig = new BasicConfigurationFile(this, "chests");
-        lanuageConfig = new BasicConfigurationFile(this, "lang");
+        lanuageConfig = new LanguageConfigurationFile(this, "lang");
 
         loadMongo();
 
@@ -210,6 +212,7 @@ public class Practice extends JavaPlugin {
                 new ArenaCommand(),
                 new ArenasCommand(),
                 new ArenaSaveCommand(),
+                new ArenaSetIconCommand(),
 
                 //Duel commands
                 new DuelCommand(),
@@ -243,6 +246,8 @@ public class Practice extends JavaPlugin {
                 new KitCommand(),
                 new KitSaveCommand(),
                 new KitRemoveCommand(),
+                new KitSetIconCommand(),
+                new KitSetRankedCommand(),
 
                 //Brackets command
                 new BracketsLeaveCommand(),
@@ -364,8 +369,9 @@ public class Practice extends JavaPlugin {
         )) {
             getServer().getPluginManager().registerEvents(listener, this);
         }
-
+    if (mainConfig.getBoolean("ARRAY.TAB_ENABLED") == true) {
         new OutlastTab(this, new Tab());
+    }
 
         new Aether(this, new Scoreboard());
         new AetherOptions().hook(true);

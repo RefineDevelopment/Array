@@ -44,7 +44,7 @@ public class SkyWarsManager {
     }
 
     public void load() {
-        FileConfiguration configuration = Practice.get().getEventsConfig().getConfiguration();
+        FileConfiguration configuration = Practice.getInstance().getEventsConfig().getConfiguration();
 
         if (configuration.contains("events.skywars.spectator")) {
             for (String loc : configuration.getStringList("events.skywars.spectator")) {
@@ -58,7 +58,7 @@ public class SkyWarsManager {
     }
 
     public void save() {
-        FileConfiguration configuration = Practice.get().getEventsConfig().getConfiguration();
+        FileConfiguration configuration = Practice.getInstance().getEventsConfig().getConfiguration();
 
         if (!skyWarsSpectators.isEmpty()) {
             configuration.set("events.skywars.spectator", this.skyWarsSpectators);
@@ -69,7 +69,7 @@ public class SkyWarsManager {
         }
 
         try {
-            configuration.save(Practice.get().getEventsConfig().getFile());
+            configuration.save(Practice.getInstance().getEventsConfig().getFile());
         } catch (IOException e) {
             e.printStackTrace();
         }

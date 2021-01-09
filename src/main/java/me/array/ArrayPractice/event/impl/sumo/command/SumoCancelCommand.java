@@ -9,12 +9,12 @@ import org.bukkit.command.CommandSender;
 public class SumoCancelCommand {
 
 	public void execute(CommandSender sender) {
-		if (Practice.get().getSumoManager().getActiveSumo() == null) {
+		if (Practice.getInstance().getSumoManager().getActiveSumo() == null) {
 			sender.sendMessage(CC.RED + "There isn't an active Sumo Event.");
 			return;
 		}
 
-		Practice.get().getSumoManager().getActiveSumo().end();
+		Practice.getInstance().getSumoManager().getActiveSumo().end();
 	}
 
 }

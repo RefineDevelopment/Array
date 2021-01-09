@@ -15,7 +15,7 @@ public class RemoveProfileCommand {
             player.sendMessage(ChatColor.RED + "That name is not valid");
         }
         try {
-            Practice.get().getMongoDatabase().getCollection("profiles").deleteOne(new Document("name", name));
+            Practice.getInstance().getMongoDatabase().getCollection("profiles").deleteOne(new Document("name", name));
         } catch (Exception e) {
             e.printStackTrace();
         }

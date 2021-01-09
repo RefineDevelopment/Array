@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public class BracketsTpCommand {
 
 	public void execute(Player player) {
-		player.teleport(Practice.get().getBracketsManager().getBracketsSpectator());
+		player.teleport(Practice.getInstance().getBracketsManager().getBracketsSpectator());
 		player.sendMessage(CC.GREEN + "Teleported to brackets's spawn location.");
 	}
 

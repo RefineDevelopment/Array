@@ -13,7 +13,7 @@ public class LMSJoinCommand {
 
     public static void execute(Player player) {
         Profile profile = Profile.getByUuid(player.getUniqueId());
-        LMS activeLMS = Practice.get().getLMSManager().getActiveLMS();
+        LMS activeLMS = Practice.getInstance().getLMSManager().getActiveLMS();
 
         if (profile.isBusy(player) || profile.getParty() != null) {
             player.sendMessage(CC.RED + "You cannot join the lms right now.");
@@ -30,7 +30,7 @@ public class LMSJoinCommand {
             return;
         }
 
-        Practice.get().getLMSManager().getActiveLMS().handleJoin(player);
+        Practice.getInstance().getLMSManager().getActiveLMS().handleJoin(player);
     }
 
 }

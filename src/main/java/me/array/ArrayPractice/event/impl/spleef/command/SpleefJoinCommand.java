@@ -13,7 +13,7 @@ public class SpleefJoinCommand {
 
 	public static void execute(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		Spleef activeSpleef = Practice.get().getSpleefManager().getActiveSpleef();
+		Spleef activeSpleef = Practice.getInstance().getSpleefManager().getActiveSpleef();
 
 		if (profile.isBusy(player) || profile.getParty() != null) {
 			player.sendMessage(CC.RED + "You cannot join the spleef right now.");
@@ -30,7 +30,7 @@ public class SpleefJoinCommand {
 			return;
 		}
 
-		Practice.get().getSpleefManager().getActiveSpleef().handleJoin(player);
+		Practice.getInstance().getSpleefManager().getActiveSpleef().handleJoin(player);
 	}
 
 }

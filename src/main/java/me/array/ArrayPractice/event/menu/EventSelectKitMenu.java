@@ -55,19 +55,19 @@ public class EventSelectKitMenu extends Menu {
         @Override
         public void clicked(Player player, ClickType clickType) {
             if (event.equals("Brackets")) {
-                if (Practice.get().getBracketsManager().getActiveBrackets() != null) {
+                if (Practice.getInstance().getBracketsManager().getActiveBrackets() != null) {
                     player.sendMessage(CC.RED + "There is already an active Brackets Event.");
                     return;
                 }
 
-                if (!Practice.get().getBracketsManager().getCooldown().hasExpired()) {
+                if (!Practice.getInstance().getBracketsManager().getCooldown().hasExpired()) {
                     player.sendMessage(CC.RED + "There is an active cooldown for the Brackets Event.");
                     return;
                 }
 
-                Practice.get().getBracketsManager().setActiveBrackets(new Brackets(player, kit));
+                Practice.getInstance().getBracketsManager().setActiveBrackets(new Brackets(player, kit));
 
-                for (Player other : Practice.get().getServer().getOnlinePlayers()) {
+                for (Player other : Practice.getInstance().getServer().getOnlinePlayers()) {
                     Profile profile = Profile.getByUuid(other.getUniqueId());
 
                     if (profile.isInLobby()) {
@@ -77,19 +77,19 @@ public class EventSelectKitMenu extends Menu {
                     }
                 }
             } else {
-                if (Practice.get().getLMSManager().getActiveLMS() != null) {
+                if (Practice.getInstance().getLMSManager().getActiveLMS() != null) {
                     player.sendMessage(CC.RED + "There is already an active LMS Event.");
                     return;
                 }
 
-                if (!Practice.get().getLMSManager().getCooldown().hasExpired()) {
+                if (!Practice.getInstance().getLMSManager().getCooldown().hasExpired()) {
                     player.sendMessage(CC.RED + "There is an active cooldown for the LMS Event.");
                     return;
                 }
 
-                Practice.get().getLMSManager().setActiveLMS(new LMS(player, kit));
+                Practice.getInstance().getLMSManager().setActiveLMS(new LMS(player, kit));
 
-                for (Player other : Practice.get().getServer().getOnlinePlayers()) {
+                for (Player other : Practice.getInstance().getServer().getOnlinePlayers()) {
                     Profile profile = Profile.getByUuid(other.getUniqueId());
 
                     if (profile.isInLobby()) {

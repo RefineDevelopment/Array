@@ -40,7 +40,7 @@ public class BracketsListener implements Listener {
 				Profile profile = Profile.getProfiles().get(event.getEntity().getUniqueId());
 				if (profile.isInBrackets()) {
 				profile.getBrackets().handleDeath(player);
-				player.teleport(Practice.get().getBracketsManager().getBracketsSpectator());
+				player.teleport(Practice.getInstance().getBracketsManager().getBracketsSpectator());
 				event.getDrops().clear();
 				PlayerUtil.reset(player);
 			}

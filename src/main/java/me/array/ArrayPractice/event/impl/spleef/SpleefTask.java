@@ -18,8 +18,8 @@ public abstract class SpleefTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		if (Practice.get().getSpleefManager().getActiveSpleef() == null ||
-		    !Practice.get().getSpleefManager().getActiveSpleef().equals(spleef) || spleef.getState() != eventState) {
+		if (Practice.getInstance().getSpleefManager().getActiveSpleef() == null ||
+		    !Practice.getInstance().getSpleefManager().getActiveSpleef().equals(spleef) || spleef.getState() != eventState) {
 			cancel();
 			return;
 		}

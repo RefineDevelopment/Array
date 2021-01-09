@@ -22,7 +22,7 @@ import java.util.*;
 public class ArmorClassManager implements Listener {
 
     protected Map<UUID, ArmorClass> classWarmups = new HashMap<>();
-    // Mapping to get the PVP Class a player has equipped.
+    // Mapping to getInstance the PVP Class a player has equipped.
     private final Map<UUID, ArmorClass> equippedClassMap = new HashMap<>();
     private final List<ArmorClass> pvpClasses = new ArrayList<>();
 
@@ -44,7 +44,7 @@ public class ArmorClassManager implements Listener {
                     Profile profile = Profile.getByUuid(player.getUniqueId());
                     Match match = profile.getMatch();
                     if (match != null && match.isHCFMatch()) {
-                        Bukkit.getScheduler().runTask(Practice.get(), () -> {
+                        Bukkit.getScheduler().runTask(Practice.getInstance(), () -> {
                             attemptEquip(player);
                         });
                     }
@@ -75,20 +75,20 @@ public class ArmorClassManager implements Listener {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
         Match match = profile.getMatch();
         if (match != null && match.isHCFMatch()) {
-            Bukkit.getScheduler().runTask(Practice.get(), () -> {
+            Bukkit.getScheduler().runTask(Practice.getInstance(), () -> {
                 this.attemptEquip(event.getPlayer());
             });
         }
     }
 
     public void attemptEquip(Player player) {
-        ArmorClass current = Practice.get().getArmorClassManager().getEquippedClass(player);
+        ArmorClass current = Practice.getInstance().getArmorClassManager().getEquippedClass(player);
         if (current != null) {
             if (current.isApplicableFor(player)) {
                 return;
             }
 
-            Practice.get().getArmorClassManager().setEquippedClass(player, null);
+            Practice.getInstance().getArmorClassManager().setEquippedClass(player, null);
         } else if ((current = classWarmups.get(player.getUniqueId())) != null) {
             if (current.isApplicableFor(player)) {
                 return;
@@ -96,10 +96,10 @@ public class ArmorClassManager implements Listener {
 
         }
 
-        Collection<ArmorClass> pvpClasses = Practice.get().getArmorClassManager().getPvpClasses();
+        Collection<ArmorClass> pvpClasses = Practice.getInstance().getArmorClassManager().getPvpClasses();
         for (ArmorClass pvpClass : pvpClasses) {
             if (pvpClass.isApplicableFor(player)) {
-                Practice.get().getArmorClassManager().setEquippedClass(player, pvpClass);
+                Practice.getInstance().getArmorClassManager().setEquippedClass(player, pvpClass);
                 break;
             }
         }
@@ -117,7 +117,7 @@ public class ArmorClassManager implements Listener {
     /**
      * Gets the equipped {@link ArmorClass} of a {@link Player}.
      *
-     * @param player the {@link Player} to get for
+     * @param player the {@link Player} to getInstance for
      * @return the equipped {@link ArmorClass}
      */
     public ArmorClass getEquippedClass(Player player) {

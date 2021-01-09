@@ -23,7 +23,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import rip.verse.jupiter.knockback.KnockbackModule;
+import pt.foxspigot.jar.knockback.KnockbackModule;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -65,7 +65,7 @@ public class LMS {
     public List<String> getLore() {
         List<String> toReturn=new ArrayList<>();
 
-        LMS LMS = Practice.get().getLMSManager().getActiveLMS();
+        LMS LMS = Practice.getInstance().getLMSManager().getActiveLMS();
 
         toReturn.add(CC.MENU_BAR);
         toReturn.add(CC.translate("&eHost: &r" + LMS.getName()));
@@ -103,7 +103,7 @@ public class LMS {
         eventTask = task;
 
         if (eventTask != null) {
-            eventTask.runTaskTimer(Practice.get(), 0L, 20L);
+            eventTask.runTaskTimer(Practice.getInstance(), 0L, 20L);
         }
     }
 
@@ -160,7 +160,7 @@ public class LMS {
         profile.setState(ProfileState.IN_EVENT);
         profile.refreshHotbar();
 
-        player.teleport(Practice.get().getLMSManager().getLmsSpectator());
+        player.teleport(Practice.getInstance().getLMSManager().getLmsSpectator());
 
         new BukkitRunnable() {
             @Override
@@ -171,7 +171,7 @@ public class LMS {
                     profile.handleVisibility(player, otherPlayer);
                 }
             }
-        }.runTaskAsynchronously(Practice.get());
+        }.runTaskAsynchronously(Practice.getInstance());
     }
 
     public void handleLeave(Player player) {
@@ -195,7 +195,7 @@ public class LMS {
         profile.setLms(null);
         profile.refreshHotbar();
 
-        Practice.get().getEssentials().teleportToSpawn(player);
+        Practice.getInstance().getEssentials().teleportToSpawn(player);
 
         new BukkitRunnable() {
             @Override
@@ -206,7 +206,7 @@ public class LMS {
                     profile.handleVisibility(player, otherPlayer);
                 }
             }
-        }.runTaskAsynchronously(Practice.get());
+        }.runTaskAsynchronously(Practice.getInstance());
     }
 
     protected List<Player> getSpectatorsList() {
@@ -221,8 +221,8 @@ public class LMS {
     }
 
     public void end() {
-        Practice.get().getLMSManager().setActiveLMS(null);
-        Practice.get().getLMSManager().setCooldown(new Cooldown(60_000L * 10));
+        Practice.getInstance().getLMSManager().setActiveLMS(null);
+        Practice.getInstance().getLMSManager().setCooldown(new Cooldown(60_000L * 10));
 
         setEventTask(null);
 
@@ -245,7 +245,7 @@ public class LMS {
                 profile.setLms(null);
                 profile.refreshHotbar();
 
-                Practice.get().getEssentials().teleportToSpawn(player);
+                Practice.getInstance().getEssentials().teleportToSpawn(player);
             }
         }
 
@@ -314,7 +314,7 @@ public class LMS {
 
         for (Player player : this.getRemainingPlayers()) {
             if (player != null) {
-                player.teleport(Practice.get().getLMSManager().getLmsSpectator());
+                player.teleport(Practice.getInstance().getLMSManager().getLmsSpectator());
 
                 Profile profile = Profile.getByUuid(player.getUniqueId());
 
@@ -351,14 +351,14 @@ public class LMS {
                     profile.handleVisibility(player, otherPlayer);
                 }
             }
-        }.runTaskAsynchronously(Practice.get());
+        }.runTaskAsynchronously(Practice.getInstance());
 
         new BukkitRunnable() {
             @Override
             public void run() {
                 profile.refreshHotbar();
             }
-        }.runTask(Practice.get());
+        }.runTask(Practice.getInstance());
     }
 
     public String getRoundDuration() {
@@ -389,7 +389,7 @@ public class LMS {
         profile.refreshHotbar();
         profile.handleVisibility();
 
-        player.teleport(Practice.get().getLMSManager().getLmsSpectator());
+        player.teleport(Practice.getInstance().getLMSManager().getLmsSpectator());
     }
 
     public void removeSpectator(Player player) {
@@ -402,6 +402,6 @@ public class LMS {
         profile.refreshHotbar();
         profile.handleVisibility();
 
-        Practice.get().getEssentials().teleportToSpawn(player);
+        Practice.getInstance().getEssentials().teleportToSpawn(player);
     }
 }

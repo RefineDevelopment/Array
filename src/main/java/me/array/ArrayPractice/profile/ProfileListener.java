@@ -43,7 +43,7 @@ public class ProfileListener implements Listener {
     public void onPlayerMatchStart(MatchEvent e) {
         if (e instanceof MatchStartEvent) {
             Match match = e.getMatch();
-            Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.get(), () -> match.getPlayers().forEach(player -> {
+            Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.getInstance(), () -> match.getPlayers().forEach(player -> {
                 Profile profile = Profile.getByUuid(player.getUniqueId());
                 List<Player> followers = profile.getFollower();
                 for (Player follower : followers) {
@@ -82,7 +82,7 @@ public class ProfileListener implements Listener {
                 Sign sign = (Sign) e.getClickedBlock().getState();
                 if (sign.getLine(1) != null && sign.getLine(1).contains("[Click Here]")) {
                     if (sign.getLine(2).toLowerCase().contains("back to spawn")) {
-                        Practice.get().getEssentials().teleportToSpawn(e.getPlayer());
+                        Practice.getInstance().getEssentials().teleportToSpawn(e.getPlayer());
                     }
                 }
             }
@@ -229,7 +229,7 @@ public class ProfileListener implements Listener {
                 event.setCancelled(true);
 
                 if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                    Practice.get().getEssentials().teleportToSpawn((Player) event.getEntity());
+                    Practice.getInstance().getEssentials().teleportToSpawn((Player) event.getEntity());
                 }
             }
         }
@@ -274,7 +274,7 @@ public class ProfileListener implements Listener {
 
             profile.setName(p.getName());
 
-            Practice.get().getEssentials().teleportToSpawn(p);
+            Practice.getInstance().getEssentials().teleportToSpawn(p);
 
             profile.refreshHotbar();
             profile.handleVisibility();
@@ -292,7 +292,7 @@ public class ProfileListener implements Listener {
             Profile profile = Profile.getProfiles().get(event.getPlayer().getUniqueId());
             profile.save();
             if (profile.getRematchData() != null) {
-                Player target = Practice.get().getServer().getPlayer(profile.getRematchData().getTarget());
+                Player target = Practice.getInstance().getServer().getPlayer(profile.getRematchData().getTarget());
 
                 if (target != null && target.isOnline()) {
                     Profile.getByUuid(target.getUniqueId()).checkForHotbarUpdate();

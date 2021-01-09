@@ -3,8 +3,8 @@ package me.array.ArrayPractice.match.impl;
 import me.array.ArrayPractice.match.Match;
 import me.array.ArrayPractice.match.MatchSnapshot;
 import me.array.ArrayPractice.match.MatchState;
-import rip.verse.jupiter.knockback.KnockbackModule;
-import rip.verse.jupiter.knockback.KnockbackProfile;
+import pt.foxspigot.jar.knockback.KnockbackModule;
+import pt.foxspigot.jar.knockback.KnockbackProfile;
 import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.kit.Kit;
@@ -111,7 +111,7 @@ public class SoloMatch extends Match {
             KnockbackProfile kbprofile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
             ((CraftPlayer) player).getHandle().setKnockback(kbprofile);
         } else {
-            KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get("Practice");
+            KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get("strafe");
             ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
         }
 
@@ -125,7 +125,7 @@ public class SoloMatch extends Match {
             player.teleport(spawn.add(0, 2, 0));
         }
 
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.get(), () -> NameTags.color(player, this.getOpponentPlayer(player), org.bukkit.ChatColor.RED, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()), 60L);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.getInstance(), () -> NameTags.color(player, this.getOpponentPlayer(player), org.bukkit.ChatColor.RED, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()), 60L);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class SoloMatch extends Match {
                         cancel();
                     }
                 }
-            }.runTaskTimer(Practice.get(), 20L, 20L);
+            }.runTaskTimer(Practice.getInstance(), 20L, 20L);
         }
     }
 
@@ -204,12 +204,12 @@ public class SoloMatch extends Match {
                                         opponent.getUniqueId(), getKit(), getArena()));
                             }
 
-                            Practice.get().getEssentials().teleportToSpawn(player);
+                            Practice.getInstance().getEssentials().teleportToSpawn(player);
                         }
                     }
                 }
             }
-        }.runTaskLaterAsynchronously(Practice.get(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 70L);
+        }.runTaskLaterAsynchronously(Practice.getInstance(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 70L);
 
         Player winningPlayer = getWinningPlayer();
         Player losingPlayer = getOpponentPlayer(winningPlayer);
@@ -362,7 +362,7 @@ public class SoloMatch extends Match {
 
     @Override
     public Team getWinningTeam() {
-        throw new UnsupportedOperationException("Cannot get winning team from a SoloMatch");
+        throw new UnsupportedOperationException("Cannot getInstance winning team from a SoloMatch");
     }
 
     @Override
@@ -420,17 +420,17 @@ public class SoloMatch extends Match {
 
     @Override
     public Team getTeamA() {
-        throw new UnsupportedOperationException("Cannot get team from a SoloMatch");
+        throw new UnsupportedOperationException("Cannot getInstance team from a SoloMatch");
     }
 
     @Override
     public Team getTeamB() {
-        throw new UnsupportedOperationException("Cannot get team from a SoloMatch");
+        throw new UnsupportedOperationException("Cannot getInstance team from a SoloMatch");
     }
 
     @Override
     public Team getTeam(Player player) {
-        throw new UnsupportedOperationException("Cannot get team from a SoloMatch");
+        throw new UnsupportedOperationException("Cannot getInstance team from a SoloMatch");
     }
 
     @Override
@@ -446,12 +446,12 @@ public class SoloMatch extends Match {
 
     @Override
     public Team getOpponentTeam(Team team) {
-        throw new UnsupportedOperationException("Cannot get opponent team from a SoloMatch");
+        throw new UnsupportedOperationException("Cannot getInstance opponent team from a SoloMatch");
     }
 
     @Override
     public Team getOpponentTeam(Player player) {
-        throw new UnsupportedOperationException("Cannot get opponent team from a SoloMatch");
+        throw new UnsupportedOperationException("Cannot getInstance opponent team from a SoloMatch");
     }
 
     @Override
@@ -498,7 +498,7 @@ public class SoloMatch extends Match {
 
     @Override
     public int getRoundsNeeded(Team team) {
-        throw new UnsupportedOperationException("Cannot get team round wins from SoloMatch");
+        throw new UnsupportedOperationException("Cannot getInstance team round wins from SoloMatch");
     }
 
     @Override
@@ -572,7 +572,7 @@ public class SoloMatch extends Match {
 
     @Override
     public void onRespawn(Player player) {
-        Practice.get().getEssentials().teleportToSpawn(player);
+        Practice.getInstance().getEssentials().teleportToSpawn(player);
     }
 
     @Override

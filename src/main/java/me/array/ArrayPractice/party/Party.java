@@ -135,7 +135,7 @@ public class Party extends Team
             profile.setMatch(null);
             profile.refreshHotbar();
             profile.handleVisibility();
-            Practice.get().getEssentials().teleportToSpawn(player);
+            Practice.getInstance().getEssentials().teleportToSpawn(player);
         }
         for (final TeamPlayer teamPlayer : this.getTeamPlayers()) {
             final Player otherPlayer = teamPlayer.getPlayer();
@@ -207,7 +207,7 @@ public class Party extends Team
             public void run() {
                 Party.getParties().forEach(party -> party.getInvites().removeIf(PartyInvite::hasExpired));
             }
-        }.runTaskTimerAsynchronously(Practice.get(), 100L, 100L);
+        }.runTaskTimerAsynchronously(Practice.getInstance(), 100L, 100L);
         new BukkitRunnable() {
             public void run() {
                 for (final Party party : Party.getParties()) {
@@ -217,7 +217,7 @@ public class Party extends Team
                     }
                 }
             }
-        }.runTaskTimerAsynchronously(Practice.get(), 1200L, 1200L);
+        }.runTaskTimerAsynchronously(Practice.getInstance(), 1200L, 1200L);
     }
     
     public PartyPrivacy getPrivacy() {

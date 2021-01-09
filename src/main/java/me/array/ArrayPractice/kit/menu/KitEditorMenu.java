@@ -104,7 +104,7 @@ public class KitEditorMenu extends Menu {
                 public void run() {
                     profile.refreshHotbar();
                 }
-            }.runTask(Practice.get());
+            }.runTask(Practice.getInstance());
         }
     }
 

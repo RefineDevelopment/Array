@@ -29,15 +29,16 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/event/impl/spleef/Spleef.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/Practice.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/util/BlockUtil.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/pom.xml" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/party/Party.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/match/Match.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/profile/Profile.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/duel/command/DuelAcceptCommand.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/party/menu/ManagePartySettings.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/tab/Tab.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/Practice.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/pom.xml" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/event/impl/spleef/Spleef.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/util/BlockUtil.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/array/ArrayPractice/duel/command/DuelAcceptCommand.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -97,10 +98,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="174" y="85" width="1092" height="762" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.860@0.0.1440.860" timestamp="1609959621601" />
-    <state x="525" y="136" key="#com.intellij.ide.util.MemberChooser" timestamp="1609948616967">
+    <state x="525" y="136" key="#com.intellij.ide.util.MemberChooser" timestamp="1610205198312">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="525" y="136" key="#com.intellij.ide.util.MemberChooser/0.0.1440.860@0.0.1440.860" timestamp="1609948616967" />
+    <state x="525" y="136" key="#com.intellij.ide.util.MemberChooser/0.0.1440.860@0.0.1440.860" timestamp="1610205198312" />
     <state x="501" y="324" width="481" height="217" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1609943669169">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
@@ -109,6 +110,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="278" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1440.860@0.0.1440.860" timestamp="1609959118797" />
+    <state x="300" y="165" key="IDE.errors.dialog" timestamp="1610194356761">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="300" y="165" key="IDE.errors.dialog/0.0.1440.860@0.0.1440.860" timestamp="1610194356761" />
     <state x="221" y="9" key="SettingsEditor" timestamp="1610015724702">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
@@ -117,13 +122,17 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state width="498" height="446" key="SwitcherDM/0.0.1440.860@0.0.1440.860" timestamp="1609941511753" />
-    <state x="427" y="163" width="595" height="592" key="find.popup" timestamp="1610063801628">
+    <state x="427" y="163" width="595" height="592" key="find.popup" timestamp="1610195819920">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="427" y="163" width="595" height="592" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1610063801628" />
-    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1610065833969">
+    <state x="427" y="163" width="595" height="592" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1610195819920" />
+    <state x="563" y="188" key="refactoring.ChangeSignatureDialog" timestamp="1610115661409">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1610065833969" />
+    <state x="563" y="188" key="refactoring.ChangeSignatureDialog/0.0.1440.860@0.0.1440.860" timestamp="1610115661409" />
+    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1610193727134">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1610193727134" />
   </component>
 </project>

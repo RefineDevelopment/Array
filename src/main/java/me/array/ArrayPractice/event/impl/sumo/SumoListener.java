@@ -36,11 +36,11 @@ public class SumoListener implements Listener {
 					event.setCancelled(true);
 					event.getEntity().setFireTicks(0);
 					if (!profile.getSumo().isFighting() || !profile.getSumo().isFighting(player.getUniqueId())) {
-						player.teleport(Practice.get().getSumoManager().getSumoSpectator());
+						player.teleport(Practice.getInstance().getSumoManager().getSumoSpectator());
 						return;
 					}
 					PlayerUtil.spectator(player);
-					player.teleport(Practice.get().getSumoManager().getSumoSpectator());
+					player.teleport(Practice.getInstance().getSumoManager().getSumoSpectator());
 					profile.getSumo().handleDeath(player);
 					return;
 				}

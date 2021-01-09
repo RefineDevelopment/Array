@@ -273,7 +273,7 @@ public class Bard extends ArmorClass implements Listener {
     /**
      * Gets the energy of a {@link Player}.
      *
-     * @param player the {@link Player} to get for
+     * @param player the {@link Player} to getInstance for
      * @return the energy, or 0 if not tracking this player
      */
     public double getEnergy(Player player) {

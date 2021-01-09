@@ -13,7 +13,7 @@ public class SkyWarsJoinCommand {
 
     public static void execute(Player player) {
         Profile profile = Profile.getByUuid(player.getUniqueId());
-        SkyWars activeSkyWars = Practice.get().getSkyWarsManager().getActiveSkyWars();
+        SkyWars activeSkyWars = Practice.getInstance().getSkyWarsManager().getActiveSkyWars();
 
         if (profile.isBusy(player) || profile.getParty() != null) {
             player.sendMessage(CC.RED + "You cannot join the skywars right now.");
@@ -30,7 +30,7 @@ public class SkyWarsJoinCommand {
             return;
         }
 
-        Practice.get().getSkyWarsManager().getActiveSkyWars().handleJoin(player);
+        Practice.getInstance().getSkyWarsManager().getActiveSkyWars().handleJoin(player);
     }
 
 }

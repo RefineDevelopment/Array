@@ -17,7 +17,7 @@ public class SpawnCommand {
         Profile.getProfiles().put(player.getUniqueId(), profile);
 
         profile.setName(player.getName());
-        Practice.get().getEssentials().teleportToSpawn(player);
+        Practice.getInstance().getEssentials().teleportToSpawn(player);
 
         profile.refreshHotbar();
         profile.handleVisibility();

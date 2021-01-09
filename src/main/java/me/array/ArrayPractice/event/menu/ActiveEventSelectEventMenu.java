@@ -36,37 +36,37 @@ public class ActiveEventSelectEventMenu extends Menu {
         int i = 0;
         for ( EventType eventType : EventType.values()) {
             if (eventType.getTitle().equals("FFA")) {
-                if (Practice.get().getLMSManager().getActiveLMS() != null && Practice.get().getLMSManager().getActiveLMS().isWaiting()) {
+                if (Practice.getInstance().getLMSManager().getActiveLMS() != null && Practice.getInstance().getLMSManager().getActiveLMS().isWaiting()) {
                     buttons.put(i, new SelectEventButton(EventType.LMS));
                     i++;
                 }
             }
             if (eventType.getTitle().equals("Brackets")) {
-                if (Practice.get().getBracketsManager().getActiveBrackets() != null && Practice.get().getBracketsManager().getActiveBrackets().isWaiting()) {
+                if (Practice.getInstance().getBracketsManager().getActiveBrackets() != null && Practice.getInstance().getBracketsManager().getActiveBrackets().isWaiting()) {
                     buttons.put(i, new SelectEventButton(EventType.BRACKETS));
                     i++;
                 }
             }
             if (eventType.getTitle().equals("Sumo")) {
-                if (Practice.get().getSumoManager().getActiveSumo() != null && Practice.get().getSumoManager().getActiveSumo().isWaiting()) {
+                if (Practice.getInstance().getSumoManager().getActiveSumo() != null && Practice.getInstance().getSumoManager().getActiveSumo().isWaiting()) {
                     buttons.put(i, new SelectEventButton(EventType.SUMO));
                     i++;
                 }
             }
             if (eventType.getTitle().equals("Parkour")) {
-                if (Practice.get().getParkourManager().getActiveParkour() != null && Practice.get().getParkourManager().getActiveParkour().isWaiting()) {
+                if (Practice.getInstance().getParkourManager().getActiveParkour() != null && Practice.getInstance().getParkourManager().getActiveParkour().isWaiting()) {
                     buttons.put(i, new SelectEventButton(EventType.PARKOUR));
                     i++;
                 }
             }
             if (eventType.getTitle().equals("Spleef")) {
-                if (Practice.get().getSpleefManager().getActiveSpleef() != null && Practice.get().getSpleefManager().getActiveSpleef().isWaiting()) {
+                if (Practice.getInstance().getSpleefManager().getActiveSpleef() != null && Practice.getInstance().getSpleefManager().getActiveSpleef().isWaiting()) {
                     buttons.put(i, new SelectEventButton(EventType.SPLEEF));
                     i++;
                 }
             }
             if (eventType.getTitle().equals("Skywars")) {
-                if (Practice.get().getSkyWarsManager().getActiveSkyWars() != null && Practice.get().getSkyWarsManager().getActiveSkyWars().isWaiting()) {
+                if (Practice.getInstance().getSkyWarsManager().getActiveSkyWars() != null && Practice.getInstance().getSkyWarsManager().getActiveSkyWars().isWaiting()) {
                     buttons.put(i, new SelectEventButton(EventType.SKYWARS));
                     i++;
                 }
@@ -86,22 +86,22 @@ public class ActiveEventSelectEventMenu extends Menu {
 
             switch (eventType.getTitle()) {
                 case "Brackets":
-                    lore=Practice.get().getBracketsManager().getActiveBrackets().getLore();
+                    lore=Practice.getInstance().getBracketsManager().getActiveBrackets().getLore();
                     break;
                 case "Sumo":
-                    lore=Practice.get().getSumoManager().getActiveSumo().getLore();
+                    lore=Practice.getInstance().getSumoManager().getActiveSumo().getLore();
                     break;
                 case "LMS":
-                    lore=Practice.get().getLMSManager().getActiveLMS().getLore();
+                    lore=Practice.getInstance().getLMSManager().getActiveLMS().getLore();
                     break;
                 case "Parkour":
-                    lore=Practice.get().getParkourManager().getActiveParkour().getLore();
+                    lore=Practice.getInstance().getParkourManager().getActiveParkour().getLore();
                     break;
                 case "Spleef":
-                    lore=Practice.get().getSpleefManager().getActiveSpleef().getLore();
+                    lore=Practice.getInstance().getSpleefManager().getActiveSpleef().getLore();
                     break;
                 case "Skywars":
-                    lore=Practice.get().getSkyWarsManager().getActiveSkyWars().getLore();
+                    lore=Practice.getInstance().getSkyWarsManager().getActiveSkyWars().getLore();
                     break;
             }
 

@@ -9,11 +9,11 @@ import org.bukkit.entity.Player;
 public class ParkourSetSpawnCommand {
 
 	public void execute(Player player) {
-		Practice.get().getParkourManager().setParkourSpawn(player.getLocation());
+		Practice.getInstance().getParkourManager().setParkourSpawn(player.getLocation());
 
 		player.sendMessage(CC.GREEN + "Updated parkour's spawn location.");
 
-		Practice.get().getParkourManager().save();
+		Practice.getInstance().getParkourManager().save();
 	}
 
 }

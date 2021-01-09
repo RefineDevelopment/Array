@@ -12,7 +12,7 @@ public class ParkourLeaveCommand {
 
 	public void execute(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		Parkour activeParkour = Practice.get().getParkourManager().getActiveParkour();
+		Parkour activeParkour = Practice.getInstance().getParkourManager().getActiveParkour();
 
 		if (activeParkour == null) {
 			player.sendMessage(CC.RED + "There isn't any active Parkour Events.");
@@ -24,7 +24,7 @@ public class ParkourLeaveCommand {
 			return;
 		}
 
-		Practice.get().getParkourManager().getActiveParkour().handleLeave(player);
+		Practice.getInstance().getParkourManager().getActiveParkour().handleLeave(player);
 	}
 
 }

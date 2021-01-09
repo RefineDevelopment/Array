@@ -46,8 +46,8 @@ public class ProfileRematchData {
 
     public void request() {
 
-        Player sender = Practice.get().getServer().getPlayer(this.sender);
-        Player target = Practice.get().getServer().getPlayer(this.target);
+        Player sender = Practice.getInstance().getServer().getPlayer(this.sender);
+        Player target = Practice.getInstance().getServer().getPlayer(this.target);
 
         if (sender == null || target == null) {
             return;
@@ -83,15 +83,15 @@ public class ProfileRematchData {
 
         senderProfile.checkForHotbarUpdate();
         targetProfile.checkForHotbarUpdate();
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.get(), () -> {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.getInstance(), () -> {
             senderProfile.checkForHotbarUpdate();
             targetProfile.checkForHotbarUpdate();
         }, 15 * 20);
     }
 
     public void accept() {
-        Player sender = Practice.get().getServer().getPlayer(this.sender);
-        Player target = Practice.get().getServer().getPlayer(this.target);
+        Player sender = Practice.getInstance().getServer().getPlayer(this.sender);
+        Player target = Practice.getInstance().getServer().getPlayer(this.target);
 
         if (sender == null || target == null || !sender.isOnline() || !target.isOnline()) {
             return;

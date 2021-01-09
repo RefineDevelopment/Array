@@ -11,19 +11,19 @@ import org.bukkit.entity.Player;
 public class SkyWarsHostCommand {
 
     public static void execute(Player player) {
-        if (Practice.get().getSkyWarsManager().getActiveSkyWars() != null) {
+        if (Practice.getInstance().getSkyWarsManager().getActiveSkyWars() != null) {
             player.sendMessage(CC.RED + "There is already an active SkyWars Event.");
             return;
         }
 
-        if (!Practice.get().getSkyWarsManager().getCooldown().hasExpired()) {
+        if (!Practice.getInstance().getSkyWarsManager().getCooldown().hasExpired()) {
             player.sendMessage(CC.RED + "There is an active cooldown for the SkyWars Event.");
             return;
         }
 
-        Practice.get().getSkyWarsManager().setActiveSkyWars(new SkyWars(player));
+        Practice.getInstance().getSkyWarsManager().setActiveSkyWars(new SkyWars(player));
 
-        for (Player other : Practice.get().getServer().getOnlinePlayers()) {
+        for (Player other : Practice.getInstance().getServer().getOnlinePlayers()) {
             Profile profile = Profile.getByUuid(other.getUniqueId());
 
             if (profile.isInLobby()) {

@@ -44,7 +44,7 @@ public class LMSManager {
     }
 
     public void load() {
-        FileConfiguration configuration = Practice.get().getEventsConfig().getConfiguration();
+        FileConfiguration configuration = Practice.getInstance().getEventsConfig().getConfiguration();
 
         if (configuration.contains("events.ffa.spectator")) {
             lmsSpectator = LocationUtil.deserialize(configuration.getString("events.ffa.spectator"));
@@ -56,7 +56,7 @@ public class LMSManager {
     }
 
     public void save() {
-        FileConfiguration configuration = Practice.get().getEventsConfig().getConfiguration();
+        FileConfiguration configuration = Practice.getInstance().getEventsConfig().getConfiguration();
 
         if (lmsSpectator != null) {
             configuration.set("events.ffa.spectator", LocationUtil.serialize(lmsSpectator));
@@ -67,7 +67,7 @@ public class LMSManager {
         }
 
         try {
-            configuration.save(Practice.get().getEventsConfig().getFile());
+            configuration.save(Practice.getInstance().getEventsConfig().getFile());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -18,8 +18,8 @@ public abstract class SumoTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		if (Practice.get().getSumoManager().getActiveSumo() == null ||
-		    !Practice.get().getSumoManager().getActiveSumo().equals(sumo) || sumo.getState() != eventState) {
+		if (Practice.getInstance().getSumoManager().getActiveSumo() == null ||
+		    !Practice.getInstance().getSumoManager().getActiveSumo().equals(sumo) || sumo.getState() != eventState) {
 			cancel();
 			return;
 		}

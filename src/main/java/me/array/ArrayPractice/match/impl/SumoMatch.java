@@ -5,7 +5,7 @@ import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.kit.Kit;
 import me.array.ArrayPractice.match.Match;
 import me.array.ArrayPractice.match.MatchSnapshot;
-import me.array.ArrayPractice.match.MatchState;;
+import me.array.ArrayPractice.match.MatchState;
 import me.array.ArrayPractice.match.task.MatchStartTask;
 import me.array.ArrayPractice.match.team.Team;
 import me.array.ArrayPractice.match.team.TeamPlayer;
@@ -30,8 +30,8 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import rip.verse.jupiter.knockback.KnockbackModule;
-import rip.verse.jupiter.knockback.KnockbackProfile;
+import pt.foxspigot.jar.knockback.KnockbackModule;
+import pt.foxspigot.jar.knockback.KnockbackProfile;
 
 import java.util.*;
 
@@ -109,7 +109,7 @@ public class SumoMatch extends Match {
             KnockbackProfile kbprofile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
             ((CraftPlayer) player).getHandle().setKnockback(kbprofile);
         } else {
-            KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get("Practice");
+            KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get("strafe");
             ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
         }
 
@@ -185,12 +185,12 @@ public class SumoMatch extends Match {
                                         opponent.getUniqueId(), getKit(), getArena()));
                             }
 
-                            Practice.get().getEssentials().teleportToSpawn(player);
+                            Practice.getInstance().getEssentials().teleportToSpawn(player);
                         }
                     }
                 }
             }
-        }.runTaskLaterAsynchronously(Practice.get(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isSumo() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
+        }.runTaskLaterAsynchronously(Practice.getInstance(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isSumo() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
 
         Player winningPlayer = getWinningPlayer();
         Player losingPlayer = getOpponentPlayer(winningPlayer);
@@ -345,7 +345,7 @@ public class SumoMatch extends Match {
 
     @Override
     public Team getWinningTeam() {
-        throw new UnsupportedOperationException("Cannot get winning team from a SoloMatch");
+        throw new UnsupportedOperationException("Cannot getInstance winning team from a SoloMatch");
     }
 
     @Override
@@ -403,17 +403,17 @@ public class SumoMatch extends Match {
 
     @Override
     public Team getTeamA() {
-        throw new UnsupportedOperationException("Cannot get team from a SoloMatch");
+        throw new UnsupportedOperationException("Cannot getInstance team from a SoloMatch");
     }
 
     @Override
     public Team getTeamB() {
-        throw new UnsupportedOperationException("Cannot get team from a SoloMatch");
+        throw new UnsupportedOperationException("Cannot getInstance team from a SoloMatch");
     }
 
     @Override
     public Team getTeam(Player player) {
-        throw new UnsupportedOperationException("Cannot get team from a SoloMatch");
+        throw new UnsupportedOperationException("Cannot getInstance team from a SoloMatch");
     }
 
     @Override
@@ -429,12 +429,12 @@ public class SumoMatch extends Match {
 
     @Override
     public Team getOpponentTeam(Team team) {
-        throw new UnsupportedOperationException("Cannot get opponent team from a SoloMatch");
+        throw new UnsupportedOperationException("Cannot getInstance opponent team from a SoloMatch");
     }
 
     @Override
     public Team getOpponentTeam(Player player) {
-        throw new UnsupportedOperationException("Cannot get opponent team from a SoloMatch");
+        throw new UnsupportedOperationException("Cannot getInstance opponent team from a SoloMatch");
     }
 
     @Override
@@ -486,7 +486,7 @@ public class SumoMatch extends Match {
 
     @Override
     public int getRoundsNeeded(Team team) {
-        throw new UnsupportedOperationException("Cannot get team round wins from SoloMatch");
+        throw new UnsupportedOperationException("Cannot getInstance team round wins from SoloMatch");
     }
 
     @Override
@@ -561,35 +561,27 @@ public class SumoMatch extends Match {
 
                     end();
                 } else {
-                    //kms
-                    playerA.getPlayer().sendMessage(CC.translate("&7You need to win &c" + getRoundsNeeded(playerA) + " &7more rounds!"));
-                    playerB.getPlayer().sendMessage(CC.translate("&7You need to win &c" + getRoundsNeeded(playerB) + " &7more rounds!"));
-
-                    //Did it because I had to, kinda shitty that I had to though.
+                    playerA.getPlayer().sendMessage(CC.translate("&fYou need to win &b" + getRoundsNeeded(playerA) + " &fmore rounds!"));
+                    playerB.getPlayer().sendMessage(CC.translate("&fYou need to win &b" + getRoundsNeeded(playerB) + " &fmore rounds!"));
                     setupPlayer(playerA.getPlayer());
                     setupPlayer(playerB.getPlayer());
-
-
-                    //Bug where both players couldn't see each other sometimes, fix for that is here
                     playerA.getPlayer().showPlayer(playerB.getPlayer());
                     playerB.getPlayer().showPlayer(playerA.getPlayer());
-
-                    //Just in case.
                     onStart();
                     setState(MatchState.STARTING);
                     setStartTimestamp(-1);
-
-                    //duh
-                    new MatchStartTask(this).runTaskTimer(Practice.get(), 20L, 20L);
-                    getPlayers().forEach(player -> player.sendMessage(CC.GRAY + "You are playing on arena " + CC.RED + getArena().getName() + CC.GRAY + "."));
-                }
+                    new MatchStartTask(this).runTaskTimer(Practice.getInstance(), 20L, 20L);
+                    this.getPlayers().forEach(player -> player.sendMessage(CC.translate("&b● &fPlayers: &b" + this.getPlayers().get(1).getDisplayName() + " &7vs &b" + this.getPlayers().get(2).getDisplayName())));
+                    this.getPlayers().forEach(player -> player.sendMessage(CC.translate("&b● &fArena: &b" + this.getArena().getName())));
+                    this.getPlayers().forEach(player -> player.sendMessage(CC.translate("&b● &fKit: &b" + this.getKit().getName())));
+                    this.broadcastMessage("");           }
             }
         }
     }
 
     @Override
     public void onRespawn(Player player) {
-        Practice.get().getEssentials().teleportToSpawn(player);
+        Practice.getInstance().getEssentials().teleportToSpawn(player);
     }
 
     @Override

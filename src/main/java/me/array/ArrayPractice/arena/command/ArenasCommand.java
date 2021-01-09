@@ -2,6 +2,7 @@ package me.array.ArrayPractice.arena.command;
 
 import com.qrakn.honcho.command.*;
 import me.array.ArrayPractice.arena.Arena;
+import me.array.ArrayPractice.arena.ArenaType;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -20,7 +21,7 @@ public class ArenasCommand
             return;
         }
         for (final Arena arena : Arena.getArenas()) {
-                player.sendMessage(CC.GRAY + " - " + (arena.isSetup() ? CC.GREEN : CC.RED) + arena.getName() + CC.GRAY + " (" + arena.getType().name() + ")" + CC.translate((arena.isActive() ? " &7[&eIn-Match&7]" : " &7[&aFree&7]")));
+                player.sendMessage(CC.GRAY + " - " + (arena.isSetup() ? CC.GREEN : CC.RED) + arena.getName() + CC.GRAY + " (" + arena.getType().name() + ")" + CC.translate((arena.isActive() ? " &7[&eIn-Match&7]" : " &7[&aFree&7]") + (arena.getType() == ArenaType.SHARED ? " &7[&bShared&7]" : " &7[&bStandalone&7]")));
         }
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
     }

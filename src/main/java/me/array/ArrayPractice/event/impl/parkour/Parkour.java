@@ -53,7 +53,7 @@ public class Parkour {
 	public List<String> getLore() {
 		List<String> toReturn = new ArrayList<>();
 
-		Parkour parkour = Practice.get().getParkourManager().getActiveParkour();
+		Parkour parkour = Practice.getInstance().getParkourManager().getActiveParkour();
 
 		toReturn.add(CC.MENU_BAR);
 		toReturn.add(CC.translate("&bHost: &r" + parkour.getName()));
@@ -90,7 +90,7 @@ public class Parkour {
 		eventTask = task;
 
 		if (eventTask != null) {
-			eventTask.runTaskTimer(Practice.get(), 0L, 20L);
+			eventTask.runTaskTimer(Practice.getInstance(), 0L, 20L);
 		}
 	}
 
@@ -151,7 +151,7 @@ public class Parkour {
 		profile.setState(ProfileState.IN_EVENT);
 		profile.refreshHotbar();
 
-		player.teleport(Practice.get().getParkourManager().getParkourSpawn());
+		player.teleport(Practice.getInstance().getParkourManager().getParkourSpawn());
 
 		PlayerUtil.denyMovement(player);
 
@@ -164,7 +164,7 @@ public class Parkour {
 					profile.handleVisibility(player, otherPlayer);
 				}
 			}
-		}.runTaskAsynchronously(Practice.get());
+		}.runTaskAsynchronously(Practice.getInstance());
 	}
 
 	public void handleLeave(Player player) {
@@ -182,7 +182,7 @@ public class Parkour {
 		profile.setParkour(null);
 		profile.refreshHotbar();
 
-		Practice.get().getEssentials().teleportToSpawn(player);
+		Practice.getInstance().getEssentials().teleportToSpawn(player);
 
 		new BukkitRunnable() {
 			@Override
@@ -193,7 +193,7 @@ public class Parkour {
 					profile.handleVisibility(player, otherPlayer);
 				}
 			}
-		}.runTaskAsynchronously(Practice.get());
+		}.runTaskAsynchronously(Practice.getInstance());
 
 		if (getRemainingPlayers().size() == 1) {
 			handleWin(getRemainingPlayers().get(0));
@@ -205,8 +205,8 @@ public class Parkour {
 	}
 
 	public void end(Player winner) {
-		Practice.get().getParkourManager().setActiveParkour(null);
-		Practice.get().getParkourManager().setCooldown(new Cooldown(60_000L * 10));
+		Practice.getInstance().getParkourManager().setActiveParkour(null);
+		Practice.getInstance().getParkourManager().setCooldown(new Cooldown(60_000L * 10));
 
 		setEventTask(null);
 
@@ -225,7 +225,7 @@ public class Parkour {
 				profile.setParkour(null);
 				profile.refreshHotbar();
 
-				Practice.get().getEssentials().teleportToSpawn(player);
+				Practice.getInstance().getEssentials().teleportToSpawn(player);
 			}
 		}
 
@@ -270,7 +270,7 @@ public class Parkour {
 
 		for (Player player : this.getRemainingPlayers()) {
 			if (player != null) {
-				player.teleport(Practice.get().getParkourManager().getParkourSpawn());
+				player.teleport(Practice.getInstance().getParkourManager().getParkourSpawn());
 
 				Profile profile = Profile.getByUuid(player.getUniqueId());
 
@@ -308,7 +308,7 @@ public class Parkour {
 		profile.handleVisibility();
 		player.setFlying(true);
 
-		player.teleport(Practice.get().getParkourManager().getParkourSpawn());
+		player.teleport(Practice.getInstance().getParkourManager().getParkourSpawn());
 	}
 
 	public void removeSpectator(Player player) {
@@ -320,6 +320,6 @@ public class Parkour {
 		profile.refreshHotbar();
 		profile.handleVisibility();
 
-		Practice.get().getEssentials().teleportToSpawn(player);
+		Practice.getInstance().getEssentials().teleportToSpawn(player);
 	}
 }

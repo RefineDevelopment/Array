@@ -36,8 +36,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
-import rip.verse.jupiter.knockback.KnockbackModule;
-import rip.verse.jupiter.knockback.KnockbackProfile;
+import pt.foxspigot.jar.knockback.KnockbackModule;
+import pt.foxspigot.jar.knockback.KnockbackProfile;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -246,7 +246,7 @@ public class MatchListener implements Listener {
     @EventHandler
     public void onPlayerDeathEvent(final PlayerDeathEvent event) {
         event.setDeathMessage(null);
-        KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get("Practice");
+        KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get("strafe");
         Profile profile = Profile.getByUuid(event.getEntity().getUniqueId());
         ((CraftPlayer)event.getEntity().getPlayer()).getHandle().setKnockback(knockbackProfile);
         event.getEntity().getPlayer().setNoDamageTicks(20);
@@ -436,7 +436,7 @@ public class MatchListener implements Listener {
     @EventHandler
     public void onPlayerItemConsumeEvent(final PlayerItemConsumeEvent event) {
         if (event.getItem().getType().equals(Material.POTION)) {
-            Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Practice.get(), new Runnable() {
+            Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Practice.getInstance(), new Runnable() {
                 @Override
                 public void run() {
                     event.getPlayer().setItemInHand(new ItemStack(Material.AIR));
@@ -558,7 +558,7 @@ public class MatchListener implements Listener {
                         event.getPlayer().addPotionEffects(kitLoadout.getEffects());
                     }
                     event.getPlayer().updateInventory();
-                    Practice.get().getArmorClassManager().attemptEquip(event.getPlayer());
+                    Practice.getInstance().getArmorClassManager().attemptEquip(event.getPlayer());
                     event.setCancelled(true);
                     return;
                 }
@@ -571,7 +571,7 @@ public class MatchListener implements Listener {
                         event.getPlayer().addPotionEffects(kitLoadout.getEffects());
                     }
                     event.getPlayer().updateInventory();
-                    Practice.get().getArmorClassManager().attemptEquip(event.getPlayer());
+                    Practice.getInstance().getArmorClassManager().attemptEquip(event.getPlayer());
                     event.setCancelled(true);
                     return;
                 }
@@ -584,7 +584,7 @@ public class MatchListener implements Listener {
                         event.getPlayer().addPotionEffects(kitLoadout.getEffects());
                     }
                     event.getPlayer().updateInventory();
-                    Practice.get().getArmorClassManager().attemptEquip(event.getPlayer());
+                    Practice.getInstance().getArmorClassManager().attemptEquip(event.getPlayer());
                     event.setCancelled(true);
                     return;
                 }
@@ -597,7 +597,7 @@ public class MatchListener implements Listener {
                         event.getPlayer().addPotionEffects(kitLoadout.getEffects());
                     }
                     event.getPlayer().updateInventory();
-                    Practice.get().getArmorClassManager().attemptEquip(event.getPlayer());
+                    Practice.getInstance().getArmorClassManager().attemptEquip(event.getPlayer());
                     event.setCancelled(true);
                     return;
                 }

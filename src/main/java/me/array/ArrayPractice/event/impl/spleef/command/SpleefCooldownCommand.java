@@ -10,14 +10,14 @@ import org.bukkit.command.CommandSender;
 public class SpleefCooldownCommand {
 
 	public void execute(CommandSender sender) {
-		if (Practice.get().getSpleefManager().getCooldown().hasExpired()) {
+		if (Practice.getInstance().getSpleefManager().getCooldown().hasExpired()) {
 			sender.sendMessage(CC.RED + "There isn't a Spleef Event cooldown.");
 			return;
 		}
 
 		sender.sendMessage(CC.GREEN + "You reset the Spleef Event cooldown.");
 
-		Practice.get().getSpleefManager().setCooldown(new Cooldown(0));
+		Practice.getInstance().getSpleefManager().setCooldown(new Cooldown(0));
 	}
 
 }

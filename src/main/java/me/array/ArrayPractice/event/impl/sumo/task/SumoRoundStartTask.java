@@ -48,7 +48,7 @@ public class SumoRoundStartTask extends SumoTask {
 				playerB.playSound(playerB.getLocation(), Sound.NOTE_PLING, 1.0F, 1.0F);
 			}
 
-			this.getSumo().broadcastMessage("&d" + seconds + "...");
+			this.getSumo().broadcastMessage("&b" + seconds + "...");
 		}
 	}
 

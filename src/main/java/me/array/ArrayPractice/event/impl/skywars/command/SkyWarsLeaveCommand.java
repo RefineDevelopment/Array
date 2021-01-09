@@ -12,7 +12,7 @@ public class SkyWarsLeaveCommand {
 
     public void execute(Player player) {
         Profile profile = Profile.getByUuid(player.getUniqueId());
-        SkyWars activeSkyWars = Practice.get().getSkyWarsManager().getActiveSkyWars();
+        SkyWars activeSkyWars = Practice.getInstance().getSkyWarsManager().getActiveSkyWars();
 
         if (activeSkyWars == null) {
             player.sendMessage(CC.RED + "There isn't any active SkyWars Events.");
@@ -24,7 +24,7 @@ public class SkyWarsLeaveCommand {
             return;
         }
 
-        Practice.get().getSkyWarsManager().getActiveSkyWars().handleLeave(player);
+        Practice.getInstance().getSkyWarsManager().getActiveSkyWars().handleLeave(player);
     }
 
 }

@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public class SetSpawnCommand
 {
     public void execute(final Player player) {
-        Practice.get().getEssentials().setSpawn(player.getLocation());
+        Practice.getInstance().getEssentials().setSpawn(player.getLocation());
         player.sendMessage(CC.translate("&aSuccefully set the lobby spawn!"));
     }
 }

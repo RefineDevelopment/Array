@@ -45,8 +45,8 @@ public class ManagePartySettings extends Menu
                 ArrayList<String> lore = new ArrayList<>();
                 lore.add("&7Limit: " + profile.getParty().getLimit());
                 lore.add("");
-                lore.add("Left-Click to Increase Limit");
-                lore.add("Right-Click to Decrease Limit");
+                lore.add("&7Left-Click to Increase Limit");
+                lore.add("&7Right-Click to Decrease Limit");
                 return new ItemBuilder(Material.REDSTONE_TORCH_ON).name("&b" + this.partyManage.getName()).lore(lore).build();
             }
             if (this.partyManage == PartyManage.PUBLIC) {

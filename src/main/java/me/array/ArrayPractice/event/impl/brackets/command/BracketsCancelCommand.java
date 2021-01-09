@@ -9,12 +9,12 @@ import org.bukkit.command.CommandSender;
 public class BracketsCancelCommand {
 
 	public void execute(CommandSender sender) {
-		if (Practice.get().getBracketsManager().getActiveBrackets() == null) {
+		if (Practice.getInstance().getBracketsManager().getActiveBrackets() == null) {
 			sender.sendMessage(CC.RED + "There isn't an active Brackets event.");
 			return;
 		}
 
-		Practice.get().getBracketsManager().getActiveBrackets().end();
+		Practice.getInstance().getBracketsManager().getActiveBrackets().end();
 	}
 
 }

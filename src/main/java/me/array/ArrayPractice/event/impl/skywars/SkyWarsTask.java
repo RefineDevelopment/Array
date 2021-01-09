@@ -18,8 +18,8 @@ public abstract class SkyWarsTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (Practice.get().getSkyWarsManager().getActiveSkyWars() == null ||
-                !Practice.get().getSkyWarsManager().getActiveSkyWars().equals(skyWars) || skyWars.getState() != eventState) {
+        if (Practice.getInstance().getSkyWarsManager().getActiveSkyWars() == null ||
+                !Practice.getInstance().getSkyWarsManager().getActiveSkyWars().equals(skyWars) || skyWars.getState() != eventState) {
             cancel();
             return;
         }

@@ -9,12 +9,12 @@ import org.bukkit.command.CommandSender;
 public class SkyWarsCancelCommand {
 
     public void execute(CommandSender sender) {
-        if (Practice.get().getSkyWarsManager().getActiveSkyWars() == null) {
+        if (Practice.getInstance().getSkyWarsManager().getActiveSkyWars() == null) {
             sender.sendMessage(CC.RED + "There isn't an active SkyWars event.");
             return;
         }
 
-        Practice.get().getSkyWarsManager().getActiveSkyWars().end();
+        Practice.getInstance().getSkyWarsManager().getActiveSkyWars().end();
     }
 
 }

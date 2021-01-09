@@ -28,6 +28,10 @@ public class KitEditorListener implements Listener {
                 event.getPlayer().sendMessage(CC.RED + "A kit name cannot be more than 16 characters long.");
                 return;
             }
+            if (event.getMessage().contains("&")) {
+                event.getPlayer().sendMessage(CC.RED + "Please Don't Use Color Codes or Symbols.");
+                return;
+            }
 
             if (!profile.isInFight()) {
                 new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(event.getPlayer());

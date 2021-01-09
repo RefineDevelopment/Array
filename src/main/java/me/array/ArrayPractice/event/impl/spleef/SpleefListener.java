@@ -58,11 +58,11 @@ public class SpleefListener implements Listener {
 					event.setCancelled(true);
 					event.getEntity().setFireTicks(0);
 					if (!profile.getSpleef().isFighting() || !profile.getSpleef().isFighting(player)) {
-						player.teleport(Practice.get().getSpleefManager().getSpleefSpectator());
+						player.teleport(Practice.getInstance().getSpleefManager().getSpleefSpectator());
 						return;
 					}
 					PlayerUtil.spectator(player);
-					player.teleport(Practice.get().getSpleefManager().getSpleefSpectator());
+					player.teleport(Practice.getInstance().getSpleefManager().getSpleefSpectator());
 					profile.getSpleef().handleDeath(player);
 					return;
 				}

@@ -11,19 +11,19 @@ import org.bukkit.entity.Player;
 public class SpleefHostCommand {
 
 	public static void execute(Player player) {
-		if (Practice.get().getSpleefManager().getActiveSpleef() != null) {
+		if (Practice.getInstance().getSpleefManager().getActiveSpleef() != null) {
 			player.sendMessage(CC.RED + "There is already an active Spleef Event.");
 			return;
 		}
 
-		if (!Practice.get().getSpleefManager().getCooldown().hasExpired()) {
+		if (!Practice.getInstance().getSpleefManager().getCooldown().hasExpired()) {
 			player.sendMessage(CC.RED + "There is an active cooldown for the Spleef Event.");
 			return;
 		}
 
-		Practice.get().getSpleefManager().setActiveSpleef(new Spleef(player));
+		Practice.getInstance().getSpleefManager().setActiveSpleef(new Spleef(player));
 
-		for (Player other : Practice.get().getServer().getOnlinePlayers()) {
+		for (Player other : Practice.getInstance().getServer().getOnlinePlayers()) {
 			Profile profile = Profile.getByUuid(other.getUniqueId());
 
 			if (profile.isInLobby()) {

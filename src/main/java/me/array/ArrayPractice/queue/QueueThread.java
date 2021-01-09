@@ -113,7 +113,7 @@ public class QueueThread extends Thread {
                                 public void run() {
                                     match.start();
                                 }
-                            }.runTask(Practice.get());
+                            }.runTask(Practice.getInstance());
                         }
                     }
                 }

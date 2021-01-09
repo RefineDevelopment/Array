@@ -27,9 +27,11 @@ public class KoTHArena extends Arena {
     public void save() {
         String path = "arenas." + getName();
 
-        FileConfiguration configuration = Practice.get().getArenasConfig().getConfiguration();
+        FileConfiguration configuration = Practice.getInstance().getArenasConfig().getConfiguration();
         configuration.set(path, null);
         configuration.set(path + ".type", getType().name());
+        configuration.set(path + ".icon.material", displayIcon.getType().name());
+        configuration.set(path + ".icon.durability", displayIcon.getDurability());
 
         if (spawn1 != null) {
             configuration.set(path + ".spawn1", LocationUtil.serialize(spawn1));
@@ -50,7 +52,7 @@ public class KoTHArena extends Arena {
         configuration.set(path + ".kits", getKits());
 
         try {
-            configuration.save(Practice.get().getArenasConfig().getFile());
+            configuration.save(Practice.getInstance().getArenasConfig().getFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,11 +60,11 @@ public class KoTHArena extends Arena {
 
     @Override
     public void delete() {
-        FileConfiguration configuration = Practice.get().getArenasConfig().getConfiguration();
+        FileConfiguration configuration = Practice.getInstance().getArenasConfig().getConfiguration();
         configuration.set("arenas." + getName(), null);
 
         try {
-            configuration.save(Practice.get().getArenasConfig().getFile());
+            configuration.save(Practice.getInstance().getArenasConfig().getFile());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,5 +1,6 @@
 package me.array.ArrayPractice.party;
 
+import me.array.ArrayPractice.Practice;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.EventPriority;
@@ -22,7 +23,7 @@ public class PartyListener implements Listener
         if (party != null) {
             if (chatMessage.startsWith("@")) {
                 event.setCancelled(true);
-                String message = CC.translate("&7» " + ChatColor.AQUA + player.getName() + ChatColor.GRAY + ": " + ChatColor.LIGHT_PURPLE + chatMessage.replace("@", ""));
+                String message = CC.translate("&7» " + Practice.getInstance().getCoreHook().getPlayerPrefix(player) + player.getName() + ChatColor.GRAY + ": " + ChatColor.LIGHT_PURPLE + chatMessage.replace("@", ""));
                 party.broadcast(message);
             }
         }

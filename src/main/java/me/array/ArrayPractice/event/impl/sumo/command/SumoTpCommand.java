@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public class SumoTpCommand {
 
 	public void execute(Player player) {
-		player.teleport(Practice.get().getSumoManager().getSumoSpectator());
+		player.teleport(Practice.getInstance().getSumoManager().getSumoSpectator());
 		player.sendMessage(CC.GREEN + "Teleported to sumo's spawn location.");
 	}
 

@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public class ParkourTpCommand {
 
 	public void execute(Player player) {
-		player.teleport(Practice.get().getParkourManager().getParkourSpawn());
+		player.teleport(Practice.getInstance().getParkourManager().getParkourSpawn());
 		player.sendMessage(CC.GREEN + "Teleported to parkour's spawn location.");
 	}
 

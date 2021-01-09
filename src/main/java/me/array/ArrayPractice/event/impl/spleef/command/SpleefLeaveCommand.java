@@ -12,7 +12,7 @@ public class SpleefLeaveCommand {
 
 	public void execute(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		Spleef activeSpleef = Practice.get().getSpleefManager().getActiveSpleef();
+		Spleef activeSpleef = Practice.getInstance().getSpleefManager().getActiveSpleef();
 
 		if (activeSpleef == null) {
 			player.sendMessage(CC.RED + "There isn't any active Spleef Events.");
@@ -24,7 +24,7 @@ public class SpleefLeaveCommand {
 			return;
 		}
 
-		Practice.get().getSpleefManager().getActiveSpleef().handleLeave(player);
+		Practice.getInstance().getSpleefManager().getActiveSpleef().handleLeave(player);
 	}
 
 }

@@ -1,13 +1,12 @@
 package me.array.ArrayPractice.duel.menu;
 
+import lombok.AllArgsConstructor;
 import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.arena.ArenaType;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.ItemBuilder;
 import me.array.ArrayPractice.util.external.menu.Button;
 import me.array.ArrayPractice.util.external.menu.Menu;
-import lombok.AllArgsConstructor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -25,7 +24,7 @@ public class DuelSelectArenaMenu extends Menu {
 
     @Override
     public String getTitle(Player player) {
-        return "&cSelect an arena";
+        return "&7Select an arena";
     }
 
     @Override
@@ -86,8 +85,8 @@ public class DuelSelectArenaMenu extends Menu {
 
         @Override
         public ItemStack getButtonItem(Player player) {
-            return new ItemBuilder(Material.PAPER)
-                    .name("&4" + arena.getName())
+            return new ItemBuilder(arena.getDisplayIcon())
+                    .name("&b" + arena.getName())
                     .build();
         }
 

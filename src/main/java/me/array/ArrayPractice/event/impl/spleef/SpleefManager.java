@@ -37,7 +37,7 @@ public class SpleefManager {
 	}
 
 	public void load() {
-		FileConfiguration configuration = Practice.get().getEventsConfig().getConfiguration();
+		FileConfiguration configuration = Practice.getInstance().getEventsConfig().getConfiguration();
 
 		if (configuration.contains("events.spleef.spectator")) {
 			spleefSpectator = LocationUtil.deserialize(configuration.getString("events.spleef.spectator"));
@@ -49,7 +49,7 @@ public class SpleefManager {
 	}
 
 	public void save() {
-		FileConfiguration configuration = Practice.get().getEventsConfig().getConfiguration();
+		FileConfiguration configuration = Practice.getInstance().getEventsConfig().getConfiguration();
 
 		if (spleefSpectator != null) {
 			configuration.set("events.spleef.spectator", LocationUtil.serialize(spleefSpectator));
@@ -60,7 +60,7 @@ public class SpleefManager {
 		}
 
 		try {
-			configuration.save(Practice.get().getEventsConfig().getFile());
+			configuration.save(Practice.getInstance().getEventsConfig().getFile());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

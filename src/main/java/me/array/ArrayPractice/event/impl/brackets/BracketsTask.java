@@ -18,8 +18,8 @@ public abstract class BracketsTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		if (Practice.get().getBracketsManager().getActiveBrackets() == null ||
-		    !Practice.get().getBracketsManager().getActiveBrackets().equals(brackets) || brackets.getState() != eventState) {
+		if (Practice.getInstance().getBracketsManager().getActiveBrackets() == null ||
+		    !Practice.getInstance().getBracketsManager().getActiveBrackets().equals(brackets) || brackets.getState() != eventState) {
 			cancel();
 			return;
 		}

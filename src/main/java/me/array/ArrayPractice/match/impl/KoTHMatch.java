@@ -148,7 +148,7 @@ public class KoTHMatch extends Match {
                     }
                 }
             }
-        }.runTaskTimerAsynchronously(Practice.get(), 2L, 20L);
+        }.runTaskTimerAsynchronously(Practice.getInstance(), 2L, 20L);
     }
 
     private boolean isCapperOnline() {
@@ -212,12 +212,12 @@ public class KoTHMatch extends Match {
                             profile.refreshHotbar();
                             profile.handleVisibility();
 
-                            Practice.get().getEssentials().teleportToSpawn(player);
+                            Practice.getInstance().getEssentials().teleportToSpawn(player);
                         }
                     }
                 }
             }
-        }.runTaskLater(Practice.get(), 40L);
+        }.runTaskLater(Practice.getInstance(), 40L);
 
         Team winningTeam = getWinningTeam();
         Team losingTeam = getOpponentTeam(winningTeam);
@@ -285,7 +285,7 @@ public class KoTHMatch extends Match {
                         canEnd();
                     }
                 }
-            }.runTaskLater(Practice.get(), 160L);
+            }.runTaskLater(Practice.getInstance(), 160L);
         } else {
             canEnd();
         }
@@ -297,7 +297,7 @@ public class KoTHMatch extends Match {
 
     @Override
     public Player getWinningPlayer() {
-        throw new UnsupportedOperationException("Cannot get solo winning player from a TeamMatch");
+        throw new UnsupportedOperationException("Cannot getInstance solo winning player from a TeamMatch");
     }
 
     @Override
@@ -317,12 +317,12 @@ public class KoTHMatch extends Match {
 
     @Override
     public TeamPlayer getTeamPlayerA() {
-        throw new UnsupportedOperationException("Cannot get solo match player from a TeamMatch");
+        throw new UnsupportedOperationException("Cannot getInstance solo match player from a TeamMatch");
     }
 
     @Override
     public TeamPlayer getTeamPlayerB() {
-        throw new UnsupportedOperationException("Cannot get solo match player from a TeamMatch");
+        throw new UnsupportedOperationException("Cannot getInstance solo match player from a TeamMatch");
     }
 
     @Override
@@ -451,27 +451,27 @@ public class KoTHMatch extends Match {
 
     @Override
     public Player getOpponentPlayer(Player player) {
-        throw new UnsupportedOperationException("Cannot get solo opponent player from TeamMatch");
+        throw new UnsupportedOperationException("Cannot getInstance solo opponent player from TeamMatch");
     }
 
     @Override
     public TeamPlayer getOpponentTeamPlayer(Player player) {
-        throw new UnsupportedOperationException("Cannot get solo opponent match player from TeamMatch");
+        throw new UnsupportedOperationException("Cannot getInstance solo opponent match player from TeamMatch");
     }
 
     @Override
     public int getTotalRoundWins() {
-        throw new UnsupportedOperationException("Cannot get solo rounds needed from TeamMatch");
+        throw new UnsupportedOperationException("Cannot getInstance solo rounds needed from TeamMatch");
     }
 
     @Override
     public int getRoundsNeeded(TeamPlayer teamPlayer) {
-        throw new UnsupportedOperationException("Cannot get solo rounds needed from TeamMatch");
+        throw new UnsupportedOperationException("Cannot getInstance solo rounds needed from TeamMatch");
     }
 
     @Override
     public int getRoundsNeeded(Team Team) {
-        throw new UnsupportedOperationException("Cannot get solo rounds needed from TeamMatch");
+        throw new UnsupportedOperationException("Cannot getInstance solo rounds needed from TeamMatch");
     }
 
     @Override

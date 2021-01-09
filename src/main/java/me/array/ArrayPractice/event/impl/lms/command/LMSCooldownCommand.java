@@ -10,14 +10,14 @@ import org.bukkit.command.CommandSender;
 public class LMSCooldownCommand {
 
     public void execute(CommandSender sender) {
-        if (Practice.get().getLMSManager().getCooldown().hasExpired()) {
+        if (Practice.getInstance().getLMSManager().getCooldown().hasExpired()) {
             sender.sendMessage(CC.RED + "There isn't a LMS Event cooldown.");
             return;
         }
 
         sender.sendMessage(CC.GREEN + "You reset the LMS Event cooldown.");
 
-        Practice.get().getLMSManager().setCooldown(new Cooldown(0));
+        Practice.getInstance().getLMSManager().setCooldown(new Cooldown(0));
     }
 
 }

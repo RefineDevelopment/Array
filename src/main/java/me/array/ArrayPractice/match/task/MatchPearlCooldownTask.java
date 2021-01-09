@@ -10,7 +10,7 @@ public class MatchPearlCooldownTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        for (Player player : Practice.get().getServer().getOnlinePlayers()) {
+        for (Player player : Practice.getInstance().getServer().getOnlinePlayers()) {
             Profile profile = Profile.getByUuid(player.getUniqueId());
 
             if ((profile.isInFight() || profile.isInEvent()) && !profile.getEnderpearlCooldown().hasExpired()) {
@@ -22,7 +22,7 @@ public class MatchPearlCooldownTask extends BukkitRunnable {
                 if (profile.isInFight() || profile.isInEvent()) {
                     if (!profile.getEnderpearlCooldown().isNotified()) {
                         profile.getEnderpearlCooldown().setNotified(true);
-                        player.sendMessage(CC.RED + "You can now pearl again.");
+                        player.sendMessage(CC.GREEN + "You can now pearl again.");
                     }
                 }
 

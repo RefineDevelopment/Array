@@ -8,12 +8,12 @@ import org.bukkit.Material;
 @AllArgsConstructor
 @Getter
 public enum EventType {
-    BRACKETS(Practice.get().getBracketsManager().getActiveBrackets(), "Brackets", Material.IRON_SWORD),
-    SUMO(Practice.get().getSumoManager().getActiveSumo(), "Sumo", Material.LEASH),
-    LMS(Practice.get().getLMSManager().getActiveLMS(), "LMS", Material.DIAMOND_AXE),
-    PARKOUR(Practice.get().getParkourManager().getActiveParkour(), "Parkour", Material.DIAMOND_BOOTS),
-    SPLEEF(Practice.get().getSpleefManager().getActiveSpleef(), "Spleef", Material.DIAMOND_SPADE),
-    SKYWARS(Practice.get().getSkyWarsManager().getActiveSkyWars(), "Skywars", Material.DIAMOND_AXE);
+    BRACKETS(Practice.getInstance().getBracketsManager().getActiveBrackets(), "Brackets", Material.IRON_SWORD),
+    SUMO(Practice.getInstance().getSumoManager().getActiveSumo(), "Sumo", Material.LEASH),
+    LMS(Practice.getInstance().getLMSManager().getActiveLMS(), "LMS", Material.DIAMOND_AXE),
+    PARKOUR(Practice.getInstance().getParkourManager().getActiveParkour(), "Parkour", Material.DIAMOND_BOOTS),
+    SPLEEF(Practice.getInstance().getSpleefManager().getActiveSpleef(), "Spleef", Material.DIAMOND_SPADE),
+    SKYWARS(Practice.getInstance().getSkyWarsManager().getActiveSkyWars(), "Skywars", Material.DIAMOND_AXE);
 
     private final Object object;
     private final String title;

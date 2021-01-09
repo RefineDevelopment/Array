@@ -9,12 +9,12 @@ import org.bukkit.command.CommandSender;
 public class SpleefCancelCommand {
 
 	public void execute(CommandSender sender) {
-		if (Practice.get().getSpleefManager().getActiveSpleef() == null) {
+		if (Practice.getInstance().getSpleefManager().getActiveSpleef() == null) {
 			sender.sendMessage(CC.RED + "There isn't an active Spleef event.");
 			return;
 		}
 
-		Practice.get().getSpleefManager().getActiveSpleef().end();
+		Practice.getInstance().getSpleefManager().getActiveSpleef().end();
 	}
 
 }

@@ -10,14 +10,14 @@ import org.bukkit.command.CommandSender;
 public class SkyWarsCooldownCommand {
 
     public void execute(CommandSender sender) {
-        if (Practice.get().getSkyWarsManager().getCooldown().hasExpired()) {
+        if (Practice.getInstance().getSkyWarsManager().getCooldown().hasExpired()) {
             sender.sendMessage(CC.RED + "There isn't a SkyWars Event cooldown.");
             return;
         }
 
         sender.sendMessage(CC.GREEN + "You reset the SkyWars Event cooldown.");
 
-        Practice.get().getSkyWarsManager().setCooldown(new Cooldown(0));
+        Practice.getInstance().getSkyWarsManager().setCooldown(new Cooldown(0));
     }
 
 }

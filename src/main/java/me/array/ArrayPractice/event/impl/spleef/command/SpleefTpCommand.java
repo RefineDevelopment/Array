@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public class SpleefTpCommand {
 
 	public void execute(Player player) {
-		player.teleport(Practice.get().getSpleefManager().getSpleefSpectator());
+		player.teleport(Practice.getInstance().getSpleefManager().getSpleefSpectator());
 		player.sendMessage(CC.GREEN + "Teleported to spleef's spawn location.");
 	}
 

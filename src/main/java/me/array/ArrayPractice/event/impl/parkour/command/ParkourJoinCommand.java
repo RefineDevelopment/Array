@@ -13,7 +13,7 @@ public class ParkourJoinCommand {
 
 	public static void execute(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		Parkour activeParkour = Practice.get().getParkourManager().getActiveParkour();
+		Parkour activeParkour = Practice.getInstance().getParkourManager().getActiveParkour();
 
 		if (profile.isBusy(player) || profile.getParty() != null) {
 			player.sendMessage(CC.RED + "You cannot join the parkour right now.");
@@ -30,7 +30,7 @@ public class ParkourJoinCommand {
 			return;
 		}
 
-		Practice.get().getParkourManager().getActiveParkour().handleJoin(player);
+		Practice.getInstance().getParkourManager().getActiveParkour().handleJoin(player);
 	}
 
 }

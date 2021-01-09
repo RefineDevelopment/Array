@@ -1,7 +1,7 @@
 kits:
   NoDebuff:
     enabled: true
-    knockback-profile: Practice
+    knockback-profile: strafe
     icon:
       material: POTION
       durability: 16421
@@ -48,7 +48,7 @@ kits:
           durability: 8226
   Debuff:
     enabled: true
-    knockback-profile: Practice
+    knockback-profile: strafe
     icon:
       material: POTION
       durability: 16452
@@ -95,10 +95,10 @@ kits:
           durability: 16452
   Combo:
     enabled: true
-    knockback-profile: Combo
+    knockback-profile: combo
     icon:
-      material: GOLDEN_APPLE
-      durability: 0
+      material: FISH
+      durability: 3
     loadout:
       armor: t@313:e@0@3:e@34@5;t@312:e@0@3:e@34@5;t@311:e@0@3:e@34@5;t@310:e@0@3:e@34@5;
       contents: t@276:e@34@4;t@322:d@1:a@64;t@310:e@0@3:e@34@5;t@311:e@0@3:e@34@5;t@312:e@0@3:e@34@5;t@313:e@0@3:e@34@5;t@0;t@0;t@373:d@8226;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@373:d@8226;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@373:d@8226;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@373:d@8226;
@@ -125,7 +125,7 @@ kits:
       allow-potion-fill: false
   BuildUHC:
     enabled: true
-    knockback-profile: Practice
+    knockback-profile: strafe
     icon:
       material: LAVA_BUCKET
       durability: 0
@@ -155,7 +155,7 @@ kits:
       allow-potion-fill: false
   Sumo:
     enabled: true
-    knockback-profile: Sumo
+    knockback-profile: sumo
     icon:
       material: LEASH
       durability: 0

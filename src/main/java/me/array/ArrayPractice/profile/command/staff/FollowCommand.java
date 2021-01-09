@@ -25,7 +25,7 @@ public class FollowCommand {
         Profile targetProfile = Profile.getByUuid(target.getUniqueId());
         if (targetProfile.isInSomeSortOfFight()) {
             if (targetProfile.isInMatch()) {
-                Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.get(), () -> player.chat("/spec " + target.getName()), 20L);
+                Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.getInstance(), () -> player.chat("/spec " + target.getName()), 20L);
             }
         }
     }

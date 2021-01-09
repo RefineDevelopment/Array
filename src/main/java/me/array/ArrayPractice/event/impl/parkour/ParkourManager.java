@@ -36,7 +36,7 @@ public class ParkourManager {
 	}
 
 	public void load() {
-		FileConfiguration configuration = Practice.get().getEventsConfig().getConfiguration();
+		FileConfiguration configuration = Practice.getInstance().getEventsConfig().getConfiguration();
 
 		if (configuration.contains("events.parkour.spectator")) {
 			parkourSpawn = LocationUtil.deserialize(configuration.getString("events.parkour.spectator"));
@@ -44,14 +44,14 @@ public class ParkourManager {
 	}
 
 	public void save() {
-		FileConfiguration configuration = Practice.get().getEventsConfig().getConfiguration();
+		FileConfiguration configuration = Practice.getInstance().getEventsConfig().getConfiguration();
 
 		if (parkourSpawn != null) {
 			configuration.set("events.parkour.spectator", LocationUtil.serialize(parkourSpawn));
 		}
 
 		try {
-			configuration.save(Practice.get().getEventsConfig().getFile());
+			configuration.save(Practice.getInstance().getEventsConfig().getFile());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

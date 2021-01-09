@@ -149,7 +149,7 @@ public class HotbarListener implements Listener
                     break;
                 }
                 case SUMO_LEAVE: {
-                    final Sumo activeSumo = Practice.get().getSumoManager().getActiveSumo();
+                    final Sumo activeSumo = Practice.getInstance().getSumoManager().getActiveSumo();
                     if (activeSumo == null) {
                         player.sendMessage(CC.RED + "There is no active sumo.");
                         return;
@@ -158,11 +158,11 @@ public class HotbarListener implements Listener
                         player.sendMessage(CC.RED + "You are not apart of the active sumo.");
                         return;
                     }
-                    Practice.get().getSumoManager().getActiveSumo().handleLeave(player);
+                    Practice.getInstance().getSumoManager().getActiveSumo().handleLeave(player);
                     break;
                 }
                 case BRACKETS_LEAVE: {
-                    final Brackets activeBrackets = Practice.get().getBracketsManager().getActiveBrackets();
+                    final Brackets activeBrackets = Practice.getInstance().getBracketsManager().getActiveBrackets();
                     if (activeBrackets == null) {
                         player.sendMessage(CC.RED + "There is no active brackets.");
                         return;
@@ -171,11 +171,11 @@ public class HotbarListener implements Listener
                         player.sendMessage(CC.RED + "You are not apart of the active brackets.");
                         return;
                     }
-                    Practice.get().getBracketsManager().getActiveBrackets().handleLeave(player);
+                    Practice.getInstance().getBracketsManager().getActiveBrackets().handleLeave(player);
                     break;
                 }
                 case SKYWARS_LEAVE: {
-                    final SkyWars activeSkywars = Practice.get().getSkyWarsManager().getActiveSkyWars();
+                    final SkyWars activeSkywars = Practice.getInstance().getSkyWarsManager().getActiveSkyWars();
                     if (activeSkywars == null) {
                         player.sendMessage(CC.RED + "There is no active skywars event.");
                         return;
@@ -184,11 +184,11 @@ public class HotbarListener implements Listener
                         player.sendMessage(CC.RED + "You are not apart of the active skywars event.");
                         return;
                     }
-                    Practice.get().getSkyWarsManager().getActiveSkyWars().handleLeave(player);
+                    Practice.getInstance().getSkyWarsManager().getActiveSkyWars().handleLeave(player);
                     break;
                 }
                 case LMS_LEAVE: {
-                    final LMS activeLMS = Practice.get().getLMSManager().getActiveLMS();
+                    final LMS activeLMS = Practice.getInstance().getLMSManager().getActiveLMS();
                     if (activeLMS == null) {
                         player.sendMessage(CC.RED + "There is no active LMS.");
                         return;
@@ -197,11 +197,11 @@ public class HotbarListener implements Listener
                         player.sendMessage(CC.RED + "You are not apart of the active LMS.");
                         return;
                     }
-                    Practice.get().getLMSManager().getActiveLMS().handleLeave(player);
+                    Practice.getInstance().getLMSManager().getActiveLMS().handleLeave(player);
                     break;
                 }
                 case PARKOUR_LEAVE: {
-                    final Parkour activeParkour = Practice.get().getParkourManager().getActiveParkour();
+                    final Parkour activeParkour = Practice.getInstance().getParkourManager().getActiveParkour();
                     if (activeParkour == null) {
                         player.sendMessage(CC.RED + "There is no active Parkour.");
                         return;
@@ -210,11 +210,11 @@ public class HotbarListener implements Listener
                         player.sendMessage(CC.RED + "You are not apart of the active Parkour.");
                         return;
                     }
-                    Practice.get().getParkourManager().getActiveParkour().handleLeave(player);
+                    Practice.getInstance().getParkourManager().getActiveParkour().handleLeave(player);
                     break;
                 }
                 case SPLEEF_LEAVE: {
-                    final Spleef activeSpleef = Practice.get().getSpleefManager().getActiveSpleef();
+                    final Spleef activeSpleef = Practice.getInstance().getSpleefManager().getActiveSpleef();
                     if (activeSpleef == null) {
                         player.sendMessage(CC.RED + "There is no active Spleef.");
                         return;
@@ -223,7 +223,7 @@ public class HotbarListener implements Listener
                         player.sendMessage(CC.RED + "You are not apart of the active Spleef.");
                         return;
                     }
-                    Practice.get().getSpleefManager().getActiveSpleef().handleLeave(player);
+                    Practice.getInstance().getSpleefManager().getActiveSpleef().handleLeave(player);
                     break;
                 }
                 case SPECTATE_STOP: {

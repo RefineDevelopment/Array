@@ -10,14 +10,14 @@ import org.bukkit.command.CommandSender;
 public class BracketsCooldownCommand {
 
 	public void execute(CommandSender sender) {
-		if (Practice.get().getBracketsManager().getCooldown().hasExpired()) {
+		if (Practice.getInstance().getBracketsManager().getCooldown().hasExpired()) {
 			sender.sendMessage(CC.RED + "There isn't a Brackets Event cooldown.");
 			return;
 		}
 
 		sender.sendMessage(CC.GREEN + "You reset the Brackets Event cooldown.");
 
-		Practice.get().getBracketsManager().setCooldown(new Cooldown(0));
+		Practice.getInstance().getBracketsManager().setCooldown(new Cooldown(0));
 	}
 
 }

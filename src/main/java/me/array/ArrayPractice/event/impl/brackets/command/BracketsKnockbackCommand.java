@@ -14,7 +14,7 @@ public class BracketsKnockbackCommand {
             player.sendMessage(CC.RED + "Please Specify a Knockback Profile.");
         }
         else {
-            Practice.get().getBracketsManager().setBracketsKnockbackProfile(kb);
+            Practice.getInstance().getBracketsManager().setBracketsKnockbackProfile(kb);
             player.sendMessage(CC.GREEN + "Successfully set the knockback profile!");
         }
     }

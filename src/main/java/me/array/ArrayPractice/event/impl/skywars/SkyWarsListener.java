@@ -35,14 +35,14 @@ public class SkyWarsListener implements Listener {
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
                 PlayerUtil.spectator(player);
-                player.teleport(LocationUtil.deserialize(Practice.get().getSkyWarsManager().getSkyWarsSpectators().get(0)));
+                player.teleport(LocationUtil.deserialize(Practice.getInstance().getSkyWarsManager().getSkyWarsSpectators().get(0)));
                 if (player.getKiller() != null) {
                     profile.getSkyWars().handleDeath(player, player.getKiller());
                 } else {
                     profile.getSkyWars().handleDeath(player, null);
                 }
 
-                Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.get(), () -> event.getDrops().clear(), 10 * 20);
+                Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.getInstance(), () -> event.getDrops().clear(), 10 * 20);
             }
         }
     }
@@ -129,11 +129,11 @@ public class SkyWarsListener implements Listener {
         if (event.getEntity() instanceof Player) {
             Profile profile = Profile.getByUuid(event.getEntity().getUniqueId());
             if (profile.isInSkyWars()) {
-                SkyWars skyWars = Practice.get().getSkyWarsManager().getActiveSkyWars();
+                SkyWars skyWars = Practice.getInstance().getSkyWarsManager().getActiveSkyWars();
                 if (skyWars != null) {
                     if (skyWars.isWaiting() || skyWars.getState().equals(SkyWarsState.ROUND_ENDING)) {
                         if (event.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
-                            event.getEntity().teleport(LocationUtil.deserialize(Practice.get().getSkyWarsManager().getSkyWarsSpectators().get(0)));
+                            event.getEntity().teleport(LocationUtil.deserialize(Practice.getInstance().getSkyWarsManager().getSkyWarsSpectators().get(0)));
                         }
                         event.setCancelled(true);
                     }

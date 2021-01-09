@@ -8,7 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import rip.verse.jupiter.knockback.KnockbackModule;
+import pt.foxspigot.jar.knockback.KnockbackModule;
 
 import java.util.Random;
 
@@ -28,7 +28,7 @@ public class SkyWarsRoundStartTask extends SkyWarsTask {
 
             this.getSkyWars().getPlayers().forEach(player -> ((CraftPlayer)player).getHandle().setKnockback(KnockbackModule.INSTANCE.profiles.get("default")));
 
-            Bukkit.getScheduler().runTaskAsynchronously(Practice.get(), () -> {
+            Bukkit.getScheduler().runTaskAsynchronously(Practice.getInstance(), () -> {
                 int x = 0;
                 Random random = new Random();
                 OUTTER_LOOP: for ( SkyWarsChest chest : SkyWarsChest.chests.values()) {

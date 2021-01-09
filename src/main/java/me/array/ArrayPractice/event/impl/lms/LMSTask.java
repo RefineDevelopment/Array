@@ -18,8 +18,8 @@ public abstract class LMSTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (Practice.get().getLMSManager().getActiveLMS() == null ||
-                !Practice.get().getLMSManager().getActiveLMS().equals(LMS) || LMS.getState() != eventState) {
+        if (Practice.getInstance().getLMSManager().getActiveLMS() == null ||
+                !Practice.getInstance().getLMSManager().getActiveLMS().equals(LMS) || LMS.getState() != eventState) {
             cancel();
             return;
         }

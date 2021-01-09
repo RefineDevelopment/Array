@@ -185,7 +185,7 @@ public class Profile {
     }
 
     public static void init() {
-        collection = Practice.get().getMongoDatabase().getCollection("profiles");
+        collection = Practice.getInstance().getMongoDatabase().getCollection("profiles");
 
         // Players might have joined before the plugin finished loading
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -201,18 +201,18 @@ public class Profile {
             profiles.put(player.getUniqueId(), profile);
         }
 
-        getEloLeagues().put(1019, "&8[&cDiamond 3&8]");
-        getEloLeagues().put(1018, "&8[&cDiamond 3&8]");
-        getEloLeagues().put(1017, "&8[&cDiamond 2&8]");
-        getEloLeagues().put(1016, "&8[&cDiamond 2&8]");
-        getEloLeagues().put(1015, "&8[&cDiamond 1&8]");
-        getEloLeagues().put(1014, "&8[&cDiamond 1&8]");
-        getEloLeagues().put(1013, "&8[&6Gold 3&8]");
-        getEloLeagues().put(1012, "&8[&6Gold 3&8]");
-        getEloLeagues().put(1011, "&8[&6Gold 2&8]");
-        getEloLeagues().put(1010, "&8[&6Gold 2&8]");
-        getEloLeagues().put(1009, "&8[&6Gold 1&8]");
-        getEloLeagues().put(1008, "&8[&6Gold 1&8]");
+        getEloLeagues().put(1019, "&8[&bDiamond &c3&8]");
+        getEloLeagues().put(1018, "&8[&bDiamond &c3&8]");
+        getEloLeagues().put(1017, "&8[&bDiamond &c2&8]");
+        getEloLeagues().put(1016, "&8[&bDiamond &c2&8]");
+        getEloLeagues().put(1015, "&8[&bDiamond &c1&8]");
+        getEloLeagues().put(1014, "&8[&bDiamond &c1&8]");
+        getEloLeagues().put(1013, "&8[&6Gold &e3&8]");
+        getEloLeagues().put(1012, "&8[&6Gold &e3&8]");
+        getEloLeagues().put(1011, "&8[&6Gold &e2&8]");
+        getEloLeagues().put(1010, "&8[&6Gold &e2&8]");
+        getEloLeagues().put(1009, "&8[&6Gold &e1&8]");
+        getEloLeagues().put(1008, "&8[&6Gold &e1&8]");
         getEloLeagues().put(1007, "&8[&7Silver 4&8]");
         getEloLeagues().put(1006, "&8[&7Silver 4&8]");
         getEloLeagues().put(1005, "&8[&7Silver 3&8]");
@@ -243,7 +243,7 @@ public class Profile {
                     profile.save();
                 }
             }
-        }.runTaskTimerAsynchronously(Practice.get(), 36000L, 36000L);
+        }.runTaskTimerAsynchronously(Practice.getInstance(), 36000L, 36000L);
 
         // Load all players from database
         Profile.loadAllProfiles();
@@ -253,7 +253,14 @@ public class Profile {
                 Profile.loadAllProfiles();
                 Kit.getKits().forEach(Kit::updateKitLeaderboards);
             }
-        }.runTaskTimerAsynchronously(Practice.get(), 600L, 600L);
+        }.runTaskTimerAsynchronously(Practice.getInstance(), 600L, 600L);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+            Bukkit.broadcastMessage(CC.translate("&8[&b&oWarning&8] &7Updating Leaderboards, this might cause some lag..."));
+            }
+        }.runTaskTimerAsynchronously(Practice.getInstance(), 6000L, 6000L);
 
         // Reload global elo leaderboards
         new BukkitRunnable() {
@@ -261,7 +268,7 @@ public class Profile {
             public void run() {
                 loadGlobalLeaderboards();
             }
-        }.runTaskTimerAsynchronously(Practice.get(), 600L, 600L);
+        }.runTaskTimerAsynchronously(Practice.getInstance(), 600L, 600L);
 
         // Refresh players' hotbars every 3 seconds
         new BukkitRunnable() {
@@ -271,7 +278,7 @@ public class Profile {
                     profile.checkForHotbarUpdate();
                 }
             }
-        }.runTaskTimerAsynchronously(Practice.get(), 60L, 60L);
+        }.runTaskTimerAsynchronously(Practice.getInstance(), 60L, 60L);
     }
 
     public static Profile getByUuid(UUID uuid) {
@@ -295,7 +302,7 @@ public class Profile {
     }
 
     public static void loadAllProfiles() {
-        allProfiles = Practice.get().getMongoDatabase().getCollection("profiles");
+        allProfiles = Practice.getInstance().getMongoDatabase().getCollection("profiles");
     }
 
     public static void loadGlobalLeaderboards() {
@@ -470,7 +477,7 @@ public class Profile {
                 break;
             }
         }
-        if (this.globalElo >= 1020) toReturn = "&c&lChampion";
+        if (this.globalElo >= 1020) toReturn = "&b&lResolve";
         return toReturn;
     }
 
@@ -637,12 +644,12 @@ public class Profile {
             }
 
             {
-                boolean activeEvent = (Practice.get().getSumoManager().getActiveSumo() != null && Practice.get().getSumoManager().getActiveSumo().isWaiting())
-                        || (Practice.get().getBracketsManager().getActiveBrackets() != null && Practice.get().getBracketsManager().getActiveBrackets().isWaiting())
-                        || (Practice.get().getLMSManager().getActiveLMS() != null && Practice.get().getLMSManager().getActiveLMS().isWaiting())
-                        || (Practice.get().getParkourManager().getActiveParkour() != null && Practice.get().getParkourManager().getActiveParkour().isWaiting())
-                        || (Practice.get().getSkyWarsManager().getActiveSkyWars() != null && Practice.get().getSkyWarsManager().getActiveSkyWars().isWaiting())
-                        || (Practice.get().getSpleefManager().getActiveSpleef() != null && Practice.get().getSpleefManager().getActiveSpleef().isWaiting());
+                boolean activeEvent = (Practice.getInstance().getSumoManager().getActiveSumo() != null && Practice.getInstance().getSumoManager().getActiveSumo().isWaiting())
+                        || (Practice.getInstance().getBracketsManager().getActiveBrackets() != null && Practice.getInstance().getBracketsManager().getActiveBrackets().isWaiting())
+                        || (Practice.getInstance().getLMSManager().getActiveLMS() != null && Practice.getInstance().getLMSManager().getActiveLMS().isWaiting())
+                        || (Practice.getInstance().getParkourManager().getActiveParkour() != null && Practice.getInstance().getParkourManager().getActiveParkour().isWaiting())
+                        || (Practice.getInstance().getSkyWarsManager().getActiveSkyWars() != null && Practice.getInstance().getSkyWarsManager().getActiveSkyWars().isWaiting())
+                        || (Practice.getInstance().getSpleefManager().getActiveSpleef() != null && Practice.getInstance().getSpleefManager().getActiveSpleef().isWaiting());
                 int eventSlot = player.getInventory().first(Hotbar.getItems().get(HotbarItem.EVENT_JOIN));
 
                 if (eventSlot == -1 && activeEvent) {
@@ -658,7 +665,7 @@ public class Profile {
                     public void run() {
                         refreshHotbar();
                     }
-                }.runTask(Practice.get());
+                }.runTask(Practice.getInstance());
             }
         }
     }
@@ -800,14 +807,14 @@ public class Profile {
                 public void run() {
                     player.hidePlayer(otherPlayer);
                 }
-            }.runTask(Practice.get());
+            }.runTask(Practice.getInstance());
         } else {
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     player.showPlayer(otherPlayer);
                 }
-            }.runTask(Practice.get());
+            }.runTask(Practice.getInstance());
         }
     }
 
@@ -820,7 +827,7 @@ public class Profile {
                         Profile.this.handleVisibility(player, otherPlayer);
                     }
                 }
-            }.runTaskAsynchronously(Practice.get());
+            }.runTaskAsynchronously(Practice.getInstance());
         }
     }
 

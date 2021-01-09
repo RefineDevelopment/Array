@@ -9,12 +9,12 @@ import org.bukkit.command.CommandSender;
 public class ParkourCancelCommand {
 
 	public void execute(CommandSender sender) {
-		if (Practice.get().getParkourManager().getActiveParkour() == null) {
+		if (Practice.getInstance().getParkourManager().getActiveParkour() == null) {
 			sender.sendMessage(CC.RED + "There isn't an active Parkour event.");
 			return;
 		}
 
-		Practice.get().getParkourManager().getActiveParkour().end(null);
+		Practice.getInstance().getParkourManager().getActiveParkour().end(null);
 	}
 
 }

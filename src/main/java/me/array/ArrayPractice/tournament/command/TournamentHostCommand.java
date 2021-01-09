@@ -66,7 +66,7 @@ public class TournamentHostCommand {
         Tournament.CURRENT_TOURNAMENT.setLadder(Kit.getByName("NoDebuff"));
 
         String type = Tournament.CURRENT_TOURNAMENT.getTeamCount() + "vs" + Tournament.CURRENT_TOURNAMENT.getTeamCount();
-        Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "(Tournament) " + CC.WHITE + "A " + ChatColor.GOLD + ChatColor.BOLD + type +  Tournament.CURRENT_TOURNAMENT.getLadder().getName() + ChatColor.WHITE + " tournament is being hosted by " + CC.translate(CC.AQUA + Practice.get().getCoreHook().getPlayerPrefix(player) + player.getName()));
+        Bukkit.broadcastMessage(CC.AQUA + CC.BOLD + "(Tournament) " + CC.WHITE + "A " + ChatColor.GOLD + ChatColor.BOLD + type +  Tournament.CURRENT_TOURNAMENT.getLadder().getName() + ChatColor.WHITE + " tournament is being hosted by " + CC.translate(CC.AQUA + Practice.getInstance().getCoreHook().getPlayerPrefix(player) + player.getName()));
         broadcastMessage(CC.AQUA + CC.BOLD + "(Tournament) " + ChatColor.GREEN + "(Click to accept)");
 
         Tournament.RUNNABLE = new BukkitRunnable() {
@@ -94,7 +94,7 @@ public class TournamentHostCommand {
                 }
             }
         };
-        Tournament.RUNNABLE.runTaskTimer(Practice.get(), 20, 20);
+        Tournament.RUNNABLE.runTaskTimer(Practice.getInstance(), 20, 20);
     }
 }
 

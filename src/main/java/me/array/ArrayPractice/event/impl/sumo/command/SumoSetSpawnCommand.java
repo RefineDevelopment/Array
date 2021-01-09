@@ -14,16 +14,16 @@ public class SumoSetSpawnCommand {
 			player.sendMessage(CC.RED + "The position must be 1 or 2.");
 		} else {
 			if (position.equals("one") || position.equals("1")) {
-				Practice.get().getSumoManager().setSumoSpawn1(player.getLocation());
+				Practice.getInstance().getSumoManager().setSumoSpawn1(player.getLocation());
 			} else if (position.equals("two")|| position.equals("2")) {
-				Practice.get().getSumoManager().setSumoSpawn2(player.getLocation());
+				Practice.getInstance().getSumoManager().setSumoSpawn2(player.getLocation());
 			} else {
-				Practice.get().getSumoManager().setSumoSpectator(player.getLocation());
+				Practice.getInstance().getSumoManager().setSumoSpectator(player.getLocation());
 			}
 
 			player.sendMessage(CC.GREEN + "Updated sumo's spawn location " + position + ".");
 
-			Practice.get().getSumoManager().save();
+			Practice.getInstance().getSumoManager().save();
 		}
 	}
 
