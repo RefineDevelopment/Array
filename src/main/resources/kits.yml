@@ -97,7 +97,7 @@ kits:
     enabled: true
     knockback-profile: combo
     icon:
-      material: FISH
+      material: RAW_FISH
       durability: 3
     loadout:
       armor: t@313:e@0@3:e@34@5;t@312:e@0@3:e@34@5;t@311:e@0@3:e@34@5;t@310:e@0@3:e@34@5;
