@@ -87,6 +87,12 @@ public class TeamMatch extends Match {
         if (teamPlayer.isDisconnected()) {
             return;
         }
+        this.broadcastMessage(CC.AQUA + CC.BOLD + "Match Found!");
+        this.broadcastMessage("");
+        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fTeams: &b" + this.getTeamA().getLeader().getDisplayName() + CC.GRAY + " vs " + CC.AQUA + this.getTeamB().getLeader().getDisplayName())));
+        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fArena: &b" + this.getArena().getName())));
+        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fKit: &b" + this.getKit().getName())));
+        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("")));
 
         teamPlayer.setAlive(true);
 

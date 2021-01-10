@@ -28,13 +28,6 @@ public class MatchStartTask extends BukkitRunnable {
         }
 
         if (match.isHCFMatch() || match.isKoTHMatch()) {
-            if (seconds > 0) {
-                if (match.isTeamMatch() || match.isSumoTeamMatch() || match.isKoTHMatch() || match.isHCFMatch()) {
-                    match.broadcastMessage(CC.AQUA + CC.BOLD + "Match Found!");
-                    match.broadcastMessage("");
-                    match.broadcastMessage(("&b● &fTeams: &b" + match.getTeamA().getLeader().getDisplayName() + CC.GRAY + " vs " + CC.AQUA + match.getTeamB().getLeader().getDisplayName()));
-                }
-            }
             if (seconds == 0) {
                 match.setState(MatchState.FIGHTING);
                 match.setStartTimestamp(System.currentTimeMillis());

@@ -95,6 +95,7 @@ public class Kit {
             kit.getGameRules().setSpleef(config.getBoolean(path + ".game-rules.spleef"));
             kit.getGameRules().setParkour(config.getBoolean(path + ".game-rules.parkour"));
             kit.getGameRules().setSumo(config.getBoolean(path + ".game-rules.sumo"));
+            kit.getGameRules().setBoxuhc(config.getBoolean(path + ".game-rules.boxuhc"));
             kit.getGameRules().setTimed(config.getBoolean(path + ".game-rules.timed"));
             kit.getGameRules().setWaterkill(config.getBoolean(path + ".game-rules.water-kill"));
             kit.getGameRules().setLavakill(config.getBoolean(path + ".game-rules.lava-kill"));
@@ -102,7 +103,6 @@ public class Kit {
             kit.getGameRules().setShowHealth(config.getBoolean(path + ".game-rules.show-health"));
             kit.getGameRules().setBowhp(config.getBoolean(path + ".game-rules.bow-hp"));
             kit.getGameRules().setHitDelay(config.getInt(path + ".game-rules.hit-delay"));
-
             kit.getEditRules().setAllowPotionFill(config.getBoolean(".edit-rules.allow-potion-fill"));
             if (config.getConfigurationSection(path + ".edit-rules.items") != null) {
                 for (String itemKey : config.getConfigurationSection(path + ".edit-rules.items").getKeys(false)) {
@@ -165,6 +165,7 @@ public class Kit {
         configFile.getConfiguration().set(path + ".game-rules.spleef", gameRules.isSpleef());
         configFile.getConfiguration().set(path + ".game-rules.parkour", gameRules.isParkour());
         configFile.getConfiguration().set(path + ".game-rules.sumo", gameRules.isSumo());
+        configFile.getConfiguration().set(path + ".game-rules.boxuhc", gameRules.isBoxuhc());
         configFile.getConfiguration().set(path + ".game-rules.timed", gameRules.isTimed());
         configFile.getConfiguration().set(path + ".game-rules.water-kill", gameRules.isWaterkill());
         configFile.getConfiguration().set(path + ".game-rules.lava-kill", gameRules.isLavakill());
@@ -172,7 +173,6 @@ public class Kit {
         configFile.getConfiguration().set(path + ".game-rules.show-health", gameRules.isShowHealth());
         configFile.getConfiguration().set(path + ".game-rules.hit-delay", gameRules.getHitDelay());
         configFile.getConfiguration().set(path + ".game-rules.bow-hp", gameRules.isBowhp());
-
         configFile.getConfiguration().set(path + ".edit-rules.allow-potion-fill", editRules.isAllowPotionFill());
 
         try {
@@ -184,7 +184,7 @@ public class Kit {
 
     public void updateKitLeaderboards() {
         if (!this.getRankedEloLeaderboards().isEmpty()) this.getRankedEloLeaderboards().clear();
-        for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("kitStatistics." + getName() + ".elo")).limit(10).into(new ArrayList<Document>())) {
+        for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("kitStatistics." + getName() + ".elo")).limit(10).into(new ArrayList<>())) {
             Document kitStatistics = (Document) document.get("kitStatistics");
             if (kitStatistics.containsKey(getName())) {
                 Document kitDocument = (Document) kitStatistics.get(getName());

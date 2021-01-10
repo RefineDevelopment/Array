@@ -97,18 +97,6 @@ public class QueueThread extends Thread {
                                 match = new SoloMatch(queue, firstMatchPlayer, secondMatchPlayer,
                                         queue.getKit(), arena, queue.getQueueType(),0,0);
                             }
-
-
-                            String[] opponentMessages = formatMessages(firstPlayer.getName(),
-                                    secondPlayer.getName(), firstMatchPlayer.getElo(), secondMatchPlayer.getElo(),
-                                    queue.getQueueType());
-
-                            firstPlayer.sendMessage(CC.AQUA + CC.BOLD + "Match Found!");
-                            firstPlayer.sendMessage(CC.GRAY + "");
-                            secondPlayer.sendMessage(CC.AQUA + CC.BOLD + "Match Found!");
-                            secondPlayer.sendMessage(CC.GRAY + "");
-                            firstPlayer.sendMessage(opponentMessages[1]);
-                            secondPlayer.sendMessage(opponentMessages[1]);
                             new BukkitRunnable() {
                                 public void run() {
                                     match.start();
@@ -135,23 +123,5 @@ public class QueueThread extends Thread {
                 e3.printStackTrace();
             }
         }
-    }
-
-    private String[] formatMessages(final String player1, final String player2, final int player1Elo, final int player2Elo, final QueueType type) {
-        String player1Format;
-        String player2Format;
-        if (type == QueueType.UNRANKED) {
-            player1Format = player1;
-            player2Format = player2;
-        }
-        else if (type == QueueType.RANKED) {
-            player1Format = player1 + CC.GRAY + " (" + player1Elo + ")";
-            player2Format = player2 + CC.GRAY + " (" + player2Elo + ")";
-        }
-        else {
-            player1Format = player1;
-            player2Format = player2;
-        }
-        return new String[] { CC.translate( "&b● &fPlayers: &b" + CC.AQUA + player1Format + CC.GRAY + " vs " + CC.AQUA + player2Format), CC.translate("&b● &fPlayers: &b" + player2Format + "&7 vs " + "&b" + player1Format) };
     }
 }

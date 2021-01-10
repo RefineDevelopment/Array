@@ -93,7 +93,12 @@ public class MatchListener implements Listener {
                             event.setCancelled(true);
                         }
                     } else if (!match.getPlacedBlocks().remove(event.getBlock().getLocation())) {
-                        event.setCancelled(true);
+                        if (!match.getKit().getGameRules().isBoxuhc()) {
+                            event.setCancelled(true);
+                        } else{
+                            event.setCancelled(false);
+                            match.getBrokenBlocks().add(event.getBlock().getLocation());
+                        }
                     }
                 } else {
                     event.setCancelled(true);

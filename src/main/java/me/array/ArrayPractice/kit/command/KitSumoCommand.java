@@ -19,7 +19,7 @@ public class KitSumoCommand {
                 kit.getGameRules().setSumo(true);
             }
             kit.save();
-            player.sendMessage(CC.GREEN + "Kit set sumo mode to " + (kit.getGameRules().isRanked() ? "true!" : "false!"));
+            player.sendMessage(CC.GREEN + "Kit set sumo mode to " + (kit.getGameRules().isSumo() ? "true!" : "false!"));
         }
     }
 }

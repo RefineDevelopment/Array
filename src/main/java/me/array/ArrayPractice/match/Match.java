@@ -25,6 +25,7 @@ import lombok.Setter;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.EnderPearl;
@@ -57,6 +58,7 @@ public abstract class Match {
     private final List<Entity> entities = new ArrayList<>();
     private final List<Location> placedBlocks = new ArrayList<>();
     private final List<BlockState> changedBlocks = new ArrayList<>();
+    private final List<Location> brokenBlocks = new ArrayList<>();
     @Setter
     private long startTimestamp;
 
@@ -91,6 +93,7 @@ public abstract class Match {
         for (Match match : matches) {
             match.getPlacedBlocks().forEach(location -> location.getBlock().setType(Material.AIR));
             match.getChangedBlocks().forEach((blockState) -> blockState.getLocation().getBlock().setType(blockState.getType()));
+            match.getBrokenBlocks().forEach(location ->  location.getBlock().setType(location.getBlock().getType()));
             match.getEntities().forEach(Entity::remove);
         }
     }
@@ -155,9 +158,6 @@ public abstract class Match {
         }
 
         new MatchStartTask(this).runTaskTimer(Practice.getInstance(), 20L, 20L);
-        getPlayers().forEach(player -> player.sendMessage(CC.translate("&b● &fArena: &b" + arena.getName())));
-        getPlayers().forEach(player -> player.sendMessage(CC.translate("&b● &fKit: &b" + kit.getName())));
-        getPlayers().forEach(player -> player.sendMessage(CC.translate("")));
         for (Player shooter : getPlayers()) {
             new BukkitRunnable() {
                 @Override

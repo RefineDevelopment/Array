@@ -1,16 +1,16 @@
 package me.array.ArrayPractice.arena.command;
 
-import com.qrakn.honcho.command.*;
+import com.qrakn.honcho.command.CommandMeta;
 import me.array.ArrayPractice.arena.Arena;
 import me.array.ArrayPractice.arena.ArenaType;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 @CommandMeta(label = { "arenas", "arena list" }, permission = "practice.staff")
 public class ArenasCommand
 {
-    public void execute(Player player) {
+    public void execute(CommandSender player) {
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
         player.sendMessage(CC.translate( "&bArray &7» All Arenas"));
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");

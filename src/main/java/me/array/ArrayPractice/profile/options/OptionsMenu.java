@@ -43,38 +43,43 @@ public class OptionsMenu extends Menu
             final Profile profile = Profile.getByUuid(player.getUniqueId());
             List<String> lines = new ArrayList<>();
             if (this.type == OptionsType.TOGGLESCOREBOARD) {
+                lines.add("");
                 lines.add("&7Enable or Disable Scoreboard");
                 lines.add("&7Display for your profile.");
                 lines.add("");
-                lines.add((profile.getOptions().isShowScoreboard() ? "&a&l● " : "&c&l● ") +  "&fShow scoreboard");
-                lines.add((!profile.getOptions().isShowScoreboard() ? "&a&l● " : "&c&l● ") + "&fHide scoreboard");
+                lines.add((profile.getOptions().isShowScoreboard() ? "&a&l● " : "&8&l● ") +  "&fShow scoreboard");
+                lines.add((!profile.getOptions().isShowScoreboard() ? "&a&l● " : "&8&l● ") + "&fHide scoreboard");
             }
             else if (this.type == OptionsType.TOGGLEDUELREQUESTS) {
+                lines.add("");
                 lines.add("&7Enable or Disable Duels from");
                 lines.add("&7other players for your profile.");
                 lines.add("");
-                lines.add((profile.getOptions().isReceiveDuelRequests() ? "&a&l● " : "&c&l● ") +  "&fAllow Duels");
-                lines.add((!profile.getOptions().isReceiveDuelRequests() ? "&a&l● " : "&c&l● ") + "&fDon't Allow Duels");
+                lines.add((profile.getOptions().isReceiveDuelRequests() ? "&a&l● " : "&8&l● ") +  "&fAllow Duels");
+                lines.add((!profile.getOptions().isReceiveDuelRequests() ? "&a&l● " : "&8&l● ") + "&fDon't Allow Duels");
             }
             else if (this.type == OptionsType.TOGGLEPINGFACTOR) {
+                lines.add("");
                 lines.add("&7Enable or Disable queueing with");
                 lines.add("&7Players of similar ping as you.");
                 lines.add("");
-                lines.add((profile.getOptions().isUsingPingFactor() ? "&a&l● " : "&c&l● ") +  "&fUse Ping Factor");
-                lines.add((!profile.getOptions().isUsingPingFactor() ? "&a&l● " : "&c&l● ") + "&fDon't Use Ping Factor");
+                lines.add((profile.getOptions().isUsingPingFactor() ? "&a&l● " : "&8&l● ") +  "&fUse Ping Factor");
+                lines.add((!profile.getOptions().isUsingPingFactor() ? "&a&l● " : "&8&l● ") + "&fDon't Use Ping Factor");
             }
             else if (this.type == OptionsType.TOGGLESPECTATORS) {
+                lines.add("");
                 lines.add("&7Enable or Disable Spectators");
                 lines.add("&7on your Matches for your Profile.");
                 lines.add("");
-                lines.add((profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fAllow Spectators");
-                lines.add((!profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fDon't Allow Spectators");
+                lines.add((profile.getOptions().isAllowSpectators() ? "&a&l● " : "&8&l● ") + "&fAllow Spectators");
+                lines.add((!profile.getOptions().isAllowSpectators() ? "&a&l● " : "&8&l● ") + "&fDon't Allow Spectators");
             } else if (this.type == OptionsType.TOGGLELIGHTNING) {
+                lines.add("");
                 lines.add("&7Enable or Disable Lightning");
                 lines.add("&7Death effect for your Profile.");
                 lines.add("");
-                lines.add((profile.getOptions().isLightning() ? "&a&l● " : "&c&l● ") + "&fEnable Lightning Death Effect");
-                lines.add((!profile.getOptions().isLightning() ? "&a&l● " : "&c&l● ") + "&fDisable Lightning Death Effect");
+                lines.add((profile.getOptions().isLightning() ? "&a&l● " : "&8&l● ") + "&fEnable Lightning Death Effect");
+                lines.add((!profile.getOptions().isLightning() ? "&a&l● " : "&8&l● ") + "&fDisable Lightning Death Effect");
             } else if (this.type == OptionsType.CORESETTINGS) {
                 lines.add("");
                 lines.add("&7View complete Core Settings");

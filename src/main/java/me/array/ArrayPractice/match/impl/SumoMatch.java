@@ -92,6 +92,19 @@ public class SumoMatch extends Match {
         if (teamPlayer.isDisconnected()) {
             return;
         }
+        this.broadcastMessage(CC.AQUA + CC.BOLD + "Match Found!");
+        this.broadcastMessage("");
+        if (getQueueType() == QueueType.RANKED) {
+            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile opponentprofile = Profile.getByUuid(this.getOpponentPlayer(player).getUniqueId());
+            this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fPlayers: &b" + player.getDisplayName() + CC.GRAY + " (" + profile.getKitData().get(getKit()).getElo() + "ELO )"  + CC.GRAY + " vs " + CC.AQUA + this.getOpponentPlayer(player).getDisplayName() + CC.GRAY + " (" + opponentprofile.getKitData().get(getKit()).getElo() + "ELO )")));
+        }
+        if (getQueueType() == QueueType.UNRANKED) {
+            this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fPlayers: &b" + player.getDisplayName() + CC.GRAY + " vs " + CC.AQUA + this.getOpponentPlayer(player).getDisplayName())));
+        }
+        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fArena: &b" + this.getArena().getName())));
+        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fKit: &b" + this.getKit().getName())));
+        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("")));
 
         teamPlayer.setAlive(true);
 

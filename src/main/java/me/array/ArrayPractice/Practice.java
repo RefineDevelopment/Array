@@ -246,6 +246,7 @@ public class Practice extends JavaPlugin {
                 new KitSetRankedCommand(),
                 new KitSumoCommand(),
                 new KitBuildCommand(),
+                new KitBoxUHCCommand(),
 
                 //Brackets command
                 new BracketsLeaveCommand(),

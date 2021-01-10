@@ -45,41 +45,13 @@ public class Essentials extends Bootstrapped {
         }
     }
 
-    public int clearEntities(World world) {
-        int removed = 0;
-
+    public void clearEntities(World world) {
         for (Entity entity : world.getEntities()) {
             if (entity.getType() == EntityType.PLAYER) {
                 continue;
             }
-
-            removed++;
             entity.remove();
         }
-
-        return removed;
-    }
-
-    public int clearEntities(World world, EntityType... excluded) {
-        int removed = 0;
-
-        entityLoop:
-        for (Entity entity : world.getEntities()) {
-            for (EntityType type : excluded) {
-                if (entity.getType() == EntityType.PLAYER) {
-                    continue entityLoop;
-                }
-
-                if (entity.getType() == type) {
-                    continue entityLoop;
-                }
-            }
-
-            removed++;
-            entity.remove();
-        }
-
-        return removed;
     }
 
 }

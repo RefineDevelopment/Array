@@ -11,8 +11,7 @@ public class KitSaveCommand {
     public void execute(CommandSender sender) {
         for ( Kit kit : Kit.getKits() ) {
             kit.save();
-
-            sender.sendMessage(CC.GREEN + "You saved all the kits!");
         }
+        sender.sendMessage(CC.GREEN + "You saved all the kits!");
     }
 }

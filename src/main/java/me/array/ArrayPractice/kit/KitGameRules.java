@@ -62,5 +62,8 @@ public class KitGameRules {
     @Getter
     @Setter
     private int hitDelay = 20;
+    @Getter
+    @Setter
+    private boolean boxuhc;
 
 }

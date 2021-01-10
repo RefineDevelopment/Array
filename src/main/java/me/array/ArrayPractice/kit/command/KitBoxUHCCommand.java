@@ -7,8 +7,8 @@ import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label={"kit build", "kit enable build"}, permission="practice.staff")
-public class KitBuildCommand {
+@CommandMeta(label={"kit boxuhc", "kit enable boxuhc"}, permission="practice.staff")
+public class KitBoxUHCCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {
             player.sendMessage(ChatColor.RED + "Kit does not exist");
@@ -19,7 +19,7 @@ public class KitBuildCommand {
                 kit.getGameRules().setBuild(true);
             }
             kit.save();
-            player.sendMessage(CC.GREEN + "Kit set build mode to " + (kit.getGameRules().isBuild() ? "true!" : "false!"));
+            player.sendMessage(CC.GREEN + "Kit set boxuhc mode to " + (kit.getGameRules().isBoxuhc() ? "true!" : "false!"));
         }
     }
 }
