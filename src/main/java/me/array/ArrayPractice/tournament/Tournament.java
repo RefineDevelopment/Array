@@ -253,6 +253,7 @@ public class Tournament {
                                     Party winner = participants.get(0);
                                     Profile winnerProfile = Profile.getByUuid(winner.getLeader().getUuid());
                                     winnerProfile.getKitData().get(getKit()).setElo(winnerProfile.getKitData().get(getKit()).getElo() + 10);
+                                    winnerProfile.calculateGlobalElo();
                             }
                         }
                         CURRENT_TOURNAMENT = null;

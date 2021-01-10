@@ -116,7 +116,7 @@ public class ParkourListener implements Listener {
 					} else if (event.getClickedBlock().getType() == Material.IRON_PLATE) {
 						if (parkour.getEventPlayer(player).getState().equals(ParkourPlayerState.WAITING)) {
 							parkour.getEventPlayer(event.getPlayer()).setLastLocation(event.getPlayer().getLocation());
-							player.sendMessage(CC.translate("&b&l[Skywars] &aCheckpoint Acquired!"));
+							player.sendMessage(CC.translate("&b&l[Parkour] &aCheckpoint Acquired!"));
 						}
 					}
 					event.setCancelled(true);

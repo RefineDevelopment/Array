@@ -44,14 +44,12 @@ import me.array.ArrayPractice.match.command.StopSpectatingCommand;
 import me.array.ArrayPractice.match.command.ViewInventoryCommand;
 import me.array.ArrayPractice.match.kits.utils.ArmorClassManager;
 import me.array.ArrayPractice.match.kits.utils.bard.EffectRestorer;
-import me.array.ArrayPractice.movement.PlayerMovementListener;
 import me.array.ArrayPractice.party.Party;
 import me.array.ArrayPractice.party.PartyListener;
 import me.array.ArrayPractice.hologram.PlaceholderAPIExtension;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.profile.ProfileListener;
 import me.array.ArrayPractice.profile.command.donator.FlyCommand;
-import me.array.ArrayPractice.profile.command.donator.ToggleVisibilityCommand;
 import me.array.ArrayPractice.profile.hotbar.Hotbar;
 import me.array.ArrayPractice.profile.hotbar.HotbarListener;
 import me.array.ArrayPractice.profile.stats.command.LeaderboardsCommand;
@@ -101,7 +99,7 @@ public class Practice extends JavaPlugin {
     @Getter
     private BasicConfigurationFile chestsConfig;
     @Getter
-    private LanguageConfigurationFile lanuageConfig;
+    private BasicConfigurationFile lanuageConfig;
 
     @Getter
     private MongoDatabase mongoDatabase;
@@ -155,7 +153,7 @@ public class Practice extends JavaPlugin {
         kitsConfig = new BasicConfigurationFile(this, "kits");
         eventsConfig = new BasicConfigurationFile(this, "events");
         chestsConfig = new BasicConfigurationFile(this, "chests");
-        lanuageConfig = new LanguageConfigurationFile(this, "lang");
+        lanuageConfig = new BasicConfigurationFile(this, "lang");
 
         loadMongo();
 
@@ -197,8 +195,6 @@ public class Practice extends JavaPlugin {
 
                 //Donator commands
                 new FlyCommand(),
-                new ToggleVisibilityCommand(),
-
 
                 //Arena commands
                 new ArenaAddKitCommand(),
@@ -248,6 +244,8 @@ public class Practice extends JavaPlugin {
                 new KitRemoveCommand(),
                 new KitSetIconCommand(),
                 new KitSetRankedCommand(),
+                new KitSumoCommand(),
+                new KitBuildCommand(),
 
                 //Brackets command
                 new BracketsLeaveCommand(),
@@ -364,7 +362,6 @@ public class Practice extends JavaPlugin {
                 new MatchListener(),
                 new WorldListener(),
                 new QueueListener(),
-                new PlayerMovementListener(),
                 new ArmorListener()
         )) {
             getServer().getPluginManager().registerEvents(listener, this);

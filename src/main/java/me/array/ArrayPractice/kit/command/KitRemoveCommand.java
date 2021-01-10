@@ -15,7 +15,8 @@ public class KitRemoveCommand {
         }
         final Kit kit = Kit.getByName(name);
         if (kit != null) {
-            Kit.getKits().remove(kit);
+            kit.delete();
+            Kit.getKits().forEach(Kit::save);
             player.sendMessage(ChatColor.RED + "Kit " + name + " removed");
         }
     }

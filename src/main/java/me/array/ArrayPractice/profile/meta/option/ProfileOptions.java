@@ -20,4 +20,7 @@ public class ProfileOptions {
     @Getter
     @Setter
     private boolean usingPingFactor=false;
+    @Getter
+    @Setter
+    private boolean isVisibility=false;
 }

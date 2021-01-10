@@ -95,8 +95,8 @@ public class Party extends Team
         for (final TeamPlayer teamPlayer : this.getTeamPlayers()) {
             final Player otherPlayer = teamPlayer.getPlayer();
             if (otherPlayer != null) {
-                NameTags.color(player, otherPlayer, ChatColor.BLUE, false);
-                NameTags.color(otherPlayer, player, ChatColor.BLUE, false);
+//               NameTags.color(player, otherPlayer, ChatColor.BLUE, false);
+//               NameTags.color(otherPlayer, player, ChatColor.BLUE, false);
                 final Profile teamProfile = Profile.getByUuid(teamPlayer.getUuid());
                 teamProfile.handleVisibility(otherPlayer, player);
             }

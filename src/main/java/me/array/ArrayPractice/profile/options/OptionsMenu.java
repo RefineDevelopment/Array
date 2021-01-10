@@ -1,5 +1,6 @@
 package me.array.ArrayPractice.profile.options;
 
+import me.activated.core.menus.settings.SettingsMenu;
 import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.CC;
 import me.array.ArrayPractice.util.external.ItemBuilder;
@@ -24,11 +25,12 @@ public class OptionsMenu extends Menu
     @Override
     public Map<Integer, Button> getButtons(final Player player) {
         final Map<Integer, Button> buttons = new HashMap<>();
-        buttons.put(0, new OptionsButton(OptionsType.TOGGLESCOREBOARD));
+        buttons.put(1, new OptionsButton(OptionsType.TOGGLESCOREBOARD));
         buttons.put(2, new OptionsButton(OptionsType.TOGGLEDUELREQUESTS));
-        buttons.put(4, new OptionsButton(OptionsType.TOGGLESPECTATORS));
+        buttons.put(3, new OptionsButton(OptionsType.TOGGLESPECTATORS));
+        buttons.put(5, new OptionsButton(OptionsType.CORESETTINGS));
         buttons.put(6, new OptionsButton(OptionsType.TOGGLEPINGFACTOR));
-        buttons.put(8, new OptionsButton(OptionsType.TOGGLELIGHTNING));
+        buttons.put(7, new OptionsButton(OptionsType.TOGGLELIGHTNING));
         return buttons;
     }
 
@@ -41,8 +43,8 @@ public class OptionsMenu extends Menu
             final Profile profile = Profile.getByUuid(player.getUniqueId());
             List<String> lines = new ArrayList<>();
             if (this.type == OptionsType.TOGGLESCOREBOARD) {
-                lines.add("&7Enable or Disable Game");
-                lines.add("&7Scoreboard for your profile.");
+                lines.add("&7Enable or Disable Scoreboard");
+                lines.add("&7Display for your profile.");
                 lines.add("");
                 lines.add((profile.getOptions().isShowScoreboard() ? "&a&l● " : "&c&l● ") +  "&fShow scoreboard");
                 lines.add((!profile.getOptions().isShowScoreboard() ? "&a&l● " : "&c&l● ") + "&fHide scoreboard");
@@ -67,12 +69,17 @@ public class OptionsMenu extends Menu
                 lines.add("");
                 lines.add((profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fAllow Spectators");
                 lines.add((!profile.getOptions().isAllowSpectators() ? "&a&l● " : "&c&l● ") + "&fDon't Allow Spectators");
-            } else {
+            } else if (this.type == OptionsType.TOGGLELIGHTNING) {
                 lines.add("&7Enable or Disable Lightning");
                 lines.add("&7Death effect for your Profile.");
                 lines.add("");
                 lines.add((profile.getOptions().isLightning() ? "&a&l● " : "&c&l● ") + "&fEnable Lightning Death Effect");
                 lines.add((!profile.getOptions().isLightning() ? "&a&l● " : "&c&l● ") + "&fDisable Lightning Death Effect");
+            } else if (this.type == OptionsType.CORESETTINGS) {
+                lines.add("");
+                lines.add("&7View complete Core Settings");
+                lines.add("&7For your profile,Ex: PMs, Sounds");
+                lines.add("");
             }
             return new ItemBuilder(this.type.getMaterial()).name("&b" + this.type.getName()).lore(lines).build();
         }
@@ -87,9 +94,10 @@ public class OptionsMenu extends Menu
                 profile.getOptions().setReceiveDuelRequests(!profile.getOptions().isReceiveDuelRequests());
             }
             else if (this.type == OptionsType.TOGGLEPINGFACTOR) {
-                if (player.hasPermission("practice.donator")) {
+                if (player.hasPermission("practice.donator+")) {
                     profile.getOptions().setUsingPingFactor(!profile.getOptions().isUsingPingFactor());
                 } else {
+                    player.closeInventory();
                     player.sendMessage(CC.translate("&7You do not have permission to use this setting."));
                     player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
                 }
@@ -101,9 +109,12 @@ public class OptionsMenu extends Menu
                 if (player.hasPermission("practice.donator")) {
                     profile.getOptions().setLightning(!profile.getOptions().isLightning());
                 } else {
+                    player.closeInventory();
                     player.sendMessage(CC.translate("&7You do not have permission to use this setting."));
                     player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
                 }
+            } else if (this.type == OptionsType.CORESETTINGS) {
+                new SettingsMenu().open(player);
             }
         }
 

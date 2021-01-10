@@ -74,7 +74,6 @@ public class PlayerUtil {
     public static void denyMovement(Player player) {
         player.setWalkSpeed(0.0F);
         player.setFlySpeed(0.0F);
-        player.setFoodLevel(0);
         player.setSprinting(false);
         player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 200));
     }

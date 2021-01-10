@@ -51,6 +51,9 @@ public class Kit {
         this.displayIcon = new ItemStack(Material.DIAMOND_SWORD);
         this.knockbackProfile = "strafe";
     }
+    public void delete() {
+        kits.remove(this);
+    }
 
     public static void init() {
         FileConfiguration config = Practice.getInstance().getKitsConfig().getConfiguration();

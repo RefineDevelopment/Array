@@ -86,7 +86,11 @@ public class DuelSelectKitMenu extends Menu {
 
                 // Force close inventory
                 player.closeInventory();
-                new DuelSelectArenaMenu("normal").openMenu(player);
+                if (player.hasPermission("practice.donator")) {
+                    new DuelSelectArenaMenu("normal").openMenu(player);
+                } else {
+                    profile.getDuelProcedure().send();
+                }
 
             } else if (type.equalsIgnoreCase("rematch")) {
                 if (profile.getRematchData() == null) {
@@ -105,7 +109,11 @@ public class DuelSelectKitMenu extends Menu {
 
                 // Force close inventory
                 player.closeInventory();
-                new DuelSelectArenaMenu("normal").openMenu(player);
+                if (player.hasPermission("practice.donator")) {
+                    new DuelSelectArenaMenu("rematch").openMenu(player);
+                } else {
+                    profile.getDuelProcedure().send();
+                }
             }
         }
 

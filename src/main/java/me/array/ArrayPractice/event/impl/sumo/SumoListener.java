@@ -2,7 +2,9 @@ package me.array.ArrayPractice.event.impl.sumo;
 
 import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.profile.Profile;
+import me.array.ArrayPractice.util.BlockUtil;
 import me.array.ArrayPractice.util.PlayerUtil;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -11,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class SumoListener implements Listener {
@@ -99,6 +102,21 @@ public class SumoListener implements Listener {
 
 		if (profile.isInSumo()) {
 			profile.getSumo().handleLeave(event.getPlayer());
+		}
+	}
+
+	@EventHandler(priority = EventPriority.LOW)
+    public void onPlayerMove(PlayerMoveEvent event) {
+		Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
+		Player player=event.getPlayer();
+		Location to=event.getTo();
+
+		if (profile.isInSumo()) {
+			if (profile.getSumo().getState() == SumoState.ROUND_FIGHTING) {
+				if (BlockUtil.isOnLiquid(to, 0) || BlockUtil.isOnLiquid(to, 1)) {
+					profile.getSumo().handleDeath(player);
+				}
+			}
 		}
 	}
 
