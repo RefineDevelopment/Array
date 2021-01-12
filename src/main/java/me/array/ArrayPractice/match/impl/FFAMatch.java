@@ -19,6 +19,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import pt.foxspigot.jar.knockback.KnockbackModule;
 import pt.foxspigot.jar.knockback.KnockbackProfile;
@@ -81,10 +82,10 @@ public class FFAMatch extends Match {
         }
         this.broadcastMessage(CC.AQUA + CC.BOLD + "Match Found!");
         this.broadcastMessage("");
-        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fTeams: &b" + this.getTeamA().getLeader().getDisplayName() + CC.GRAY + " vs " + CC.AQUA + this.getTeamB().getLeader().getDisplayName())));
-        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fArena: &b" + this.getArena().getName())));
-        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fKit: &b" + this.getKit().getName())));
-        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("")));
+        this.broadcastMessage(CC.translate(" &b● &fTeams: &b" + this.getTeamA().getLeader().getDisplayName() + CC.GRAY + " vs " + CC.AQUA + this.getTeamB().getLeader().getDisplayName()));
+        this.broadcastMessage(CC.translate(" &b● &fArena: &b" + this.getArena().getName()));
+        this.broadcastMessage(CC.translate(" &b● &fKit: &b" + this.getKit().getName()));
+        this.broadcastMessage(CC.translate(""));
 
         teamPlayer.setAlive(true);
 
@@ -94,7 +95,16 @@ public class FFAMatch extends Match {
             PlayerUtil.denyMovement(player);
         }
 
-		player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
+        if (!getKit().getGameRules().isCombo()) {
+            player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
+        }
+
+        if (getKit().getGameRules().isInfinitespeed()) {
+            player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 2));
+        }
+        if (getKit().getGameRules().isInfinitestrength()) {
+            player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 1));
+        }
 
         if (!getKit().getGameRules().isNoitems()) {
             Profile.getByUuid(player.getUniqueId()).getKitData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
@@ -112,12 +122,12 @@ public class FFAMatch extends Match {
 
         Location spawn = getArena().getSpawn1();
         Location spawn2 = getArena().getSpawn2();
-        Location sumospawn = getArena().getSpawn1();
-        sumospawn.setX(getAverage(spawn.getX(), spawn2.getX()));
-        sumospawn.setZ(getAverage(spawn.getZ(), spawn2.getZ()));
+        Location ffaspawn = getArena().getSpawn1();
+        ffaspawn.setX(getAverage(spawn.getX(), spawn2.getX()));
+        ffaspawn.setZ(getAverage(spawn.getZ(), spawn2.getZ()));
 
         if (getKit().getGameRules().isFfacenter()) {
-            player.teleport(sumospawn);
+            player.teleport(ffaspawn);
         } else {
             player.teleport(spawn);
         }

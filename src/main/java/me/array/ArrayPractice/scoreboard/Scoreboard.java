@@ -96,9 +96,11 @@ public class Scoreboard implements BoardAdapter {
                     final TeamPlayer opponent=match.getOpponentTeamPlayer(player);
                     lines.add("&fOpponent: &c" + opponent.getUsername());
                     lines.add("&fDuration: &b" + match.getDuration());
-                    lines.add("");
-                    lines.add("&fYour Ping: &a" + self.getPing() + "ms");
-                    lines.add("&fEnemy Ping: &c" + opponent.getPing() + "ms");
+                    if (profile.getOptions().isPingScoreboard()) {
+                        lines.add("");
+                        lines.add("&fYour Ping: &a" + self.getPing() + "ms");
+                        lines.add("&fEnemy Ping: &c" + opponent.getPing() + "ms");
+                    }
                 } else if (match.isSumoMatch()) {
                     TeamPlayer self=match.getTeamPlayer(player);
                     TeamPlayer opponent=match.getOpponentTeamPlayer(player);
@@ -109,8 +111,8 @@ public class Scoreboard implements BoardAdapter {
                     int opPoints=targetProfile.getSumoRounds();
 
                     lines.add("&fOpponent: &b" + opponent.getUsername());
-                    lines.add("&fPing: &a" + self.getPing() + "ms &f┃ &c" + opponent.getPing() + "ms");
-                    lines.add("&fPoints: &a" + selfPoints + " &f┃ &c" + opPoints + "");
+                    lines.add("&fPing: &a" + self.getPing() + "ms &7┃ &c" + opponent.getPing() + "ms");
+                    lines.add("&fPoints: &a" + selfPoints + " &7┃ &c" + opPoints + "");
 
                 } else if (match.isSumoTeamMatch()) {
                     Team team=match.getTeam(player);

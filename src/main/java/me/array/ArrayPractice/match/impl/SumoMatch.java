@@ -29,6 +29,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import pt.foxspigot.jar.knockback.KnockbackModule;
 import pt.foxspigot.jar.knockback.KnockbackProfile;
@@ -97,14 +98,14 @@ public class SumoMatch extends Match {
         if (getQueueType() == QueueType.RANKED) {
             Profile profile = Profile.getByUuid(player.getUniqueId());
             Profile opponentprofile = Profile.getByUuid(this.getOpponentPlayer(player).getUniqueId());
-            this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fPlayers: &b" + player.getDisplayName() + CC.GRAY + " (" + profile.getKitData().get(getKit()).getElo() + "ELO )"  + CC.GRAY + " vs " + CC.AQUA + this.getOpponentPlayer(player).getDisplayName() + CC.GRAY + " (" + opponentprofile.getKitData().get(getKit()).getElo() + "ELO )")));
+            this.broadcastMessage(CC.translate(" &b● &fPlayers: &b" + player.getDisplayName() + CC.GRAY + " (" + profile.getKitData().get(getKit()).getElo() + "ELO )"  + CC.GRAY + " vs " + CC.AQUA + this.getOpponentPlayer(player).getDisplayName() + CC.GRAY + " (" + opponentprofile.getKitData().get(getKit()).getElo() + "ELO )"));
         }
         if (getQueueType() == QueueType.UNRANKED) {
-            this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fPlayers: &b" + player.getDisplayName() + CC.GRAY + " vs " + CC.AQUA + this.getOpponentPlayer(player).getDisplayName())));
+            this.broadcastMessage(CC.translate(" &b● &fPlayers: &b" + player.getDisplayName() + CC.GRAY + " vs " + CC.AQUA + this.getOpponentPlayer(player).getDisplayName()));
         }
-        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fArena: &b" + this.getArena().getName())));
-        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fKit: &b" + this.getKit().getName())));
-        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("")));
+        this.broadcastMessage(CC.translate(" &b● &fArena: &b" + this.getArena().getName()));
+        this.broadcastMessage(CC.translate(" &b● &fKit: &b" + this.getKit().getName()));
+        this.broadcastMessage(CC.translate(""));
 
         teamPlayer.setAlive(true);
 
@@ -112,7 +113,16 @@ public class SumoMatch extends Match {
 
         PlayerUtil.denyMovement(player);
 
-		player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
+        if (!getKit().getGameRules().isCombo()) {
+            player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
+        }
+
+        if (getKit().getGameRules().isInfinitespeed()) {
+            player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 2));
+        }
+        if (getKit().getGameRules().isInfinitestrength()) {
+            player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 1));
+        }
 
         if (!getKit().getGameRules().isNoitems()) {
             Profile.getByUuid(player.getUniqueId()).getKitData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));

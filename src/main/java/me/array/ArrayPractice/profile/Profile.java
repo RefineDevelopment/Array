@@ -149,9 +149,6 @@ public class Profile {
     private Player lastMessager;
     @Getter
     @Setter
-    private boolean socialSpy = false;
-    @Getter
-    @Setter
     private boolean silent = false;
     @Getter
     @Setter
@@ -342,6 +339,9 @@ public class Profile {
         this.options.setReceiveDuelRequests(options.getBoolean("receiveDuelRequests"));
         this.options.setUsingPingFactor(options.getBoolean("usingPingFactor"));
         this.options.setLightning(options.getBoolean("toggleLightning"));
+        this.options.setPingScoreboard(options.getBoolean("pingScoreboard"));
+        this.options.setPlayerVisibility(options.getBoolean("playerVisibility"));
+        this.options.setAllowTournamentMessages(options.getBoolean("allowTournamentMessages"));
 
         Document kitStatistics = (Document) document.get("kitStatistics");
 
@@ -412,6 +412,9 @@ public class Profile {
         optionsDocument.put("receiveDuelRequests", options.isReceiveDuelRequests());
         optionsDocument.put("usingPingFactor", options.isUsingPingFactor());
         optionsDocument.put("toggleLightning", options.isLightning());
+        optionsDocument.put("pingScoreboard", options.isPingScoreboard());
+        optionsDocument.put("allowTournamentMessages", options.isAllowTournamentMessages());
+        optionsDocument.put("playerVisibility", options.isPlayerVisibility());
         document.put("options", optionsDocument);
 
         Document kitStatisticsDocument = new Document();
@@ -722,7 +725,7 @@ public class Profile {
             return;
         }
         boolean hide=true;
-        if (this.state == ProfileState.IN_LOBBY || this.state == ProfileState.IN_QUEUE) {
+        if (this.state == ProfileState.IN_LOBBY || this.state == ProfileState.IN_QUEUE || this.getOptions().isPlayerVisibility()) {
             if (this.party != null && this.party.containsPlayer(otherPlayer)) {
                 hide=false;
                 NameTags.color(player, otherPlayer, ChatColor.GREEN, false);

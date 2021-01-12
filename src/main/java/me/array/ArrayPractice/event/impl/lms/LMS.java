@@ -68,11 +68,11 @@ public class LMS {
         LMS LMS = Practice.getInstance().getLMSManager().getActiveLMS();
 
         toReturn.add(CC.MENU_BAR);
-        toReturn.add(CC.translate("&eHost: &r" + LMS.getName()));
-        toReturn.add(CC.translate("&eKit: &r" + kit.getName()));
+        toReturn.add(CC.translate("&bHost: &r" + LMS.getName()));
+        toReturn.add(CC.translate("&bKit: &r" + kit.getName()));
 
         if (LMS.isWaiting()) {
-            toReturn.add("&ePlayers: &r" + LMS.getEventPlayers().size() + "/" + LMS.getMaxPlayers());
+            toReturn.add("&bPlayers: &r" + LMS.getEventPlayers().size() + "/" + LMS.getMaxPlayers());
             toReturn.add("");
 
             if (LMS.getCooldown() == null) {
@@ -87,8 +87,8 @@ public class LMS {
                 toReturn.add(CC.translate("&fStarting in " + remaining + "s"));
             }
         } else {
-            toReturn.add("&eRemaining: &r" + LMS.getRemainingPlayers().size() + "/" + LMS.getTotalPlayers());
-            toReturn.add("&eDuration: &r" + LMS.getRoundDuration());
+            toReturn.add("&bRemaining: &r" + LMS.getRemainingPlayers().size() + "/" + LMS.getTotalPlayers());
+            toReturn.add("&bDuration: &r" + LMS.getRoundDuration());
         }
         toReturn.add(CC.MENU_BAR);
 

@@ -104,8 +104,6 @@ public class ActiveEventSelectEventMenu extends Menu {
                     lore=Practice.getInstance().getSkyWarsManager().getActiveSkyWars().getLore();
                     break;
             }
-
-            lore.add(CC.MENU_BAR);
             lore.add("&7(Left-Click to join)");
             lore.add(CC.MENU_BAR);
 

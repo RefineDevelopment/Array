@@ -4,6 +4,7 @@ import me.array.ArrayPractice.Practice;
 import me.array.ArrayPractice.match.Match;
 import me.array.ArrayPractice.match.events.MatchEvent;
 import me.array.ArrayPractice.match.events.MatchStartEvent;
+import me.array.ArrayPractice.profile.command.PracticeCommand;
 import me.array.ArrayPractice.profile.meta.option.button.AllowSpectatorsOptionButton;
 import me.array.ArrayPractice.profile.meta.option.button.DuelRequestsOptionButton;
 import me.array.ArrayPractice.profile.meta.option.button.ShowScoreboardOptionButton;
@@ -256,8 +257,7 @@ public class ProfileListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         event.setJoinMessage(null);
-        event.getPlayer().performCommand("help");
-        event.getPlayer().performCommand("spawn");
+        new PracticeCommand().execute(event.getPlayer());
         TaskUtil.runAsync(() -> {
             Player p = event.getPlayer();
             Profile profile = new Profile(p.getUniqueId());

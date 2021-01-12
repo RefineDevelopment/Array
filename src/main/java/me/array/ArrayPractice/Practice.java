@@ -77,10 +77,13 @@ import me.array.ArrayPractice.profile.command.*;
 import me.array.ArrayPractice.profile.command.staff.*;
 import me.array.ArrayPractice.tournament.command.*;
 import org.apache.commons.codec.language.bm.Lang;
+import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
 
@@ -247,6 +250,8 @@ public class Practice extends JavaPlugin {
                 new KitSumoCommand(),
                 new KitBuildCommand(),
                 new KitBoxUHCCommand(),
+                new KitSetHitDelayCommand(),
+                new GoldenHeadcommand(),
 
                 //Brackets command
                 new BracketsLeaveCommand(),
@@ -346,6 +351,15 @@ public class Practice extends JavaPlugin {
             world.setDifficulty(Difficulty.HARD);
             essentials.clearEntities(world);
         });
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for ( Player player : Bukkit.getOnlinePlayers() ) {
+                    OutlastTab.getInstance().getTablistVersion().update(player);
+                }
+            }
+        }.runTaskTimer(this, 300L, 300L);
 
         for (Listener listener : Arrays.asList(
                 new ProfileListener(),

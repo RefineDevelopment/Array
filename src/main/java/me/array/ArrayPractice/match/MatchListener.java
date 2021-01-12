@@ -58,9 +58,7 @@ public class MatchListener implements Listener {
                         return;
                     }
                     final Arena arena = match.getArena();
-                    final int x = (int) event.getBlockPlaced().getLocation().getX();
                     final int y = (int) event.getBlockPlaced().getLocation().getY();
-                    final int z = (int) event.getBlockPlaced().getLocation().getZ();
                     if (y > arena.getMaxBuildHeight()) {
                         event.getPlayer().sendMessage(CC.RED + "You have reached the maximum build height.");
                         event.setCancelled(true);
@@ -96,7 +94,6 @@ public class MatchListener implements Listener {
                         if (!match.getKit().getGameRules().isBoxuhc()) {
                             event.setCancelled(true);
                         } else{
-                            event.setCancelled(false);
                             match.getBrokenBlocks().add(event.getBlock().getLocation());
                         }
                     }
@@ -464,13 +461,11 @@ public class MatchListener implements Listener {
             if (profile.isInFight() && !profile.getMatch().isHCFMatch() && !profile.getMatch().isKoTHMatch() && profile.getMatch() != null && profile.getMatch().getKit().getGameRules().isAntifoodloss()) {
                 event.setFoodLevel(20);
             }
-            if (profile.isInFight() && profile.getMatch().isFighting()) {
+            if (profile.isInFight() && profile.getMatch().isFighting() && profile.getMatch().getKit().getGameRules().isAntifoodloss()) {
                 if (event.getFoodLevel() >= 20) {
                     event.setFoodLevel(20);
                     player.setSaturation(20.0f);
                 }
-            } else {
-                event.setCancelled(true);
             }
         }
     }

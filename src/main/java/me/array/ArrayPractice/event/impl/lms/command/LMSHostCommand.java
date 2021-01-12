@@ -4,7 +4,7 @@ import com.qrakn.honcho.command.CommandMeta;
 import me.array.ArrayPractice.event.menu.EventSelectKitMenu;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = {"lms host"}, permission = "practice.lms.host")
+@CommandMeta(label = {"lms host"}, permission = "practice.host")
 public class LMSHostCommand {
 
     public static void execute(Player player) {

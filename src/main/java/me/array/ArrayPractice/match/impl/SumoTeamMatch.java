@@ -88,10 +88,10 @@ public class SumoTeamMatch extends Match {
         }
         this.broadcastMessage(CC.AQUA + CC.BOLD + "Match Found!");
         this.broadcastMessage("");
-        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fTeams: &b" + this.getTeamA().getLeader().getDisplayName() + CC.GRAY + " vs " + CC.AQUA + this.getTeamB().getLeader().getDisplayName())));
-        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fArena: &b" + this.getArena().getName())));
-        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fKit: &b" + this.getKit().getName())));
-        this.getPlayers().forEach(p -> p.sendMessage(CC.translate("")));
+        this.broadcastMessage(CC.translate(" &b● &fTeams: &b" + this.getTeamA().getLeader().getDisplayName() + CC.GRAY + " vs " + CC.AQUA + this.getTeamB().getLeader().getDisplayName()));
+        this.broadcastMessage(CC.translate(" &b● &fArena: &b" + this.getArena().getName()));
+        this.broadcastMessage(CC.translate(" &b● &fKit: &b" + this.getKit().getName()));
+        this.broadcastMessage(CC.translate(""));
 
         Profile.getByUuid(player.getUniqueId()).setState(ProfileState.IN_FIGHT);
 
@@ -569,9 +569,9 @@ public class SumoTeamMatch extends Match {
 
                     //duh
                     new MatchStartTask(this).runTaskTimer(Practice.getInstance(), 20L, 20L);
-                    this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fTeams: &b" + this.getTeamA().getLeader().getDisplayName() + CC.GRAY + " vs " + CC.AQUA + this.getTeamB().getLeader().getDisplayName())));
-                    this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fArena: &b" + this.getArena().getName())));
-                    this.getPlayers().forEach(p -> p.sendMessage(CC.translate("&b● &fKit: &b" + this.getKit().getName())));                }
+                    this.broadcastMessage(CC.translate(" &b● &fTeams: &b" + this.getTeamA().getLeader().getDisplayName() + CC.GRAY + " vs " + CC.AQUA + this.getTeamB().getLeader().getDisplayName()));
+                    this.broadcastMessage(CC.translate(" &b● &fArena: &b" + this.getArena().getName()));
+                    this.broadcastMessage(CC.translate(" &b● &fPoints: &a" + this.teamA.getSumoRounds() + "&7&l| &c" + teamB.getSumoRounds()));                }
                     this.broadcastMessage("");
             }
         }

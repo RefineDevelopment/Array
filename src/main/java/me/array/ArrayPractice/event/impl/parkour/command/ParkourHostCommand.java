@@ -7,7 +7,7 @@ import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = { "parkour host" }, permission = "practice.host")
+@CommandMeta(label = { "parkour host" }, permission = "practice.host+")
 public class ParkourHostCommand {
 
 	public static void execute(Player player) {

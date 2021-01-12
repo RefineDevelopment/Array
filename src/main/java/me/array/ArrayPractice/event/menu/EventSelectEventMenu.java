@@ -57,28 +57,28 @@ public class EventSelectEventMenu extends Menu {
             lore.add(CC.MENU_BAR);
             switch (eventType.getTitle()) {
                 case "Brackets":
-                    lore.add(CC.YELLOW + "A Mini-Tournament event for");
-                    lore.add(CC.YELLOW + "other kits like Combo and BuildUHC etc.");
+                    lore.add(CC.WHITE + "A Mini-Tournament event for other");
+                    lore.add(CC.WHITE + "kits like Combo and BuildUHC etc.");
                     break;
                 case "Sumo":
-                    lore.add(CC.YELLOW + "One by one players fight in a sumo arena");
-                    lore.add(CC.YELLOW + "This is a fun tournament to host casually.");
+                    lore.add(CC.WHITE + "One by one players fight in a sumo arena");
+                    lore.add(CC.WHITE + "This is a fun tournament to host casually.");
                     break;
                 case "LMS":
-                    lore.add(CC.YELLOW + "Unleash all participants in a FFA Match");
-                    lore.add(CC.YELLOW + "The last player remaining wins!");
+                    lore.add(CC.WHITE + "Unleash all participants in a FFA");
+                    lore.add(CC.WHITE + "Match, The last player remaining wins!");
                     break;
                 case "Parkour":
-                    lore.add(CC.YELLOW + "Compete other players in a parkour arena,");
-                    lore.add(CC.YELLOW + "The First player to reach the end wins!");
+                    lore.add(CC.WHITE + "Compete other players in a parkour arena,");
+                    lore.add(CC.WHITE + "The First player to reach the end wins!");
                     break;
                 case "Spleef":
-                    lore.add(CC.YELLOW + "Compete other players in a spleef arena,");
-                    lore.add(CC.YELLOW + "The last player remaining wins!");
+                    lore.add(CC.WHITE + "Compete other players in a spleef arena,");
+                    lore.add(CC.WHITE + "The last player remaining wins!");
                     break;
                 case "Skywars":
-                    lore.add(CC.YELLOW + "Compete other players in a Skywars Map with OP Loot,");
-                    lore.add(CC.YELLOW + "The last player remaining wins!");
+                    lore.add(CC.WHITE + "Compete other players in a Skywars Map with");
+                    lore.add(CC.WHITE + "OP Loot, The last player remaining wins!");
                     break;
             }
             lore.add("");
@@ -120,34 +120,52 @@ public class EventSelectEventMenu extends Menu {
             } else if (clickType.isLeftClick()) {
                 switch (eventType.getTitle()) {
                     case "Brackets":
-                        if (player.hasPermission("practice.host")) BracketsHostCommand.execute(player);
-                        else player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                             player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
+                        if (player.hasPermission("practice.host")) {
+                            BracketsHostCommand.execute(player);
+                        } else {
+                            player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
+                            player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
+                        }
                         break;
                     case "Sumo":
-                        if (player.hasPermission("practice.host")) SumoHostCommand.execute(player);
-                        else player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                             player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
+                        if (player.hasPermission("practice.host+")) {
+                            SumoHostCommand.execute(player);
+                        } else {
+                            player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
+                            player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
+                        }
                         break;
                     case "LMS":
-                        if (player.hasPermission("practice.host")) LMSHostCommand.execute(player);
-                        else player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                             player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
+                        if (player.hasPermission("practice.host")) {
+                            LMSHostCommand.execute(player);
+                        } else {
+                            player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
+                            player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
+                        }
                         break;
                     case "Parkour":
-                        if (player.hasPermission("practice.host")) ParkourHostCommand.execute(player);
-                        else player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                             player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
+                        if (player.hasPermission("practice.host+")) {
+                            ParkourHostCommand.execute(player);
+                        } else {
+                            player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
+                            player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
+                        }
                         break;
                     case "Spleef":
-                        if (player.hasPermission("practice.host")) SpleefHostCommand.execute(player);
-                        else player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                             player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
+                        if (player.hasPermission("practice.host")) {
+                            SpleefHostCommand.execute(player);
+                        } else {
+                            player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
+                            player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
+                        }
                         break;
                     case "Skywars":
-                        if (player.hasPermission("practice.host")) SkyWarsHostCommand.execute(player);
-                        else player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                             player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
+                        if (player.hasPermission("practice.host+")) {
+                            SkyWarsHostCommand.execute(player);
+                        } else {
+                            player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
+                            player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
+                        }
                         break;
                 }
             }

@@ -13,10 +13,10 @@ public class KitBoxUHCCommand {
         if (kit == null) {
             player.sendMessage(ChatColor.RED + "Kit does not exist");
         } else {
-            if (kit.getGameRules().isBuild()) {
-                kit.getGameRules().setBuild(false);
-            } else if (!kit.getGameRules().isBuild()) {
-                kit.getGameRules().setBuild(true);
+            if (kit.getGameRules().isBoxuhc()) {
+                kit.getGameRules().setBoxuhc(false);
+            } else if (!kit.getGameRules().isBoxuhc()) {
+                kit.getGameRules().setBoxuhc(true);
             }
             kit.save();
             player.sendMessage(CC.GREEN + "Kit set boxuhc mode to " + (kit.getGameRules().isBoxuhc() ? "true!" : "false!"));

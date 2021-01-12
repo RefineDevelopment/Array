@@ -15,6 +15,7 @@ import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.profile.ProfileState;
 import me.array.ArrayPractice.queue.Queue;
 import me.array.ArrayPractice.queue.QueueType;
+import me.array.ArrayPractice.tournament.Tournament;
 import me.array.ArrayPractice.util.PlayerUtil;
 import me.array.ArrayPractice.util.external.CC;
 import me.array.ArrayPractice.util.external.ChatComponentBuilder;
@@ -52,9 +53,9 @@ public abstract class Match {
     private final QueueType queueType;
     public Map<UUID, EnderPearl> pearlMap = new HashMap<>();
     @Setter
-    private MatchState state = MatchState.STARTING;
+    public MatchState state = MatchState.STARTING;
     private final List<MatchSnapshot> snapshots = new ArrayList<>();
-    private final List<UUID> spectators = new ArrayList<>();
+    public final List<UUID> spectators = new ArrayList<>();
     private final List<Entity> entities = new ArrayList<>();
     private final List<Location> placedBlocks = new ArrayList<>();
     private final List<BlockState> changedBlocks = new ArrayList<>();
@@ -357,6 +358,7 @@ public abstract class Match {
     }
 
     public void addSpectator(Player player, Player target) {
+
         spectators.add(player.getUniqueId());
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -428,6 +430,72 @@ public abstract class Match {
             }
         }
     }
+
+    public void addTournamentSpectator(Player player, Player target) {
+        if (Tournament.CURRENT_TOURNAMENT.getParticipants().contains(target)) {
+            spectators.add(player.getUniqueId());
+
+            Profile profile=Profile.getByUuid(player.getUniqueId());
+            profile.setMatch(this);
+            profile.refreshHotbar();
+            profile.handleVisibility();
+            player.setFlying(true);
+
+            player.teleport(target.getLocation().clone().add(0, 2, 0));
+
+            if (!player.hasPermission("practice.staff")) {
+                for ( Player otherPlayer : getPlayers() ) {
+                    otherPlayer.sendMessage(CC.AQUA + player.getName() + CC.YELLOW + " is now spectating your match.");
+                }
+            }
+
+
+            Bukkit.getScheduler().runTaskLaterAsynchronously(Practice.getInstance(), () -> {
+                if (this.isSoloMatch()) {
+                    NameTags.color(player, target, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
+                    NameTags.color(player, this.getOpponentPlayer(target), ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
+                } else if (this.isSumoMatch()) {
+                    NameTags.color(player, target, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
+                    NameTags.color(player, this.getOpponentPlayer(target), ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
+                } else if (this.isTeamMatch()) {
+                    this.getTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
+                    this.getOpponentTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
+                } else if (this.isSumoTeamMatch()) {
+                    this.getTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
+                    this.getOpponentTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
+                } else if (this.isHCFMatch()) {
+                    this.getTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
+                    this.getOpponentTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
+                } else if (this.isKoTHMatch()) {
+                    this.getTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
+                    this.getOpponentTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
+                } else if (this.isFreeForAllMatch()) {
+                    this.getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
+                }
+            }, 20L);
+        }
+    }
+
+    public void removeTournamentSpectator(Player player) {
+            spectators.remove(player.getUniqueId());
+            Profile profile = Profile.getByUuid(player.getUniqueId());
+            profile.setMatch(null);
+            player.setAllowFlight(false);
+            profile.refreshHotbar();
+            profile.handleVisibility();
+
+            Practice.getInstance().getEssentials().teleportToSpawn(player);
+
+            player.spigot().setCollidesWithEntities(true);
+
+            if (state != MatchState.ENDING) {
+                for (Player otherPlayer : getPlayers()) {
+                    if (!profile.isSilent() && !player.hasPermission("practice.staff")) {
+                        otherPlayer.sendMessage(CC.RED + player.getName() + CC.YELLOW + " is no longer spectating your match.");
+                    }
+                }
+            }
+        }
 
     public List<Player> getPlayersAndSpectators() {
         List<Player> allPlayers = new ArrayList<>();

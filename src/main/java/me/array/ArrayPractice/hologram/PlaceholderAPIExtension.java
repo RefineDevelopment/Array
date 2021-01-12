@@ -6,6 +6,8 @@ import me.array.ArrayPractice.profile.Profile;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class PlaceholderAPIExtension extends PlaceholderExpansion {
     @Override
     public String getIdentifier() {
@@ -42,7 +44,6 @@ public class PlaceholderAPIExtension extends PlaceholderExpansion {
             if (kitLeaderboards == null) {
                 return "&7";
             }
-
 
             return "&b#" + (number + 1) + " &8- &f" + kitLeaderboards.getName() + " &8- &b" + kitLeaderboards.getElo();
         }

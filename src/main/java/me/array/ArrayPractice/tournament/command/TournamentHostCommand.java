@@ -16,7 +16,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-@CommandMeta(label = "tournament host", permission = "tournament.host")
+@CommandMeta(label = "tournament host", permission = "practice.host++")
 public class TournamentHostCommand {
 
     private static void broadcastMessage(String message) {

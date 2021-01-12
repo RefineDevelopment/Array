@@ -25,12 +25,15 @@ public class OptionsMenu extends Menu
     @Override
     public Map<Integer, Button> getButtons(final Player player) {
         final Map<Integer, Button> buttons = new HashMap<>();
-        buttons.put(1, new OptionsButton(OptionsType.TOGGLESCOREBOARD));
-        buttons.put(2, new OptionsButton(OptionsType.TOGGLEDUELREQUESTS));
-        buttons.put(3, new OptionsButton(OptionsType.TOGGLESPECTATORS));
-        buttons.put(5, new OptionsButton(OptionsType.CORESETTINGS));
+        buttons.put(0, new OptionsButton(OptionsType.TOGGLESCOREBOARD));
+        buttons.put(1, new OptionsButton(OptionsType.TOGGLETOURNAMENTMESSAGES));
+        buttons.put(2, new OptionsButton(OptionsType.TOGGLESPECTATORS));
+        buttons.put(3, new OptionsButton(OptionsType.TOGGLEPINGONSCOREBOARD));
+        buttons.put(4, new OptionsButton(OptionsType.TOGGLELIGHTNING));
+        buttons.put(5, new OptionsButton(OptionsType.TOGGLEPLAYERVISIBILITY));
+        buttons.put(7, new OptionsButton(OptionsType.CORESETTINGS));
         buttons.put(6, new OptionsButton(OptionsType.TOGGLEPINGFACTOR));
-        buttons.put(7, new OptionsButton(OptionsType.TOGGLELIGHTNING));
+        buttons.put(8, new OptionsButton(OptionsType.TOGGLEDUELREQUESTS));
         return buttons;
     }
 
@@ -59,12 +62,21 @@ public class OptionsMenu extends Menu
                 lines.add((!profile.getOptions().isReceiveDuelRequests() ? "&a&l● " : "&8&l● ") + "&fDon't Allow Duels");
             }
             else if (this.type == OptionsType.TOGGLEPINGFACTOR) {
-                lines.add("");
-                lines.add("&7Enable or Disable queueing with");
-                lines.add("&7Players of similar ping as you.");
-                lines.add("");
-                lines.add((profile.getOptions().isUsingPingFactor() ? "&a&l● " : "&8&l● ") +  "&fUse Ping Factor");
-                lines.add((!profile.getOptions().isUsingPingFactor() ? "&a&l● " : "&8&l● ") + "&fDon't Use Ping Factor");
+                if (player.hasPermission("practice.donator")) {
+                    lines.add("");
+                    lines.add("&7Enable or Disable queueing with");
+                    lines.add("&7Players of similar ping as you.");
+                    lines.add("");
+                    lines.add((profile.getOptions().isUsingPingFactor() ? "&a&l● " : "&8&l● ") + "&fUse Ping Factor");
+                    lines.add((!profile.getOptions().isUsingPingFactor() ? "&a&l● " : "&8&l● ") + "&fDon't Use Ping Factor");
+                } else {
+                    lines.add("");
+                    lines.add("&7Enable or Disable queueing with");
+                    lines.add("&7Players of similar ping as you.");
+                    lines.add("");
+                    lines.add("&7This Option is Donator only!");
+                    lines.add("&7Please buy a rank at &bstore.resolve.rip.");
+                }
             }
             else if (this.type == OptionsType.TOGGLESPECTATORS) {
                 lines.add("");
@@ -74,17 +86,47 @@ public class OptionsMenu extends Menu
                 lines.add((profile.getOptions().isAllowSpectators() ? "&a&l● " : "&8&l● ") + "&fAllow Spectators");
                 lines.add((!profile.getOptions().isAllowSpectators() ? "&a&l● " : "&8&l● ") + "&fDon't Allow Spectators");
             } else if (this.type == OptionsType.TOGGLELIGHTNING) {
-                lines.add("");
-                lines.add("&7Enable or Disable Lightning");
-                lines.add("&7Death effect for your Profile.");
-                lines.add("");
-                lines.add((profile.getOptions().isLightning() ? "&a&l● " : "&8&l● ") + "&fEnable Lightning Death Effect");
-                lines.add((!profile.getOptions().isLightning() ? "&a&l● " : "&8&l● ") + "&fDisable Lightning Death Effect");
+                if (player.hasPermission("practice.donator")) {
+                    lines.add("");
+                    lines.add("&7Enable or Disable Lightning");
+                    lines.add("&7Death effect for your Profile.");
+                    lines.add("");
+                    lines.add((profile.getOptions().isLightning() ? "&a&l● " : "&8&l● ") + "&fEnable Lightning Death Effect");
+                    lines.add((!profile.getOptions().isLightning() ? "&a&l● " : "&8&l● ") + "&fDisable Lightning Death Effect");
+                } else {
+                    lines.add("");
+                    lines.add("&7Enable or Disable Lightning");
+                    lines.add("&7Death effect for your Profile.");
+                    lines.add("");
+                    lines.add("&7This Option is Donator only!");
+                    lines.add("&7Please buy a rank at &bstore.resolve.rip.");
+                }
             } else if (this.type == OptionsType.CORESETTINGS) {
                 lines.add("");
-                lines.add("&7View complete Core Settings");
-                lines.add("&7For your profile,Ex: PMs, Sounds");
+                lines.add("&7Click to view Profile Settings");
+                lines.add("&7Ex: PMs, Sounds, Global Chat.");
                 lines.add("");
+            } else if (this.type == OptionsType.TOGGLEPINGONSCOREBOARD) {
+                lines.add("");
+                lines.add("&7Enable or Disable Ping on");
+                lines.add("&7Scoreboard for your Profile.");
+                lines.add("");
+                lines.add((profile.getOptions().isPingScoreboard() ? "&a&l● " : "&8&l● ") + "&fShow Ping on Scoreboard");
+                lines.add((!profile.getOptions().isPingScoreboard() ? "&a&l● " : "&8&l● ") + "&fDon't Show Ping on Scoreboard");
+            } else if (this.type == OptionsType.TOGGLETOURNAMENTMESSAGES) {
+                lines.add("");
+                lines.add("&7Enable or Disable Tournament");
+                lines.add("&7Messages for your Profile.");
+                lines.add("");
+                lines.add((profile.getOptions().isAllowTournamentMessages() ? "&a&l● " : "&8&l● ") + "&fShow Tournament Messages");
+                lines.add((!profile.getOptions().isAllowTournamentMessages() ? "&a&l● " : "&8&l● ") + "&fDon't Show Tournament Messages");
+            } else if (this.type == OptionsType.TOGGLEPLAYERVISIBILITY) {
+                lines.add("");
+                lines.add("&7Toggle Player Visibility");
+                lines.add("&7in Lobby for your Profile.");
+                lines.add("");
+                lines.add((profile.getOptions().isAllowTournamentMessages() ? "&a&l● " : "&8&l● ") + "&fShow players at Lobby");
+                lines.add((!profile.getOptions().isAllowTournamentMessages() ? "&a&l● " : "&8&l● ") + "&fDon't Show players at Lobby");
             }
             return new ItemBuilder(this.type.getMaterial()).name("&b" + this.type.getName()).lore(lines).build();
         }
@@ -120,6 +162,13 @@ public class OptionsMenu extends Menu
                 }
             } else if (this.type == OptionsType.CORESETTINGS) {
                 new SettingsMenu().open(player);
+            } else if (this.type == OptionsType.TOGGLEPINGONSCOREBOARD) {
+                profile.getOptions().setPingScoreboard(!profile.getOptions().isPingScoreboard());
+            } else if (this.type == OptionsType.TOGGLETOURNAMENTMESSAGES) {
+                profile.getOptions().setAllowTournamentMessages(!profile.getOptions().isAllowTournamentMessages());
+            } else if (this.type == OptionsType.TOGGLEPLAYERVISIBILITY) {
+                profile.getOptions().setPlayerVisibility(!profile.getOptions().isPlayerVisibility());
+                profile.handleVisibility();
             }
         }
 

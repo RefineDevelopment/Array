@@ -58,10 +58,6 @@ public class Sumo {
 		List<String> toReturn = new ArrayList<>();
 
 		Sumo sumo = Practice.getInstance().getSumoManager().getActiveSumo();
-
-		toReturn.add(CC.MENU_BAR);
-		toReturn.add(CC.translate("&e&lHost: &r" + sumo.getName()));
-
 		toReturn.add(CC.MENU_BAR);
 		toReturn.add(CC.translate("&bHost: &r" + sumo.getName()));
 		toReturn.add(CC.translate("&bKit: &f" + "Sumo"));

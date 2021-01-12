@@ -2,25 +2,15 @@ package me.array.ArrayPractice.profile.meta.option;
 
 import lombok.Getter;
 import lombok.Setter;
-
+@Getter
+@Setter
 public class ProfileOptions {
-
-    @Getter
-    @Setter
     private boolean showScoreboard=true;
-    @Getter
-    @Setter
     private boolean receiveDuelRequests=true;
-    @Getter
-    @Setter
     private boolean allowSpectators=true;
-    @Getter
-    @Setter
     private boolean lightning=true;
-    @Getter
-    @Setter
     private boolean usingPingFactor=false;
-    @Getter
-    @Setter
-    private boolean isVisibility=false;
+    private boolean isPingScoreboard=true;
+    private boolean allowTournamentMessages=true;
+    private boolean playerVisibility=false;
 }

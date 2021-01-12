@@ -50,7 +50,7 @@ public class ManagePartySettings extends Menu
                 return new ItemBuilder(Material.REDSTONE_TORCH_ON).name("&b" + this.partyManage.getName()).lore(lore).build();
             }
             if (this.partyManage == PartyManage.PUBLIC) {
-                return new ItemBuilder(Material.CHEST).name("&b" + this.partyManage.getName()).lore("&7Public: " + profile.getParty().isPublic()).build();
+                return new ItemBuilder(Material.CHEST).name("&b" + this.partyManage.getName()).lore("&7Public: " + (profile.getParty().isPublic() ? "&aPublic" : "&eInvite Only")).build();
             }
             return new ItemBuilder(Material.SKULL_ITEM).name("&b" + this.partyManage.getName()).lore("&7Click to Manage Members").build();
         }

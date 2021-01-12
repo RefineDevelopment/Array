@@ -7,7 +7,7 @@ import me.array.ArrayPractice.profile.Profile;
 import me.array.ArrayPractice.util.external.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = {"skywars host"}, permission = "practice.skywars.host")
+@CommandMeta(label = {"skywars host"}, permission = "practice.host+")
 public class SkyWarsHostCommand {
 
     public static void execute(Player player) {
