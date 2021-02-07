@@ -1,10 +1,40 @@
-#Array is forked by Drizzy
-#For URL in Mongo put it like this:
-#Local Host: URL:"mongodb://127.0.0.1:27017"
-#Hosting Services Like Clevercloud: URL:"mongodb://<username>:<password>@<host>:<port>/<database>"
 Mongo:
-  Database: "Practice"
-  URL: ""
+  Database: Array
+  URL: mongodb://127.0.0.1:27017/Array
 ARRAY:
-  SPAWN: world:0.5:101.0:0.5:181.29625:1.3300086
-  TAB_ENABLED: true
+  SPAWN: world:108.42862345557752:106.0:2.4753712094583005:-89.59775:0.17956273
+Tab:
+  Enabled: true
+  Color:
+    Main: "&b"
+    Elements: "&f"
+  Header: "&b&lResolve Practice"
+  Footer: "&7store.resolve.rip"
+Queue-Lore:
+- "&7&m----------------------"
+- "&fIn Queue &8» &b{in_queue}"
+- "&fIn Fight &8» &b{in_fight}"
+- ""
+- "&bClick to join queue."
+- "&7&m----------------------"
+MOTD:
+  enabled: true
+  lines:
+  - "&7&m------------------------------------------------"
+  - "         &b&lPurge Community &7(Practice)"
+  - "&7&m------------------------------------------------"
+  - "&bPractice Commands:"
+  - "&7/duel <Name> &8- &7Send a player a duel request"
+  - "&7/spec <Name> &8- &7Spectate a player's ongoing match"
+  - "&7/settings &8- &7Edit preferences on the server"
+  - "&7/party &8- &7See all party related commands"
+  - " "
+  - "&7To send a message to your party do &7'&d@&7' <message>:"
+  - " "
+  - "&bServer Links:"
+  - "&7Website &8- &bwww.purgemc.club"
+  - "&7Discord &8- &bdiscord.purgemc.club"
+  - "&7Store &8- &bstore.purgemc.club"
+  - " "
+  - "&7Welcome to the &b&lPurge Practice!"
+  - "&7&m------------------------------------------------"

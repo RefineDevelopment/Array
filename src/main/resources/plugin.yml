@@ -1,8 +1,9 @@
-main: me.array.ArrayPractice.Practice
+main: me.drizzy.practice.Array
 name: Array
-version: 3.0
-authors: ["Nick", "Drizzy", "Chris", "Zentil"]
+version: 4.0
+authors: ["Nick", "Drizzy", "Zentil"]
 depend:
   - ProtocolLib
-  - PlaceholderAPI
+softdepend:
   - HolographicDisplays
+  - PlaceholderAPI

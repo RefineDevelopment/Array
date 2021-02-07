@@ -1,8 +1,0 @@
-main: me.array.ArrayPractice.Practice
-name: Array
-version: 3.0
-authors: ["Nick", "Drizzy", "Chris", "Zentil"]
-depend:
-  - ProtocolLib
-  - PlaceholderAPI
-  - HolographicDisplays

@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>me.array.ArrayPractice</groupId>
+    <groupId>rip.resolve.Practice</groupId>
     <artifactId>Array</artifactId>
-    <version>3.0</version>
+    <version>4.0</version>
 
     <!--Repositories-->
 
@@ -82,29 +82,22 @@
             <scope>compile</scope>
         </dependency>
 
-        <!--Spigot (credits to Chris)-->
+        <!--Spigot-->
         <dependency>
-            <groupId>rip.verse.jupiter</groupId>
-            <artifactId>Jupiter</artifactId>
+            <groupId>rip.resolve</groupId>
+            <artifactId>RaveSpigot</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/server.jar</systemPath>
         </dependency>
 
-        <!-- Command Handlers  -->
+        <!--1.7 Compatibility Spigot-->
         <dependency>
-            <groupId>com.qrakn</groupId>
-            <artifactId>honcho</artifactId>
-            <version>1.0</version>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>Spigot</artifactId>
+            <version>1.7.10.R4-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/honcho-1.0-SNAPSHOT.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.qrakn</groupId>
-            <artifactId>phoenix</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/phoenix-lang-1.0-SNAPSHOT.jar</systemPath>
+            <systemPath>${project.basedir}/lib/spigot-1.7.10.jar</systemPath>
         </dependency>
 
         <!-- Mongo Driver -->
@@ -113,20 +106,11 @@
             <artifactId>mongo-java-driver</artifactId>
             <version>3.9.1</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib</artifactId>
-            <version>4.4.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/ProtocolLib.jar</systemPath>
-        </dependency>
-
         <!--Packet Handler-->
         <dependency>
             <groupId>com.comphenix</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>1.0</version>
+            <version>4.4</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/ProtocolLib.jar</systemPath>
         </dependency>
@@ -140,13 +124,20 @@
             <systemPath>${project.basedir}/lib/Aquacore.jar</systemPath>
         </dependency>
 
-        <!-- Tablist Handlers  -->
         <dependency>
-            <groupId>cc.outlast.tablist</groupId>
-            <artifactId>Tablist</artifactId>
+            <groupId>us.myles</groupId>
+            <artifactId>ViaVersion</artifactId>
+            <version>3.2.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/ViaVersion.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.thatkawaiisam</groupId>
+            <artifactId>Ziggurat</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/outlast.jar</systemPath>
+            <systemPath>${project.basedir}/lib/ziggurat.jar</systemPath>
         </dependency>
 
         <!--LunarAPI Support-->
@@ -155,7 +146,15 @@
             <artifactId>LunarClient-API</artifactId>
             <version>LATEST</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/bukkitapi-1.0-20200213.200536-3.jar</systemPath>
+            <systemPath>${project.basedir}/lib/LunarAPi.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>net.mineaus</groupId>
+            <artifactId>LunarClient-API</artifactId>
+            <version>LATEST</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/LunarClientAPI-1.0.jar</systemPath>
         </dependency>
 
         <!--Hologram Leaderboards Handler-->
@@ -165,22 +164,6 @@
             <version>2.10.3</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/PlaceholderAPI.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>com.gmail.filoghost.holographicdisplays</groupId>
-            <artifactId>holographicdisplays-api</artifactId>
-            <version>2.4.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/HolographicDisplays.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>TouchScreenHolos</groupId>
-            <artifactId>holographicdisplays-api</artifactId>
-            <version>2.4.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/TouchscreenHolograms.jar</systemPath>
         </dependency>
 
         <!--Citizens (To Fix NPC's Dissapearing)-->

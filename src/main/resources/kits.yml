@@ -1,7 +1,7 @@
 kits:
   NoDebuff:
     enabled: true
-    knockback-profile: strafe
+    knockback-profile: default
     icon:
       material: POTION
       durability: 16421
@@ -19,7 +19,10 @@ kits:
       build: false
       spleef: false
       parkour: false
+      combo: false
       sumo: false
+      infinite-speed: false
+      infinite-strength: false
       timed: false
       water-kill: false
       lava-kill: false
@@ -27,6 +30,7 @@ kits:
       show-health: false
       hit-delay: 20
       bow-hp: false
+      BoxUHC: false 
     edit-rules:
       allow-potion-fill: false
       items:
@@ -48,7 +52,7 @@ kits:
           durability: 8226
   Debuff:
     enabled: true
-    knockback-profile: strafe
+    knockback-profile: default
     icon:
       material: POTION
       durability: 16452
@@ -66,7 +70,10 @@ kits:
       build: false
       spleef: false
       parkour: false
+      combo: false
       sumo: false
+      infinite-speed: false
+      infinite-strength: false
       timed: false
       water-kill: false
       lava-kill: false
@@ -74,6 +81,7 @@ kits:
       show-health: false
       hit-delay: 20
       bow-hp: false
+      BoxUHC: false 
     edit-rules:
       allow-potion-fill: false
       items:
@@ -113,7 +121,10 @@ kits:
       build: false
       spleef: false
       parkour: false
+      combo: false
       sumo: false
+      infinite-speed: false
+      infinite-strength: false
       timed: false
       water-kill: false
       lava-kill: false
@@ -121,6 +132,7 @@ kits:
       show-health: false
       hit-delay: 3
       bow-hp: false
+      BoxUHC: false
     edit-rules:
       allow-potion-fill: false
   BuildUHC:
@@ -143,7 +155,10 @@ kits:
       build: true
       spleef: false
       parkour: false
+      combo: false
       sumo: false
+      infinite-speed: false
+      infinite-strength: false
       timed: false
       water-kill: false
       lava-kill: false
@@ -151,6 +166,7 @@ kits:
       show-health: true
       hit-delay: 20
       bow-hp: true
+      BoxUHC: false     
     edit-rules:
       allow-potion-fill: false
   Sumo:
@@ -173,7 +189,10 @@ kits:
       build: false
       spleef: false
       parkour: false
+      combo: false
       sumo: true
+      infinite-speed: false
+      infinite-strength: false
       timed: false
       water-kill: true
       lava-kill: false
@@ -181,6 +200,7 @@ kits:
       show-health: false
       hit-delay: 20
       bow-hp: false
+      BoxUHC: false
     edit-rules:
       allow-potion-fill: false
   Classic:
@@ -202,7 +222,10 @@ kits:
       build: false
       spleef: false
       parkour: false
+      combo: false
       sumo: false
+      infinite-speed: false
+      infinite-strength: false
       timed: false
       water-kill: false
       lava-kill: false
@@ -231,7 +254,10 @@ kits:
       build: true
       spleef: false
       parkour: false
+      combo: false
       sumo: false
+      infinite-speed: false
+      infinite-strength: false
       timed: false
       water-kill: false
       lava-kill: false
@@ -239,9 +265,44 @@ kits:
       show-health: false
       hit-delay: 20
       bow-hp: false
+      BoxUHC: true
     edit-rules:
       allow-potion-fill: false
     knockback-profile: builduhc
+  HCFTeamFight:
+      enabled: false
+      icon:
+        material: WOOD_DOOR
+        durability: 0
+      loadout:
+        armor: t@0;t@0;t@0;t@0;
+        contents: t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;
+      game-rules:
+        ranked: true
+        partyffa: false
+        partysplit: false
+        editable: true
+        antifoodloss: true
+        ffacenter: false
+        noitems: false
+        build: true
+        spleef: false
+        parkour: false
+        combo: false
+        sumo: false
+        infinite-speed: false
+        infinite-strength: false
+        timed: false
+        water-kill: false
+        lava-kill: false
+        health-regeneration: true
+        show-health: false
+        hit-delay: 20
+        bow-hp: false
+        BoxUHC: false
+      edit-rules:
+        allow-potion-fill: false
+      knockback-profile: default
   Soup:
     enabled: true
     icon:
@@ -261,7 +322,10 @@ kits:
       build: false
       spleef: false
       parkour: false
+      combo: false
       sumo: false
+      infinite-speed: false
+      infinite-strength: false
       timed: false
       water-kill: false
       lava-kill: false
@@ -269,9 +333,10 @@ kits:
       show-health: false
       hit-delay: 20
       bow-hp: false
+      BoxUHC: false
     edit-rules:
       allow-potion-fill: false
-    knockback-profile: strafe
+    knockback-profile: default
   Axe:
     enabled: true
     icon:
@@ -291,7 +356,10 @@ kits:
       build: false
       spleef: false
       parkour: false
+      combo: false
       sumo: false
+      infinite-speed: false
+      infinite-strength: false
       timed: false
       water-kill: false
       lava-kill: false
@@ -299,9 +367,10 @@ kits:
       show-health: false
       hit-delay: 20
       bow-hp: false
+      BoxUHC: false
     edit-rules:
       allow-potion-fill: false
-    knockback-profile: strafe
+    knockback-profile: default
   Gapple:
     enabled: true
     icon:
@@ -321,7 +390,10 @@ kits:
       build: false
       spleef: false
       parkour: false
+      combo: false
       sumo: false
+      infinite-speed: false
+      infinite-strength: false
       timed: false
       water-kill: false
       lava-kill: false
@@ -329,6 +401,123 @@ kits:
       show-health: false
       hit-delay: 20
       bow-hp: false
+      BoxUHC: false
     edit-rules:
       allow-potion-fill: false
-    knockback-profile: strafe
+    knockback-profile: default
+  HCFDIAMOND:
+    enabled: false
+    icon:
+      material: DIAMOND_SWORD
+      durability: 0
+    loadout:
+      armor: t@313:e@0@1:e@2@4:e@34@3;t@312:e@0@1:e@34@3;t@311:e@0@1:e@34@3;t@310:e@0@1:e@34@3;
+      contents: t@276:e@16@1:e@34@3;t@368:a@16;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@8226;t@393:a@64;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@8226;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@8226;t@373:d@8226;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@8226;t@373:d@8226;
+    game-rules:
+      ranked: false
+      partyffa: false
+      partysplit: false
+      editable: false
+      antifoodloss: false
+      ffacenter: false
+      noitems: false
+      build: false
+      spleef: false
+      parkour: false
+      sumo: false
+      timed: false
+      water-kill: false
+      lava-kill: false
+      health-regeneration: false
+      show-health: false
+      hit-delay: 20
+    edit-rules:
+      allow-potion-fill: false
+    knockback-profile: default
+  HCFBARD:
+    enabled: false
+    icon:
+      material: DIAMOND_SWORD
+      durability: 0
+    loadout:
+      armor: t@317:e@0@1:e@34@3:e@2@4;t@316:e@0@1:e@34@3;t@315:e@0@1:e@34@3;t@314:e@0@1:e@34@3;
+      contents: t@276:e@16@1:e@34@3;t@368:a@16;t@377:a@64;t@370:a@64;t@265:a@64;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@393:a@64;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@375:a@64;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@351:a@64;t@385:a@64;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@353:a@64;t@288:a@64;
+    game-rules:
+      ranked: false
+      partyffa: false
+      partysplit: false
+      editable: false
+      antifoodloss: false
+      ffacenter: false
+      noitems: false
+      build: false
+      spleef: false
+      parkour: false
+      sumo: false
+      timed: false
+      water-kill: false
+      lava-kill: false
+      health-regeneration: false
+      show-health: false
+      hit-delay: 20
+    edit-rules:
+      allow-potion-fill: false
+    knockback-profile: default
+  HCFARCHER:
+    enabled: false
+    icon:
+      material: DIAMOND_SWORD
+      durability: 0
+    loadout:
+      armor: t@301:e@0@1:e@34@3:e@2@4;t@300:e@0@1:e@34@3;t@299:e@0@1:e@34@3;t@298:e@0@1:e@34@3;
+      contents: t@276:e@16@1:e@34@3;t@368:a@16;t@261:e@48@4:e@34@3:e@50@1:e@51@1;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@353:a@64;t@393:a@64;t@262;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@288:a@64;
+    game-rules:
+      ranked: false
+      partyffa: false
+      partysplit: false
+      editable: false
+      antifoodloss: false
+      ffacenter: false
+      noitems: false
+      build: false
+      spleef: false
+      parkour: false
+      sumo: false
+      timed: false
+      water-kill: false
+      lava-kill: false
+      health-regeneration: false
+      show-health: false
+      hit-delay: 20
+    edit-rules:
+      allow-potion-fill: false
+    knockback-profile: default
+  HCFROGUE:
+    enabled: false
+    icon:
+      material: DIAMOND_SWORD
+      durability: 0
+    loadout:
+      armor: t@305:e@0@1:e@2@4:e@34@3;t@304:e@0@1:e@34@3;t@303:e@0@1:e@34@3;t@302:e@0@1:e@34@3;
+      contents: t@276:e@16@1:e@34@3;t@368:a@16;t@283;t@283;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@353:a@64;t@393:a@64;t@283;t@283;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@283;t@283;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@283;t@283;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@288:a@64;
+    game-rules:
+      ranked: false
+      partyffa: false
+      partysplit: false
+      editable: false
+      antifoodloss: false
+      ffacenter: false
+      noitems: false
+      build: false
+      spleef: false
+      parkour: false
+      sumo: false
+      timed: false
+      water-kill: false
+      lava-kill: false
+      health-regeneration: false
+      show-health: false
+      hit-delay: 20
+    edit-rules:
+      allow-potion-fill: false
+    knockback-profile: default    

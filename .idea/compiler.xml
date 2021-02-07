@@ -7,12 +7,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Array 3.0" />
+        <module name="Array" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="AquaCoreBridge" target="1.8" />
-      <module name="Array 3.0" target="1.8" />
+      <module name="Array" target="1.8" />
       <module name="Bridge" target="1.8" />
       <module name="LunarClient-API" target="1.8" />
       <module name="ServerStatusBot" target="1.8" />

@@ -1,5 +1,6 @@
 arenas:
-  Test:
+  RemoveMe:
+    enabled: true
     type: SHARED
     icon:
       material: SNOW_BLOCK
