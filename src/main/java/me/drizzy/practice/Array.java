@@ -199,7 +199,7 @@ public class Array extends JavaPlugin {
             this.logger("            &4&lMongo Internal Error");
             this.logger("        &cMongo is not setup correctly!");
             this.logger(     "&cPlease check your mongo and try again.");
-            this.logger("               &4&lDisabling Array");
+            this.logger("              &4&lDisabling Array");
             this.logger("------------------------------------------------");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
@@ -307,6 +307,7 @@ public class Array extends JavaPlugin {
                 new ArenaTpCommand(),
                 new ArenaCommand(),
                 new ArenasCommand(),
+                new ArenaKitListCommand(),
                 new ArenaSaveCommand(),
                 new ArenaReloadCommand(),
                 new ArenaSetIconCommand(),
@@ -425,6 +426,7 @@ public class Array extends JavaPlugin {
                 new SkyWarsJoinCommand(),
                 new SkyWarsLeaveCommand(),
                 new SkyWarsSetSpawnCommand(),
+                new SkywarsClearChestsCommand(),
                 new SkyWarsTpCommand(),
                 new SkyWarsSetChestCommand(),
                 new SkyWarsHelpCommand(),
@@ -514,6 +516,7 @@ public class Array extends JavaPlugin {
             this.logger("&cPlaceholderAPI was NOT found, Holograms will NOT work!");
         }
         SkywarsChests.preload();
+        Profile.loadGlobalLeaderboards();
     }
 
     @Override

@@ -143,7 +143,7 @@ public class Tab implements ZigguratAdapter {
                         }
                         elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "&lMatch Info").slot(23));
                         elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Duration: &b" + match2.getDuration()).slot(24));
-                        elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Arena: &b" + match2.getArena().getName()).slot(5));
+                        elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Arena: &b" + match2.getArena().getName()).slot(25));
                         elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Kit: &b" + match2.getKit().getName()).slot(26));
                         int added3 = 45;
                         elements.add(new BufferedTabObject().text("&cOpponents &c(" + opponentTeam.getAliveCount() + "/" + opponentTeam.getTeamPlayers().size() + ")").slot(44));
@@ -174,7 +174,7 @@ public class Tab implements ZigguratAdapter {
                         }
                         elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "&lMatch Info").slot(23));
                         elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Duration: &b" + match2.getDuration()).slot(24));
-                        elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Arena: &b" + match2.getArena().getName()).slot(5));
+                        elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Arena: &b" + match2.getArena().getName()).slot(25));
                         int added3 = 45;
                         elements.add(new BufferedTabObject().text("&cOpponents &c(" + opponentTeam.getAliveCount() + "/" + opponentTeam.getTeamPlayers().size() + ")").slot(44));
                         for (final TeamPlayer teamPlayer2 : opponentTeam.getTeamPlayers()) {

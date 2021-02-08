@@ -8,9 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -22,6 +20,7 @@ public class SkywarsChests {
     private ChestType type;
 
     public static Map<Location, SkywarsChests> chests = new HashMap<>();
+    public static List<SkywarsChests> chestsList = new ArrayList<>();
 
     private static YamlConfiguration config = Array.getInstance().getChestsConfig().getConfiguration();
 
@@ -31,6 +30,7 @@ public class SkywarsChests {
         this.block = (Chest) location.getBlock().getState();
         this.type = type;
         chests.put(location, this);
+        chestsList.add(this);
     }
 
     public void save() {
@@ -38,6 +38,16 @@ public class SkywarsChests {
         try {
             config.save(Array.getInstance().getChestsConfig().getFile());
         } catch (Exception ignored) {}
+    }
+
+    public void delete() {
+        config.set(uuid.toString(), null);
+        try {
+            config.save(Array.getInstance().getChestsConfig().getFile());
+        } catch (Exception ignored) {}
+        chests.clear();
+        chestsList.clear();
+        preload();
     }
 
     public static void preload() {
