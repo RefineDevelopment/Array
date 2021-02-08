@@ -13,6 +13,7 @@ import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.Sorts;
 import lombok.Getter;
 import lombok.Setter;
+import me.activated.core.plugin.AquaCoreAPI;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.duel.DuelProcedure;
 import me.drizzy.practice.duel.DuelRequest;
@@ -158,7 +159,7 @@ public class Profile {
     @Getter
     @Setter
     private boolean visibility = false;
-    @Getter private List<Location> plates = new ArrayList<>();
+    @Getter private final List<Location> plates = new ArrayList<>();
     @Getter
     @Setter
     private Player following;
@@ -542,13 +543,10 @@ public class Profile {
 
     public boolean isSpectating() {
         return state == ProfileState.SPECTATE_MATCH && (
-                match != null ||
-                        sumo != null ||
-                        brackets != null ||
-                        lms != null ||
-                        parkour != null ||
-                        skyWars != null ||
-                        spleef != null);
+                match != null || sumo != null ||
+                brackets != null || lms != null ||
+                parkour != null || skyWars != null ||
+                spleef != null);
     }
 
     public boolean isInEvent() {
@@ -625,12 +623,12 @@ public class Profile {
                     } else if (!this.rematchData.getKey().equals(this.getRematchData().getKey())) {
                         this.rematchData=null;
                         update=true;
-                    } else if (this.rematchData.isReceive()) {
-                        final int requestSlot=player.getInventory().first(Hotbar.getItems().get(HotbarItem.REMATCH_REQUEST));
-                        if (requestSlot != -1) {
-                            update=true;
-                        }
-                    }
+                    }// else if (this.rematchData.isReceive()) {
+                        ///int requestSlot = player.getInventory().first(Hotbar.getItems().get(HotbarItem.REMATCH_ACCEPT));
+
+                        /*if (requestSlot != -1) {
+                            update = true;
+                        }*/
                 }
             }
 
@@ -662,178 +660,153 @@ public class Profile {
     }
 
     public void refreshHotbar() {
-        final Player player = this.getPlayer();
+        Player player = getPlayer();
+
         if (player != null) {
             PlayerUtil.reset(player, false);
-            if (this.isInLobby()) {
-                for ( Player otherplayer : Bukkit.getOnlinePlayers() ) {
-                    NameTags.color(player, otherplayer, ChatColor.GREEN, false);
-                    if (!Profile.getByUuid(otherplayer).isInFight() && Profile.getByUuid(otherplayer).getState() == ProfileState.IN_LOBBY || Profile.getByUuid(otherplayer).getState() == ProfileState.IN_QUEUE) {
-                        NameTags.color(player, otherplayer, ChatColor.GREEN, false);
-                    }
-            }
+
+            if (isInLobby()) {
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.LOBBY, this));
-            }
-            else if (this.isInQueue()) {
-                for ( Player otherplayer : Bukkit.getOnlinePlayers() ) {
-                    NameTags.color(player, otherplayer, ChatColor.GREEN, false);
-                    if (!Profile.getByUuid(otherplayer).isInFight() && Profile.getByUuid(otherplayer).getState() == ProfileState.IN_LOBBY || Profile.getByUuid(otherplayer).getState() == ProfileState.IN_QUEUE) {
-                        NameTags.color(player, otherplayer, ChatColor.GREEN, false);
-                    }
-                    player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.QUEUE, this));
-                }
-            }
-            else if (this.isSpectating()) {
+            } else if (isInQueue()) {
+                player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.QUEUE, this));
+            } else if (isSpectating()) {
                 PlayerUtil.spectator(player);
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this));
-            }
-            else if (this.isInSumo()) {
+            } else if (isInSumo()) {
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SUMO_SPECTATE, this));
-            }
-            else if (this.isInBrackets()) {
+            } else if (isInBrackets()) {
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.BRACKETS_SPECTATE, this));
-            }
-            else if (this.isInLMS()) {
-                if (this.getLms().getEventPlayer(player).getState().equals(LMSPlayerState.ELIMINATED)) {
+            } else if (isInLMS()) {
+                if (getLms().getEventPlayer(player).getState().equals(LMSPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.LMS_SPECTATE, this));
-            }
-            else if (this.isInParkour()) {
-                if (this.getParkour().getEventPlayer(player).getState().equals(ParkourPlayerState.ELIMINATED)) {
+            } else if (isInParkour()) {
+                if (getParkour().getEventPlayer(player).getState().equals(ParkourPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.PARKOUR_SPECTATE, this));
-            }
-            else if (this.isInSkyWars()) {
-                if (this.getSkyWars().getEventPlayer(player).getState().equals(SkyWarsPlayerState.ELIMINATED)) {
+            } else if (isInSkyWars()) {
+                if (getSkyWars().getEventPlayer(player).getState().equals(SkyWarsPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SKYWARS_SPECTATE, this));
-            }
-            else if (this.isInSpleef()) {
-                if (this.getSpleef().getEventPlayer(player).getState().equals(SpleefPlayerState.ELIMINATED)) {
+            } else if (isInSpleef()) {
+                if (getSpleef().getEventPlayer(player).getState().equals(SpleefPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SPLEEF_SPECTATE, this));
+            } else if (isInFight()) {
+                if (!match.getTeamPlayer(player).isAlive()) {
+                    player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this));
+                }
             }
-            else if (this.isInFight() && !this.match.getTeamPlayer(player).isAlive()) {
-                player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this));
-            }
+
             player.updateInventory();
         }
     }
 
-    public void handleVisibility(final Player player, final Player otherPlayer) {
-        if (player == null || otherPlayer == null) {
-            return;
-        }
+    public void handleVisibility(Player player, Player otherPlayer) {
+        if (player == null || otherPlayer == null) return;
+
         boolean hide = true;
-        if (this.state == ProfileState.IN_LOBBY || this.state == ProfileState.IN_QUEUE) {
-            if (this.party != null && this.party.containsPlayer(otherPlayer)) {
+
+        if (state == ProfileState.IN_LOBBY || state == ProfileState.IN_QUEUE) {
+            hide = true;
+            if (party != null && party.containsPlayer(otherPlayer)) {
                 hide = false;
                 NameTags.color(player, otherPlayer, ChatColor.BLUE, false);
             }
-        }
-        else if (this.isInFight()) {
-            final TeamPlayer teamPlayer = this.match.getTeamPlayer(otherPlayer);
+        } else if (isInFight()) {
+            TeamPlayer teamPlayer = match.getTeamPlayer(otherPlayer);
+
             if (teamPlayer != null && teamPlayer.isAlive()) {
                 hide = false;
             }
-        }
-        else if (this.isSpectating()) {
-            if (this.sumo != null) {
-                final SumoPlayer sumoPlayer = this.sumo.getEventPlayer(otherPlayer);
+        } else if (isSpectating()) {
+            if (sumo != null) {
+                SumoPlayer sumoPlayer = sumo.getEventPlayer(otherPlayer);
                 if (sumoPlayer != null && sumoPlayer.getState() == SumoPlayerState.WAITING) {
                     hide = false;
                 }
-            }
-            else if (this.brackets != null) {
-                final BracketsPlayer bracketsPlayer = this.brackets.getEventPlayer(otherPlayer);
+            } else if (brackets != null) {
+                BracketsPlayer bracketsPlayer = brackets.getEventPlayer(otherPlayer);
                 if (bracketsPlayer != null && bracketsPlayer.getState() == BracketsPlayerState.WAITING) {
                     hide = false;
                 }
-            }
-            else if (this.lms != null) {
-                final LMSPlayer ffaPlayer = this.lms.getEventPlayer(otherPlayer);
-                if (ffaPlayer != null && ffaPlayer.getState() == LMSPlayerState.WAITING) {
+            } else if (lms != null) {
+                LMSPlayer LMSPlayer = lms.getEventPlayer(otherPlayer);
+                if (LMSPlayer != null && LMSPlayer.getState() == LMSPlayerState.WAITING) {
                     hide = false;
                 }
-            }
-            else if (this.parkour != null) {
-                final ParkourPlayer parkourPlayer = this.parkour.getEventPlayer(otherPlayer);
+            } else if (parkour != null) {
+                ParkourPlayer parkourPlayer = parkour.getEventPlayer(otherPlayer);
                 if (parkourPlayer != null && parkourPlayer.getState() == ParkourPlayerState.WAITING) {
                     hide = false;
                 }
-            }
-            else if (this.skyWars != null) {
-                final SkyWarsPlayer skyWarsPlayer = this.skyWars.getEventPlayer(otherPlayer);
+            } else if (skyWars != null) {
+                SkyWarsPlayer skyWarsPlayer = skyWars.getEventPlayer(otherPlayer);
                 if (skyWarsPlayer != null && skyWarsPlayer.getState() == SkyWarsPlayerState.WAITING) {
                     hide = false;
                 }
-            }
-            else if (this.spleef != null) {
-                final SpleefPlayer spleefPlayer = this.spleef.getEventPlayer(otherPlayer);
+            } else if (spleef != null) {
+                SpleefPlayer spleefPlayer = spleef.getEventPlayer(otherPlayer);
                 if (spleefPlayer != null && spleefPlayer.getState() == SpleefPlayerState.WAITING) {
                     hide = false;
                 }
-            }
-            else {
-                final TeamPlayer teamPlayer = this.match.getTeamPlayer(otherPlayer);
+            } else {
+                TeamPlayer teamPlayer = match.getTeamPlayer(otherPlayer);
                 if (teamPlayer != null && teamPlayer.isAlive()) {
                     hide = false;
                 }
             }
-        }
-        else if (this.isInEvent()) {
-            if (this.sumo != null) {
-                if (!this.sumo.getSpectators().contains(otherPlayer.getUniqueId())) {
-                    final SumoPlayer sumoPlayer = this.sumo.getEventPlayer(otherPlayer);
+        } else if (isInEvent()) {
+            if (sumo != null) {
+                if (!sumo.getSpectators().contains(otherPlayer.getUniqueId())) {
+                    SumoPlayer sumoPlayer = sumo.getEventPlayer(otherPlayer);
                     if (sumoPlayer != null && sumoPlayer.getState() == SumoPlayerState.WAITING) {
                         hide = false;
                     }
                 }
-            }
-            else if (this.brackets != null) {
-                final BracketsPlayer bracketsPlayer = this.brackets.getEventPlayer(otherPlayer);
+            } else if (brackets != null) {
+                BracketsPlayer bracketsPlayer = brackets.getEventPlayer(otherPlayer);
                 if (bracketsPlayer != null && bracketsPlayer.getState() == BracketsPlayerState.WAITING) {
                     hide = false;
                 }
-            }
-            else if (this.lms != null) {
-                final LMSPlayer ffaPlayer = this.lms.getEventPlayer(otherPlayer);
-                if (ffaPlayer != null && ffaPlayer.getState() == LMSPlayerState.WAITING) {
+            } else if (lms != null) {
+                LMSPlayer LMSPlayer = lms.getEventPlayer(otherPlayer);
+                if (LMSPlayer != null && LMSPlayer.getState() == LMSPlayerState.WAITING) {
                     hide = false;
                 }
-            }
-            else if (this.parkour != null) {
-                final ParkourPlayer parkourPlayer = this.parkour.getEventPlayer(otherPlayer);
+            } else if (parkour != null) {
+                ParkourPlayer parkourPlayer = parkour.getEventPlayer(otherPlayer);
                 if (parkourPlayer != null && parkourPlayer.getState() == ParkourPlayerState.WAITING) {
                     hide = false;
                 }
-            }
-            else if (this.skyWars != null) {
-                final SkyWarsPlayer skyWarsPlayer = this.skyWars.getEventPlayer(otherPlayer);
+            } else if (skyWars != null) {
+                SkyWarsPlayer skyWarsPlayer = skyWars.getEventPlayer(otherPlayer);
                 if (skyWarsPlayer != null && skyWarsPlayer.getState() == SkyWarsPlayerState.WAITING) {
                     hide = false;
                 }
-            }
-            else if (this.spleef != null) {
-                final SpleefPlayer spleefPlayer = this.spleef.getEventPlayer(otherPlayer);
+            } else if (spleef != null) {
+                SpleefPlayer spleefPlayer = spleef.getEventPlayer(otherPlayer);
                 if (spleefPlayer != null && spleefPlayer.getState() == SpleefPlayerState.WAITING) {
                     hide = false;
                 }
             }
+
         }
+
         if (hide) {
             new BukkitRunnable() {
+                @Override
                 public void run() {
                     player.hidePlayer(otherPlayer);
                 }
             }.runTask(Array.getInstance());
-        }
-        else {
+        } else {
             new BukkitRunnable() {
+                @Override
                 public void run() {
                     player.showPlayer(otherPlayer);
                 }
@@ -842,12 +815,13 @@ public class Profile {
     }
 
     public void handleVisibility() {
-        final Player player = this.getPlayer();
+        Player player = getPlayer();
         if (player != null) {
             new BukkitRunnable() {
+                @Override
                 public void run() {
-                    for (final Player otherPlayer : Bukkit.getOnlinePlayers()) {
-                        Profile.this.handleVisibility(player, otherPlayer);
+                    for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
+                        handleVisibility(player, otherPlayer);
                     }
                 }
             }.runTaskAsynchronously(Array.getInstance());

@@ -392,7 +392,7 @@ public class Brackets {
 
 		broadcastMessage("&b" + player.getName() + "&7 was eliminated by &b" + winner.getUsername() + "&7!");
 		player.setFireTicks(0);
-		Profile.getByUuid(player).handleVisibility();
+		winner.getPlayer().hidePlayer(player);
 		setState(BracketsState.ROUND_ENDING);
 		setEventTask(new BracketsRoundEndTask(this));
 	}
@@ -447,6 +447,7 @@ public class Brackets {
 		profile.setState(ProfileState.SPECTATE_MATCH);
 		profile.refreshHotbar();
 		profile.handleVisibility();
+		PlayerUtil.spectator(player);
 		player.setFlying(true);
 
 		player.teleport(Array.getInstance().getBracketsManager().getBracketsSpawn1());
@@ -454,7 +455,7 @@ public class Brackets {
 
 	public void removeSpectator(Player player) {
 		spectators.remove(player.getUniqueId());
-
+        PlayerUtil.reset(player);
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setBrackets(null);
 		profile.setState(ProfileState.IN_LOBBY);

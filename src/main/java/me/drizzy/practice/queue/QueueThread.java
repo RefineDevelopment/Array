@@ -94,7 +94,7 @@ public class QueueThread extends Thread {
                                 secondProfile.calculateGlobalElo();
                                 firstProfile.calculateGlobalElo();
                             }
-                            kit = queue.getKit();
+                            kit=queue.getKit();
 
                             // Create match
                             Match match;
@@ -107,15 +107,15 @@ public class QueueThread extends Thread {
                             }
                             for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Start-Message.Solo") ) {
                                 final String opponentMessages=this.formatMessages(string, firstPlayer.getDisplayName(), secondPlayer.getDisplayName(), firstMatchPlayer.getElo(), secondMatchPlayer.getElo(), queue.getQueueType());
-                                final String message = CC.translate(this.replace(opponentMessages));
+                                final String message=CC.translate(this.replace(opponentMessages));
                                 firstPlayer.sendMessage(message);
                                 secondPlayer.sendMessage(message);
-                                new BukkitRunnable() {
-                                    public void run() {
-                                        match.start();
-                                    }
-                                }.runTask(Array.getInstance());
                             }
+                            new BukkitRunnable() {
+                                public void run() {
+                                    match.start();
+                                }
+                            }.runTask(Array.getInstance());
                         }
                     }
                 }

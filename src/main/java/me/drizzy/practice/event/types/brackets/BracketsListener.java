@@ -218,7 +218,6 @@ public class BracketsListener implements Listener {
 				if (event.getItem().getType() == Material.ENDER_PEARL) {
 					if (profile.getBrackets().getState().equals(BracketsState.ROUND_STARTING)) {
 						event.setCancelled(true);
-						return;
 					}
 				}
 			}

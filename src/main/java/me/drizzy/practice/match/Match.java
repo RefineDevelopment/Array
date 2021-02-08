@@ -378,17 +378,17 @@ public abstract class Match {
     public void addSpectator(Player player, Player target) {
         Location spawn = Profile.getByUuid(target).getMatch().getArena().getSpawn1();
         spectators.add(player.getUniqueId());
-        player.setAllowFlight(true);
-        player.setFlying(true);
+        PlayerUtil.spectator(player);
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setMatch(this);
         profile.setState(ProfileState.SPECTATE_MATCH);
         profile.refreshHotbar();
         profile.handleVisibility();
-
         player.teleport(spawn);
+        player.teleport(target.getLocation().clone().add(0, 2, 0));
+        player.spigot().setCollidesWithEntities(false);
 
-        if (!player.hasPermission("practice.staff")) {
+        if (!profile.isSilent()) {
             for (Player otherPlayer : getPlayers()) {
                 otherPlayer.sendMessage(CC.AQUA + player.getName() + CC.YELLOW + " is now spectating your match.");
             }
@@ -453,8 +453,7 @@ public abstract class Match {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setState(ProfileState.IN_LOBBY);
         profile.setMatch(null);
-        player.setAllowFlight(false);
-        player.setFlying(false);
+        PlayerUtil.reset(player);
         profile.refreshHotbar();
         profile.handleVisibility();
 
@@ -464,7 +463,7 @@ public abstract class Match {
 
         if (state != MatchState.ENDING) {
             for (Player otherPlayer : getPlayers()) {
-                if (!profile.isSilent() && !player.hasPermission("practice.staff")) {
+                if (!profile.isSilent()) {
                     otherPlayer.sendMessage(CC.RED + player.getName() + CC.YELLOW + " is no longer spectating your match.");
                 }
             }

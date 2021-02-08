@@ -105,7 +105,11 @@ public class ProfileListener implements Listener {
             NameTags.color(event.getPlayer(), ps, ChatColor.GREEN, false);
             if (!Profile.getByUuid(ps).isBusy(ps) && !Profile.getByUuid(ps).isInSomeSortOfFight()) {
                 if (Profile.getByUuid(ps).getState() == ProfileState.IN_LOBBY || Profile.getByUuid(ps).getState() == ProfileState.IN_QUEUE)
+                    if (profile.getParty() != null) {
+                    NameTags.color(ps, event.getPlayer(), ChatColor.BLUE, false);
+                    } else {
                     NameTags.color(ps, event.getPlayer(), ChatColor.GREEN, false);
+                    }
             }
         }
     }
@@ -278,9 +282,12 @@ public class ProfileListener implements Listener {
             }
             Profile.getProfiles().put(p.getUniqueId(), profile);
             profile.setName(p.getName());
+            Array.getInstance().getEssentials().teleportToSpawn(player);
             profile.refreshHotbar();
             profile.handleVisibility();
-            Array.getInstance().getEssentials().teleportToSpawn(player);
+            for (Profile otherProfile : Profile.getProfiles().values()) {
+                otherProfile.handleVisibility(otherProfile.getPlayer(), p);
+            }
         });
             for(Player ps : Bukkit.getOnlinePlayers()) {
             NameTags.color(event.getPlayer(), ps, ChatColor.GREEN, false);

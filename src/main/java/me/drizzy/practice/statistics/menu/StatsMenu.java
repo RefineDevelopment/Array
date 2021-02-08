@@ -55,7 +55,7 @@ public class StatsMenu extends Menu {
             String elo = kit.getGameRules().isRanked() ? Integer.toString(profile.getKitData().get(kit).getElo()) : "N/A";
             String wins = Integer.toString(profile.getKitData().get(kit).getWon());
             String losses = Integer.toString(profile.getKitData().get(kit).getLost());
-
+            lore.add("");
             lore.add(" &b&lStatistics");
             lore.add("  &bELO: &f" + elo);
             lore.add("  &bWins: &f" + wins);
