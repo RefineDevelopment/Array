@@ -2,7 +2,6 @@ package me.drizzy.practice.event.types.skywars.task;
 
 import me.drizzy.practice.event.types.skywars.*;
 import me.drizzy.practice.Array;
-import pt.foxspigot.jar.practice.event.types.skywars.*;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.CC;
 import org.bukkit.Bukkit;

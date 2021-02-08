@@ -398,25 +398,50 @@ public abstract class Match {
         Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), () -> {
             if (this.isSoloMatch()) {
                 NameTags.color(player, target, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
-                NameTags.color(player, this.getOpponentPlayer(target), ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
+
+                target.hidePlayer(player);
+                this.getOpponentPlayer(target).hidePlayer(player);NameTags.color(player, this.getOpponentPlayer(target), ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
             }
             else if (this.isSumoMatch()) {
                 NameTags.color(player, target, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
                 NameTags.color(player, this.getOpponentPlayer(target), ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
+                target.hidePlayer(player);
+                this.getOpponentPlayer(target).hidePlayer(player);
             }
             else if (this.isTeamMatch()) {
                 this.getTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
+                for ( Player targetplayers : this.getTeam(target).getPlayers() ) {
+                    targetplayers.hidePlayer(player);
+                }
                 this.getOpponentTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
+                for ( Player targetplayers : this.getOpponentTeam(target).getPlayers() ) {
+                    targetplayers.hidePlayer(player);
+                }
             }
             else if (this.isSumoTeamMatch()) {
                 this.getTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
+                for ( Player targetplayers : this.getTeam(target).getPlayers() ) {
+                    targetplayers.hidePlayer(player);
+                }
                 this.getOpponentTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
+                for ( Player targetplayers : this.getOpponentTeam(target).getPlayers() ) {
+                    targetplayers.hidePlayer(player);
+                }
             }
             else if (this.isHCFMatch()) {
                 this.getTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
+                for ( Player targetplayers : this.getTeam(target).getPlayers() ) {
+                    targetplayers.hidePlayer(player);
+                }
                 this.getOpponentTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
+                for ( Player targetplayers : this.getOpponentTeam(target).getPlayers() ) {
+                    targetplayers.hidePlayer(player);
+                }
             }
             else if (this.isFreeForAllMatch()) {
+                for (  Player targetplayers : this.getPlayers()) {
+                    targetplayers.hidePlayer(player);
+                }
                 this.getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
             }
         }, 20L);

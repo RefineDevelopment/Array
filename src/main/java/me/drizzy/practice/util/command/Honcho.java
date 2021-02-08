@@ -27,8 +27,6 @@ import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.util.command.command.CommandOption;
 import me.drizzy.practice.util.command.command.adapter.CommandTypeAdapter;
-import pt.foxspigot.jar.practice.util.command.command.adapter.impl.*;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;

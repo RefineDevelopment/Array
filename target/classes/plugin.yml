@@ -1,0 +1,9 @@
+main: me.drizzy.practice.Array
+name: Array
+version: 4.0
+authors: ["Nick", "Drizzy", "Zentil"]
+depend:
+  - ProtocolLib
+softdepend:
+  - HolographicDisplays
+  - PlaceholderAPI

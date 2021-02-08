@@ -29,8 +29,6 @@ import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.PlayerSnapshot;
 import me.drizzy.practice.util.PlayerUtil;
-import pt.foxspigot.jar.practice.util.external.*;
-
 import java.util.*;
 
 @Getter

@@ -1,7 +1,6 @@
 package me.drizzy.practice.array.commands.staff;
 
 import me.drizzy.practice.util.command.command.CommandMeta;
-import pt.foxspigot.jar.practice.util.command.command.*;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.CC;
 import org.bukkit.entity.*;

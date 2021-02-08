@@ -162,7 +162,7 @@ public class Brackets {
 	}
 
 	public void handleJoin(Player player) {
-		if (this.eventPlayers.size() >= this.maxPlayers) {
+		if (this.eventPlayers.size() >= maxPlayers) {
 			player.sendMessage(CC.RED + "The event is full");
 			return;
 		}
@@ -392,6 +392,7 @@ public class Brackets {
 
 		broadcastMessage("&b" + player.getName() + "&7 was eliminated by &b" + winner.getUsername() + "&7!");
 		player.setFireTicks(0);
+		Profile.getByUuid(player).handleVisibility();
 		setState(BracketsState.ROUND_ENDING);
 		setEventTask(new BracketsRoundEndTask(this));
 	}

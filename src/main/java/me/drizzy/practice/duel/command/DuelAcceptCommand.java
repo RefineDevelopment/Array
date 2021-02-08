@@ -13,7 +13,6 @@ import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.arena.ArenaType;
-import pt.foxspigot.jar.practice.match.types.*;
 import org.bukkit.entity.Player;
 
 @CommandMeta(label = "duel accept")

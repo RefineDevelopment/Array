@@ -77,12 +77,12 @@ public class StatsMenu extends Menu {
             List<String> lore = new ArrayList<>();
             Profile profile = Profile.getByUuid(target.getUniqueId());
             lore.add("");
-            lore.add("&f&lStatistics");
+            lore.add("&b&lStatistics");
             lore.add(" &bELO: &r" + profile.getGlobalElo());
             lore.add(" &bTotal Wins: &f" + profile.getTotalWins());
             lore.add(" &bTotal Losses: &f" + profile.getTotalLost());
             lore.add("");
-            lore.add("&f&lOther");
+            lore.add("&b&lOther");
             lore.add(" &bLeague: &f" + profile.getEloLeague());
 
             return new ItemBuilder(SkullCreator.itemFromUuid(target.getUniqueId()))

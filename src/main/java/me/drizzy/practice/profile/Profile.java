@@ -11,6 +11,8 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.Sorts;
+import lombok.Getter;
+import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.duel.DuelProcedure;
 import me.drizzy.practice.duel.DuelRequest;
@@ -26,9 +28,15 @@ import me.drizzy.practice.event.types.parkour.player.ParkourPlayerState;
 import me.drizzy.practice.event.types.skywars.SkyWars;
 import me.drizzy.practice.event.types.skywars.player.SkyWarsPlayer;
 import me.drizzy.practice.event.types.skywars.player.SkyWarsPlayerState;
+import me.drizzy.practice.event.types.spleef.Spleef;
+import me.drizzy.practice.event.types.spleef.player.SpleefPlayer;
+import me.drizzy.practice.event.types.spleef.player.SpleefPlayerState;
 import me.drizzy.practice.event.types.sumo.Sumo;
 import me.drizzy.practice.event.types.sumo.player.SumoPlayer;
 import me.drizzy.practice.event.types.sumo.player.SumoPlayerState;
+import me.drizzy.practice.kit.Kit;
+import me.drizzy.practice.kit.KitLeaderboards;
+import me.drizzy.practice.kit.KitLoadout;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.party.Party;
@@ -44,28 +52,20 @@ import me.drizzy.practice.settings.meta.ProfileOptions;
 import me.drizzy.practice.statistics.ProfileKitData;
 import me.drizzy.practice.tournament.Tournament;
 import me.drizzy.practice.util.CC;
-import pt.foxspigot.jar.knockback.KnockbackModule;
-import pt.foxspigot.jar.knockback.KnockbackProfile;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import me.drizzy.practice.event.types.spleef.Spleef;
-import me.drizzy.practice.event.types.spleef.player.SpleefPlayer;
-import me.drizzy.practice.event.types.spleef.player.SpleefPlayerState;
-import me.drizzy.practice.kit.Kit;
-import me.drizzy.practice.kit.KitLeaderboards;
-import me.drizzy.practice.kit.KitLoadout;
 import me.drizzy.practice.util.InventoryUtil;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.external.Cooldown;
-import lombok.Getter;
-import lombok.Setter;
+import me.drizzy.practice.util.nametag.NameTags;
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import me.drizzy.practice.util.nametag.NameTags;
+import pt.foxspigot.jar.knockback.KnockbackModule;
+import pt.foxspigot.jar.knockback.KnockbackProfile;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -81,7 +81,7 @@ public class Profile {
     @Getter
     private static Map<Integer, String> eloLeagues = new HashMap<>();
     @Getter
-    private static Map<String, UUID> playerCache = new HashMap<>();
+    private static final Map<String, UUID> playerCache = new HashMap<>();
     @Getter
     private static MongoCollection<Document> allProfiles;
     private static MongoCollection<Document> collection;
@@ -662,18 +662,19 @@ public class Profile {
     }
 
     public void refreshHotbar() {
-        Player player = getPlayer();
+        final Player player = this.getPlayer();
         if (player != null) {
-            PlayerUtil.reset(player);
-            if (isInLobby()) {
+            PlayerUtil.reset(player, false);
+            if (this.isInLobby()) {
                 for ( Player otherplayer : Bukkit.getOnlinePlayers() ) {
                     NameTags.color(player, otherplayer, ChatColor.GREEN, false);
                     if (!Profile.getByUuid(otherplayer).isInFight() && Profile.getByUuid(otherplayer).getState() == ProfileState.IN_LOBBY || Profile.getByUuid(otherplayer).getState() == ProfileState.IN_QUEUE) {
-                    NameTags.color(player, otherplayer, ChatColor.GREEN, false);
+                        NameTags.color(player, otherplayer, ChatColor.GREEN, false);
                     }
-                    player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.LOBBY, this));
-                }
-            } else if (isInQueue()) {
+            }
+                player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.LOBBY, this));
+            }
+            else if (this.isInQueue()) {
                 for ( Player otherplayer : Bukkit.getOnlinePlayers() ) {
                     NameTags.color(player, otherplayer, ChatColor.GREEN, false);
                     if (!Profile.getByUuid(otherplayer).isInFight() && Profile.getByUuid(otherplayer).getState() == ProfileState.IN_LOBBY || Profile.getByUuid(otherplayer).getState() == ProfileState.IN_QUEUE) {
@@ -681,39 +682,44 @@ public class Profile {
                     }
                     player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.QUEUE, this));
                 }
-            } else if (isSpectating()) {
+            }
+            else if (this.isSpectating()) {
                 PlayerUtil.spectator(player);
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this));
-            } else if (isInSumo()) {
+            }
+            else if (this.isInSumo()) {
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SUMO_SPECTATE, this));
-            } else if (isInBrackets()) {
+            }
+            else if (this.isInBrackets()) {
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.BRACKETS_SPECTATE, this));
-            } else if (isInLMS()) {
-                if (getLms().getEventPlayer(player).getState().equals(LMSPlayerState.ELIMINATED)) {
+            }
+            else if (this.isInLMS()) {
+                if (this.getLms().getEventPlayer(player).getState().equals(LMSPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.LMS_SPECTATE, this));
-            } else if (isInParkour()) {
-                if (getParkour().getEventPlayer(player).getState().equals(ParkourPlayerState.ELIMINATED)) {
+            }
+            else if (this.isInParkour()) {
+                if (this.getParkour().getEventPlayer(player).getState().equals(ParkourPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.PARKOUR_SPECTATE, this));
-            } else if (isInSkyWars()) {
-                if (getSkyWars().getEventPlayer(player).getState().equals(SkyWarsPlayerState.ELIMINATED)) {
+            }
+            else if (this.isInSkyWars()) {
+                if (this.getSkyWars().getEventPlayer(player).getState().equals(SkyWarsPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SKYWARS_SPECTATE, this));
-            } else if (isInSpleef()) {
-                if (getSpleef().getEventPlayer(player).getState().equals(SpleefPlayerState.ELIMINATED)) {
+            }
+            else if (this.isInSpleef()) {
+                if (this.getSpleef().getEventPlayer(player).getState().equals(SpleefPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SPLEEF_SPECTATE, this));
-            } else if (isInFight()) {
-                if (!match.getTeamPlayer(player).isAlive()) {
-                    player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this));
-                }
             }
-
+            else if (this.isInFight() && !this.match.getTeamPlayer(player).isAlive()) {
+                player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this));
+            }
             player.updateInventory();
         }
     }
@@ -724,9 +730,9 @@ public class Profile {
         }
         boolean hide = true;
         if (this.state == ProfileState.IN_LOBBY || this.state == ProfileState.IN_QUEUE) {
-            NameTags.color(player, otherPlayer, ChatColor.GREEN, false);
             if (this.party != null && this.party.containsPlayer(otherPlayer)) {
                 hide = false;
+                NameTags.color(player, otherPlayer, ChatColor.BLUE, false);
             }
         }
         else if (this.isInFight()) {
@@ -795,8 +801,8 @@ public class Profile {
                 }
             }
             else if (this.lms != null) {
-                final LMSPlayer lmsPlayer = this.lms.getEventPlayer(otherPlayer);
-                if (lmsPlayer != null && lmsPlayer.getState() == LMSPlayerState.WAITING) {
+                final LMSPlayer ffaPlayer = this.lms.getEventPlayer(otherPlayer);
+                if (ffaPlayer != null && ffaPlayer.getState() == LMSPlayerState.WAITING) {
                     hide = false;
                 }
             }
@@ -836,11 +842,11 @@ public class Profile {
     }
 
     public void handleVisibility() {
-        final Player player=this.getPlayer();
+        final Player player = this.getPlayer();
         if (player != null) {
             new BukkitRunnable() {
                 public void run() {
-                    for ( final Player otherPlayer : Bukkit.getOnlinePlayers() ) {
+                    for (final Player otherPlayer : Bukkit.getOnlinePlayers()) {
                         Profile.this.handleVisibility(player, otherPlayer);
                     }
                 }

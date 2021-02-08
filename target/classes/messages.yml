@@ -1,0 +1,38 @@
+Party:
+  YOU_HAVE_BEEN_INVITED: "&eYou have been invited to join &a{0}&e''s party."
+  CLICK_TO_JOIN: "&a(Click to accept)"
+  PLAYER_INVITED: "&b{0} &ehas been invited to your party."
+  PLAYER_JOINED: "&b{0} &ejoined your party."
+  PLAYER_LEFT: "&c{0} &ehas left your party."
+  CREATED: "&aYou created a party."
+  DISBANDED: "&cYour party has been disbanded."
+  PUBLIC: "&b{0}&e is hosting a public party"
+  PRIVACY_CHANGED: "&7Your party privacy has been changed to: &b{0}"
+Match:
+  #Placeholders are {arena}, {kit}, for solo {player1} & {player2} (it auto detects if the match is ranked and adds ELO in Gray to it) (gonna add more later!)
+  Start-Message:
+    HCF:
+      - "&7&m------------------------------------"
+      - "        &b&lHCF Match Started!"
+      - ""
+      - "&fIn this event, each player gets 4 set"
+      - "&fof kits and each kit has its own"
+      - "&funique ability and perks. This event"
+      - "&fis a mini-hcf tournament, Good Luck!"
+      - "&7&m-------------------------------------"
+    Team:
+      - "&b&lMatch Found!"
+      - ""
+      - " &b● &fType: &bTeam"
+      - " &b● &fArena: &b{arena}"
+      - " &b● &fKit: &b{kit}"
+      - ""
+    Solo:
+      - "&b&lMatch Found!"
+      - ""
+      - " &b● &fPlayers: &b{player1} &7vs &b{player2}"
+      - " &b● &fArena: &b{arena}"
+      - " &b● &fKit: &b{kit}"
+      - ""
+  Sumo-Round-Message:
+    - "&fYou need to win &b{rounds} &fmore rounds to win!"
