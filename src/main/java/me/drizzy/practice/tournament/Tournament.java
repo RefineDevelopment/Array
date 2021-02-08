@@ -100,7 +100,7 @@ public class Tournament {
         if(participants.contains(party)) {
             for (Party partyparticipants : participants) {
                 for (Player player : partyparticipants.getPlayers()) {
-                    player.sendMessage(CC.translate("&8[&b&lTournament&8] &c" + Array.getInstance().getCoreHook().getPlayerPrefix(party.getLeader().getPlayer()) + party.getLeader().getPlayer().getName() + CC.GRAY + " has left Tournament!" + CC.GRAY + "(&b" + participants.size() + "/" + "50" + "&8)"));
+                    player.sendMessage(CC.translate("&8[&b&lTournament&8] &c" + party.getLeader().getPlayer().getDisplayName()) + CC.GRAY + " has left Tournament!" + CC.GRAY + "(&b" + participants.size() + "/" + "50" + "&8)");
                 }
             }
             participants.remove(party);
@@ -113,7 +113,7 @@ public class Tournament {
             participants.add(party);
             for (Party partyparticipants : participants) {
                 for (Player player : partyparticipants.getPlayers()) {
-                    player.sendMessage(CC.translate("&8[&b&lTournament&8] &b" + Array.getInstance().getCoreHook().getPlayerPrefix(party.getLeader().getPlayer()) + party.getLeader().getPlayer().getName() + CC.GRAY + " has joined the Tournament! " + "&8(&b" + participants.size() + "/" + "50" + "&8)"));
+                    player.sendMessage(CC.translate("&8[&b&lTournament&8] &b" + party.getLeader().getPlayer().getDisplayName() + CC.GRAY + " has joined the Tournament! " + "&8(&b" + participants.size() + "/" + "50" + "&8)"));
                 }
             }
         }
@@ -200,13 +200,12 @@ public class Tournament {
                 StringBuilder builder = new StringBuilder();
 
                 for (TeamPlayer matchPlayer : winningTeam.getTeamPlayers()) {
-                    builder.append(CC.translate(Array.getInstance().getCoreHook().getPlayerColor(matchPlayer.getPlayer())));
-
+                    builder.append(matchPlayer.getPlayer().getDisplayName());
                     builder.append("&7, ");
                 }
                 StringBuilder builders = new StringBuilder();
                 for (TeamPlayer matchPlayer : losingTeam.getTeamPlayers()) {
-                    builders.append(CC.translate(Array.getInstance().getCoreHook().getPlayerColor(matchPlayer.getPlayer())));
+                    builders.append(matchPlayer.getPlayer().getDisplayName());
                     builders.append("&7, ");
                 }
                 if (builders.length() > 0) {

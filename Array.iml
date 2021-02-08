@@ -53,15 +53,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: me.activated:AquaCore:2.5.8">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/Aquacore.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
       <library name="Maven: us.myles:ViaVersion:3.2.1">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/ViaVersion.jar!/" />

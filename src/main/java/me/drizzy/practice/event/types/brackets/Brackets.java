@@ -297,7 +297,7 @@ public class Brackets {
 
 	public void announce() {
 		BaseComponent[] components = new ChatComponentBuilder("")
-				.parse(EVENT_PREFIX + Array.getInstance().getCoreHook().getPlayerPrefix(getHost().getPlayer()) + getHost().getPlayer().getName() + CC.translate("&7 is hosting a &b&lBrackets Event&7. ") + CC.GREEN + "[Click to join]")
+				.parse(EVENT_PREFIX + getHost().getPlayer().getDisplayName() + CC.translate("&7 is hosting a &b&lBrackets Event&7. ") + CC.GREEN + "[Click to join]")
 				.attachToEachPart(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentBuilder("")
 						.parse(CC.GRAY + "Click to join the brackets event.").create()))
 				.attachToEachPart(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/brackets join"))

@@ -162,9 +162,6 @@ public class SettingsMenu extends Menu
                     player.sendMessage(CC.translate("&7You do not have permission to use this setting."));
                     player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.resolve.rip &7!"));
                 }
-            } else if (this.type == SettingsType.CORESETTINGS) {
-                Button.playSuccess(player);
-                new me.activated.core.menus.settings.SettingsMenu().open(player);
             } else if (this.type == SettingsType.TOGGLEPINGONSCOREBOARD) {
                 Button.playSuccess(player);
                 profile.getSettings().setPingScoreboard(!profile.getSettings().isPingScoreboard());

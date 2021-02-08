@@ -115,15 +115,6 @@
             <systemPath>${project.basedir}/lib/ProtocolLib.jar</systemPath>
         </dependency>
 
-        <!--Core Hook-->
-        <dependency>
-            <groupId>me.activated</groupId>
-            <artifactId>AquaCore</artifactId>
-            <version>2.5.8</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Aquacore.jar</systemPath>
-        </dependency>
-
         <dependency>
             <groupId>us.myles</groupId>
             <artifactId>ViaVersion</artifactId>

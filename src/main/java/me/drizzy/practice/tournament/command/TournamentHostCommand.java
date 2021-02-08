@@ -65,7 +65,7 @@ public class TournamentHostCommand {
 
         Tournament.CURRENT_TOURNAMENT.setLadder(Kit.getByName("NoDebuff"));
 
-        Bukkit.broadcastMessage(CC.translate("&8[&b&lTournament&8] &b" + Array.getInstance().getCoreHook().getPlayerPrefix(player.getPlayer()) + player.getPlayer().getName() + CC.WHITE + " is hosting a Tournament!"));
+        Bukkit.broadcastMessage(CC.translate("&8[&b&lTournament&8] &b" + player.getPlayer().getDisplayName() + CC.WHITE + " is hosting a Tournament!"));
         broadcastMessage(CC.translate("&8[&b&lTournament&8] &b" + ChatColor.AQUA + "(Click to accept)"));
 
         Tournament.RUNNABLE = new BukkitRunnable() {

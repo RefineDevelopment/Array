@@ -81,7 +81,6 @@ import me.drizzy.practice.scoreboard.Scoreboard;
 import me.drizzy.practice.tablist.Tab;
 import me.drizzy.practice.util.EntityHider;
 import me.drizzy.practice.util.InventoryUtil;
-import me.drizzy.practice.util.AquaCoreHook;
 import me.drizzy.practice.util.essentials.Essentials;
 import me.drizzy.practice.util.essentials.listener.EssentialsListener;
 import me.drizzy.practice.util.events.ArmorListener;
@@ -144,8 +143,6 @@ public class Array extends JavaPlugin {
     private EffectRestorer effectRestorer;
 
     private Essentials essentials;
-
-    private AquaCoreHook coreHook;
 
     private Honcho honcho;
 
@@ -244,17 +241,6 @@ public class Array extends JavaPlugin {
         nms.setup();
 
         essentials = new Essentials(this);
-        if (Bukkit.getPluginManager().isPluginEnabled("AquaCore")) {
-            coreHook=new AquaCoreHook();
-        } else {
-            this.logger("------------------------------------------------");
-            this.logger(" &bAquacore&f is not installed or not working");
-            this.logger(  "&cPlease check your Aquacore and try again.");
-            this.logger("           &4&lDisabling Array");
-            this.logger("------------------------------------------------");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
 
 
         honcho.registerTypeAdapter(Arena.class, new ArenaTypeAdapter());
