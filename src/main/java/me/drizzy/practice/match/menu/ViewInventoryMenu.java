@@ -71,7 +71,7 @@ public class ViewInventoryMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private class HealthButton extends Button {
+    private static class HealthButton extends Button {
 
         private final int health;
 
@@ -86,7 +86,7 @@ public class ViewInventoryMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private class HungerButton extends Button {
+    private static class HungerButton extends Button {
 
         private final int hunger;
 
@@ -101,7 +101,7 @@ public class ViewInventoryMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private class EffectsButton extends Button {
+    private static class EffectsButton extends Button {
 
         private final Collection<PotionEffect> effects;
 

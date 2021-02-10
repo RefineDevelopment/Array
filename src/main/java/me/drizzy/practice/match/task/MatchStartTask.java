@@ -27,7 +27,7 @@ public class MatchStartTask extends BukkitRunnable {
         }
 
         if (match.isHCFMatch()) {
-            if (seconds == 3) {
+            if (seconds == 0) {
                 match.setState(MatchState.FIGHTING);
                 match.setStartTimestamp(System.currentTimeMillis());
                 match.broadcastMessage(CC.GREEN + "Match Started!");
@@ -42,7 +42,7 @@ public class MatchStartTask extends BukkitRunnable {
             match.broadcastSound(Sound.NOTE_PLING);
         } else {
             if (match.getKit().getGameRules().isSumo() || match.getKit().getGameRules().isParkour()) {
-                if (seconds == 3) {
+                if (seconds == 0) {
                     match.getPlayers().forEach(PlayerUtil::allowMovement);
                     match.setState(MatchState.FIGHTING);
                     match.setStartTimestamp(System.currentTimeMillis());
@@ -64,7 +64,7 @@ public class MatchStartTask extends BukkitRunnable {
                 match.broadcastMessage(CC.AQUA + (seconds - 2) + "...");
                 match.broadcastSound(Sound.NOTE_PLING);
             } else {
-                if (seconds == 3) {
+                if (seconds == 0) {
                     match.setState(MatchState.FIGHTING);
                     match.setStartTimestamp(System.currentTimeMillis());
                     match.broadcastMessage(CC.GREEN + "Match Started!");

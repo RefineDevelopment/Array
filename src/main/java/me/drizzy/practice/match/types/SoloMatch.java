@@ -16,8 +16,6 @@ import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.TaskUtil;
 import org.bukkit.potion.PotionEffectType;
-import pt.foxspigot.jar.knockback.KnockbackModule;
-import pt.foxspigot.jar.knockback.KnockbackProfile;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.elo.EloUtil;
@@ -32,6 +30,8 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import pt.foxspigot.jar.knockback.KnockbackModule;
+import pt.foxspigot.jar.knockback.KnockbackProfile;
 
 import java.util.*;
 
