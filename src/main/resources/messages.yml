@@ -8,31 +8,46 @@ Party:
   DISBANDED: "&cYour party has been disbanded."
   PUBLIC: "&b{0}&e is hosting a public party"
   PRIVACY_CHANGED: "&7Your party privacy has been changed to: &b{0}"
+  Already-Have-Party: "&cYou already have a party."
+  Not-In-Lobby: "&cYou must be in the lobby to create a party."
+  Dont-Have-Party: "&cYou do not have a party."
+  Not-Leader: "&cYou are not the leader of your party."
 Match:
   #Placeholders are {arena}, {kit}, for solo {player1} & {player2} (it auto detects if the match is ranked and adds ELO in Gray to it) (gonna add more later!)
   Start-Message:
     HCF:
-      - "&7&m------------------------------------"
+      - "&8&m------------------------------------"
       - "        &b&lHCF Match Started!"
       - ""
-      - "&fIn this event, each player gets 4 set"
-      - "&fof kits and each kit has its own"
-      - "&funique ability and perks. This event"
-      - "&fis a mini-hcf tournament, Good Luck!"
-      - "&7&m-------------------------------------"
+      - "&7In this event, each player gets 4 set"
+      - "&7of kits and each kit has its own"
+      - "&7unique ability and perks. This event"
+      - "&7is a mini-hcf tournament, Good Luck!"
+      - "&8&m-------------------------------------"
     Team:
       - "&b&lMatch Found!"
       - ""
-      - " &b● &fType: &bTeam"
-      - " &b● &fArena: &b{arena}"
-      - " &b● &fKit: &b{kit}"
-      - ""
+      - "&fYou are playing on &b{arena}&f on a &bTeam Match!"
     Solo:
       - "&b&lMatch Found!"
       - ""
-      - " &b● &fPlayers: &b{player1} &7vs &b{player2}"
-      - " &b● &fArena: &b{arena}"
-      - " &b● &fKit: &b{kit}"
-      - ""
+      - "&fYou are playing on &b{arena}&f with &fPlayers: &b{player1} &7vs &b{player2}"
   Sumo-Round-Message:
     - "&fYou need to win &b{rounds} &fmore rounds to win!"
+Ranked:
+  Disabled: "&7Ranked has been disabled by an Admin!"
+  Required:
+   - "&7You need to win at least &b10 Unranked Matches &7 to queue Ranked!"
+   - "&7&oYou can bypass this limit by upgrading your rank at &b&ostore.purgemc.club"
+Event:
+  Sumo:
+    Not-Active: "&cThere is no Active Sumo."
+    Not-Part: "&cYou are not part of any Sumo."
+    Joined: ""
+    Left: ""
+    Joined-Announce: ""
+    Left-Announce: ""
+    Broadcast: ""
+    Killed: ""
+    Starting: ""
+Rematch: ""

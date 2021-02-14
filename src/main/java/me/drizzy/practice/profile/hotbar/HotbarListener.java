@@ -22,6 +22,7 @@ import me.drizzy.practice.settings.SettingsMenu;
 import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.queue.menu.QueueSelectKitMenu;
 import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.config.BasicConfigurationFile;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,6 +32,9 @@ import me.drizzy.practice.util.PlayerUtil;
 
 public class HotbarListener implements Listener
 {
+
+    BasicConfigurationFile config = Array.getInstance().getMessagesConfig();
+
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerInteract(final PlayerInteractEvent event) {
         if (event.getItem() != null && event.getAction().name().contains("RIGHT")) {
@@ -44,11 +48,18 @@ public class HotbarListener implements Listener
             switch (hotbarItem) {
                 case QUEUE_JOIN_RANKED: {
                     if (!player.hasPermission("practice.donator")) {
-                        if (profile.getTotalWins() < 10) {
-                            player.sendMessage(CC.translate("&7You need to win at least &b10 Unranked Matches &7 to queue Ranked!"));
-                            player.sendMessage(CC.translate("&7&oYou can bypass this limit by upgrading your rank at &b&ostore.resolve.rip"));
-                             break;
+                        if (Array.getInstance().getMainConfig().getBoolean("Ranked.Require-Kills")) {
+                            if (profile.getTotalWins() < Array.getInstance().getMainConfig().getInteger("Ranked.Required-Kills")) {
+                                for ( String error : Array.getInstance().getMessagesConfig().getStringList("Ranked.Required") ) {
+                                    player.sendMessage(CC.translate(error));
+                                }
+                                break;
+                            }
                         }
+                    }
+                    if (!Array.getInstance().getMainConfig().getBoolean("Ranked.Enabled")) {
+                        player.sendMessage(CC.translate(Array.getInstance().getMessagesConfig().getString("Ranked.Disabled")));
+                        break;
                     }
                     if (!profile.isBusy(player)) {
                         new QueueSelectKitMenu(QueueType.RANKED).openMenu(event.getPlayer());
@@ -103,11 +114,11 @@ public class HotbarListener implements Listener
                 }
                 case PARTY_CREATE: {
                     if (profile.getParty() != null) {
-                        player.sendMessage(CC.RED + "You already have a party.");
+                        player.sendMessage(CC.translate(config.getString("Party.Already-Have-Party")));
                         return;
                     }
                     if (!profile.isInLobby()) {
-                        player.sendMessage(CC.RED + "You must be in the lobby to create a party.");
+                        player.sendMessage(CC.translate(config.getString("Party.Not-In-Lobby")));
                         return;
                     }
                     profile.setParty(new Party(player));
@@ -118,11 +129,11 @@ public class HotbarListener implements Listener
                 }
                 case PARTY_DISBAND: {
                     if (profile.getParty() == null) {
-                        player.sendMessage(CC.RED + "You do not have a party.");
+                        player.sendMessage(CC.translate(config.getString("Party.Dont-Have-Party")));
                         return;
                     }
                     if (!profile.getParty().isLeader(player.getUniqueId())) {
-                        player.sendMessage(CC.RED + "You are not the leader of your party.");
+                        player.sendMessage(CC.translate(config.getString("Party.Not-Leader")));
                         return;
                     }
                     profile.getParty().disband();
@@ -130,7 +141,7 @@ public class HotbarListener implements Listener
                 }
                 case PARTY_INFORMATION: {
                     if (profile.getParty() == null) {
-                        player.sendMessage(CC.RED + "You do not have a party.");
+                        player.sendMessage(CC.translate(config.getString("Party.Dont-Have-Party")));
                         return;
                     }
                     profile.getParty().sendInformation(player);
@@ -138,7 +149,7 @@ public class HotbarListener implements Listener
                 }
                 case PARTY_LEAVE: {
                     if (profile.getParty() == null) {
-                        player.sendMessage(CC.RED + "You do not have a party.");
+                        player.sendMessage(CC.translate(config.getString("Party.Dont-Have-Party")));
                         return;
                     }
                     if (profile.getParty().getLeader().getUuid().equals(player.getUniqueId())) {
@@ -255,7 +266,8 @@ public class HotbarListener implements Listener
                         break;
                     }
                     if (profile.getState() == ProfileState.SPECTATE_TOURNAMENT) {
-                        //
+                        //TODO: Add Tournament Spectate
+                        break;
                     }
                     if (!profile.isSpectating()) {
                         player.sendMessage(CC.RED + "You are not spectating a match.");

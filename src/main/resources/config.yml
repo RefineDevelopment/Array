@@ -8,8 +8,8 @@ Tab:
   Color:
     Main: "&b"
     Elements: "&f"
-  Header: "&b&lResolve Practice"
-  Footer: "&7store.resolve.rip"
+  Header: "&b&lPurge Practice"
+  Footer: "&7store.purgemc.clubw"
 Queue-Lore:
 - "&7&m----------------------"
 - "&fIn Queue &8» &b{in_queue}"
@@ -38,3 +38,7 @@ MOTD:
   - " "
   - "&7Welcome to the &b&lPurge Practice!"
   - "&7&m------------------------------------------------"
+Ranked:
+  Enabled: true
+  Require-Kills: true
+  Required-Kills: 10
