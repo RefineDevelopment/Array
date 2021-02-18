@@ -49,7 +49,6 @@ import org.bukkit.World;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.yaml.snakeyaml.error.YAMLException;
-import me.drizzy.practice.nms.NMSProvider;
 import me.drizzy.practice.util.Description;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
 import me.drizzy.practice.util.CC;
@@ -123,8 +122,6 @@ public class Array extends JavaPlugin {
     private Aether scoreboard;
 
     private Ziggurat tab;
-
-    private NMSProvider nms;
 
     private SumoManager sumoManager;
 
@@ -237,9 +234,6 @@ public class Array extends JavaPlugin {
         Match.preload();
         Party.preload();
 
-        this.nms = new NMSProvider();
-        nms.setup();
-
         essentials = new Essentials(this);
 
 
@@ -256,6 +250,7 @@ public class Array extends JavaPlugin {
                 //Array Commands
                 new ArrayCommand(),
                 new ArraySetLobbyCommand(),
+                new ArraySetEloCommand(),
                 new ArrayGoldenHeadCommand(),
                 new ArrayReloadCommand(),
                 new ArrayRenameCommand(),

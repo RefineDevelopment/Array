@@ -44,9 +44,9 @@ public class Tab implements ZigguratAdapter {
         final int[] ipSlots = { 2, 22, 42, 20, 40, 60 };
             elements.add(new BufferedTabObject().slot(21).text("&b&lPractice &7| &f&lEU"));
         for (final int ipSlot : ipSlots) {
-            elements.add(new BufferedTabObject().slot(19).text("&7store.resolve.rip"));
-            elements.add(new BufferedTabObject().slot(59).text("&7discord.resolve.rip"));
-            elements.add(new BufferedTabObject().slot(39).text("&7www.resolve.rip"));
+            elements.add(new BufferedTabObject().slot(19).text("&7store.purgemc.club"));
+            elements.add(new BufferedTabObject().slot(59).text("&7discord.purgemc.club"));
+            elements.add(new BufferedTabObject().slot(39).text("&7www.purgemc.club"));
             elements.add(new BufferedTabObject().slot(ipSlot).text("&7&m----------------"));
             tabSlots.add(ipSlot);
         }
@@ -301,9 +301,9 @@ public class Tab implements ZigguratAdapter {
         int pl=0;
         for ( int added4=1; added4 < 60; ++added4 ) {
             elements.add(new BufferedTabObject().text("&b&lPractice &7| &f&lEU").slot(21));
-            elements.add(new BufferedTabObject().text("&7store.resolve.rip").slot( 40));
-            elements.add(new BufferedTabObject().text("&7discord.resolve.rip").slot(60));
-            elements.add(new BufferedTabObject().text("&7www.resolve.rip").slot( 20));
+            elements.add(new BufferedTabObject().text("&7store.purgemc.club").slot( 40));
+            elements.add(new BufferedTabObject().text("&7discord.purgemc.club").slot(60));
+            elements.add(new BufferedTabObject().text("&7www.purgemc.club").slot( 20));
             tabSlots.add(0);
             tabSlots.add(1);
             tabSlots.add(21);

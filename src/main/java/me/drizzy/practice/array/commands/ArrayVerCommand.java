@@ -9,7 +9,7 @@ import me.drizzy.practice.util.CC;
 public class ArrayVerCommand {
     public void execute(Player p) {
         p.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
-        p.sendMessage(CC.translate("&7This server is running &bArray [Resolve Build]"));
+        p.sendMessage(CC.translate("&7This server is running &bArray [Purge Build]"));
         p.sendMessage(CC.translate("&7Array is made By Drizzy, Nick and Zentil"));
         p.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
     }

@@ -13,5 +13,5 @@ public class ProfileOptions {
     private boolean isPingScoreboard=true;
     private boolean allowTournamentMessages=true;
     private boolean isVanillaTab=false;
-//    private boolean isShowPlayers=true;
+    private boolean isShowPlayers=true;
 }

@@ -468,7 +468,7 @@ public class Profile {
                 break;
             }
         }
-        if (this.globalElo >= 1020) toReturn = "&b&lResolve";
+        if (this.globalElo >= 1020) toReturn = "&b&lPurge";
         return toReturn;
     }
 
@@ -707,11 +707,13 @@ public class Profile {
 
     public void handleVisibility(Player player, Player otherPlayer) {
         if (player == null || otherPlayer == null) return;
-
         boolean hide = true;
-
         if (state == ProfileState.IN_LOBBY || state == ProfileState.IN_QUEUE) {
-            hide = true;
+            if (this.getSettings().isShowPlayers()) {
+                hide=false;
+            } else {
+                hide=true;
+            }
             if (party != null && party.containsPlayer(otherPlayer)) {
                 hide = false;
                 NameTags.color(player, otherPlayer, ChatColor.BLUE, false);

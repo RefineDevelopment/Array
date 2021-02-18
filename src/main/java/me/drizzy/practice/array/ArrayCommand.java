@@ -20,21 +20,12 @@ public class ArrayCommand {
             p.sendMessage(CC.translate("&7» &b/array hcf &7- Help on how to setup HCF."));
             p.sendMessage(CC.translate("&7» &b/array resetstats (name) &7- Resets a profile."));
             p.sendMessage(CC.translate("&7» &b/array rename (name) &7- Renames item in hand."));
-            p.sendMessage(CC.translate("&7» &b/array vertical (value) &7- Set vertical Knockback."));
-            p.sendMessage(CC.translate("&7» &b/array horizontal (value) &7- Set Horizontal Knockback."));
-            p.sendMessage(CC.translate("&7» &b/array airvertical (value) &7- Set Air Vertical Knockback."));
-            p.sendMessage(CC.translate("&7» &b/array airhorizontal (value) &7- Set Air Horizontal Knockback."));
-            p.sendMessage(CC.translate("&7» &b/array combo vertical (value) &7- Set Combo Vertical Knockback."));
-            p.sendMessage(CC.translate("&7» &b/array combo horizontal (value) &7- Set Combo Horizontal Knockback."));
-            p.sendMessage(CC.translate("&7» &b/array combo airvertical (value) &7- Set Combo Air Vertical Knockback."));
-            p.sendMessage(CC.translate("&7» &b/array combo airhorizontal (value) &7- Set Combo Air Horizontal Knockback."));
-
             p.sendMessage(CC.translate("&7» &b/kit help &7- View kit commands."));
             p.sendMessage(CC.translate("&7» &b/arena help &7- View arena commands."));
             p.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
         } else {
             p.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
-            p.sendMessage(CC.translate("&7This server is running &bArray [Resolve Build]"));
+            p.sendMessage(CC.translate("&7This server is running &bArray [Commercial Build]"));
             p.sendMessage(CC.translate("&7Array is made By Drizzy, Nick and Zentil"));
             p.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
 

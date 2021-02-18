@@ -144,7 +144,7 @@ public class EventSelectEventMenu extends Menu {
                             BracketsHostCommand.execute(player);
                         } else {
                             player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                            player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.resolve.rip &7!"));
+                            player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.purgemc.club &7!"));
                         }
                         break;
                     case "&b&lSumo":
@@ -152,7 +152,7 @@ public class EventSelectEventMenu extends Menu {
                             SumoHostCommand.execute(player);
                         } else {
                             player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                            player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.resolve.rip &7!"));
+                            player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.purgemc.club &7!"));
                         }
                         break;
                     case "&b&lLMS":
@@ -160,7 +160,7 @@ public class EventSelectEventMenu extends Menu {
                             LMSHostCommand.execute(player);
                         } else {
                             player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                            player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.resolve.rip &7!"));
+                            player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.purgemc.club &7!"));
                         }
                         break;
                     case "&b&lParkour":
@@ -168,7 +168,7 @@ public class EventSelectEventMenu extends Menu {
                             ParkourHostCommand.execute(player);
                         } else {
                             player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                            player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.resolve.rip &7!"));
+                            player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.purgemc.club &7!"));
                         }
                         break;
                     case "&b&lSpleef":
@@ -176,7 +176,7 @@ public class EventSelectEventMenu extends Menu {
                             SpleefHostCommand.execute(player);
                         } else {
                             player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                            player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.resolve.rip &7!"));
+                            player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.purgemc.club &7!"));
                         }
                         break;
                     case "&b&lSkywars":
@@ -184,7 +184,7 @@ public class EventSelectEventMenu extends Menu {
                             SkyWarsHostCommand.execute(player);
                         } else {
                             player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                            player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.resolve.rip &7!"));
+                            player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.purgemc.club &7!"));
                         }
                         break;
                     case "&c&lRunner":

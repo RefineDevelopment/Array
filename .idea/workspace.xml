@@ -29,6 +29,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/Profile.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/pom.xml" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/drizzy/practice/Array.java" root0="SKIP_INSPECTION" />
   </component>
@@ -50,28 +51,28 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/rip/resolve/practice/array/commands/combo" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.16113281" />
     <property name="project.structure.side.proportion" value="0.15034965" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\array\commands\combo" />
-      <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\array\knockback" />
+    <key name="MoveFile.RECENT_KEYS">
       <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\util" />
-      <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice" />
-      <recent name="J:\Minecraft Servers\Source Codes\Resolve\ResolvePractice-master\lib" />
+      <recent name="J:\Minecraft Servers\Source Codes\Array Backup\ResolvePractice-master\src\main\java\rip\resolve\Practice\scoreboard" />
+      <recent name="J:\Minecraft Servers\Source Codes\Resolve\ResolvePractice-master\src\main\java\rip\resolve\Practice\util\external\menu\deprecated" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="rip.resolve.practice.array.commands" />
       <recent name="rip.resolve.practice.match.types" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="J:\Minecraft Servers\Source Codes\My Projects\Array\src\main\java\me\drizzy\practice\array\commands" />
+      <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\array\commands\combo" />
+      <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\array\knockback" />
       <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\util" />
-      <recent name="J:\Minecraft Servers\Source Codes\Array Backup\ResolvePractice-master\src\main\java\rip\resolve\Practice\scoreboard" />
-      <recent name="J:\Minecraft Servers\Source Codes\Resolve\ResolvePractice-master\src\main\java\rip\resolve\Practice\util\external\menu\deprecated" />
+      <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice" />
     </key>
   </component>
   <component name="RunManager">
@@ -160,10 +161,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="331" y="81" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1440.860@0.0.1440.860" timestamp="1612347988695" />
-    <state x="427" y="144" width="650" height="716" key="find.popup" timestamp="1612795048268">
+    <state x="427" y="144" width="650" height="716" key="find.popup" timestamp="1613674364501">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="427" y="144" width="650" height="716" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1612795048268" />
+    <state x="427" y="144" width="650" height="716" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1613674364501" />
     <state x="563" y="188" key="refactoring.ChangeSignatureDialog" timestamp="1610115661409">
       <screen x="0" y="0" width="1440" height="860" />
     </state>

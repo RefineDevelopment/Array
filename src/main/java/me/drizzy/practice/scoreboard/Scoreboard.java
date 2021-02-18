@@ -34,7 +34,7 @@ public class Scoreboard implements BoardAdapter {
 
     @Override
     public String getTitle(Player player) {
-        return "&b&lResolve &7&l┃ &fPractice";
+        return "&b&lPurge &7&l┃ &fPractice";
     }
 
     @Override

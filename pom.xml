@@ -56,7 +56,8 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.8</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Lombok.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -157,14 +158,6 @@
             <systemPath>${project.basedir}/lib/PlaceholderAPI.jar</systemPath>
         </dependency>
 
-        <!--Citizens (To Fix NPC's Dissapearing)-->
-        <dependency>
-            <groupId>Citizens</groupId>
-            <artifactId>citizens-api</artifactId>
-            <version>2.4.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Citizens.jar</systemPath>
-        </dependency>
     </dependencies>
 
 

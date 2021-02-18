@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public class ArrayPracticeCommand {
     public void execute(final Player player) {
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() + "------------------------------------------------");
-        player.sendMessage(CC.translate("         &b&lResolve Network " + ChatColor.GRAY + "(Practice)"));
+        player.sendMessage(CC.translate("         &b&lPurge Network " + ChatColor.GRAY + "(Practice)"));
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() +"------------------------------------------------");
         player.sendMessage(CC.translate("&bPractice Commands:"));
         player.sendMessage(CC.translate("&7/duel <Name> &8- &7Send a player a duel request"));
@@ -20,11 +20,11 @@ public class ArrayPracticeCommand {
         player.sendMessage(CC.translate("&7To send a message to your party do &7'&d@&7' <message>:"));
         player.sendMessage(" ");
         player.sendMessage(CC.translate("&bServer Links:"));
-        player.sendMessage(CC.translate("&7Website &8- &bwww.resolve.rip"));
-        player.sendMessage(CC.translate("&7Discord &8- &bdiscord.resolve.rip"));
-        player.sendMessage(CC.translate("&7Store &8- &bstore.resolve.rip"));
+        player.sendMessage(CC.translate("&7Website &8- &bwww.purgemc.club"));
+        player.sendMessage(CC.translate("&7Discord &8- &bdiscord.purgemc.club"));
+        player.sendMessage(CC.translate("&7Store &8- &bstore.purgemc.club"));
         player.sendMessage("");
-        player.sendMessage(CC.translate("&7Welcome to the &b&lResolve Practice Beta!"));
+        player.sendMessage(CC.translate("&7Welcome to the &b&lPurge Practice Beta!"));
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() + "------------------------------------------------");
     }
 }

@@ -87,30 +87,21 @@ public class ProfileListener implements Listener {
         Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
 
         if (!profile.isBusy(event.getPlayer()) && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-        PlayerUtil.reset(event.getPlayer(), false);
-        profile.refreshHotbar();
+            PlayerUtil.reset(event.getPlayer(), false);
+            profile.refreshHotbar();
+            profile.handleVisibility();
         }
-
         for ( Player ps : Bukkit.getOnlinePlayers() ) {
-            /*if (profile.getSettings().isShowPlayers()) {
-                ps.hidePlayer(event.getPlayer());
-                event.getPlayer().showPlayer(ps);
-            } else if (Profile.getByUuid(ps).getSettings().isShowPlayers() || profile.getSettings().isShowPlayers()) {
-                ps.showPlayer(event.getPlayer());
-                event.getPlayer().showPlayer(ps);
-            } else {
-                ps.hidePlayer(event.getPlayer());
-                event.getPlayer().hidePlayer(ps);
-            }*/
             NameTags.color(event.getPlayer(), ps, ChatColor.GREEN, false);
             if (!Profile.getByUuid(ps).isBusy(ps) && !Profile.getByUuid(ps).isInSomeSortOfFight()) {
                 if (Profile.getByUuid(ps).getState() == ProfileState.IN_LOBBY || Profile.getByUuid(ps).getState() == ProfileState.IN_QUEUE)
                     if (profile.getParty() != null) {
-                    NameTags.color(ps, event.getPlayer(), ChatColor.BLUE, false);
+                        NameTags.color(ps, event.getPlayer(), ChatColor.BLUE, false);
                     } else {
-                    NameTags.color(ps, event.getPlayer(), ChatColor.GREEN, false);
+                        NameTags.color(ps, event.getPlayer(), ChatColor.GREEN, false);
                     }
             }
+            PlayerUtil.allowMovement(event.getPlayer());
         }
     }
 
@@ -265,11 +256,12 @@ public class ProfileListener implements Listener {
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         event.setJoinMessage(null);
         Player player=event.getPlayer();
-        Profile.getPlayerList().add(event.getPlayer());
-        Player p=event.getPlayer();
-        Profile profile=new Profile(p.getUniqueId());
-
+        Profile.getPlayerList().add(player);
+        Profile profile=new Profile(player.getUniqueId());
         TaskUtil.runAsync(() -> {
+            if (!Profile.getPlayerCache().containsKey(player.getName())) {
+                Profile.getPlayerCache().put(player.getName(), player.getUniqueId());
+            }
             try {
                 profile.load();
             } catch (Exception e) {
@@ -277,23 +269,20 @@ public class ProfileListener implements Listener {
                 event.getPlayer().kickPlayer(CC.AQUA + "Failed to load your profile, Please contact an Administrator!");
                 return;
             }
-            if (!Profile.getPlayerCache().containsKey(player.getName())) {
-                Profile.getPlayerCache().put(player.getName(), player.getUniqueId());
-            }
-            Profile.getProfiles().put(p.getUniqueId(), profile);
-            profile.setName(p.getName());
+            Profile.getProfiles().put(player.getUniqueId(), profile);
+            profile.setName(event.getPlayer().getName());
             Array.getInstance().getEssentials().teleportToSpawn(player);
             profile.refreshHotbar();
             profile.handleVisibility();
-            for (Profile otherProfile : Profile.getProfiles().values()) {
-                otherProfile.handleVisibility(otherProfile.getPlayer(), p);
+            for ( Profile other : Profile.getProfiles().values() ) {
+                other.handleVisibility();
             }
         });
-            for(Player ps : Bukkit.getOnlinePlayers()) {
-            NameTags.color(event.getPlayer(), ps, ChatColor.GREEN, false);
+        for(Player ps : Bukkit.getOnlinePlayers()) {
+            NameTags.color(player, ps, ChatColor.GREEN, false);
             if (!Profile.getByUuid(ps).isBusy(ps) && !Profile.getByUuid(ps).isInSomeSortOfFight()) {
-            if (Profile.getByUuid(ps).getState() == ProfileState.IN_LOBBY || Profile.getByUuid(ps).getState() == ProfileState.IN_QUEUE)
-            NameTags.color(ps, event.getPlayer(), ChatColor.GREEN, false);
+                if (Profile.getByUuid(ps).getState() == ProfileState.IN_LOBBY || Profile.getByUuid(ps).getState() == ProfileState.IN_QUEUE)
+                    NameTags.color(ps, player, ChatColor.GREEN, false);
             }
         }
     }
