@@ -11,16 +11,8 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="AquaCoreBridge" target="1.8" />
       <module name="Array" target="1.8" />
-      <module name="Bridge" target="1.8" />
       <module name="LunarClient-API" target="1.8" />
-      <module name="ServerStatusBot" target="1.8" />
-      <module name="SmokCore" target="1.8" />
-      <module name="SmokDisguise" target="1.8" />
-      <module name="SmokHub" target="1.8" />
-      <module name="SmokKits" target="1.8" />
-      <module name="SmokRegistration" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
