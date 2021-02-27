@@ -28,13 +28,20 @@ public class PlaceholderAPIExtension extends PlaceholderExpansion {
             return "&7";
         }
 
-        if (identifier.contains("global")) { //array_global_1
-            String[] splitstring=identifier.split("_");
-            int number=Integer.parseInt(splitstring[1]) - 1;
+        /**
+         * Originally coded by Nick and improved by Drizzy.
+         * Note: The Player Cache in profile should not be null for it to work!
+         *
+         * @param GlobalLeaderboards - array_global_<position>
+         */
+
+        if (identifier.contains("global")) {
+            String[] splitstring = identifier.split("_");
+            int number = Integer.parseInt(splitstring[1]) - 1;
             KitLeaderboards kitLeaderboards;
 
             try {
-                kitLeaderboards=Profile.getGlobalEloLeaderboards().get(number);
+                kitLeaderboards = Profile.getGlobalEloLeaderboards().get(number);
             } catch (Exception e) {
                 return "&7";
             }
@@ -43,22 +50,29 @@ public class PlaceholderAPIExtension extends PlaceholderExpansion {
                 return "&7";
             }
 
-            Profile profile=Profile.getByUuid(Profile.getUUID(kitLeaderboards.getName()));
+            Profile profile = Profile.getByUuid(Profile.getUUID(kitLeaderboards.getName()));
 
             return "&b" + (number + 1) + ". &f" + kitLeaderboards.getName() + ": &b" + kitLeaderboards.getElo() + " &7(" + profile.getEloLeague() + ")";
         }
-        if (identifier.contains("lb")) { //array_lb_NoDebuff_1
-            String[] splitstring=identifier.split("_");
-            String kitString=splitstring[1];
-            int number=Integer.parseInt(splitstring[2]) - 1;
-            Kit kit=Kit.getByName(kitString);
+
+        /**
+         * Originally coded by Nick and improved by Drizzy.
+         * Note: The Player Cache in profile should not be null for it to work!
+         *
+         * @param KitLeaderboards - array_lb_<Kit>_<position>
+         */
+        if (identifier.contains("lb")) {
+            String[] splitstring = identifier.split("_");
+            String kitString = splitstring[1];
+            int number = Integer.parseInt(splitstring[2]) - 1;
+            Kit kit = Kit.getByName(kitString);
 
             if (kit == null) return "&7";
 
             KitLeaderboards kitLeaderboards;
 
             try {
-                kitLeaderboards=kit.getRankedEloLeaderboards().get(number);
+                kitLeaderboards = kit.getRankedEloLeaderboards().get(number);
             } catch (Exception e) {
                 return "&7";
             }

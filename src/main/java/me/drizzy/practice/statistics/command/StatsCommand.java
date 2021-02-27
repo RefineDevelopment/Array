@@ -1,25 +1,38 @@
 package me.drizzy.practice.statistics.command;
 
-import me.drizzy.practice.util.CC;
-import me.drizzy.practice.util.command.command.CPL;
-import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.statistics.menu.StatsMenu;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = {"stats", "profile", "player", "elo"})
-public class StatsCommand {
+import java.util.Collections;
 
-    public void execute(Player player) {
-        new StatsMenu(player).openMenu(player);
+
+public class StatsCommand extends Command {
+
+    public StatsCommand() {
+        super("stats");
+        this.setAliases(Collections.singletonList("statistics"));
+        this.usageMessage = "/stats";
     }
 
-    public void execute(Player player, @CPL("player") Player target) {
-        if (target == null) {
-            player.sendMessage(CC.RED + "That player does not exist!");
-            return;
+    @Override
+    public boolean execute(CommandSender sender, String s, String[] args) {
+        if (!(sender instanceof Player)) {
+            return true;
         }
+        Player player = (Player) sender;
+        if (args.length == 0) {
+            new StatsMenu(player).openMenu(player);
+            return true;
+        }
+        if (args.length == 1) {
+            String target2 = args[0];
+            Player target = Bukkit.getOfflinePlayer(target2).getPlayer();
+            new StatsMenu(target).openMenu(player);
 
-        new StatsMenu(target).openMenu(player);
+        }
+        return true;
     }
-
 }

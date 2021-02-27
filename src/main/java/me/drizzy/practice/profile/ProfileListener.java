@@ -6,6 +6,7 @@ import me.drizzy.practice.match.events.MatchEvent;
 import me.drizzy.practice.match.events.MatchStartEvent;
 import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.TaskUtil;
+import me.drizzy.practice.util.essentials.Essentials;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -22,6 +23,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.StringUtil;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.essentials.event.SpawnTeleportEvent;
@@ -74,7 +76,7 @@ public class ProfileListener implements Listener {
                 Sign sign = (Sign) e.getClickedBlock().getState();
                 if (sign.getLine(1) != null && sign.getLine(1).contains("[Click Here]")) {
                     if (sign.getLine(2).toLowerCase().contains("back to spawn")) {
-                        Array.getInstance().getEssentials().teleportToSpawn(e.getPlayer());
+                        Essentials.teleportToSpawn(e.getPlayer());
                     }
                 }
             }
@@ -88,6 +90,10 @@ public class ProfileListener implements Listener {
 
         if (!profile.isBusy(event.getPlayer()) && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
             PlayerUtil.reset(event.getPlayer(), false);
+            Player player = event.getPlayer();
+            player.getActivePotionEffects().clear();
+            player.setHealth(20.0D);
+            player.setFoodLevel(20);
             profile.refreshHotbar();
             profile.handleVisibility();
         }
@@ -140,7 +146,7 @@ public class ProfileListener implements Listener {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
         if (profile.isInSomeSortOfFight()) {
-            if (!profile.isInSkyWars() && !profile.isInFight() && !profile.isInSpleef() && !profile.isInMatch()) {
+            if (!profile.isInFight()) {
                 if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
                     if (!event.getPlayer().isOp()) {
                         event.setCancelled(true);
@@ -165,7 +171,7 @@ public class ProfileListener implements Listener {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
         if (profile.isInSomeSortOfFight()) {
-            if (!profile.isInSkyWars() && !profile.isInFight()) {
+            if (!profile.isInFight()) {
                 if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
                     if (!event.getPlayer().isOp()) {
                         event.setCancelled(true);
@@ -197,7 +203,7 @@ public class ProfileListener implements Listener {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
         if (profile.isInSomeSortOfFight()) {
-            if (!profile.isInSkyWars() && !profile.isInFight()) {
+            if (!profile.isInFight()) {
                 if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
                     if (!event.getPlayer().isOp()) {
                         event.setCancelled(true);
@@ -235,7 +241,7 @@ public class ProfileListener implements Listener {
                 event.setCancelled(true);
 
                 if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                    Array.getInstance().getEssentials().teleportToSpawn((Player) event.getEntity());
+                    Essentials.teleportToSpawn((Player) event.getEntity());
                 }
             }
         }
@@ -249,6 +255,9 @@ public class ProfileListener implements Listener {
             if (profile.isInLobby() || profile.isInQueue()) {
                 event.setCancelled(true);
             }
+            if(profile.isInSumo()) {
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -259,6 +268,9 @@ public class ProfileListener implements Listener {
         Profile.getPlayerList().add(player);
         Profile profile=new Profile(player.getUniqueId());
         TaskUtil.runAsync(() -> {
+            for ( Profile other : Profile.getProfiles().values() ) {
+                other.handleVisibility();
+            }
             if (!Profile.getPlayerCache().containsKey(player.getName())) {
                 Profile.getPlayerCache().put(player.getName(), player.getUniqueId());
             }
@@ -271,13 +283,16 @@ public class ProfileListener implements Listener {
             }
             Profile.getProfiles().put(player.getUniqueId(), profile);
             profile.setName(event.getPlayer().getName());
-            Array.getInstance().getEssentials().teleportToSpawn(player);
+            Essentials.teleportToSpawn(player);
             profile.refreshHotbar();
-            profile.handleVisibility();
-            for ( Profile other : Profile.getProfiles().values() ) {
-                other.handleVisibility();
-            }
         });
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+            profile.handleVisibility();
+            }
+        }.runTaskLaterAsynchronously(Array.getInstance(), 5L);
+
         for(Player ps : Bukkit.getOnlinePlayers()) {
             NameTags.color(player, ps, ChatColor.GREEN, false);
             if (!Profile.getByUuid(ps).isBusy(ps) && !Profile.getByUuid(ps).isInSomeSortOfFight()) {

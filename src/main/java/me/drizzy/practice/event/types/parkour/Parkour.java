@@ -2,6 +2,7 @@ package me.drizzy.practice.event.types.parkour;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.drizzy.practice.util.essentials.Essentials;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -65,7 +66,7 @@ public class Parkour {
 		toReturn.add(CC.translate("&bHost: &r" + parkour.getName()));
 
 		if (parkour.isWaiting()) {
-			toReturn.add("&bPlayers: &r" + parkour.getEventPlayers().size() + "/" + parkour.getMaxPlayers());
+			toReturn.add("&bPlayers: &r" + parkour.getEventPlayers().size() + "/" + getMaxPlayers());
 			toReturn.add("");
 
 			if (parkour.getCooldown() == null) {
@@ -146,7 +147,7 @@ public class Parkour {
 	}
 
 	public void handleJoin(Player player) {
-		if (this.eventPlayers.size() >= this.maxPlayers) {
+		if (this.eventPlayers.size() >= maxPlayers) {
 			player.sendMessage(CC.RED + "The event is full");
 			return;
 		}
@@ -194,7 +195,7 @@ public class Parkour {
 		profile.setParkour(null);
 		profile.refreshHotbar();
 
-		Array.getInstance().getEssentials().teleportToSpawn(player);
+		Essentials.teleportToSpawn(player);
 
 		new BukkitRunnable() {
 			@Override
@@ -238,7 +239,7 @@ public class Parkour {
 				profile.setParkour(null);
 				profile.refreshHotbar();
 
-				Array.getInstance().getEssentials().teleportToSpawn(player);
+				Essentials.teleportToSpawn(player);
 			}
 		}
 
@@ -276,7 +277,9 @@ public class Parkour {
 		}
 	}
 
-	public void onJoin(Player player) {}
+	public void onJoin(Player player) {
+
+	}
 
 	public void onLeave(Player player) {
 		//player.setKnockbackProfile(null);
@@ -347,6 +350,6 @@ public class Parkour {
 		profile.refreshHotbar();
 		profile.handleVisibility();
 
-		Array.getInstance().getEssentials().teleportToSpawn(player);
+		Essentials.teleportToSpawn(player);
 	}
 }

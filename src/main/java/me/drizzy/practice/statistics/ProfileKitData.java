@@ -26,6 +26,12 @@ public class ProfileKitData {
     private int lost = 0;
     @Getter
     @Setter
+    private int kills = 0;
+    @Getter
+    @Setter
+    private int deaths = 0;
+    @Getter
+    @Setter
     private KitLoadout[] loadouts = new KitLoadout[4];
 
     public void incrementWon() {
@@ -34,6 +40,14 @@ public class ProfileKitData {
 
     public void incrementLost() {
         this.lost++;
+    }
+
+    public void incrementKills() {
+        this.kills++;
+    }
+
+    public void incrementDeaths() {
+        this.deaths++;
     }
 
     public KitLoadout getLoadout(int index) {
@@ -85,26 +99,6 @@ public class ProfileKitData {
         }
 
         return toReturn;
-        /*List<ItemStack> toReturn = new ArrayList<>();
-
-        for (KitLoadout loadout : loadouts) {
-            if (loadout != null) {
-
-                ItemStack itemStack = new ItemStack(Material.ENCHANTED_BOOK);
-                ItemMeta itemMeta = itemStack.getItemMeta();
-
-                itemMeta.setDisplayName(ChatColor.RED + "Kit: " + ChatColor.AQUA + loadout.getCustomName());
-                itemMeta.setLore(Arrays.asList(
-                        ChatColor.GRAY + "Right-click with this book in your",
-                        ChatColor.GRAY + "hand to receive this kit."
-                ));
-                itemStack.setItemMeta(itemMeta);
-
-                toReturn.add(itemStack);
-            }
-        }
-
-        return toReturn;*/
     }
 
     public List<ItemStack> getHCFKitItems() {
@@ -113,9 +107,38 @@ public class ProfileKitData {
         toReturn.add(Hotbar.getItems().get(HotbarItem.BARD_KIT));
         toReturn.add(Hotbar.getItems().get(HotbarItem.ARCHER_KIT));
         toReturn.add(Hotbar.getItems().get(HotbarItem.ROGUE_KIT));
-
-
         return toReturn;
     }
+
+
+    /*private void recalculateWLR(UUID uuid, KitType kitType) {
+        double totalWins = getStat(uuid, StatisticsHandler.Statistic.WINS, kitType.getId());
+        double totalLosses = getStat(uuid, StatisticsHandler.Statistic.LOSSES, kitType.getId());
+
+        double ratio = totalWins / Math.max(totalLosses, 1);
+        statisticsMap.get(uuid).get(kitType.getId()).put(StatisticsHandler.Statistic.WLR, ratio);
+
+        totalWins = getStat(uuid, StatisticsHandler.Statistic.WINS, "GLOBAL");
+        totalLosses = getStat(uuid, StatisticsHandler.Statistic.LOSSES, "GLOBAL");
+
+        ratio = totalWins / Math.max(totalLosses, 1);
+        statisticsMap.get(uuid).get("GLOBAL").put(StatisticsHandler.Statistic.WLR, ratio);
+    }
+
+    private void recalculateKDR(UUID uuid, KitType kitType) {
+        double totalKills = getStat(uuid, StatisticsHandler.Statistic.KILLS, kitType.getId());
+        double totalDeaths = getStat(uuid, StatisticsHandler.Statistic.DEATHS, kitType.getId());
+
+        double ratio = totalKills / Math.max(totalDeaths, 1);
+        statisticsMap.get(uuid).get(kitType.getId()).put(StatisticsHandler.Statistic.KDR, ratio);
+
+        totalKills = getStat(uuid, StatisticsHandler.Statistic.KILLS, "GLOBAL");
+        totalDeaths = getStat(uuid, StatisticsHandler.Statistic.DEATHS, "GLOBAL");
+
+        ratio = totalKills / Math.max(totalDeaths, 1);
+        statisticsMap.get(uuid).get("GLOBAL").put(StatisticsHandler.Statistic.KDR, ratio);
+    }*/
+
+
 
 }

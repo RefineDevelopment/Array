@@ -56,8 +56,7 @@ public class ManageArenaKitsMenu extends Menu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
-            arena.getKits().remove(kit.getName());
-            arena.save();
+            player.performCommand("arena removekit " + kit.getName());
             player.closeInventory();
             new ManageArenaKitsMenu(arena).onOpen(player);
         }

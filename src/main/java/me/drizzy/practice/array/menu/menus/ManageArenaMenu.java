@@ -49,8 +49,7 @@ public class ManageArenaMenu extends Menu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
-            arena.delete();
-            arena.save();
+            player.performCommand("arena delete " + arena.getName());
             Button.playSuccess(player);
             player.closeInventory();
             new ManageArenaMenu(arena).onOpen(player);

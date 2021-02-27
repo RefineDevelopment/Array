@@ -4,7 +4,6 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.event.types.brackets.Brackets;
 import me.drizzy.practice.event.types.lms.LMS;
 import me.drizzy.practice.event.types.parkour.Parkour;
-import me.drizzy.practice.event.types.skywars.SkyWars;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.kits.Bard;
 import me.drizzy.practice.match.kits.utils.ArmorClass;
@@ -318,29 +317,6 @@ public class Scoreboard implements BoardAdapter {
                     lines.add("&fPlayers: &b" + spleef.getRemainingPlayers().size() + "/" + Spleef.getMaxPlayers());
                     lines.add("&fDuration: &b" + spleef.getRoundDuration());
                 }
-            } else if (profile.getSkyWars() !=null) {
-                final SkyWars skywars2=profile.getSkyWars();
-                if (skywars2.isWaiting()) {
-                    lines.add("&b&lSkywars Event");
-                    lines.add("");
-                    lines.add(CC.translate("&fHost: &b" + skywars2.getName()));
-                    lines.add("&fPlayers: &b" + skywars2.getEventPlayers().size() + "/" + SkyWars.getMaxPlayers());
-                    lines.add("");
-                    if (skywars2.getCooldown() == null) {
-                        lines.add(CC.translate("&fWaiting for players..."));
-                    } else {
-                        String remaining2=TimeUtil.millisToSeconds(skywars2.getCooldown().getRemaining());
-                        if (remaining2.startsWith("-")) {
-                            remaining2="0.0";
-                        }
-                        lines.add(CC.translate("&fStarting in " + remaining2 + "s"));
-                    }
-                } else {
-                    lines.add("&b&lSkywars Event");
-                    lines.add("");
-                    lines.add("&fPlayers: &b" + skywars2.getRemainingPlayers().size() + "/" + SkyWars.getMaxPlayers());
-                    lines.add("&fDuration: &b" + skywars2.getRoundDuration());
-                }
             }
         } else if (profile.isInSumo()) {
             final Sumo sumo2 = profile.getSumo();
@@ -445,29 +421,6 @@ public class Scoreboard implements BoardAdapter {
                 lines.add("");
                 lines.add("&fPlayers: &b" + parkour2.getRemainingPlayers().size() + "/" + Parkour.getMaxPlayers());
                 lines.add("&fDuration: &b" + parkour2.getRoundDuration());
-            }
-        } else if (profile.isInSkyWars()) {
-            final SkyWars skywars2=profile.getSkyWars();
-            if (skywars2.isWaiting()) {
-                lines.add("&b&lSkywars Event");
-                lines.add("");
-                lines.add(CC.translate("&fHost: &b" + skywars2.getName()));
-                lines.add("&fPlayers: &b" + skywars2.getEventPlayers().size() + "/" + SkyWars.getMaxPlayers());
-                lines.add("");
-                if (skywars2.getCooldown() == null) {
-                    lines.add(CC.translate("&fWaiting for players..."));
-                } else {
-                    String remaining2=TimeUtil.millisToSeconds(skywars2.getCooldown().getRemaining());
-                    if (remaining2.startsWith("-")) {
-                        remaining2="0.0";
-                    }
-                    lines.add(CC.translate("&fStarting in " + remaining2 + "s"));
-                }
-            } else {
-                lines.add("&b&lSkywars Event");
-                lines.add("");
-                lines.add("&fPlayers: &b" + skywars2.getRemainingPlayers().size() + "/" + SkyWars.getMaxPlayers());
-                lines.add("&fDuration: &b" + skywars2.getRoundDuration());
             }
         } else if (profile.isInSpleef()) {
             final Spleef spleef2=profile.getSpleef();

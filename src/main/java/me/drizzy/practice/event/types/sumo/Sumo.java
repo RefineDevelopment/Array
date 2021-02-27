@@ -8,6 +8,7 @@ import me.drizzy.practice.util.CC;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.PlayerSnapshot;
 import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.essentials.Essentials;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.external.TimeUtil;
@@ -189,7 +190,7 @@ public class Sumo {
 		profile.setSumo(null);
 		profile.refreshHotbar();
 
-		Array.getInstance().getEssentials().teleportToSpawn(player);
+		Essentials.teleportToSpawn(player);
 
 		new BukkitRunnable() {
 			@Override
@@ -239,7 +240,7 @@ public class Sumo {
 				profile.setSumo(null);
 				profile.refreshHotbar();
 
-				Array.getInstance().getEssentials().teleportToSpawn(player);
+				Essentials.teleportToSpawn(player);
 			}
 		}
 
@@ -296,11 +297,11 @@ public class Sumo {
 	}
 
 	public void onJoin(Player player) {
-		//   empty (Used to have kb)
+	 Profile.setKb(player, Array.getInstance().getSumoManager().getSumoKnockbackProfile());
 	}
 
 	public void onLeave(Player player) {
-    //   empty (Used to have kb)
+     Profile.setKb(player, Array.getInstance().getSumoManager().getSumoKnockbackProfile());
 	}
 
 	public void onRound() {
@@ -433,7 +434,7 @@ public class Sumo {
 		profile.refreshHotbar();
 		profile.handleVisibility();
 
-		Array.getInstance().getEssentials().teleportToSpawn(player);
+		Essentials.teleportToSpawn(player);
 	}
 
 }

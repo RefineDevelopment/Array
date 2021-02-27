@@ -31,8 +31,6 @@ public class StopSpectatingCommand {
                 profile.getLms().removeSpectator(player);
             } else if (profile.getParkour() != null) {
                 profile.getParkour().removeSpectator(player);
-            } else if (profile.getSkyWars() != null) {
-                profile.getSkyWars().removeSpectator(player);
             } else if (profile.getSpleef() != null) {
                 profile.getSpleef().removeSpectator(player);
             }

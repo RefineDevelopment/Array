@@ -11,8 +11,10 @@ import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.util.Circle;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.essentials.Essentials;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.nametag.NameTags;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -120,12 +122,6 @@ public class FFAMatch extends Match {
         }
 
         Team team = getTeam(player);
-        Location spawn = getArena().getSpawn1();
-        Location spawn2 = getArena().getSpawn2();
-        Location ffaspawn = getArena().getSpawn1();
-        ffaspawn.setX(getAverage(spawn.getX(), spawn2.getX()));
-        ffaspawn.setZ(getAverage(spawn.getZ(), spawn2.getZ()));
-        player.teleport(ffaspawn);
         for (Player enemy : team.getPlayers()) {
             NameTags.color(player, enemy, org.bukkit.ChatColor.RED, getKit().getGameRules().isShowHealth());
             Profile.getByUuid(enemy.getUniqueId()).handleVisibility();
@@ -145,7 +141,17 @@ public class FFAMatch extends Match {
 
     @Override
     public void onStart() {
-
+        int i = 0;
+        for ( Player player : getPlayers() ) {
+            Location midSpawn = this.getMidSpawn();
+            List<Location> circleLocations = Circle.getCircle(midSpawn, 7, this.getPlayers().size());
+            Location center = midSpawn.clone();
+            Location loc = circleLocations.get(i);
+            Location target = loc.setDirection(center.subtract(loc).toVector());
+            player.teleport(target.add(0, 0.5, 0));
+            circleLocations.remove(i);
+            i++;
+        }
     }
 
     @Override
@@ -183,13 +189,12 @@ public class FFAMatch extends Match {
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
                             NameTags.color(player, firstTeamPlayer.getPlayer(), ChatColor.GREEN, false);
-                        PlayerUtil.reset(player, false);
-        profile.refreshHotbar();
+                            PlayerUtil.reset(player, false);
+                            profile.refreshHotbar();
                             profile.handleVisibility();
                             KnockbackProfile knockbackProfile = KnockbackModule.getDefault();
                             ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
-
-                            Array.getInstance().getEssentials().teleportToSpawn(player);
+                            Essentials.teleportToSpawn(player);
                         }
                     }
                 }
@@ -222,7 +227,7 @@ public class FFAMatch extends Match {
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
         components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7(Click name to view inventory)").create());
-        components.add(new ChatComponentBuilder("").parse("").create());
+        components.add(new ChatComponentBuilder("").create());
         components.add(winnerInventories.create());
         components.add(loserInventories.create());
         components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
@@ -248,8 +253,8 @@ public class FFAMatch extends Match {
         if (!canEnd() && !teamPlayer.isDisconnected()) {
             player.teleport(getArena().getSpawn1());
             Profile profile = Profile.getByUuid(player.getUniqueId());
-        PlayerUtil.reset(player, false);
-        profile.refreshHotbar();
+            PlayerUtil.reset(player, false);
+            profile.refreshHotbar();
             player.setAllowFlight(true);
             player.setFlying(true);
             profile.setState(ProfileState.SPECTATE_MATCH);
@@ -372,47 +377,6 @@ public class FFAMatch extends Match {
     @Override
     public int getTotalRoundWins() {
         return 0;
-    }
-
-
-    @Override
-    public int getTeamACapturePoints() {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public void setTeamACapturePoints(int number) {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public int getTeamBCapturePoints() {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public void setTeamBCapturePoints(int number) {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public int getTimer() {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public void setTimer(int number) {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public Player getCapper() {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public void setCapper(Player player) {
-        throw new UnsupportedOperationException("No");
     }
 
     @Override

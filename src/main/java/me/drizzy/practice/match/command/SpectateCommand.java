@@ -67,8 +67,6 @@ public class SpectateCommand {
             targetProfile.getParkour().addSpectator(player);
         } else if (targetProfile.isInSpleef()) {
             targetProfile.getSpleef().addSpectator(player);
-        } else if (targetProfile.isInSkyWars()) {
-            targetProfile.getSkyWars().addSpectator(player);
         } else {
             player.sendMessage(CC.RED + "That player is not in a match or running event.");
         }

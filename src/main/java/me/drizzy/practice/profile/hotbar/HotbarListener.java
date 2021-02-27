@@ -3,7 +3,6 @@ package me.drizzy.practice.profile.hotbar;
 import me.drizzy.practice.event.menu.ActiveEventSelectEventMenu;
 import me.drizzy.practice.event.types.lms.LMS;
 import me.drizzy.practice.event.types.parkour.Parkour;
-import me.drizzy.practice.event.types.skywars.SkyWars;
 import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.event.types.brackets.Brackets;
@@ -189,19 +188,6 @@ public class HotbarListener implements Listener
                     Array.getInstance().getBracketsManager().getActiveBrackets().handleLeave(player);
                     break;
                 }
-                case SKYWARS_LEAVE: {
-                    final SkyWars activeSkywars = Array.getInstance().getSkyWarsManager().getActiveSkyWars();
-                    if (activeSkywars == null) {
-                        player.sendMessage(CC.RED + "There is no active skywars event.");
-                        return;
-                    }
-                    if (!profile.isInSkyWars() || !activeSkywars.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(CC.RED + "You are not apart of the active skywars event.");
-                        return;
-                    }
-                    Array.getInstance().getSkyWarsManager().getActiveSkyWars().handleLeave(player);
-                    break;
-                }
                 case LMS_LEAVE: {
                     final LMS activeLMS = Array.getInstance().getLMSManager().getActiveLMS();
                     if (activeLMS == null) {
@@ -295,10 +281,6 @@ public class HotbarListener implements Listener
                     }
                     if (profile.getSpleef() != null) {
                         profile.getSpleef().removeSpectator(player);
-                        break;
-                    }
-                    if (profile.getSkyWars() != null) {
-                        profile.getSkyWars().removeSpectator(player);
                         break;
                     }
                     break;

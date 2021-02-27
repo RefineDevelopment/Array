@@ -172,7 +172,7 @@ public class BracketsListener implements Listener {
 			if (profile.isInBrackets()) {
 				if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
 					if (event.getItem().equals(Hotbar.getItems().get(HotbarItem.DEFAULT_KIT))) {
-						KitLoadout kitLoadout = Brackets.getKit().getKitLoadout();
+						KitLoadout kitLoadout = profile.getBrackets().getKit().getKitLoadout();
 						event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
 						event.getPlayer().getInventory().setContents(kitLoadout.getContents());
 						event.getPlayer().updateInventory();
@@ -187,7 +187,7 @@ public class BracketsListener implements Listener {
 					if (displayName.startsWith("Kit: ")) {
 						String kitName = displayName.replace("Kit: ", "");
 
-						for (KitLoadout kitLoadout : profile.getKitData().get(Brackets.getKit()).getLoadouts()) {
+						for (KitLoadout kitLoadout : profile.getKitData().get(profile.getBrackets().getKit()).getLoadouts()) {
 							if (kitLoadout != null && ChatColor.stripColor(kitLoadout.getCustomName()).equals(kitName)) {
 								event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
 								event.getPlayer().getInventory().setContents(kitLoadout.getContents());

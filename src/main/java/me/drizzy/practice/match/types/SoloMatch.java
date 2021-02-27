@@ -15,6 +15,7 @@ import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.TaskUtil;
+import me.drizzy.practice.util.essentials.Essentials;
 import org.bukkit.potion.PotionEffectType;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.util.PlayerUtil;
@@ -214,7 +215,7 @@ public class SoloMatch extends Match {
                                         opponent.getUniqueId(), getKit(), getArena()));
                             }
 
-                            Array.getInstance().getEssentials().teleportToSpawn(player);
+                            Essentials.teleportToSpawn(player);
                         }
                     }
                 }
@@ -236,7 +237,7 @@ public class SoloMatch extends Match {
 
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7(Click name to view inventory)").create());
-        components.add(new ChatComponentBuilder("").parse("").create());
+        components.add(new ChatComponentBuilder("").create());
         components.add(inventoriesBuilder.create());
 
 
@@ -512,46 +513,6 @@ public class SoloMatch extends Match {
     }
 
     @Override
-    public int getTeamACapturePoints() {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public void setTeamACapturePoints(int number) {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public int getTeamBCapturePoints() {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public void setTeamBCapturePoints(int number) {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public int getTimer() {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public void setTimer(int number) {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public Player getCapper() {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public void setCapper(Player player) {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
     public void onDeath(Player deadPlayer, Player killerPlayer) {
         if (!getKit().getGameRules().isSumo()) {
             TeamPlayer roundLoser = getTeamPlayer(deadPlayer);
@@ -582,7 +543,7 @@ public class SoloMatch extends Match {
 
     @Override
     public void onRespawn(Player player) {
-        Array.getInstance().getEssentials().teleportToSpawn(player);
+        Essentials.teleportToSpawn(player);
     }
 
     @Override

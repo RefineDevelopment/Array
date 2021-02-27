@@ -18,9 +18,7 @@ public class KitRemoveCommand {
         if (kit != null) {
             kit.delete();
             Kit.getKits().forEach(Kit::save);
-            Queue.getQueues().clear();
-            Kit.getKits().clear();
-            Kit.preload();
+            Queue.getQueues().remove(Queue.getByKit(kit));
             player.sendMessage((CC.translate("&8[&b&lArray&8] &c")) + "Kit " + name + " removed");
         }
     }

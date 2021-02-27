@@ -15,6 +15,7 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.PlayerSnapshot;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.essentials.Essentials;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.external.TimeUtil;
@@ -41,7 +42,7 @@ public class Brackets {
 	private BracketsState state=BracketsState.WAITING;
 	@Getter
 	@Setter
-	static private Kit kit;
+	private Kit kit;
 	private BracketsTask eventTask;
 	private final PlayerSnapshot host;
 	private final LinkedHashMap<UUID, BracketsPlayer> eventPlayers=new LinkedHashMap<>();
@@ -69,7 +70,7 @@ public class Brackets {
 		this.name=player.getName();
 		this.host=new PlayerSnapshot(player.getUniqueId(), player.getName());
 		Brackets.maxPlayers=100;
-		Brackets.kit=kit;
+		this.kit=kit;
 }
 	public List<String> getLore() {
 		List<String> toReturn = new ArrayList<>();
@@ -212,7 +213,7 @@ public class Brackets {
 		profile.setBrackets(null);
 		profile.refreshHotbar();
 
-		Array.getInstance().getEssentials().teleportToSpawn(player);
+		Essentials.teleportToSpawn(player);
 
 		new BukkitRunnable() {
 			@Override
@@ -262,7 +263,7 @@ public class Brackets {
 				profile.setBrackets(null);
 				profile.refreshHotbar();
 
-				Array.getInstance().getEssentials().teleportToSpawn(player);
+				Essentials.teleportToSpawn(player);
 			}
 		}
 
@@ -462,6 +463,6 @@ public class Brackets {
 		profile.refreshHotbar();
 		profile.handleVisibility();
 
-		Array.getInstance().getEssentials().teleportToSpawn(player);
+		Essentials.teleportToSpawn(player);
 	}
 }

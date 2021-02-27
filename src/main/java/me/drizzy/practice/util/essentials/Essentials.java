@@ -1,41 +1,38 @@
 package me.drizzy.practice.util.essentials;
 
-import me.drizzy.practice.util.bootstrap.Bootstrapped;
+import me.drizzy.practice.Array;
 import me.drizzy.practice.util.essentials.event.SpawnTeleportEvent;
 import me.drizzy.practice.util.external.LocationUtil;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.spigotmc.AsyncCatcher;
 
 import java.io.IOException;
 
-public class Essentials extends Bootstrapped {
+public class Essentials {
 
-    private Location spawn;
+    public static Location spawn;
 
-    public Essentials(me.drizzy.practice.Array Array) {
-        super(Array);
+    public Essentials() {
 
-        spawn = LocationUtil.deserialize(Array.getMainConfig().getStringOrDefault("ARRAY.SPAWN", null));
+        spawn = LocationUtil.deserialize(Array.getInstance().getMainConfig().getStringOrDefault("ARRAY.SPAWN", null));
     }
 
-    public void setSpawn(Location location) {
+    public static void setSpawn(Location location) {
         spawn = location;
 
-        Array.getMainConfig().getConfiguration().set("ARRAY.SPAWN", LocationUtil.serialize(this.spawn));
+        Array.getInstance().getMainConfig().getConfiguration().set("ARRAY.SPAWN", LocationUtil.serialize(spawn));
 
         try {
-            Array.getMainConfig().getConfiguration().save(Array.getMainConfig().getFile());
+            Array.getInstance().getMainConfig().getConfiguration().save(Array.getInstance().getMainConfig().getFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void teleportToSpawn(Player player) {
+    public static void teleportToSpawn(Player player) {
         Location location = spawn;
-
+        AsyncCatcher.enabled=false;
         SpawnTeleportEvent event = new SpawnTeleportEvent(player, location);
         event.call();
 
@@ -43,14 +40,4 @@ public class Essentials extends Bootstrapped {
             player.teleport(event.getLocation());
         }
     }
-
-    public void clearEntities(World world) {
-        for (Entity entity : world.getEntities()) {
-            if (entity.getType() == EntityType.PLAYER) {
-                continue;
-            }
-            entity.remove();
-        }
-    }
-
 }

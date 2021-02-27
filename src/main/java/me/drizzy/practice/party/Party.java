@@ -1,6 +1,7 @@
 package me.drizzy.practice.party;
 
 import me.drizzy.practice.profile.ProfileState;
+import me.drizzy.practice.util.essentials.Essentials;
 import org.bukkit.ChatColor;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.duel.DuelRequest;
@@ -140,7 +141,7 @@ public class Party extends Team
             PlayerUtil.reset(player, false);
             profile.refreshHotbar();
             profile.handleVisibility();
-            Array.getInstance().getEssentials().teleportToSpawn(player);
+            Essentials.teleportToSpawn(player);
         }
         for (final TeamPlayer teamPlayer : this.getTeamPlayers()) {
             final Player otherPlayer = teamPlayer.getPlayer();

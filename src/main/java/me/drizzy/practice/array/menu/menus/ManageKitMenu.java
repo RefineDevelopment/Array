@@ -50,8 +50,9 @@ public class ManageKitMenu extends Menu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
-            kit.delete();
-            kit.save();
+            player.performCommand("kit delete " + kit.getName());
+            player.closeInventory();
+            new ManageKitMenu(kit).openMenu(player);
         }
     }
 

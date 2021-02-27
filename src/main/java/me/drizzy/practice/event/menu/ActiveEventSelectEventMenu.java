@@ -5,7 +5,6 @@ import me.drizzy.practice.event.EventType;
 import me.drizzy.practice.event.types.brackets.command.BracketsJoinCommand;
 import me.drizzy.practice.event.types.lms.command.LMSJoinCommand;
 import me.drizzy.practice.event.types.parkour.command.ParkourJoinCommand;
-import me.drizzy.practice.event.types.skywars.command.SkyWarsJoinCommand;
 import me.drizzy.practice.event.types.spleef.command.SpleefJoinCommand;
 import me.drizzy.practice.event.types.sumo.command.SumoJoinCommand;
 import me.drizzy.practice.util.CC;
@@ -65,12 +64,6 @@ public class ActiveEventSelectEventMenu extends Menu {
                     i++;
                 }
             }
-            if (eventType.getTitle().equals("&b&lSkywars")) {
-                if (Array.getInstance().getSkyWarsManager().getActiveSkyWars() != null && Array.getInstance().getSkyWarsManager().getActiveSkyWars().isWaiting()) {
-                    buttons.put(i, new SelectEventButton(EventType.SKYWARS));
-                    i++;
-                }
-            }
         }
         return buttons;
     }
@@ -100,9 +93,6 @@ public class ActiveEventSelectEventMenu extends Menu {
                     break;
                 case "&b&lSpleef":
                     lore=Array.getInstance().getSpleefManager().getActiveSpleef().getLore();
-                    break;
-                case "&b&lSkywars":
-                    lore=Array.getInstance().getSkyWarsManager().getActiveSkyWars().getLore();
                     break;
             }
             lore.add("&bClick to join");
@@ -134,9 +124,6 @@ public class ActiveEventSelectEventMenu extends Menu {
                     break;
                 case "&b&lSpleef":
                     SpleefJoinCommand.execute(player);
-                    break;
-                case "&b&lSkywars":
-                    SkyWarsJoinCommand.execute(player);
                     break;
             }
         }

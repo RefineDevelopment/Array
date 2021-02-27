@@ -1,11 +1,9 @@
 package me.drizzy.practice.arena;
 
 import me.drizzy.practice.Array;
-import me.drizzy.practice.arena.impl.KoTHArena;
 import me.drizzy.practice.arena.impl.SharedArena;
 import me.drizzy.practice.arena.impl.StandaloneArena;
 import me.drizzy.practice.kit.Kit;
-import me.drizzy.practice.util.KothPoint;
 import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.LocationUtil;
 import lombok.Getter;
@@ -30,15 +28,8 @@ public class Arena {
     protected Location spawn1;
     @Setter
     protected Location spawn2;
-    @Setter
-    protected Location point1;
-    @Setter
-    protected Location point2;
     @Getter
     protected boolean active;
-    @Getter
-    @Setter
-    private KothPoint point;
     @Getter
     @Setter
     private List<String> kits = new ArrayList<>();
@@ -66,8 +57,6 @@ public class Arena {
                     arena = new StandaloneArena(arenaName);
                 } else if (arenaType == ArenaType.SHARED) {
                     arena = new SharedArena(arenaName);
-                } else if (arenaType == ArenaType.KOTH) {
-                    arena = new KoTHArena(arenaName);
                 } else {
                     continue;
                 }
@@ -85,13 +74,6 @@ public class Arena {
                 if (configuration.contains(path + ".spawn2")) {
                     arena.setSpawn2(LocationUtil.deserialize(configuration.getString(path + ".spawn2")));
                 }
-
-                if (configuration.contains(path + ".point1") && configuration.contains(path + ".point2")) {
-                    arena.setPoint1(LocationUtil.deserialize(configuration.getString(path + ".point1")));
-                    arena.setPoint2(LocationUtil.deserialize(configuration.getString(path + ".point2")));
-                    arena.setPoint(new KothPoint(arena.point1, arena.point2));
-                }
-
 
                 if (configuration.contains(path + ".kits")) {
                     for (String kitName : configuration.getStringList(path + ".kits")) {
@@ -155,10 +137,6 @@ public class Arena {
 
             if (!arena.getKits().contains(kit.getName())) continue;
 
-            if (arena.getType() == ArenaType.KOTH) {
-                _arenas.add(arena);
-            }
-
             if (!arena.isActive() && (arena.getType() == ArenaType.STANDALONE || arena.getType() == ArenaType.DUPLICATE)) {
                 _arenas.add(arena);
             } else if (!kit.getGameRules().isBuild() && arena.getType() == ArenaType.SHARED) {
@@ -182,7 +160,7 @@ public class Arena {
     }
 
     public int getMaxBuildHeight() {
-        int highest = (int) (spawn1.getY() >= spawn2.getY() ? spawn1.getY() : spawn2.getY());
+        int highest = (int) (Math.max(spawn1.getY(), spawn2.getY()));
         return highest + 5;
     }
 
@@ -202,24 +180,9 @@ public class Arena {
         return spawn2.clone();
     }
 
-    public Location getPoint1() {
-        if (point1 == null) {
-            return null;
-        }
-
-        return point1.clone();
-    }
-
-    public Location getPoint2() {
-        if (point2 == null) {
-            return null;
-        }
-
-        return point2.clone();
-    }
 
     public void setActive(boolean active) {
-        if (getType() != ArenaType.SHARED && getType() != ArenaType.KOTH) {
+        if (getType() != ArenaType.SHARED) {
             this.active = active;
         }
     }

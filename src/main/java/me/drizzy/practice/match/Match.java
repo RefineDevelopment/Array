@@ -17,6 +17,7 @@ import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.essentials.Essentials;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.external.TimeUtil;
 import me.drizzy.practice.util.nametag.NameTags;
@@ -37,6 +38,7 @@ import org.bukkit.util.Vector;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
 public abstract class Match {
@@ -276,15 +278,15 @@ public abstract class Match {
 
         for (Player player : playersAndSpectators) {
             if (teamPlayer.isDisconnected()) {
-                player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.YELLOW + " has disconnected.");
+                player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.GRAY + " has disconnected.");
                 continue;
             }
             if ((!isHCFMatch()) && getKit().getGameRules().isParkour()) {
                 player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.YELLOW + " has won.");
             } else if (killerPlayer == null) {
-                player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() +	CC.YELLOW + " has died.");
+                player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() +	CC.GRAY + " has died.");
             } else {
-                player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.YELLOW + " was killed by " + getRelationColor(player, killerPlayer) + killerPlayer.getName() + CC.YELLOW + ".");
+                player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.GRAY + " was killed by " + getRelationColor(player, killerPlayer) + killerPlayer.getName() + CC.GRAY + ".");
             }
         }
 
@@ -293,9 +295,14 @@ public abstract class Match {
         final Profile deadProfile = Profile.getByUuid(deadPlayer.getUniqueId());
         if (deadProfile.getSettings().isLightning()) {
             final PacketContainer lightningPacket = this.createLightningPacket(deadPlayer.getLocation());
-            final float thunderSoundPitch = 0.8f + new Random().nextFloat() * 0.2f;
+            float thunderSoundPitch = 0.8f + ThreadLocalRandom.current().nextFloat() * 0.2f;
+            float explodeSoundPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
             for (final Player onlinePlayer : this.getPlayers()) {
                 onlinePlayer.playSound(deadPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
+                if (killerPlayer != null) {
+                    onlinePlayer.playSound(killerPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
+                    onlinePlayer.playSound(killerPlayer.getLocation(), Sound.EXPLODE, 2.0f, explodeSoundPitch);
+                }
                 this.sendLightningPacket(onlinePlayer, lightningPacket);
             }
         }
@@ -327,14 +334,14 @@ public abstract class Match {
         }
     }
 
-    private PacketContainer createLightningPacket(final Location location) {
+    private PacketContainer createLightningPacket(Location location) {
         final PacketContainer lightningPacket = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
         lightningPacket.getModifier().writeDefaults();
         lightningPacket.getIntegers().write(0, 128);
         lightningPacket.getIntegers().write(4, 1);
         lightningPacket.getIntegers().write(1, (int)(location.getX() * 32.0));
-        lightningPacket.getIntegers().write(2, (int)(location.getY() * 32.0));
-        lightningPacket.getIntegers().write(3, (int)(location.getZ() * 32.0));
+        lightningPacket.getIntegers().write(2, ((int)(location.getY() * 32.0)));
+        lightningPacket.getIntegers().write(3, ((int)(location.getZ() * 32.0)));
         return lightningPacket;
     }
 
@@ -457,7 +464,7 @@ public abstract class Match {
         profile.refreshHotbar();
         profile.handleVisibility();
 
-        Array.getInstance().getEssentials().teleportToSpawn(player);
+        Essentials.teleportToSpawn(player);
 
         player.spigot().setCollidesWithEntities(true);
 
@@ -490,6 +497,15 @@ public abstract class Match {
         double three = one + two;
         three = three / 2;
         return three;
+    }
+
+    public Location getMidSpawn() {
+        Location spawn=getArena().getSpawn1();
+        Location spawn2=getArena().getSpawn2();
+        Location midSpawn=getArena().getSpawn1();
+        midSpawn.setX(getAverage(spawn.getX(), spawn2.getX()));
+        midSpawn.setZ(getAverage(spawn.getZ(), spawn2.getZ()));
+        return midSpawn;
     }
 
     public abstract boolean isSoloMatch();
@@ -553,22 +569,6 @@ public abstract class Match {
     public abstract int getRoundsNeeded(TeamPlayer teamPlayer);
 
     public abstract int getRoundsNeeded(Team Team);
-
-    public abstract int getTeamACapturePoints();
-
-    public abstract void setTeamACapturePoints(int number);
-
-    public abstract int getTeamBCapturePoints();
-
-    public abstract void setTeamBCapturePoints(int number);
-
-    public abstract int getTimer();
-
-    public abstract void setTimer(int number);
-
-    public abstract Player getCapper();
-
-    public abstract void setCapper(Player player);
 
     public abstract ChatColor getRelationColor(Player viewer, Player target);
 

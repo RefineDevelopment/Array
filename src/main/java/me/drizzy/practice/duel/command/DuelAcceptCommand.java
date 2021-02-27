@@ -1,5 +1,6 @@
 package me.drizzy.practice.duel.command;
 
+import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.arena.impl.StandaloneArena;
 import me.drizzy.practice.duel.DuelRequest;
@@ -106,7 +107,7 @@ public class DuelAcceptCommand {
                 return;
             }
         }
-        if (!arena.getType().equals(ArenaType.SHARED) && !arena.getType().equals(ArenaType.KOTH)) {
+        if (!arena.getType().equals(ArenaType.SHARED)) {
             arena.setActive(true);
         }
 
@@ -164,11 +165,21 @@ public class DuelAcceptCommand {
             }
         }
         if (!request.isParty()) {
-            match.broadcastMessage(CC.translate("&b&lDuel Accepted!"));
-            match.broadcastMessage("");
-            match.broadcastMessage(CC.translate(" &b● &fType: &b" + "Duel"));
+            for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Start-Message.Solo") ) {
+                final String opponentMessages=this.formatMessages(string, player.getDisplayName(), target.getDisplayName());
+                final String message=CC.translate(opponentMessages).replace("{kit}", request.getKit().getName().replace("{arena}", request.getArena().getName()));
+                match.broadcastMessage(message);
+            }
         }
         match.start();
+    }
+
+    private String formatMessages(final String string, final String player1, final String player2) {
+        String player1Format;
+        String player2Format;
+        player1Format = player1;
+        player2Format = player2;
+        return string.replace("{player1}", player1Format).replace("{player2}", player2Format);
     }
 
 

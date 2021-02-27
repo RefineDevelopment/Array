@@ -27,7 +27,6 @@ public enum HotbarItem
     LMS_LEAVE("lms leave"),
     PARKOUR_LEAVE("parkour leave"),
     PARKOUR_SPAWN(null),
-    SKYWARS_LEAVE("skywars leave"), 
     SPLEEF_LEAVE("spleef leave"),
     REMATCH_REQUEST("rematch"), 
     REMATCH_ACCEPT("rematch"), 

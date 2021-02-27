@@ -10,8 +10,10 @@ import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.Circle;
 import me.drizzy.practice.util.PlayerSnapshot;
 import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.essentials.Essentials;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.external.TimeUtil;
@@ -205,7 +207,7 @@ public class Spleef {
 		profile.setSpleef(null);
 		profile.refreshHotbar();
 
-		Array.getInstance().getEssentials().teleportToSpawn(player);
+		Essentials.teleportToSpawn(player);
 
 		new BukkitRunnable() {
 			@Override
@@ -257,7 +259,7 @@ public class Spleef {
 				profile.setSpleef(null);
 				profile.refreshHotbar();
 
-				Array.getInstance().getEssentials().teleportToSpawn(player);
+				Essentials.teleportToSpawn(player);
 			}
 		}
 
@@ -335,11 +337,14 @@ public class Spleef {
 		int i = 0;
 		for (Player player : this.getRemainingPlayers()) {
 			if (player != null) {
-				player.teleport(Array.getInstance().getSpleefManager().getSpleefSpectator());
-				i++;
-
+				Location midSpawn = Array.getInstance().getSpleefManager().getSpleefSpectator();
+				List<Location> circleLocations = Circle.getCircle(midSpawn, 7, this.getPlayers().size());
+				Location center = midSpawn.clone();
+				Location loc = circleLocations.get(i);
+				Location target = loc.setDirection(center.subtract(loc).toVector());
+				player.teleport(target.add(0, 0.5, 0));
+				circleLocations.remove(i);				i++;
 				Profile profile = Profile.getByUuid(player.getUniqueId());
-
 				if (profile.isInSpleef()) {
 					profile.refreshHotbar();
 				}
@@ -415,6 +420,6 @@ public class Spleef {
 		profile.refreshHotbar();
 		profile.handleVisibility();
 
-		Array.getInstance().getEssentials().teleportToSpawn(player);
+		Essentials.teleportToSpawn(player);
 	}
 }

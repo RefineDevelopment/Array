@@ -42,7 +42,6 @@ public class Hotbar
         Hotbar.items.put(HotbarItem.LMS_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave LMS" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.PARKOUR_SPAWN, new ItemBuilder(Material.ARROW).name(CC.GREEN + "Back to Checkpoint" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.PARKOUR_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Parkour" + CC.GRAY + " (Right-Click)").build());
-        Hotbar.items.put(HotbarItem.SKYWARS_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Skywars" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.SPLEEF_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Spleef" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.REMATCH_REQUEST, new ItemBuilder(Material.BLAZE_POWDER).name(CC.AQUA + "Request Rematch" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarItem.REMATCH_ACCEPT, new ItemBuilder(Material.DIAMOND).name(CC.AQUA + "Accept Rematch" + CC.GRAY + " (Right-Click)").build());
@@ -116,9 +115,6 @@ public class Hotbar
             case MATCH_SPECTATE: {
                 toReturn[0] = Hotbar.items.get(HotbarItem.SPECTATE_STOP);
                 break;
-            }
-            case SKYWARS_SPECTATE: {
-                toReturn[0] = Hotbar.items.get(HotbarItem.SKYWARS_LEAVE);
             }
         }
         return toReturn;

@@ -29,8 +29,9 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/Profile.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/pom.xml" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/drizzy/practice/hologram/PlaceholderAPIExtension.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/Profile.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/drizzy/practice/Array.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="MavenImportPreferences">
@@ -51,28 +52,28 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.16113281" />
     <property name="project.structure.side.proportion" value="0.15034965" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="J:\Minecraft Servers\Source Codes\My Projects\Array\src\main\java\me\drizzy\practice\arena\command" />
+      <recent name="J:\Minecraft Servers\Source Codes\My Projects\Array\src\main\java\me\drizzy\practice\array\commands" />
+      <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\array\commands\combo" />
+      <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\array\knockback" />
       <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\util" />
-      <recent name="J:\Minecraft Servers\Source Codes\Array Backup\ResolvePractice-master\src\main\java\rip\resolve\Practice\scoreboard" />
-      <recent name="J:\Minecraft Servers\Source Codes\Resolve\ResolvePractice-master\src\main\java\rip\resolve\Practice\util\external\menu\deprecated" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="rip.resolve.practice.array.commands" />
       <recent name="rip.resolve.practice.match.types" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="J:\Minecraft Servers\Source Codes\My Projects\Array\src\main\java\me\drizzy\practice\array\commands" />
-      <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\array\commands\combo" />
-      <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\array\knockback" />
+    <key name="MoveFile.RECENT_KEYS">
       <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\util" />
-      <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice" />
+      <recent name="J:\Minecraft Servers\Source Codes\Array Backup\ResolvePractice-master\src\main\java\rip\resolve\Practice\scoreboard" />
+      <recent name="J:\Minecraft Servers\Source Codes\Resolve\ResolvePractice-master\src\main\java\rip\resolve\Practice\util\external\menu\deprecated" />
     </key>
   </component>
   <component name="RunManager">
@@ -113,18 +114,18 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="174" y="26" width="1092" height="834" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.860@0.0.1440.860" timestamp="1611274343760" />
-    <state x="525" y="136" key="#com.intellij.ide.util.MemberChooser" timestamp="1612337878772">
+    <state x="525" y="136" key="#com.intellij.ide.util.MemberChooser" timestamp="1614376475629">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="525" y="136" key="#com.intellij.ide.util.MemberChooser/0.0.1440.860@0.0.1440.860" timestamp="1612337878772" />
+    <state x="525" y="136" key="#com.intellij.ide.util.MemberChooser/0.0.1440.860@0.0.1440.860" timestamp="1614376475629" />
     <state x="501" y="324" width="539" height="217" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1612678358247">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="501" y="324" width="539" height="217" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1440.860@0.0.1440.860" timestamp="1612678358247" />
-    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1612498178167">
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1614174180083">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1440.860@0.0.1440.860" timestamp="1612498178167" />
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1440.860@0.0.1440.860" timestamp="1614174180083" />
     <state x="450" y="177" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1612319877933">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
@@ -149,10 +150,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="300" y="165" key="IDE.errors.dialog/0.0.1440.860@0.0.1440.860" timestamp="1610194356761" />
-    <state x="221" y="9" key="SettingsEditor" timestamp="1611990256955">
+    <state x="221" y="9" key="SettingsEditor" timestamp="1614172080236">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="221" y="9" key="SettingsEditor/0.0.1440.860@0.0.1440.860" timestamp="1611990256955" />
+    <state x="221" y="9" key="SettingsEditor/0.0.1440.860@0.0.1440.860" timestamp="1614172080236" />
     <state width="498" height="446" key="SwitcherDM" timestamp="1609941511753">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
@@ -161,10 +162,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="331" y="81" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1440.860@0.0.1440.860" timestamp="1612347988695" />
-    <state x="427" y="144" width="650" height="716" key="find.popup" timestamp="1613674364501">
+    <state x="427" y="144" width="650" height="716" key="find.popup" timestamp="1614385505488">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="427" y="144" width="650" height="716" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1613674364501" />
+    <state x="427" y="144" width="650" height="716" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1614385505488" />
     <state x="563" y="188" key="refactoring.ChangeSignatureDialog" timestamp="1610115661409">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
@@ -173,9 +174,9 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="376" y="195" key="run.anything.popup/0.0.1440.860@0.0.1440.860" timestamp="1611100594374" />
-    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1613118427318">
+    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1613869878133">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1613118427318" />
+    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1613869878133" />
   </component>
 </project>

@@ -8,6 +8,5 @@ import lombok.Getter;
 public enum ArenaType {
     STANDALONE,
     SHARED,
-    DUPLICATE,
-    KOTH
+    DUPLICATE
 }

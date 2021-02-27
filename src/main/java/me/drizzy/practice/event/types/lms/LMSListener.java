@@ -172,11 +172,11 @@ public class LMSListener implements Listener {
                 }
                 if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
                     if (event.getItem().equals(Hotbar.getItems().get(HotbarItem.DEFAULT_KIT))) {
-                        KitLoadout kitLoadout = LMS.getKit().getKitLoadout();
+                        KitLoadout kitLoadout = profile.getLms().getKit().getKitLoadout();
                         event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                         event.getPlayer().getInventory().setContents(kitLoadout.getContents());
                         event.getPlayer().getActivePotionEffects().clear();
-                        event.getPlayer().addPotionEffects(LMS.getKit().getKitLoadout().getEffects());
+                        event.getPlayer().addPotionEffects(profile.getLms().getKit().getKitLoadout().getEffects());
                         event.getPlayer().updateInventory();
                         event.setCancelled(true);
                         return;
@@ -189,12 +189,12 @@ public class LMSListener implements Listener {
                     if (displayName.startsWith("Kit: ")) {
                         String kitName = displayName.replace("Kit: ", "");
 
-                        for (KitLoadout kitLoadout : profile.getKitData().get(LMS.getKit()).getLoadouts()) {
+                        for (KitLoadout kitLoadout : profile.getKitData().get(profile.getLms().getKit()).getLoadouts()) {
                             if (kitLoadout != null && ChatColor.stripColor(kitLoadout.getCustomName()).equals(kitName)) {
                                 event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                                 event.getPlayer().getInventory().setContents(kitLoadout.getContents());
                                 event.getPlayer().getActivePotionEffects().clear();
-                                event.getPlayer().addPotionEffects(LMS.getKit().getKitLoadout().getEffects());
+                                event.getPlayer().addPotionEffects(profile.getLms().getKit().getKitLoadout().getEffects());
                                 event.getPlayer().updateInventory();
                                 event.setCancelled(true);
                                 return;

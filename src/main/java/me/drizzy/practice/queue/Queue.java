@@ -9,16 +9,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import me.drizzy.practice.util.PlayerUtil;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class Queue {
 
     @Getter
     private static final List<Queue> queues = new ArrayList<>();
+
+    @Getter
+    private static final Map<Kit, Queue> queuemap = new HashMap<>();
 
     @Getter
     private final UUID uuid = UUID.randomUUID();
@@ -34,6 +34,7 @@ public class Queue {
         this.type = type;
 
         queues.add(this);
+        queuemap.put(kit, this);
     }
 
     public static Queue getByUuid(UUID uuid) {
@@ -44,6 +45,10 @@ public class Queue {
         }
 
         return null;
+    }
+
+    public static Queue getByKit(Kit kit) {
+        return queuemap.get(kit);
     }
 
     public static Queue getByPredicate(Predicate<Queue> predicate) {

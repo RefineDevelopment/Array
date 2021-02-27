@@ -1,5 +1,6 @@
 package me.drizzy.practice.util.events;
 
+import me.drizzy.practice.Array;
 import org.bukkit.Difficulty;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,7 +19,7 @@ public class WorldListener implements Listener {
 
     @EventHandler
     public void onChunkUnload(ChunkUnloadEvent event) {
-        event.setCancelled(true);
+        event.setCancelled(Array.getInstance().getMainConfig().getBoolean("performance.mode"));
     }
 
     @EventHandler

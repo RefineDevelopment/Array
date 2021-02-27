@@ -1,5 +1,6 @@
 package me.drizzy.practice.event.types.lms;
 
+import me.drizzy.practice.util.essentials.Essentials;
 import org.bukkit.Location;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.event.types.lms.player.LMSPlayer;
@@ -42,7 +43,7 @@ public class LMS {
     protected static String EVENT_PREFIX =CC.translate("&8[&bLMS&8] &r");
     @Getter
     @Setter
-    static private Kit kit;
+    private Kit kit;
     private final String name;
     @Setter
     private LMSState state = LMSState.WAITING;
@@ -70,7 +71,7 @@ public class LMS {
         this.name = player.getName();
         this.host = new PlayerSnapshot(player.getUniqueId(), player.getName());
         maxPlayers = 100;
-        LMS.kit = kit;
+        this.kit = kit;
     }
 
     public List<String> getLore() {
@@ -83,7 +84,7 @@ public class LMS {
         toReturn.add(CC.translate("&bKit: &r" + kit.getName()));
 
         if (LMS.isWaiting()) {
-            toReturn.add("&bPlayers: &r" + LMS.getEventPlayers().size() + "/" + LMS.getMaxPlayers());
+            toReturn.add("&bPlayers: &r" + LMS.getEventPlayers().size() + "/" + getMaxPlayers());
             toReturn.add("");
 
             if (LMS.getCooldown() == null) {
@@ -160,7 +161,7 @@ public class LMS {
     }
 
     public void handleJoin(Player player) {
-        if (this.eventPlayers.size() >= this.maxPlayers) {
+        if (this.eventPlayers.size() >= maxPlayers) {
             player.sendMessage(CC.RED + "The event is full");
             return;
         }
@@ -211,7 +212,7 @@ public class LMS {
         profile.setLms(null);
         profile.refreshHotbar();
 
-        Array.getInstance().getEssentials().teleportToSpawn(player);
+        Essentials.teleportToSpawn(player);
 
         new BukkitRunnable() {
             @Override
@@ -264,7 +265,7 @@ public class LMS {
             PlayerUtil.reset(player, false);
         profile.refreshHotbar();
 
-                Array.getInstance().getEssentials().teleportToSpawn(player);
+                Essentials.teleportToSpawn(player);
             }
         }
 
@@ -434,6 +435,6 @@ public class LMS {
         profile.refreshHotbar();
         profile.handleVisibility();
 
-        Array.getInstance().getEssentials().teleportToSpawn(player);
+        Essentials.teleportToSpawn(player);
     }
 }

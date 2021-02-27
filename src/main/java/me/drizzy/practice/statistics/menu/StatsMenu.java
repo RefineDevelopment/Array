@@ -53,13 +53,11 @@ public class StatsMenu extends Menu {
             List<String> lore = new ArrayList<>();
             Profile profile = Profile.getByUuid(target.getUniqueId());
             String elo = kit.getGameRules().isRanked() ? Integer.toString(profile.getKitData().get(kit).getElo()) : "N/A";
-            String wins = Integer.toString(profile.getKitData().get(kit).getWon());
-            String losses = Integer.toString(profile.getKitData().get(kit).getLost());
-            lore.add("");
-            lore.add(" &b&lStatistics");
-            lore.add("  &bELO: &f" + elo);
-            lore.add("  &bWins: &f" + wins);
-            lore.add("  &bLosses: &f" + losses);
+            lore.add("&bELO: &f" + elo);
+            lore.add("&bWins: &f" + profile.getKitData().get(kit).getWon());
+            lore.add("&bKills: &f" + profile.getKitData().get(kit).getKills());
+            lore.add("&bLosses: &f" + profile.getKitData().get(kit).getLost());
+            lore.add("&bDeaths: &f" + profile.getKitData().get(kit).getDeaths());
 
             return new ItemBuilder(kit.getDisplayIcon())
                     .name("&b&l" + kit.getName() + " &7｜ &fStats")
@@ -79,11 +77,15 @@ public class StatsMenu extends Menu {
             lore.add("");
             lore.add("&b&lStatistics");
             lore.add(" &bELO: &r" + profile.getGlobalElo());
-            lore.add(" &bTotal Wins: &f" + profile.getTotalWins());
-            lore.add(" &bTotal Losses: &f" + profile.getTotalLost());
+            lore.add(" &bWins: &f" + profile.getTotalWins());
+            lore.add(" &bKills: &f" + profile.getTotalKills());
+            lore.add(" &bLosses: &f" + profile.getTotalLost());
+            lore.add(" &bDeaths: &f" + profile.getTotalDeaths());
             lore.add("");
             lore.add("&b&lOther");
             lore.add(" &bLeague: &f" + profile.getEloLeague());
+            lore.add(" &bW/L Ratio: &f" + profile.getWLR());
+            lore.add(" &bK/D Ratio: &f" + profile.getKDR());
 
             return new ItemBuilder(SkullCreator.itemFromUuid(target.getUniqueId()))
                     .name("&b&lGlobal &7｜ &fStats")

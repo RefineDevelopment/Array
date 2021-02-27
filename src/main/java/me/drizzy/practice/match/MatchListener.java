@@ -69,26 +69,21 @@ public class MatchListener implements Listener {
     public void onBlockBreakEvent(final BlockBreakEvent event) {
         final Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
         if (profile.isInFight()) {
-            final Match match = profile.getMatch();
+            Match match = profile.getMatch();
             if (!profile.getMatch().isHCFMatch()) {
                 if (match.getKit().getGameRules().isBuild() && profile.getMatch().isFighting()) {
                     if (match.getKit().getGameRules().isSpleef()) {
-                        if (event.getBlock().getType() == Material.SNOW_BLOCK || event.getBlock().getType() == Material.SNOW) {
+                        if (event.getBlock().getType() == Material.SNOW_BLOCK ||
+                            event.getBlock().getType() == Material.SNOW) {
                             match.getChangedBlocks().add(event.getBlock().getState());
                             event.getBlock().setType(Material.AIR);
                             event.getPlayer().getInventory().addItem(new ItemStack(Material.SNOW_BALL, 4));
                             event.getPlayer().updateInventory();
-                        }
-                    } else if (match.getKit().getGameRules().isBoxuhc()) {
-                            match.getBrokenBlocks().add(event.getBlock().getLocation());
-                            event.getBlock().setType(Material.AIR);
-                            event.getPlayer().getInventory().addItem(new ItemStack(Material.WOOD, 1));
-                            event.getPlayer().updateInventory();
-                            event.setCancelled(false);
-                    } else if (!match.getPlacedBlocks().remove(event.getBlock().getLocation())) {
-                        if (!match.getKit().getGameRules().isBoxuhc()) {
+                        } else {
                             event.setCancelled(true);
                         }
+                    } else if (!match.getPlacedBlocks().remove(event.getBlock().getLocation())) {
+                        event.setCancelled(true);
                     }
                 } else {
                     event.setCancelled(true);
@@ -257,6 +252,8 @@ public class MatchListener implements Listener {
         Profile profile = Profile.getByUuid(event.getEntity().getUniqueId());
         ((CraftPlayer)event.getEntity().getPlayer()).getHandle().setKnockback(knockbackProfile);
         event.getEntity().getPlayer().setNoDamageTicks(20);
+        Player player = event.getEntity().getPlayer();
+        player.teleport(player.getLocation().add(0.0, 2.0, 0.0));
         if (profile.isInFight()) {
             event.getDrops().clear();
             if (PlayerUtil.getLastDamager(event.getEntity()) instanceof CraftPlayer) {

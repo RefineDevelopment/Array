@@ -6,7 +6,6 @@ import org.bukkit.Material;
 import me.drizzy.practice.event.types.brackets.command.BracketsHostCommand;
 import me.drizzy.practice.event.types.lms.command.LMSHostCommand;
 import me.drizzy.practice.event.types.parkour.command.ParkourHostCommand;
-import me.drizzy.practice.event.types.skywars.command.SkyWarsHostCommand;
 import me.drizzy.practice.event.types.spleef.command.SpleefHostCommand;
 import me.drizzy.practice.event.types.sumo.command.SumoHostCommand;
 import me.drizzy.practice.util.CC;
@@ -42,11 +41,10 @@ public class EventSelectEventMenu extends Menu {
                 buttons.put(glassslots, new GlassButton());
             }
         }
-        buttons.put(13, new SelectEventButton(EventType.LMS));
-        buttons.put(12, new SelectEventButton(EventType.BRACKETS));
-        buttons.put(11, new SelectEventButton(EventType.SUMO));
-        buttons.put(14, new SelectEventButton(EventType.PARKOUR));
-        buttons.put(15, new SelectEventButton(EventType.SKYWARS));
+        buttons.put(14, new SelectEventButton(EventType.LMS));
+        buttons.put(13, new SelectEventButton(EventType.BRACKETS));
+        buttons.put(12, new SelectEventButton(EventType.SUMO));
+        buttons.put(15, new SelectEventButton(EventType.PARKOUR));
         buttons.put(30, new SelectEventButton(EventType.SPLEEF));
         buttons.put(31, new SelectEventButton(EventType.RUNNER));
         buttons.put(32, new SelectEventButton(EventType.KOTH));
@@ -174,14 +172,6 @@ public class EventSelectEventMenu extends Menu {
                     case "&b&lSpleef":
                         if (player.hasPermission("practice.host.spleef")) {
                             SpleefHostCommand.execute(player);
-                        } else {
-                            player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
-                            player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.purgemc.club &7!"));
-                        }
-                        break;
-                    case "&b&lSkywars":
-                        if (player.hasPermission("practice.host.skywars")) {
-                            SkyWarsHostCommand.execute(player);
                         } else {
                             player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
                             player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.purgemc.club &7!"));

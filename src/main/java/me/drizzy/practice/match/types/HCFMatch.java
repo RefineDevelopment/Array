@@ -2,6 +2,7 @@ package me.drizzy.practice.match.types;
 
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.queue.QueueType;
+import me.drizzy.practice.util.essentials.Essentials;
 import pt.foxspigot.jar.knockback.KnockbackModule;
 import pt.foxspigot.jar.knockback.KnockbackProfile;
 import me.drizzy.practice.Array;
@@ -27,6 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 public class HCFMatch extends Match {
@@ -109,7 +111,7 @@ public class HCFMatch extends Match {
             player.teleport(spawn.add(0, 2, 0));
         }
 
-        getPlayers().forEach(player1 -> ((CraftPlayer)player1).getHandle().setKnockback(KnockbackModule.INSTANCE.profiles.get(Kit.getByName("NoDebuff").getKnockbackProfile())));
+        getPlayers().forEach(player1 -> ((CraftPlayer)player1).getHandle().setKnockback(KnockbackModule.INSTANCE.profiles.get(Objects.requireNonNull(Kit.getByName("NoDebuff")).getKnockbackProfile())));
     }
 
     @Override
@@ -175,15 +177,14 @@ public class HCFMatch extends Match {
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
                             NameTags.reset(player, firstTeamPlayer.getPlayer());
-                        PlayerUtil.reset(player, false);
-        profile.refreshHotbar();
+                            PlayerUtil.reset(player, false);
+                            profile.refreshHotbar();
                             profile.handleVisibility();
                             KnockbackProfile knockbackProfile = KnockbackModule.getDefault();
                             ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
-
-                            Array.getInstance().getEssentials().teleportToSpawn(player);
-                        PlayerUtil.reset(player, false);
-        profile.refreshHotbar();
+                            Essentials.teleportToSpawn(player);
+                            PlayerUtil.reset(player, false);
+                            profile.refreshHotbar();
                         }
                     }
                 }
@@ -220,7 +221,7 @@ public class HCFMatch extends Match {
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
         components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7(Click name to view inventory)").create());
-        components.add(new ChatComponentBuilder("").parse("").create());
+        components.add(new ChatComponentBuilder("").create());
         components.add(winnerInventories.create());
         components.add(loserInventories.create());
         components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
@@ -233,19 +234,12 @@ public class HCFMatch extends Match {
 
     @Override
     public boolean canEnd() {
-//		if (getKit().getGameRules().isSumo()) {
-//			return (teamA.getDeadCount() + teamA.getDisconnectedCount()) == teamA.getTeamPlayers().size() ||
-//			       (teamB.getDeadCount() + teamB.getDisconnectedCount()) == teamB.getTeamPlayers().size() ||
-//			       teamARoundWins == 3 || teamBRoundWins == 3;
-//		} else {
         return teamA.getAliveTeamPlayers().isEmpty() || teamB.getAliveTeamPlayers().isEmpty();
-//		}
     }
 
     @Override
     public void onDeath(Player player, Player killer) {
-        // TODO: request teams messages directly then request global messages to spectators
-        // Team roundLoser = this.getOpponentTeam(player);
+
         TeamPlayer teamPlayer = getTeamPlayer(player);
         getSnapshots().add(new MatchSnapshot(teamPlayer));
 
@@ -253,8 +247,8 @@ public class HCFMatch extends Match {
 
         if (!canEnd() && !teamPlayer.isDisconnected()) {
             Profile profile = Profile.getByUuid(player.getUniqueId());
-        PlayerUtil.reset(player, false);
-        profile.refreshHotbar();
+            PlayerUtil.reset(player, false);
+            profile.refreshHotbar();
             player.setAllowFlight(true);
             player.setFlying(true);
             profile.setState(ProfileState.SPECTATE_MATCH);
@@ -444,47 +438,6 @@ public class HCFMatch extends Match {
         } else {
             return -1;
         }
-    }
-
-
-    @Override
-    public int getTeamACapturePoints() {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public void setTeamACapturePoints(int number) {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public int getTeamBCapturePoints() {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public void setTeamBCapturePoints(int number) {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public int getTimer() {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public void setTimer(int number) {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public Player getCapper() {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public void setCapper(Player player) {
-        throw new UnsupportedOperationException("No");
     }
 
     @Override

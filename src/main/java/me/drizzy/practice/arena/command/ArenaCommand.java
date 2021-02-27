@@ -21,4 +21,5 @@ public class ArenaCommand {
         player.sendMessage(CC.translate("&7» &b/arena save &7- Save Arenas"));
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
     }
+
 }

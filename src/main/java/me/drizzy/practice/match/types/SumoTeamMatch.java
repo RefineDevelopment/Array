@@ -1,7 +1,6 @@
 package me.drizzy.practice.match.types;
 
-import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.queue.QueueType;
+import lombok.Getter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.kit.Kit;
@@ -12,11 +11,12 @@ import me.drizzy.practice.match.task.MatchStartTask;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.profile.ProfileState;
+import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.nametag.NameTags;
-import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
@@ -29,6 +29,8 @@ import pt.foxspigot.jar.knockback.KnockbackProfile;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static me.drizzy.practice.util.essentials.Essentials.teleportToSpawn;
 
 @Getter
 public class SumoTeamMatch extends Match {
@@ -182,15 +184,14 @@ public class SumoTeamMatch extends Match {
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
-                        PlayerUtil.reset(player, false);
-        profile.refreshHotbar();
+                            PlayerUtil.reset(player, false);
+                            profile.refreshHotbar();
                             profile.handleVisibility();
                             KnockbackProfile knockbackProfile = KnockbackModule.getDefault();
                             ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
-
-                            Array.getInstance().getEssentials().teleportToSpawn(player);
-                        PlayerUtil.reset(player, false);
-        profile.refreshHotbar();
+                            teleportToSpawn(player);
+                            PlayerUtil.reset(player, false);
+                            profile.refreshHotbar();
                         }
                     }
                 }
@@ -227,7 +228,7 @@ public class SumoTeamMatch extends Match {
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
         components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7(Click name to view inventory)").create());
-        components.add(new ChatComponentBuilder("").parse("").create());
+        components.add(new ChatComponentBuilder("").create());
         components.add(winnerInventories.create());
         components.add(loserInventories.create());
         components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
@@ -459,46 +460,6 @@ public class SumoTeamMatch extends Match {
     }
 
     @Override
-    public int getTeamACapturePoints() {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public void setTeamACapturePoints(int number) {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public int getTeamBCapturePoints() {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public void setTeamBCapturePoints(int number) {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public int getTimer() {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public void setTimer(int number) {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public Player getCapper() {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
-    public void setCapper(Player player) {
-        throw new UnsupportedOperationException("No");
-    }
-
-    @Override
     public void onDeath(Player player, Player killer) {
 
         TeamPlayer dyingTeam = getTeamPlayer(player);
@@ -560,17 +521,14 @@ public class SumoTeamMatch extends Match {
 
                     //duh
                     new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
-                    this.broadcastMessage(CC.translate(" &b● &fTeams: &b" + this.getTeamA().getLeader().getDisplayName() + CC.GRAY + " vs " + CC.AQUA + this.getTeamB().getLeader().getDisplayName()));
-                    this.broadcastMessage(CC.translate(" &b● &fArena: &b" + this.getArena().getName()));
-                    this.broadcastMessage(CC.translate(" &b● &fPoints: &a" + this.teamA.getSumoRounds() + " &7&l| &c" + teamB.getSumoRounds()));                }
-                    this.broadcastMessage("");
+                }
             }
         }
     }
 
     @Override
     public void onRespawn(Player player) {
-        Array.getInstance().getEssentials().teleportToSpawn(player);
+        teleportToSpawn(player);
     }
 
     @Override
