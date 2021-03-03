@@ -19,7 +19,7 @@ public class KitVoidSpawnCommand {
                 kit.getGameRules().setVoidspawn(true);
             }
             kit.save();
-            player.sendMessage((CC.translate("&8[&b&lArray&8] &a")) + "Kit set voidspawn mode to " + (kit.getGameRules().isVoidspawn() ? "true!" : "false!"));
+            player.sendMessage((CC.translate("&8[&b&lArray&8] &a")) + "Kit set void spawn mode to " + (kit.getGameRules().isVoidspawn() ? "true!" : "false!"));
         }
     }
 }

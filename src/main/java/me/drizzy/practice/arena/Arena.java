@@ -74,7 +74,7 @@ public class Arena {
                 if (configuration.contains(path + ".disable-pearls")) {
                     arena.setDisablePearls(configuration.getBoolean(path + ".disable-pearls"));
                 } else {
-                    arena.setDisablePearls(true);
+                    arena.setDisablePearls(false);
                 }
 
                 if (configuration.contains(path + ".spawn1")) {

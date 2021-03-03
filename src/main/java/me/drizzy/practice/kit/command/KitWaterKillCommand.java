@@ -18,7 +18,7 @@ public class KitWaterKillCommand {
                 kit.getGameRules().setWaterkill(true);
             }
             kit.save();
-            player.sendMessage((CC.translate("&8[&b&lArray&8] &a") + "Kit set water-kill mode to " + (kit.getGameRules().isWaterkill() ? "true!" : "false!")));
+            player.sendMessage((CC.translate("&8[&b&lArray&8] &a") + "Kit set water kill mode to " + (kit.getGameRules().isWaterkill() ? "true!" : "false!")));
         }
     }
 }
