@@ -8,7 +8,7 @@ import me.drizzy.practice.util.CC;
 
 import java.util.UUID;
 
-@CommandMeta(label="uuid", permission="practice.dev")
+@CommandMeta(label="uuid", permission="array.dev")
 public class GetUUIDCommand {
     public void execute(Player player, @CPL("name") String name) {
         UUID uuid = Profile.getUUID(name);

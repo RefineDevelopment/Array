@@ -8,7 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-@CommandMeta(label={"arena seticon"}, permission="practice.dev")
+@CommandMeta(label={"arena seticon"}, permission="array.dev")
 public class ArenaSetIconCommand {
     public void execute(Player player, @CPL("arena") Arena arena) {
     ItemStack item = player.getItemInHand();
@@ -20,7 +20,7 @@ public class ArenaSetIconCommand {
     } else {
         arena.setDisplayIcon(item);
         arena.save();
-        player.sendMessage(CC.GREEN + "Arena Icon set!");
+        player.sendMessage(CC.translate("&8[&b&lArray&8] &a") + "Successfully set the arena icon to your item in hand.");
     }
   }
 }

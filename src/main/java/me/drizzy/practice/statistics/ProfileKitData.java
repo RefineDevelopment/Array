@@ -1,7 +1,7 @@
 package me.drizzy.practice.statistics;
 
-import me.drizzy.practice.profile.hotbar.Hotbar;
-import me.drizzy.practice.profile.hotbar.HotbarItem;
+import me.drizzy.practice.hotbar.Hotbar;
+import me.drizzy.practice.hotbar.HotbarItem;
 import me.drizzy.practice.kit.KitLoadout;
 import me.drizzy.practice.util.CC;
 import lombok.Getter;

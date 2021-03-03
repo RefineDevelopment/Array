@@ -6,7 +6,7 @@ import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.external.Cooldown;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "parkour cooldown", permission = "practice.staff")
+@CommandMeta(label = "parkour cooldown", permission = "array.staff")
 public class ParkourCooldownCommand {
 
 	public void execute(CommandSender sender) {

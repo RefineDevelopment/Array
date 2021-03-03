@@ -5,7 +5,7 @@ import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "kit save", permission = "practice.dev")
+@CommandMeta(label = "kit save", permission = "array.dev")
 public class KitSaveCommand {
 
     public void execute(CommandSender sender) {

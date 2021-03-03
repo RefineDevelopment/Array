@@ -5,7 +5,7 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.util.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "parkour setspawn", permission = "practice.staff")
+@CommandMeta(label = "parkour setspawn", permission = "array.staff")
 public class ParkourSetSpawnCommand {
 
 	public void execute(Player player) {

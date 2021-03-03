@@ -13,7 +13,7 @@ import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.Circle;
 import me.drizzy.practice.util.PlayerSnapshot;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.essentials.Essentials;
+import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.external.TimeUtil;

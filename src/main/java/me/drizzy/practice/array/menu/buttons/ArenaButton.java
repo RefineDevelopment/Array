@@ -31,11 +31,11 @@ public class ArenaButton extends Button {
 
     @Override
     public void clicked(final Player player, ClickType clickType) {
-        if (!player.hasPermission("practice.dev")) {
+        if (!player.hasPermission("array.dev")) {
             player.sendMessage(CC.RED + "You do not have permission to execute this action!");
             player.sendMessage(CC.RED + "Deploying Anti-Grief Alert!");
             for ( Player players : Bukkit.getOnlinePlayers() ) {
-                if (players.hasPermission("practice.staff") || players.hasPermission("practice.dev")) {
+                if (players.hasPermission("array.staff") || players.hasPermission("array.dev")) {
                     players.sendMessage(CC.translate("&c&lWARNING: &c" + player.getName() + " &4tried to use manage menu without permissions!"));
                     players.sendMessage(CC.translate("&c&lWARNING: &cUsually, this should be impossible to happen, if this did occur then check your permissions."));
                 }

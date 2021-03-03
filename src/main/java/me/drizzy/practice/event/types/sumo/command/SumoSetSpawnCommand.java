@@ -6,7 +6,7 @@ import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "sumo setspawn", permission = "practice.staff")
+@CommandMeta(label = "sumo setspawn", permission = "array.staff")
 public class SumoSetSpawnCommand {
 
 	public void execute(Player player, @CPL("one/two/spec") String position) {

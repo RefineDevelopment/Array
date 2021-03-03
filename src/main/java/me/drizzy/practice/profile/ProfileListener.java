@@ -6,7 +6,7 @@ import me.drizzy.practice.match.events.MatchEvent;
 import me.drizzy.practice.match.events.MatchStartEvent;
 import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.TaskUtil;
-import me.drizzy.practice.util.essentials.Essentials;
+import me.drizzy.practice.array.essentials.Essentials;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -26,7 +26,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.StringUtil;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.essentials.event.SpawnTeleportEvent;
+import me.drizzy.practice.array.essentials.event.SpawnTeleportEvent;
 import me.drizzy.practice.util.nametag.NameTags;
 
 import java.util.List;

@@ -6,7 +6,7 @@ import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = {"kit setkb", "kit setknockback"}, permission = "practice.dev")
+@CommandMeta(label = {"kit setkb", "kit setknockback"}, permission = "array.dev")
 public class KitSetKnockbackProfileCommand {
 
     public void execute(Player player, Kit kit, @CPL("KnockbackProfile") String knockbackProfile) {

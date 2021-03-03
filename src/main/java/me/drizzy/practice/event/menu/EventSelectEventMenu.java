@@ -2,6 +2,7 @@ package me.drizzy.practice.event.menu;
 
 import lombok.AllArgsConstructor;
 import me.drizzy.practice.event.EventType;
+import me.drizzy.practice.event.types.gulag.command.GulagHostCommand;
 import org.bukkit.Material;
 import me.drizzy.practice.event.types.brackets.command.BracketsHostCommand;
 import me.drizzy.practice.event.types.lms.command.LMSHostCommand;
@@ -41,13 +42,13 @@ public class EventSelectEventMenu extends Menu {
                 buttons.put(glassslots, new GlassButton());
             }
         }
-        buttons.put(14, new SelectEventButton(EventType.LMS));
-        buttons.put(13, new SelectEventButton(EventType.BRACKETS));
-        buttons.put(12, new SelectEventButton(EventType.SUMO));
-        buttons.put(15, new SelectEventButton(EventType.PARKOUR));
+        buttons.put(13, new SelectEventButton(EventType.LMS));
+        buttons.put(12, new SelectEventButton(EventType.BRACKETS));
+        buttons.put(11, new SelectEventButton(EventType.SUMO));
+        buttons.put(14, new SelectEventButton(EventType.PARKOUR));
+        buttons.put(15, new SelectEventButton(EventType.GULAG));
         buttons.put(30, new SelectEventButton(EventType.SPLEEF));
-        buttons.put(31, new SelectEventButton(EventType.RUNNER));
-        buttons.put(32, new SelectEventButton(EventType.KOTH));
+        buttons.put(31, new SelectEventButton(EventType.KOTH));
         return buttons;
     }
 
@@ -66,42 +67,42 @@ public class EventSelectEventMenu extends Menu {
                     lore.add(CC.GRAY + "beat your opponent in 1v1");
                     lore.add(CC.GRAY + "duels. The last player wins!");
                     lore.add("");
-                    lore.add("&bClick to host");
+                    lore.add("&bClick to host...");
                     break;
                 case "&b&lSumo":
                     lore.add(CC.GRAY + "Knockback everyone off the");
                     lore.add(CC.GRAY + "platform until your are");
                     lore.add(CC.GRAY + "the last player alive");
                     lore.add("");
-                    lore.add("&bClick to host");
+                    lore.add("&bClick to host...");
                     break;
                 case "&b&lLMS":
                     lore.add(CC.GRAY + "Fight for your life");
                     lore.add(CC.GRAY + "and kill everyone to");
                     lore.add(CC.GRAY + "be the last man standing");
                     lore.add("");
-                    lore.add("&bClick to host");
+                    lore.add("&bClick to host...");
                     break;
                 case "&b&lParkour":
                     lore.add(CC.GRAY + "Make your way through the");
                     lore.add(CC.GRAY + "course and beat the others!");
                     lore.add(CC.GRAY + "The player to reach the goal wins");
                     lore.add("");
-                    lore.add("&bClick to host");
+                    lore.add("&bClick to host...");
                     break;
                 case "&b&lSpleef":
                     lore.add(CC.GRAY + "Break the snow blocks");
                     lore.add(CC.GRAY + "and avoid falling into");
                     lore.add(CC.GRAY + "water, the last player wins!");
                     lore.add("");
-                    lore.add("&bClick to host");
+                    lore.add("&bClick to host...");
                     break;
-                case "&b&lSkywars":
-                    lore.add(CC.GRAY + "Loot the chests and fight");
-                    lore.add(CC.GRAY + "your way through victory,");
-                    lore.add(CC.GRAY + "the last player wins!");
+                case "&b&lGulag":
+                    lore.add(CC.GRAY + "Fight for your life and");
+                    lore.add(CC.GRAY + "beat your opponent in");
+                    lore.add(CC.GRAY + "1v1 Duels with guns!");
                     lore.add("");
-                    lore.add("&bClick to host");
+                    lore.add("&bClick to host...");
                     break;
                 case "&c&lKoTH":
                     lore.add(CC.GRAY + "Capture the KoTH point");
@@ -172,6 +173,14 @@ public class EventSelectEventMenu extends Menu {
                     case "&b&lSpleef":
                         if (player.hasPermission("practice.host.spleef")) {
                             SpleefHostCommand.execute(player);
+                        } else {
+                            player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
+                            player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.purgemc.club &7!"));
+                        }
+                        break;
+                    case "&b&lGulag":
+                        if (player.hasPermission("practice.host.gulag")) {
+                            GulagHostCommand.execute(player);
                         } else {
                             player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
                             player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.purgemc.club &7!"));

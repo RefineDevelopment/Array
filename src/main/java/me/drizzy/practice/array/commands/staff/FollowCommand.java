@@ -8,7 +8,7 @@ import me.drizzy.practice.util.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = {"follow"}, permission = "practice.staff")
+@CommandMeta(label = {"follow"}, permission = "array.staff")
 public class FollowCommand {
     public void execute(final Player player, @CPL("player") final Player target) {
         final Profile profile = Profile.getByUuid(player.getUniqueId());

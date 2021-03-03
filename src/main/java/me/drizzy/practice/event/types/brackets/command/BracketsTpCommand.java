@@ -5,7 +5,7 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.util.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "brackets tp", permission = "practice.staff")
+@CommandMeta(label = "brackets tp", permission = "array.staff")
 public class BracketsTpCommand {
 
 	public void execute(Player player) {

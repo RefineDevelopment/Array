@@ -12,11 +12,11 @@ public class TournamentCommand {
             player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
             player.sendMessage(CC.translate( "&bArray &7» Tournament Commands"));
             player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
-            player.sendMessage(CC.translate("&7» &b/tournament list &7- Create a Kit."));
-            player.sendMessage(CC.translate("&7» &b/tournament host (team-size(1/2)) &7- Host a tournament."));
-            player.sendMessage(CC.translate("&7» &b/tournament cancel &7- Cancels a tournament."));
-            player.sendMessage(CC.translate("&7» &b/tournament join &7- Join an on-going tournament."));
-            player.sendMessage(CC.translate("&7» &b/tournament leave &7- Leave an on-going tournament."));
+            player.sendMessage(CC.translate("&b/tournament list &8- &8&o(&7&oCreate a Kit."));
+            player.sendMessage(CC.translate("&b/tournament host (team-size(1/2)) &8- &8&o(&7&oHost a tournament."));
+            player.sendMessage(CC.translate("&b/tournament cancel &8- &8&o(&7&oCancels a tournament."));
+            player.sendMessage(CC.translate("&b/tournament join &8- &8&o(&7&oJoin an on-going tournament."));
+            player.sendMessage(CC.translate("&b/tournament leave &8- &8&o(&7&oLeave an on-going tournament."));
             player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
         }
     }

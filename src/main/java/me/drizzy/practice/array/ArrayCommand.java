@@ -8,20 +8,20 @@ import org.bukkit.entity.Player;
 @CommandMeta(label={"array", "array help", "practice"})
 public class ArrayCommand {
     public void execute(Player p) {
-        if (p.hasPermission("practice.staff")) {
+        if (p.hasPermission("array.staff")) {
             p.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
             p.sendMessage(CC.translate("&bArray &7» Array Commands"));
             p.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
-            p.sendMessage(CC.translate("&7» &b/array reload &7- Reload the plugin (NOT RECOMMENDED)."));
-            p.sendMessage(CC.translate("&7» &b/array setlobby &7- Sets the lobby to player's location."));
-            p.sendMessage(CC.translate("&7» &b/array savekits &7- Save all Kits."));
-            p.sendMessage(CC.translate("&7» &b/array savearenas &7- Save all Arenas"));
-            p.sendMessage(CC.translate("&7» &b/array savedata &7- Save all Profiles."));
-            p.sendMessage(CC.translate("&7» &b/array hcf &7- Help on how to setup HCF."));
-            p.sendMessage(CC.translate("&7» &b/array resetstats (name) &7- Resets a profile."));
-            p.sendMessage(CC.translate("&7» &b/array rename (name) &7- Renames item in hand."));
-            p.sendMessage(CC.translate("&7» &b/kit help &7- View kit commands."));
-            p.sendMessage(CC.translate("&7» &b/arena help &7- View arena commands."));
+            p.sendMessage(CC.translate("&b/array reload &8- &8&o(&7&oReload the plugin (NOT RECOMMENDED)."));
+            p.sendMessage(CC.translate("&b/array setlobby &8- &8&o(&7&oSets the lobby to player's location."));
+            p.sendMessage(CC.translate("&b/array savekits &8- &8&o(&7&oSave all Kits."));
+            p.sendMessage(CC.translate("&b/array savearenas &8- &8&o(&7&oSave all Arenas"));
+            p.sendMessage(CC.translate("&b/array savedata &8- &8&o(&7&oSave all Profiles."));
+            p.sendMessage(CC.translate("&b/array hcf &8- &8&o(&7&oHelp on how to setup HCF."));
+            p.sendMessage(CC.translate("&b/array resetstats (name) &8- &8&o(&7&oResets a profile."));
+            p.sendMessage(CC.translate("&b/array rename (name) &8- &8&o(&7&oRenames item in hand."));
+            p.sendMessage(CC.translate("&b/kit help &8- &8&o(&7&oView kit commands."));
+            p.sendMessage(CC.translate("&b/arena help &8- &8&o(&7&oView arena commands."));
             p.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
         } else {
             p.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");

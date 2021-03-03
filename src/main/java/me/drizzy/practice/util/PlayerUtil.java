@@ -40,6 +40,7 @@ public class PlayerUtil {
         player.setExp(0f);
         player.setFireTicks(0);
         player.setMaximumNoDamageTicks(20);
+        player.setSaturation(20);
         player.setAllowFlight(false);
         player.setFlying(false);
         player.setGameMode(GameMode.SURVIVAL);

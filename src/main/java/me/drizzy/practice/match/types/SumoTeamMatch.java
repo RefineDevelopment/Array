@@ -30,7 +30,7 @@ import pt.foxspigot.jar.knockback.KnockbackProfile;
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.drizzy.practice.util.essentials.Essentials.teleportToSpawn;
+import static me.drizzy.practice.array.essentials.Essentials.teleportToSpawn;
 
 @Getter
 public class SumoTeamMatch extends Match {

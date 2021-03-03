@@ -1,7 +1,7 @@
 package me.drizzy.practice.match;
 
-import me.drizzy.practice.profile.hotbar.Hotbar;
-import me.drizzy.practice.profile.hotbar.HotbarItem;
+import me.drizzy.practice.hotbar.Hotbar;
+import me.drizzy.practice.hotbar.HotbarItem;
 import pt.foxspigot.jar.knockback.KnockbackModule;
 import pt.foxspigot.jar.knockback.KnockbackProfile;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -248,12 +248,12 @@ public class MatchListener implements Listener {
     @EventHandler
     public void onPlayerDeathEvent(final PlayerDeathEvent event) {
         event.setDeathMessage(null);
+        Player player = event.getEntity().getPlayer();
+        player.teleport(player.getLocation().add(0.0, 2.0, 0.0));
         KnockbackProfile knockbackProfile = KnockbackModule.getDefault();
         Profile profile = Profile.getByUuid(event.getEntity().getUniqueId());
         ((CraftPlayer)event.getEntity().getPlayer()).getHandle().setKnockback(knockbackProfile);
         event.getEntity().getPlayer().setNoDamageTicks(20);
-        Player player = event.getEntity().getPlayer();
-        player.teleport(player.getLocation().add(0.0, 2.0, 0.0));
         if (profile.isInFight()) {
             event.getDrops().clear();
             if (PlayerUtil.getLastDamager(event.getEntity()) instanceof CraftPlayer) {
@@ -745,6 +745,19 @@ public class MatchListener implements Listener {
                 if (match.isEnding()) {
                     e.setCancelled(true);
                 }
+            }
+        }
+    }
+
+    @EventHandler (priority = EventPriority.LOW)
+    public void enderPearlThrown(PlayerTeleportEvent event) {
+        Player player = event.getPlayer();
+        Match match = Profile.getByUuid(player).getMatch();
+
+        if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
+            if (match.getArena().isDisablePearls()){
+                player.sendMessage(ChatColor.RED + "Enderpearls can't be used in this arena.");
+                event.setCancelled(true);
             }
         }
     }

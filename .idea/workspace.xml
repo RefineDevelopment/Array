@@ -9,7 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="339e4fd3-2648-48f6-9711-4eb584f7cd8b" name="Default Changelist" comment="" />
+    <list default="true" id="339e4fd3-2648-48f6-9711-4eb584f7cd8b" name="Default Changelist" comment="Added Gulag and Made some changes to HCF and Added Pearl disable option for Arenas">
+      <changelist_data name="Drizzy" email="" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -26,11 +28,16 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="Drizzy" />
+      </list>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/pom.xml" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/me/drizzy/practice/hologram/PlaceholderAPIExtension.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/drizzy/practice/hologram/HologramPlaceholders.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/Profile.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/drizzy/practice/Array.java" root0="SKIP_INSPECTION" />
   </component>
@@ -52,7 +59,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.16113281" />
     <property name="project.structure.side.proportion" value="0.15034965" />
@@ -60,13 +67,14 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="J:\Minecraft Servers\Source Codes\My Projects\Array\src\main\java\me\drizzy\practice\util" />
+      <recent name="J:\Minecraft Servers\Source Codes\My Projects\Array\src\main\java\me\drizzy\practice\event\types\gulag" />
       <recent name="J:\Minecraft Servers\Source Codes\My Projects\Array\src\main\java\me\drizzy\practice\arena\command" />
       <recent name="J:\Minecraft Servers\Source Codes\My Projects\Array\src\main\java\me\drizzy\practice\array\commands" />
       <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\array\commands\combo" />
-      <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\array\knockback" />
-      <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\util" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="me.drizzy.practice.duel.command" />
       <recent name="rip.resolve.practice.array.commands" />
       <recent name="rip.resolve.practice.match.types" />
     </key>
@@ -97,6 +105,10 @@
     </task>
     <servers />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added Gulag and Made some changes to HCF and Added Pearl disable option for Arenas" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Gulag and Made some changes to HCF and Added Pearl disable option for Arenas" />
+  </component>
   <component name="WindowStateProjectService">
     <state x="493" y="0" key="#Auto_Import" timestamp="1612789164681">
       <screen x="0" y="0" width="1440" height="860" />
@@ -122,10 +134,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="501" y="324" width="539" height="217" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1440.860@0.0.1440.860" timestamp="1612678358247" />
-    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1614174180083">
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1614672910111">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1440.860@0.0.1440.860" timestamp="1614174180083" />
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1440.860@0.0.1440.860" timestamp="1614672910111" />
     <state x="450" y="177" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1612319877933">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
@@ -162,10 +174,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="331" y="81" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1440.860@0.0.1440.860" timestamp="1612347988695" />
-    <state x="427" y="144" width="650" height="716" key="find.popup" timestamp="1614385505488">
+    <state x="427" y="144" width="650" height="716" key="find.popup" timestamp="1614684529300">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="427" y="144" width="650" height="716" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1614385505488" />
+    <state x="427" y="144" width="650" height="716" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1614684529300" />
     <state x="563" y="188" key="refactoring.ChangeSignatureDialog" timestamp="1610115661409">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
@@ -174,9 +186,9 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="376" y="195" key="run.anything.popup/0.0.1440.860@0.0.1440.860" timestamp="1611100594374" />
-    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1613869878133">
+    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1614674848526">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1613869878133" />
+    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1614674848526" />
   </component>
 </project>

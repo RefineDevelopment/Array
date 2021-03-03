@@ -6,16 +6,16 @@ import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.external.Cooldown;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "brackets cooldown", permission = "practice.staff")
+@CommandMeta(label = "brackets cooldown", permission = "array.staff")
 public class BracketsCooldownCommand {
 
 	public void execute(CommandSender sender) {
 		if (Array.getInstance().getBracketsManager().getCooldown().hasExpired()) {
-			sender.sendMessage(CC.RED + "There isn't a Brackets Event cooldown.");
+			sender.sendMessage(CC.RED + "There isn't a Gulag Event cooldown.");
 			return;
 		}
 
-		sender.sendMessage(CC.GREEN + "You reset the Brackets Event cooldown.");
+		sender.sendMessage(CC.GREEN + "You reset the Gulag Event cooldown.");
 
 		Array.getInstance().getBracketsManager().setCooldown(new Cooldown(0));
 	}

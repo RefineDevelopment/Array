@@ -5,43 +5,43 @@ import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = { "kit", "kithelp" }, permission = "practice.dev")
+@CommandMeta(label = { "kit", "kithelp" }, permission = "array.dev")
 public class KitCommand {
     public void execute(final Player player) {
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
         player.sendMessage(CC.translate( "&bArray &7» Kit Commands"));
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
-        player.sendMessage(CC.translate("&7» &b/kit create (name) &7- Create a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit setkb (name) &7- Set a Kit's Knockback Profile."));
-        player.sendMessage(CC.translate("&7» &b/kit remove (name) &7- Delete a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit hitdelay (name) (1-20) &7- Set a Kit's Hitdelay"));
-        player.sendMessage(CC.translate("&7» &b/kit elo (name) &7- Toggle elo mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit build (name) &7- Toggle build mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit boxuhc (name) &7- Toggle boxuhc mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit combo (name) &7- Toggle combo mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit editable (name) &7- Toggle editable mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit lavakill (name) &7- Toggle lava-kill mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit parkour (name) &7- Toggle parkour mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit partyffa (name) &7- Toggle party-ffa mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit partysplit (name) &7- Toggle party-split mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit antifoodloss (name) &7- Toggle anti-food-loss mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit bowhp (name) &7- Toggle bow-hp mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit ffacenter (name) &7- Toggle ffa-center mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit healthregen (name) &7- Toggle health-regen mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit infinitespeed (name) &7- Toggle infinite-speed mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit infinitestrength (name) &7- Toggle infinite-strength mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit noitems (name) &7- Toggle no-items mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit showhealth (name) &7- Toggle show-health mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit stickspawn (name) &7- Toggle Stick-spawn mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit bedwars (name) &7- Toggle Bedwars mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit netheruhc (name) &7- Toggle Nether-UHC mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit boxuhc (name) &7- Toggle Box-UHC mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit spleef (name) &7- Toggle spleef mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit timed (name) &7- Toggle timed mode for a Kit."));
-        player.sendMessage(CC.translate("&7» &b/kit setLoadout &7- Sets the loadout of the kit as your inventory."));
-        player.sendMessage(CC.translate("&7» &b/kit getLoadout &7- Get the loadout of the kit."));
-        player.sendMessage(CC.translate("&7» &b/kit list &7- Lists All Kits"));
-        player.sendMessage(CC.translate("&7» &b/kit save &7- Save All the Kits"));
+        player.sendMessage(CC.translate("&b/kit create (name) &8- &8&o(&7&oCreate a Kit."));
+        player.sendMessage(CC.translate("&b/kit setkb (name) &8- &8&o(&7&oSet a Kit's Knockback Profile."));
+        player.sendMessage(CC.translate("&b/kit remove (name) &8- &8&o(&7&oDelete a Kit."));
+        player.sendMessage(CC.translate("&b/kit hitdelay (name) (1-20) &8- &8&o(&7&oSet a Kit's Hitdelay"));
+        player.sendMessage(CC.translate("&b/kit elo (name) &8- &8&o(&7&oToggle elo mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit build (name) &8- &8&o(&7&oToggle build mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit boxuhc (name) &8- &8&o(&7&oToggle boxuhc mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit combo (name) &8- &8&o(&7&oToggle combo mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit editable (name) &8- &8&o(&7&oToggle editable mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit lavakill (name) &8- &8&o(&7&oToggle lava-kill mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit parkour (name) &8- &8&o(&7&oToggle parkour mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit partyffa (name) &8- &8&o(&7&oToggle party-ffa mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit partysplit (name) &8- &8&o(&7&oToggle party-split mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit antifoodloss (name) &8- &8&o(&7&oToggle anti-food-loss mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit bowhp (name) &8- &8&o(&7&oToggle bow-hp mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit ffacenter (name) &8- &8&o(&7&oToggle ffa-center mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit healthregen (name) &8- &8&o(&7&oToggle health-regen mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit infinitespeed (name) &8- &8&o(&7&oToggle infinite-speed mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit infinitestrength (name) &8- &8&o(&7&oToggle infinite-strength mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit noitems (name) &8- &8&o(&7&oToggle no-items mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit showhealth (name) &8- &8&o(&7&oToggle show-health mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit stickspawn (name) &8- &8&o(&7&oToggle Stick-spawn mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit bedwars (name) &8- &8&o(&7&oToggle Bedwars mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit netheruhc (name) &8- &8&o(&7&oToggle Nether-UHC mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit boxuhc (name) &8- &8&o(&7&oToggle Box-UHC mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit spleef (name) &8- &8&o(&7&oToggle spleef mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit timed (name) &8- &8&o(&7&oToggle timed mode for a Kit."));
+        player.sendMessage(CC.translate("&b/kit setLoadout &8- &8&o(&7&oSets the loadout of the kit as your inventory."));
+        player.sendMessage(CC.translate("&b/kit getLoadout &8- &8&o(&7&oGet the loadout of the kit."));
+        player.sendMessage(CC.translate("&b/kit list &8- &8&o(&7&oLists All Kits"));
+        player.sendMessage(CC.translate("&b/kit save &8- &8&o(&7&oSave All the Kits"));
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");
     }
 }

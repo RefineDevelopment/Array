@@ -15,6 +15,7 @@ import me.drizzy.practice.duel.command.DuelCommand;
 import me.drizzy.practice.duel.command.RematchCommand;
 import me.drizzy.practice.event.EventCommand;
 import me.drizzy.practice.event.types.brackets.command.*;
+import me.drizzy.practice.event.types.gulag.command.*;
 import me.drizzy.practice.event.types.lms.command.*;
 import me.drizzy.practice.event.types.parkour.command.*;
 import me.drizzy.practice.event.types.spleef.command.*;
@@ -73,6 +74,8 @@ public class RegisterCommands {
                 //Arena commands
                 new ArenaAddKitCommand(),
                 new ArenaRemoveKitCommand(),
+                new ArenaAddBuildKitsCommand(),
+                new ArenaDisablePearlsCommand(),
                 new ArenaSetSpawnCommand(),
                 new ArenaCreateCommand(),
                 new ArenaAddNormalKitCommand(),
@@ -147,7 +150,7 @@ public class RegisterCommands {
                 new KitStickSpawnCommand(),
                 new KitNetherUHCCommand(),
 
-                //Brackets command
+                //Brackets commands
                 new BracketsLeaveCommand(),
                 new BracketsCancelCommand(),
                 new BracketsCooldownCommand(),
@@ -159,7 +162,19 @@ public class RegisterCommands {
                 new BracketsKnockbackCommand(),
                 new BracketsForceStartCommand(),
 
-                //Sumo command
+                //Gulag Commands
+                new GulagLeaveCommand(),
+                new GulagCancelCommand(),
+                new GulagCooldownCommand(),
+                new GulagJoinCommand(),
+                new GulagForceStartCommand(),
+                new GulagHostCommand(),
+                new GulagHelpCommand(),
+                new GulagSetSpawnCommand(),
+                new GulagTpCommand(),
+                new GulagKnockbackCommand(),
+
+                //Sumo commands
                 new SumoCancelCommand(),
                 new SumoCooldownCommand(),
                 new SumoHostCommand(),
@@ -171,7 +186,7 @@ public class RegisterCommands {
                 new SumoKnockbackCommand(),
                 new SumoForceStartCommand(),
 
-                //LMS command
+                //LMS commands
                 new LMSCancelCommand(),
                 new LMSCooldownCommand(),
                 new LMSHostCommand(),
@@ -182,7 +197,7 @@ public class RegisterCommands {
                 new LMSHelpCommand(),
                 new LMSForceStartCommand(),
 
-                //Parkour command
+                //Parkour commands
                 new ParkourCancelCommand(),
                 new ParkourCooldownCommand(),
                 new ParkourHostCommand(),
@@ -193,7 +208,7 @@ public class RegisterCommands {
                 new ParkourHelpCommand(),
                 new ParkourForceStartComman(),
 
-                //Spleef command
+                //Spleef commands
                 new SpleefCancelCommand(),
                 new SpleefCooldownCommand(),
                 new SpleefHostCommand(),
@@ -204,7 +219,7 @@ public class RegisterCommands {
                 new SpleefHelpCommand(),
                 new SpleefForceStartCommand(),
 
-                //Tournament command
+                //Tournament commands
                 new TournamentCommand(),
                 new TournamentLeaveCommand(),
                 new TournamentJoinCommand(),

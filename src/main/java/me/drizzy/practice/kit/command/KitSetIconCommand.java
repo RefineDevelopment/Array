@@ -8,7 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-@CommandMeta(label={"kit seticon"}, permission = "practice.dev")
+@CommandMeta(label={"kit seticon"}, permission = "array.dev")
 public class KitSetIconCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         ItemStack item = player.getItemInHand();

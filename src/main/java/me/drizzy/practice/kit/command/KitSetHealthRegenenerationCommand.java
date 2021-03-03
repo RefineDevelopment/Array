@@ -6,7 +6,7 @@ import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label={"kit healthregen"}, permission = "practice.dev")
+@CommandMeta(label={"kit healthregen"}, permission = "array.dev")
 public class KitSetHealthRegenenerationCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {

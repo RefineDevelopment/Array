@@ -60,7 +60,7 @@ public class SettingsMenu extends Menu
                 lines.add((!profile.getSettings().isReceiveDuelRequests() ? "&b&l▶ " : "   ") + "&fDon't Allow Duels");
             }
             else if (this.type == SettingsType.TOGGLEPINGFACTOR) {
-                if (player.hasPermission("practice.donator+")) {
+                if (player.hasPermission("array.donator+")) {
                     lines.add("&7Enable or Disable queueing with");
                     lines.add("&7Players of similar ping as you.");
                     lines.add("");
@@ -81,7 +81,7 @@ public class SettingsMenu extends Menu
                 lines.add((profile.getSettings().isAllowSpectators() ? "&b&l▶ " : "   ") + "&fAllow Spectators");
                 lines.add((!profile.getSettings().isAllowSpectators() ? "&b&l▶ " : "   ") + "&fDon't Allow Spectators");
             } else if (this.type == SettingsType.TOGGLELIGHTNING) {
-                if (player.hasPermission("practice.donator")) {
+                if (player.hasPermission("array.donator")) {
                     lines.add("&7Enable or Disable Lightning");
                     lines.add("&7Death effect for your Profile.");
                     lines.add("");
@@ -139,7 +139,7 @@ public class SettingsMenu extends Menu
                 profile.getSettings().setReceiveDuelRequests(!profile.getSettings().isReceiveDuelRequests());
             }
             else if (this.type == SettingsType.TOGGLEPINGFACTOR) {
-                if (player.hasPermission("practice.donator+")) {
+                if (player.hasPermission("array.donator+")) {
                     Button.playSuccess(player);
                     profile.getSettings().setUsingPingFactor(!profile.getSettings().isUsingPingFactor());
                 } else {
@@ -154,7 +154,7 @@ public class SettingsMenu extends Menu
                 profile.getSettings().setAllowSpectators(!profile.getSettings().isAllowSpectators());
             }
             else if (this.type == SettingsType.TOGGLELIGHTNING) {
-                if (player.hasPermission("practice.donator")) {
+                if (player.hasPermission("array.donator")) {
                     Button.playSuccess(player);
                     profile.getSettings().setLightning(!profile.getSettings().isLightning());
                 } else {

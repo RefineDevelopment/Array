@@ -1,6 +1,6 @@
 package me.drizzy.practice.event.types.lms;
 
-import me.drizzy.practice.util.essentials.Essentials;
+import me.drizzy.practice.array.essentials.Essentials;
 import org.bukkit.Location;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.event.types.lms.player.LMSPlayer;
@@ -10,8 +10,8 @@ import me.drizzy.practice.event.types.lms.task.LMSRoundStartTask;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.profile.hotbar.Hotbar;
-import me.drizzy.practice.profile.hotbar.HotbarItem;
+import me.drizzy.practice.hotbar.Hotbar;
+import me.drizzy.practice.hotbar.HotbarItem;
 import me.drizzy.practice.util.Circle;
 import me.drizzy.practice.util.PlayerSnapshot;
 import me.drizzy.practice.util.PlayerUtil;
@@ -322,11 +322,7 @@ public class LMS {
     }
 
     public void onJoin(Player player) {
-        KnockbackProfile kbprofile = KnockbackModule.getDefault();
-        if (getKit().getKnockbackProfile() != null && KnockbackModule.INSTANCE.profiles.containsKey(getKit().getKnockbackProfile())) {
-            kbprofile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
-        }
-        ((CraftPlayer) player).getHandle().setKnockback(kbprofile);
+        Profile.setKb(player, Array.getInstance().getLMSManager().getLmsKnockbackProfile());
     }
     public void onLeave(Player player) {
         KnockbackProfile kbprofile = KnockbackModule.getDefault();
@@ -347,12 +343,8 @@ public class LMS {
                     locs.remove(0);
                 }
                 Profile profile = Profile.getByUuid(player.getUniqueId());
-
-                if (profile.isInLMS()) {
                 PlayerUtil.reset(player, false);
-        profile.refreshHotbar();
-                }
-                PlayerUtil.reset(player);
+                profile.refreshHotbar();
             }
 
             assert player != null;

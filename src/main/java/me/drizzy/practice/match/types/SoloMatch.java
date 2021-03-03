@@ -15,7 +15,7 @@ import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.TaskUtil;
-import me.drizzy.practice.util.essentials.Essentials;
+import me.drizzy.practice.array.essentials.Essentials;
 import org.bukkit.potion.PotionEffectType;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.util.PlayerUtil;

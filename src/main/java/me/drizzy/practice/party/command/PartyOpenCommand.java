@@ -11,7 +11,7 @@ public class PartyOpenCommand
 {
     public void execute(final Player player) {
         final Profile profile = Profile.getByUuid(player.getUniqueId());
-        if (!player.hasPermission("practice.donator")) {
+        if (!player.hasPermission("array.donator")) {
             player.sendMessage(CC.translate("&7You do not have permission to use Party Settings."));
             player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.purgemc.club &7!"));
             return;

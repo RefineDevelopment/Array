@@ -6,7 +6,7 @@ import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label={"kit build"}, permission = "practice.dev")
+@CommandMeta(label={"kit build"}, permission = "array.dev")
 public class KitBuildCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {

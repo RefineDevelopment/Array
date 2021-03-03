@@ -1,51 +1,19 @@
 package me.drizzy.practice;
 
-import me.drizzy.practice.arena.command.*;
-import me.drizzy.practice.array.commands.*;
-import me.drizzy.practice.array.commands.donator.FlyCommand;
-import me.drizzy.practice.array.commands.staff.FollowCommand;
-import me.drizzy.practice.array.commands.staff.GetUUIDCommand;
-import me.drizzy.practice.array.commands.staff.SilentCommand;
-import me.drizzy.practice.array.commands.staff.UnFollowCommand;
-import me.drizzy.practice.array.listener.GoldenHeads;
-import me.drizzy.practice.array.listener.MOTDListener;
-import me.drizzy.practice.array.listener.ToggleSprintFix;
-import me.drizzy.practice.event.EventCommand;
-import me.drizzy.practice.event.types.brackets.BracketsListener;
 import me.drizzy.practice.event.types.brackets.BracketsManager;
-import me.drizzy.practice.event.types.brackets.command.*;
-import me.drizzy.practice.event.types.lms.LMSListener;
+import me.drizzy.practice.event.types.gulag.GulagManager;
 import me.drizzy.practice.event.types.lms.LMSManager;
-import me.drizzy.practice.event.types.lms.command.*;
-import me.drizzy.practice.event.types.parkour.ParkourListener;
 import me.drizzy.practice.event.types.parkour.ParkourManager;
-import me.drizzy.practice.event.types.parkour.command.*;
-import me.drizzy.practice.event.types.spleef.command.*;
-import me.drizzy.practice.event.types.sumo.command.*;
-import me.drizzy.practice.kit.command.*;
 import me.drizzy.practice.match.Match;
-import me.drizzy.practice.match.MatchListener;
-import me.drizzy.practice.match.command.MatchStatusCommand;
-import me.drizzy.practice.match.command.SpectateCommand;
-import me.drizzy.practice.match.command.StopSpectatingCommand;
-import me.drizzy.practice.match.command.ViewInventoryCommand;
 import me.drizzy.practice.match.kits.utils.ArmorClassManager;
 import me.drizzy.practice.match.kits.utils.bard.EffectRestorer;
 import me.drizzy.practice.party.Party;
-import me.drizzy.practice.party.PartyListener;
-import me.drizzy.practice.party.command.*;
-import me.drizzy.practice.profile.hotbar.Hotbar;
-import me.drizzy.practice.profile.hotbar.HotbarListener;
-import me.drizzy.practice.queue.QueueListener;
+import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.queue.QueueThread;
 import me.drizzy.practice.register.RegisterCommands;
 import me.drizzy.practice.register.RegisterListeners;
-import me.drizzy.practice.statistics.command.LeaderboardsCommand;
-import me.drizzy.practice.statistics.command.StatsCommand;
-import me.drizzy.practice.tournament.command.*;
 import me.drizzy.practice.util.*;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.yaml.snakeyaml.error.YAMLException;
@@ -55,38 +23,24 @@ import com.mongodb.*;
 import com.mongodb.client.MongoDatabase;
 import me.drizzy.practice.util.command.Honcho;
 import me.allen.ziggurat.Ziggurat;
-import me.drizzy.practice.array.VerCommand;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.arena.ArenaType;
 import me.drizzy.practice.arena.ArenaTypeAdapter;
 import me.drizzy.practice.arena.ArenaTypeTypeAdapter;
-import me.drizzy.practice.array.ArrayCommand;
-import me.drizzy.practice.duel.command.DuelAcceptCommand;
-import me.drizzy.practice.duel.command.DuelCommand;
-import me.drizzy.practice.duel.command.RematchCommand;
-import me.drizzy.practice.event.types.spleef.SpleefListener;
 import me.drizzy.practice.event.types.spleef.SpleefManager;
-import me.drizzy.practice.event.types.sumo.SumoListener;
 import me.drizzy.practice.event.types.sumo.SumoManager;
 import me.drizzy.practice.kit.Kit;
-import me.drizzy.practice.kit.KitEditorListener;
 import me.drizzy.practice.kit.KitTypeAdapter;
-import me.drizzy.practice.hologram.PlaceholderAPIExtension;
+import me.drizzy.practice.hologram.HologramPlaceholders;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.profile.ProfileListener;
 import me.drizzy.practice.scoreboard.Scoreboard;
 import me.drizzy.practice.tablist.Tab;
-import me.drizzy.practice.util.essentials.Essentials;
-import me.drizzy.practice.util.essentials.listener.EssentialsListener;
-import me.drizzy.practice.util.events.ArmorListener;
-import me.drizzy.practice.util.events.WorldListener;
+import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.util.external.duration.Duration;
 import me.drizzy.practice.util.external.duration.DurationTypeAdapter;
-import me.drizzy.practice.util.external.menu.MenuListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.Material;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
@@ -121,11 +75,13 @@ public class Array extends JavaPlugin {
 
     private BracketsManager bracketsManager;
 
-    private me.drizzy.practice.event.types.lms.LMSManager LMSManager;
+    private LMSManager LMSManager;
 
     private ParkourManager parkourManager;
 
     private SpleefManager spleefManager;
+
+    private GulagManager gulagManager;
 
     private ArmorClassManager armorClassManager;
 
@@ -177,7 +133,7 @@ public class Array extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-        if (this.mainConfig.getBoolean("performance-mode")) {
+        if (this.mainConfig.getBoolean("Performance-mode")) {
             TaskUtil.runAsync(() -> {
             this.registerAll();
             RegisterCommands.register();
@@ -194,6 +150,7 @@ public class Array extends JavaPlugin {
         LMSManager = new LMSManager();
         parkourManager = new ParkourManager();
         spleefManager = new SpleefManager();
+        gulagManager = new GulagManager();
 
         this.entityHider = EntityHider.enable();
         this.effectRestorer = new EffectRestorer(this);
@@ -213,7 +170,7 @@ public class Array extends JavaPlugin {
             world.setDifficulty(Difficulty.EASY);
          }
 
-        if (this.mainConfig.getBoolean("performance-mode")) {
+        if (this.mainConfig.getBoolean("Performance-mode")) {
             TaskUtil.runAsync(() -> {
                 RegisterListeners.register();
                 this.registerEssentials();
@@ -269,7 +226,7 @@ public class Array extends JavaPlugin {
             this.logger("&aLoaded Kits!");
         } catch (YAMLException e) {
             this.logger("------------------------------------------------");
-            this.logger("       &bError Loading Kits: &fYAML Error");
+            this.logger("       &cError Loading Kits: &cYAML Error");
             this.logger("    &cThis means your configuration was wrong.");
             this.logger("  &cPlease check your Kits config and try again!");
             this.logger("              &4&lDisabling Array");
@@ -282,7 +239,7 @@ public class Array extends JavaPlugin {
             Arena.preload();
         } catch (YAMLException e) {
             this.logger("------------------------------------------------");
-            this.logger("      &bError Loading Kits: &fYAML Error");
+            this.logger("      &cError Loading Kits: &cYAML Error");
             this.logger("   &cThis means your configuration was wrong.");
             this.logger(" &cPlease check your Arenas config and try again!");
             this.logger("              &4&lDisabling Array");
@@ -290,12 +247,11 @@ public class Array extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-        Hotbar.preload();
+        new Hotbar();
         Match.preload();
         Party.preload();
 
         essentials = new Essentials();
-
 
         honcho.registerTypeAdapter(Arena.class, new ArenaTypeAdapter());
         honcho.registerTypeAdapter(ArenaType.class, new ArenaTypeTypeAdapter());
@@ -310,7 +266,7 @@ public class Array extends JavaPlugin {
         }
         new QueueThread().start();
         if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new PlaceholderAPIExtension().register();
+            new HologramPlaceholders().register();
         } else {
             this.logger("&cPlaceholderAPI was NOT found, Holograms will NOT work!");
         }

@@ -2,7 +2,7 @@ package me.drizzy.practice.event.types.parkour;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.drizzy.practice.util.essentials.Essentials;
+import me.drizzy.practice.array.essentials.Essentials;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;

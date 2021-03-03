@@ -5,7 +5,7 @@ import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.util.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label={"array savearenas", "array arenas save"}, permission="practice.dev")
+@CommandMeta(label={"array savearenas", "array arenas save"}, permission="array.dev")
 public class ArraySaveArenasCommand {
     public void execute(Player p) {
         Arena.getArenas().forEach(Arena::save);

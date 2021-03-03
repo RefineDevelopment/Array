@@ -6,7 +6,7 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "silent", permission = "practice.staff")
+@CommandMeta(label = "silent", permission = "array.staff")
 public class SilentCommand {
 
 

@@ -8,7 +8,7 @@ import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bson.Document;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label={"array reset", "array resetstats"}, permission="practice.dev")
+@CommandMeta(label={"array reset", "array resetstats"}, permission="array.dev")
 public class ArrayResetStatsCommand {
     public void execute(Player p, @CPL("profile") String name) {
         if (name == null) {

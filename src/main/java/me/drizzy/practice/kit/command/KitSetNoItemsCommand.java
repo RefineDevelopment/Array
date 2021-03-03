@@ -7,7 +7,7 @@ import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label={"kit noitems"}, permission = "practice.dev")
+@CommandMeta(label={"kit noitems"}, permission = "array.dev")
 public class KitSetNoItemsCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {

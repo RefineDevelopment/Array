@@ -2,7 +2,7 @@ package me.drizzy.practice.match.types;
 
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.queue.QueueType;
-import me.drizzy.practice.util.essentials.Essentials;
+import me.drizzy.practice.array.essentials.Essentials;
 import pt.foxspigot.jar.knockback.KnockbackModule;
 import pt.foxspigot.jar.knockback.KnockbackProfile;
 import me.drizzy.practice.Array;

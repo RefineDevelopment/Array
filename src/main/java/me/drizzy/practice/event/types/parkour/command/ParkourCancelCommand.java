@@ -5,7 +5,7 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.util.CC;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "parkour cancel", permission = "practice.staff")
+@CommandMeta(label = "parkour cancel", permission = "array.staff")
 public class ParkourCancelCommand {
 
 	public void execute(CommandSender sender) {

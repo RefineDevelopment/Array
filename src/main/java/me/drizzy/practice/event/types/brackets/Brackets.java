@@ -5,8 +5,8 @@ import me.drizzy.practice.event.types.brackets.player.BracketsPlayerState;
 import me.drizzy.practice.event.types.brackets.task.BracketsRoundEndTask;
 import me.drizzy.practice.event.types.brackets.task.BracketsRoundStartTask;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.profile.hotbar.Hotbar;
-import me.drizzy.practice.profile.hotbar.HotbarItem;
+import me.drizzy.practice.hotbar.Hotbar;
+import me.drizzy.practice.hotbar.HotbarItem;
 import me.drizzy.practice.Array;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.PlayerSnapshot;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.CC;
-import me.drizzy.practice.util.essentials.Essentials;
+import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.external.TimeUtil;
@@ -249,9 +249,9 @@ public class Brackets {
 		if (winner == null) {
 			Bukkit.broadcastMessage(EVENT_PREFIX + CC.RED + "The brackets event has been canceled.");
 		} else {
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Brackets Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Brackets Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Brackets Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Gulag Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Gulag Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Gulag Event" + CC.GRAY + "!");
 		}
 
 		for (BracketsPlayer bracketsPlayer : eventPlayers.values()) {

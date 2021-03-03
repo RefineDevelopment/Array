@@ -9,12 +9,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "arena setspawn", permission = "practice.dev")
+@CommandMeta(label = "arena setspawn", permission = "array.dev")
 public class ArenaSetSpawnCommand {
 
     public void execute(Player player, @CPL("arena") Arena arena, @CPL("1/2") Integer pos) {
         if (arena == null) {
-            player.sendMessage(ChatColor.RED + "Arena does not exist");
+            player.sendMessage(CC.translate("&8[&b&lArray&8] &c") + "That arena does not exist");
             return;
         }
 

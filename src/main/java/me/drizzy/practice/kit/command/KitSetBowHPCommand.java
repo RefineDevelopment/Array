@@ -7,7 +7,7 @@ import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label={"kit bowhp"}, permission = "practice.dev")
+@CommandMeta(label={"kit bowhp"}, permission = "array.dev")
 public class KitSetBowHPCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {

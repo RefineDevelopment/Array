@@ -5,7 +5,7 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.util.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "parkour tp", permission = "practice.staff")
+@CommandMeta(label = "parkour tp", permission = "array.staff")
 public class ParkourTpCommand {
 
 	public void execute(Player player) {

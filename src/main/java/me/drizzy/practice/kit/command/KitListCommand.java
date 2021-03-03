@@ -6,7 +6,7 @@ import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = {"kit list", "kits"}, permission = "practice.dev")
+@CommandMeta(label = {"kit list", "kits"}, permission = "array.dev")
 public class KitListCommand {
 
 	public void execute(Player player) {

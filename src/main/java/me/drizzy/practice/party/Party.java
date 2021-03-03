@@ -1,7 +1,7 @@
 package me.drizzy.practice.party;
 
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.util.essentials.Essentials;
+import me.drizzy.practice.array.essentials.Essentials;
 import org.bukkit.ChatColor;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.duel.DuelRequest;
@@ -41,13 +41,6 @@ public class Party extends Team
         this.invites = new ArrayList<>();
         this.banned = new ArrayList<>();
         Party.parties.add(this);
-        player.sendMessage(CC.translate("&8&m-----------------------------------------"));
-        player.sendMessage(CC.translate("&7You have successfully created a new &bParty&7."));
-        player.sendMessage(CC.translate("&7To invite your friends do &b/party invite &7."));
-        player.sendMessage(CC.translate(" "));
-        player.sendMessage(CC.translate("&7To use party chat do '&b@&7'&7 <messsage>."));
-        player.sendMessage(CC.translate("&7/party help for information on all commands."));
-        player.sendMessage(CC.translate("&8&m-----------------------------------------"));
     }
     
     public void setPrivacy(final PartyPrivacy privacy) {

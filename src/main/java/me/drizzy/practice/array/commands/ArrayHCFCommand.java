@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import me.drizzy.practice.util.CC;
 
-@CommandMeta(label = { "hcf", "array hcf", "hcf help"}, permission="practice.dev")
+@CommandMeta(label = { "hcf", "array hcf", "hcf help"}, permission="array.dev")
 public class ArrayHCFCommand {
     public void execute(final Player player) {
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() + "------------------------------------------------");

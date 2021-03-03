@@ -196,7 +196,7 @@ public class Tab implements ZigguratAdapter {
         }
         else if (profile.isInBrackets()) {
             final Brackets brackets = profile.getBrackets();
-            elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "Brackets").slot(23));
+            elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "Gulag").slot(23));
             int pl = 0;
             for (int added4 = 0; added4 < 60; ++added4) {
                 if (!tabSlots.contains(added4)) {

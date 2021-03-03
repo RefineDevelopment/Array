@@ -7,7 +7,7 @@ import me.drizzy.practice.arena.ArenaType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = { "arenas", "arena list" }, permission = "practice.staff")
+@CommandMeta(label = { "arenas", "arena list" }, permission = "array.staff")
 public class ArenasCommand
 {
     public void execute(CommandSender player) {

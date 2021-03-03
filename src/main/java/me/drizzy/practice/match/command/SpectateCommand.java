@@ -34,7 +34,7 @@ public class SpectateCommand {
             return;
         }
 
-        if (!targetProfile.getSettings().isAllowSpectators() && !player.hasPermission("practice.staff")) {
+        if (!targetProfile.getSettings().isAllowSpectators() && !player.hasPermission("array.staff")) {
             player.sendMessage(CC.RED + "That player is not allowing spectators.");
             return;
         }
@@ -46,7 +46,7 @@ public class SpectateCommand {
                     if (inMatchPlayer != null) {
                         Profile inMatchProfile=Profile.getByUuid(inMatchPlayer.getUniqueId());
 
-                        if (!inMatchProfile.getSettings().isAllowSpectators() && !player.hasPermission("practice.staff")) {
+                        if (!inMatchProfile.getSettings().isAllowSpectators() && !player.hasPermission("array.staff")) {
                             player.sendMessage(CC.RED + "This match includes player that is not allowing spectators.");
                             return;
                         }

@@ -5,6 +5,7 @@ import me.drizzy.practice.array.listener.GoldenHeads;
 import me.drizzy.practice.array.listener.MOTDListener;
 import me.drizzy.practice.array.listener.ToggleSprintFix;
 import me.drizzy.practice.event.types.brackets.BracketsListener;
+import me.drizzy.practice.event.types.gulag.GulagListener;
 import me.drizzy.practice.event.types.lms.LMSListener;
 import me.drizzy.practice.event.types.parkour.ParkourListener;
 import me.drizzy.practice.event.types.spleef.SpleefListener;
@@ -13,9 +14,8 @@ import me.drizzy.practice.kit.KitEditorListener;
 import me.drizzy.practice.match.MatchListener;
 import me.drizzy.practice.party.PartyListener;
 import me.drizzy.practice.profile.ProfileListener;
-import me.drizzy.practice.profile.hotbar.HotbarListener;
+import me.drizzy.practice.hotbar.HotbarListener;
 import me.drizzy.practice.queue.QueueListener;
-import me.drizzy.practice.util.essentials.listener.EssentialsListener;
 import me.drizzy.practice.util.events.ArmorListener;
 import me.drizzy.practice.util.events.WorldListener;
 import me.drizzy.practice.util.external.menu.MenuListener;
@@ -29,8 +29,8 @@ public class RegisterListeners {
         for ( Listener listener : Arrays.asList(
                 new ProfileListener(),
                 new MenuListener(Array.getInstance()),
-                new EssentialsListener(Array.getInstance()),
                 new SumoListener(),
+                new GulagListener(),
                 new BracketsListener(),
                 new LMSListener(),
                 new ParkourListener(),

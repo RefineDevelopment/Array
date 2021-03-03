@@ -5,12 +5,12 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.util.CC;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "brackets cancel", permission = "practice.staff")
+@CommandMeta(label = "brackets cancel", permission = "array.staff")
 public class BracketsCancelCommand {
 
 	public void execute(CommandSender sender) {
 		if (Array.getInstance().getBracketsManager().getActiveBrackets() == null) {
-			sender.sendMessage(CC.RED + "There isn't an active Brackets event.");
+			sender.sendMessage(CC.RED + "There isn't an active Gulag event.");
 			return;
 		}
 

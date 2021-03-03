@@ -5,7 +5,7 @@ import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "spleef tp", permission = "practice.staff")
+@CommandMeta(label = "spleef tp", permission = "array.staff")
 public class SpleefTpCommand {
 
 	public void execute(Player player) {

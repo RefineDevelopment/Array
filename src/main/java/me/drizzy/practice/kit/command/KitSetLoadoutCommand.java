@@ -9,7 +9,7 @@ import org.bukkit.potion.PotionEffect;
 import java.util.ArrayList;
 import java.util.List;
 
-@CommandMeta(label = "kit setloadout", permission = "practice.dev")
+@CommandMeta(label = "kit setloadout", permission = "array.dev")
 public class KitSetLoadoutCommand {
 
     public void execute(Player player, Kit kit) {

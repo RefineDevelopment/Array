@@ -32,6 +32,9 @@ public class Arena {
     protected boolean active;
     @Getter
     @Setter
+    protected boolean disablePearls;
+    @Getter
+    @Setter
     private List<String> kits = new ArrayList<>();
     @Setter
     public org.bukkit.inventory.ItemStack displayIcon;
@@ -67,6 +70,13 @@ public class Arena {
                 } else {
                     arena.setDisplayIcon(new ItemBuilder(Material.PAPER).durability(0).build());
                 }
+
+                if (configuration.contains(path + ".disable-pearls")) {
+                    arena.setDisablePearls(configuration.getBoolean(path + ".disable-pearls"));
+                } else {
+                    arena.setDisablePearls(true);
+                }
+
                 if (configuration.contains(path + ".spawn1")) {
                     arena.setSpawn1(LocationUtil.deserialize(configuration.getString(path + ".spawn1")));
                 }

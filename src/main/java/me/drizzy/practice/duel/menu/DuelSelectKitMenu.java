@@ -37,7 +37,7 @@ public class DuelSelectKitMenu extends Menu {
         boolean party = Profile.getByUuid(player.getUniqueId()).getParty() != null;
 
         for ( Kit kit : Kit.getKits()) {
-            if (kit.isEnabled()) {
+            if (kit.isEnabled() || kit.getName().equalsIgnoreCase("HCFTeamFight")) {
                 if (!(kit.getGameRules().isTimed() && party))
                     buttons.put(buttons.size(), new SelectKitButton(kit));
             }
@@ -91,7 +91,7 @@ public class DuelSelectKitMenu extends Menu {
 
                 // Force close inventory
                 player.closeInventory();
-                if (player.hasPermission("practice.donator")) {
+                if (player.hasPermission("array.donator")) {
                     new DuelSelectArenaMenu("normal").openMenu(player);
                 } else {
                     profile.getDuelProcedure().send();
@@ -114,7 +114,7 @@ public class DuelSelectKitMenu extends Menu {
 
                 // Force close inventory
                 player.closeInventory();
-                if (player.hasPermission("practice.donator")) {
+                if (player.hasPermission("array.donator")) {
                     new DuelSelectArenaMenu("rematch").openMenu(player);
                 } else {
                     profile.getDuelProcedure().send();

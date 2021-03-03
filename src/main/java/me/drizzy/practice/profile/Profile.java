@@ -19,6 +19,10 @@ import me.drizzy.practice.duel.DuelRequest;
 import me.drizzy.practice.event.types.brackets.Brackets;
 import me.drizzy.practice.event.types.brackets.player.BracketsPlayer;
 import me.drizzy.practice.event.types.brackets.player.BracketsPlayerState;
+import me.drizzy.practice.event.types.gulag.Gulag;
+import me.drizzy.practice.event.types.gulag.GulagState;
+import me.drizzy.practice.event.types.gulag.player.GulagPlayer;
+import me.drizzy.practice.event.types.gulag.player.GulagPlayerState;
 import me.drizzy.practice.event.types.lms.LMS;
 import me.drizzy.practice.event.types.lms.player.LMSPlayer;
 import me.drizzy.practice.event.types.lms.player.LMSPlayerState;
@@ -37,9 +41,9 @@ import me.drizzy.practice.kit.KitLoadout;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.party.Party;
-import me.drizzy.practice.profile.hotbar.Hotbar;
-import me.drizzy.practice.profile.hotbar.HotbarItem;
-import me.drizzy.practice.profile.hotbar.HotbarLayout;
+import me.drizzy.practice.hotbar.Hotbar;
+import me.drizzy.practice.hotbar.HotbarItem;
+import me.drizzy.practice.hotbar.HotbarLayout;
 import me.drizzy.practice.profile.meta.ProfileKitEditor;
 import me.drizzy.practice.profile.meta.ProfileMatchHistory;
 import me.drizzy.practice.profile.meta.ProfileRematchData;
@@ -51,7 +55,6 @@ import me.drizzy.practice.tournament.Tournament;
 import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.InventoryUtil;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.config.BasicConfigurationFile;
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.nametag.NameTags;
 import org.bson.Document;
@@ -121,6 +124,9 @@ public class Profile {
     @Getter
     @Setter
     private Parkour parkour;
+    @Getter
+    @Setter
+    private Gulag gulag;
     @Getter
     @Setter
     private Spleef spleef;
@@ -758,7 +764,7 @@ public class Profile {
         return state == ProfileState.SPECTATE_MATCH && (
                 match != null || sumo != null ||
                 brackets != null || lms != null ||
-                parkour != null ||
+                parkour != null || gulag !=null ||
                 spleef != null);
     }
 
@@ -792,6 +798,10 @@ public class Profile {
 
     public boolean isInSpleef() {
         return state == ProfileState.IN_EVENT && spleef != null;
+    }
+
+    public boolean isInGulag() {
+        return state == ProfileState.IN_EVENT && gulag !=null;
     }
 
     public boolean isInSomeSortOfFight() {
@@ -846,6 +856,7 @@ public class Profile {
                         || (Array.getInstance().getBracketsManager().getActiveBrackets() != null && Array.getInstance().getBracketsManager().getActiveBrackets().isWaiting())
                         || (Array.getInstance().getLMSManager().getActiveLMS() != null && Array.getInstance().getLMSManager().getActiveLMS().isWaiting())
                         || (Array.getInstance().getParkourManager().getActiveParkour() != null && Array.getInstance().getParkourManager().getActiveParkour().isWaiting())
+                        || (Array.getInstance().getGulagManager().getActiveGulag() != null && Array.getInstance().getGulagManager().getActiveGulag().isWaiting())
                         || (Array.getInstance().getSpleefManager().getActiveSpleef() != null && Array.getInstance().getSpleefManager().getActiveSpleef().isWaiting());
                 int eventSlot = player.getInventory().first(Hotbar.getItems().get(HotbarItem.EVENT_JOIN));
 
@@ -881,8 +892,14 @@ public class Profile {
                 PlayerUtil.spectator(player);
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this));
             } else if (isInSumo()) {
+                if (getSumo().getEventPlayer(player).getState().equals(SumoPlayerState.ELIMINATED)) {
+                    PlayerUtil.spectator(player);
+                }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SUMO_SPECTATE, this));
             } else if (isInBrackets()) {
+                if (getBrackets().getEventPlayer(player).getState().equals(BracketsPlayerState.ELIMINATED)) {
+                    PlayerUtil.spectator(player);
+                }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.BRACKETS_SPECTATE, this));
             } else if (isInLMS()) {
                 if (getLms().getEventPlayer(player).getState().equals(LMSPlayerState.ELIMINATED)) {
@@ -899,6 +916,11 @@ public class Profile {
                     PlayerUtil.spectator(player);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SPLEEF_SPECTATE, this));
+            } else if(isInGulag()) {
+                if (getGulag().getEventPlayer(player).getState().equals(GulagPlayerState.ELIMINATED)) {
+                    PlayerUtil.spectator(player);
+                }
+                player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.GULAG_SPECTATE, this));
             } else if (isInFight()) {
                 if (!match.getTeamPlayer(player).isAlive()) {
                     player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this));
@@ -953,6 +975,11 @@ public class Profile {
                 if (bracketsPlayer != null && bracketsPlayer.getState() == BracketsPlayerState.WAITING) {
                     hide = false;
                 }
+            } else if (gulag != null) {
+                GulagPlayer gulagPlayer = gulag.getEventPlayer(otherPlayer);
+                if (gulagPlayer != null && gulagPlayer.getState() == GulagPlayerState.WAITING) {
+                    hide = false;
+                }
             } else if (lms != null) {
                 LMSPlayer LMSPlayer = lms.getEventPlayer(otherPlayer);
                 if (LMSPlayer != null && LMSPlayer.getState() == LMSPlayerState.WAITING) {
@@ -985,6 +1012,11 @@ public class Profile {
             } else if (brackets != null) {
                 BracketsPlayer bracketsPlayer = brackets.getEventPlayer(otherPlayer);
                 if (bracketsPlayer != null && bracketsPlayer.getState() == BracketsPlayerState.WAITING) {
+                    hide = false;
+                }
+            } else if (gulag != null) {
+                GulagPlayer gulagPlayer = gulag.getEventPlayer(otherPlayer);
+                if (gulagPlayer != null && gulagPlayer.getState() == GulagPlayerState.WAITING) {
                     hide = false;
                 }
             } else if (lms != null) {

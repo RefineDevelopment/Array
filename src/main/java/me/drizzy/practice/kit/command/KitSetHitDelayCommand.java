@@ -7,7 +7,7 @@ import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label="kit hitdelay", permission = "practice.dev")
+@CommandMeta(label="kit hitdelay", permission = "array.dev")
 public class KitSetHitDelayCommand {
     public void execute(Player player, @CPL("kit") Kit kit, @CPL("delay") int delay) {
         if (kit == null) {

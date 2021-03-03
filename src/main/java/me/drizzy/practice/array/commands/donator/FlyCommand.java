@@ -5,14 +5,14 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "fly", permission = "practice.donator+")
+@CommandMeta(label = "fly", permission = "array.donator+")
 public class FlyCommand {
 
     public void execute(Player player) {
         Profile profile = Profile.getByUuid(player.getUniqueId());
 
-        if ((profile.isInLobby() || profile.isInQueue()) || profile.getPlayer().hasPermission("practice.staff")) {
-            if (player.hasPermission("practice.donator+")) {
+        if ((profile.isInLobby() || profile.isInQueue()) || profile.getPlayer().hasPermission("array.staff")) {
+            if (player.hasPermission("array.donator+")) {
                 if (player.getAllowFlight()) {
                     player.setAllowFlight(false);
                     player.setFlying(false);

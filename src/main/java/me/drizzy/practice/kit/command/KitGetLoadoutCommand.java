@@ -5,7 +5,7 @@ import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "kit getloadout", permission = "practice.dev")
+@CommandMeta(label = "kit getloadout", permission = "array.dev")
 public class KitGetLoadoutCommand {
 
     public void execute(Player player, Kit kit) {

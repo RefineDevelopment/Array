@@ -5,7 +5,7 @@ import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "spleef cancel", permission = "practice.staff")
+@CommandMeta(label = "spleef cancel", permission = "array.staff")
 public class SpleefCancelCommand {
 
 	public void execute(CommandSender sender) {

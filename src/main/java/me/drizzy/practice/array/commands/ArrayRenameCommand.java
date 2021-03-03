@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-@CommandMeta(label={"array rename"}, permission="practice.dev")
+@CommandMeta(label={"array rename"}, permission="array.dev")
 public class ArrayRenameCommand {
     public void execute(Player p, @CPL("name") String name) {
         if (p.getItemInHand() == null || p.getItemInHand().getType().equals(Material.AIR)) {

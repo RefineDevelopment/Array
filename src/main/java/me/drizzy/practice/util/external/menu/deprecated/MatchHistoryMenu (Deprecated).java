@@ -66,7 +66,7 @@ public class MatchHistoryMenu extends Menu {
             }
             lore.add("&8&m--------------------------");
             lore.add("&7Left-Click to view the inventories");
-            if (player.hasPermission("practice.staff") && profileMatchHistory.getMatchType().equalsIgnoreCase("ranked")) {
+            if (player.hasPermission("array.staff") && profileMatchHistory.getMatchType().equalsIgnoreCase("ranked")) {
                 lore.add("&7Right-Click to revert this elo change");
                 lore.add("&cREAD ALL TEXT IN THE NEXT MENU CAREFULLY");
             }
@@ -82,7 +82,7 @@ public class MatchHistoryMenu extends Menu {
         @Override
         public void clicked(Player player, ClickType clickType) {
             player.closeInventory();
-            if (player.hasPermission("practice.staff") && profileMatchHistory.getMatchType().equalsIgnoreCase("ranked")) {
+            if (player.hasPermission("array.staff") && profileMatchHistory.getMatchType().equalsIgnoreCase("ranked")) {
                 if (clickType.isLeftClick())
                     new MatchDetailsMenu(profileMatchHistory.getFighter(), profileMatchHistory.getOpponent()).openMenu(player);
                 else new RevertEloMenu(profileMatchHistory).openMenu(player);

@@ -9,7 +9,7 @@ import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label= "arena listkits", permission="practice.dev")
+@CommandMeta(label= "arena listkits", permission="array.dev")
 public class ArenaKitListCommand {
     public void execute(Player player, @CPL("arena")Arena arena) {
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "---------------------------------------------------");

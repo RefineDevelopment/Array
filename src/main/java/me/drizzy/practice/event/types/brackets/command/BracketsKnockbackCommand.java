@@ -6,7 +6,7 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.util.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "brackets setknockbackprofile", permission = "practice.staff")
+@CommandMeta(label = "brackets setknockbackprofile", permission = "array.staff")
 public class BracketsKnockbackCommand {
 
     public void execute(Player player, @CPL("knockback-profile") String kb) {

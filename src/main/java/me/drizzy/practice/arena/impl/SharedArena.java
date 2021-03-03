@@ -32,7 +32,7 @@ public class SharedArena extends Arena {
         configuration.set(path + ".type", getType().name());
         configuration.set(path + ".icon.material", displayIcon.getType().name());
         configuration.set(path + ".icon.durability", displayIcon.getDurability());
-
+        configuration.set(path + ".disable-pearls", disablePearls);
         if (spawn1 != null) {
             configuration.set(path + ".spawn1", LocationUtil.serialize(spawn1));
         }

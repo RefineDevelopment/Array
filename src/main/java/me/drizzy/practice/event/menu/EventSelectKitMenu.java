@@ -55,14 +55,14 @@ public class EventSelectKitMenu extends Menu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
-            if (event.equals("Brackets")) {
+            if (event.equals("Gulag")) {
                 if (Array.getInstance().getBracketsManager().getActiveBrackets() != null) {
-                    player.sendMessage(CC.RED + "There is already an active Brackets Event.");
+                    player.sendMessage(CC.RED + "There is already an active Gulag Event.");
                     return;
                 }
 
                 if (!Array.getInstance().getBracketsManager().getCooldown().hasExpired()) {
-                    player.sendMessage(CC.RED + "There is an active cooldown for the Brackets Event.");
+                    player.sendMessage(CC.RED + "There is an active cooldown for the Gulag Event.");
                     return;
                 }
 

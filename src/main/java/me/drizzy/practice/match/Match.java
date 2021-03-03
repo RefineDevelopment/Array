@@ -17,7 +17,7 @@ import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.CC;
-import me.drizzy.practice.util.essentials.Essentials;
+import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.external.TimeUtil;
 import me.drizzy.practice.util.nametag.NameTags;

@@ -1,8 +1,9 @@
 Mongo:
   Database: Array
   URL: mongodb://127.0.0.1:27017/Array
-ARRAY:
-  SPAWN: world:108.42862345557752:106.0:2.4753712094583005:-89.59775:0.17956273
+Array:
+  Spawn: world:108.42862345557752:106.0:2.4753712094583005:-89.59775:0.17956273
+  Performance-mode: true
 Tab:
   Enabled: true
   Color:
@@ -17,7 +18,6 @@ Queue-Lore:
 - ""
 - "&bClick to join queue."
 - "&7&m----------------------"
-performance-mode: true
 MOTD:
   enabled: true
   lines:

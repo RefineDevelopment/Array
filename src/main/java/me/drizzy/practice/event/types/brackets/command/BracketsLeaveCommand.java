@@ -15,12 +15,12 @@ public class BracketsLeaveCommand {
 		Brackets activeBrackets = Array.getInstance().getBracketsManager().getActiveBrackets();
 
 		if (activeBrackets == null) {
-			player.sendMessage(CC.RED + "There isn't any active Brackets Events.");
+			player.sendMessage(CC.RED + "There isn't any active Gulag Events.");
 			return;
 		}
 
 		if (!profile.isInBrackets() || !activeBrackets.getEventPlayers().containsKey(player.getUniqueId())) {
-			player.sendMessage(CC.RED + "You are not apart of the active Brackets Event.");
+			player.sendMessage(CC.RED + "You are not apart of the active Gulag Event.");
 			return;
 		}
 

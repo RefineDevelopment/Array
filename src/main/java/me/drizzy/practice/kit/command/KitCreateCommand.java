@@ -7,7 +7,7 @@ import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "kit create", permission = "practice.dev")
+@CommandMeta(label = "kit create", permission = "array.dev")
 public class KitCreateCommand {
 
     public void execute(Player player, String kitName) {

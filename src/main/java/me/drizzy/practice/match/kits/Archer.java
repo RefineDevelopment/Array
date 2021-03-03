@@ -34,14 +34,17 @@ public class Archer extends ArmorClass implements Listener {
 
     public static PotionEffect ARCHER_SPEED_EFFECT = new PotionEffect(PotionEffectType.SPEED, 160, 3);
     public static PotionEffect ARCHER_JUMP_EFFECT = new PotionEffect(PotionEffectType.JUMP, 160, 7);
+    public static PotionEffect ARCHER_RES_EFFECT = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 160, 2);
     public static Map<UUID, Long> archerSpeedCooldowns = new HashMap<>();
     public static Map<UUID, Long> archerJumpCooldowns = new HashMap<>();
+    public static Map<UUID, Long> archerResistanceCooldowns = new HashMap<>();
 
-    public static HashMap<UUID, UUID> TAGGED = new HashMap<UUID, UUID>();
+    public static HashMap<UUID, UUID> TAGGED = new HashMap<>();
     public static Random random = new Random();
 
     public static long ARCHER_SPEED_COOLDOWN_DELAY = TimeUnit.SECONDS.toMillis(45L);
     public static long ARCHER_JUMP_COOLDOWN_DELAY = TimeUnit.MINUTES.toMillis(1L);
+    public static long ARCHER_RES_COOLDOWN_DELAY = TimeUnit.MINUTES.toMillis(1L);
 
     public Array plugin;
 
@@ -192,6 +195,30 @@ public class Archer extends ArmorClass implements Listener {
 
                 this.plugin.getEffectRestorer().setRestoreEffect(player, ARCHER_JUMP_EFFECT);
                 archerJumpCooldowns.put(event.getPlayer().getUniqueId(), System.currentTimeMillis() + ARCHER_JUMP_COOLDOWN_DELAY);
+            }
+        } else if (((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK)) && (event.hasItem()) && (event.getItem().getType() == Material.IRON_INGOT)) {
+
+            if (this.plugin.getArmorClassManager().getEquippedClass(event.getPlayer()) != this) {
+                return;
+            }
+
+            long timestamp = archerResistanceCooldowns.getOrDefault(event.getPlayer().getUniqueId(), 0L);
+            long millis = System.currentTimeMillis();
+            long remaining1 = timestamp - millis;
+
+            if (remaining1 > 0L) {
+                player.sendMessage(ChatColor.RED + "You cannot use this for another " + ChatColor.BOLD.toString() + DurationFormatUtils.formatDurationWords(remaining1, true, true) + ".");
+            } else {
+                ItemStack stack = player.getItemInHand();
+
+                if (stack.getAmount() == 1) {
+                    player.setItemInHand(new ItemStack(Material.AIR, 1));
+                } else {
+                    stack.setAmount(stack.getAmount() - 1);
+                }
+
+                this.plugin.getEffectRestorer().setRestoreEffect(player, ARCHER_RES_EFFECT);
+                archerResistanceCooldowns.put(event.getPlayer().getUniqueId(), System.currentTimeMillis() + ARCHER_RES_COOLDOWN_DELAY);
             }
         }
     }

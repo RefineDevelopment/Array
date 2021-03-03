@@ -114,7 +114,7 @@ public class DuelAcceptCommand {
         Match match;
 
         if (request.isParty()) {
-            if (request.getKit().getName().equals("HCFDIAMOND")) {
+            if (request.getKit().getName().equals("HCFTeamFight")) {
                 Team teamA = new Team(new TeamPlayer(player));
 
                 for (Player partyMember : senderProfile.getParty().getPlayers()) {

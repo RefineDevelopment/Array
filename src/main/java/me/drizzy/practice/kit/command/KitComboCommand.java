@@ -6,7 +6,7 @@ import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label={"kit combo"}, permission = "practice.dev")
+@CommandMeta(label={"kit combo"}, permission = "array.dev")
 public class KitComboCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {

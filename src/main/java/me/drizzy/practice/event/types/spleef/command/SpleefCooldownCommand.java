@@ -6,7 +6,7 @@ import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.external.Cooldown;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "spleef cooldown", permission = "practice.staff")
+@CommandMeta(label = "spleef cooldown", permission = "array.staff")
 public class SpleefCooldownCommand {
 
 	public void execute(CommandSender sender) {

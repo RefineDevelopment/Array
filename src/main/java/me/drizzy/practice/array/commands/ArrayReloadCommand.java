@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label={"array reload", "practice reload"}, permission="practice.dev")
+@CommandMeta(label={"array reload", "practice reload"}, permission="array.dev")
 public class ArrayReloadCommand {
     public void execute(Player p) {
         p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "WARNING! Reloading is not recommended. You might need to restart to make all features work again.");

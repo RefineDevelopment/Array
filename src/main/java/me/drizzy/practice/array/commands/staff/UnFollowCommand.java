@@ -5,7 +5,7 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.CC;
 import org.bukkit.entity.*;
 
-@CommandMeta(label = { "unfollow" }, permission = "practice.staff")
+@CommandMeta(label = { "unfollow" }, permission = "array.staff")
 public class UnFollowCommand
 {
     public void execute(final Player player) {

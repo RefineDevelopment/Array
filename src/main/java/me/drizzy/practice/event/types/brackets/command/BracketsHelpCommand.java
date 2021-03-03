@@ -10,16 +10,16 @@ public class BracketsHelpCommand {
 
     public void execute(Player player) {
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() + "------------------------------------------------");
-        player.sendMessage(Color.translate("&b&lBRACKETS &7- &7Information on how to use bracket commands"));
+        player.sendMessage(Color.translate("&b&lBRACKETS &8- &8&o(&7&o&7Information on how to use bracket commands"));
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() + "------------------------------------------------");
-        player.sendMessage(Color.translate("&7» &b/brackets cancel &7- &7Cancel current Brackets Event"));
-        player.sendMessage(Color.translate("&7» &b/brackets cooldown &7- &7Reset the Brackets Event cooldown"));
-        player.sendMessage(Color.translate("&7» &b/brackets host &7- &7Host a Brackets Event"));
-        player.sendMessage(Color.translate("&7» &b/brackets forcestart &7- &7Force start a Brackets Event"));
-        player.sendMessage(Color.translate("&7» &b/brackets join &7- &7Join ongoing Brackets Event"));
-        player.sendMessage(Color.translate("&7» &b/brackets leave &7- &7Leave ongoing Brackets Event"));
-        player.sendMessage(Color.translate("&7» &b/brackets tp &7- &7Teleport to the Brackets Event Arena"));
-        player.sendMessage(Color.translate("&7» &b/brackets setspawn  &7- &7Set the spawns for Brackets Event"));
+        player.sendMessage(Color.translate("&b/brackets cancel &8- &8&o(&7&o&7Cancel current Gulag Event"));
+        player.sendMessage(Color.translate("&b/brackets cooldown &8- &8&o(&7&o&7Reset the Gulag Event cooldown"));
+        player.sendMessage(Color.translate("&b/brackets host &8- &8&o(&7&o&7Host a Gulag Event"));
+        player.sendMessage(Color.translate("&b/brackets forcestart &8- &8&o(&7&o&7Force start a Gulag Event"));
+        player.sendMessage(Color.translate("&b/brackets join &8- &8&o(&7&o&7Join ongoing Gulag Event"));
+        player.sendMessage(Color.translate("&b/brackets leave &8- &8&o(&7&o&7Leave ongoing Gulag Event"));
+        player.sendMessage(Color.translate("&b/brackets tp &8- &8&o(&7&o&7Teleport to the Gulag Event Arena"));
+        player.sendMessage(Color.translate("&b/brackets setspawn  &8- &8&o(&7&o&7Set the spawns for Gulag Event"));
         player.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() + "------------------------------------------------");
     }
 }

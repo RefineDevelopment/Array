@@ -7,7 +7,7 @@ import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "kit remove", permission = "practice.dev")
+@CommandMeta(label = "kit remove", permission = "array.dev")
 public class KitRemoveCommand {
     public void execute(final Player player, @CPL("name") final String name) {
         if (name == null) {

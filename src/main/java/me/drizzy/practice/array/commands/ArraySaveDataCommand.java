@@ -5,7 +5,7 @@ import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label={"array save", "array savedata"}, permission="practice.dev")
+@CommandMeta(label={"array save", "array savedata"}, permission="array.dev")
 public class ArraySaveDataCommand {
     public void execute(Player p) {
         Profile.getProfiles().values().forEach(Profile::save);
