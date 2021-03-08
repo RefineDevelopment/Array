@@ -1,6 +1,6 @@
 # Array
 
-A fork of Praxi Standalone (Fork of Praxi)
+Commerical Praxi Fork
 
 ## Terms of Use
 
