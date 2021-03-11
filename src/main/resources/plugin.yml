@@ -1,6 +1,6 @@
 main: me.drizzy.practice.Array
 name: Array
-version: 4.0
+version: b4.2
 authors: ["Nick", "Drizzy", "Zentil"]
 depend:
   - ProtocolLib
