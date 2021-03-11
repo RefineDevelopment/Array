@@ -1,10 +1,9 @@
 package me.drizzy.practice.match.types;
 
-import me.drizzy.practice.match.task.MatchStickSpawnTask;
-import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.queue.QueueType;
+import lombok.Getter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
+import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
@@ -12,22 +11,19 @@ import me.drizzy.practice.match.MatchState;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.profile.ProfileState;
+import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.CC;
-import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.nametag.NameTags;
-import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import pt.foxspigot.jar.knockback.KnockbackModule;
-import pt.foxspigot.jar.knockback.KnockbackProfile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +73,12 @@ public class TeamMatch extends Match {
         return false;
     }
 
+
+    @Override
+    public boolean isTheBridgeMatch() {
+        return false;
+    }
+
     @Override
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
@@ -89,10 +91,6 @@ public class TeamMatch extends Match {
         teamPlayer.setAlive(true);
 
         PlayerUtil.reset(player);
-
-        if (getKit().getGameRules().isSumo() || getKit().getGameRules().isParkour()) {
-            new MatchStickSpawnTask(this, this.getPlayers()).runTaskTimer(Array.getInstance(), 20L, 20L);
-        }
 
         if (!getKit().getGameRules().isCombo()) {
             player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
@@ -111,20 +109,10 @@ public class TeamMatch extends Match {
         }
 
         if (!getKit().getGameRules().isNoitems()) {
-            Profile.getByUuid(player.getUniqueId()).getKitData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
+            Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
         }
 
-        if (getKit().getGameRules().isStickspawn()) {
-            PlayerUtil.denyMovement(player);
-        }
-
-        if (getKit().getKnockbackProfile() != null && KnockbackModule.INSTANCE.profiles.containsKey(getKit().getKnockbackProfile())) {
-            KnockbackProfile kbprofile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
-            ((CraftPlayer) player).getHandle().setKnockback(kbprofile);
-        } else {
-            KnockbackProfile knockbackProfile = KnockbackModule.getDefault();
-            ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
-        }
+        Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
 
         Team team = getTeam(player);
 
@@ -143,6 +131,7 @@ public class TeamMatch extends Match {
         } else {
             player.teleport(spawn.add(0, 2, 0));
         }
+        teamPlayer.setPlayerSpawn(spawn);
     }
 
     @Override
@@ -152,6 +141,10 @@ public class TeamMatch extends Match {
 
     @Override
     public void onStart() {
+        if (getPlayers().size() < 1) {
+            return;
+        }
+
         if (getKit().getGameRules().isTimed())
             new BukkitRunnable() {
                 @Override
@@ -223,8 +216,7 @@ public class TeamMatch extends Match {
                             PlayerUtil.reset(player, false);
                             profile.refreshHotbar();
                             profile.handleVisibility();
-                            KnockbackProfile knockbackProfile = KnockbackModule.getDefault();
-                            ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
+                            Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
                             Essentials.teleportToSpawn(player);
                             PlayerUtil.reset(player, false);
                             profile.refreshHotbar();
@@ -282,7 +274,9 @@ public class TeamMatch extends Match {
 
     @Override
     public void onDeath(Player player, Player killer) {
+
         TeamPlayer teamPlayer = getTeamPlayer(player);
+
         getSnapshots().add(new MatchSnapshot(teamPlayer));
 
         PlayerUtil.reset(player);
@@ -292,8 +286,8 @@ public class TeamMatch extends Match {
             Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
             player.teleport(spawn);
             Profile profile = Profile.getByUuid(player.getUniqueId());
-        PlayerUtil.reset(player, false);
-        profile.refreshHotbar();
+            PlayerUtil.reset(player, false);
+            profile.refreshHotbar();
             player.setAllowFlight(true);
             player.setFlying(true);
             profile.setState(ProfileState.SPECTATE_MATCH);
@@ -363,7 +357,6 @@ public class TeamMatch extends Match {
                 return null;
             }
         }
-//		}
     }
 
     @Override

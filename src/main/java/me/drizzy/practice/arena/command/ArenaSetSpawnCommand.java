@@ -1,20 +1,18 @@
 package me.drizzy.practice.arena.command;
 
 import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.arena.impl.StandaloneArena;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 @CommandMeta(label = "arena setspawn", permission = "array.dev")
 public class ArenaSetSpawnCommand {
 
-    public void execute(Player player, @CPL("arena") Arena arena, @CPL("1/2") Integer pos) {
+    public void execute(Player player, @CPL("arena") Arena arena, @CPL("[1|2]") Integer pos) {
         if (arena == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &c") + "That arena does not exist");
+            player.sendMessage(CC.translate("&8[&b&lArray&8] &7An arena with that name does not exist."));
             return;
         }
 
@@ -26,7 +24,7 @@ public class ArenaSetSpawnCommand {
         } else if (pos.equals(2)) {
             arena.setSpawn2(loc);
         }
-        player.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully set the position of &b" + arena.getName() + "&7 (&bPosition: &f" + pos + "&7)"));
+        player.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully updated the position of &b" + arena.getName() + "&8&o (&7&oPosition: " + pos + "&8&o)"));
         arena.save();
 
     }

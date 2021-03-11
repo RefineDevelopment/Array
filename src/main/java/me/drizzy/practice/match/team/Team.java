@@ -16,10 +16,7 @@ public class Team {
     @Setter
     private TeamPlayer leader;
     private final List<TeamPlayer> teamPlayers;
-    @Getter
-    @Setter
-    private int kothPoints;
-
+    @Getter @Setter  private int kothPoints;
     @Getter @Setter
     private int sumoRounds = 0;
 

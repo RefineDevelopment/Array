@@ -9,15 +9,18 @@ import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.match.types.*;
 import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.profile.rank.RankType;
 import me.drizzy.practice.queue.QueueType;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
-import me.drizzy.practice.arena.ArenaType;
+import me.drizzy.practice.enums.ArenaType;
 import org.bukkit.entity.Player;
 
 @CommandMeta(label = "duel accept")
 public class DuelAcceptCommand {
+
+    RankType rank = Array.getInstance().getRankManager();
 
     public void execute(Player player, @CPL("player") Player target) {
         if (target == null) {
@@ -166,7 +169,7 @@ public class DuelAcceptCommand {
         }
         if (!request.isParty()) {
             for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Start-Message.Solo") ) {
-                final String opponentMessages=this.formatMessages(string, player.getDisplayName(), target.getDisplayName());
+                final String opponentMessages=this.formatMessages(string, rank.getFullName(player), rank.getFullName(target));
                 final String message=CC.translate(opponentMessages).replace("{kit}", request.getKit().getName().replace("{arena}", request.getArena().getName()));
                 match.broadcastMessage(message);
             }

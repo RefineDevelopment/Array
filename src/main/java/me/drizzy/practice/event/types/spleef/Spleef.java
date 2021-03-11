@@ -3,32 +3,30 @@ package me.drizzy.practice.event.types.spleef;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.event.types.spleef.player.SpleefPlayer;
 import me.drizzy.practice.event.types.spleef.player.SpleefPlayerState;
+import me.drizzy.practice.event.types.spleef.task.SpleefRoundEndTask;
 import me.drizzy.practice.event.types.spleef.task.SpleefRoundStartTask;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.util.CC;
 import me.drizzy.practice.util.Circle;
 import me.drizzy.practice.util.PlayerSnapshot;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.util.chat.CC;
+import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.external.TimeUtil;
-import me.drizzy.practice.event.types.spleef.task.SpleefRoundEndTask;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import pt.foxspigot.jar.knockback.KnockbackModule;
-import pt.foxspigot.jar.knockback.KnockbackProfile;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -49,15 +47,11 @@ public class Spleef {
 	@Getter private final List<UUID> spectators = new ArrayList<>();
 	private final List<Location> placedBlocks = new ArrayList<>();
 	private final List<BlockState> changedBlocks = new ArrayList<>();
-	@Getter
-	@Setter
-	public static int maxPlayers;
+	@Getter @Setter	public static int maxPlayers;
 	@Getter @Setter private int totalPlayers;
 	@Setter private Cooldown cooldown;
 	@Setter private long roundStart;
-	@Getter
-	@Setter
-	private static boolean enabled = true;
+	@Getter	@Setter	private static boolean enabled = true;
 
 
 	public Spleef(Player player) {
@@ -293,18 +287,22 @@ public class Spleef {
 	}
 
 	public void announce() {
-		BaseComponent[] components = new ChatComponentBuilder("")
-				.parse(EVENT_PREFIX + CC.AQUA + getHost().getPlayer().getName() + CC.translate("&7 is hosting a &b&lSpleef Event&7. ") + CC.GREEN + "[Click to join]")
-				.attachToEachPart(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentBuilder("")
-						.parse(CC.GRAY + "Click to join the spleef event.").create()))
-				.attachToEachPart(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/spleef join"))
-				.create();
-
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			if (!eventPlayers.containsKey(player.getUniqueId())) {
-				player.sendMessage("");
-				player.spigot().sendMessage(components);
-				player.sendMessage("");
+		List<String> strings=new ArrayList<>();
+		strings.add(CC.translate(" "));
+		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
+		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&b&l[Spleef Event]"));
+		strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + ""));
+		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&fA &bSpleef &fevent is being hosted by &b" + this.host.getUsername()));
+		strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
+		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
+		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
+		strings.add(CC.translate(" "));
+		for ( String string : strings ) {
+			Clickable message = new Clickable(string, "Click to join Spleef event", "/spleef join");
+			for ( Player player : Bukkit.getOnlinePlayers() ) {
+				if (!eventPlayers.containsKey(player.getUniqueId())) {
+					message.sendToPlayer(player);
+				}
 			}
 		}
 	}
@@ -316,19 +314,10 @@ public class Spleef {
 	}
 
 	public void onJoin(Player player) {
-		KnockbackProfile kbprofile = KnockbackModule.getDefault();
-		if (getKit().getKnockbackProfile() != null && KnockbackModule.INSTANCE.profiles.containsKey(getKit().getKnockbackProfile())) {
-			kbprofile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
-		}
-		((CraftPlayer) player).getHandle().setKnockback(kbprofile);
+		Array.getInstance().getKnockbackManager().getKnockbackType().applyKnockback(player, Array.getInstance().getBracketsManager().getBracketsKnockbackProfile());
 	}
-
 	public void onLeave(Player player) {
-		KnockbackProfile kbprofile = KnockbackModule.getDefault();
-		if (getKit().getKnockbackProfile() != null && KnockbackModule.INSTANCE.profiles.containsKey(getKit().getKnockbackProfile())) {
-			kbprofile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
-		}
-		((CraftPlayer) player).getHandle().setKnockback(kbprofile);
+		Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
 	}
 
 	public void onRound() {
@@ -352,7 +341,7 @@ public class Spleef {
 			}
 
 			assert player != null;
-			Profile.getByUuid(player.getUniqueId()).getKitData().get(getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
+			Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
 		}
 		setEventTask(new SpleefRoundStartTask(this));
 	}

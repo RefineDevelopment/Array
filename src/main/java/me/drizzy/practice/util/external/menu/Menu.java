@@ -1,7 +1,7 @@
 package me.drizzy.practice.util.external.menu;
 
 import me.drizzy.practice.Array;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;

@@ -1,7 +1,7 @@
 package me.drizzy.practice.array.commands;
 
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 

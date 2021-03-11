@@ -4,9 +4,9 @@ import me.drizzy.practice.event.types.brackets.player.BracketsPlayer;
 import me.drizzy.practice.event.types.brackets.player.BracketsPlayerState;
 import me.drizzy.practice.event.types.brackets.task.BracketsRoundEndTask;
 import me.drizzy.practice.event.types.brackets.task.BracketsRoundStartTask;
+import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.hotbar.Hotbar;
-import me.drizzy.practice.hotbar.HotbarItem;
 import me.drizzy.practice.Array;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,8 +14,9 @@ import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.PlayerSnapshot;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.external.TimeUtil;
@@ -23,6 +24,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -36,34 +38,21 @@ import java.util.*;
 public class Brackets {
 
 	protected static String EVENT_PREFIX=CC.translate("&8[&bBrackets&8] &r");
-
 	private final String name;
-	@Setter
-	private BracketsState state=BracketsState.WAITING;
-	@Getter
-	@Setter
-	private Kit kit;
+	@Setter	private BracketsState state=BracketsState.WAITING;
+	@Getter	@Setter	private Kit kit;
 	private BracketsTask eventTask;
 	private final PlayerSnapshot host;
 	private final LinkedHashMap<UUID, BracketsPlayer> eventPlayers=new LinkedHashMap<>();
-	@Getter
-	private final List<UUID> spectators=new ArrayList<>();
-	@Getter
-	@Setter
-	public static int maxPlayers;
-	@Getter
-	@Setter
-	private int totalPlayers;
-	@Setter
-	private Cooldown cooldown;
+	@Getter	private final List<UUID> spectators=new ArrayList<>();
+	@Getter	@Setter	public static int maxPlayers;
+	@Getter	@Setter	private int totalPlayers;
+	@Setter private Cooldown cooldown;
 	private final List<Entity> entities=new ArrayList<>();
 	private BracketsPlayer roundPlayerA;
 	private BracketsPlayer roundPlayerB;
-	@Setter
-	private long roundStart;
-	@Getter
-	@Setter
-	private static boolean enabled = true;
+	@Setter private long roundStart;
+	@Getter @Setter private static boolean enabled = true;
 
 
 	public Brackets(Player player, Kit kit) {
@@ -179,7 +168,7 @@ public class Brackets {
 		profile.setBrackets(this);
 		profile.setState(ProfileState.IN_EVENT);
 		profile.refreshHotbar();
-
+        Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
 		player.teleport(Array.getInstance().getBracketsManager().getBracketsSpectator());
 
 		new BukkitRunnable() {
@@ -212,7 +201,7 @@ public class Brackets {
 		profile.setState(ProfileState.IN_LOBBY);
 		profile.setBrackets(null);
 		profile.refreshHotbar();
-
+		Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
 		Essentials.teleportToSpawn(player);
 
 		new BukkitRunnable() {
@@ -249,9 +238,9 @@ public class Brackets {
 		if (winner == null) {
 			Bukkit.broadcastMessage(EVENT_PREFIX + CC.RED + "The brackets event has been canceled.");
 		} else {
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Gulag Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Gulag Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Gulag Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Brackets Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Brackets Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Brackets Event" + CC.GRAY + "!");
 		}
 
 		for (BracketsPlayer bracketsPlayer : eventPlayers.values()) {
@@ -297,18 +286,22 @@ public class Brackets {
 	}
 
 	public void announce() {
-		BaseComponent[] components = new ChatComponentBuilder("")
-				.parse(EVENT_PREFIX + getHost().getPlayer().getDisplayName() + CC.translate("&7 is hosting a &b&lBrackets Event&7. ") + CC.GREEN + "[Click to join]")
-				.attachToEachPart(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentBuilder("")
-						.parse(CC.GRAY + "Click to join the brackets event.").create()))
-				.attachToEachPart(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/brackets join"))
-				.create();
-
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			if (!eventPlayers.containsKey(player.getUniqueId())) {
-				player.sendMessage("");
-				player.spigot().sendMessage(components);
-				player.sendMessage("");
+		List<String> strings=new ArrayList<>();
+		strings.add(CC.translate(" "));
+		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
+		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&b&l[Brackets Event]"));
+		strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + ""));
+		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&fA &bBrackets &fevent is being hosted by &b" + this.host.getUsername()));
+		strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
+		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
+		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
+		strings.add(CC.translate(" "));
+		for ( String string : strings ) {
+			Clickable message = new Clickable(string, "Click to join Brackets Event", "/brackets join");
+			for ( Player player : Bukkit.getOnlinePlayers() ) {
+				if (!eventPlayers.containsKey(player.getUniqueId())) {
+					message.sendToPlayer(player);
+				}
 			}
 		}
 	}
@@ -320,15 +313,10 @@ public class Brackets {
 	}
 
 	public void onJoin(Player player) {
-		KnockbackProfile kbprofile = KnockbackModule.getDefault();
-		if (getKit().getKnockbackProfile() != null && KnockbackModule.INSTANCE.profiles.containsKey(getKit().getKnockbackProfile())) {
-			kbprofile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
-		}
-		((CraftPlayer) player).getHandle().setKnockback(kbprofile);
+		Array.getInstance().getKnockbackManager().getKnockbackType().applyKnockback(player, Array.getInstance().getBracketsManager().getBracketsKnockbackProfile());
 	}
 	public void onLeave(Player player) {
-		KnockbackProfile kbprofile = KnockbackModule.getDefault();
-		((CraftPlayer) player).getHandle().setKnockback(kbprofile);
+		Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
 	}
 
 	public void onRound() {
@@ -375,14 +363,12 @@ public class Brackets {
 		PlayerUtil.reset(playerA);
 		PlayerUtil.reset(playerB);
 
-		PlayerUtil.denyMovement(playerA);
-		PlayerUtil.denyMovement(playerB);
-
 		playerA.teleport(Array.getInstance().getBracketsManager().getBracketsSpawn1());
-
-		Profile.getByUuid(playerA.getUniqueId()).getKitData().get(getKit()).getKitItems().forEach((integer, itemStack) -> playerA.getInventory().setItem(0, Hotbar.getItems().get(HotbarItem.DEFAULT_KIT)));
+		playerA.getInventory().setContents(getKit().getKitLoadout().getContents());
+		playerA.getInventory().setArmorContents(getKit().getKitLoadout().getArmor());
 		playerB.teleport(Array.getInstance().getBracketsManager().getBracketsSpawn2());
-		Profile.getByUuid(playerB.getUniqueId()).getKitData().get(getKit()).getKitItems().forEach((integer, itemStack) -> playerB.getInventory().setItem(0, Hotbar.getItems().get(HotbarItem.DEFAULT_KIT)));
+		playerB.getInventory().setContents(getKit().getKitLoadout().getContents());
+		playerB.getInventory().setArmorContents(getKit().getKitLoadout().getArmor());
 		setEventTask(new BracketsRoundStartTask(this));
 	}
 
@@ -451,7 +437,7 @@ public class Brackets {
 		PlayerUtil.spectator(player);
 		player.setFlying(true);
 
-		player.teleport(Array.getInstance().getBracketsManager().getBracketsSpawn1());
+		player.teleport(Array.getInstance().getBracketsManager().getBracketsSpectator());
 	}
 
 	public void removeSpectator(Player player) {

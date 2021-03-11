@@ -1,6 +1,7 @@
 package me.drizzy.practice.statistics.menu;
 
 import lombok.AllArgsConstructor;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import me.drizzy.practice.kit.Kit;
@@ -22,7 +23,7 @@ public class StatsMenu extends Menu {
 
     @Override
     public String getTitle(Player player) {
-        return "&b" + target.getName() + "'s Statistics";
+        return "&7" + target.getName() + "'s Statistics";
     }
 
     @Override
@@ -52,15 +53,17 @@ public class StatsMenu extends Menu {
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
             Profile profile = Profile.getByUuid(target.getUniqueId());
-            String elo = kit.getGameRules().isRanked() ? Integer.toString(profile.getKitData().get(kit).getElo()) : "N/A";
-            lore.add("&bELO: &f" + elo);
-            lore.add("&bWins: &f" + profile.getKitData().get(kit).getWon());
-            lore.add("&bKills: &f" + profile.getKitData().get(kit).getKills());
-            lore.add("&bLosses: &f" + profile.getKitData().get(kit).getLost());
-            lore.add("&bDeaths: &f" + profile.getKitData().get(kit).getDeaths());
+            String elo = kit.getGameRules().isRanked() ? Integer.toString(profile.getStatisticsData().get(kit).getElo()) : "N/A";
+            lore.add(CC.MENU_BAR);
+            lore.add("&8 • &bELO: &f" + elo);
+            lore.add("&8 • &bWins: &f" + profile.getStatisticsData().get(kit).getWon());
+            lore.add("&8 • &bKills: &f" + profile.getStatisticsData().get(kit).getKills());
+            lore.add("&8 • &bLosses: &f" + profile.getStatisticsData().get(kit).getLost());
+            lore.add("&8 • &bDeaths: &f" + profile.getStatisticsData().get(kit).getDeaths());
+            lore.add(CC.MENU_BAR);
 
             return new ItemBuilder(kit.getDisplayIcon())
-                    .name("&b&l" + kit.getName() + " &7｜ &fStats")
+                    .name(kit.getDisplayName() + " &7｜ &fStats")
                     .lore(lore)
                     .build();
         }
@@ -74,18 +77,17 @@ public class StatsMenu extends Menu {
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
             Profile profile = Profile.getByUuid(target.getUniqueId());
-            lore.add("");
-            lore.add("&b&lStatistics");
-            lore.add(" &bELO: &r" + profile.getGlobalElo());
-            lore.add(" &bWins: &f" + profile.getTotalWins());
-            lore.add(" &bKills: &f" + profile.getTotalKills());
-            lore.add(" &bLosses: &f" + profile.getTotalLost());
-            lore.add(" &bDeaths: &f" + profile.getTotalDeaths());
-            lore.add("");
-            lore.add("&b&lOther");
-            lore.add(" &bLeague: &f" + profile.getEloLeague());
-            lore.add(" &bW/L Ratio: &f" + profile.getWLR());
-            lore.add(" &bK/D Ratio: &f" + profile.getKDR());
+            lore.add(CC.MENU_BAR);
+            lore.add("&8 • &bELO: &r" + profile.getGlobalElo());
+            lore.add("&8 • &bWins: &f" + profile.getTotalWins());
+            lore.add("&8 • &bKills: &f" + profile.getTotalKills());
+            lore.add("&8 • &bLosses: &f" + profile.getTotalLost());
+            lore.add("&8 • &bDeaths: &f" + profile.getTotalDeaths());
+            lore.add(CC.MENU_BAR);
+            lore.add("&8 • &bLeague: &f" + profile.getEloLeague());
+            lore.add("&8 • &bW/L Ratio: &f" + profile.getWLR());
+            lore.add("&8 • &bK/D Ratio: &f" + profile.getKDR());
+            lore.add(CC.MENU_BAR);
 
             return new ItemBuilder(SkullCreator.itemFromUuid(target.getUniqueId()))
                     .name("&b&lGlobal &7｜ &fStats")

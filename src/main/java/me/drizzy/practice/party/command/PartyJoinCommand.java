@@ -4,9 +4,9 @@ package me.drizzy.practice.party.command;
 
 import me.drizzy.practice.tournament.Tournament;
 import me.drizzy.practice.party.Party;
-import me.drizzy.practice.party.PartyPrivacy;
+import me.drizzy.practice.enums.PartyPrivacyType;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 import me.drizzy.practice.util.command.command.CommandMeta;
 
@@ -37,7 +37,7 @@ public class PartyJoinCommand
             player.sendMessage(CC.RED + "A party with that name could not be found.");
             return;
         }
-        if (party.getPrivacy() == PartyPrivacy.CLOSED && party.getInvite(player.getUniqueId()) == null) {
+        if (party.getPrivacy() == PartyPrivacyType.CLOSED && party.getInvite(player.getUniqueId()) == null) {
             player.sendMessage(CC.RED + "You have not been invited to that party.");
             return;
         }

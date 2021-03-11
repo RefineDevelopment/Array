@@ -1,40 +1,34 @@
 package me.drizzy.practice.queue;
 
+import lombok.Getter;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.util.CC;
-import lombok.Getter;
+import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.chat.CC;
+import me.drizzy.practice.util.external.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import me.drizzy.practice.util.PlayerUtil;
 
 import java.util.*;
-import java.util.function.Predicate;
 
+@Getter
 public class Queue {
 
-    @Getter
-    private static final List<Queue> queues = new ArrayList<>();
-
-    @Getter
-    private static final Map<Kit, Queue> queuemap = new HashMap<>();
-
-    @Getter
-    private final UUID uuid = UUID.randomUUID();
-    @Getter
+    @Getter private static final List<Queue> queues = new ArrayList<>();
+    @Getter private static final Map<Kit, Queue> queueMap = new HashMap<>();
+    private final Map<UUID, Long> playerQueueTime = new HashMap<>();
+    private final UUID uuid;
     private final Kit kit;
-    @Getter
     private final QueueType type;
-    @Getter
     private final LinkedList<QueueProfile> players = new LinkedList<>();
 
     public Queue(Kit kit, QueueType type) {
         this.kit = kit;
         this.type = type;
-
+        this.uuid = UUID.randomUUID();
         queues.add(this);
-        queuemap.put(kit, this);
+        queueMap.put(kit, this);
     }
 
     public static Queue getByUuid(UUID uuid) {
@@ -43,21 +37,13 @@ public class Queue {
                 return queue;
             }
         }
-
         return null;
     }
 
     public static Queue getByKit(Kit kit) {
-        return queuemap.get(kit);
-    }
-
-    public static Queue getByPredicate(Predicate<Queue> predicate) {
-        for (Queue queue : queues) {
-            if (predicate.test(queue)) {
-                return queue;
-            }
+        if (queueMap.containsKey(kit)) {
+            return queueMap.get(kit);
         }
-
         return null;
     }
 
@@ -73,7 +59,7 @@ public class Queue {
 
     public Queue getRankedType() {
         if (type != QueueType.RANKED) {
-            for (Queue queue : queues) {
+            for ( Queue queue : queues ) {
                 if (queue.getKit() == kit) {
                     if (queue.getQueueType() != type) {
                         return queue;
@@ -84,10 +70,14 @@ public class Queue {
         return null;
     }
 
+    public String getDuration(Player player) {
+        return TimeUtil.millisToTimer(this.getPlayerQueueTime(player.getUniqueId()));
+    }
+
     public void addPlayer(Player player, int elo) {
         QueueProfile queueProfile = new QueueProfile(player.getUniqueId());
         queueProfile.setElo(elo);
-
+        this.playerQueueTime.put(player.getUniqueId(), System.currentTimeMillis());
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setQueue(this);
         profile.setQueueProfile(queueProfile);
@@ -99,7 +89,7 @@ public class Queue {
             player.sendMessage(CC.GRAY + "You have been added to the " + CC.AQUA + this.getQueueName() + CC.GRAY + " queue.");
         }
         if (this.type == QueueType.RANKED) {
-            player.sendMessage(CC.GRAY + "You have been added to the " + CC.AQUA + this.getQueueName() + CC.GRAY +  " queue." + CC.AQUA + " [" + profile.getKitData().get(kit).getElo() + "]");
+            player.sendMessage(CC.GRAY + "You have been added to the " + CC.AQUA + this.getQueueName() + CC.GRAY +  " queue." + CC.AQUA + " [" + profile.getStatisticsData().get(kit).getElo() + "]");
         }
         this.players.add(queueProfile);
     }
@@ -119,6 +109,10 @@ public class Queue {
         profile.setState(ProfileState.IN_LOBBY);
         PlayerUtil.reset(profile.getPlayer(), false);
         profile.refreshHotbar();
+    }
+
+    public long getPlayerQueueTime(UUID uuid) {
+        return this.playerQueueTime.get(uuid);
     }
 
     public QueueType getQueueType() {

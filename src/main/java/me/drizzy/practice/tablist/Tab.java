@@ -4,6 +4,7 @@ import me.allen.ziggurat.ZigguratAdapter;
 import me.allen.ziggurat.objects.BufferedTabObject;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.event.types.brackets.Brackets;
+import me.drizzy.practice.event.types.wizard.Wizard;
 import me.drizzy.practice.event.types.lms.LMS;
 import me.drizzy.practice.event.types.parkour.Parkour;
 import me.drizzy.practice.event.types.sumo.Sumo;
@@ -12,7 +13,7 @@ import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.tournament.Tournament;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.ChatColor;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.event.types.spleef.Spleef;
@@ -68,7 +69,7 @@ public class Tab implements ZigguratAdapter {
                 int statslots = 4;
                 for (final Kit kit : Kit.getKits()) {
                     if (kit.isEnabled() && kit.getGameRules().isRanked()) {
-                        elements.add(new BufferedTabObject().slot(statslots).text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + kit.getName() + ": " + Array.getInstance().getMainConfig().getString("Tab.Color.Main") + profile.getKitData().get(kit).getElo()));
+                        elements.add(new BufferedTabObject().slot(statslots).text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + kit.getName() + ": " + Array.getInstance().getMainConfig().getString("Tab.Color.Main") + profile.getStatisticsData().get(kit).getElo()));
                         if (++statslots >= 20) {
                             break;
                         }
@@ -118,7 +119,7 @@ public class Tab implements ZigguratAdapter {
         else if (profile.isInFight()) {
             final Match match2 = profile.getMatch();
             if (match2 != null) {
-                if (match2.isSoloMatch() || match2.isSumoMatch()) {
+                if (match2.isSoloMatch() || match2.isSumoMatch() || match2.isTheBridgeMatch()) {
                     final TeamPlayer opponent = match2.getOpponentTeamPlayer(player);
                     elements.add(new BufferedTabObject().text("&a&lYou").slot(4));
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "Match Details").slot(23));
@@ -196,7 +197,7 @@ public class Tab implements ZigguratAdapter {
         }
         else if (profile.isInBrackets()) {
             final Brackets brackets = profile.getBrackets();
-            elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "Gulag").slot(23));
+            elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "Brackets").slot(23));
             int pl = 0;
             for (int added4 = 0; added4 < 60; ++added4) {
                 if (!tabSlots.contains(added4)) {
@@ -206,6 +207,21 @@ public class Tab implements ZigguratAdapter {
                     final Player bracketsPlayer = brackets.getRemainingPlayers().get(pl).getPlayer();
                     ++pl;
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + bracketsPlayer.getName()).slot(added4));
+                }
+            }
+        }
+        else if (profile.isInWizard()) {
+            final Wizard wizard = profile.getWizard();
+            elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "Wizard").slot(23));
+            int pl = 0;
+            for (int added4 = 0; added4 < 60; ++added4) {
+                if (!tabSlots.contains(added4)) {
+                    if (wizard.getRemainingPlayers().size() <= pl) {
+                        break;
+                    }
+                    final Player wizardPlayer = wizard.getRemainingPlayers().get(pl).getPlayer();
+                    ++pl;
+                    elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + wizardPlayer.getName()).slot(added4));
                 }
             }
         }
@@ -226,7 +242,7 @@ public class Tab implements ZigguratAdapter {
         }
         else if (profile.isInLMS()) {
             final LMS ffa = profile.getLms();
-            elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "LMS").slot(23));
+            elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "KoTH").slot(23));
             int pl = 0;
             for (int added4 = 4; added4 < 60; ++added4) {
                 if (!tabSlots.contains(added4)) {
@@ -273,17 +289,17 @@ public class Tab implements ZigguratAdapter {
             final Match match2=profile.getMatch();
             if (match2 != null) {
                 if (match2.isSoloMatch()) {
-                    elements.add(new BufferedTabObject().text("&eTeam A").slot( 4));
+                    elements.add(new BufferedTabObject().text("&aTeam A").slot( 4));
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "Match Info").slot( 23));
-                    elements.add(new BufferedTabObject().text("&eTeam B").slot( 44));
+                    elements.add(new BufferedTabObject().text("&aTeam B").slot( 44));
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + match2.getTeamPlayerA().getUsername()).slot( 5));
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Duration:").slot( 24));
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + match2.getDuration()).slot( 25));
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + match2.getTeamPlayerB().getUsername()).slot( 45));
                 } else if (match2.isTeamMatch() || match2.isHCFMatch()) {
-                    elements.add(new BufferedTabObject().text("&eTeam A").slot( 4));
+                    elements.add(new BufferedTabObject().text("&aTeam A").slot( 4));
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "Match Info").slot( 23));
-                    elements.add(new BufferedTabObject().text("&eTeam B").slot( 44));
+                    elements.add(new BufferedTabObject().text("&aTeam B").slot( 44));
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + match2.getTeamA().getLeader().getUsername()).slot( 5));
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Duration:").slot( 24));
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + match2.getDuration()).slot( 25));
@@ -301,9 +317,9 @@ public class Tab implements ZigguratAdapter {
         int pl=0;
         for ( int added4=1; added4 < 60; ++added4 ) {
             elements.add(new BufferedTabObject().text("&b&lPractice &7| &f&lEU").slot(21));
-            elements.add(new BufferedTabObject().text("&7store.purgemc.club").slot( 40));
+            elements.add(new BufferedTabObject().text("&7store.purgemc.club").slot(40));
             elements.add(new BufferedTabObject().text("&7discord.purgemc.club").slot(60));
-            elements.add(new BufferedTabObject().text("&7www.purgemc.club").slot( 20));
+            elements.add(new BufferedTabObject().text("&7www.purgemc.club").slot(20));
             tabSlots.add(0);
             tabSlots.add(1);
             tabSlots.add(21);

@@ -3,7 +3,7 @@ package me.drizzy.practice.kit.command;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueType;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;

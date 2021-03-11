@@ -5,7 +5,7 @@ import me.drizzy.practice.event.types.brackets.Brackets;
 import me.drizzy.practice.event.types.brackets.BracketsState;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 
 @CommandMeta(label = "brackets join")
@@ -21,12 +21,12 @@ public class BracketsJoinCommand {
 		}
 
 		if (activeBrackets == null) {
-			player.sendMessage(CC.RED + "There isn't any active Gulag Events right now.");
+			player.sendMessage(CC.RED + "There isn't any active Brackets Events right now.");
 			return;
 		}
 
 		if (activeBrackets.getState() != BracketsState.WAITING) {
-			player.sendMessage(CC.RED + "This Gulag Event is currently on-going and cannot be joined.");
+			player.sendMessage(CC.RED + "This Brackets Event is currently on-going and cannot be joined.");
 			return;
 		}
 

@@ -1,8 +1,8 @@
 package me.drizzy.practice.party.command;
 
-import me.drizzy.practice.party.PartyPrivacy;
+import me.drizzy.practice.enums.PartyPrivacyType;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 import me.drizzy.practice.util.command.command.CommandMeta;
 
@@ -24,6 +24,6 @@ public class PartyOpenCommand
             player.sendMessage(CC.RED + "You are not the leader of your party.");
             return;
         }
-        profile.getParty().setPrivacy(PartyPrivacy.OPEN);
+        profile.getParty().setPrivacy(PartyPrivacyType.OPEN);
     }
 }

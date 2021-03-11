@@ -1,6 +1,6 @@
 package me.drizzy.practice.duel;
 
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;

@@ -5,7 +5,7 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.event.types.spleef.Spleef;
 import me.drizzy.practice.event.types.spleef.SpleefState;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 
 @CommandMeta(label = "spleef join")

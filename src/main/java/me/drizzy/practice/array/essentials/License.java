@@ -1,5 +1,6 @@
 package me.drizzy.practice.array.essentials;
 
+import me.drizzy.practice.Array;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -12,9 +13,9 @@ import java.util.UUID;
 
 public class License {
 
-	private String licenseKey;
-	private Plugin plugin;
-	private String validationServer;
+	private final String licenseKey;
+	private final Plugin plugin;
+	private final String validationServer;
 	private LogType logType = LogType.NORMAL;
 	private String securityKey = "af4efaegfage5rgadfga05thxdrizzyHuW8iUhTdIUInjkfF";
 	private boolean debug = false;
@@ -41,23 +42,24 @@ public class License {
 	}
 
 	public boolean register() {
-		log(0, "---------------[Array-License]---------------");
+		log(0, "&7&m---------------&8[&bArray-License&8]&7&m----------------");
 		log(0, "Connecting to License-Server...");
 		ValidationType vt = isValid();
 		if (vt == ValidationType.VALID) {
 			log(1, "License valid!");
 			log(1, "By using this plugin you agree to our TOS!");
-			log(1, "Array made by Drizzy#0278 at Discord.link/purge");
-			log(0, "---------------[Array-License]---------------");
+			log(1, "Array is made by Drizzy#0278 at https://discord.link/purge");
+			log(1, "");
+			log(1, "Note: If this is a cracked copy then please don't use it,");
+			log(1, "I work very hard to make this plugin affordable and useful!");
+			log(0, "&7&m---------------&8[&bArray-License&8]&7&m----------------");
 			return true;
 		} else {
-			log(1, "License is NOT valid!");
-			log(1, "Failed as a result of " + vt.toString());
-			log(1, "Plugin is probably leaked!");
-			log(1, "Disabling Array!");
-			log(1, "Contact Drizzy#0278 for License Issues!");
-			log(0, "---------------[Array-License]----------------");
-
+			log(1, "            &cLicense is NOT valid!");
+			log(1, "&7Failed as a result of &b" + vt.toString());
+			log(1, "&cPlugin is probably leaked, &4Disabling Array!");
+			log(1, "&7Contact Drizzy#0278 for License Issues!");
+			log(0, "&7&m---------------&8[&bArray-License&8]&7&m----------------");
 			Bukkit.getScheduler().cancelTasks(plugin);
 			Bukkit.getPluginManager().disablePlugin(plugin);
 			return false;
@@ -173,6 +175,6 @@ public class License {
 	private void log(int type, String message) {
 		if (logType == LogType.NONE || (logType == LogType.LOW && type == 0))
 			return;
-		System.out.println(message);
+		Array.logger(message);
 	}
 }

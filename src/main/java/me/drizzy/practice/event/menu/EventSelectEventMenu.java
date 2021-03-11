@@ -1,15 +1,15 @@
 package me.drizzy.practice.event.menu;
 
 import lombok.AllArgsConstructor;
-import me.drizzy.practice.event.EventType;
-import me.drizzy.practice.event.types.gulag.command.GulagHostCommand;
+import me.drizzy.practice.enums.EventType;
+import me.drizzy.practice.event.types.wizard.command.WizardHostCommand;
 import org.bukkit.Material;
 import me.drizzy.practice.event.types.brackets.command.BracketsHostCommand;
 import me.drizzy.practice.event.types.lms.command.LMSHostCommand;
 import me.drizzy.practice.event.types.parkour.command.ParkourHostCommand;
 import me.drizzy.practice.event.types.spleef.command.SpleefHostCommand;
 import me.drizzy.practice.event.types.sumo.command.SumoHostCommand;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.menu.Button;
 import me.drizzy.practice.util.external.menu.Menu;
@@ -42,13 +42,12 @@ public class EventSelectEventMenu extends Menu {
                 buttons.put(glassslots, new GlassButton());
             }
         }
-        buttons.put(13, new SelectEventButton(EventType.LMS));
-        buttons.put(12, new SelectEventButton(EventType.BRACKETS));
-        buttons.put(11, new SelectEventButton(EventType.SUMO));
+        buttons.put(31, new SelectEventButton(EventType.LMS));
+        buttons.put(13, new SelectEventButton(EventType.BRACKETS));
+        buttons.put(12, new SelectEventButton(EventType.SUMO));
         buttons.put(14, new SelectEventButton(EventType.PARKOUR));
-        buttons.put(15, new SelectEventButton(EventType.GULAG));
+        buttons.put(32, new SelectEventButton(EventType.WIZARD));
         buttons.put(30, new SelectEventButton(EventType.SPLEEF));
-        buttons.put(31, new SelectEventButton(EventType.KOTH));
         return buttons;
     }
 
@@ -97,24 +96,24 @@ public class EventSelectEventMenu extends Menu {
                     lore.add("");
                     lore.add("&bClick to host...");
                     break;
-                case "&b&lGulag":
+                case "&b&lWizard":
                     lore.add(CC.GRAY + "Fight for your life and");
                     lore.add(CC.GRAY + "beat your opponent in");
-                    lore.add(CC.GRAY + "1v1 Duels with guns!");
+                    lore.add(CC.GRAY + "1v1 Duels with wands!");
                     lore.add("");
                     lore.add("&bClick to host...");
                     break;
-                case "&c&lKoTH":
-                    lore.add(CC.GRAY + "Capture the KoTH point");
+                case "&b&lKoTH":
+                    lore.add(CC.GRAY + "Capture the koth point");
                     lore.add(CC.GRAY + "with your team, the last");
                     lore.add(CC.GRAY + "team standing until timer wins!");
                     lore.add("");
                     lore.add("&c&lThis event is in development!");
                     break;
-                case "&c&lRunner":
+                case "&c&lOITC":
                     lore.add(CC.GRAY + "Run for your life and");
                     lore.add(CC.GRAY + "beat your opponents in a");
-                    lore.add(CC.GRAY + "Foot Race by avoiding the water.");
+                    lore.add(CC.GRAY + "FFA with a One Hit Bow!");
                     lore.add("");
                     lore.add("&c&lThis event is in development!");
                     break;
@@ -139,7 +138,7 @@ public class EventSelectEventMenu extends Menu {
 
                 switch (eventType.getTitle()) {
                     case "&b&lBrackets":
-                        if (player.hasPermission("practice.host.brackets")) {
+                        if (player.hasPermission("array.host.brackets")) {
                             BracketsHostCommand.execute(player);
                         } else {
                             player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
@@ -147,7 +146,7 @@ public class EventSelectEventMenu extends Menu {
                         }
                         break;
                     case "&b&lSumo":
-                        if (player.hasPermission("practice.host.sumo")) {
+                        if (player.hasPermission("array.host.sumo")) {
                             SumoHostCommand.execute(player);
                         } else {
                             player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
@@ -155,7 +154,7 @@ public class EventSelectEventMenu extends Menu {
                         }
                         break;
                     case "&b&lLMS":
-                        if (player.hasPermission("practice.host.lms")) {
+                        if (player.hasPermission("array.host.lms")) {
                             LMSHostCommand.execute(player);
                         } else {
                             player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
@@ -163,7 +162,7 @@ public class EventSelectEventMenu extends Menu {
                         }
                         break;
                     case "&b&lParkour":
-                        if (player.hasPermission("practice.host.parkour")) {
+                        if (player.hasPermission("array.host.parkour")) {
                             ParkourHostCommand.execute(player);
                         } else {
                             player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
@@ -171,23 +170,22 @@ public class EventSelectEventMenu extends Menu {
                         }
                         break;
                     case "&b&lSpleef":
-                        if (player.hasPermission("practice.host.spleef")) {
+                        if (player.hasPermission("array.host.spleef")) {
                             SpleefHostCommand.execute(player);
                         } else {
                             player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
                             player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.purgemc.club &7!"));
                         }
                         break;
-                    case "&b&lGulag":
-                        if (player.hasPermission("practice.host.gulag")) {
-                            GulagHostCommand.execute(player);
+                    case "&b&lWizard":
+                        if (player.hasPermission("array.host.wizard")) {
+                            WizardHostCommand.execute(player);
                         } else {
                             player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
                             player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.purgemc.club &7!"));
                         }
                         break;
                     case "&c&lRunner":
-                    case "&c&lKoTH":
                         player.sendMessage(CC.translate("&cThis event is currently in development, please try again!"));
                         break;
                 }

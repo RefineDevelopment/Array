@@ -1,23 +1,22 @@
 package me.drizzy.practice.match.types;
 
-import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.queue.QueueType;
-import me.drizzy.practice.array.essentials.Essentials;
-import pt.foxspigot.jar.knockback.KnockbackModule;
-import pt.foxspigot.jar.knockback.KnockbackProfile;
+import lombok.Getter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
+import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.hcf.HCFManager;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.profile.ProfileState;
+import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.nametag.NameTags;
-import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
@@ -26,9 +25,11 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import pt.foxspigot.jar.knockback.KnockbackModule;
+import pt.foxspigot.jar.knockback.KnockbackProfile;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 public class HCFMatch extends Match {
@@ -75,6 +76,11 @@ public class HCFMatch extends Match {
         return false;
     }
 
+    @Override
+    public boolean isTheBridgeMatch() {
+        return false;
+    }
+
 
     @Override
     public void setupPlayer(Player player) {
@@ -89,7 +95,7 @@ public class HCFMatch extends Match {
 
         PlayerUtil.reset(player);
 
-        for (ItemStack itemStack : Profile.getByUuid(player.getUniqueId()).getKitData().get(Kit.getByName("NoDebuff")).getHCFKitItems()) {
+        for (ItemStack itemStack : HCFManager.getHCFKitItems()) {
             player.getInventory().addItem(itemStack);
         }
 
@@ -110,8 +116,7 @@ public class HCFMatch extends Match {
         } else {
             player.teleport(spawn.add(0, 2, 0));
         }
-
-        getPlayers().forEach(player1 -> ((CraftPlayer)player1).getHandle().setKnockback(KnockbackModule.INSTANCE.profiles.get(Objects.requireNonNull(Kit.getByName("NoDebuff")).getKnockbackProfile())));
+        teamPlayer.setPlayerSpawn(spawn);
     }
 
     @Override
@@ -121,6 +126,7 @@ public class HCFMatch extends Match {
 
     @Override
     public void onStart() {
+        getPlayers().forEach(player1 -> Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player1, Kit.getByName("NoDebuff")));
 
     }
 
@@ -221,7 +227,6 @@ public class HCFMatch extends Match {
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
         components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7(Click name to view inventory)").create());
-        components.add(new ChatComponentBuilder("").create());
         components.add(winnerInventories.create());
         components.add(loserInventories.create());
         components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());

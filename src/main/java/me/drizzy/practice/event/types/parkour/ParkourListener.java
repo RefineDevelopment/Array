@@ -4,7 +4,7 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.event.types.parkour.player.ParkourPlayerState;
 import me.drizzy.practice.util.BlockUtil;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

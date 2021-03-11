@@ -2,7 +2,7 @@ package me.drizzy.practice.event.types.parkour.command;
 
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.Array;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.command.CommandSender;
 
 @CommandMeta(label = "parkour cancel", permission = "array.staff")

@@ -8,9 +8,893 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:master" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="339e4fd3-2648-48f6-9711-4eb584f7cd8b" name="Default Changelist" comment="Added Gulag and Made some changes to HCF and Added Pearl disable option for Arenas">
+    <list default="true" id="339e4fd3-2648-48f6-9711-4eb584f7cd8b" name="Default Changelist" comment="Update 4.2&#10;&#10;- Added Wizard Event&#10;- Added">
       <changelist_data name="Drizzy" email="" />
+      <change afterPath="$PROJECT_DIR$/lib/api/AquaCoreAPI.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/api/HestiaAPI.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/api/MizuAPI.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/api/ZoomAPI-1.1-SNAPSHOT.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/obfuscator/allatori-annotations.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/obfuscator/allatori.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/spigots/CatalystSpigot.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/spigots/ClubSpigot.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/spigots/GenericSpigot.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/spigots/SpigotX.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/spigots/StellarSpigot.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/spigots/nSpigot.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/spigots/wSpigot.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/spigots/ySpigot.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/spigots/zSpigot.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/ArrayAPI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/ArrayCache.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaPortalWandCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaSetPortalCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/cuboid/Cuboid.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/cuboid/CuboidDirection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/impl/TheBridgeArena.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/selection/ArenaSelectionListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/selection/Selection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayRefillCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayWoldCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/enums/PartyPrivacyType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/EventHelpCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/WizardListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/WizardManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/WizardState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/WizardTask.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/command/WizardCancelCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/command/WizardCooldownCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/command/WizardHelpCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/command/WizardHostCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/command/WizardJoinCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/command/WizardLeaveCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/command/WizardSetSpawnCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/command/WizardTpCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/task/WizardRoundEndTask.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/task/WizardRoundStartTask.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/task/WizardStartTask.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitBridgeCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/knockback/KnockbackManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/knockback/KnockbackType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/knockback/types/FoxSpigot.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/knockback/types/SpigotX.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/task/MatchBridgeStartTask.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/types/TheBridgeMatch.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyChatCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/placeholders/Placeholders.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/rank/Rank.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/rank/RankType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/rank/apis/AquaCore.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/rank/apis/HestiaCore.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/tablist/Tablist.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/ArrayAPI.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaPortalWandCommand.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaSetPortalCommand.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenasCommand$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/cuboid/Cuboid$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/cuboid/Cuboid$LocationCuboidIterator.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/cuboid/Cuboid.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/cuboid/CuboidDirection$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/cuboid/CuboidDirection.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/impl/TheBridgeArena.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/selection/ArenaSelectionListener.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/selection/Selection.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayWoldCommand$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayWoldCommand$WorldButton.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayWoldCommand$WorldMenu.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayWoldCommand.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/enums/ArenaType.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/enums/EventType.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/enums/HotbarType.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/enums/SettingsType.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/EventHelpCommand.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hcf/bard/EffectRestorer$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hcf/bard/EffectRestorer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hcf/classes/Bard$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hcf/events/ArmorClassEquipEvent.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hcf/events/ArmorClassUnequipEvent.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitBridgeCommand.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/KitEditRules.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/KitEditor.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/KitEditorListener.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitEditorMenu$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitEditorMenu$ArmorDisplayButton.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitEditorMenu$CurrentKitButton.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitEditorMenu$InfiniteItemButton.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitEditorMenu$LoadDefaultKitButton.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitEditorMenu$SaveButton.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitEditorSelectKitMenu$KitDisplayButton.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitManagementMenu$DeleteKitButton.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitManagementMenu$KitDisplayButton.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitManagementMenu$RenameKitButton.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitManagementMenu.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/task/MatchBridgeStartTask.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/TheBridgeMatch$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/TheBridgeMatch.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyChatCommand.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/placeholders/Placeholders.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/rank/Rank.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/rank/RankType.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/rank/apis/AquaCore.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/rank/apis/HestiaCore.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/settings/SettingsMenu$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/settings/meta/SettingsMeta.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/StatisticsData.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/StatisticsListener.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/menu/LeaderboardsMenu$StatsButton.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/chat/CC.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/chat/ChatHelper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/chat/Color.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Array.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Array.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/LunarAPi.jar" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/LunarAPI-GIT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/LunarClientAPI-1.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/LunarAPI-MCM.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/PlaceholderAPI.jar" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/PlaceholderAPI.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ViaVersion.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/server.jar" beforeDir="false" afterPath="$PROJECT_DIR$/lib/spigots/FoxSpigot.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/spigot-1.7.10.jar" beforeDir="false" afterPath="$PROJECT_DIR$/lib/spigots/ExoSpigot.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/Array.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/Array.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/Arena.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/ArenaType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/enums/ArenaType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/ArenaTypeTypeAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/ArenaTypeTypeAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaAddBuildKitsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaAddBuildKitsCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaAddKitCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaAddKitCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaAddNormalKitCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaAddNormalKitCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaCreateCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaCreateCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaDisablePearlsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaDisablePearlsCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaKitListCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaKitListCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaReloadCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaReloadCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaRemoveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaRemoveCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaRemoveKitCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaRemoveKitCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaSaveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaSaveCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaSetIconCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaSetIconCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaSetSpawnCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaSetSpawnCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaTpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenaTpCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenasCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/command/ArenasCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/impl/SharedArena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/impl/SharedArena.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/impl/StandaloneArena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/impl/StandaloneArena.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/ArrayCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/ArrayCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/VerCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayGoldenHeadCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayGoldenHeadCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayHCFCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayHCFCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayManageCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayPracticeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayPracticeCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayReloadCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayReloadCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayRenameCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayRenameCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayResetStatsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayResetStatsCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArraySaveArenasCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArraySaveArenasCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArraySaveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArraySaveCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArraySaveDataCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArraySaveDataCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArraySaveKitsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArraySaveKitsCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArraySetEloCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArraySetEloCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArraySetLobbyCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArraySetLobbyCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArraySpawnCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArraySpawnCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayToggleDuelCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayToggleDuelCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayToggleScoreboardCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayToggleScoreboardCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayVerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/ArrayVerCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/TestCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/TestCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/donator/FlyCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/donator/FlyCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/staff/FollowCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/staff/FollowCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/staff/GetUUIDCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/staff/GetUUIDCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/staff/SilentCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/staff/SilentCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/staff/UnFollowCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/commands/staff/UnFollowCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/essentials/License.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/essentials/License.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/listener/GoldenHeads.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/listener/GoldenHeads.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/listener/MOTDListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/listener/MOTDListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/menu/MainMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/menu/buttons/Airbutton.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/menu/buttons/ArenaButton.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/menu/buttons/KitsButton.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/menu/buttons/QueueButton.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/menu/menus/ManageArenaKitsMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/menu/menus/ManageArenaMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/menu/menus/ManageArenasMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/menu/menus/ManageKitMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/array/menu/menus/ManageKitsMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/duel/DuelProcedure.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/duel/DuelProcedure.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/duel/command/DuelAcceptCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/duel/command/DuelAcceptCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/duel/command/DuelCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/duel/command/DuelCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/duel/command/RematchCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/duel/command/RematchCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/duel/menu/DuelSelectArenaMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/duel/menu/DuelSelectArenaMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/duel/menu/DuelSelectKitMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/duel/menu/DuelSelectKitMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/EventCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/EventCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/EventType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/enums/EventType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/menu/ActiveEventSelectEventMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/menu/ActiveEventSelectEventMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/menu/EventSelectEventMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/menu/EventSelectEventMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/menu/EventSelectKitMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/menu/EventSelectKitMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/Brackets.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/Brackets.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/BracketsListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/BracketsListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsCancelCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsCancelCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsCooldownCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsCooldownCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsHelpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsHelpCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsHostCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsHostCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsJoinCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsJoinCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsKnockbackCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsKnockbackCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsLeaveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsLeaveCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsSetSpawnCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsSetSpawnCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsTpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/command/BracketsTpCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/task/BracketsRoundStartTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/task/BracketsRoundStartTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/task/BracketsStartTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/brackets/task/BracketsStartTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/Gulag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/Wizard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/GulagListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/GulagManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/GulagState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/GulagTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/command/GulagCancelCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/command/GulagCooldownCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/command/GulagForceStartCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/command/WizardForceStartCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/command/GulagHelpCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/command/GulagHostCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/command/GulagJoinCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/command/GulagKnockbackCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/command/WizardKnockbackCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/command/GulagLeaveCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/command/GulagSetSpawnCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/command/GulagTpCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/player/GulagPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/player/WizardPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/player/GulagPlayerState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/player/WizardPlayerState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/task/GulagRoundEndTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/task/GulagRoundStartTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/gulag/task/GulagStartTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/LMS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/LMS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/LMSListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/LMSListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/command/LMSCancelCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/command/LMSCancelCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/command/LMSCooldownCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/command/LMSCooldownCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/command/LMSHelpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/command/LMSHelpCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/command/LMSJoinCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/command/LMSJoinCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/command/LMSLeaveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/command/LMSLeaveCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/command/LMSSetSpawnCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/command/LMSSetSpawnCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/command/LMSTpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/command/LMSTpCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/task/LMSRoundStartTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/lms/task/LMSRoundStartTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/Parkour.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/Parkour.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/ParkourListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/ParkourListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/command/ParkourCancelCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/command/ParkourCancelCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/command/ParkourCooldownCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/command/ParkourCooldownCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/command/ParkourHelpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/command/ParkourHelpCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/command/ParkourHostCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/command/ParkourHostCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/command/ParkourJoinCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/command/ParkourJoinCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/command/ParkourLeaveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/command/ParkourLeaveCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/command/ParkourSetSpawnCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/command/ParkourSetSpawnCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/command/ParkourTpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/command/ParkourTpCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/task/ParkourRoundStartTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/parkour/task/ParkourRoundStartTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/Spleef.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/Spleef.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/SpleefListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/SpleefListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefCancelCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefCancelCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefCooldownCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefCooldownCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefHelpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefHelpCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefHostCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefHostCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefJoinCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefJoinCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefKnockbackCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefKnockbackCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefLeaveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefLeaveCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefSetSpawnCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefSetSpawnCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefTpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/command/SpleefTpCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/task/SpleefRoundStartTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/spleef/task/SpleefRoundStartTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/Sumo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/Sumo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/SumoListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/SumoListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoCancelCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoCancelCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoCooldownCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoCooldownCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoHelpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoHelpCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoHostCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoHostCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoJoinCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoJoinCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoKnockbackCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoKnockbackCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoLeaveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoLeaveCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoSetSpawnCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoSetSpawnCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoTpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/command/SumoTpCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/task/SumoRoundStartTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/task/SumoRoundStartTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/task/SumoStartTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/sumo/task/SumoStartTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hologram/HologramPlaceholders.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hologram/HologramPlaceholders.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hotbar/Hotbar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hotbar/Hotbar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hotbar/HotbarItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/enums/HotbarType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hotbar/HotbarLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hotbar/HotbarLayout.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hotbar/HotbarListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hotbar/HotbarListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/Kit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/Kit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/KitEditRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kiteditor/KitEditRules.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/KitEditorListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kiteditor/KitEditorListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/KitGameRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/KitGameRules.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/KitLeaderboards.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/KitLeaderboards.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/KitLoadout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/KitLoadout.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitBoxUHCCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitBoxUHCCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitBuildCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitBuildCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitComboCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitComboCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitCreateCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitCreateCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitDisableCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitDisableCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitEditableCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitEditableCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitEnableCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitEnableCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitGetLoadoutCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitGetLoadoutCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitLavaKillCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitLavaKillCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitListCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitListCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitNetherUHCCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitNetherUHCCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitParkourCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitParkourCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitPartyFFACommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitPartyFFACommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitPartySplitCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitPartySplitCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitRemoveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitRemoveCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSaveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSaveCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetAntiFoodLossCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetAntiFoodLossCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetBowHPCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetBowHPCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetHealthRegenenerationCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetHealthRegenenerationCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetHitDelayCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetHitDelayCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetIconCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetIconCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetInfiniteSpeedCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetInfiniteSpeedCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetInfiniteStrengthCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetInfiniteStrengthCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetKnockbackProfileCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetKnockbackProfileCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetLoadoutCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetLoadoutCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetNoItemsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetNoItemsCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetRankedCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSetRankedCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitShowHealthCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitShowHealthCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSpleefCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSpleefCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitStickSpawnCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitStickSpawnCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSumoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitSumoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitTimedCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitTimedCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitVoidSpawnCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitVoidSpawnCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitWaterKillCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/command/KitWaterKillCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/menu/KitEditorMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kiteditor/menu/KitEditorMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/menu/KitEditorSelectKitMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kiteditor/menu/KitEditorSelectKitMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kit/menu/KitManagementMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kiteditor/menu/KitManagementMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/Match.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/MatchListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/MatchListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/command/MatchStatusCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/command/MatchStatusCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/command/SpectateCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/command/SpectateCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/command/StopSpectatingCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/command/StopSpectatingCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/command/ViewInventoryCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/command/ViewInventoryCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/kits/Archer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hcf/classes/Archer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/kits/Bard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hcf/classes/Bard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/kits/Rogue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hcf/classes/Rogue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/kits/utils/ArmorClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hcf/HCFClasses.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/kits/utils/ArmorClassManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hcf/HCFManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/kits/utils/bard/BardData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hcf/bard/BardData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/kits/utils/bard/EffectData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hcf/bard/EffectData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/kits/utils/bard/EffectRestorer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hcf/bard/EffectRestorer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/kits/utils/events/ArmorClassEquipEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hcf/events/ArmorClassEquipEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/kits/utils/events/ArmorClassUnequipEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/hcf/events/ArmorClassUnequipEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/menu/MatchDetailsMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/menu/MatchDetailsMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/menu/ViewInventoryMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/menu/ViewInventoryMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/task/MatchPearlCooldownTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/task/MatchPearlCooldownTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/task/MatchResetTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/task/MatchResetTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/task/MatchStartTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/task/MatchStartTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/task/MatchStickSpawnTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/team/Team.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/team/Team.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/team/TeamPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/team/TeamPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/types/FFAMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/types/FFAMatch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/types/HCFMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/types/HCFMatch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/types/SoloMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/types/SoloMatch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/types/SumoMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/types/SumoMatch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/types/SumoTeamMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/types/SumoTeamMatch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/types/TeamMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/match/types/TeamMatch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/Party.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/Party.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/PartyEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/enums/PartyEventType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/PartyListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/PartyListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/PartyManage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/enums/PartyManageType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/PartyMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/enums/PartyMessageType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/PartyPrivacy.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyBanCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyBanCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyCloseCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyCloseCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyCreateCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyCreateCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyDisbandCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyDisbandCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyHelpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyHelpCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyInfoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyInfoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyInviteCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyInviteCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyJoinCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyJoinCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyKickCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyKickCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyLeaderCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyLeaderCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyLeaveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyLeaveCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyOpenCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyOpenCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyUnbanCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/command/PartyUnbanCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/menu/ManagePartyMember.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/menu/ManagePartyMember.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/menu/ManagePartySettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/menu/ManagePartySettings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/menu/OtherPartiesMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/menu/OtherPartiesMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/menu/PartyEventSelectEventMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/menu/PartyEventSelectEventMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/menu/PartyEventSelectKitMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/menu/PartyEventSelectKitMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/menu/PartyListMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/party/menu/PartyListMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/Profile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/ProfileListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/ProfileListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/menu/PlayerMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/menu/PlayerMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/meta/ProfileKitEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/kiteditor/KitEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/meta/ProfileMatchHistory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/meta/ProfileRematchData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/meta/ProfileRematchData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/queue/Queue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/queue/Queue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/queue/QueueProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/queue/QueueProfile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/queue/QueueThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/queue/QueueThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/queue/menu/QueueSelectKitMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/queue/menu/QueueSelectKitMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/register/RegisterCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/register/RegisterCommands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/register/RegisterListeners.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/register/RegisterListeners.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/scoreboard/Scoreboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/scoreboard/Scoreboard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/settings/SettingsMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/settings/SettingsMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/settings/SettingsType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/enums/SettingsType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/settings/meta/ProfileOptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/settings/meta/SettingsMeta.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/settings/meta/button/AllowSpectatorsOptionButton.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/settings/meta/button/DuelRequestsOptionButton.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/settings/meta/button/ShowScoreboardOptionButton.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/statistics/ProfileKitData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/statistics/StatisticsData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/statistics/ProfileStatsListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/statistics/StatisticsListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/statistics/menu/LeaderboardsMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/statistics/menu/LeaderboardsMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/statistics/menu/StatsMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/statistics/menu/StatsMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/tablist/Tab.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/tablist/Tab.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/tournament/Tournament.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/tournament/Tournament.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/tournament/command/TournamentCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/tournament/command/TournamentCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/tournament/command/TournamentHostCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/tournament/command/TournamentHostCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/tournament/command/TournamentListCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/tournament/command/TournamentListCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/tournament/command/TournamentSpecCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/tournament/command/TournamentSpecCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/BlockUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/BlockUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/CC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/chat/CC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/ChatHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/chat/ChatHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/Color.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/chat/Color.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/ConfigurationSerializableTypeAdapter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/DefaultFontInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/FieldUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/FireworkEffectPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/FireworkEffectPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/InventoryRestore.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/ItemBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/ItemBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/ItemStackUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/LocationUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/LocationUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/LoggerUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/RandomCollection.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/Selection.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/Teleporter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/Utils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/command/Honcho.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/command/Honcho.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/events/WorldListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/events/WorldListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/external/ItemBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/external/ItemBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/external/menu/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/external/menu/Menu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/external/menu/MenuListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/external/menu/MenuListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/external/menu/button/BackButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/external/menu/button/BackButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/external/menu/deprecated/MatchHistoryMenu (Deprecated).java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/external/menu/deprecated/ProfileMenu (Deprecated).java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/external/profile/option/ProfileOptions.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/external/profile/option/ProfileStaffOptions.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/external/profile/option/event/OptionsOpenedEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/external/profile/option/menu/ProfileOptionButton.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/external/profile/option/menu/ProfileOptionsMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/nametag/NameTags.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/nametag/NameTags.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/scoreboard/Aether.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/scoreboard/Aether.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/scoreboard/example/ExampleBoardAdapter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/scoreboard/scoreboard/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/scoreboard/scoreboard/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/scoreboard/scoreboard/BoardEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util/scoreboard/scoreboard/BoardEntry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/chests.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/kits.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/kits.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/messages.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/messages.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/Array.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/chests.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kits.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kits.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/Array.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/Array.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/Arena.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/Arena.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/ArenaType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/ArenaTypeTypeAdapter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/ArenaTypeTypeAdapter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaAddBuildKitsCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaAddBuildKitsCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaAddKitCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaAddKitCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaAddNormalKitCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaAddNormalKitCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaCreateCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaCreateCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaDisablePearlsCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaDisablePearlsCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaKitListCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaKitListCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaReloadCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaReloadCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaRemoveCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaRemoveCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaRemoveKitCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaRemoveKitCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaSaveCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaSaveCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaSetIconCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaSetIconCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaSetSpawnCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaSetSpawnCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaTpCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenaTpCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenasCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/command/ArenasCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/impl/SharedArena.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/impl/SharedArena.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/impl/StandaloneArena.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/arena/impl/StandaloneArena.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/ArrayCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/ArrayCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/VerCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayGoldenHeadCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayGoldenHeadCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayHCFCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayHCFCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayManageCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayPracticeCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayPracticeCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayReloadCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayReloadCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayRenameCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayRenameCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayResetStatsCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayResetStatsCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArraySaveArenasCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArraySaveArenasCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArraySaveCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArraySaveCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArraySaveDataCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArraySaveDataCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArraySaveKitsCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArraySaveKitsCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArraySetEloCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArraySetEloCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArraySetLobbyCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArraySetLobbyCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArraySpawnCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArraySpawnCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayToggleDuelCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayToggleDuelCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayToggleScoreboardCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayToggleScoreboardCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayVerCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/ArrayVerCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/TestCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/TestCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/donator/FlyCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/donator/FlyCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/staff/FollowCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/staff/FollowCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/staff/GetUUIDCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/staff/GetUUIDCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/staff/SilentCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/staff/SilentCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/staff/UnFollowCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/commands/staff/UnFollowCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/essentials/License$LogType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/essentials/License$LogType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/essentials/License$ValidationType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/essentials/License$ValidationType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/essentials/License.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/essentials/License.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/listener/GoldenHeads.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/listener/GoldenHeads.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/listener/MOTDListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/listener/MOTDListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/MainMenu.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/buttons/Airbutton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/buttons/ArenaButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/buttons/KitsButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/buttons/QueueButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/menus/ManageArenaKitsMenu$Kitbutton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/menus/ManageArenaKitsMenu.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/menus/ManageArenaMenu$DeleteButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/menus/ManageArenaMenu$KitsButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/menus/ManageArenaMenu$TeleportButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/menus/ManageArenaMenu.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/menus/ManageArenasMenu$ArenasButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/menus/ManageArenasMenu.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/menus/ManageKitMenu$DeleteButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/menus/ManageKitMenu$ToggleButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/menus/ManageKitMenu.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/menus/ManageKitsMenu$KitButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/array/menu/menus/ManageKitsMenu.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/duel/DuelProcedure.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/duel/DuelProcedure.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/duel/command/DuelAcceptCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/duel/command/DuelAcceptCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/duel/command/DuelCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/duel/command/DuelCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/duel/command/RematchCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/duel/command/RematchCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/duel/menu/DuelSelectArenaMenu$SelectArenaButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/duel/menu/DuelSelectArenaMenu$SelectArenaButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/duel/menu/DuelSelectArenaMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/duel/menu/DuelSelectArenaMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/duel/menu/DuelSelectKitMenu$SelectKitButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/duel/menu/DuelSelectKitMenu$SelectKitButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/duel/menu/DuelSelectKitMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/duel/menu/DuelSelectKitMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/EventCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/EventCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/EventType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/menu/ActiveEventSelectEventMenu$SelectEventButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/menu/ActiveEventSelectEventMenu$SelectEventButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/menu/ActiveEventSelectEventMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/menu/ActiveEventSelectEventMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/menu/EventSelectEventMenu$GlassButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/menu/EventSelectEventMenu$GlassButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/menu/EventSelectEventMenu$SelectEventButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/menu/EventSelectEventMenu$SelectEventButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/menu/EventSelectEventMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/menu/EventSelectEventMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/menu/EventSelectKitMenu$SelectKitButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/menu/EventSelectKitMenu$SelectKitButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/Brackets$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/Brackets$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/Brackets$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/Brackets$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/Brackets.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/Brackets.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/BracketsListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/BracketsListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsCancelCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsCancelCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsCooldownCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsCooldownCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsHelpCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsHelpCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsHostCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsHostCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsJoinCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsJoinCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsKnockbackCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsKnockbackCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsLeaveCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsLeaveCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsSetSpawnCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsSetSpawnCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsTpCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/command/BracketsTpCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/task/BracketsRoundStartTask.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/task/BracketsRoundStartTask.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/task/BracketsStartTask.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/brackets/task/BracketsStartTask.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/Gulag$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/Gulag$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/Gulag.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/GulagListener$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/GulagListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/GulagManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/GulagState.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/GulagTask.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/command/GulagCancelCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/command/GulagCooldownCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/command/GulagForceStartCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/command/GulagHelpCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/command/GulagHostCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/command/GulagJoinCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/command/GulagKnockbackCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/command/GulagLeaveCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/command/GulagSetSpawnCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/command/GulagTpCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/player/GulagPlayer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/player/GulagPlayerState.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/task/GulagRoundEndTask.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/task/GulagRoundStartTask.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/gulag/task/GulagStartTask.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/LMS$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/LMS$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/LMS$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/LMS$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/LMS$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/LMS$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/LMS$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/LMS$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/LMS.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/LMS.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/LMSListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/LMSListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/command/LMSCancelCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/command/LMSCancelCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/command/LMSCooldownCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/command/LMSCooldownCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/command/LMSHelpCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/command/LMSHelpCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/command/LMSJoinCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/command/LMSJoinCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/command/LMSLeaveCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/command/LMSLeaveCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/command/LMSSetSpawnCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/command/LMSSetSpawnCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/command/LMSTpCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/command/LMSTpCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/task/LMSRoundStartTask.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/lms/task/LMSRoundStartTask.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/Parkour$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/Parkour$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/Parkour$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/Parkour$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/Parkour.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/Parkour.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/ParkourListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/ParkourListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/command/ParkourCancelCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/command/ParkourCancelCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/command/ParkourCooldownCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/command/ParkourCooldownCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/command/ParkourHelpCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/command/ParkourHelpCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/command/ParkourHostCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/command/ParkourHostCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/command/ParkourJoinCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/command/ParkourJoinCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/command/ParkourLeaveCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/command/ParkourLeaveCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/command/ParkourSetSpawnCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/command/ParkourSetSpawnCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/command/ParkourTpCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/command/ParkourTpCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/task/ParkourRoundStartTask.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/parkour/task/ParkourRoundStartTask.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/Spleef$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/Spleef$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/Spleef$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/Spleef$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/Spleef$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/Spleef$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/Spleef$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/Spleef$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/Spleef.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/Spleef.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/SpleefListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/SpleefListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefCancelCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefCancelCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefCooldownCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefCooldownCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefHelpCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefHelpCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefHostCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefHostCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefJoinCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefJoinCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefKnockbackCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefKnockbackCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefLeaveCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefLeaveCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefSetSpawnCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefSetSpawnCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefTpCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/command/SpleefTpCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/task/SpleefRoundStartTask.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/spleef/task/SpleefRoundStartTask.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/Sumo$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/Sumo$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/Sumo$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/Sumo$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/Sumo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/Sumo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/SumoListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/SumoListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoCancelCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoCancelCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoCooldownCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoCooldownCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoHelpCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoHelpCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoHostCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoHostCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoJoinCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoJoinCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoKnockbackCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoKnockbackCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoLeaveCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoLeaveCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoSetSpawnCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoSetSpawnCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoTpCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/command/SumoTpCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/task/SumoRoundStartTask.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/task/SumoRoundStartTask.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/task/SumoStartTask.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/event/types/sumo/task/SumoStartTask.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hologram/HologramPlaceholders.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hologram/HologramPlaceholders.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hotbar/Hotbar$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hotbar/Hotbar$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hotbar/Hotbar.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hotbar/Hotbar.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hotbar/HotbarItem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hotbar/HotbarLayout.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hotbar/HotbarLayout.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hotbar/HotbarListener$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hotbar/HotbarListener$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hotbar/HotbarListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hotbar/HotbarListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/Kit.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/Kit.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/KitEditRules.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/KitEditorListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/KitGameRules.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/KitGameRules.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/KitLeaderboards.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/KitLeaderboards.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/KitLoadout.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/KitLoadout.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitBoxUHCCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitBoxUHCCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitBuildCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitBuildCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitComboCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitComboCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitCreateCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitCreateCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitDisableCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitDisableCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitEditableCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitEditableCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitEnableCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitEnableCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitGetLoadoutCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitGetLoadoutCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitLavaKillCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitLavaKillCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitListCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitListCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitNetherUHCCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitNetherUHCCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitParkourCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitParkourCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitPartyFFACommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitPartyFFACommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitPartySplitCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitPartySplitCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitRemoveCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitRemoveCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSaveCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSaveCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetAntiFoodLossCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetAntiFoodLossCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetBowHPCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetBowHPCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetHealthRegenenerationCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetHealthRegenenerationCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetHitDelayCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetHitDelayCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetIconCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetIconCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetInfiniteSpeedCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetInfiniteSpeedCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetInfiniteStrengthCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetInfiniteStrengthCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetKnockbackProfileCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetKnockbackProfileCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetLoadoutCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetLoadoutCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetNoItemsCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetNoItemsCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetRankedCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSetRankedCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitShowHealthCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitShowHealthCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSpleefCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSpleefCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitStickSpawnCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitStickSpawnCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSumoCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitSumoCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitTimedCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitTimedCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitVoidSpawnCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitVoidSpawnCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitWaterKillCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/command/KitWaterKillCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitEditorMenu$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitEditorMenu$ArmorDisplayButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitEditorMenu$CancelButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitEditorMenu$CancelButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitEditorMenu$ClearInventoryButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitEditorMenu$ClearInventoryButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitEditorMenu$CurrentKitButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitEditorMenu$InfiniteItemButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitEditorMenu$LoadDefaultKitButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitEditorMenu$SaveButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitEditorMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitEditorMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitEditorSelectKitMenu$KitDisplayButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitEditorSelectKitMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitEditorSelectKitMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitManagementMenu$CreateKitButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitManagementMenu$CreateKitButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitManagementMenu$DeleteKitButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitManagementMenu$KitDisplayButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitManagementMenu$LoadKitButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kiteditor/menu/KitManagementMenu$LoadKitButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitManagementMenu$RenameKitButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/kit/menu/KitManagementMenu.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/Match$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/Match$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/Match$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/Match$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/Match$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/Match$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/Match.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/Match.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/MatchListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/MatchListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/command/MatchStatusCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/command/MatchStatusCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/command/SpectateCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/command/SpectateCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/command/StopSpectatingCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/command/StopSpectatingCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/command/ViewInventoryCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/command/ViewInventoryCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/kits/Archer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hcf/classes/Archer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/kits/Bard$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/kits/Bard.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hcf/classes/Bard.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/kits/Rogue.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hcf/classes/Rogue.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/kits/utils/ArmorClass.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/kits/utils/ArmorClassManager$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/kits/utils/ArmorClassManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/kits/utils/bard/BardData.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hcf/bard/BardData.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/kits/utils/bard/EffectData.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/hcf/bard/EffectData.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/kits/utils/bard/EffectRestorer$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/kits/utils/bard/EffectRestorer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/kits/utils/events/ArmorClassEquipEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/kits/utils/events/ArmorClassUnequipEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/menu/MatchDetailsMenu$EffectsButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/menu/MatchDetailsMenu$EffectsButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/menu/MatchDetailsMenu$SwitchInventoryButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/menu/MatchDetailsMenu$SwitchInventoryButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/menu/ViewInventoryMenu$EffectsButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/menu/ViewInventoryMenu$EffectsButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/menu/ViewInventoryMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/menu/ViewInventoryMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/task/MatchPearlCooldownTask.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/task/MatchPearlCooldownTask.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/task/MatchResetTask.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/task/MatchResetTask.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/task/MatchStartTask.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/task/MatchStartTask.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/task/MatchStickSpawnTask.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/team/Team.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/team/Team.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/team/TeamPlayer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/team/TeamPlayer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/FFAMatch$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/FFAMatch$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/FFAMatch.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/FFAMatch.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/HCFMatch$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/HCFMatch$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/HCFMatch.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/HCFMatch.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/SoloMatch$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/SoloMatch$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/SoloMatch$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/SoloMatch$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/SoloMatch.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/SoloMatch.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/SumoMatch$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/SumoMatch$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/SumoMatch.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/SumoMatch.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/SumoTeamMatch$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/SumoTeamMatch$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/SumoTeamMatch.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/SumoTeamMatch.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/TeamMatch$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/TeamMatch$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/TeamMatch$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/TeamMatch$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/TeamMatch.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/match/types/TeamMatch.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/Party$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/Party$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/Party$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/Party$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/Party.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/Party.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/PartyEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/PartyListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/PartyListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/PartyManage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/PartyMessage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/PartyPrivacy.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyBanCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyBanCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyCloseCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyCloseCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyCreateCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyCreateCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyDisbandCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyDisbandCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyHelpCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyHelpCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyInfoCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyInfoCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyInviteCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyInviteCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyJoinCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyJoinCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyKickCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyKickCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyLeaderCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyLeaderCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyLeaveCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyLeaveCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyOpenCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyOpenCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyUnbanCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/command/PartyUnbanCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/ManagePartyMember$SelectManageButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/ManagePartyMember$SelectManageButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/ManagePartyMember.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/ManagePartyMember.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/ManagePartySettings$SelectManageButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/ManagePartySettings$SelectManageButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/ManagePartySettings.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/ManagePartySettings.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/OtherPartiesMenu$OtherPartyButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/OtherPartiesMenu$OtherPartyButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/PartyEventSelectEventMenu$SelectEventButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/PartyEventSelectEventMenu$SelectEventButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/PartyEventSelectEventMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/PartyEventSelectEventMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/PartyEventSelectKitMenu$SelectKitButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/PartyEventSelectKitMenu$SelectKitButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/PartyEventSelectKitMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/PartyEventSelectKitMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/PartyListMenu$PartyDisplayButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/party/menu/PartyListMenu$PartyDisplayButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile$9.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/Profile.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/ProfileListener$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/ProfileListener$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/ProfileListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/ProfileListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/menu/PlayerMenu$KitEditorButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/menu/PlayerMenu$KitEditorButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/meta/ProfileKitEditor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/meta/ProfileMatchHistory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/meta/ProfileRematchData.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/profile/meta/ProfileRematchData.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/queue/Queue.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/queue/Queue.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/queue/QueueProfile.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/queue/QueueProfile.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/queue/QueueThread$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/queue/QueueThread$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/queue/QueueThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/queue/QueueThread.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/queue/menu/QueueSelectKitMenu$SelectKitButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/queue/menu/QueueSelectKitMenu$SelectKitButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/register/RegisterCommands.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/register/RegisterCommands.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/register/RegisterListeners.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/register/RegisterListeners.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/scoreboard/Scoreboard.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/scoreboard/Scoreboard.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/settings/SettingsMenu$SettingsButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/settings/SettingsMenu$SettingsButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/settings/SettingsMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/settings/SettingsMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/settings/SettingsType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/settings/meta/ProfileOptions.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/settings/meta/button/AllowSpectatorsOptionButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/settings/meta/button/DuelRequestsOptionButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/settings/meta/button/ShowScoreboardOptionButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/ProfileKitData.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/ProfileStatsListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/menu/LeaderboardsMenu$GlobalLeaderboardsButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/menu/LeaderboardsMenu$GlobalLeaderboardsButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/menu/LeaderboardsMenu$KitLeaderboardsButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/menu/LeaderboardsMenu$KitLeaderboardsButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/menu/LeaderboardsMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/menu/LeaderboardsMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/menu/StatsMenu$GlobalStatsButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/menu/StatsMenu$GlobalStatsButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/menu/StatsMenu$KitStatsButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/menu/StatsMenu$KitStatsButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/menu/StatsMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/statistics/menu/StatsMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/tablist/Tab.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/tablist/Tab.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/tournament/Tournament$TournamentMatch.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/tournament/Tournament$TournamentMatch.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/tournament/Tournament.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/tournament/Tournament.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/tournament/command/TournamentCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/tournament/command/TournamentCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/tournament/command/TournamentHostCommand$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/tournament/command/TournamentHostCommand$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/tournament/command/TournamentHostCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/tournament/command/TournamentHostCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/tournament/command/TournamentListCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/tournament/command/TournamentListCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/tournament/command/TournamentSpecCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/tournament/command/TournamentSpecCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/BlockUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/BlockUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/CC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/ChatHelper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/Color.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/ConfigurationSerializableTypeAdapter$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/ConfigurationSerializableTypeAdapter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/DefaultFontInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/FieldUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/FireworkEffectPlayer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/FireworkEffectPlayer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/InventoryRestore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/ItemBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/ItemBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/ItemStackUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/LocationUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/LocationUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/LoggerUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/RandomCollection.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/Selection.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/Teleporter$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/Teleporter$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/Teleporter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/Utils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/command/Honcho.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/command/Honcho.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/events/WorldListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/events/WorldListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/external/ItemBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/external/ItemBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/external/menu/Menu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/external/menu/Menu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/external/menu/MenuListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/external/menu/MenuListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/external/menu/button/BackButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/external/menu/button/BackButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/external/profile/option/ProfileOptions.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/external/profile/option/ProfileStaffOptions.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/external/profile/option/event/OptionsOpenedEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/external/profile/option/menu/ProfileOptionButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/external/profile/option/menu/ProfileOptionsMenu.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/nametag/NameTags.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/nametag/NameTags.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/scoreboard/Aether$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/scoreboard/Aether$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/scoreboard/Aether.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/scoreboard/Aether.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/scoreboard/example/ExampleBoardAdapter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/scoreboard/scoreboard/Board.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/scoreboard/scoreboard/Board.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/scoreboard/scoreboard/BoardEntry.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/drizzy/practice/util/scoreboard/scoreboard/BoardEntry.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/messages.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/messages.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +907,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -33,13 +918,19 @@
         <option value="Drizzy" />
       </list>
     </option>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/pom.xml" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/me/drizzy/practice/hologram/HologramPlaceholders.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/Profile.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/me/drizzy/practice/Array.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/drizzy/practice/profile/Profile.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/pom.xml" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/drizzy/practice/arena/Arena.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/me/drizzy/practice/hologram/HologramPlaceholders.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -58,36 +949,39 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/me/drizzy/practice/util" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/oitc" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.16113281" />
     <property name="project.structure.side.proportion" value="0.15034965" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="J:\Minecraft Servers\Source Codes\My Projects\Array\src\main\java\me\drizzy\practice\util" />
-      <recent name="J:\Minecraft Servers\Source Codes\My Projects\Array\src\main\java\me\drizzy\practice\event\types\gulag" />
-      <recent name="J:\Minecraft Servers\Source Codes\My Projects\Array\src\main\java\me\drizzy\practice\arena\command" />
-      <recent name="J:\Minecraft Servers\Source Codes\My Projects\Array\src\main\java\me\drizzy\practice\array\commands" />
-      <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\array\commands\combo" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="me.drizzy.practice.duel.command" />
-      <recent name="rip.resolve.practice.array.commands" />
-      <recent name="rip.resolve.practice.match.types" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="J:\Minecraft Servers\Source Codes\My Projects\By Drizzy\Array\lib\spigots" />
       <recent name="J:\Minecraft Servers\Source Codes\Resolve Network Source Codes\ResolvePractice-master\src\main\java\rip\resolve\practice\util" />
       <recent name="J:\Minecraft Servers\Source Codes\Array Backup\ResolvePractice-master\src\main\java\rip\resolve\Practice\scoreboard" />
       <recent name="J:\Minecraft Servers\Source Codes\Resolve\ResolvePractice-master\src\main\java\rip\resolve\Practice\util\external\menu\deprecated" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="me.drizzy.practice.tablist" />
+      <recent name="me.drizzy.practice.match.task" />
+      <recent name="me.drizzy.practice.match.types" />
+      <recent name="me.drizzy.practice.duel.command" />
+      <recent name="rip.resolve.practice.array.commands" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="J:\Minecraft Servers\Source Codes\My Projects\By Drizzy\Array\src\main\java\me\drizzy\practice\event\types\oitc" />
+      <recent name="J:\Minecraft Servers\Source Codes\My Projects\By Drizzy\Array\src\main\java\me\drizzy\practice\util\chat" />
+      <recent name="J:\Minecraft Servers\Source Codes\My Projects\Array\lib" />
+      <recent name="J:\Minecraft Servers\Source Codes\My Projects\Array\src\main\java\me\drizzy\practice\util" />
+      <recent name="J:\Minecraft Servers\Source Codes\My Projects\Array\src\main\java" />
     </key>
   </component>
   <component name="RunManager">
     <configuration name="Array Compile With Depends" type="AntRunConfiguration">
       <method v="2">
-        <option name="Make" enabled="true" />
         <option name="BuildArtifacts" enabled="true">
           <artifact name="Array:jar" />
         </option>
@@ -104,6 +998,30 @@
       <updated>1609855912788</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added Gulag and Made some changes to HCF and Added Pearl disable option for Arenas" />
@@ -122,26 +1040,34 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="487" y="254" key="#Notifications/0.0.1440.860@0.0.1440.860" timestamp="1610015669436" />
-    <state x="174" y="26" width="1092" height="834" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1611274343760">
+    <state x="200" y="4" key="#Project_Structure" timestamp="1614993069710">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="174" y="26" width="1092" height="834" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.860@0.0.1440.860" timestamp="1611274343760" />
-    <state x="525" y="136" key="#com.intellij.ide.util.MemberChooser" timestamp="1614376475629">
+    <state x="200" y="4" key="#Project_Structure/0.0.1440.860@0.0.1440.860" timestamp="1614993069710" />
+    <state x="174" y="2" width="1092" height="858" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1614987069740">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="525" y="136" key="#com.intellij.ide.util.MemberChooser/0.0.1440.860@0.0.1440.860" timestamp="1614376475629" />
-    <state x="501" y="324" width="539" height="217" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1612678358247">
+    <state x="174" y="2" width="1092" height="858" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.860@0.0.1440.860" timestamp="1614987069740" />
+    <state x="525" y="136" width="390" height="579" key="#com.intellij.ide.util.MemberChooser" timestamp="1615252756239">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="501" y="324" width="539" height="217" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1440.860@0.0.1440.860" timestamp="1612678358247" />
-    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1614672910111">
+    <state x="525" y="136" width="390" height="579" key="#com.intellij.ide.util.MemberChooser/0.0.1440.860@0.0.1440.860" timestamp="1615252756239" />
+    <state x="501" y="324" width="539" height="217" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1615255201201">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1440.860@0.0.1440.860" timestamp="1614672910111" />
+    <state x="501" y="324" width="539" height="217" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1440.860@0.0.1440.860" timestamp="1615255201201" />
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1615272401770">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1440.860@0.0.1440.860" timestamp="1615272401770" />
     <state x="450" y="177" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1612319877933">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="450" y="177" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1440.860@0.0.1440.860" timestamp="1612319877933" />
+    <state x="92" y="92" width="1256" height="676" key="DiffContextDialog" timestamp="1615348550409">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="92" y="92" width="1256" height="676" key="DiffContextDialog/0.0.1440.860@0.0.1440.860" timestamp="1615348550409" />
     <state width="1397" height="222" key="GridCell.Tab.0.bottom" timestamp="1611181932225">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
@@ -158,37 +1084,41 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state width="1397" height="222" key="GridCell.Tab.0.right/0.0.1440.860@0.0.1440.860" timestamp="1611181932225" />
-    <state x="300" y="165" key="IDE.errors.dialog" timestamp="1610194356761">
+    <state x="300" y="165" key="IDE.errors.dialog" timestamp="1615270339804">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="300" y="165" key="IDE.errors.dialog/0.0.1440.860@0.0.1440.860" timestamp="1610194356761" />
-    <state x="221" y="9" key="SettingsEditor" timestamp="1614172080236">
+    <state x="300" y="165" key="IDE.errors.dialog/0.0.1440.860@0.0.1440.860" timestamp="1615270339804" />
+    <state x="358" y="191" key="MultipleFileMergeDialog" timestamp="1615348333796">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="221" y="9" key="SettingsEditor/0.0.1440.860@0.0.1440.860" timestamp="1614172080236" />
-    <state width="498" height="446" key="SwitcherDM" timestamp="1609941511753">
+    <state x="358" y="191" key="MultipleFileMergeDialog/0.0.1440.860@0.0.1440.860" timestamp="1615348333796" />
+    <state x="221" y="9" key="SettingsEditor" timestamp="1615286938520">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state width="498" height="446" key="SwitcherDM/0.0.1440.860@0.0.1440.860" timestamp="1609941511753" />
+    <state x="221" y="9" key="SettingsEditor/0.0.1440.860@0.0.1440.860" timestamp="1615286938520" />
+    <state width="498" height="446" key="SwitcherDM" timestamp="1615005625900">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state width="498" height="446" key="SwitcherDM/0.0.1440.860@0.0.1440.860" timestamp="1615005625900" />
     <state x="331" y="81" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1612347988695">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="331" y="81" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1440.860@0.0.1440.860" timestamp="1612347988695" />
-    <state x="427" y="144" width="650" height="716" key="find.popup" timestamp="1614684529300">
+    <state x="429" y="144" width="650" height="716" key="find.popup" timestamp="1615347830491">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="427" y="144" width="650" height="716" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1614684529300" />
-    <state x="563" y="188" key="refactoring.ChangeSignatureDialog" timestamp="1610115661409">
+    <state x="429" y="144" width="650" height="716" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1615347830491" />
+    <state x="563" y="188" key="refactoring.ChangeSignatureDialog" timestamp="1615268275288">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="563" y="188" key="refactoring.ChangeSignatureDialog/0.0.1440.860@0.0.1440.860" timestamp="1610115661409" />
-    <state x="376" y="195" key="run.anything.popup" timestamp="1614788048224">
+    <state x="563" y="188" key="refactoring.ChangeSignatureDialog/0.0.1440.860@0.0.1440.860" timestamp="1615268275288" />
+    <state x="376" y="195" key="run.anything.popup" timestamp="1615293856524">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="376" y="195" key="run.anything.popup/0.0.1440.860@0.0.1440.860" timestamp="1614788048224" />
-    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1614674848526">
+    <state x="376" y="195" key="run.anything.popup/0.0.1440.860@0.0.1440.860" timestamp="1615293856524" />
+    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1615348646642">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1614674848526" />
+    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1615348646642" />
   </component>
 </project>

@@ -1,18 +1,27 @@
 package me.drizzy.practice;
 
+import lombok.Setter;
 import me.drizzy.practice.event.types.brackets.BracketsManager;
-import me.drizzy.practice.event.types.gulag.GulagManager;
+import me.drizzy.practice.event.types.wizard.WizardManager;
 import me.drizzy.practice.event.types.lms.LMSManager;
+import me.drizzy.practice.event.types.oitc.OITCManager;
 import me.drizzy.practice.event.types.parkour.ParkourManager;
+import me.drizzy.practice.knockback.KnockbackManager;
 import me.drizzy.practice.match.Match;
-import me.drizzy.practice.match.kits.utils.ArmorClassManager;
-import me.drizzy.practice.match.kits.utils.bard.EffectRestorer;
+import me.drizzy.practice.hcf.HCFManager;
+import me.drizzy.practice.hcf.bard.EffectRestorer;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.hotbar.Hotbar;
+import me.drizzy.practice.placeholders.Placeholders;
+import me.drizzy.practice.profile.rank.Rank;
+import me.drizzy.practice.profile.rank.RankType;
+import me.drizzy.practice.profile.rank.apis.DefaultProvider;
 import me.drizzy.practice.queue.QueueThread;
 import me.drizzy.practice.register.RegisterCommands;
 import me.drizzy.practice.register.RegisterListeners;
 import me.drizzy.practice.util.*;
+import me.drizzy.practice.util.chat.CC;
+import me.drizzy.practice.util.external.ItemBuilder;
 import org.bukkit.World;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
@@ -24,7 +33,7 @@ import com.mongodb.client.MongoDatabase;
 import me.drizzy.practice.util.command.Honcho;
 import me.allen.ziggurat.Ziggurat;
 import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.arena.ArenaType;
+import me.drizzy.practice.enums.ArenaType;
 import me.drizzy.practice.arena.ArenaTypeAdapter;
 import me.drizzy.practice.arena.ArenaTypeTypeAdapter;
 import me.drizzy.practice.event.types.spleef.SpleefManager;
@@ -65,6 +74,12 @@ public class Array extends JavaPlugin {
 
     public static Random random;
 
+    @Setter private RankType rankManager;
+    
+    @Setter private Rank rankSystem;
+
+    private Kit hcfKit;
+
     private MongoDatabase mongoDatabase;
 
     private Aether scoreboard;
@@ -81,9 +96,13 @@ public class Array extends JavaPlugin {
 
     private SpleefManager spleefManager;
 
-    private GulagManager gulagManager;
+    private OITCManager OITCManager;
 
-    private ArmorClassManager armorClassManager;
+    private WizardManager wizardManager;
+
+    private KnockbackManager knockbackManager;
+
+    private HCFManager HCFManager;
 
     private EffectRestorer effectRestorer;
 
@@ -102,18 +121,18 @@ public class Array extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Array= this;
-
-        random= new Random();
-
+        Array = this;
+        random = new Random();
         honcho = new Honcho(this);
 
+        //Seteup All the Configs
         mainConfig = new BasicConfigurationFile(this, "config");
         arenasConfig = new BasicConfigurationFile(this, "arenas");
         kitsConfig = new BasicConfigurationFile(this, "kits");
         eventsConfig = new BasicConfigurationFile(this, "events");
         messagesConfig = new BasicConfigurationFile(this, "messages");
 
+        //To Prevent Stealing and Renaming (Skidding)
         if (!Description.getAuthor().contains("Drizzy")) {
             this.logger("------------------------------------------------");
             this.logger("&cYou edited the plugin.yml, please don't do that");
@@ -124,6 +143,7 @@ public class Array extends JavaPlugin {
             return;
         }
 
+        //To Prevent Stealing and Renaming (Skidding)
         if (!Description.getName().contains("Array")) {
             this.logger("------------------------------------------------");
             this.logger("&cYou edited the plugin.yml, please don't do that");
@@ -135,35 +155,43 @@ public class Array extends JavaPlugin {
         }
         if (this.mainConfig.getBoolean("Performance-mode")) {
             TaskUtil.runAsync(() -> {
-            this.registerAll();
+            registerAll();
             RegisterCommands.register();
-            });
+          });
         } else {
-            this.registerAll();
+            registerAll();
             RegisterCommands.register();
         }
-
-        honcho.registerTypeAdapter(Duration.class, new DurationTypeAdapter());
-
+        knockbackManager = new KnockbackManager();
         sumoManager = new SumoManager();
         bracketsManager = new BracketsManager();
         LMSManager = new LMSManager();
         parkourManager = new ParkourManager();
         spleefManager = new SpleefManager();
-        gulagManager = new GulagManager();
+        wizardManager = new WizardManager();
+        OITCManager = new OITCManager();
 
+        if (mainConfig.getBoolean("Array.Core-Hook")) {
+            //Core API Support
+            rankSystem = new Rank();
+        } else {
+            setRankManager(new DefaultProvider());
+        }
         this.entityHider = EntityHider.enable();
         this.effectRestorer = new EffectRestorer(this);
-        this.armorClassManager = new ArmorClassManager(this);
+        this.HCFManager= new HCFManager(this);
 
-        new Kit("HCFTeamFight");
+        if (mainConfig.getBoolean("Array.HCF-Enabled")) {
+            //Create HCF's Duel Kit
+            this.hcfKit = new Kit("HCFTeamFight");
+            this.hcfKit.setDisplayIcon(new ItemBuilder(Material.BEACON).clearEnchantments().clearFlags().build());
+        }
 
-        Arrays.asList(
-                Material.WORKBENCH,
-                Material.STICK,
-                Material.WOOD_PLATE,
-                Material.WOOD_BUTTON,
-                Material.SNOW_BLOCK
+        Arrays.asList(Material.WORKBENCH,
+                      Material.STICK,
+                      Material.WOOD_PLATE,
+                      Material.WOOD_BUTTON,
+                      Material.SNOW_BLOCK
         ).forEach(InventoryUtil::removeCrafting);
 
         for ( World world : this.getServer().getWorlds() ) {
@@ -184,13 +212,13 @@ public class Array extends JavaPlugin {
     @Override
     public void onDisable() {
         disabling = true;
+        //Stop all matches and Remove the placed Block
         Match.cleanup();
-        for (Profile profile : Profile.getProfiles().values()) {
-            profile.save();
-        }
+        //Save Everything before disabling to prevent data loss
         Kit.getKits().forEach(Kit::save);
         Arena.getArenas().forEach(Arena::save);
         Profile.getProfiles().values().forEach(Profile::save);
+        //Clear out the PlayerList for Vanilla Tab
         Profile.getPlayerList().clear();
     }
 
@@ -206,13 +234,13 @@ public class Array extends JavaPlugin {
         try {
             preLoadMongo();
         } catch (NullPointerException | MongoInterruptedException | MongoInternalException | MongoCommandException | MongoClientException e) {
-            this.logger("------------------------------------------------");
+            this.logger(CC.CHAT_BAR);
             this.logger("            &4&lMongo Internal Error");
             this.logger("        &cMongo is not setup correctly!");
             this.logger(     "&cPlease check your mongo and try again.");
             this.logger("              &4&lDisabling Array");
-            this.logger("------------------------------------------------");
-            Bukkit.getPluginManager().disablePlugin(this);
+            this.logger(CC.CHAT_BAR);
+            this.shutDown();
             return;
         }
 
@@ -225,26 +253,26 @@ public class Array extends JavaPlugin {
             Kit.preload();
             this.logger("&aLoaded Kits!");
         } catch (YAMLException e) {
-            this.logger("------------------------------------------------");
+            this.logger(CC.CHAT_BAR);
             this.logger("       &cError Loading Kits: &cYAML Error");
             this.logger("    &cThis means your configuration was wrong.");
             this.logger("  &cPlease check your Kits config and try again!");
-            this.logger("              &4&lDisabling Array");
-            this.logger("------------------------------------------------");
-            Bukkit.getPluginManager().disablePlugin(this);
+            this.logger("               &4&lDisabling Array");
+            this.logger(CC.CHAT_BAR);
+            this.shutDown();
             return;
         }
         try {
             this.logger("&bLoading Arenas!");
             Arena.preload();
         } catch (YAMLException e) {
-            this.logger("------------------------------------------------");
+            this.logger(CC.CHAT_BAR);
             this.logger("      &cError Loading Kits: &cYAML Error");
             this.logger("   &cThis means your configuration was wrong.");
             this.logger(" &cPlease check your Arenas config and try again!");
             this.logger("              &4&lDisabling Array");
-            this.logger("------------------------------------------------");
-            Bukkit.getPluginManager().disablePlugin(this);
+            this.logger(CC.CHAT_BAR);
+            this.shutDown();
             return;
         }
         new Hotbar();
@@ -256,20 +284,30 @@ public class Array extends JavaPlugin {
         honcho.registerTypeAdapter(Arena.class, new ArenaTypeAdapter());
         honcho.registerTypeAdapter(ArenaType.class, new ArenaTypeTypeAdapter());
         honcho.registerTypeAdapter(Kit.class, new KitTypeAdapter());
+        honcho.registerTypeAdapter(Duration.class, new DurationTypeAdapter());
     }
 
     private void registerEssentials() {
+        //Setup Scoreboard & Tab (Spent 2 Days figuring out why scoreboard was not working,
+        // turns out you gotta register it before tab)
         this.scoreboard = new Aether(this, new Scoreboard());
         this.scoreboard.getOptions().hook(true);
         if (mainConfig.getBoolean("Tab.Enabled")) {
             this.tab=new Ziggurat(this, new Tab());
         }
+        //Start the Queue Thread
         new QueueThread().start();
+
+        //PlaceholderAPI Hook
         if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new HologramPlaceholders().register();
+            new Placeholders().register();
+            logger("&bFound PlaceholderAPI, Registering Expansions....");
         } else {
             this.logger("&cPlaceholderAPI was NOT found, Holograms will NOT work!");
         }
+
+        //Load the Global Leaderboards (Also a bug fix for leaderboards being blank on start)
         Profile.loadGlobalLeaderboards();
     }
 
@@ -281,5 +319,11 @@ public class Array extends JavaPlugin {
     private void preLoadMongo() {
         MongoClient client = new MongoClient(new MongoClientURI(mainConfig.getString("Mongo.URL")));
         this.mongoDatabase = client.getDatabase(mainConfig.getString("Mongo.Database"));
+    }
+
+    public void shutDown() {
+        this.onDisable();
+        logger("Shutting down Array!");
+        Bukkit.getPluginManager().disablePlugin(this);
     }
 }

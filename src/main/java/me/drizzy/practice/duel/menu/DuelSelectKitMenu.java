@@ -1,9 +1,10 @@
 package me.drizzy.practice.duel.menu;
 
+import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.menu.Button;
 import me.drizzy.practice.util.external.menu.Menu;
@@ -36,10 +37,19 @@ public class DuelSelectKitMenu extends Menu {
 
         boolean party = Profile.getByUuid(player.getUniqueId()).getParty() != null;
 
-        for ( Kit kit : Kit.getKits()) {
-            if (kit.isEnabled() || kit.getName().equalsIgnoreCase("HCFTeamFight")) {
-                if (!(kit.getGameRules().isTimed() && party))
-                    buttons.put(buttons.size(), new SelectKitButton(kit));
+        if (Array.getInstance().getMainConfig().getBoolean("Array.HCF-Enabled")) {
+            for ( Kit kit : Kit.getKits() ) {
+                if (kit.isEnabled() || kit.getName().equalsIgnoreCase("HCFTeamFight")) {
+                    if (!(kit.getGameRules().isTimed() && party))
+                        buttons.put(buttons.size(), new SelectKitButton(kit));
+                }
+            }
+        } else {
+            for ( Kit kit : Kit.getKits() ) {
+                if (kit.isEnabled() && !kit.getName().equalsIgnoreCase("HCFTeamFight")) {
+                    if (!(kit.getGameRules().isTimed() && party))
+                        buttons.put(buttons.size(), new SelectKitButton(kit));
+                }
             }
         }
 
@@ -65,7 +75,7 @@ public class DuelSelectKitMenu extends Menu {
             lore.add("");
             lore.add("&bClick to send a duel with this kit.");
             return new ItemBuilder(kit.getDisplayIcon())
-                    .name("&b&l" + kit.getName()).lore(lore)
+                    .name(kit.getDisplayName()).lore(lore)
                     .clearFlags()
                     .build();
         }

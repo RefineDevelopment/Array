@@ -2,6 +2,8 @@ package me.drizzy.practice.util;
 
 import java.util.Arrays;
 import java.util.List;
+
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -10,7 +12,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 public class ItemBuilder {
-    private ItemStack itemStack;
+
+    private final ItemStack itemStack;
 
     public ItemBuilder(Material material, int n2, int n3) {
         if (n2 == 0) {
@@ -92,7 +95,7 @@ public class ItemBuilder {
 
     public ItemBuilder setDisplayName(String string) {
         ItemMeta itemMeta = this.itemStack.getItemMeta();
-        itemMeta.setDisplayName(Utils.translate(string));
+        itemMeta.setDisplayName(CC.translate(string));
         this.itemStack.setItemMeta(itemMeta);
         return this;
     }

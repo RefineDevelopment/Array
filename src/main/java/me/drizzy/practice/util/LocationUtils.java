@@ -1,8 +1,12 @@
 package me.drizzy.practice.util;
 
+import me.drizzy.practice.arena.impl.TheBridgeArena;
+import me.drizzy.practice.match.types.TheBridgeMatch;
+import me.drizzy.practice.profile.Profile;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 public class LocationUtils {
     public static String getString(Location loc) {
@@ -34,7 +38,20 @@ public class LocationUtils {
     }
 
     public static boolean isSameLocation(Location loc1, Location loc2) {
-        return loc1 != null && loc2 != null && loc1.equals(loc2);
+        return loc1 != null && loc1.equals(loc2);
+    }
+
+    public static boolean isTeamPortal(Player player) {
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        TheBridgeMatch match = (TheBridgeMatch) profile.getMatch();
+
+        TheBridgeArena arena = (TheBridgeArena) match.getArena();
+
+        if (match.getTeamPlayerA().getPlayer() == player) {
+            return arena.getRedCuboid().contains(player.getLocation());
+        } else {
+            return arena.getBlueCuboid().contains(player.getLocation());
+        }
     }
 
 }

@@ -4,9 +4,9 @@ import me.drizzy.practice.event.types.lms.player.LMSPlayerState;
 import me.drizzy.practice.kit.KitLoadout;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.hotbar.Hotbar;
-import me.drizzy.practice.hotbar.HotbarItem;
+import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.external.TimeUtil;
 import org.bukkit.ChatColor;
@@ -171,7 +171,7 @@ public class LMSListener implements Listener {
                     return;
                 }
                 if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
-                    if (event.getItem().equals(Hotbar.getItems().get(HotbarItem.DEFAULT_KIT))) {
+                    if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DEFAULT_KIT))) {
                         KitLoadout kitLoadout = profile.getLms().getKit().getKitLoadout();
                         event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                         event.getPlayer().getInventory().setContents(kitLoadout.getContents());
@@ -189,7 +189,7 @@ public class LMSListener implements Listener {
                     if (displayName.startsWith("Kit: ")) {
                         String kitName = displayName.replace("Kit: ", "");
 
-                        for (KitLoadout kitLoadout : profile.getKitData().get(profile.getLms().getKit()).getLoadouts()) {
+                        for (KitLoadout kitLoadout : profile.getStatisticsData().get(profile.getLms().getKit()).getLoadouts()) {
                             if (kitLoadout != null && ChatColor.stripColor(kitLoadout.getCustomName()).equals(kitName)) {
                                 event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                                 event.getPlayer().getInventory().setContents(kitLoadout.getContents());

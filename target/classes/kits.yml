@@ -235,40 +235,6 @@ kits:
       bow-hp: false
     edit-rules:
       allow-potion-fill: false
-  BoxUHC:
-    enabled: true
-    icon:
-      material: WOOD_DOOR
-      durability: 0
-    loadout:
-      armor: t@0;t@0;t@0;t@0;
-      contents: t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;
-    game-rules:
-      ranked: true
-      partyffa: false
-      partysplit: false
-      editable: true
-      antifoodloss: true
-      ffacenter: false
-      noitems: false
-      build: true
-      spleef: false
-      parkour: false
-      combo: false
-      sumo: false
-      infinite-speed: false
-      infinite-strength: false
-      timed: false
-      water-kill: false
-      lava-kill: false
-      health-regeneration: true
-      show-health: false
-      hit-delay: 20
-      bow-hp: false
-      BoxUHC: true
-    edit-rules:
-      allow-potion-fill: false
-    knockback-profile: builduhc
   HCFTeamFight:
       enabled: false
       icon:

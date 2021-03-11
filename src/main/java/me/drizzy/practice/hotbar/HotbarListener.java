@@ -1,5 +1,6 @@
 package me.drizzy.practice.hotbar;
 
+import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.event.menu.ActiveEventSelectEventMenu;
 import me.drizzy.practice.event.types.lms.LMS;
 import me.drizzy.practice.event.types.parkour.Parkour;
@@ -8,9 +9,9 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.event.types.brackets.Brackets;
 import me.drizzy.practice.event.types.spleef.Spleef;
 import me.drizzy.practice.event.types.sumo.Sumo;
-import me.drizzy.practice.kit.menu.KitEditorSelectKitMenu;
+import me.drizzy.practice.kiteditor.menu.KitEditorSelectKitMenu;
 import me.drizzy.practice.party.Party;
-import me.drizzy.practice.party.PartyMessage;
+import me.drizzy.practice.enums.PartyMessageType;
 import me.drizzy.practice.party.menu.ManagePartySettings;
 import me.drizzy.practice.party.menu.OtherPartiesMenu;
 import me.drizzy.practice.party.menu.PartyEventSelectEventMenu;
@@ -20,7 +21,7 @@ import me.drizzy.practice.profile.menu.PlayerMenu;
 import me.drizzy.practice.settings.SettingsMenu;
 import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.queue.menu.QueueSelectKitMenu;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -39,12 +40,12 @@ public class HotbarListener implements Listener
         if (event.getItem() != null && event.getAction().name().contains("RIGHT")) {
             final Player player = event.getPlayer();
             final Profile profile = Profile.getByUuid(player.getUniqueId());
-            final HotbarItem hotbarItem = Hotbar.fromItemStack(event.getItem());
-            if (hotbarItem == null) {
+            final HotbarType hotbarType= Hotbar.fromItemStack(event.getItem());
+            if (hotbarType == null) {
                 return;
             }
             event.setCancelled(true);
-            switch (hotbarItem) {
+            switch (hotbarType) {
                 case QUEUE_JOIN_RANKED: {
                     if (!player.hasPermission("array.donator")) {
                         if (Array.getInstance().getMainConfig().getBoolean("Ranked.Require-Kills")) {
@@ -123,7 +124,7 @@ public class HotbarListener implements Listener
                     profile.setParty(new Party(player));
                     PlayerUtil.reset(player, false);
                     profile.refreshHotbar();
-                    player.sendMessage(PartyMessage.CREATED.format());
+                    player.sendMessage(PartyMessageType.CREATED.format());
                     break;
                 }
                 case PARTY_DISBAND: {
@@ -191,11 +192,11 @@ public class HotbarListener implements Listener
                 case LMS_LEAVE: {
                     final LMS activeLMS = Array.getInstance().getLMSManager().getActiveLMS();
                     if (activeLMS == null) {
-                        player.sendMessage(CC.RED + "There is no active LMS.");
+                        player.sendMessage(CC.RED + "There is no active KoTH.");
                         return;
                     }
                     if (!profile.isInLMS() || !activeLMS.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(CC.RED + "You are not apart of the active LMS.");
+                        player.sendMessage(CC.RED + "You are not apart of the active KoTH.");
                         return;
                     }
                     Array.getInstance().getLMSManager().getActiveLMS().handleLeave(player);

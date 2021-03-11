@@ -3,7 +3,7 @@ package me.drizzy.practice.event.types.sumo.command;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.event.types.sumo.Sumo;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 

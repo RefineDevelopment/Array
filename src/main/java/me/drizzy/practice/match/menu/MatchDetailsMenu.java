@@ -2,7 +2,7 @@ package me.drizzy.practice.match.menu;
 
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.team.TeamPlayer;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.InventoryUtil;
 import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.PotionUtil;
@@ -152,17 +152,17 @@ public class MatchDetailsMenu extends Menu {
 
         @Override
         public ItemStack getButtonItem(Player player) {
-            ItemBuilder builder=new ItemBuilder(Material.POTION).name("&bPotion Effects");
+            ItemBuilder builder=new ItemBuilder(Material.POTION).name("&b&lPotion Effects");
 
             if (effects.isEmpty()) {
-                builder.lore("&eNo potion effects");
+                builder.lore("&bNo potion effects");
             } else {
                 List<String> lore=new ArrayList<>();
 
                 effects.forEach(effect -> {
-                    String name=PotionUtil.getName(effect.getType()) + " " + (effect.getAmplifier() + 1);
-                    String duration=" (" + TimeUtil.millisToTimer((effect.getDuration() / 20) * 1000) + ")";
-                    lore.add(CC.WHITE + name + duration);
+                    String name = PotionUtil.getName(effect.getType()) + " " + (effect.getAmplifier() + 1);
+                    String duration = " (" + TimeUtil.millisToTimer((effect.getDuration() / 20) * 1000) + ")";
+                    lore.add("&b" + name + "&f" + duration);
                 });
 
                 builder.lore(lore);

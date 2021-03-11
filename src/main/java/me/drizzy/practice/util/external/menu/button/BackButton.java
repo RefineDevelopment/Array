@@ -1,6 +1,6 @@
 package me.drizzy.practice.util.external.menu.button;
 
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.menu.Button;
 import me.drizzy.practice.util.external.menu.Menu;

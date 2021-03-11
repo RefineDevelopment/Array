@@ -1,7 +1,7 @@
 package me.drizzy.practice.event.types.lms.command;
 
 import me.drizzy.practice.Array;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.util.external.Cooldown;
 import org.bukkit.command.CommandSender;

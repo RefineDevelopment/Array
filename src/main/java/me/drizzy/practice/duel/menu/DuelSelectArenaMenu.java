@@ -2,7 +2,7 @@ package me.drizzy.practice.duel.menu;
 
 import lombok.AllArgsConstructor;
 import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.arena.ArenaType;
+import me.drizzy.practice.enums.ArenaType;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.menu.Button;
@@ -87,7 +87,7 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
         @Override
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(arena.getDisplayIcon())
-                    .name("&b" + arena.getName())
+                    .name(arena.getDisplayName())
                     .build();
         }
 

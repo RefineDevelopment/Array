@@ -2,7 +2,7 @@ package me.drizzy.practice.tournament.command;
 
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.tournament.Tournament;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

@@ -25,17 +25,12 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * TODO: Add documentation to methods, etc
- * TODO: Fix inconsistent cooldown scores
- * TODO: Finish other board formats
- */
-
+@Getter
 public class Aether implements Listener {
 
-    @Getter private final JavaPlugin plugin;
-    @Getter private final AetherOptions options;
-    @Getter BoardAdapter adapter;
+    private final JavaPlugin plugin;
+    private final AetherOptions options;
+    BoardAdapter adapter;
 
     public Aether(JavaPlugin plugin, BoardAdapter adapter, AetherOptions options) {
         this.options = options;
@@ -49,10 +44,6 @@ public class Aether implements Listener {
 
     public Aether(JavaPlugin plugin, BoardAdapter adapter) {
         this(plugin, adapter, AetherOptions.defaultOptions());
-    }
-
-    public Aether(JavaPlugin plugin) {
-        this(plugin, null, AetherOptions.defaultOptions());
     }
 
     private void run() {

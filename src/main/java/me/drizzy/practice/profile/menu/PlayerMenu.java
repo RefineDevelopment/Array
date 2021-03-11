@@ -6,7 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import me.drizzy.practice.kit.menu.KitEditorSelectKitMenu;
+import me.drizzy.practice.kiteditor.menu.KitEditorSelectKitMenu;
 import me.drizzy.practice.settings.SettingsMenu;
 import me.drizzy.practice.statistics.menu.LeaderboardsMenu;
 import me.drizzy.practice.statistics.menu.StatsMenu;

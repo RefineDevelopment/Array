@@ -4,45 +4,28 @@ import me.drizzy.practice.util.PlayerUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
+@Getter
 public class TeamPlayer {
 
-    @Getter
     private final UUID uuid;
-    @Getter
     private final String username;
-    @Getter
-    @Setter
-    private boolean alive = true;
-    @Getter
-    @Setter
-    private boolean disconnected;
-    @Getter
-    @Setter
-    private int elo;
-    @Getter
-    @Setter
-    private int potionsThrown;
-    @Getter
-    @Setter
-    private int potionsMissed;
-    @Getter
-    @Setter
-    private int potions;
-    @Getter
-    @Setter
-    private int hits;
-    @Getter
-    @Setter
-    private int combo;
-    @Getter
-    @Setter
-    private int longestCombo;
+    @Setter Location playerSpawn;
+    @Setter private boolean alive = true;
+    @Setter private boolean disconnected;
+    @Setter private int elo;
+    @Setter private int potionsThrown;
+    @Setter private int potionsMissed;
+    @Setter private int potions;
+    @Setter private int hits;
+    @Setter private int combo;
+    @Setter private int longestCombo;
 
     public TeamPlayer(Player player) {
         this.uuid = player.getUniqueId();

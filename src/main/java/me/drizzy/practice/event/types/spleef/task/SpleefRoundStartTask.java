@@ -1,6 +1,6 @@
 package me.drizzy.practice.event.types.spleef.task;
 
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.event.types.spleef.Spleef;
 import me.drizzy.practice.event.types.spleef.SpleefState;
 import me.drizzy.practice.event.types.spleef.SpleefTask;

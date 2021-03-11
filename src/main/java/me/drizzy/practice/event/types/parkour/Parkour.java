@@ -3,6 +3,7 @@ package me.drizzy.practice.event.types.parkour;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.util.chat.Clickable;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -19,7 +20,7 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.PlayerSnapshot;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.external.TimeUtil;
@@ -40,15 +41,11 @@ public class Parkour {
 	private final PlayerSnapshot host;
 	private final LinkedHashMap<UUID, ParkourPlayer> eventPlayers = new LinkedHashMap<>();
 	@Getter private final List<UUID> spectators = new ArrayList<>();
-	@Getter
-	@Setter
-	public static int maxPlayers;
+	@Getter	@Setter	public static int maxPlayers;
 	@Getter @Setter private int totalPlayers;
 	@Setter private Cooldown cooldown;
 	@Setter private long roundStart;
-	@Getter
-	@Setter
-	private static boolean enabled = true;
+	@Getter	@Setter	private static boolean enabled = true;
 
 
 	public Parkour(Player player) {
@@ -228,7 +225,8 @@ public class Parkour {
 		} else {
 			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Parkour Event" + CC.GRAY + "!");
 			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Parkour Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Parkour Event" + CC.GRAY + "!");		}
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Parkour Event" + CC.GRAY + "!");
+		}
 
 		for (ParkourPlayer parkourPlayer : eventPlayers.values()) {
 			Player player = parkourPlayer.getPlayer();
@@ -255,18 +253,22 @@ public class Parkour {
 	}
 
 	public void announce() {
-		BaseComponent[] components = new ChatComponentBuilder("")
-				.parse(EVENT_PREFIX + CC.AQUA + getHost().getPlayer().getName() + CC.translate("&7 is hosting a &b&lParkour Event&7. ") + CC.GREEN + "[Click to join]")
-				.attachToEachPart(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentBuilder("")
-						.parse(CC.GRAY + "Click to join the parkour.").create()))
-				.attachToEachPart(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/parkour join"))
-				.create();
-
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			if (!eventPlayers.containsKey(player.getUniqueId())) {
-				player.sendMessage("");
-				player.spigot().sendMessage(components);
-				player.sendMessage("");
+		List<String> strings=new ArrayList<>();
+		strings.add(CC.translate(" "));
+		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
+		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&b&l[Parkour Event]"));
+		strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + ""));
+		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&fA &bParkour &fevent is being hosted by &b" + this.host.getUsername()));
+		strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
+		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
+		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
+		strings.add(CC.translate(" "));
+		for ( String string : strings ) {
+			Clickable message = new Clickable(string, "Click to join Parkour event", "/parkour join");
+			for ( Player player : Bukkit.getOnlinePlayers() ) {
+				if (!eventPlayers.containsKey(player.getUniqueId())) {
+					message.sendToPlayer(player);
+				}
 			}
 		}
 	}
@@ -278,7 +280,6 @@ public class Parkour {
 	}
 
 	public void onJoin(Player player) {
-
 	}
 
 	public void onLeave(Player player) {

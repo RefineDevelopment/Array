@@ -5,7 +5,7 @@ import me.drizzy.practice.event.types.brackets.Brackets;
 import me.drizzy.practice.event.types.lms.LMS;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.menu.Button;
@@ -55,14 +55,14 @@ public class EventSelectKitMenu extends Menu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
-            if (event.equals("Gulag")) {
+            if (event.equals("Brackets")) {
                 if (Array.getInstance().getBracketsManager().getActiveBrackets() != null) {
-                    player.sendMessage(CC.RED + "There is already an active Gulag Event.");
+                    player.sendMessage(CC.RED + "There is already an active Brackets Event.");
                     return;
                 }
 
                 if (!Array.getInstance().getBracketsManager().getCooldown().hasExpired()) {
-                    player.sendMessage(CC.RED + "There is an active cooldown for the Gulag Event.");
+                    player.sendMessage(CC.RED + "There is an active cooldown for the Brackets Event.");
                     return;
                 }
 
@@ -97,7 +97,7 @@ public class EventSelectKitMenu extends Menu {
                     if (profile.isInLobby()) {
                         if (!profile.getKitEditor().isActive()) {
                         PlayerUtil.reset(player, false);
-        profile.refreshHotbar();
+                        profile.refreshHotbar();
                         }
                     }
                 }

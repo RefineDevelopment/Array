@@ -1,7 +1,6 @@
 package me.drizzy.practice.match.types;
 
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.profile.meta.ProfileMatchHistory;
 import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueType;
@@ -21,7 +20,7 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.util.elo.EloUtil;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.nametag.NameTags;
 import lombok.Getter;
@@ -40,10 +39,8 @@ import java.util.*;
 @Getter
 public class SumoMatch extends Match {
 
-    @Setter
-    private TeamPlayer playerA;
-    @Setter
-    private TeamPlayer playerB;
+    @Setter private TeamPlayer playerA;
+    @Setter private TeamPlayer playerB;
 
     public SumoMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
         super(queue, kit, arena, queueType);
@@ -83,6 +80,11 @@ public class SumoMatch extends Match {
     }
 
     @Override
+    public boolean isTheBridgeMatch() {
+        return false;
+    }
+
+    @Override
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
@@ -100,11 +102,7 @@ public class SumoMatch extends Match {
             player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 2));
         }
 
-        KnockbackProfile kbprofile = KnockbackModule.getDefault();
-        if (getKit().getKnockbackProfile() != null && KnockbackModule.INSTANCE.profiles.containsKey(getKit().getKnockbackProfile())) {
-            kbprofile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
-        }
-        ((CraftPlayer) player).getHandle().setKnockback(kbprofile);
+        Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
 
         Location spawn = playerA.equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
 
@@ -160,7 +158,6 @@ public class SumoMatch extends Match {
                         Player opponent = getOpponentPlayer(player);
 
                         if (player != null) {
-                            NameTags.reset(player, opponent);
 
                             player.setFireTicks(0);
                             player.updateInventory();
@@ -168,17 +165,14 @@ public class SumoMatch extends Match {
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
-                            NameTags.reset(player, teamPlayer.getPlayer());
-                            TaskUtil.runSync(profile::refreshHotbar);
+                            NameTags.reset(player, opponent);
+                            profile.refreshHotbar();
                             profile.handleVisibility();
-                            KnockbackProfile kbprofile = KnockbackModule.getDefault();
-                            ((CraftPlayer) player).getHandle().setKnockback(kbprofile);
-
+                            Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
                             if (opponent != null) {
                                 profile.setRematchData(new ProfileRematchData(rematchKey, player.getUniqueId(),
                                         opponent.getUniqueId(), getKit(), getArena()));
                             }
-
                             Essentials.teleportToSpawn(player);
                         }
                     }
@@ -196,12 +190,11 @@ public class SumoMatch extends Match {
         ChatComponentBuilder inventoriesBuilder = new ChatComponentBuilder("");
 
         inventoriesBuilder.append("Winner: ").color(ChatColor.GREEN).append(winningPlayer.getName()).color(ChatColor.WHITE);
-        inventoriesBuilder.setCurrentHoverEvent(getHoverEvent(winningTeamPlayer)).setCurrentClickEvent(getClickEvent(winningTeamPlayer)).append(" ⎜ ").color(ChatColor.GRAY).append("Loser: ").color(ChatColor.RED).append(losingPlayer.getName()).color(ChatColor.WHITE);
+        inventoriesBuilder.setCurrentHoverEvent(getHoverEvent(winningTeamPlayer)).setCurrentClickEvent(getClickEvent(winningTeamPlayer)).append(" - ").color(ChatColor.GRAY).append("Loser: ").color(ChatColor.RED).append(losingPlayer.getName()).color(ChatColor.WHITE);
         inventoriesBuilder.setCurrentHoverEvent(getHoverEvent(losingTeamPlayer)).setCurrentClickEvent(getClickEvent(losingTeamPlayer));
 
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7(Click name to view inventory)").create());
-        components.add(new ChatComponentBuilder("").create());
         components.add(inventoriesBuilder.create());
 
 
@@ -209,14 +202,8 @@ public class SumoMatch extends Match {
         Profile losingProfile = Profile.getByUuid(losingPlayer.getUniqueId());
 
         if (getQueueType() == QueueType.UNRANKED) {
-            winningProfile.getKitData().get(getKit()).incrementWon();
-            losingProfile.getKitData().get(getKit()).incrementLost();
-
-            ProfileMatchHistory winnerProfileMatchHistory = new ProfileMatchHistory(getSnapshotOfPlayer(winningPlayer), getSnapshotOfPlayer(losingPlayer), true, "UNRANKED", getKit().getName(), 0, 0, new Date(), winningProfile.getSumoRounds(), losingProfile.getSumoRounds());
-            ProfileMatchHistory loserProfileMatchHistory = new ProfileMatchHistory(getSnapshotOfPlayer(winningPlayer), getSnapshotOfPlayer(losingPlayer), false, "UNRANKED", getKit().getName(), 0, 0, new Date(), winningProfile.getSumoRounds(), losingProfile.getSumoRounds());
-
-            winningProfile.addMatchHistory(winnerProfileMatchHistory);
-            losingProfile.addMatchHistory(loserProfileMatchHistory);
+            winningProfile.getStatisticsData().get(getKit()).incrementWon();
+            losingProfile.getStatisticsData().get(getKit()).incrementLost();
         }
 
 
@@ -225,10 +212,10 @@ public class SumoMatch extends Match {
             int oldLoserElo = losingTeamPlayer.getElo();
             int newWinnerElo = EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
             int newLoserElo = EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
-            winningProfile.getKitData().get(getKit()).setElo(newWinnerElo);
-            losingProfile.getKitData().get(getKit()).setElo(newLoserElo);
-            winningProfile.getKitData().get(getKit()).incrementWon();
-            losingProfile.getKitData().get(getKit()).incrementLost();
+            winningProfile.getStatisticsData().get(getKit()).setElo(newWinnerElo);
+            losingProfile.getStatisticsData().get(getKit()).setElo(newLoserElo);
+            winningProfile.getStatisticsData().get(getKit()).incrementWon();
+            losingProfile.getStatisticsData().get(getKit()).incrementLost();
             winningProfile.calculateGlobalElo();
             losingProfile.calculateGlobalElo();
 
@@ -240,12 +227,6 @@ public class SumoMatch extends Match {
                             newWinnerElo + ") &7⎜ &c" + losingPlayer.getName() + " -" + loserEloChange + " (" + newLoserElo +
                             ")")
                     .create());
-
-            ProfileMatchHistory winnerProfileMatchHistory = new ProfileMatchHistory(getSnapshotOfPlayer(winningPlayer), getSnapshotOfPlayer(losingPlayer), true, "RANKED", getKit().getName(), winnerEloChange, loserEloChange, new Date());
-            ProfileMatchHistory loserProfileMatchHistory = new ProfileMatchHistory(getSnapshotOfPlayer(winningPlayer), getSnapshotOfPlayer(losingPlayer), false, "RANKED", getKit().getName(), winnerEloChange, loserEloChange, new Date());
-
-            winningProfile.addMatchHistory(winnerProfileMatchHistory);
-            losingProfile.addMatchHistory(loserProfileMatchHistory);
         }
 
         StringBuilder builder = new StringBuilder();
@@ -282,13 +263,13 @@ public class SumoMatch extends Match {
             }
         }
 
-        List<BaseComponent[]> chatbar = new ArrayList<>();
-        chatbar.add(0, new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
+        List<BaseComponent[]> CHAT_BAR = new ArrayList<>();
+        CHAT_BAR.add(0, new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
 
         for (Player player : new Player[]{winningPlayer, losingPlayer}) {
-            chatbar.forEach(components1 -> player.spigot().sendMessage(components1));
+            CHAT_BAR.forEach(components1 -> player.spigot().sendMessage(components1));
             components.forEach(components1 -> player.spigot().sendMessage(components1));
-            chatbar.forEach(components1 -> player.spigot().sendMessage(components1));
+            CHAT_BAR.forEach(components1 -> player.spigot().sendMessage(components1));
         }
 
         if (getMatchWaterCheck() != null) {
@@ -516,12 +497,19 @@ public class SumoMatch extends Match {
                     end();
                 } else {
                     for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Sumo-Round-Message") ) {
+                        //Send Round Messages
                         playerA.getPlayer().sendMessage(CC.translate(string.replace("{rounds}", String.valueOf(getRoundsNeeded(playerA)).replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName()))));
-                        playerA.getPlayer().sendMessage(CC.translate(string.replace("{rounds}", String.valueOf(getRoundsNeeded(playerB)).replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName()))));
+                        playerB.getPlayer().sendMessage(CC.translate(string.replace("{rounds}", String.valueOf(getRoundsNeeded(playerB)).replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName()))));
+
+                        //Setup the Player
                         setupPlayer(playerA.getPlayer());
                         setupPlayer(playerB.getPlayer());
+
+                        //Handle visibility for both
                         playerA.getPlayer().showPlayer(playerB.getPlayer());
                         playerB.getPlayer().showPlayer(playerA.getPlayer());
+
+                        //Restart the match
                         onStart();
                         setState(MatchState.STARTING);
                         setStartTimestamp(-1);

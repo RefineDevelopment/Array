@@ -5,7 +5,7 @@ import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.menu.Button;
 import me.drizzy.practice.util.external.menu.Menu;
@@ -55,7 +55,7 @@ public class QueueSelectKitMenu extends Menu
             for ( String lines : Array.getInstance().getMainConfig().getStringList("Queue-Lore") ) {
                 lore.add(CC.translate(this.replace(lines)));
             }
-            return new ItemBuilder(this.queue.getKit().getDisplayIcon()).name("&b&l" + this.queue.getKit().getName()).lore(lore).clearFlags().build();
+            return new ItemBuilder(this.queue.getKit().getDisplayIcon()).name(this.queue.getKit().getDisplayName()).lore(lore).clearFlags().build();
         }
 
         @Override
@@ -70,7 +70,7 @@ public class QueueSelectKitMenu extends Menu
                 this.queue.addPlayer(player, 0);
             }
             else if (QueueSelectKitMenu.this.queueType == QueueType.RANKED) {
-                this.queue.addPlayer(player, profile.getKitData().get(this.queue.getKit()).getElo());
+                this.queue.addPlayer(player, profile.getStatisticsData().get(this.queue.getKit()).getElo());
             }
         }
 

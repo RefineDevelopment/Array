@@ -3,7 +3,7 @@
 package me.drizzy.practice.party.command;
 
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 import me.drizzy.practice.util.command.command.CommandMeta;
 

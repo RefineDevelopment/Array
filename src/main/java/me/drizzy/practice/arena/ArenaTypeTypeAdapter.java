@@ -1,5 +1,6 @@
 package me.drizzy.practice.arena;
 
+import me.drizzy.practice.enums.ArenaType;
 import me.drizzy.practice.util.command.command.adapter.CommandTypeAdapter;
 
 public class ArenaTypeTypeAdapter implements CommandTypeAdapter {

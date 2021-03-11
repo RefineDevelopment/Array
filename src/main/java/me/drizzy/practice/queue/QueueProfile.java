@@ -37,13 +37,13 @@ public class QueueProfile {
     public int getMinRange() {
         int min = this.elo - this.range;
 
-        return min < 0 ? 0 : min;
+        return Math.max(min, 0);
     }
 
     public int getMaxRange() {
         int max = this.elo + this.range;
 
-        return max > 2500 ? 2500 : max;
+        return Math.min(max, 2500);
     }
 
     @Override

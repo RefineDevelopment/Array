@@ -13,7 +13,7 @@ import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.queue.QueueType;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.nametag.NameTags;
@@ -21,11 +21,8 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import pt.foxspigot.jar.knockback.KnockbackModule;
-import pt.foxspigot.jar.knockback.KnockbackProfile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +74,12 @@ public class SumoTeamMatch extends Match {
 
 
     @Override
+    public boolean isTheBridgeMatch() {
+        return false;
+    }
+
+
+    @Override
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
@@ -94,16 +97,10 @@ public class SumoTeamMatch extends Match {
 		player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         if (!getKit().getGameRules().isNoitems()) {
-            Profile.getByUuid(player.getUniqueId()).getKitData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
+            Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
         }
 
-        if (getKit().getKnockbackProfile() != null && KnockbackModule.INSTANCE.profiles.containsKey(getKit().getKnockbackProfile())) {
-            KnockbackProfile kbprofile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
-            ((CraftPlayer) player).getHandle().setKnockback(kbprofile);
-        } else {
-            KnockbackProfile knockbackProfile = KnockbackModule.getDefault();
-            ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
-        }
+        Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
 
         Team team = getTeam(player);
 
@@ -184,11 +181,8 @@ public class SumoTeamMatch extends Match {
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
-                            PlayerUtil.reset(player, false);
-                            profile.refreshHotbar();
                             profile.handleVisibility();
-                            KnockbackProfile knockbackProfile = KnockbackModule.getDefault();
-                            ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
+                            Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
                             teleportToSpawn(player);
                             PlayerUtil.reset(player, false);
                             profile.refreshHotbar();
@@ -472,8 +466,8 @@ public class SumoTeamMatch extends Match {
             Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
             player.teleport(spawn);
             Profile profile = Profile.getByUuid(player.getUniqueId());
-        PlayerUtil.reset(player, false);
-        profile.refreshHotbar();
+            PlayerUtil.reset(player, false);
+            profile.refreshHotbar();
             player.setAllowFlight(true);
             player.setFlying(true);
             profile.setState(ProfileState.SPECTATE_MATCH);
@@ -498,11 +492,9 @@ public class SumoTeamMatch extends Match {
                 if (teamA.getSumoRounds() >= 3 || teamB.getSumoRounds() >= 3) {
                     end();
                 } else {
-                    //kms
                     teamA.broadcast(CC.translate("&fYou need to win &b" + getRoundsNeeded(teamA) + " &fmore rounds!"));
                     teamB.broadcast(CC.translate("&fYou need to win &b" + getRoundsNeeded(teamB) + " &fmore rounds!"));
 
-                    //Did it because I had to, kinda shitty that I had to though.
                     teamA.getPlayers().forEach(this::setupPlayer);
                     teamB.getPlayers().forEach(this::setupPlayer);
 

@@ -4,7 +4,7 @@ import java.beans.ConstructorProperties;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.menu.Menu;
 import org.bukkit.event.inventory.ClickType;

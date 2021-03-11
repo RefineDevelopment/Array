@@ -2,7 +2,7 @@ package me.drizzy.practice.match.task;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 

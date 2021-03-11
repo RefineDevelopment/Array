@@ -1,6 +1,8 @@
 package me.drizzy.practice.util.external.menu;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.bootstrap.BootstrappedListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -9,10 +11,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class MenuListener extends BootstrappedListener {
 
-    public MenuListener(Array Array) {
+
+    public MenuListener(me.drizzy.practice.Array Array) {
         super(Array);
     }
 
@@ -80,13 +84,28 @@ public class MenuListener extends BootstrappedListener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClose(InventoryCloseEvent event) {
-        Player player = (Player) event.getPlayer();
-        Menu openMenu = Menu.currentlyOpenedMenus.get(player.getName());
+        Player player=(Player) event.getPlayer();
+        Menu openMenu=Menu.currentlyOpenedMenus.get(player.getName());
 
         if (openMenu != null) {
             openMenu.onClose(player);
 
             Menu.currentlyOpenedMenus.remove(player.getName());
+        }
+
+        //Kit Editor Bug where anyone can keep the inventory
+        Profile profile=Profile.getByUuid(player.getUniqueId());
+        if (profile.getKitEditor().isActive()) {
+            profile.getKitEditor().setActive(false);
+            if (!profile.isInFight()) {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        PlayerUtil.reset(player, false);
+                        profile.refreshHotbar();
+                    }
+                }.runTask(Array);
+            }
         }
     }
 
