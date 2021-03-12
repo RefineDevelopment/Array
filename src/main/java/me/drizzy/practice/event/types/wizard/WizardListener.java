@@ -22,7 +22,13 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class WizardListener implements Listener {
+
+	int cooldownTime = 30;
+	HashMap<String, Long> cooldown = new HashMap<>();
 
 	private final FireworkEffectPlayer fireworkEffectPlayer=new FireworkEffectPlayer();
 
@@ -210,6 +216,7 @@ public class WizardListener implements Listener {
 				if (profile.isInWizard()) {
 					if (event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
 						event.setDamage(3.0);
+
 					} else {
 						event.setCancelled(true);
 						return;
@@ -220,6 +227,8 @@ public class WizardListener implements Listener {
 						Profile attackerProfile=Profile.getByUuid(attacker.getUniqueId());
 
 						if (damagedProfile.isInWizard() && attackerProfile.isInWizard()) {
+							Vector launchingLocation = attacker.getLocation().getDirection(); // 100% coded by veltus
+							damaged.setVelocity(launchingLocation.multiply(10));
 							damaged.playSound(damaged.getLocation(), Sound.EXPLODE, 20F, 15F);
 							damaged.getWorld().spigot().playEffect(damaged.getLocation(), Effect.SMOKE,
 									26, 0, 0.2F, 0.5F, 0.2F, 0.2F, 12, 387);
@@ -231,16 +240,28 @@ public class WizardListener implements Listener {
 	}
 
 	@EventHandler
-	private void onDoubleJump(PlayerToggleFlightEvent event) {
+	private void onDoubleJump(PlayerMoveEvent event) {
+		// cooldown check
+		if(cooldown.get(event.getPlayer().getName()) - System.currentTimeMillis() * 1000 < cooldownTime) {
+			return;
+		}
+
+		// rest of the code
 		Player player=event.getPlayer();
+
 		if (player.getGameMode().equals(GameMode.CREATIVE)) {
 			return;
 		}
 		if (Profile.getByUuid(player).isInWizard()) {
-			event.setCancelled(true);
-			player.setAllowFlight(false);
-			player.setFlying(false);
-			player.setVelocity(player.getLocation().getDirection().multiply(0.5).setY(1));
+			Vector launchingLocation = player.getLocation().getDirection(); // 100% coded by veltus
+
+			if (player.isFlying() ) {
+				player.setVelocity(launchingLocation.multiply(10));
+				player.setFlying(false);
+			} else if (player.isOnGround()) {
+				player.setAllowFlight(true);
+				player.setFlying(true);
+			}
 			player.getWorld().spigot().playEffect(player.getLocation(), Effect.SMOKE, 26, 0, 0.2F, 0.5F, 0.2F, 0.2F, 12, 387);
 			player.playSound(player.getLocation(), Sound.EXPLODE, 1.0F, 1.0F);
 		}
