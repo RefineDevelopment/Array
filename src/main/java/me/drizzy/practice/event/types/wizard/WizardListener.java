@@ -246,7 +246,6 @@ public class WizardListener implements Listener {
 			return;
 		}
 
-		// rest of the code
 		Player player=event.getPlayer();
 
 		if (player.getGameMode().equals(GameMode.CREATIVE)) {
