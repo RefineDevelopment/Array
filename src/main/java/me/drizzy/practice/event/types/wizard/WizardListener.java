@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class WizardListener implements Listener {
 
-	int cooldownTime = 30;
+	int cooldownTime = 5;
 	HashMap<String, Long> cooldown = new HashMap<>();
 
 	private final FireworkEffectPlayer fireworkEffectPlayer=new FireworkEffectPlayer();
@@ -241,10 +241,6 @@ public class WizardListener implements Listener {
 
 	@EventHandler
 	private void onDoubleJump(PlayerMoveEvent event) {
-		// cooldown check
-		if(cooldown.get(event.getPlayer().getName()) - System.currentTimeMillis() * 1000 < cooldownTime) {
-			return;
-		}
 
 		Player player=event.getPlayer();
 
@@ -254,12 +250,18 @@ public class WizardListener implements Listener {
 		if (Profile.getByUuid(player).isInWizard()) {
 			Vector launchingLocation = player.getLocation().getDirection(); // 100% coded by veltus
 
+			if(cooldown.get(event.getPlayer().getName()) - System.currentTimeMillis() * 1000 < cooldownTime) {
+				return;
+			}
+
 			if (player.isFlying() ) {
 				player.setVelocity(launchingLocation.multiply(10));
 				player.setFlying(false);
+				cooldown.put(player.getName(), System.currentTimeMillis());
 			} else if (player.isOnGround()) {
 				player.setAllowFlight(true);
 				player.setFlying(true);
+				cooldown.put(player.getName(), System.currentTimeMillis());
 			}
 			player.getWorld().spigot().playEffect(player.getLocation(), Effect.SMOKE, 26, 0, 0.2F, 0.5F, 0.2F, 0.2F, 12, 387);
 			player.playSound(player.getLocation(), Sound.EXPLODE, 1.0F, 1.0F);

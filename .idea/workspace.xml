@@ -33,13 +33,9 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="339e4fd3-2648-48f6-9711-4eb584f7cd8b" name="Default Changelist" comment="Update 4.2&#10;&#10;- Added Wizard Event&#10;- Added">
-      <changelist_data name="Drizzy" email="" />
-      <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
+    <list default="true" id="339e4fd3-2648-48f6-9711-4eb584f7cd8b" name="Default Changelist" comment="added double jump cooldowns and attack event launching">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Array.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Array.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/WizardListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/drizzy/practice/event/types/wizard/WizardListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,6 +131,21 @@
       <option name="presentableId" value="Default" />
       <updated>1609855912788</updated>
     </task>
+    <task id="LOCAL-00001" summary="Update 4.2&#10;&#10;- Added Wizard Event&#10;- Added">
+      <created>1615549970994</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1615549970994</updated>
+    </task>
+    <task id="LOCAL-00002" summary="added double jump cooldowns and attack event launching">
+      <created>1615550049720</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1615550049720</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -163,100 +174,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added Gulag and Made some changes to HCF and Added Pearl disable option for Arenas" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Gulag and Made some changes to HCF and Added Pearl disable option for Arenas" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="493" y="0" key="#Auto_Import" timestamp="1612789164681">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="493" y="0" key="#Auto_Import/0.0.1440.860@0.0.1440.860" timestamp="1612789164681" />
-    <state x="500" y="259" key="#BuildArtifactsBeforeRunChooser" timestamp="1611254691864">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="500" y="259" key="#BuildArtifactsBeforeRunChooser/0.0.1440.860@0.0.1440.860" timestamp="1611254691864" />
-    <state x="487" y="254" key="#Notifications" timestamp="1610015669436">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="487" y="254" key="#Notifications/0.0.1440.860@0.0.1440.860" timestamp="1610015669436" />
-    <state x="200" y="4" key="#Project_Structure" timestamp="1614993069710">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="200" y="4" key="#Project_Structure/0.0.1440.860@0.0.1440.860" timestamp="1614993069710" />
-    <state x="174" y="2" width="1092" height="858" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1614987069740">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="174" y="2" width="1092" height="858" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.860@0.0.1440.860" timestamp="1614987069740" />
-    <state x="525" y="136" width="390" height="579" key="#com.intellij.ide.util.MemberChooser" timestamp="1615252756239">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="525" y="136" width="390" height="579" key="#com.intellij.ide.util.MemberChooser/0.0.1440.860@0.0.1440.860" timestamp="1615252756239" />
-    <state x="501" y="324" width="539" height="217" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1615255201201">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="501" y="324" width="539" height="217" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1440.860@0.0.1440.860" timestamp="1615255201201" />
-    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1615272401770">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1440.860@0.0.1440.860" timestamp="1615272401770" />
-    <state x="450" y="177" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1612319877933">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="450" y="177" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1440.860@0.0.1440.860" timestamp="1612319877933" />
-    <state x="92" y="92" width="1256" height="676" key="DiffContextDialog" timestamp="1615348550409">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="92" y="92" width="1256" height="676" key="DiffContextDialog/0.0.1440.860@0.0.1440.860" timestamp="1615348550409" />
-    <state width="1397" height="222" key="GridCell.Tab.0.bottom" timestamp="1611181932225">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state width="1397" height="222" key="GridCell.Tab.0.bottom/0.0.1440.860@0.0.1440.860" timestamp="1611181932225" />
-    <state width="1397" height="222" key="GridCell.Tab.0.center" timestamp="1611181932225">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state width="1397" height="222" key="GridCell.Tab.0.center/0.0.1440.860@0.0.1440.860" timestamp="1611181932225" />
-    <state width="1397" height="222" key="GridCell.Tab.0.left" timestamp="1611181932225">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state width="1397" height="222" key="GridCell.Tab.0.left/0.0.1440.860@0.0.1440.860" timestamp="1611181932225" />
-    <state width="1397" height="222" key="GridCell.Tab.0.right" timestamp="1611181932225">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state width="1397" height="222" key="GridCell.Tab.0.right/0.0.1440.860@0.0.1440.860" timestamp="1611181932225" />
-    <state x="300" y="165" key="IDE.errors.dialog" timestamp="1615270339804">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="300" y="165" key="IDE.errors.dialog/0.0.1440.860@0.0.1440.860" timestamp="1615270339804" />
-    <state x="358" y="191" key="MultipleFileMergeDialog" timestamp="1615348333796">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="358" y="191" key="MultipleFileMergeDialog/0.0.1440.860@0.0.1440.860" timestamp="1615348333796" />
-    <state x="221" y="9" key="SettingsEditor" timestamp="1615286938520">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="221" y="9" key="SettingsEditor/0.0.1440.860@0.0.1440.860" timestamp="1615286938520" />
-    <state width="498" height="446" key="SwitcherDM" timestamp="1615005625900">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state width="498" height="446" key="SwitcherDM/0.0.1440.860@0.0.1440.860" timestamp="1615005625900" />
-    <state x="331" y="81" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1612347988695">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="331" y="81" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1440.860@0.0.1440.860" timestamp="1612347988695" />
-    <state x="429" y="144" width="650" height="716" key="find.popup" timestamp="1615347830491">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="429" y="144" width="650" height="716" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1615347830491" />
-    <state x="563" y="188" key="refactoring.ChangeSignatureDialog" timestamp="1615268275288">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="563" y="188" key="refactoring.ChangeSignatureDialog/0.0.1440.860@0.0.1440.860" timestamp="1615268275288" />
-    <state x="376" y="195" key="run.anything.popup" timestamp="1615293856524">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="376" y="195" key="run.anything.popup/0.0.1440.860@0.0.1440.860" timestamp="1615293856524" />
-    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1615348646642">
-      <screen x="0" y="0" width="1440" height="860" />
-    </state>
-    <state x="383" y="180" width="672" height="678" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1615348646642" />
+    <MESSAGE value="Update 4.2&#10;&#10;- Added Wizard Event&#10;- Added" />
+    <MESSAGE value="added double jump cooldowns and attack event launching" />
+    <option name="LAST_COMMIT_MESSAGE" value="added double jump cooldowns and attack event launching" />
   </component>
 </project>
