@@ -1,7 +1,7 @@
 main: me.drizzy.practice.Array
 name: Array
 version: Beta 4.2
-authors: ["Nick", "Drizzy", "Zentil"]
+authors: ["Nick", "Drizzy", "Zentil", "Veltus"]
 depend:
   - ProtocolLib
 softdepend:

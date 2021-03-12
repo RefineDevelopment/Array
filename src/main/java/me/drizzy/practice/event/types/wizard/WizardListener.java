@@ -240,9 +240,9 @@ public class WizardListener implements Listener {
 	}
 
 	@EventHandler
-	private void onDoubleJump(PlayerMoveEvent event) {
+	private void onDoubleJump(PlayerToggleFlightEvent event) {
 
-		Player player=event.getPlayer();
+		Player player = event.getPlayer();
 
 		if (player.getGameMode().equals(GameMode.CREATIVE)) {
 			return;
@@ -250,7 +250,7 @@ public class WizardListener implements Listener {
 		if (Profile.getByUuid(player).isInWizard()) {
 			Vector launchingLocation = player.getLocation().getDirection(); // 100% coded by veltus
 
-			if(cooldown.get(event.getPlayer().getName()) - System.currentTimeMillis() * 1000 < cooldownTime) {
+			if (cooldown.get(event.getPlayer().getName()) - System.currentTimeMillis() * 1000 < cooldownTime) {
 				return;
 			}
 
@@ -259,10 +259,11 @@ public class WizardListener implements Listener {
 				player.setFlying(false);
 				cooldown.put(player.getName(), System.currentTimeMillis());
 			} else if (player.isOnGround()) {
-				player.setAllowFlight(true);
-				player.setFlying(true);
+				player.setVelocity(launchingLocation.multiply(10));
+				player.setFlying(false);
 				cooldown.put(player.getName(), System.currentTimeMillis());
 			}
+
 			player.getWorld().spigot().playEffect(player.getLocation(), Effect.SMOKE, 26, 0, 0.2F, 0.5F, 0.2F, 0.2F, 12, 387);
 			player.playSound(player.getLocation(), Sound.EXPLODE, 1.0F, 1.0F);
 		}

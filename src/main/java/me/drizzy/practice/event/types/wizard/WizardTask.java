@@ -8,8 +8,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 public abstract class WizardTask extends BukkitRunnable {
 
 	private int ticks;
-	private Wizard wizard;
-	private WizardState eventState;
+	private final Wizard wizard;
+	private final WizardState eventState;
 
 	public WizardTask(Wizard wizard, WizardState eventState) {
 		this.wizard=wizard;
