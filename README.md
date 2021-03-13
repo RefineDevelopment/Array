@@ -18,6 +18,6 @@ You are NOT allowed to:
 
 ## Credits
 
-Drizzy, Chris, Zentil, Nick, Joeloeli
+Drizzy, Vetus, Nick, Joeloeli
 
 > Leak this, and you are fucked nigga
