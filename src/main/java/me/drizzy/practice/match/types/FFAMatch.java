@@ -1,31 +1,27 @@
 package me.drizzy.practice.match.types;
 
-import me.drizzy.practice.match.task.MatchStickSpawnTask;
-import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
+import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.profile.ProfileState;
+import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.util.Circle;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.CC;
-import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.nametag.NameTags;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import pt.foxspigot.jar.knockback.KnockbackModule;
-import pt.foxspigot.jar.knockback.KnockbackProfile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +66,10 @@ public class FFAMatch extends Match {
         return false;
     }
 
-
+    @Override
+    public boolean isTheBridgeMatch() {
+        return false;
+    }
 
     @Override
     public void setupPlayer(Player player) {
@@ -83,11 +82,6 @@ public class FFAMatch extends Match {
         teamPlayer.setAlive(true);
 
         PlayerUtil.reset(player);
-
-        if (getKit().getGameRules().isSumo() || getKit().getGameRules().isParkour()) {
-        new MatchStickSpawnTask(this, this.getPlayers()).runTaskTimer(Array.getInstance(), 20L, 20L);
-
-        }
 
         if (!getKit().getGameRules().isCombo()) {
             player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
@@ -110,16 +104,10 @@ public class FFAMatch extends Match {
         }
 
         if (!getKit().getGameRules().isNoitems()) {
-            Profile.getByUuid(player.getUniqueId()).getKitData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
+            Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
         }
 
-        if (getKit().getKnockbackProfile() != null && KnockbackModule.INSTANCE.profiles.containsKey(getKit().getKnockbackProfile())) {
-            KnockbackProfile kbprofile = KnockbackModule.INSTANCE.profiles.get(getKit().getKnockbackProfile());
-            ((CraftPlayer) player).getHandle().setKnockback(kbprofile);
-        } else {
-            KnockbackProfile knockbackProfile = KnockbackModule.getDefault();
-            ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
-        }
+        Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
 
         Team team = getTeam(player);
         for (Player enemy : team.getPlayers()) {
@@ -173,27 +161,27 @@ public class FFAMatch extends Match {
             @Override
             public void run() {
                 for (TeamPlayer firstTeamPlayer : team.getTeamPlayers()) {
+                    //Check if they didn't disconnect
                     if (!firstTeamPlayer.isDisconnected()) {
                         Player player = firstTeamPlayer.getPlayer();
 
+                        //Add Their Snapshot
                         if (player != null) {
-
                             if (firstTeamPlayer.isAlive()) {
                                 getSnapshots().add(new MatchSnapshot(firstTeamPlayer));
                             }
 
+                            //Reset the Player
                             player.setFireTicks(0);
                             player.updateInventory();
-
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
-                            NameTags.color(player, firstTeamPlayer.getPlayer(), ChatColor.GREEN, false);
+                            profile.handleVisibility();
                             PlayerUtil.reset(player, false);
                             profile.refreshHotbar();
-                            profile.handleVisibility();
-                            KnockbackProfile knockbackProfile = KnockbackModule.getDefault();
-                            ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
+                            //Reset their Knockback Profile and Teleport them to Spawn
+                            Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
                             Essentials.teleportToSpawn(player);
                         }
                     }
@@ -227,7 +215,6 @@ public class FFAMatch extends Match {
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
         components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7(Click name to view inventory)").create());
-        components.add(new ChatComponentBuilder("").create());
         components.add(winnerInventories.create());
         components.add(loserInventories.create());
         components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());

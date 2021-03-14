@@ -1,8 +1,9 @@
 package me.drizzy.practice.event.types.lms;
 
-import me.drizzy.practice.array.essentials.Essentials;
-import org.bukkit.Location;
+import lombok.Getter;
+import lombok.Setter;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.event.types.lms.player.LMSPlayer;
 import me.drizzy.practice.event.types.lms.player.LMSPlayerState;
 import me.drizzy.practice.event.types.lms.task.LMSRoundEndTask;
@@ -10,27 +11,17 @@ import me.drizzy.practice.event.types.lms.task.LMSRoundStartTask;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.hotbar.Hotbar;
-import me.drizzy.practice.hotbar.HotbarItem;
 import me.drizzy.practice.util.Circle;
 import me.drizzy.practice.util.PlayerSnapshot;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.Teleporter;
-import me.drizzy.practice.util.CC;
-import me.drizzy.practice.util.external.ChatComponentBuilder;
+import me.drizzy.practice.util.chat.CC;
+import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.external.TimeUtil;
-import lombok.Getter;
-import lombok.Setter;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import pt.foxspigot.jar.knockback.KnockbackModule;
-import pt.foxspigot.jar.knockback.KnockbackProfile;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -41,30 +32,18 @@ import java.util.UUID;
 public class LMS {
 
     protected static String EVENT_PREFIX =CC.translate("&8[&bLMS&8] &r");
-    @Getter
-    @Setter
-    private Kit kit;
+    @Getter @Setter private Kit kit;
     private final String name;
-    @Setter
-    private LMSState state = LMSState.WAITING;
+    @Setter private LMSState state = LMSState.WAITING;
     private LMSTask eventTask;
     private final PlayerSnapshot host;
     private final LinkedHashMap<UUID, LMSPlayer> eventPlayers = new LinkedHashMap<>();
-    @Getter
-    private final List<UUID> spectators = new ArrayList<>();
-    @Getter
-    @Setter
-    public static int maxPlayers;
-    @Getter
-    @Setter
-    private int totalPlayers;
-    @Setter
-    private Cooldown cooldown;
-    @Setter
-    private long roundStart;
-    @Getter
-    @Setter
-    private static boolean enabled = true;
+    @Getter private final List<UUID> spectators = new ArrayList<>();
+    @Getter @Setter public static int maxPlayers;
+    @Getter @Setter private int totalPlayers;
+    @Setter private Cooldown cooldown;
+    @Setter private long roundStart;
+    @Getter @Setter private static boolean enabled = true;
 
 
     public LMS(Player player, Kit kit) {
@@ -299,18 +278,22 @@ public class LMS {
     }
 
     public void announce() {
-        BaseComponent[] components = new ChatComponentBuilder("")
-                .parse(EVENT_PREFIX + CC.AQUA + getHost().getPlayer().getName() + CC.translate("&7 is hosting a &b&lLMS Event&7. ") + CC.GREEN + "[Click to join]")
-                .attachToEachPart(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentBuilder("")
-                        .parse(CC.GRAY + "Click to join the LMS event.").create()))
-                .attachToEachPart(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/lms join"))
-                .create();
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (!eventPlayers.containsKey(player.getUniqueId())) {
-                player.sendMessage("");
-                player.spigot().sendMessage(components);
-                player.sendMessage("");
+        List<String> strings=new ArrayList<>();
+        strings.add(CC.translate(" "));
+        strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
+        strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&b&l[LMS Event]"));
+        strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + ""));
+        strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&fA &bLMS &fevent is being hosted by &b" + this.host.getUsername()));
+        strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
+        strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
+        strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
+        strings.add(CC.translate(" "));
+        for ( String string : strings ) {
+            Clickable message = new Clickable(string, "Click to join LMS event", "/lms join");
+            for ( Player player : Bukkit.getOnlinePlayers() ) {
+                if (!eventPlayers.containsKey(player.getUniqueId())) {
+                    message.sendToPlayer(player);
+                }
             }
         }
     }
@@ -325,30 +308,24 @@ public class LMS {
         Profile.setKb(player, Array.getInstance().getLMSManager().getLmsKnockbackProfile());
     }
     public void onLeave(Player player) {
-        KnockbackProfile kbprofile = KnockbackModule.getDefault();
-        ((CraftPlayer) player).getHandle().setKnockback(kbprofile);
+        Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
     }
 
     public void onRound() {
         setState(LMSState.ROUND_STARTING);
 
+        int i=0;
         for (Player player : this.getRemainingPlayers()) {
-                List<Location> locs = Circle.getCircle(Array.getInstance().getLMSManager().getLmsSpectator(),5, this.eventPlayers.size());
-                Location spawn = Array.getInstance().getLMSManager().getLmsSpectator();
-            if (player != null) {
-                Location center = spawn.clone();
-                Location loc = locs.get(0);
+                Location midSpawn = Array.getInstance().getLMSManager().getLmsSpectator();
+                List<Location> circleLocations = Circle.getCircle(midSpawn, 7, this.getPlayers().size());
+                Location center = midSpawn.clone();
+                Location loc = circleLocations.get(i);
                 Location target = loc.setDirection(center.subtract(loc).toVector());
-                if(Teleporter.teleport(player, target, false)) {
-                    locs.remove(0);
-                }
-                Profile profile = Profile.getByUuid(player.getUniqueId());
-                PlayerUtil.reset(player, false);
-                profile.refreshHotbar();
-            }
-
-            assert player != null;
-            Profile.getByUuid(player.getUniqueId()).getKitData().get(getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(0, Hotbar.getItems().get(HotbarItem.DEFAULT_KIT)));
+                player.teleport(target.add(0, 0.5, 0));
+                circleLocations.remove(i);
+                i++;
+                player.getInventory().setContents(getKit().getKitLoadout().getContents());
+                player.getInventory().setArmorContents(getKit().getKitLoadout().getArmor());
         }
         setEventTask(new LMSRoundStartTask(this));
     }

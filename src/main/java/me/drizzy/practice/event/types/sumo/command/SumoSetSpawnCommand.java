@@ -1,7 +1,7 @@
 package me.drizzy.practice.event.types.sumo.command;
 
 import me.drizzy.practice.Array;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 @CommandMeta(label = "sumo setspawn", permission = "array.staff")
 public class SumoSetSpawnCommand {
 
-	public void execute(Player player, @CPL("one/two/spec") String position) {
+	public void execute(Player player, @CPL("[one|two|spec]") String position) {
 		if (!(position.equals("one") || position.equals("two") || position.equals("spec"))) {
 			player.sendMessage(CC.RED + "The position must be 1 or 2.");
 		} else {

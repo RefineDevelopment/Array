@@ -50,7 +50,7 @@ public class Board {
         if (aether.getAdapter() != null) {
             objective.setDisplayName(ChatColor.translateAlternateColorCodes('&', aether.getAdapter().getTitle(player)));
         } else {
-            objective.setDisplayName("Default Title");
+            objective.setDisplayName("DefaultProvider Title");
         }
 
         boards.add(this);
@@ -109,15 +109,7 @@ public class Board {
     }
 
     public Set<BoardCooldown> getCooldowns() {
-        Iterator<BoardCooldown> iterator = cooldowns.iterator();
-
-        while (iterator.hasNext()) {
-            BoardCooldown cooldown = iterator.next();
-            if (System.currentTimeMillis() >= cooldown.getEnd()) {
-                iterator.remove();
-            }
-        }
-
+        cooldowns.removeIf(cooldown -> System.currentTimeMillis() >= cooldown.getEnd());
         return cooldowns;
     }
 

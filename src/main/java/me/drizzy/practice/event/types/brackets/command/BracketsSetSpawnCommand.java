@@ -3,13 +3,13 @@ package me.drizzy.practice.event.types.brackets.command;
 import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.Array;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 
 @CommandMeta(label = "brackets setspawn", permission = "array.staff")
 public class BracketsSetSpawnCommand {
 
-	public void execute(Player player, @CPL("one/two/spec") String position) {
+	public void execute(Player player, @CPL("[one|two|spec]") String position) {
 		if (!(position.equals("one") || position.equals("two") || position.equals("spec"))) {
 			player.sendMessage(CC.RED + "The position must be one/two/spec.");
 		} else {

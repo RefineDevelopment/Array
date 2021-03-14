@@ -16,7 +16,7 @@ import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.external.TimeUtil;
@@ -27,9 +27,11 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.*;
 import org.bukkit.block.BlockState;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -43,31 +45,23 @@ import java.util.concurrent.ThreadLocalRandom;
 @Getter
 public abstract class Match {
 
-    @Getter
-    protected static List<Match> matches = new ArrayList<>();
-
+    @Getter protected static List<Match> matches = new ArrayList<>();
     private final UUID matchId = UUID.randomUUID();
     private final Queue queue;
     private final Kit kit;
     private final Arena arena;
     private final QueueType queueType;
     public Map<UUID, EnderPearl> pearlMap = new HashMap<>();
-    @Setter
-    public MatchState state = MatchState.STARTING;
+    @Setter public MatchState state = MatchState.STARTING;
     private final List<MatchSnapshot> snapshots = new ArrayList<>();
     public final List<UUID> spectators = new ArrayList<>();
     private final List<Entity> entities = new ArrayList<>();
     private final List<Location> placedBlocks = new ArrayList<>();
     private final List<BlockState> changedBlocks = new ArrayList<>();
     private final List<Location> brokenBlocks = new ArrayList<>();
-    @Getter
-    public BukkitTask task;
-    @Setter
-    private long startTimestamp;
-
-    @Getter
-    @Setter
-    private BukkitTask matchWaterCheck;
+    @Getter public BukkitTask task;
+    @Setter private long startTimestamp;
+    @Getter @Setter private BukkitTask matchWaterCheck;
 
     public Match(Queue queue, Kit kit, Arena arena, QueueType queueType) {
         this.queue = queue;
@@ -96,7 +90,7 @@ public abstract class Match {
         for (Match match : matches) {
             match.getPlacedBlocks().forEach(location -> location.getBlock().setType(Material.AIR));
             match.getChangedBlocks().forEach((blockState) -> blockState.getLocation().getBlock().setType(blockState.getType()));
-            match.getBrokenBlocks().forEach(location ->  location.getBlock().setType(Material.WOOD));
+            Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), new MatchBoxUHCTask(match), 5L);
             match.getEntities().forEach(Entity::remove);
         }
     }
@@ -139,6 +133,10 @@ public abstract class Match {
                 profile.handleVisibility(player, otherPlayer);
             }
 
+            if (!getArena().getSpawn1().getChunk().isLoaded() || !getArena().getSpawn2().getChunk().isLoaded()) {
+                getArena().getSpawn1().getChunk().load();
+                getArena().getSpawn2().getChunk().load();
+            }
             setupPlayer(player);
         }
 
@@ -154,7 +152,7 @@ public abstract class Match {
         startTimestamp = -1;
         arena.setActive(true);
 
-        if (!this.isSumoMatch() || !this.isSoloMatch() || !isHCFMatch()) {
+        if (!this.isSumoMatch() || !this.isSoloMatch() || !isHCFMatch() || !this.isTheBridgeMatch()) {
             if (this.isFreeForAllMatch() || this.isTeamMatch() || this.isSumoTeamMatch()) {
                 for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Start-Message.Team")) {
                     this.broadcastMessage(CC.translate(this.replace(string)));
@@ -203,6 +201,28 @@ public abstract class Match {
         }
         final MatchStartEvent event = new MatchStartEvent(this);
         Bukkit.getPluginManager().callEvent(event);
+    }
+
+    public void onDisconnect(Player dead) {
+        if (getKit().getGameRules().isBridge()) {
+            end();
+            return;
+        }
+
+        // Don't continue if the match is already ending
+        if (!(state == MatchState.STARTING || state == MatchState.FIGHTING)) {
+            return;
+        }
+
+        TeamPlayer deadGamePlayer = getTeamPlayer(dead);
+
+        if (deadGamePlayer != null) {
+            deadGamePlayer.setDisconnected(true);
+
+            if (deadGamePlayer.isAlive()) {
+                onDeath(dead, (Player) PlayerUtil.getLastDamager(dead));
+            }
+        }
     }
 
     public void end() {
@@ -282,12 +302,18 @@ public abstract class Match {
                 continue;
             }
             if ((!isHCFMatch()) && getKit().getGameRules().isParkour()) {
-                player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.YELLOW + " has won.");
+                player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.GREEN + " has won.");
             } else if (killerPlayer == null) {
                 player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() +	CC.GRAY + " has died.");
             } else {
                 player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.GRAY + " was killed by " + getRelationColor(player, killerPlayer) + killerPlayer.getName() + CC.GRAY + ".");
             }
+        }
+        CraftEntity killer = PlayerUtil.getLastDamager(deadPlayer);
+        if (killer !=null) {
+            Player player = (Player) killer;
+            Profile profile = Profile.getByUuid(player);
+            profile.getStatisticsData().get(kit).incrementKills();
         }
 
         onDeath(deadPlayer, killerPlayer);
@@ -307,17 +333,16 @@ public abstract class Match {
             }
         }
 
-        if ((isSumoMatch()) && disconnected) {
+        if ((isSumoMatch()) && disconnected || (isTheBridgeMatch()) && disconnected) {
             end();
             return;
         }
 
-        if (!isSumoMatch() && !isSumoTeamMatch()) {
+        if (!isSumoMatch() && !isSumoTeamMatch() && !isTheBridgeMatch()) {
             if (canEnd()) {
                 end();
             } else {
                 PlayerUtil.spectator(deadPlayer);
-
                 new BukkitRunnable() {
                     @Override
                     public void run() {
@@ -409,7 +434,7 @@ public abstract class Match {
                 target.hidePlayer(player);
                 this.getOpponentPlayer(target).hidePlayer(player);NameTags.color(player, this.getOpponentPlayer(target), ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
             }
-            else if (this.isSumoMatch()) {
+            else if (this.isSumoMatch() || this.isTheBridgeMatch()) {
                 NameTags.color(player, target, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
                 NameTags.color(player, this.getOpponentPlayer(target), ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
                 target.hidePlayer(player);
@@ -417,37 +442,37 @@ public abstract class Match {
             }
             else if (this.isTeamMatch()) {
                 this.getTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
-                for ( Player targetplayers : this.getTeam(target).getPlayers() ) {
-                    targetplayers.hidePlayer(player);
+                for ( Player targetPlayers : this.getTeam(target).getPlayers() ) {
+                    targetPlayers.hidePlayer(player);
                 }
                 this.getOpponentTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
-                for ( Player targetplayers : this.getOpponentTeam(target).getPlayers() ) {
-                    targetplayers.hidePlayer(player);
+                for ( Player targetPlayers : this.getOpponentTeam(target).getPlayers() ) {
+                    targetPlayers.hidePlayer(player);
                 }
             }
             else if (this.isSumoTeamMatch()) {
                 this.getTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
-                for ( Player targetplayers : this.getTeam(target).getPlayers() ) {
-                    targetplayers.hidePlayer(player);
+                for ( Player targetPlayers : this.getTeam(target).getPlayers() ) {
+                    targetPlayers.hidePlayer(player);
                 }
                 this.getOpponentTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
-                for ( Player targetplayers : this.getOpponentTeam(target).getPlayers() ) {
-                    targetplayers.hidePlayer(player);
+                for ( Player targetPlayers : this.getOpponentTeam(target).getPlayers() ) {
+                    targetPlayers.hidePlayer(player);
                 }
             }
             else if (this.isHCFMatch()) {
                 this.getTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
-                for ( Player targetplayers : this.getTeam(target).getPlayers() ) {
-                    targetplayers.hidePlayer(player);
+                for ( Player targetPlayers : this.getTeam(target).getPlayers() ) {
+                    targetPlayers.hidePlayer(player);
                 }
                 this.getOpponentTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
-                for ( Player targetplayers : this.getOpponentTeam(target).getPlayers() ) {
-                    targetplayers.hidePlayer(player);
+                for ( Player targetPlayers : this.getOpponentTeam(target).getPlayers() ) {
+                    targetPlayers.hidePlayer(player);
                 }
             }
             else if (this.isFreeForAllMatch()) {
-                for (  Player targetplayers : this.getPlayers()) {
-                    targetplayers.hidePlayer(player);
+                for (  Player targetPlayers : this.getPlayers()) {
+                    targetPlayers.hidePlayer(player);
                 }
                 this.getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
             }
@@ -463,9 +488,7 @@ public abstract class Match {
         PlayerUtil.reset(player);
         profile.refreshHotbar();
         profile.handleVisibility();
-
         Essentials.teleportToSpawn(player);
-
         player.spigot().setCollidesWithEntities(true);
 
         if (state != MatchState.ENDING) {
@@ -500,11 +523,18 @@ public abstract class Match {
     }
 
     public Location getMidSpawn() {
-        Location spawn=getArena().getSpawn1();
-        Location spawn2=getArena().getSpawn2();
-        Location midSpawn=getArena().getSpawn1();
+
+        //Get Both Spawns
+        Location spawn = getArena().getSpawn1();
+        Location spawn2 = getArena().getSpawn2();
+        //Initialize the mid spawn
+        Location midSpawn = getArena().getSpawn1();
+
+        //Get Average from both spawns to get the middle of the arena
         midSpawn.setX(getAverage(spawn.getX(), spawn2.getX()));
         midSpawn.setZ(getAverage(spawn.getZ(), spawn2.getZ()));
+
+        //Return it as the middle spawn
         return midSpawn;
     }
 
@@ -519,6 +549,8 @@ public abstract class Match {
     public abstract boolean isHCFMatch();
 
     public abstract boolean isSumoMatch();
+
+    public abstract boolean isTheBridgeMatch();
 
     public abstract void setupPlayer(Player player);
 
@@ -571,13 +603,4 @@ public abstract class Match {
     public abstract int getRoundsNeeded(Team Team);
 
     public abstract ChatColor getRelationColor(Player viewer, Player target);
-
-    public MatchSnapshot getSnapshotOfPlayer(Player player) {
-        for (MatchSnapshot snapshot : getSnapshots()) {
-            if (snapshot.getTeamPlayer().getUuid().toString().equals(player.getUniqueId().toString())) {
-                return snapshot;
-            }
-        }
-        return null;
-    }
 }

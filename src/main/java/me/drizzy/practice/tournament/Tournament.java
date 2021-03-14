@@ -17,7 +17,7 @@ import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 
 import java.util.*;
 
@@ -230,7 +230,7 @@ public class Tournament {
                             if (getTeamCount() == 1) {
                                     Party winner = participants.get(0);
                                     Profile winnerProfile = Profile.getByUuid(winner.getLeader().getUuid());
-                                    winnerProfile.getKitData().get(getKit()).setElo(winnerProfile.getKitData().get(getKit()).getElo() + 10);
+                                    winnerProfile.getStatisticsData().get(getKit()).setElo(winnerProfile.getStatisticsData().get(getKit()).getElo() + 10);
                                     winnerProfile.calculateGlobalElo();
                             }
                         }

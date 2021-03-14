@@ -23,14 +23,14 @@ public class FireworkEffectPlayer {
 
     public void playFirework(World world, Location loc, FireworkEffect fe) throws Exception {
         Firework fw=world.spawn(loc, Firework.class);
-        Object nms_world=null;
-        Object nms_firework=null;
+        Object nms_world;
+        Object nms_firework;
         if (this.world_getHandle == null) {
             this.world_getHandle=FireworkEffectPlayer.getMethod(world.getClass(), "getHandle");
             this.firework_getHandle=FireworkEffectPlayer.getMethod(fw.getClass(), "getHandle");
         }
-        nms_world=this.world_getHandle.invoke(world, null);
-        nms_firework=this.firework_getHandle.invoke(fw, null);
+        nms_world=this.world_getHandle.invoke(world, (Object) null);
+        nms_firework=this.firework_getHandle.invoke(fw, (Object) null);
         if (this.nms_world_broadcastEntityEffect == null) {
             this.nms_world_broadcastEntityEffect=FireworkEffectPlayer.getMethod(nms_world.getClass(), "broadcastEntityEffect");
         }

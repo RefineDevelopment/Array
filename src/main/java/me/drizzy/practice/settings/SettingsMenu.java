@@ -1,10 +1,11 @@
 package me.drizzy.practice.settings;
 
+import me.drizzy.practice.enums.SettingsType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.menu.Button;
 import me.drizzy.practice.util.external.menu.Menu;
@@ -42,86 +43,89 @@ public class SettingsMenu extends Menu
 
         @Override
         public ItemStack getButtonItem(final Player player) {
-            final Profile profile = Profile.getByUuid(player.getUniqueId());
-            List<String> lines = new ArrayList<>();
+            final Profile profile=Profile.getByUuid(player.getUniqueId());
+            List<String> lines=new ArrayList<>();
             lines.add(CC.MENU_BAR);
-            if (this.type == SettingsType.TOGGLESCOREBOARD) {
-                lines.add("&7Enable or Disable Scoreboard");
-                lines.add("&7Display for your profile.");
-                lines.add("");
-                lines.add((profile.getSettings().isShowScoreboard() ? "&b&l▶ " : "   ") + "&fShow scoreboard");
-                lines.add((!profile.getSettings().isShowScoreboard() ? "&b&l▶ " : "   ") + "&fHide scoreboard");
-            }
-            else if (this.type == SettingsType.TOGGLEDUELREQUESTS) {
-                lines.add("&7Enable or Disable Duels from");
-                lines.add("&7other players for your profile.");
-                lines.add("");
-                lines.add((profile.getSettings().isReceiveDuelRequests() ? "&b&l▶ " : "   ") + "&fAllow Duels");
-                lines.add((!profile.getSettings().isReceiveDuelRequests() ? "&b&l▶ " : "   ") + "&fDon't Allow Duels");
-            }
-            else if (this.type == SettingsType.TOGGLEPINGFACTOR) {
-                if (player.hasPermission("array.donator+")) {
-                    lines.add("&7Enable or Disable queueing with");
-                    lines.add("&7Players of similar ping as you.");
+            switch (type) {
+                case TOGGLESCOREBOARD:
+                    lines.add("&7Enable or Disable Scoreboard");
+                    lines.add("&7Display for your profile.");
                     lines.add("");
-                    lines.add((profile.getSettings().isUsingPingFactor() ? "&b&l▶ " : "   ") + "&fUse Ping Factor");
-                    lines.add((!profile.getSettings().isUsingPingFactor() ? "&b&l▶ " : "   ") + "&fDon't Use Ping Factor");
-                } else {
-                    lines.add("&7Enable or Disable queueing with");
-                    lines.add("&7players of similar ping as you.");
+                    lines.add((profile.getSettings().isShowScoreboard() ? "&a&l■ " : "&8&l■ ") + "&fShow scoreboard");
+                    lines.add((!profile.getSettings().isShowScoreboard() ? "&a&l■ " : "&8&l■ ") + "&fHide scoreboard");
+                    break;
+                case TOGGLEDUELREQUESTS:
+                    lines.add("&7Enable or Disable Duels from");
+                    lines.add("&7other players for your profile.");
                     lines.add("");
-                    lines.add("&7This Option is Donator only!");
-                    lines.add("&7Please Upgrade your rank at &bstore.purgemc.club.");
-                }
-            }
-            else if (this.type == SettingsType.TOGGLESPECTATORS) {
-                lines.add("&7Enable or Disable Spectators");
-                lines.add("&7on your Matches for your Profile.");
-                lines.add("");
-                lines.add((profile.getSettings().isAllowSpectators() ? "&b&l▶ " : "   ") + "&fAllow Spectators");
-                lines.add((!profile.getSettings().isAllowSpectators() ? "&b&l▶ " : "   ") + "&fDon't Allow Spectators");
-            } else if (this.type == SettingsType.TOGGLELIGHTNING) {
-                if (player.hasPermission("array.donator")) {
-                    lines.add("&7Enable or Disable Lightning");
-                    lines.add("&7Death effect for your Profile.");
+                    lines.add((profile.getSettings().isReceiveDuelRequests() ? "&a&l■ " : "&8&l■ ") + "&fAllow Duels");
+                    lines.add((!profile.getSettings().isReceiveDuelRequests() ? "&a&l■ " : "&8&l■ ") + "&fDon't Allow Duels");
+                    break;
+                case TOGGLEPINGFACTOR:
+                    if (player.hasPermission("array.donator+")) {
+                        lines.add("&7Enable or Disable queueing with");
+                        lines.add("&7players of similar ping as you.");
+                        lines.add("");
+                        lines.add((profile.getSettings().isUsingPingFactor() ? "&a&l■ " : "&8&l■ ") + "&fUse Ping Factor");
+                        lines.add((!profile.getSettings().isUsingPingFactor() ? "&a&l■ " : "&8&l■ ") + "&fDon't Use Ping Factor");
+                    } else {
+                        lines.add("&7Enable or Disable queueing with");
+                        lines.add("&7players of similar ping as you.");
+                        lines.add("");
+                        lines.add("&7This Option is Donator only!");
+                        lines.add("&7Please Upgrade your rank at &bstore.purgemc.club.");
+                    }
+                    break;
+                case TOGGLESPECTATORS:
+                    lines.add("&7Enable or Disable Spectators");
+                    lines.add("&7on your Matches for your Profile.");
                     lines.add("");
-                    lines.add((profile.getSettings().isLightning() ? "&b&l▶ " : "   ") + "&fEnable Lightning Death Effect");
-                    lines.add((!profile.getSettings().isLightning() ? "&b&l▶ " : "   ") + "&fDisable Lightning Death Effect");
-                } else {
-                    lines.add("&7Enable or Disable Lightning");
-                    lines.add("&7Death effect for your Profile.");
+                    lines.add((profile.getSettings().isAllowSpectators() ? "&a&l■ " : "&8&l■ ") + "&fAllow Spectators");
+                    lines.add((!profile.getSettings().isAllowSpectators() ? "&a&l■ " : "&8&l■ ") + "&fDon't Allow Spectators");
+                    break;
+                case TOGGLELIGHTNING:
+                    if (player.hasPermission("array.donator")) {
+                        lines.add("&7Enable or Disable Lightning");
+                        lines.add("&7Death effect for your Profile.");
+                        lines.add("");
+                        lines.add((profile.getSettings().isLightning() ? "&a&l■ " : "&8&l■ ") + "&fEnable Lightning Death Effect");
+                        lines.add((!profile.getSettings().isLightning() ? "&a&l■ " : "&8&l■ ") + "&fDisable Lightning Death Effect");
+                    } else {
+                        lines.add("&7Enable or Disable Lightning");
+                        lines.add("&7Death effect for your Profile.");
+                        lines.add("");
+                        lines.add("&7This Option is Donator only!");
+                        lines.add("&7Please Upgrade your rank at &bstore.purgemc.club.");
+                    }
+                    break;
+                case TOGGLEPINGONSCOREBOARD:
+                    lines.add("&7Enable or Disable Ping on");
+                    lines.add("&7Scoreboard for your Profile.");
                     lines.add("");
-                    lines.add("&7This Option is Donator only!");
-                    lines.add("&7Please Upgrade your rank at &bstore.purgemc.club.");
-                }
-            } else if (this.type == SettingsType.CORESETTINGS) {
-                lines.add("&7Click to view Profile Settings");
-                lines.add("&7Ex: PMs, Sounds, Global Chat.");
-                lines.add("");
-            } else if (this.type == SettingsType.TOGGLEPINGONSCOREBOARD) {
-                lines.add("&7Enable or Disable Ping on");
-                lines.add("&7Scoreboard for your Profile.");
-                lines.add("");
-                lines.add((profile.getSettings().isPingScoreboard() ? "&b&l▶ " : "   ") + "&fShow Ping on Scoreboard");
-                lines.add((!profile.getSettings().isPingScoreboard() ? "&b&l▶ " : "   ") + "&fDon't Show Ping on Scoreboard");
-            } else if (this.type == SettingsType.TOGGLETOURNAMENTMESSAGES) {
-                lines.add("&7Enable or Disable Tournament");
-                lines.add("&7Messages for your Profile.");
-                lines.add("");
-                lines.add((profile.getSettings().isAllowTournamentMessages() ? "&b&l▶ " : "   ") + "&fShow Tournament Messages");
-                lines.add((!profile.getSettings().isAllowTournamentMessages() ? "&b&l▶ " : "   ") + "&fDon't Show Tournament Messages");
-            } else if (this.type == SettingsType.TOGGLEVANILLATAB) {
-                lines.add("&7Toggle through different");
-                lines.add("&7Tab Styles for your profile");
-                lines.add("");
-                lines.add((profile.getSettings().isVanillaTab() ? "&b&l▶ " : "   ") + "&fShow Vanilla Tab");
-                lines.add((!profile.getSettings().isVanillaTab() ? "&b&l▶ " : "   ") + "&fShow Normal Tab");
-            } else if (this.type == SettingsType.TOGGLESHOWPLAYERS) {
-                lines.add("&7Toggle player visibility");
-                lines.add("&7at Lobby for your profile");
-                lines.add("");
-                lines.add((profile.getSettings().isShowPlayers() ? "&b&l▶ " : "   ") + "&fShow Players at Lobby");
-                lines.add((!profile.getSettings().isShowPlayers() ? "&b&l▶ " : "   ") + "&fDon't Show Players at Lobby");
+                    lines.add((profile.getSettings().isPingScoreboard() ? "&a&l■ " : "&8&l■ ") + "&fShow Ping on Scoreboard");
+                    lines.add((!profile.getSettings().isPingScoreboard() ? "&a&l■ " : "&8&l■ ") + "&fDon't Show Ping on Scoreboard");
+                    break;
+                case TOGGLETOURNAMENTMESSAGES:
+                    lines.add("&7Enable or Disable Tournament");
+                    lines.add("&7Messages for your Profile.");
+                    lines.add("");
+                    lines.add((profile.getSettings().isAllowTournamentMessages() ? "&a&l■ " : "&8&l■ ") + "&fShow Tournament Messages");
+                    lines.add((!profile.getSettings().isAllowTournamentMessages() ? "&a&l■ " : "&8&l■ ") + "&fDon't Show Tournament Messages");
+                    break;
+                case TOGGLEVANILLATAB:
+                    lines.add("&7Toggle through different");
+                    lines.add("&7Tab Styles for your profile");
+                    lines.add("");
+                    lines.add((profile.getSettings().isVanillaTab() ? "&a&l■ " : "&8&l■ ") + "&fShow Vanilla Tab");
+                    lines.add((!profile.getSettings().isVanillaTab() ? "&a&l■ " : "&8&l■ ") + "&fShow DefaultProvider Tab");
+                    break;
+                case TOGGLESHOWPLAYERS:
+                    lines.add("&7Toggle player visibility");
+                    lines.add("&7at Lobby for your profile");
+                    lines.add("");
+                    lines.add((profile.getSettings().isShowPlayers() ? "&a&l■ " : "&8&l■ ") + "&fShow Players at Lobby");
+                    lines.add((!profile.getSettings().isShowPlayers() ? "&a&l■ " : "&8&l■ ") + "&fDon't Show Players at Lobby");
+                    break;
             }
             lines.add(CC.MENU_BAR);
             return new ItemBuilder(this.type.getMaterial()).name("&b" + this.type.getName()).lore(lines).build();
@@ -130,15 +134,17 @@ public class SettingsMenu extends Menu
         @Override
         public void clicked(final Player player, final ClickType clickType) {
             final Profile profile = Profile.getByUuid(player.getUniqueId());
-            if (this.type == SettingsType.TOGGLESCOREBOARD) {
-                Button.playSuccess(player);
-                profile.getSettings().setShowScoreboard(!profile.getSettings().isShowScoreboard());
-            }
-            else if (this.type == SettingsType.TOGGLEDUELREQUESTS) {
-                Button.playSuccess(player);
-                profile.getSettings().setReceiveDuelRequests(!profile.getSettings().isReceiveDuelRequests());
-            }
-            else if (this.type == SettingsType.TOGGLEPINGFACTOR) {
+            switch (type) {
+                case TOGGLESCOREBOARD:
+                    Button.playSuccess(player);
+                    profile.getSettings().setShowScoreboard(!profile.getSettings().isShowScoreboard());
+                    break;
+                case TOGGLEDUELREQUESTS:
+                    Button.playSuccess(player);
+                    profile.getSettings().setReceiveDuelRequests(!profile.getSettings().isReceiveDuelRequests());
+                    break;
+
+                case TOGGLEPINGFACTOR:
                 if (player.hasPermission("array.donator+")) {
                     Button.playSuccess(player);
                     profile.getSettings().setUsingPingFactor(!profile.getSettings().isUsingPingFactor());
@@ -148,12 +154,12 @@ public class SettingsMenu extends Menu
                     player.sendMessage(CC.translate("&7You do not have permission to use this setting."));
                     player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.purgemc.club &7!"));
                 }
-            }
-            else if (this.type == SettingsType.TOGGLESPECTATORS) {
-                Button.playSuccess(player);
-                profile.getSettings().setAllowSpectators(!profile.getSettings().isAllowSpectators());
-            }
-            else if (this.type == SettingsType.TOGGLELIGHTNING) {
+                    break;
+                case TOGGLESPECTATORS:
+                    Button.playSuccess(player);
+                    profile.getSettings().setAllowSpectators(!profile.getSettings().isAllowSpectators());
+                    break;
+                case TOGGLELIGHTNING:
                 if (player.hasPermission("array.donator")) {
                     Button.playSuccess(player);
                     profile.getSettings().setLightning(!profile.getSettings().isLightning());
@@ -163,19 +169,24 @@ public class SettingsMenu extends Menu
                     player.sendMessage(CC.translate("&7You do not have permission to use this setting."));
                     player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.purgemc.club &7!"));
                 }
-            } else if (this.type == SettingsType.TOGGLEPINGONSCOREBOARD) {
-                Button.playSuccess(player);
-                profile.getSettings().setPingScoreboard(!profile.getSettings().isPingScoreboard());
-            } else if (this.type == SettingsType.TOGGLETOURNAMENTMESSAGES) {
-                Button.playSuccess(player);
-                profile.getSettings().setAllowTournamentMessages(!profile.getSettings().isAllowTournamentMessages());
-            } else if (this.type == SettingsType.TOGGLEVANILLATAB) {
-                Button.playSuccess(player);
-                profile.getSettings().setVanillaTab(!profile.getSettings().isVanillaTab());
-            } else if (this.type == SettingsType.TOGGLESHOWPLAYERS) {
-                Button.playSuccess(player);
-                profile.getSettings().setShowPlayers(!profile.getSettings().isShowPlayers());
-                profile.handleVisibility();
+                    break;
+                case TOGGLEPINGONSCOREBOARD:
+                    Button.playSuccess(player);
+                    profile.getSettings().setPingScoreboard(!profile.getSettings().isPingScoreboard());
+                    break;
+                case TOGGLETOURNAMENTMESSAGES:
+                    Button.playSuccess(player);
+                    profile.getSettings().setAllowTournamentMessages(!profile.getSettings().isAllowTournamentMessages());
+                    break;
+                case TOGGLEVANILLATAB:
+                    Button.playSuccess(player);
+                    profile.getSettings().setVanillaTab(!profile.getSettings().isVanillaTab());
+                    break;
+                case TOGGLESHOWPLAYERS:
+                    Button.playSuccess(player);
+                    profile.getSettings().setShowPlayers(!profile.getSettings().isShowPlayers());
+                    profile.handleVisibility();
+                    break;
             }
         }
 

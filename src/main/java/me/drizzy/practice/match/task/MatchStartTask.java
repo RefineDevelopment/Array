@@ -1,8 +1,9 @@
 package me.drizzy.practice.match.task;
 
+import me.drizzy.practice.Array;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchState;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -31,8 +32,12 @@ public class MatchStartTask extends BukkitRunnable {
                 match.setState(MatchState.FIGHTING);
                 match.setStartTimestamp(System.currentTimeMillis());
                 match.broadcastMessage(CC.GREEN + "Match Started!");
-                match.broadcastMessage("");
-                match.broadcastMessage(CC.AQUA + CC.BOLD + "Reminder: " + CC.WHITE + "Butterfly clicking is " + CC.AQUA + "discouraged" + CC.WHITE + " and could result in a" + CC.AQUA + " ban." + CC.AQUA + " Use at own risk.");
+                if (Array.getInstance().getMessagesConfig().getBoolean("Disclaimer-Message.Enabled")) {
+                    match.broadcastMessage("");
+                    for ( String string : Array.getInstance().getMessagesConfig().getStringList("Disclaimer-Message.Message")) {
+                        match.broadcastMessage(CC.translate(string));
+                    }
+                }
                 match.broadcastSound(Sound.LEVEL_UP);
                 match.getPlayers().forEach(PlayerUtil::allowMovement);
                 cancel();
@@ -68,8 +73,12 @@ public class MatchStartTask extends BukkitRunnable {
                     match.setState(MatchState.FIGHTING);
                     match.setStartTimestamp(System.currentTimeMillis());
                     match.broadcastMessage(CC.GREEN + "Match Started!");
-                    match.broadcastMessage("");
-                    match.broadcastMessage(CC.AQUA + CC.BOLD + "Reminder: " + CC.WHITE + "Butterfly clicking is " + CC.AQUA + "discouraged" + CC.WHITE + " and could result in a" + CC.AQUA + " ban." + CC.AQUA + " Use at own risk.");
+                    if (Array.getInstance().getMessagesConfig().getBoolean("Disclaimer-Message.Enabled")) {
+                        match.broadcastMessage("");
+                        for ( String string : Array.getInstance().getMessagesConfig().getStringList("Disclaimer-Message.Message")) {
+                            match.broadcastMessage(CC.translate(string));
+                        }
+                    }
                     match.broadcastSound(Sound.LEVEL_UP);
                     match.getPlayers().forEach(PlayerUtil::allowMovement);
                     match.getPlayers().forEach(player -> {

@@ -3,10 +3,10 @@ package me.drizzy.practice.party.menu;
 import java.beans.ConstructorProperties;
 
 import lombok.AllArgsConstructor;
-import me.drizzy.practice.party.PartyManage;
-import me.drizzy.practice.party.PartyPrivacy;
+import me.drizzy.practice.enums.PartyManageType;
+import me.drizzy.practice.enums.PartyPrivacyType;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ItemBuilder;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.Material;
@@ -39,36 +39,36 @@ public class ManagePartySettings extends Menu
                 buttons.put(glassslots, new GlassButton());
             }
         }
-        buttons.put(11, new SelectManageButton(PartyManage.LIMIT));
-        buttons.put(13, new SelectManageButton(PartyManage.PUBLIC));
-        buttons.put(15, new SelectManageButton(PartyManage.MANAGE_MEMBERS));
+        buttons.put(11, new SelectManageButton(PartyManageType.LIMIT));
+        buttons.put(13, new SelectManageButton(PartyManageType.PUBLIC));
+        buttons.put(15, new SelectManageButton(PartyManageType.MANAGE));
         return buttons;
     }
     
     private static class SelectManageButton extends Button
     {
-        private final PartyManage partyManage;
+        private final PartyManageType partyManageType;
         
         @Override
         public ItemStack getButtonItem(final Player player) {
             final Profile profile = Profile.getByUuid(player.getUniqueId());
             ArrayList<String> lore = new ArrayList<>();
-            if (this.partyManage == PartyManage.LIMIT) {
+            if (this.partyManageType == PartyManageType.LIMIT) {
                 lore.add(CC.MENU_BAR);
                 lore.add("&bLimit: &f" + profile.getParty().getLimit());
                 lore.add("");
                 lore.add("&fLeft-Click to Increase Limit");
                 lore.add("&fRight-Click to Decrease Limit");
                 lore.add(CC.MENU_BAR);
-                return new ItemBuilder(Material.INK_SACK).durability(2).name("&b" + this.partyManage.getName()).lore(lore).build();
+                return new ItemBuilder(Material.INK_SACK).durability(2).name("&b" + this.partyManageType.getName()).lore(lore).build();
             }
-            if (this.partyManage == PartyManage.PUBLIC) {
+            if (this.partyManageType == PartyManageType.PUBLIC) {
                 lore.add(CC.MENU_BAR);
                 lore.add("&7Public: " + (profile.getParty().isPublic() ? "&aPublic" : "&eInvite Only"));
                 lore.add("");
                 lore.add("&bClick to change party state.");
                 lore.add(CC.MENU_BAR);
-                return new ItemBuilder(Material.CHEST).name("&b" + this.partyManage.getName()).lore(lore).build();
+                return new ItemBuilder(Material.CHEST).name("&b" + this.partyManageType.getName()).lore(lore).build();
             }
             lore.add(CC.MENU_BAR);
             lore.add("&7Click here to manage your party");
@@ -77,7 +77,7 @@ public class ManagePartySettings extends Menu
             lore.add("");
             lore.add("&bClick to change party state.");
             lore.add(CC.MENU_BAR);
-            return new ItemBuilder(Material.SKULL_ITEM).name("&b" + this.partyManage.getName()).lore(lore).build();
+            return new ItemBuilder(Material.SKULL_ITEM).name("&b" + this.partyManageType.getName()).lore(lore).build();
         }
         
         @Override
@@ -96,7 +96,7 @@ public class ManagePartySettings extends Menu
                 player.closeInventory();
                 return;
             }
-            if (this.partyManage == PartyManage.LIMIT) {
+            if (this.partyManageType == PartyManageType.LIMIT) {
                 if (clickType.isLeftClick()) {
                     if (profile.getParty().getLimit() < 100) {
                         profile.getParty().setLimit(profile.getParty().getLimit() + 1);
@@ -110,24 +110,24 @@ public class ManagePartySettings extends Menu
                     }
                 }
             }
-            else if (this.partyManage == PartyManage.PUBLIC) {
+            else if (this.partyManageType == PartyManageType.PUBLIC) {
                 if (!profile.getParty().isPublic()) {
                     profile.getParty().setPublic(true);
-                    profile.getParty().setPrivacy(PartyPrivacy.OPEN);
+                    profile.getParty().setPrivacy(PartyPrivacyType.OPEN);
                 }
                 else {
                     profile.getParty().setPublic(false);
-                    profile.getParty().setPrivacy(PartyPrivacy.CLOSED);
+                    profile.getParty().setPrivacy(PartyPrivacyType.CLOSED);
                 }
                 new ManagePartySettings().openMenu(player);
-            } else if (this.partyManage == PartyManage.MANAGE_MEMBERS) {
+            } else if (this.partyManageType == PartyManageType.MANAGE) {
                 new PartyListMenu().openMenu(player);
             }
         }
         
-        @ConstructorProperties({ "partyManage" })
-        public SelectManageButton(final PartyManage partyManage) {
-            this.partyManage = partyManage;
+        @ConstructorProperties({ "partyManageType" })
+        public SelectManageButton(final PartyManageType partyManageType) {
+            this.partyManageType=partyManageType;
         }
     }
     @AllArgsConstructor

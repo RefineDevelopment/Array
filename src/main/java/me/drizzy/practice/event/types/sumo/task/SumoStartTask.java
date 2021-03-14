@@ -1,5 +1,7 @@
 package me.drizzy.practice.event.types.sumo.task;
 
+import me.drizzy.practice.Array;
+import me.drizzy.practice.kit.Kit;
 import pt.foxspigot.jar.knockback.KnockbackModule;
 import pt.foxspigot.jar.knockback.KnockbackProfile;
 import me.drizzy.practice.event.types.sumo.Sumo;
@@ -31,9 +33,9 @@ public class SumoStartTask extends SumoTask {
 			if (this.getSumo().getCooldown() == null) {
 				this.getSumo().setCooldown(new Cooldown(11_000));
 				this.getSumo().broadcastMessage("&7The sumo event will start in &b10 seconds&7...");
-				KnockbackProfile profile =KnockbackModule.INSTANCE.profiles.get("sumo");
-				Player player = (Player) this.getSumo().getPlayers();
-				((CraftPlayer)player).getHandle().setKnockback(profile);
+				for ( Player player : getSumo().getPlayers() ) {
+					Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, Kit.getByName("Sumo"));
+				}
 			} else {
 				if (this.getSumo().getCooldown().hasExpired()) {
 					this.getSumo().setState(SumoState.ROUND_STARTING);

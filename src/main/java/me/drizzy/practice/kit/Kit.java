@@ -1,59 +1,55 @@
 package me.drizzy.practice.kit;
 
 import com.mongodb.client.model.Sorts;
+import lombok.Getter;
+import lombok.Setter;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.kiteditor.KitEditRules;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueType;
-import org.bukkit.metadata.MetadataValue;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.InventoryUtil;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
 import me.drizzy.practice.util.external.ItemBuilder;
-import lombok.Getter;
-import lombok.Setter;
 import org.bson.Document;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.Metadatable;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class Kit {
 
-    @Getter
-    private static final List<Kit> kits = new ArrayList<>();
-
-    public static final String currentKit = "ArrayCurrentKit";
-    @Getter
+    @Getter private static final List<Kit> kits = new ArrayList<>();
     private final String name;
-    @Getter
     private final KitLoadout kitLoadout = new KitLoadout();
-    @Getter
     private final KitEditRules editRules = new KitEditRules();
-    @Getter
     private final KitGameRules gameRules = new KitGameRules();
-    @Getter
-    @Setter
-    private boolean enabled;
-    @Getter
-    @Setter
-    private String knockbackProfile;
-    @Setter
-    private ItemStack displayIcon;
-    @Getter
+    @Setter private Queue unrankedQueue;
+    @Setter private Queue rankedQueue;
+    @Setter private boolean enabled;
+    @Setter private String knockbackProfile;
+    @Setter private ItemStack displayIcon;
+    @Setter private String displayName;
     private final List<KitLeaderboards> rankedEloLeaderboards = new ArrayList<>();
+    private final List<KitLeaderboards> winLeaderboards = new ArrayList<>();
+    private final List<KitLeaderboards> killsLeaderboards = new ArrayList<>();
 
     public Kit(String name) {
         this.name = name;
-        this.displayIcon = new ItemStack(Material.DIAMOND_SWORD);
+        this.displayName = CC.AQUA + name;
+        this.displayIcon = new ItemStack(Material.DIAMOND_CHESTPLATE);
         this.knockbackProfile = "default";
     }
+
     public void delete() {
         kits.remove(this);
+        Queue.getQueues().remove(rankedQueue);
+        Queue.getQueues().remove(unrankedQueue);
         Array.getInstance().getKitsConfig().getConfiguration().set("kits." + getName(), null);
         try {
             Array.getInstance().getKitsConfig().getConfiguration().save(Array.getInstance().getKitsConfig().getFile());
@@ -64,12 +60,14 @@ public class Kit {
 
     public static void preload() {
         FileConfiguration config = Array.getInstance().getKitsConfig().getConfiguration();
-        FileConfiguration mainConfig = Array.getInstance().getMainConfig().getConfiguration();
         for (String key : config.getConfigurationSection("kits").getKeys(false)) {
             String path = "kits." + key;
 
             Kit kit = new Kit(key);
             kit.setEnabled(config.getBoolean(path + ".enabled"));
+            if (config.contains(path + ".display-name")) {
+                kit.setDisplayName(CC.translate(config.getString(path + ".display-name")));
+            }
             kit.setKnockbackProfile(config.getString(path + ".knockback-profile"));
 
             kit.setDisplayIcon(new ItemBuilder(Material.valueOf(config.getString(path + ".icon.material")))
@@ -96,6 +94,7 @@ public class Kit {
             kit.getGameRules().setFfacenter(config.getBoolean(path + ".game-rules.ffacenter"));
             kit.getGameRules().setNoitems(config.getBoolean(path + ".game-rules.noitems"));
             kit.getGameRules().setBuild(config.getBoolean(path + ".game-rules.build"));
+            kit.getGameRules().setBridge(config.getBoolean(path + ".game-rules.bridge"));
             kit.getGameRules().setSpleef(config.getBoolean(path + ".game-rules.spleef"));
             kit.getGameRules().setParkour(config.getBoolean(path + ".game-rules.parkour"));
             kit.getGameRules().setCombo(config.getBoolean(path + ".game-rules.combo"));
@@ -129,9 +128,9 @@ public class Kit {
 
         kits.forEach(kit -> {
             if (kit.isEnabled()) {
-                new Queue(kit, QueueType.UNRANKED);
+                kit.setUnrankedQueue(new Queue(kit, QueueType.UNRANKED));
                 if (kit.getGameRules().isRanked()) {
-                    new Queue(kit, QueueType.RANKED);
+                    kit.setRankedQueue(new Queue(kit, QueueType.RANKED));
                 }
             }
         });
@@ -149,21 +148,6 @@ public class Kit {
         return null;
     }
 
-    public void giveKitMeta(Metadatable metadatable) {
-        metadatable.setMetadata(currentKit, new FixedMetadataValue(Array.getInstance(), this));
-    }
-
-    public static Kit getCurrentKit(Metadatable metadatable){
-        if(metadatable.hasMetadata(currentKit)) {
-            MetadataValue m = Array.getInstance().getMetadata(metadatable, currentKit);
-            if(m != null && m.value() != null && m.value() instanceof Kit) {
-                return (Kit) m.value();
-            }
-        }
-        return null;
-    }
-
-
     public ItemStack getDisplayIcon() {
         return this.displayIcon.clone();
     }
@@ -173,6 +157,7 @@ public class Kit {
 
         BasicConfigurationFile configFile = Array.getInstance().getKitsConfig();
         configFile.getConfiguration().set(path + ".enabled", enabled);
+        configFile.getConfiguration().set(path + ".display-name", displayName);
         configFile.getConfiguration().set(path + ".knockback-profile", knockbackProfile);
         configFile.getConfiguration().set(path + ".icon.material", displayIcon.getType().name());
         configFile.getConfiguration().set(path + ".icon.durability", displayIcon.getDurability());
@@ -187,6 +172,7 @@ public class Kit {
         configFile.getConfiguration().set(path + ".game-rules.ffacenter", gameRules.isFfacenter());
         configFile.getConfiguration().set(path + ".game-rules.noitems", gameRules.isNoitems());
         configFile.getConfiguration().set(path + ".game-rules.build", gameRules.isBuild());
+        configFile.getConfiguration().set(path + ".game-rules.bridge", gameRules.isBridge());
         configFile.getConfiguration().set(path + ".game-rules.spleef", gameRules.isSpleef());
         configFile.getConfiguration().set(path + ".game-rules.parkour", gameRules.isParkour());
         configFile.getConfiguration().set(path + ".game-rules.netheruhc", gameRules.isNetheruhc());
@@ -223,6 +209,28 @@ public class Kit {
                 kitLeaderboards.setName((String) document.get("name"));
                 kitLeaderboards.setElo((Integer) kitDocument.get("elo"));
                 this.getRankedEloLeaderboards().add(kitLeaderboards);
+            }
+        }
+        if (!this.getWinLeaderboards().isEmpty()) this.getWinLeaderboards().clear();
+        for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("kitStatistics." + getName() + ".unrankedWon")).limit(10).into(new ArrayList<>())) {
+            Document kitStatistics = (Document) document.get("kitStatistics");
+            if (kitStatistics.containsKey(getName())) {
+                Document kitDocument = (Document) kitStatistics.get(getName());
+                KitLeaderboards kitLeaderboards = new KitLeaderboards();
+                kitLeaderboards.setName((String) document.get("name"));
+                kitLeaderboards.setElo((Integer) kitDocument.get("won"));
+                this.getWinLeaderboards().add(kitLeaderboards);
+            }
+        }
+        if (!this.getKillsLeaderboards().isEmpty()) this.getKillsLeaderboards().clear();
+        for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("kitStatistics." + getName() + ".kills")).limit(10).into(new ArrayList<>())) {
+            Document kitStatistics = (Document) document.get("kitStatistics");
+            if (kitStatistics.containsKey(getName())) {
+                Document kitDocument = (Document) kitStatistics.get(getName());
+                KitLeaderboards kitLeaderboards = new KitLeaderboards();
+                kitLeaderboards.setName((String) document.get("name"));
+                kitLeaderboards.setElo((Integer) kitDocument.get("kills"));
+                this.getKillsLeaderboards().add(kitLeaderboards);
             }
         }
     }

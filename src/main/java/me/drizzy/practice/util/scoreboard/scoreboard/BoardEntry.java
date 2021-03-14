@@ -9,14 +9,15 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+@Getter
 @Accessors(chain = true)
 public class BoardEntry {
     
-    @Getter private final Board board;
-    @Getter @Setter private String text;
-    @Getter private final String originalText;
-    @Getter private final String key;
-    @Getter private Team team;
+    private final Board board;
+    @Setter private String text;
+    private final String originalText;
+    private final String key;
+    private Team team;
 
     public BoardEntry(Board board, String text) {
         this.board = board;

@@ -1,11 +1,29 @@
 package me.drizzy.practice.match;
 
+import me.drizzy.practice.Array;
+import me.drizzy.practice.arena.Arena;
+import me.drizzy.practice.arena.impl.TheBridgeArena;
+import me.drizzy.practice.enums.HotbarType;
+import me.drizzy.practice.hcf.HCFManager;
 import me.drizzy.practice.hotbar.Hotbar;
-import me.drizzy.practice.hotbar.HotbarItem;
-import pt.foxspigot.jar.knockback.KnockbackModule;
-import pt.foxspigot.jar.knockback.KnockbackProfile;
+import me.drizzy.practice.kit.Kit;
+import me.drizzy.practice.kit.KitLoadout;
+import me.drizzy.practice.match.team.Team;
+import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.match.types.TheBridgeMatch;
+import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.profile.ProfileState;
+import me.drizzy.practice.util.BlockUtil;
+import me.drizzy.practice.util.LocationUtils;
+import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.chat.CC;
+import me.drizzy.practice.util.external.Cooldown;
+import me.drizzy.practice.util.external.TimeUtil;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.*;
@@ -21,21 +39,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
-import me.drizzy.practice.Array;
-import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.kit.Kit;
-import me.drizzy.practice.kit.KitLoadout;
-import me.drizzy.practice.match.team.Team;
-import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.BlockUtil;
-import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.CC;
-import me.drizzy.practice.util.external.Cooldown;
-import me.drizzy.practice.util.external.TimeUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class MatchListener implements Listener {
+
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockPlaceEvent(final BlockPlaceEvent event) {
         final Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
@@ -55,6 +66,17 @@ public class MatchListener implements Listener {
                         event.setCancelled(true);
                         return;
                     }
+                    if (arena instanceof TheBridgeArena) {
+                        TheBridgeArena standaloneArena = (TheBridgeArena) arena;
+                        if (standaloneArena.getBlueCuboid() != null && standaloneArena.getBlueCuboid().contains(event.getBlockPlaced())) {
+                            event.setCancelled(true);
+                            return;
+                        }
+                        if (standaloneArena.getRedCuboid() != null && standaloneArena.getRedCuboid().contains(event.getBlockPlaced())) {
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
                     match.getPlacedBlocks().add(event.getBlock().getLocation());
                 } else {
                     event.setCancelled(true);
@@ -65,11 +87,40 @@ public class MatchListener implements Listener {
         }
     }
 
+    //TODO: Laggy players double or triple point sometimes (Could try the parkour patch again?)
+    @EventHandler
+    public void onPortal(PlayerPortalEvent event){
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        if (profile.getState() == ProfileState.IN_FIGHT) {
+            if (profile.getMatch().getKit().getGameRules().isBridge()) {
+                if (event.getPlayer().getLocation().getBlock().getType() == Material.ENDER_PORTAL ||
+                    event.getPlayer().getLocation().getBlock().getType() == Material.ENDER_PORTAL_FRAME) {
+                    if(LocationUtils.isTeamPortal(player)) {
+                        player.teleport(profile.getMatch().getTeamPlayerA().equals(profile.getMatch().getTeamPlayer(player)) ? profile.getMatch().getArena().getSpawn1() : profile.getMatch().getArena().getSpawn2());
+                        return;
+                    }
+                    TheBridgeMatch match = (TheBridgeMatch) profile.getMatch();
+                    if(match.getState() == MatchState.ENDING) return;
+                    for ( TeamPlayer teamPlayer : match.getTeamPlayers() ) {
+                        Player other=teamPlayer.getPlayer();
+                        other.sendMessage(match.getRelationColor(other, player) + player.getDisplayName() + " has scored a Point!");
+                    }
+                    TeamPlayer guy = match.getPlayerA().getPlayer() == player ? match.getTeamPlayerB() : match.getTeamPlayerA();
+                    match.onDeath(guy.getPlayer(), (Player) PlayerUtil.getLastDamager(guy.getPlayer()));
+                }
+            }
+        }
+    }
+
+    //TODO: For some reason now, you can't break blocks
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onBlockBreakEvent(final BlockBreakEvent event) {
-        final Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+    public void onBlockBreakEvent(BlockBreakEvent event) {
+        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+
         if (profile.isInFight()) {
             Match match = profile.getMatch();
+
             if (!profile.getMatch().isHCFMatch()) {
                 if (match.getKit().getGameRules().isBuild() && profile.getMatch().isFighting()) {
                     if (match.getKit().getGameRules().isSpleef()) {
@@ -98,7 +149,7 @@ public class MatchListener implements Listener {
         Player player = event.getPlayer();
         Profile profile = Profile.getByUuid(player);
         if (profile.isInFight()) {
-            Match match =profile.getMatch();
+            Match match = profile.getMatch();
             if (match.getKit().getGameRules().isNetheruhc()) {
                 event.setCancelled(true);
             } else {
@@ -139,20 +190,20 @@ public class MatchListener implements Listener {
         final int id = event.getBlock().getTypeId();
         if (id >= 8 && id <= 11) {
             final Block b = event.getToBlock();
-            final int toid = b.getTypeId();
-            if (toid == 0 && BlockUtil.generatesCobble(id, b)) {
+            final int toId = b.getTypeId();
+            if (toId == 0 && BlockUtil.generatesCobble(id, b)) {
                 event.setCancelled(true);
             }
         }
         final Location l = event.getToBlock().getLocation();
-        final List<UUID> playersinarena = new ArrayList<>();
+        final List<UUID> playersIsInArena = new ArrayList<>();
         for (final Entity entity : BlockUtil.getNearbyEntities(l, 50)) {
             if (entity instanceof Player) {
-                playersinarena.add(((Player) entity).getPlayer().getUniqueId());
+                playersIsInArena.add(((Player) entity).getPlayer().getUniqueId());
             }
         }
-        if (playersinarena.size() > 0) {
-            final Profile profile = Profile.getByUuid(playersinarena.get(0));
+        if (playersIsInArena.size() > 0) {
+            final Profile profile = Profile.getByUuid(playersIsInArena.get(0));
             if (profile.isInFight()) {
                 final Match match = profile.getMatch();
                 match.getPlacedBlocks().add(event.getToBlock().getLocation());
@@ -174,19 +225,17 @@ public class MatchListener implements Listener {
             }
             if (event.getItem().getItemStack().getType().name().contains("BOOK")) {
                 event.setCancelled(true);
-                return;
             }
-            final Iterator<Entity> entityIterator = profile.getMatch().getEntities().iterator();
-            while (entityIterator.hasNext()) {
-                final Entity entity = entityIterator.next();
-                if (entity instanceof Item && entity.equals(event.getItem())) {
-                    entityIterator.remove();
-                    return;
+            for ( ItemStack itemStack :  HCFManager.getHCFKitItems() ) {
+                if (event.getItem().getItemStack() == itemStack) {
+                    event.getItem().remove();
+                    event.setCancelled(true);
                 }
             }
-            event.setCancelled(true);
         }
     }
+
+    //TODO: Finish up the new Armor Class selector so that you wont have to use these checks
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerDropItemEvent(final PlayerDropItemEvent event) {
         final Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
@@ -201,19 +250,19 @@ public class MatchListener implements Listener {
             event.getItemDrop().remove();
             return;
         }
-        if (event.getItemDrop().getItemStack().isSimilar(Hotbar.getItems().get(HotbarItem.DIAMOND_KIT))) {
+        if (event.getItemDrop().getItemStack().isSimilar(Hotbar.getItems().get(HotbarType.DIAMOND_KIT))) {
             event.setCancelled(true);
             return;
         }
-        if (event.getItemDrop().getItemStack().isSimilar(Hotbar.getItems().get(HotbarItem.BARD_KIT))) {
+        if (event.getItemDrop().getItemStack().isSimilar(Hotbar.getItems().get(HotbarType.BARD_KIT))) {
             event.setCancelled(true);
             return;
         }
-        if (event.getItemDrop().getItemStack().isSimilar(Hotbar.getItems().get(HotbarItem.ARCHER_KIT))) {
+        if (event.getItemDrop().getItemStack().isSimilar(Hotbar.getItems().get(HotbarType.ARCHER_KIT))) {
             event.setCancelled(true);
             return;
         }
-        if (event.getItemDrop().getItemStack().isSimilar(Hotbar.getItems().get(HotbarItem.ROGUE_KIT))) {
+        if (event.getItemDrop().getItemStack().isSimilar(Hotbar.getItems().get(HotbarType.ROGUE_KIT))) {
             event.setCancelled(true);
             return;
         }
@@ -228,31 +277,40 @@ public class MatchListener implements Listener {
         }
     }
 
+    //TODO: Finish up the new Armor Class selector so that you wont have to use these checks
     @EventHandler
     public void onPlayerDeathEvent(final ItemSpawnEvent event) {
-        if (event.getEntity().getItemStack().isSimilar(Hotbar.getItems().get(HotbarItem.DIAMOND_KIT))) {
+        if (event.getEntity().getItemStack().isSimilar(Hotbar.getItems().get(HotbarType.DIAMOND_KIT))) {
             event.setCancelled(true);
             event.getEntity().remove();
-        } else if (event.getEntity().getItemStack().isSimilar(Hotbar.getItems().get(HotbarItem.BARD_KIT))) {
+        } else if (event.getEntity().getItemStack().isSimilar(Hotbar.getItems().get(HotbarType.BARD_KIT))) {
             event.setCancelled(true);
             event.getEntity().remove();
-        } else if (event.getEntity().getItemStack().isSimilar(Hotbar.getItems().get(HotbarItem.ARCHER_KIT))) {
+        } else if (event.getEntity().getItemStack().isSimilar(Hotbar.getItems().get(HotbarType.ARCHER_KIT))) {
             event.setCancelled(true);
             event.getEntity().remove();
-        } else if (event.getEntity().getItemStack().isSimilar(Hotbar.getItems().get(HotbarItem.ROGUE_KIT))) {
+        } else if (event.getEntity().getItemStack().isSimilar(Hotbar.getItems().get(HotbarType.ROGUE_KIT))) {
             event.setCancelled(true);
             event.getEntity().remove();
         }
     }
 
+    //TODO: HCf fucks this sometimes?
     @EventHandler
     public void onPlayerDeathEvent(final PlayerDeathEvent event) {
         event.setDeathMessage(null);
         Player player = event.getEntity().getPlayer();
-        player.teleport(player.getLocation().add(0.0, 2.0, 0.0));
-        KnockbackProfile knockbackProfile = KnockbackModule.getDefault();
         Profile profile = Profile.getByUuid(event.getEntity().getUniqueId());
-        ((CraftPlayer)event.getEntity().getPlayer()).getHandle().setKnockback(knockbackProfile);
+        player.teleport(player.getLocation().add(0.0, 2.0, 0.0));
+        if (profile.isInFight()) {
+            if (profile.getMatch().isTheBridgeMatch()) {
+                event.getDrops().clear();
+                PlayerUtil.reset(player);
+                profile.getMatch().setupPlayer(player);
+                return;
+            }
+        }
+        Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
         event.getEntity().getPlayer().setNoDamageTicks(20);
         if (profile.isInFight()) {
             event.getDrops().clear();
@@ -265,6 +323,7 @@ public class MatchListener implements Listener {
         }
     }
 
+    //TODO: Laggy players just bypass this lmfao
     @EventHandler
     public void onPlayerRespawn(final PlayerRespawnEvent event) {
         event.setRespawnLocation(event.getPlayer().getLocation());
@@ -321,29 +380,48 @@ public class MatchListener implements Listener {
         }
     }
 
+    /**
+     * Custom Stick Spawn Task {@link PlayerMoveEvent}
+     * We could have used Movement Handlers but that is not
+     * in all spigots hence PlayerMoveEvent is the next Solution
+     * If the direction where player is moving is more than .5 in its axis
+     * then we teleport them back.
+     */
     @EventHandler
-    public void onMove(final PlayerMoveEvent event) {
+    public void onMove(PlayerMoveEvent event) {
         final Player player = event.getPlayer();
         final Profile profile = Profile.getByUuid(player.getUniqueId());
         if (profile.getMatch() != null) {
             Match match=profile.getMatch();
-            if (profile.getMatch().getKit() !=null) {
-                if (profile.getMatch().isSumoMatch() || profile.getMatch().isSumoTeamMatch() || profile.getMatch().getKit().getGameRules().isStickspawn() || profile.getMatch().getKit().getGameRules().isSumo()) {
+            if (profile.getMatch().getKit() != null) {
+                if (profile.getMatch().isSumoMatch() || profile.getMatch().isSumoTeamMatch() || profile.getMatch().getKit().getGameRules().isStickspawn()
+                    || profile.getMatch().getKit().getGameRules().isSumo() || profile.getMatch().isTheBridgeMatch() || profile.getMatch().getKit().getGameRules().isBridge()) {
                     if (match.getState() == MatchState.STARTING) {
                         Location from=event.getFrom();
                         Location to=event.getTo();
-                        double x=Math.floor(from.getX());
-                        double z=Math.floor(from.getZ());
-                        if (Math.floor(to.getX()) != x || Math.floor(to.getZ()) != z) {
-                            x+=.5;
-                            z+=.5;
-                            event.getPlayer().teleport(new Location(from.getWorld(), x, from.getY(), z, from.getYaw(), from.getPitch()));
+                        if (to.getX() != from.getX() || to.getZ() != from.getZ()) {
+                            player.teleport(from);
+                            ((CraftPlayer) player).getHandle().playerConnection.checkMovement=false;
                         }
                     }
                 }
+                //Just Drizzy messing around with MetaData
+            } else if (player.hasMetadata("ArrayTest")) {
+                event.getPlayer().teleport(event.getPlayer().getLocation());
             }
-        } else if (player.hasMetadata("arraytest")) {
-            event.getPlayer().teleport(event.getPlayer().getLocation());
+        }
+    }
+    
+    @EventHandler(ignoreCancelled=true)
+    public void onWater(PlayerMoveEvent event) {
+        Player player =event.getPlayer();
+        Location to = event.getTo();
+        Profile profile = Profile.getByUuid(player);
+        if (profile.getMatch() !=null && profile.getMatch().isSumoMatch() || profile.getMatch() != null && profile.getMatch().isSumoTeamMatch()) {
+            Match match = profile.getMatch();
+            if (BlockUtil.isOnLiquid(to, 0) || BlockUtil.isOnLiquid(to, 1)) {
+                match.handleDeath(player, match.getOpponentPlayer(player), false);
+            }
         }
     }
 
@@ -353,13 +431,14 @@ public class MatchListener implements Listener {
             final Player player = (Player) event.getEntity();
             final Profile profile = Profile.getByUuid(player.getUniqueId());
             if (profile.isInFight()) {
+                final Match match = profile.getMatch();
                 if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-
-                    if (profile.getMatch().getKit().getGameRules().isVoidspawn()) {
+                    if (profile.getMatch().getKit().getGameRules().isVoidspawn() || profile.getMatch().isTheBridgeMatch() || profile.getMatch().getKit().getGameRules().isBridge()) {
                         event.setDamage(0.0);
                         player.setFallDistance(0);
                         player.setHealth(20.0);
-                        player.teleport((profile.getMatch().getTeamPlayerA().getPlayer() == player ? profile.getMatch().getArena().getSpawn1() : profile.getMatch().getArena().getSpawn1()));
+                        player.teleport(match.getTeamPlayer(player).getPlayerSpawn());
+                        return;
                     }
                     profile.getMatch().handleDeath(player, null, false);
                     return;
@@ -388,6 +467,22 @@ public class MatchListener implements Listener {
                     player.updateInventory();
                 }
             }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    public void onLow(final PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByUuid(player);
+        Match match = profile.getMatch();
+        if (profile.isInFight()) {
+          if (match.isTheBridgeMatch()) {
+            if (player.getLocation().getBlockY() <= 30) {
+                player.setFallDistance(0);
+                player.setHealth(20.0);
+                player.teleport(match.getTeamPlayer(player).getPlayerSpawn());
+            }
+          }
         }
     }
 
@@ -432,7 +527,7 @@ public class MatchListener implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-                if (match.isSoloMatch() || match.isFreeForAllMatch() || match.isSumoMatch()) {
+                if (match.isSoloMatch() || match.isFreeForAllMatch() || match.isSumoMatch() || match.isTheBridgeMatch()) {
                     attackerProfile.getMatch().getTeamPlayer(attacker).handleHit();
                     damagedProfile.getMatch().getTeamPlayer(damaged).resetCombo();
                     if (event.getDamager() instanceof Arrow) {
@@ -443,7 +538,7 @@ public class MatchListener implements Listener {
                             }
                         }
                     }
-                } else if (match.isTeamMatch() || match.isHCFMatch() ) {
+                } else if (match.isTeamMatch() || match.isHCFMatch() || match.isSumoTeamMatch() ) {
                     final Team attackerTeam = match.getTeam(attacker);
                     final Team damagedTeam = match.getTeam(damaged);
                     if (attackerTeam == null || damagedTeam == null) {
@@ -468,7 +563,6 @@ public class MatchListener implements Listener {
             }
         }
     }
-
     @EventHandler
     public void onPlayerItemConsumeEvent(final PlayerItemConsumeEvent event) {
         if (event.getItem().getType().equals(Material.POTION)) {
@@ -485,8 +579,8 @@ public class MatchListener implements Listener {
     @EventHandler
     public void onFoodLevelChange(final FoodLevelChangeEvent event) {
         if (event.getEntity() instanceof Player) {
-            final Player player=(Player) event.getEntity();
-            final Profile profile=Profile.getByUuid(player.getUniqueId());
+            final Player player = (Player) event.getEntity();
+            final Profile profile = Profile.getByUuid(player.getUniqueId());
             if (profile.isInSomeSortOfFight()) {
                 if (profile.getMatch() != null) {
                     if (profile.getMatch().getKit().getGameRules().isAntifoodloss()) {
@@ -566,6 +660,8 @@ public class MatchListener implements Listener {
         }
     }
 
+
+    //TODO: Finish up the new Armor Class selector so that you wont have to use this at all
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerInteractEvent(final PlayerInteractEvent event) {
         final Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
@@ -574,7 +670,7 @@ public class MatchListener implements Listener {
         }
         if (event.getItem() != null && event.getAction().name().contains("RIGHT") && profile.isInFight()) {
             if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
-                if (event.getItem().equals(Hotbar.getItems().get(HotbarItem.DEFAULT_KIT))) {
+                if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DEFAULT_KIT))) {
                     final KitLoadout kitLoadout = profile.getMatch().getKit().getKitLoadout();
                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());
@@ -586,7 +682,7 @@ public class MatchListener implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-                if (event.getItem().equals(Hotbar.getItems().get(HotbarItem.DIAMOND_KIT))) {
+                if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DIAMOND_KIT))) {
                     final KitLoadout kitLoadout = Objects.requireNonNull(Kit.getByName("HCFDIAMOND")).getKitLoadout();
                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());
@@ -595,11 +691,11 @@ public class MatchListener implements Listener {
                         event.getPlayer().addPotionEffects(kitLoadout.getEffects());
                     }
                     event.getPlayer().updateInventory();
-                    Array.getInstance().getArmorClassManager().attemptEquip(event.getPlayer());
+                    Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
                     event.setCancelled(true);
                     return;
                 }
-                if (event.getItem().equals(Hotbar.getItems().get(HotbarItem.BARD_KIT))) {
+                if (event.getItem().equals(Hotbar.getItems().get(HotbarType.BARD_KIT))) {
                     final KitLoadout kitLoadout = Objects.requireNonNull(Kit.getByName("HCFBARD")).getKitLoadout();
                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());
@@ -608,11 +704,11 @@ public class MatchListener implements Listener {
                         event.getPlayer().addPotionEffects(kitLoadout.getEffects());
                     }
                     event.getPlayer().updateInventory();
-                    Array.getInstance().getArmorClassManager().attemptEquip(event.getPlayer());
+                    Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
                     event.setCancelled(true);
                     return;
                 }
-                if (event.getItem().equals(Hotbar.getItems().get(HotbarItem.ARCHER_KIT))) {
+                if (event.getItem().equals(Hotbar.getItems().get(HotbarType.ARCHER_KIT))) {
                     final KitLoadout kitLoadout = Objects.requireNonNull(Kit.getByName("HCFARCHER")).getKitLoadout();
                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());
@@ -621,11 +717,11 @@ public class MatchListener implements Listener {
                         event.getPlayer().addPotionEffects(kitLoadout.getEffects());
                     }
                     event.getPlayer().updateInventory();
-                    Array.getInstance().getArmorClassManager().attemptEquip(event.getPlayer());
+                    Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
                     event.setCancelled(true);
                     return;
                 }
-                if (event.getItem().equals(Hotbar.getItems().get(HotbarItem.ROGUE_KIT))) {
+                if (event.getItem().equals(Hotbar.getItems().get(HotbarType.ROGUE_KIT))) {
                     final KitLoadout kitLoadout = Objects.requireNonNull(Kit.getByName("HCFROGUE")).getKitLoadout();
                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());
@@ -634,7 +730,7 @@ public class MatchListener implements Listener {
                         event.getPlayer().addPotionEffects(kitLoadout.getEffects());
                     }
                     event.getPlayer().updateInventory();
-                    Array.getInstance().getArmorClassManager().attemptEquip(event.getPlayer());
+                    Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
                     event.setCancelled(true);
                     return;
                 }
@@ -643,7 +739,7 @@ public class MatchListener implements Listener {
                 final String displayName = ChatColor.stripColor(event.getItem().getItemMeta().getDisplayName());
                 if (displayName.endsWith(" (Right-Click)")) {
                     final String kitName = displayName.replace(" (Right-Click)", "");
-                    for (final KitLoadout kitLoadout2 : profile.getKitData().get(profile.getMatch().getKit()).getLoadouts()) {
+                    for (final KitLoadout kitLoadout2 : profile.getStatisticsData().get(profile.getMatch().getKit()).getLoadouts()) {
                         if (kitLoadout2 != null && ChatColor.stripColor(kitLoadout2.getCustomName()).equals(kitName)) {
                             event.getPlayer().getInventory().setArmorContents(kitLoadout2.getArmor());
                             event.getPlayer().getInventory().setContents(kitLoadout2.getContents());
@@ -711,9 +807,7 @@ public class MatchListener implements Listener {
 
     @EventHandler
     public void onPotionSplash(final PotionSplashEvent event) {
-        final Iterator<LivingEntity> iterator = event.getAffectedEntities().iterator();
-        while (iterator.hasNext()) {
-            final LivingEntity entity = iterator.next();
+      for( LivingEntity entity : event.getAffectedEntities()) {
             if (entity instanceof Player) {
                 final Player player = (Player) entity;
                 final Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -721,7 +815,6 @@ public class MatchListener implements Listener {
                     continue;
                 }
                 event.setIntensity(player, 0.0);
-                iterator.remove();
             }
         }
     }
@@ -739,7 +832,6 @@ public class MatchListener implements Listener {
         if (e.getEntity() instanceof Player) {
             Player damaged = (Player) e.getEntity();
             Profile damagedProfile = Profile.getByUuid(damaged.getUniqueId());
-
             if (damagedProfile.getMatch() != null) {
                 Match match = damagedProfile.getMatch();
                 if (match.isEnding()) {
@@ -750,14 +842,21 @@ public class MatchListener implements Listener {
     }
 
     @EventHandler (priority = EventPriority.LOW)
-    public void enderPearlThrown(PlayerTeleportEvent event) {
-        Player player = event.getPlayer();
-        Match match = Profile.getByUuid(player).getMatch();
-
-        if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
-            if (match.getArena().isDisablePearls()){
-                player.sendMessage(ChatColor.RED + "Enderpearls can't be used in this arena.");
-                event.setCancelled(true);
+    public void onPearlThrow(final ProjectileLaunchEvent event) {
+        final Projectile projectile = event.getEntity();
+        if (projectile instanceof EnderPearl) {
+            final EnderPearl enderPearl = (EnderPearl) projectile;
+            final ProjectileSource source = enderPearl.getShooter();
+            if (source instanceof Player) {
+                final Player shooter = (Player) source;
+                final Profile profile = Profile.getByUuid(shooter.getUniqueId());
+                if (profile.getMatch().getArena().isDisablePearls()) {
+                    if (!profile.getEnderpearlCooldown().hasExpired()) {
+                        shooter.sendMessage(CC.RED + "You can't pearl in this arena!");
+                        shooter.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 1));
+                        event.setCancelled(true);
+                    }
+                }
             }
         }
     }

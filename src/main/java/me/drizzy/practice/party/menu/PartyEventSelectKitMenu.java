@@ -1,5 +1,6 @@
 package me.drizzy.practice.party.menu;
 
+import me.drizzy.practice.enums.PartyEventType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -12,9 +13,8 @@ import me.drizzy.practice.match.types.TeamMatch;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.party.Party;
-import me.drizzy.practice.party.PartyEvent;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.menu.Button;
 import me.drizzy.practice.util.external.menu.Menu;
@@ -24,7 +24,7 @@ import java.util.*;
 
 public class PartyEventSelectKitMenu extends Menu
 {
-    private final PartyEvent partyEvent;
+    private final PartyEventType partyEventType;
 
     @Override
     public String getTitle(final Player player) {
@@ -36,20 +36,20 @@ public class PartyEventSelectKitMenu extends Menu
         final Map<Integer, Button> buttons =new HashMap<>();
         for (final Kit kit : Kit.getKits()) {
             if (kit.isEnabled() && !kit.getGameRules().isSumo()) {
-                buttons.put(buttons.size(), new SelectKitButton(this.partyEvent, kit));
+                buttons.put(buttons.size(), new SelectKitButton(this.partyEventType, kit));
             }
         }
         return buttons;
     }
 
-    @ConstructorProperties({ "partyEvent" })
-    public PartyEventSelectKitMenu(final PartyEvent partyEvent) {
-        this.partyEvent = partyEvent;
+    @ConstructorProperties({ "partyEventType" })
+    public PartyEventSelectKitMenu(final PartyEventType partyEventType) {
+        this.partyEventType=partyEventType;
     }
 
     private static class SelectKitButton extends Button
     {
-        private final PartyEvent partyEvent;
+        private final PartyEventType partyEventType;
         private final Kit kit;
 
         @Override
@@ -78,7 +78,7 @@ public class PartyEventSelectKitMenu extends Menu
             }
             arena.setActive(true);
             Match match;
-            if (this.partyEvent == PartyEvent.FFA) {
+            if (this.partyEventType == PartyEventType.FFA) {
                 if (this.kit.getGameRules().isSumo()) {
                     player.sendMessage(CC.RED + "You cannot start an ffa with the kit sumo!");
                 }
@@ -119,9 +119,9 @@ public class PartyEventSelectKitMenu extends Menu
             match.start();
         }
 
-        @ConstructorProperties({ "partyEvent", "kit" })
-        public SelectKitButton(final PartyEvent partyEvent, final Kit kit) {
-            this.partyEvent = partyEvent;
+        @ConstructorProperties({ "partyEventType", "kit" })
+        public SelectKitButton(final PartyEventType partyEventType, final Kit kit) {
+            this.partyEventType=partyEventType;
             this.kit = kit;
         }
     }

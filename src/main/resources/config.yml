@@ -4,6 +4,8 @@ Mongo:
 Array:
   Spawn: world:108.42862345557752:106.0:2.4753712094583005:-89.59775:0.17956273
   Performance-mode: true
+  Core-Hook: true
+  HCF-Enabled: true
 Tab:
   Enabled: true
   Color:
@@ -43,23 +45,3 @@ Ranked:
   Enabled: true
   Require-Kills: true
   Required-Kills: 10
-ELO-Ranks:
-  0-991: "Bronze 1"
-  992-993: "Bronze 2"
-  994-995: "Bronze 3"
-  996-997: "Bronze 4"
-  998-999: "Bronze 5"
-  1000-1010: "Silver 1"
-  1011-1020: "Silver 2"
-  1021-1030: "Silver 3"
-  1031-1040: "Silver 4"
-  1041-1050: "Gold 1"
-  1051-1060: "Gold 2"
-  1061-1070: "Gold 3"
-  1071-1080: "Gold 4"
-  1081-1150: "Diamond 1"
-  1151-1250: "Diamond 2"
-  1251-1300: "Diamond 3"
-  1301-1350: "Diamond 4"
-  1351-1400: "Diamond 5"
-  1401-1500: "Prestige"

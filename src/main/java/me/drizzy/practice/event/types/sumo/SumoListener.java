@@ -114,6 +114,12 @@ public class SumoListener implements Listener {
 		Profile profile = Profile.getByUuid(player);
 		Sumo sumo = profile.getSumo();
 
+		if (profile.getMatch() !=null && profile.getMatch().isSumoMatch() || profile.getMatch() !=null && profile.getMatch().isSumoTeamMatch()) {
+			if (BlockUtil.isOnLiquid(e.getFrom(), 1)) {
+				profile.getMatch().handleDeath(player, profile.getMatch().getOpponentPlayer(player), false);
+			}
+		}
+
 		if (sumo == null) {
 			return;
 		}

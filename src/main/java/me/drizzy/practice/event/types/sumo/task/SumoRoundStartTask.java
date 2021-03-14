@@ -1,6 +1,6 @@
 package me.drizzy.practice.event.types.sumo.task;
 
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.event.types.sumo.Sumo;
 import me.drizzy.practice.event.types.sumo.SumoState;
 import me.drizzy.practice.event.types.sumo.SumoTask;

@@ -1,12 +1,14 @@
 package me.drizzy.practice.util.external;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,18 @@ public class ItemBuilder implements Listener {
     public ItemBuilder amount(int amount) {
         is.setAmount(amount);
         return this;
+    }
+
+    public ItemBuilder color(Color color) {
+        if (is.getType() == Material.LEATHER_BOOTS || is.getType() == Material.LEATHER_CHESTPLATE || is.getType() == Material.LEATHER_HELMET
+                || is.getType() == Material.LEATHER_LEGGINGS) {
+            LeatherArmorMeta meta = (LeatherArmorMeta) is.getItemMeta();
+            meta.setColor(color);
+            is.setItemMeta(meta);
+            return this;
+        } else {
+            throw new IllegalArgumentException("color() only applicable for leather armor!");
+        }
     }
 
     public ItemBuilder name(String name) {

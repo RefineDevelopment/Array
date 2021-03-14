@@ -2,7 +2,7 @@ package me.drizzy.practice.arena.impl;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.arena.ArenaType;
+import me.drizzy.practice.enums.ArenaType;
 import me.drizzy.practice.util.external.LocationUtil;
 import lombok.Getter;
 import lombok.Setter;

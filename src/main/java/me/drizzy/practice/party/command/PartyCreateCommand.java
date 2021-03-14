@@ -3,9 +3,9 @@
 package me.drizzy.practice.party.command;
 
 import me.drizzy.practice.party.Party;
-import me.drizzy.practice.party.PartyMessage;
+import me.drizzy.practice.enums.PartyMessageType;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 import me.drizzy.practice.util.command.command.CommandMeta;
 
@@ -24,6 +24,6 @@ public class PartyCreateCommand
         }
         profile.setParty(new Party(player));
         profile.refreshHotbar();
-        player.sendMessage(PartyMessage.CREATED.format(new Object[0]));
+        player.sendMessage(PartyMessageType.CREATED.format(new Object[0]));
     }
 }

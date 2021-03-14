@@ -23,7 +23,7 @@ public class BracketsStartTask extends BracketsTask {
 			this.getBrackets().broadcastMessage("&cThere are not enough players for the brackets to start.");
 		}
 
-		if (this.getBrackets().getPlayers().size() == this.getBrackets().getMaxPlayers() || (getTicks() >= 30 && this.getBrackets().getPlayers().size() >= 2)) {
+		if (this.getBrackets().getPlayers().size() == Brackets.getMaxPlayers() || (getTicks() >= 30 && this.getBrackets().getPlayers().size() >= 2)) {
 			if (this.getBrackets().getCooldown() == null) {
 				this.getBrackets().setCooldown(new Cooldown(11_000));
 				this.getBrackets().broadcastMessage("&fThe brackets will start in &b10 seconds&f...");

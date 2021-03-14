@@ -4,20 +4,23 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
+import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.match.types.SoloMatch;
 import me.drizzy.practice.match.types.SumoMatch;
-import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.match.types.TheBridgeMatch;
 import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.profile.rank.RankType;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import me.drizzy.practice.util.CC;
 
 public class QueueThread extends Thread {
 
     Arena arena;
     Kit kit;
+    RankType rank = Array.getInstance().getRankManager();
 
     @Override
     public void run() {
@@ -74,6 +77,10 @@ public class QueueThread extends Thread {
                             arena=Arena.getRandom(queue.getKit());
 
                             if (arena == null) {
+                                queue.getPlayers().remove(firstQueueProfile);
+                                queue.getPlayers().remove(secondQueueProfile);
+                                firstPlayer.sendMessage(CC.translate("&cNo arenas available."));
+                                secondPlayer.sendMessage(CC.translate("&cNo arenas available."));
                                 continue;
                             }
 
@@ -89,8 +96,8 @@ public class QueueThread extends Thread {
                             TeamPlayer secondMatchPlayer=new TeamPlayer(secondPlayer);
 
                             if (queue.getType() == QueueType.RANKED) {
-                                firstMatchPlayer.setElo(firstProfile.getKitData().get(queue.getKit()).getElo());
-                                secondMatchPlayer.setElo(secondProfile.getKitData().get(queue.getKit()).getElo());
+                                firstMatchPlayer.setElo(firstProfile.getStatisticsData().get(queue.getKit()).getElo());
+                                secondMatchPlayer.setElo(secondProfile.getStatisticsData().get(queue.getKit()).getElo());
                                 secondProfile.calculateGlobalElo();
                                 firstProfile.calculateGlobalElo();
                             }
@@ -99,14 +106,17 @@ public class QueueThread extends Thread {
                             // Create match
                             Match match;
                             if (queue.getKit().getGameRules().isSumo()) {
-                                match=new SumoMatch(queue, firstMatchPlayer, secondMatchPlayer,
+                                match = new SumoMatch(queue, firstMatchPlayer, secondMatchPlayer,
+                                        queue.getKit(), arena, queue.getQueueType());
+                            } else if (queue.getKit().getGameRules().isBuild() && queue.getKit().getGameRules().isBridge()) {
+                                match = new TheBridgeMatch(queue, firstMatchPlayer, secondMatchPlayer,
                                         queue.getKit(), arena, queue.getQueueType());
                             } else {
-                                match=new SoloMatch(queue, firstMatchPlayer, secondMatchPlayer,
+                                match = new SoloMatch(queue, firstMatchPlayer, secondMatchPlayer,
                                         queue.getKit(), arena, queue.getQueueType(), 0, 0);
                             }
                             for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Start-Message.Solo") ) {
-                                final String opponentMessages=this.formatMessages(string, firstPlayer.getDisplayName(), secondPlayer.getDisplayName(), firstMatchPlayer.getElo(), secondMatchPlayer.getElo(), queue.getQueueType());
+                                final String opponentMessages=this.formatMessages(string, rank.getFullName(firstPlayer), rank.getFullName(secondPlayer), firstMatchPlayer.getElo(), secondMatchPlayer.getElo(), queue.getQueueType());
                                 final String message=CC.translate(this.replace(opponentMessages));
                                 firstPlayer.sendMessage(message);
                                 secondPlayer.sendMessage(message);
@@ -157,8 +167,8 @@ public class QueueThread extends Thread {
     }
 
     public String replace(String string) {
-        string = string.replace("{arena}", this.arena.getName())
-                .replace("{kit}", this.kit.getName());
+        string = string.replace("{arena}", this.arena.getDisplayName())
+                .replace("{kit}", this.kit.getDisplayName());
         return string;
     }
 }

@@ -1,13 +1,13 @@
 package me.drizzy.practice.party.menu;
 
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.enums.PartyManageType;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.profile.Profile;
 import org.bukkit.event.inventory.ClickType;
 import me.drizzy.practice.util.external.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import java.beans.ConstructorProperties;
-import me.drizzy.practice.party.PartyManage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,9 +27,9 @@ public class ManagePartyMember extends Menu {
     @Override
     public Map<Integer, Button> getButtons(final Player player) {
         final Map<Integer, Button> buttons=new HashMap<>();
-        buttons.put(2, new SelectManageButton(PartyManage.LEADER));
-        buttons.put(4, new SelectManageButton(PartyManage.KICK));
-        buttons.put(6, new SelectManageButton(PartyManage.BAN));
+        buttons.put(2, new SelectManageButton(PartyManageType.LEADER));
+        buttons.put(4, new SelectManageButton(PartyManageType.KICK));
+        buttons.put(6, new SelectManageButton(PartyManageType.BAN));
         return buttons;
     }
 
@@ -39,13 +39,13 @@ public class ManagePartyMember extends Menu {
     }
 
     private class SelectManageButton extends Button {
-        private final PartyManage partyManage;
+        private final PartyManageType partyManageType;
 
         @Override
         public ItemStack getButtonItem(final Player player) {
             ArrayList<String> lore=new ArrayList<>();
             Player target = ManagePartyMember.this.target;
-            if (this.partyManage == PartyManage.LEADER) {
+            if (this.partyManageType == PartyManageType.LEADER) {
                 lore.add(CC.MENU_BAR);
                 lore.add("&7Click here to make &b" + target.getName());
                 lore.add("&7the party leader, this will grant them");
@@ -53,9 +53,9 @@ public class ManagePartyMember extends Menu {
                 lore.add("");
                 lore.add("&bClick to Grant party leadership.");
                 lore.add(CC.MENU_BAR);
-                return new ItemBuilder(Material.GOLD_SWORD).name("&b" + this.partyManage.getName()).lore(lore).build();
+                return new ItemBuilder(Material.GOLD_SWORD).name("&b" + this.partyManageType.getName()).lore(lore).build();
             }
-            if (this.partyManage == PartyManage.KICK) {
+            if (this.partyManageType == PartyManageType.KICK) {
                 lore.add(CC.MENU_BAR);
                 lore.add("&7Click here to Kick &b" + target.getName());
                 lore.add("&7this will make them leave the party");
@@ -63,7 +63,7 @@ public class ManagePartyMember extends Menu {
                 lore.add("");
                 lore.add("&bClick to Kick " + target.getName() + ".");
                 lore.add(CC.MENU_BAR);
-                return new ItemBuilder(Material.BOOK).name("&b" + this.partyManage.getName()).lore(lore).build();
+                return new ItemBuilder(Material.BOOK).name("&b" + this.partyManageType.getName()).lore(lore).build();
             }
             lore.add(CC.MENU_BAR);
             lore.add("&7Click here to Ban &b" + target.getName());
@@ -73,7 +73,7 @@ public class ManagePartyMember extends Menu {
             lore.add("");
             lore.add("&bClick to Ban " + target.getName() + ".");
             lore.add(CC.MENU_BAR);
-            return new ItemBuilder(Material.SKULL_ITEM).name("&b" + this.partyManage.getName()).lore(lore).build();
+            return new ItemBuilder(Material.SKULL_ITEM).name("&b" + this.partyManageType.getName()).lore(lore).build();
         }
         
         @Override
@@ -83,13 +83,13 @@ public class ManagePartyMember extends Menu {
                 player.sendMessage(CC.RED + "You are not in a party.");
                 return;
             }
-            if (this.partyManage == PartyManage.LEADER) {
+            if (this.partyManageType == PartyManageType.LEADER) {
                 profile.getParty().leader(player, ManagePartyMember.this.target);
             }
-            else if (this.partyManage == PartyManage.MANAGE_MEMBERS) {
+            else if (this.partyManageType == PartyManageType.MANAGE) {
                 profile.getParty().leave(ManagePartyMember.this.target, true);
             }
-            else if (this.partyManage == PartyManage.BAN) {
+            else if (this.partyManageType == PartyManageType.BAN) {
                 profile.getParty().leave(ManagePartyMember.this.target, true);
                 profile.getParty().ban(ManagePartyMember.this.target);
             }
@@ -97,9 +97,9 @@ public class ManagePartyMember extends Menu {
             player.closeInventory();
         }
         
-        @ConstructorProperties({ "partyManage" })
-        public SelectManageButton(final PartyManage partyManage) {
-            this.partyManage = partyManage;
+        @ConstructorProperties({ "partyManageType" })
+        public SelectManageButton(final PartyManageType partyManageType) {
+            this.partyManageType=partyManageType;
         }
     }
 }

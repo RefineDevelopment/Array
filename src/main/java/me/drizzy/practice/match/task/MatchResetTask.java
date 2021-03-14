@@ -21,10 +21,6 @@ public class MatchResetTask extends BukkitRunnable {
                 match.getChangedBlocks().forEach(blockState -> blockState.getLocation().getBlock().setType(blockState.getType()));
                 match.getChangedBlocks().clear();
             }
-            if (match.getKit().getGameRules().isBoxuhc() && match.getBrokenBlocks().size() > 0) {
-                match.getBrokenBlocks().forEach(location -> location.getBlock().setType(Material.WOOD));
-                match.getBrokenBlocks().clear();
-            }
         }
     }
 

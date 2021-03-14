@@ -1,11 +1,14 @@
 package me.drizzy.practice.hologram;
 
+import com.allatori.annotations.DoNotRename;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.drizzy.practice.ArrayCache;
 import me.drizzy.practice.profile.Profile;
 import org.bukkit.entity.Player;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.kit.KitLeaderboards;
 
+@DoNotRename
 public class HologramPlaceholders extends PlaceholderExpansion {
     @Override
     public String getIdentifier() {
@@ -50,7 +53,7 @@ public class HologramPlaceholders extends PlaceholderExpansion {
                 return "&7";
             }
 
-            Profile profile = Profile.getByUuid(Profile.getUUID(kitLeaderboards.getName()));
+            Profile profile = Profile.getByUuid(ArrayCache.getUUID(kitLeaderboards.getName()));
 
             return "&b" + (number + 1) + ". &f" + kitLeaderboards.getName() + ": &b" + kitLeaderboards.getElo() + " &7(" + profile.getEloLeague() + ")";
         }
@@ -81,7 +84,7 @@ public class HologramPlaceholders extends PlaceholderExpansion {
                 return "&7";
             }
 
-            Profile profile = Profile.getByUuid(Profile.getUUID(kitLeaderboards.getName()));
+            Profile profile = Profile.getByUuid(ArrayCache.getUUID(kitLeaderboards.getName()));
 
             return "&b" + (number + 1) + ". &f" + kitLeaderboards.getName() + ": &b" + kitLeaderboards.getElo() + " &7(" + profile.getEloLeague() + ")";
         }

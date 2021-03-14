@@ -176,7 +176,7 @@ public class Honcho implements Listener
     public void registerCommand(final Object object) {
         final CommandMeta meta = object.getClass().getAnnotation(CommandMeta.class);
         if (meta == null) {
-            throw new RuntimeException(new ClassNotFoundException(object.getClass().getName() + " is missing CommandMeta annotation"));
+            throw new RuntimeException(new ClassNotFoundException(object.getClass().getName() + " is missing CommandMeta Annotation, Please Contact a Developer"));
         }
         final List<MethodData> methodDataList =new ArrayList<>();
         for (final Method method : object.getClass().getMethods()) {
@@ -201,8 +201,8 @@ public class Honcho implements Listener
                     try {
                         this.registerCommand(clazz.getDeclaredConstructor(object.getClass()).newInstance(object));
                     }
-                    catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex2) {
-                        ex2.printStackTrace();
+                    catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                        e.printStackTrace();
                     }
                 }
             }

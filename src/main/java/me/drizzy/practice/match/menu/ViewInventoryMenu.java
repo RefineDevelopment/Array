@@ -1,6 +1,6 @@
 package me.drizzy.practice.match.menu;
 
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.InventoryUtil;
 import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.PotionUtil;

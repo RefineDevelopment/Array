@@ -5,7 +5,7 @@ import me.drizzy.practice.event.types.spleef.player.SpleefPlayerState;
 import me.drizzy.practice.kit.KitLoadout;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.hotbar.Hotbar;
-import me.drizzy.practice.hotbar.HotbarItem;
+import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.util.PlayerUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -158,7 +158,7 @@ public class SpleefListener implements Listener {
 					return;
 				}
 				if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
-					if (event.getItem().equals(Hotbar.getItems().get(HotbarItem.DEFAULT_KIT))) {
+					if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DEFAULT_KIT))) {
 						KitLoadout kitLoadout = Spleef.getKit().getKitLoadout();
 						event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
 						event.getPlayer().getInventory().setContents(kitLoadout.getContents());
@@ -174,7 +174,7 @@ public class SpleefListener implements Listener {
 					if (displayName.startsWith("Kit: ")) {
 						String kitName = displayName.replace("Kit: ", "");
 
-						for (KitLoadout kitLoadout : profile.getKitData().get(Spleef.getKit()).getLoadouts()) {
+						for (KitLoadout kitLoadout : profile.getStatisticsData().get(Spleef.getKit()).getLoadouts()) {
 							if (kitLoadout != null && ChatColor.stripColor(kitLoadout.getCustomName()).equals(kitName)) {
 								event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
 								event.getPlayer().getInventory().setContents(kitLoadout.getContents());

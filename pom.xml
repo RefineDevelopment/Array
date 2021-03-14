@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>rip.resolve.Practice</groupId>
+    <groupId>me.drizzy.practice</groupId>
     <artifactId>Array</artifactId>
-    <version>4.0</version>
+    <version>BETA-4.2</version>
 
     <!--Repositories-->
 
@@ -83,22 +83,21 @@
             <scope>compile</scope>
         </dependency>
 
-        <!--Spigot-->
+        <!--Spigots-->
         <dependency>
-            <groupId>rip.resolve</groupId>
-            <artifactId>RaveSpigot</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>pt.foxspigot.jar</groupId>
+            <artifactId>FoxSpigot</artifactId>
+            <version>0.5-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/server.jar</systemPath>
+            <systemPath>${project.basedir}/lib/spigots/FoxSpigot.jar</systemPath>
         </dependency>
 
-        <!--1.7 Compatibility Spigot-->
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>Spigot</artifactId>
-            <version>1.7.10.R4-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/spigot-1.7.10.jar</systemPath>
+          <groupId>me.joeleoli</groupId>
+          <artifactId>SpigotX</artifactId>
+          <version>1.0-SNAPSHOT</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/spigots/SpigotX.jar</systemPath>
         </dependency>
 
         <!-- Mongo Driver -->
@@ -107,6 +106,7 @@
             <artifactId>mongo-java-driver</artifactId>
             <version>3.9.1</version>
         </dependency>
+
         <!--Packet Handler-->
         <dependency>
             <groupId>com.comphenix</groupId>
@@ -117,15 +117,7 @@
         </dependency>
 
         <dependency>
-            <groupId>us.myles</groupId>
-            <artifactId>ViaVersion</artifactId>
-            <version>3.2.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/ViaVersion.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.thatkawaiisam</groupId>
+            <groupId>me.allen.ziggurat</groupId>
             <artifactId>Ziggurat</artifactId>
             <version>1.0</version>
             <scope>system</scope>
@@ -138,7 +130,7 @@
             <artifactId>LunarClient-API</artifactId>
             <version>LATEST</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/LunarAPi.jar</systemPath>
+            <systemPath>${project.basedir}/lib/api/LunarAPI-GIT.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -146,7 +138,58 @@
             <artifactId>LunarClient-API</artifactId>
             <version>LATEST</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/LunarClientAPI-1.0.jar</systemPath>
+            <systemPath>${project.basedir}/lib/api/LunarAPI-MCM.jar</systemPath>
+        </dependency>
+
+        <!--APIs-->
+        <dependency>
+            <groupId>me.activated.core</groupId>
+            <artifactId>AquaCore-API</artifactId>
+            <version>2.5.8</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/api/AquaCoreAPI.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>club.frozed</groupId>
+            <artifactId>Zoom-API</artifactId>
+            <version>1.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/api/ZoomAPI-1.1-SNAPSHOT.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>me.quartz</groupId>
+            <artifactId>Hestia-API</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/api/HestiaAPI.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.broustudio</groupId>
+            <artifactId>Mizu-API</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/api/MizuAPI.jar</systemPath>
+        </dependency>
+
+        <!--Obfuscator-->
+
+        <dependency>
+            <groupId>com.allatori</groupId>
+            <artifactId>Allatori</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/obfuscator/allatori.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.allatori</groupId>
+            <artifactId>annotations</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/obfuscator/allatori-annotations.jar</systemPath>
         </dependency>
 
         <!--Hologram Leaderboards Handler-->
@@ -155,7 +198,7 @@
             <artifactId>placeholderapi</artifactId>
             <version>2.10.3</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/PlaceholderAPI.jar</systemPath>
+            <systemPath>${project.basedir}/lib/api/PlaceholderAPI.jar</systemPath>
         </dependency>
 
     </dependencies>

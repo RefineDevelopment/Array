@@ -4,7 +4,7 @@ import me.drizzy.practice.event.types.parkour.Parkour;
 import me.drizzy.practice.event.types.parkour.ParkourState;
 import me.drizzy.practice.event.types.parkour.ParkourTask;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 
 public class ParkourRoundStartTask extends ParkourTask {
 

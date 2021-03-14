@@ -3,12 +3,12 @@
 package me.drizzy.practice.party.command;
 
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CPL;
 import org.bukkit.entity.Player;
 import me.drizzy.practice.util.command.command.CommandMeta;
 
-@CommandMeta(label = { "party leader", "p leader" })
+@CommandMeta(label = { "party leader", "p leader", "party promote", "p promote" })
 public class PartyLeaderCommand
 {
     public void execute(final Player player, @CPL("player") final Player target) {

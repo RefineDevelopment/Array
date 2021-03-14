@@ -2,7 +2,7 @@ package me.drizzy.practice.array.commands.donator;
 
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 
 @CommandMeta(label = "fly", permission = "array.donator+")
@@ -12,7 +12,7 @@ public class FlyCommand {
         Profile profile = Profile.getByUuid(player.getUniqueId());
 
         if ((profile.isInLobby() || profile.isInQueue()) || profile.getPlayer().hasPermission("array.staff")) {
-            if (player.hasPermission("array.donator+")) {
+            if (player.hasPermission("array.donator+") || profile.getPlayer().hasPermission("array.staff")) {
                 if (player.getAllowFlight()) {
                     player.setAllowFlight(false);
                     player.setFlying(false);

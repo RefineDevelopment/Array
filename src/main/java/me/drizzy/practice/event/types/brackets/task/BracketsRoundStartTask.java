@@ -4,7 +4,7 @@ import me.drizzy.practice.event.types.brackets.Brackets;
 import me.drizzy.practice.event.types.brackets.BracketsState;
 import me.drizzy.practice.event.types.brackets.BracketsTask;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -26,15 +26,13 @@ public class BracketsRoundStartTask extends BracketsTask {
 
 			if (playerA != null) {
 				playerA.playSound(playerA.getLocation(), Sound.NOTE_BASS, 1.0F, 1.0F);
-				PlayerUtil.allowMovement(playerA);
 			}
 
 			if (playerB != null) {
 				playerB.playSound(playerB.getLocation(), Sound.NOTE_BASS, 1.0F, 1.0F);
-				PlayerUtil.allowMovement(playerB);
 			}
 
-			((Brackets) this.getBrackets()).setRoundStart(System.currentTimeMillis());
+			(this.getBrackets()).setRoundStart(System.currentTimeMillis());
 		} else {
 			int seconds = getSeconds();
 			Player playerA = this.getBrackets().getRoundPlayerA().getPlayer();

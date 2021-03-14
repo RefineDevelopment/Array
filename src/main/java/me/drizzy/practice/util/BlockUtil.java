@@ -9,8 +9,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 
-public class BlockUtil
-{
+public class BlockUtil {
     private static Set<Byte> blockSolidPassSet;
     private static Set<Byte> blockStairsSet;
     private static Set<Byte> blockLiquidsSet;

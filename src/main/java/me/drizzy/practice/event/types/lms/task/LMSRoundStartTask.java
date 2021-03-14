@@ -3,7 +3,7 @@ package me.drizzy.practice.event.types.lms.task;
 import me.drizzy.practice.event.types.lms.LMS;
 import me.drizzy.practice.event.types.lms.LMSState;
 import me.drizzy.practice.event.types.lms.LMSTask;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 
 public class LMSRoundStartTask extends LMSTask {
 

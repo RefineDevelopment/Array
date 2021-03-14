@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class KitLoadout {
 
-    private String customName = "Default";
+    private String customName = "DefaultProvider";
     private ItemStack[] armor;
     private ItemStack[] contents;
     private List<PotionEffect> effects;

@@ -5,7 +5,7 @@ import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.tournament.Tournament;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -16,7 +16,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-@CommandMeta(label = "tournament host", permission = "practice.host++")
+@CommandMeta(label = "tournament host", permission = "array.host.tournament")
 public class TournamentHostCommand {
 
     private static void broadcastMessage(String message) {

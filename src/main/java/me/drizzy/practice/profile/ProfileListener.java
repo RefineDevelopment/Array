@@ -1,10 +1,11 @@
 package me.drizzy.practice.profile;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.ArrayCache;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.events.MatchEvent;
 import me.drizzy.practice.match.events.MatchStartEvent;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.array.essentials.Essentials;
 import org.bukkit.Bukkit;
@@ -145,22 +146,14 @@ public class ProfileListener implements Listener {
     public void onBreak(BlockBreakEvent event) {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
-        if (profile.isInSomeSortOfFight()) {
-            if (!profile.isInFight()) {
-                if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-                    if (!event.getPlayer().isOp()) {
-                        event.setCancelled(true);
-                    }
-                } else {
-                    event.setCancelled(true);
-                }
-            }
-        } else {
+        if (!profile.isInSomeSortOfFight()) {
             if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
                 if (!event.getPlayer().isOp()) {
+                    event.getPlayer().sendMessage("This event was cancelled on profile listener");
                     event.setCancelled(true);
                 }
             } else {
+                event.getPlayer().sendMessage("This event was cancelled on profile listener");
                 event.setCancelled(true);
             }
         }
@@ -271,8 +264,8 @@ public class ProfileListener implements Listener {
             for ( Profile other : Profile.getProfiles().values() ) {
                 other.handleVisibility();
             }
-            if (!Profile.getPlayerCache().containsKey(player.getName())) {
-                Profile.getPlayerCache().put(player.getName(), player.getUniqueId());
+            if (!ArrayCache.getPlayerCache().containsKey(player.getName())) {
+                ArrayCache.getPlayerCache().put(player.getName(), player.getUniqueId());
             }
             try {
                 profile.load();
@@ -305,19 +298,19 @@ public class ProfileListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         event.setQuitMessage(null);
-        Profile profile = Profile.getProfiles().get(event.getPlayer().getUniqueId());
+        Profile profile=Profile.getProfiles().get(event.getPlayer().getUniqueId());
         Profile.getPlayerList().remove(event.getPlayer());
         if (profile.getMatch() != null) {
-            profile.getMatch().handleDeath(event.getPlayer(), profile.getMatch().getOpponentPlayer(event.getPlayer()),true);
+            profile.getMatch().handleDeath(event.getPlayer(), profile.getMatch().getOpponentPlayer(event.getPlayer()), true);
         }
         if (profile.isInQueue()) {
             profile.getQueue().removePlayer(profile.getQueueProfile());
         }
         profile.save();
         if (profile.getRematchData() != null) {
-        Player target = Array.getInstance().getServer().getPlayer(profile.getRematchData().getTarget());
-        if (target != null && target.isOnline()) {
-        Profile.getByUuid(target.getUniqueId()).checkForHotbarUpdate();
+            Player target=Array.getInstance().getServer().getPlayer(profile.getRematchData().getTarget());
+            if (target != null && target.isOnline()) {
+                Profile.getByUuid(target.getUniqueId()).checkForHotbarUpdate();
             }
         }
     }

@@ -3,7 +3,6 @@ package me.drizzy.practice.register;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.command.*;
 import me.drizzy.practice.array.ArrayCommand;
-import me.drizzy.practice.array.VerCommand;
 import me.drizzy.practice.array.commands.*;
 import me.drizzy.practice.array.commands.donator.FlyCommand;
 import me.drizzy.practice.array.commands.staff.FollowCommand;
@@ -14,8 +13,9 @@ import me.drizzy.practice.duel.command.DuelAcceptCommand;
 import me.drizzy.practice.duel.command.DuelCommand;
 import me.drizzy.practice.duel.command.RematchCommand;
 import me.drizzy.practice.event.EventCommand;
+import me.drizzy.practice.event.EventHelpCommand;
 import me.drizzy.practice.event.types.brackets.command.*;
-import me.drizzy.practice.event.types.gulag.command.*;
+import me.drizzy.practice.event.types.wizard.command.*;
 import me.drizzy.practice.event.types.lms.command.*;
 import me.drizzy.practice.event.types.parkour.command.*;
 import me.drizzy.practice.event.types.spleef.command.*;
@@ -36,6 +36,7 @@ import java.util.Arrays;
 public class RegisterCommands {
     
     public static void register() {
+        Array.logger("&bRegistering Commands...");
         for (Object command : Arrays.asList(
                 //Staff commands
                 new SilentCommand(),
@@ -49,6 +50,7 @@ public class RegisterCommands {
                 new ArrayGoldenHeadCommand(),
                 new ArrayReloadCommand(),
                 new ArrayRenameCommand(),
+                new ArrayRefillCommand(),
                 new ArrayResetStatsCommand(),
                 new ArraySaveArenasCommand(),
                 new ArraySaveCommand(),
@@ -60,15 +62,15 @@ public class RegisterCommands {
                 new ArrayToggleScoreboardCommand(),
                 new ArrayToggleDuelCommand(),
                 new ArrayVerCommand(),
-                new ArrayManageCommand(),
+                new ArrayWoldCommand(),
                 new TestCommand(),
-                new VerCommand(),
 
                 //Player command
                 new LeaderboardsCommand(),
                 new ArraySettingsCommand(),
                 new EventCommand(),
                 new GetUUIDCommand(),
+                new EventHelpCommand(),
                 new FlyCommand(),
 
                 //Arena commands
@@ -76,6 +78,8 @@ public class RegisterCommands {
                 new ArenaRemoveKitCommand(),
                 new ArenaAddBuildKitsCommand(),
                 new ArenaDisablePearlsCommand(),
+                new ArenaSetPortalCommand(),
+                new ArenaPortalWandCommand(),
                 new ArenaSetSpawnCommand(),
                 new ArenaCreateCommand(),
                 new ArenaAddNormalKitCommand(),
@@ -108,6 +112,7 @@ public class RegisterCommands {
                 new PartyJoinCommand(),
                 new PartyKickCommand(),
                 new PartyLeaveCommand(),
+                new PartyChatCommand(),
                 new PartyOpenCommand(),
                 new PartyLeaderCommand(),
                 new PartyUnbanCommand(),
@@ -124,6 +129,7 @@ public class RegisterCommands {
                 new KitRemoveCommand(),
                 new KitSetIconCommand(),
                 new KitSetHitDelayCommand(),
+                new KitBridgeCommand(),
                 new KitSetRankedCommand(),
                 new KitSumoCommand(),
                 new KitBuildCommand(),
@@ -162,17 +168,17 @@ public class RegisterCommands {
                 new BracketsKnockbackCommand(),
                 new BracketsForceStartCommand(),
 
-                //Gulag Commands
-                new GulagLeaveCommand(),
-                new GulagCancelCommand(),
-                new GulagCooldownCommand(),
-                new GulagJoinCommand(),
-                new GulagForceStartCommand(),
-                new GulagHostCommand(),
-                new GulagHelpCommand(),
-                new GulagSetSpawnCommand(),
-                new GulagTpCommand(),
-                new GulagKnockbackCommand(),
+                //Wizard Commands
+                new WizardLeaveCommand(),
+                new WizardCancelCommand(),
+                new WizardCooldownCommand(),
+                new WizardJoinCommand(),
+                new WizardForceStartCommand(),
+                new WizardHostCommand(),
+                new WizardHelpCommand(),
+                new WizardSetSpawnCommand(),
+                new WizardTpCommand(),
+                new WizardKnockbackCommand(),
 
                 //Sumo commands
                 new SumoCancelCommand(),

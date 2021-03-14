@@ -1,6 +1,5 @@
 package me.drizzy.practice.profile;
 
-import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -19,13 +18,14 @@ import me.drizzy.practice.duel.DuelRequest;
 import me.drizzy.practice.event.types.brackets.Brackets;
 import me.drizzy.practice.event.types.brackets.player.BracketsPlayer;
 import me.drizzy.practice.event.types.brackets.player.BracketsPlayerState;
-import me.drizzy.practice.event.types.gulag.Gulag;
-import me.drizzy.practice.event.types.gulag.GulagState;
-import me.drizzy.practice.event.types.gulag.player.GulagPlayer;
-import me.drizzy.practice.event.types.gulag.player.GulagPlayerState;
+import me.drizzy.practice.event.types.wizard.Wizard;
+import me.drizzy.practice.event.types.wizard.player.WizardPlayer;
+import me.drizzy.practice.event.types.wizard.player.WizardPlayerState;
 import me.drizzy.practice.event.types.lms.LMS;
 import me.drizzy.practice.event.types.lms.player.LMSPlayer;
 import me.drizzy.practice.event.types.lms.player.LMSPlayerState;
+import me.drizzy.practice.event.types.oitc.OITC;
+import me.drizzy.practice.event.types.oitc.player.OITCPlayerState;
 import me.drizzy.practice.event.types.parkour.Parkour;
 import me.drizzy.practice.event.types.parkour.player.ParkourPlayer;
 import me.drizzy.practice.event.types.parkour.player.ParkourPlayerState;
@@ -42,17 +42,16 @@ import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.hotbar.Hotbar;
-import me.drizzy.practice.hotbar.HotbarItem;
+import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.hotbar.HotbarLayout;
-import me.drizzy.practice.profile.meta.ProfileKitEditor;
-import me.drizzy.practice.profile.meta.ProfileMatchHistory;
+import me.drizzy.practice.kiteditor.KitEditor;
 import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueProfile;
-import me.drizzy.practice.settings.meta.ProfileOptions;
-import me.drizzy.practice.statistics.ProfileKitData;
+import me.drizzy.practice.settings.meta.SettingsMeta;
+import me.drizzy.practice.statistics.StatisticsData;
 import me.drizzy.practice.tournament.Tournament;
-import me.drizzy.practice.util.CC;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.InventoryUtil;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.external.Cooldown;
@@ -62,125 +61,62 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import pt.foxspigot.jar.knockback.KnockbackModule;
-import pt.foxspigot.jar.knockback.KnockbackProfile;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class Profile {
-    @Getter
-    private static final Map<UUID, Profile> profiles = new HashMap<>();
-    @Getter
-    static final List<Player> playerList = new ArrayList<>();
-    @Getter
-    private static final List<KitLeaderboards> globalEloLeaderboards = new ArrayList<>();
-    @Getter
-    private static Map<Integer, String> eloLeagues = new HashMap<>();
-    @Getter
-    private static final Map<String, UUID> playerCache = new HashMap<>();
-    @Getter
-    private static MongoCollection<Document> allProfiles;
+    @Getter private static final Map<UUID, Profile> profiles = new HashMap<>();
+    @Getter static final List<Player> playerList = new ArrayList<>();
+    @Getter private static final List<KitLeaderboards> globalEloLeaderboards = new ArrayList<>();
+    @Getter private static Map<Integer, String> eloLeagues = new HashMap<>();
+    @Getter private static MongoCollection<Document> allProfiles;
     private static MongoCollection<Document> collection;
-    @Getter
-    private final ProfileOptions settings = new ProfileOptions();
-    @Getter
-    private final ProfileKitEditor kitEditor = new ProfileKitEditor();
-    @Getter
-    private final Map<Kit, ProfileKitData> kitData = new LinkedHashMap<>();
-    @Getter
-    @Setter
-    String name;
-    @Getter
-    @Setter
-    int globalElo = 1000;
-    @Getter
-    @Setter
-    int sumoRounds = 0;
-    @Getter
-    private final UUID uuid;
-    @Getter
-    @Setter
-    private ProfileState state;
-    @Getter
-    @Setter
-    private Party party;
-    @Getter
-    @Setter
-    private Match match;
-    @Getter
-    @Setter
-    private Sumo sumo;
-    @Getter
-    @Setter
-    private Brackets brackets;
-    @Getter
-    @Setter
-    private LMS lms;
-    @Getter
-    @Setter
-    private Parkour parkour;
-    @Getter
-    @Setter
-    private Gulag gulag;
-    @Getter
-    @Setter
-    private Spleef spleef;
-    @Getter
-    @Setter
-    private Queue queue;
-    @Getter
-    @Setter
-    private QueueProfile queueProfile;
-    @Getter
-    @Setter
-    private Cooldown enderpearlCooldown = new Cooldown(0);
-    @Getter
-    private final Map<UUID, DuelRequest> sentDuelRequests = new HashMap<>();
-    @Getter
-    @Setter
-    private DuelProcedure duelProcedure;
-    @Getter
-    @Setter
-    private ProfileRematchData rematchData;
-    @Getter
-    @Setter
-    private Player lastMessager;
-    @Getter
-    @Setter
-    private boolean silent = false;
-    @Getter
-    @Setter
-    private boolean followMode = false;
-    @Getter
-    @Setter
-    private boolean visibility = false;
+    @Getter private final SettingsMeta settings = new SettingsMeta();
+    @Getter private final KitEditor kitEditor = new KitEditor();
+    @Getter private final Map<Kit, StatisticsData> statisticsData= new LinkedHashMap<>();
+    @Getter @Setter String name;
+    @Getter @Setter int globalElo = 1000;
+    @Getter @Setter int bridgeRounds = 0;
+    @Getter @Setter int sumoRounds = 0;
+    @Getter private final UUID uuid;
+    @Getter @Setter private ProfileState state;
+    @Getter @Setter private Party party;
+    @Getter @Setter private Match match;
+    @Getter @Setter private Sumo sumo;
+    @Getter @Setter private Brackets brackets;
+    @Getter @Setter private LMS lms;
+    @Getter @Setter private Parkour parkour;
+    @Getter @Setter private Wizard wizard;
+    @Getter @Setter private OITC OITC;
+    @Getter @Setter private Spleef spleef;
+    @Getter @Setter private Queue queue;
+    @Getter @Setter private QueueProfile queueProfile;
+    @Getter @Setter private String hcfClass = "HCFDIAMOND";
+    @Getter @Setter private Cooldown enderpearlCooldown = new Cooldown(0);
+    @Getter @Setter private Cooldown wizardReloadCooldown = new Cooldown(0);
+    @Getter private final Map<UUID, DuelRequest> sentDuelRequests = new HashMap<>();
+    @Getter @Setter private DuelProcedure duelProcedure;
+    @Getter @Setter private ProfileRematchData rematchData;
+    @Getter @Setter private Player lastMessager;
+    @Getter @Setter private boolean silent = false;
+    @Getter @Setter private boolean followMode = false;
+    @Getter @Setter private boolean visibility = false;
     @Getter private final List<Location> plates = new ArrayList<>();
-    @Getter
-    @Setter
-    private Player following;
-    @Getter
-    @Setter
-    private long lastRunVisibility = 0L;
-    @Getter
-    @Setter
-    private List<Player> follower = new ArrayList<>();
-    @Getter
-    @Setter
-    private Player spectating;
-    @Getter
-    private List<ProfileMatchHistory> matchHistory = new ArrayList<>();
+    @Getter @Setter private Player following;
+    @Getter @Setter private long lastRunVisibility = 0L;
+    @Getter @Setter private List<Player> follower = new ArrayList<>();
+    @Getter @Setter private Player spectating;
 
     public Profile(UUID uuid) {
         this.uuid = uuid;
         this.state = ProfileState.IN_LOBBY;
 
         for (Kit kit : Kit.getKits()) {
-            this.kitData.put(kit, new ProfileKitData());
+            this.statisticsData.put(kit, new StatisticsData());
         }
         this.calculateGlobalElo();
     }
@@ -201,209 +137,6 @@ public class Profile {
 
             profiles.put(player.getUniqueId(), profile);
         }
-/*      BasicConfigurationFile config = Array.getInstance().getMainConfig();
-        String path = "ELO-Ranks.";
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1075, "Diamond 3");
-        getEloLeagues().put(1074, "Diamond 3");
-        getEloLeagues().put(1073, "Diamond 3");
-        getEloLeagues().put(1072, "Diamond 3");
-        getEloLeagues().put(1071, "Diamond 3");
-        getEloLeagues().put(1070, "Diamond 3");
-        getEloLeagues().put(1069, "Diamond 3");
-        getEloLeagues().put(1068, "Diamond 3");
-        getEloLeagues().put(1067, "Diamond 3");
-        getEloLeagues().put(1066, "Diamond 3");
-        getEloLeagues().put(1065, "Diamond 3");
-        getEloLeagues().put(1064, "Diamond 3");
-        getEloLeagues().put(1063, "Diamond 3");
-        getEloLeagues().put(1062, "Diamond 3");
-        getEloLeagues().put(1061, "Diamond 3");
-        getEloLeagues().put(1060, "Diamond 3");
-        getEloLeagues().put(1059, "Diamond 3");
-        getEloLeagues().put(1058, "Diamond 3");
-        getEloLeagues().put(1057, "Diamond 3");
-        getEloLeagues().put(1056, "Diamond 3");
-        getEloLeagues().put(1055, "Diamond 3");
-        getEloLeagues().put(1054, "Diamond 3");
-        getEloLeagues().put(1053, "Diamond 3");
-        getEloLeagues().put(1052, "Diamond 3");
-        getEloLeagues().put(1051, "Diamond 3");
-        getEloLeagues().put(1050, "Diamond 3");
-        getEloLeagues().put(1049, "Diamond 3");
-        getEloLeagues().put(1048, "Diamond 3");
-        getEloLeagues().put(1047, "Diamond 3");
-        getEloLeagues().put(1046, "Diamond 3");
-        getEloLeagues().put(1045, "Diamond 3");
-        getEloLeagues().put(1044, "Diamond 3");
-        getEloLeagues().put(1043, "Diamond 3");
-        getEloLeagues().put(1042, "Diamond 3");
-        getEloLeagues().put(1041, "Diamond 3");
-        getEloLeagues().put(1040, "Diamond 3");
-        getEloLeagues().put(1039, "Diamond 3");
-        getEloLeagues().put(1038, "Diamond 3");
-        getEloLeagues().put(1037, "Diamond 3");
-        getEloLeagues().put(1036, "Diamond 3");
-        getEloLeagues().put(1035, "Diamond 3");
-        getEloLeagues().put(1034, "Diamond 3");
-        getEloLeagues().put(1033, "Diamond 3");
-        getEloLeagues().put(1032, "Diamond 3");
-        getEloLeagues().put(1031, "Diamond 3");
-        getEloLeagues().put(1030, "Diamond 3");
-        getEloLeagues().put(1029, "Diamond 3");
-        getEloLeagues().put(1028, "Diamond 3");
-        getEloLeagues().put(1027, "Diamond 3");
-        getEloLeagues().put(1026, "Diamond 3");
-        getEloLeagues().put(1025, "Diamond 3");
-        getEloLeagues().put(1024, "Diamond 3");
-        getEloLeagues().put(1023, "Diamond 3");
-        getEloLeagues().put(1022, "Diamond 3");
-        getEloLeagues().put(1021, "Diamond 3");
-        getEloLeagues().put(1020, "Diamond 3");
-        getEloLeagues().put(1019, "Diamond 3");
-        getEloLeagues().put(1018, "Diamond 3");
-        getEloLeagues().put(1017, "Diamond 2");
-        getEloLeagues().put(1016, "Diamond 2");
-        getEloLeagues().put(1015, "Diamond 1");
-        getEloLeagues().put(1014, "Diamond 1");
-        getEloLeagues().put(1013, "Gold 3");
-        getEloLeagues().put(1012, "Gold 3");
-        getEloLeagues().put(1011, "Gold 2");
-        getEloLeagues().put(1010, config.getString(path + "1000-1010"));
-        getEloLeagues().put(1009, config.getString(path + "1000-1010"));
-        getEloLeagues().put(1008, config.getString(path + "1000-1010"));
-        getEloLeagues().put(1007, config.getString(path + "1000-1010"));
-        getEloLeagues().put(1006, config.getString(path + "1000-1010"));
-        getEloLeagues().put(1005, config.getString(path + "1000-1010"));
-        getEloLeagues().put(1004, config.getString(path + "1000-1010"));
-        getEloLeagues().put(1003, config.getString(path + "1000-1010"));
-        getEloLeagues().put(1002, config.getString(path + "1000-1010"));
-        getEloLeagues().put(1001, config.getString(path + "1000-1010"));
-        getEloLeagues().put(1000, config.getString(path + "1000-1010"));
-        getEloLeagues().put(999, config.getString(path + "998-999"));
-        getEloLeagues().put(998, config.getString(path + "998-999"));
-        getEloLeagues().put(997, config.getString(path + "996-997"));
-        getEloLeagues().put(996, config.getString(path + "996-997"));
-        getEloLeagues().put(995, config.getString(path + "994-995"));
-        getEloLeagues().put(994, config.getString(path + "994-995"));
-        getEloLeagues().put(993, config.getString(path + "992-993"));
-        getEloLeagues().put(992, config.getString(path + "992-993"));
-        getEloLeagues().put(991, config.getString(path + "0-991"));
-        getEloLeagues().put(990, config.getString(path + "0-991")); */
         getEloLeagues().put(1019, "Diamond III");
         getEloLeagues().put(1018, "Diamond III");
         getEloLeagues().put(1017, "Diamond II");
@@ -458,13 +191,6 @@ public class Profile {
             }
         }.runTaskTimerAsynchronously(Array.getInstance(), 600L, 600L);
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-            Bukkit.broadcastMessage(CC.translate("&8[&b&oWarning&8] &7Updating Leaderboards, this might cause some lag..."));
-            }
-        }.runTaskTimerAsynchronously(Array.getInstance(), 6000L, 6000L);
-
         // Reload global elo leaderboards
         new BukkitRunnable() {
             @Override
@@ -508,6 +234,9 @@ public class Profile {
         allProfiles = Array.getInstance().getMongoDatabase().getCollection("profiles");
     }
 
+
+    //TODO: Change mongo to mysql and sql-lite (For beta 4.3)
+
     public static void loadGlobalLeaderboards() {
         if (!getGlobalEloLeaderboards().isEmpty()) getGlobalEloLeaderboards().clear();
         for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("globalElo")).limit(10).into(new ArrayList<>())) {
@@ -546,18 +275,33 @@ public class Profile {
             Kit kit = Kit.getByName(key);
 
             if (kit != null) {
-                ProfileKitData profileKitData = new ProfileKitData();
-                profileKitData.setElo(kitDocument.getInteger("elo"));
-                profileKitData.setWon(kitDocument.getInteger("unrankedWon"));
-                profileKitData.setLost(kitDocument.getInteger("unrankedLost"));
+                StatisticsData statisticsData= new StatisticsData();
+                if (kitDocument.getInteger("elo") !=null) {
+                    statisticsData.setElo(kitDocument.getInteger("elo"));
+                } else {
+                    kitDocument.put("elo" ,0);
+                }
+                if(kitDocument.getInteger("won") !=null) {
+                    statisticsData.setWon(kitDocument.getInteger("won"));
+                } else {
+                    kitDocument.put("won", 0);
+                }
+                if(kitDocument.getInteger("lost") !=null) {
+                    statisticsData.setLost(kitDocument.getInteger("lost"));
+                } else {
+                    kitDocument.put("lost", 0);
+                }
                 if (kitDocument.getInteger("kills") !=null) {
-                    profileKitData.setKills(kitDocument.getInteger("kills"));
+                    statisticsData.setKills(kitDocument.getInteger("kills"));
+                } else {
+                    kitDocument.put("kills", 0);
                 }
                 if (kitDocument.getInteger("deaths") !=null) {
-                    profileKitData.setDeaths(kitDocument.getInteger("deaths"));
+                    statisticsData.setDeaths(kitDocument.getInteger("deaths"));
+                } else {
+                    kitDocument.put("deaths", 0);
                 }
-
-                kitData.put(kit, profileKitData);
+                this.statisticsData.put(kit, statisticsData);
             }
         }
 
@@ -580,20 +324,7 @@ public class Profile {
                     loadouts[kitObject.get("index").getAsInt()] = loadout;
                 }
 
-                kitData.get(kit).setLoadouts(loadouts);
-            }
-        }
-
-        this.matchHistory = Lists.newArrayList();
-
-        if (document.containsKey("matchHistory")) {
-            List<Document> matchHistoryDocument = (List<Document>) document.get("matchHistory");
-            for (Document children : matchHistoryDocument) {
-                try {
-                    this.matchHistory.add(new ProfileMatchHistory(children));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                statisticsData.get(kit).setLoadouts(loadouts);
             }
         }
     }
@@ -617,26 +348,20 @@ public class Profile {
 
         Document kitStatisticsDocument = new Document();
 
-        for (Map.Entry<Kit, ProfileKitData> entry : kitData.entrySet()) {
+        for (Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet()) {
             Document kitDocument = new Document();
             kitDocument.put("elo", entry.getValue().getElo());
-            kitDocument.put("unrankedWon", entry.getValue().getWon());
-            kitDocument.put("unrankedLost", entry.getValue().getLost());
+            kitDocument.put("won", entry.getValue().getWon());
+            kitDocument.put("lost", entry.getValue().getLost());
             kitDocument.put("kills", entry.getValue().getKills());
             kitDocument.put("deaths", entry.getValue().getDeaths());
             kitStatisticsDocument.put(entry.getKey().getName(), kitDocument);
         }
         document.put("kitStatistics", kitStatisticsDocument);
 
-        List<Document> matchHistoryDocument = Lists.newArrayList();
-        for (ProfileMatchHistory history : matchHistory) {
-            matchHistoryDocument.add(history.toDocument());
-        }
-        document.put("matchHistory", matchHistoryDocument);
-
         Document kitsDocument = new Document();
 
-        for (Map.Entry<Kit, ProfileKitData> entry : kitData.entrySet()) {
+        for (Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet()) {
             JsonArray kitsArray = new JsonArray();
 
             for (int i = 0; i < 4; i++) {
@@ -663,9 +388,9 @@ public class Profile {
     public void calculateGlobalElo() {
         int globalElo = 0;
         int kitCounter = 0;
-        for (Kit kit : this.kitData.keySet()) {
+        for (Kit kit : this.statisticsData.keySet()) {
             if (kit.getGameRules().isRanked()) {
-                globalElo += this.kitData.get(kit).getElo();
+                globalElo += this.statisticsData.get(kit).getElo();
                 kitCounter++;
             }
         }
@@ -685,29 +410,19 @@ public class Profile {
     }
 
     public Integer getTotalWins() {
-        return this.kitData.values().stream().mapToInt(ProfileKitData::getWon).sum();
+        return this.statisticsData.values().stream().mapToInt(StatisticsData::getWon).sum();
     }
 
     public Integer getTotalLost() {
-        return this.kitData.values().stream().mapToInt(ProfileKitData::getLost).sum();
+        return this.statisticsData.values().stream().mapToInt(StatisticsData::getLost).sum();
     }
 
     public Integer getTotalDeaths() {
-        return this.kitData.values().stream().mapToInt(ProfileKitData::getDeaths).sum();
+        return this.statisticsData.values().stream().mapToInt(StatisticsData::getDeaths).sum();
     }
 
     public Integer getTotalKills() {
-        return this.kitData.values().stream().mapToInt(ProfileKitData::getKills).sum();
-    }
-
-    public void addMatchHistory(ProfileMatchHistory profileMatchHistory) {
-        while (matchHistory.size() > 54) {
-            matchHistory.remove(0);
-        }
-        while (matchHistory.size() > 53) {
-            matchHistory.remove(0);
-        }
-        matchHistory.add(profileMatchHistory);
+        return this.statisticsData.values().stream().mapToInt(StatisticsData::getKills).sum();
     }
 
     public Player getPlayer() {
@@ -764,8 +479,8 @@ public class Profile {
         return state == ProfileState.SPECTATE_MATCH && (
                 match != null || sumo != null ||
                 brackets != null || lms != null ||
-                parkour != null || gulag !=null ||
-                spleef != null);
+                parkour != null || wizard !=null ||
+                OITC !=null || spleef != null);
     }
 
     public boolean isInEvent() {
@@ -800,8 +515,12 @@ public class Profile {
         return state == ProfileState.IN_EVENT && spleef != null;
     }
 
-    public boolean isInGulag() {
-        return state == ProfileState.IN_EVENT && gulag !=null;
+    public boolean isInWizard() {
+        return state == ProfileState.IN_EVENT && wizard !=null;
+    }
+
+    public boolean isInOITC() {
+        return state == ProfileState.IN_EVENT && OITC != null;
     }
 
     public boolean isInSomeSortOfFight() {
@@ -842,31 +561,32 @@ public class Profile {
                     } else if (!this.rematchData.getKey().equals(this.getRematchData().getKey())) {
                         this.rematchData=null;
                         update=true;
-                    }// else if (this.rematchData.isReceive()) {
-                        ///int requestSlot = player.getInventory().first(Hotbar.getItems().get(HotbarItem.REMATCH_ACCEPT));
+                    } else if (this.rematchData.isReceive()) {
+                        int requestSlot=player.getInventory().first(Hotbar.getItems().get(HotbarType.REMATCH_ACCEPT));
 
-                        /*if (requestSlot != -1) {
-                            update = true;
-                        }*/
+                        if (requestSlot != -1) {
+                            update=true;
+                        }
+                    }
+                }
+
+                {
+                    boolean activeEvent=(Array.getInstance().getSumoManager().getActiveSumo() != null && Array.getInstance().getSumoManager().getActiveSumo().isWaiting())
+                            || (Array.getInstance().getBracketsManager().getActiveBrackets() != null && Array.getInstance().getBracketsManager().getActiveBrackets().isWaiting())
+                            || (Array.getInstance().getLMSManager().getActiveLMS() != null && Array.getInstance().getLMSManager().getActiveLMS().isWaiting())
+                            || (Array.getInstance().getParkourManager().getActiveParkour() != null && Array.getInstance().getParkourManager().getActiveParkour().isWaiting())
+                            || (Array.getInstance().getWizardManager().getActiveWizard() != null && Array.getInstance().getWizardManager().getActiveWizard().isWaiting())
+                            || (Array.getInstance().getOITCManager().getActiveOITC() != null && Array.getInstance().getOITCManager().getActiveOITC().isWaiting())
+                            || (Array.getInstance().getSpleefManager().getActiveSpleef() != null && Array.getInstance().getSpleefManager().getActiveSpleef().isWaiting());
+                    int eventSlot=player.getInventory().first(Hotbar.getItems().get(HotbarType.EVENT_JOIN));
+
+                    if (eventSlot == -1 && activeEvent) {
+                        update=true;
+                    } else if (eventSlot != -1 && !activeEvent) {
+                        update=true;
+                    }
                 }
             }
-
-            {
-                boolean activeEvent = (Array.getInstance().getSumoManager().getActiveSumo() != null && Array.getInstance().getSumoManager().getActiveSumo().isWaiting())
-                        || (Array.getInstance().getBracketsManager().getActiveBrackets() != null && Array.getInstance().getBracketsManager().getActiveBrackets().isWaiting())
-                        || (Array.getInstance().getLMSManager().getActiveLMS() != null && Array.getInstance().getLMSManager().getActiveLMS().isWaiting())
-                        || (Array.getInstance().getParkourManager().getActiveParkour() != null && Array.getInstance().getParkourManager().getActiveParkour().isWaiting())
-                        || (Array.getInstance().getGulagManager().getActiveGulag() != null && Array.getInstance().getGulagManager().getActiveGulag().isWaiting())
-                        || (Array.getInstance().getSpleefManager().getActiveSpleef() != null && Array.getInstance().getSpleefManager().getActiveSpleef().isWaiting());
-                int eventSlot = player.getInventory().first(Hotbar.getItems().get(HotbarItem.EVENT_JOIN));
-
-                if (eventSlot == -1 && activeEvent) {
-                    update = true;
-                } else if (eventSlot != -1 && !activeEvent) {
-                    update = true;
-                }
-            }
-
             if (update) {
                 new BukkitRunnable() {
                     @Override
@@ -916,8 +636,13 @@ public class Profile {
                     PlayerUtil.spectator(player);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SPLEEF_SPECTATE, this));
-            } else if(isInGulag()) {
-                if (getGulag().getEventPlayer(player).getState().equals(GulagPlayerState.ELIMINATED)) {
+            } else if (isInOITC()) {
+                if (getOITC().getEventPlayer(player).getState().equals(OITCPlayerState.ELIMINATED)) {
+                    PlayerUtil.spectator(player);
+                }
+                player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.OITC_SPECTATE, this));
+            } else if(isInWizard()) {
+                if (getWizard().getEventPlayer(player).getState().equals(WizardPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.GULAG_SPECTATE, this));
@@ -975,9 +700,9 @@ public class Profile {
                 if (bracketsPlayer != null && bracketsPlayer.getState() == BracketsPlayerState.WAITING) {
                     hide = false;
                 }
-            } else if (gulag != null) {
-                GulagPlayer gulagPlayer = gulag.getEventPlayer(otherPlayer);
-                if (gulagPlayer != null && gulagPlayer.getState() == GulagPlayerState.WAITING) {
+            } else if (wizard != null) {
+                WizardPlayer wizardPlayer = wizard.getEventPlayer(otherPlayer);
+                if (wizardPlayer != null && wizardPlayer.getState() == WizardPlayerState.WAITING) {
                     hide = false;
                 }
             } else if (lms != null) {
@@ -1014,9 +739,9 @@ public class Profile {
                 if (bracketsPlayer != null && bracketsPlayer.getState() == BracketsPlayerState.WAITING) {
                     hide = false;
                 }
-            } else if (gulag != null) {
-                GulagPlayer gulagPlayer = gulag.getEventPlayer(otherPlayer);
-                if (gulagPlayer != null && gulagPlayer.getState() == GulagPlayerState.WAITING) {
+            } else if (wizard != null) {
+                WizardPlayer wizardPlayer = wizard.getEventPlayer(otherPlayer);
+                if (wizardPlayer != null && wizardPlayer.getState() == WizardPlayerState.WAITING) {
                     hide = false;
                 }
             } else if (lms != null) {
@@ -1070,8 +795,7 @@ public class Profile {
     }
 
     public static void setKb(Player player, String kb) {
-        KnockbackProfile knockbackProfile =KnockbackModule.INSTANCE.profiles.get(kb);
-        ((CraftPlayer)player).getHandle().setKnockback(knockbackProfile);
+       Array.getInstance().getKnockbackManager().getKnockbackType().applyKnockback(player, kb);
     }
 
     public void setEnderpearlCooldown(Cooldown cooldown) {
@@ -1087,11 +811,16 @@ public class Profile {
         }
     }
 
-    public static UUID getUUID(String name) {
-        UUID uuid = null;
-        if (Profile.getPlayerCache().containsKey(name)) {
-            uuid = Profile.getPlayerCache().get(name);
+    public void setWizardCooldown(Cooldown cooldown) {
+        this.wizardReloadCooldown = cooldown;
+
+        try {
+            final Player player = this.getPlayer();
+            if (player != null) {
+                LunarClientAPI.getInstance().sendCooldown(player, new LCCooldown("Reload", cooldown.getDuration(), TimeUnit.MILLISECONDS, Material.DIAMOND_HOE));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return uuid;
     }
 }
