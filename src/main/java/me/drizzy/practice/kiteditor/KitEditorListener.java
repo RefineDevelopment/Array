@@ -17,7 +17,11 @@ import org.bukkit.inventory.Inventory;
 
 public class KitEditorListener implements Listener {
 
+<<<<<<< Updated upstream
     @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+=======
+    @EventHandler(priority=EventPriority.LOWEST, ignoreCancelled=true)
+>>>>>>> Stashed changes
     public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
         Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
 
@@ -37,7 +41,11 @@ public class KitEditorListener implements Listener {
                 new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(event.getPlayer());
             }
 
+<<<<<<< Updated upstream
             profile.getKitEditor().getSelectedKitLoadout().setCustomName(event.getMessage());
+=======
+            profile.getKitEditor().getSelectedKitInventory().setCustomName(event.getMessage());
+>>>>>>> Stashed changes
             profile.getKitEditor().setActive(false);
             profile.getKitEditor().setRename(false);
             profile.getKitEditor().setSelectedKit(null);
@@ -61,7 +69,11 @@ public class KitEditorListener implements Listener {
             Profile profile=Profile.getByUuid(player.getUniqueId());
 
             if (!profile.isInSomeSortOfFight() && player.getGameMode() == GameMode.SURVIVAL) {
+<<<<<<< Updated upstream
                 if (!profile.isInBrackets() && !profile.isInLMS()) {
+=======
+                if (!profile.isInBrackets() && !profile.isInLMS() && !profile.isInWizard() && !profile.isInEvent()) {
+>>>>>>> Stashed changes
                     Inventory clicked=event.getClickedInventory();
 
                     if (profile.getKitEditor().isActive()) {
@@ -78,14 +90,28 @@ public class KitEditorListener implements Listener {
                                 event.setCursor(null);
                                 player.updateInventory();
                             }
+<<<<<<< Updated upstream
                         }
                     } else {
                         if (clicked != null && clicked.equals(player.getInventory())) {
                             event.setCancelled(true);
+=======
+                        } else {
+                            if (clicked.equals(player.getInventory())) {
+                                event.setCancelled(true);
+                            }
+>>>>>>> Stashed changes
                         }
                     }
                 }
             }
+<<<<<<< Updated upstream
         }
     }
 }
+=======
+
+        }
+    }
+}
+>>>>>>> Stashed changes

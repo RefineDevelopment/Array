@@ -26,7 +26,11 @@ public class Kit {
 
     @Getter private static final List<Kit> kits = new ArrayList<>();
     private final String name;
+<<<<<<< Updated upstream
     private final KitLoadout kitLoadout = new KitLoadout();
+=======
+    private final KitInventory kitInventory= new KitInventory();
+>>>>>>> Stashed changes
     private final KitEditRules editRules = new KitEditRules();
     private final KitGameRules gameRules = new KitGameRules();
     @Setter private Queue unrankedQueue;
@@ -75,15 +79,15 @@ public class Kit {
                     .build());
 
             if (config.contains(path + ".loadout.armor")) {
-                kit.getKitLoadout().setArmor(InventoryUtil.deserializeInventory(config.getString(path + ".loadout.armor")));
+                kit.getKitInventory().setArmor(InventoryUtil.deserializeInventory(config.getString(path + ".loadout.armor")));
             }
 
             if (config.contains(path + ".loadout.contents")) {
-                kit.getKitLoadout().setContents(InventoryUtil.deserializeInventory(config.getString(path + ".loadout.contents")));
+                kit.getKitInventory().setContents(InventoryUtil.deserializeInventory(config.getString(path + ".loadout.contents")));
             }
 
             if (config.contains(path + ".loadout.effects")) {
-                kit.getKitLoadout().setEffects(InventoryUtil.deserializeEffects(config.getString(path + ".loadout.effects")));
+                kit.getKitInventory().setEffects(InventoryUtil.deserializeEffects(config.getString(path + ".loadout.effects")));
             }
 
             kit.getGameRules().setRanked(config.getBoolean(path + ".game-rules.ranked"));
@@ -100,7 +104,7 @@ public class Kit {
             kit.getGameRules().setCombo(config.getBoolean(path + ".game-rules.combo"));
             kit.getGameRules().setStickspawn(config.getBoolean(path + ".game-rules.stickspawn"));
             kit.getGameRules().setVoidspawn(config.getBoolean(path + ".game-rules.voidspawn"));
-            kit.getGameRules().setNetheruhc(config.contains(path + ".game-rules.netheruhc"));
+            //kit.getGameRules().setNetheruhc(config.contains(path + ".game-rules.netheruhc"));
             kit.getGameRules().setSumo(config.getBoolean(path + ".game-rules.sumo"));
             kit.getGameRules().setBoxuhc(config.getBoolean(path + ".game-rules.boxuhc"));
             kit.getGameRules().setTimed(config.getBoolean(path + ".game-rules.timed"));
@@ -161,9 +165,9 @@ public class Kit {
         configFile.getConfiguration().set(path + ".knockback-profile", knockbackProfile);
         configFile.getConfiguration().set(path + ".icon.material", displayIcon.getType().name());
         configFile.getConfiguration().set(path + ".icon.durability", displayIcon.getDurability());
-        configFile.getConfiguration().set(path + ".loadout.armor", InventoryUtil.serializeInventory(kitLoadout.getArmor()));
-        configFile.getConfiguration().set(path + ".loadout.contents", InventoryUtil.serializeInventory(kitLoadout.getContents()));
-        configFile.getConfiguration().set(path + ".loadout.effects", InventoryUtil.serializeEffects(kitLoadout.getEffects()));
+        configFile.getConfiguration().set(path + ".loadout.armor", InventoryUtil.serializeInventory(kitInventory.getArmor()));
+        configFile.getConfiguration().set(path + ".loadout.contents", InventoryUtil.serializeInventory(kitInventory.getContents()));
+        configFile.getConfiguration().set(path + ".loadout.effects", InventoryUtil.serializeEffects(kitInventory.getEffects()));
         configFile.getConfiguration().set(path + ".game-rules.ranked", gameRules.isRanked());
         configFile.getConfiguration().set(path + ".game-rules.partyffa", gameRules.isPartyffa());
         configFile.getConfiguration().set(path + ".game-rules.partysplit", gameRules.isPartysplit());
@@ -175,7 +179,7 @@ public class Kit {
         configFile.getConfiguration().set(path + ".game-rules.bridge", gameRules.isBridge());
         configFile.getConfiguration().set(path + ".game-rules.spleef", gameRules.isSpleef());
         configFile.getConfiguration().set(path + ".game-rules.parkour", gameRules.isParkour());
-        configFile.getConfiguration().set(path + ".game-rules.netheruhc", gameRules.isNetheruhc());
+        //configFile.getConfiguration().set(path + ".game-rules.netheruhc", gameRules.isNetheruhc());
         configFile.getConfiguration().set(path + ".game-rules.stickspawn", gameRules.isStickspawn());
         configFile.getConfiguration().set(path + ".game-rules.voidspawn", gameRules.isVoidspawn());
         configFile.getConfiguration().set(path + ".game-rules.combo", gameRules.isCombo());
@@ -222,6 +226,7 @@ public class Kit {
                 this.getWinLeaderboards().add(kitLeaderboards);
             }
         }
+<<<<<<< Updated upstream
         if (!this.getKillsLeaderboards().isEmpty()) this.getKillsLeaderboards().clear();
         for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("kitStatistics." + getName() + ".kills")).limit(10).into(new ArrayList<>())) {
             Document kitStatistics = (Document) document.get("kitStatistics");
@@ -233,6 +238,8 @@ public class Kit {
                 this.getKillsLeaderboards().add(kitLeaderboards);
             }
         }
+=======
+>>>>>>> Stashed changes
     }
 
 }

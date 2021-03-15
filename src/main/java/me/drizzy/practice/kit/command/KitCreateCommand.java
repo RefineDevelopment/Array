@@ -14,7 +14,7 @@ public class KitCreateCommand {
 
     public void execute(Player player, String kitName) {
         if (Kit.getByName(kitName) != null) {
-            player.sendMessage((CC.translate("&8[&b&lArray&8] &c")) + "A kit with that name already exists.");
+            player.sendMessage(CC.translate("&8[&b&lArray&8] &7A kit with that name already exists."));
             return;
         }
         Kit kit = new Kit(kitName);
@@ -32,7 +32,7 @@ public class KitCreateCommand {
             kit.setRankedQueue(ranked);
         }
 
-        player.sendMessage((CC.translate("&8[&b&lArray&8] &a")) + "You created a new kit.");
+        player.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully created a new kit &b" + kit.getDisplayName() + "."));
     }
 
 }

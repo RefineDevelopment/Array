@@ -42,12 +42,18 @@ public class WizardRoundStartTask extends WizardTask {
 
 			if (playerA != null) {
 				playerA.playSound(playerA.getLocation(), Sound.NOTE_PLING, 1.0F, 1.0F);
+<<<<<<< Updated upstream
 				playerA.setAllowFlight(true);
+=======
+>>>>>>> Stashed changes
 			}
 
 			if (playerB != null) {
 				playerB.playSound(playerB.getLocation(), Sound.NOTE_PLING, 1.0F, 1.0F);
+<<<<<<< Updated upstream
 				playerB.setAllowFlight(true);
+=======
+>>>>>>> Stashed changes
 			}
 
 			this.getWizard().broadcastMessage("&b" + seconds + "...");

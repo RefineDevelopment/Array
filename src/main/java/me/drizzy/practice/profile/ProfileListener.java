@@ -68,20 +68,9 @@ public class ProfileListener implements Listener {
                 if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
                     if (!e.getPlayer().isOp()) {
                         e.setCancelled(true);
-                        return;
                     }
                 }
             }
-
-            if (e.getClickedBlock().getState() instanceof Sign) {
-                Sign sign = (Sign) e.getClickedBlock().getState();
-                if (sign.getLine(1) != null && sign.getLine(1).contains("[Click Here]")) {
-                    if (sign.getLine(2).toLowerCase().contains("back to spawn")) {
-                        Essentials.teleportToSpawn(e.getPlayer());
-                    }
-                }
-            }
-
         }
     }
 
@@ -257,9 +246,10 @@ public class ProfileListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         event.setJoinMessage(null);
-        Player player=event.getPlayer();
+        Player player = event.getPlayer();
         Profile.getPlayerList().add(player);
-        Profile profile=new Profile(player.getUniqueId());
+        Profile profile = new Profile(player.getUniqueId());
+        //TODO: Clean this up
         TaskUtil.runAsync(() -> {
             for ( Profile other : Profile.getProfiles().values() ) {
                 other.handleVisibility();
@@ -275,10 +265,13 @@ public class ProfileListener implements Listener {
                 return;
             }
             Profile.getProfiles().put(player.getUniqueId(), profile);
-            profile.setName(event.getPlayer().getName());
+            profile.setName(player.getName());
             Essentials.teleportToSpawn(player);
+            profile.getKitEditor().setActive(false);
+            profile.getKitEditor().setRename(false);
             profile.refreshHotbar();
         });
+        //Visibility Bug Fix :)
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -286,6 +279,7 @@ public class ProfileListener implements Listener {
             }
         }.runTaskLaterAsynchronously(Array.getInstance(), 5L);
 
+        //TODO: Remove this with a NameTagHandler Thread
         for(Player ps : Bukkit.getOnlinePlayers()) {
             NameTags.color(player, ps, ChatColor.GREEN, false);
             if (!Profile.getByUuid(ps).isBusy(ps) && !Profile.getByUuid(ps).isInSomeSortOfFight()) {
@@ -301,14 +295,26 @@ public class ProfileListener implements Listener {
         Profile profile=Profile.getProfiles().get(event.getPlayer().getUniqueId());
         Profile.getPlayerList().remove(event.getPlayer());
         if (profile.getMatch() != null) {
+<<<<<<< Updated upstream
             profile.getMatch().handleDeath(event.getPlayer(), profile.getMatch().getOpponentPlayer(event.getPlayer()), true);
+=======
+            if (profile.getMatch().isSoloMatch() || profile.getMatch().isSumoMatch() || profile.getMatch().isTheBridgeMatch()) {
+                profile.getMatch().handleDeath(event.getPlayer(), profile.getMatch().getOpponentPlayer(event.getPlayer()), true);
+            } else {
+                profile.getMatch().handleDeath(event.getPlayer(), profile.getMatch().getOpponentTeam(event.getPlayer()).getLeader().getPlayer(), true);
+            }
+>>>>>>> Stashed changes
         }
         if (profile.isInQueue()) {
             profile.getQueue().removePlayer(profile.getQueueProfile());
         }
         profile.save();
         if (profile.getRematchData() != null) {
+<<<<<<< Updated upstream
             Player target=Array.getInstance().getServer().getPlayer(profile.getRematchData().getTarget());
+=======
+            Player target = Array.getInstance().getServer().getPlayer(profile.getRematchData().getTarget());
+>>>>>>> Stashed changes
             if (target != null && target.isOnline()) {
                 Profile.getByUuid(target.getUniqueId()).checkForHotbarUpdate();
             }

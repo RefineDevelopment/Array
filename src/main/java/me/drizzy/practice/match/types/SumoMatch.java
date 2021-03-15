@@ -5,8 +5,6 @@ import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.array.essentials.Essentials;
-import pt.foxspigot.jar.knockback.KnockbackModule;
-import pt.foxspigot.jar.knockback.KnockbackProfile;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.kit.Kit;

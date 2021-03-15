@@ -42,6 +42,10 @@ public class TheBridgeMatch extends Match {
 
     @Setter private TeamPlayer playerA;
     @Setter private TeamPlayer playerB;
+<<<<<<< Updated upstream
+=======
+    @Getter private final List<Player> bridgePlayers = new ArrayList<>();
+>>>>>>> Stashed changes
 
     public TheBridgeMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
         super(queue, kit, arena, queueType);
@@ -112,8 +116,14 @@ public class TheBridgeMatch extends Match {
             player.teleport(spawn.add(0, 2, 0));
         }
         teamPlayer.setPlayerSpawn(spawn);
+<<<<<<< Updated upstream
         player.getInventory().setArmorContents(getKit().getKitLoadout().getArmor());
         player.getInventory().setContents(getKit().getKitLoadout().getContents());
+=======
+        player.getInventory().setArmorContents(getKit().getKitInventory().getArmor());
+        player.getInventory().setContents(getKit().getKitInventory().getContents());
+        giveBridgeKit(player);
+>>>>>>> Stashed changes
         NameTags.color(player, getOpponentPlayer(player), org.bukkit.ChatColor.RED, getKit().getGameRules().isBuild());
 
     }
@@ -125,7 +135,10 @@ public class TheBridgeMatch extends Match {
 
     @Override
     public void onStart() {
+<<<<<<< Updated upstream
         this.getPlayers().forEach(TheBridgeMatch::giveBridgeKit);
+=======
+>>>>>>> Stashed changes
     }
 
     @Override

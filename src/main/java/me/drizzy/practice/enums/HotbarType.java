@@ -30,8 +30,13 @@ public enum HotbarType
     SPLEEF_LEAVE("spleef leave"),
     REMATCH_REQUEST("rematch"), 
     REMATCH_ACCEPT("rematch"),
+<<<<<<< Updated upstream
     GULAG_EVENT(null),
     GULAG_LEAVE("wizard leave"),
+=======
+    WIZARD_WAND(null),
+    WIZARD_LEAVE("wizard leave"),
+>>>>>>> Stashed changes
     OITC_LEAVE("oitc leave"),
     OITC_KIT(null),
     DEFAULT_KIT(null), 

@@ -3,7 +3,11 @@ package me.drizzy.practice.event.types.oitc;
 import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.event.types.oitc.player.OITCPlayerState;
 import me.drizzy.practice.hotbar.Hotbar;
+<<<<<<< Updated upstream
 import me.drizzy.practice.kit.KitLoadout;
+=======
+import me.drizzy.practice.kit.KitInventory;
+>>>>>>> Stashed changes
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
@@ -172,11 +176,19 @@ public class OITCListener implements Listener {
                 }
                 if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
                     if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DEFAULT_KIT))) {
+<<<<<<< Updated upstream
                         KitLoadout kitLoadout = profile.getOITC().getKit().getKitLoadout();
                         event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                         event.getPlayer().getInventory().setContents(kitLoadout.getContents());
                         event.getPlayer().getActivePotionEffects().clear();
                         event.getPlayer().addPotionEffects(profile.getOITC().getKit().getKitLoadout().getEffects());
+=======
+                        KitInventory kitInventory= profile.getOITC().getKit().getKitInventory();
+                        event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                        event.getPlayer().getInventory().setContents(kitInventory.getContents());
+                        event.getPlayer().getActivePotionEffects().clear();
+                        event.getPlayer().addPotionEffects(profile.getOITC().getKit().getKitInventory().getEffects());
+>>>>>>> Stashed changes
                         event.getPlayer().updateInventory();
                         event.setCancelled(true);
                         return;
@@ -189,12 +201,21 @@ public class OITCListener implements Listener {
                     if (displayName.startsWith("Kit: ")) {
                         String kitName = displayName.replace("Kit: ", "");
 
+<<<<<<< Updated upstream
                         for (KitLoadout kitLoadout : profile.getStatisticsData().get(profile.getOITC().getKit()).getLoadouts()) {
                             if (kitLoadout != null && ChatColor.stripColor(kitLoadout.getCustomName()).equals(kitName)) {
                                 event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                                 event.getPlayer().getInventory().setContents(kitLoadout.getContents());
                                 event.getPlayer().getActivePotionEffects().clear();
                                 event.getPlayer().addPotionEffects(profile.getOITC().getKit().getKitLoadout().getEffects());
+=======
+                        for ( KitInventory kitInventory : profile.getStatisticsData().get(profile.getOITC().getKit()).getLoadouts()) {
+                            if (kitInventory != null && ChatColor.stripColor(kitInventory.getCustomName()).equals(kitName)) {
+                                event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                                event.getPlayer().getInventory().setContents(kitInventory.getContents());
+                                event.getPlayer().getActivePotionEffects().clear();
+                                event.getPlayer().addPotionEffects(profile.getOITC().getKit().getKitInventory().getEffects());
+>>>>>>> Stashed changes
                                 event.getPlayer().updateInventory();
                                 event.setCancelled(true);
                                 return;

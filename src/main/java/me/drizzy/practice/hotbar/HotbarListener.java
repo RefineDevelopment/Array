@@ -4,6 +4,7 @@ import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.event.menu.ActiveEventSelectEventMenu;
 import me.drizzy.practice.event.types.lms.LMS;
 import me.drizzy.practice.event.types.parkour.Parkour;
+import me.drizzy.practice.event.types.wizard.Wizard;
 import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.event.types.brackets.Brackets;
@@ -215,6 +216,19 @@ public class HotbarListener implements Listener
                     Array.getInstance().getParkourManager().getActiveParkour().handleLeave(player);
                     break;
                 }
+                case WIZARD_LEAVE: {
+                    final Wizard activeWizard = Array.getInstance().getWizardManager().getActiveWizard();
+                    if (activeWizard == null) {
+                        player.sendMessage(CC.RED + "There is no active Wizard.");
+                        return;
+                    }
+                    if (!profile.isInParkour() || !activeWizard.getEventPlayers().containsKey(player.getUniqueId())) {
+                        player.sendMessage(CC.RED + "You are not apart of the active Wizard.");
+                        return;
+                    }
+                    Array.getInstance().getWizardManager().getActiveWizard().handleLeave(player);
+                    break;
+                }
                 case PARKOUR_SPAWN: {
                     final Parkour activeParkour = Array.getInstance().getParkourManager().getActiveParkour();
                     if (activeParkour == null) {
@@ -250,10 +264,6 @@ public class HotbarListener implements Listener
                         profile.getMatch().getTeamPlayer(player).setDisconnected(true);
                         profile.setState(ProfileState.IN_LOBBY);
                         profile.setMatch(null);
-                        break;
-                    }
-                    if (profile.getState() == ProfileState.SPECTATE_TOURNAMENT) {
-                        //TODO: Add Tournament Spectate
                         break;
                     }
                     if (!profile.isSpectating()) {

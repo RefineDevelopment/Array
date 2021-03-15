@@ -2,13 +2,15 @@ package me.drizzy.practice.event.types.sumo.task;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.kit.Kit;
+<<<<<<< Updated upstream
 import pt.foxspigot.jar.knockback.KnockbackModule;
 import pt.foxspigot.jar.knockback.KnockbackProfile;
+=======
+>>>>>>> Stashed changes
 import me.drizzy.practice.event.types.sumo.Sumo;
 import me.drizzy.practice.event.types.sumo.SumoState;
 import me.drizzy.practice.event.types.sumo.SumoTask;
 import me.drizzy.practice.util.external.Cooldown;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class SumoStartTask extends SumoTask {

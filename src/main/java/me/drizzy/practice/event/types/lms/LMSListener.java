@@ -1,7 +1,7 @@
 package me.drizzy.practice.event.types.lms;
 
 import me.drizzy.practice.event.types.lms.player.LMSPlayerState;
-import me.drizzy.practice.kit.KitLoadout;
+import me.drizzy.practice.kit.KitInventory;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.enums.HotbarType;
@@ -172,11 +172,17 @@ public class LMSListener implements Listener {
                 }
                 if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
                     if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DEFAULT_KIT))) {
+<<<<<<< Updated upstream
                         KitLoadout kitLoadout = profile.getLms().getKit().getKitLoadout();
                         event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                         event.getPlayer().getInventory().setContents(kitLoadout.getContents());
+=======
+                        KitInventory kitInventory= profile.getLms().getKit().getKitInventory();
+                        event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                        event.getPlayer().getInventory().setContents(kitInventory.getContents());
+>>>>>>> Stashed changes
                         event.getPlayer().getActivePotionEffects().clear();
-                        event.getPlayer().addPotionEffects(profile.getLms().getKit().getKitLoadout().getEffects());
+                        event.getPlayer().addPotionEffects(profile.getLms().getKit().getKitInventory().getEffects());
                         event.getPlayer().updateInventory();
                         event.setCancelled(true);
                         return;
@@ -189,12 +195,19 @@ public class LMSListener implements Listener {
                     if (displayName.startsWith("Kit: ")) {
                         String kitName = displayName.replace("Kit: ", "");
 
+<<<<<<< Updated upstream
                         for (KitLoadout kitLoadout : profile.getStatisticsData().get(profile.getLms().getKit()).getLoadouts()) {
                             if (kitLoadout != null && ChatColor.stripColor(kitLoadout.getCustomName()).equals(kitName)) {
                                 event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                                 event.getPlayer().getInventory().setContents(kitLoadout.getContents());
+=======
+                        for ( KitInventory kitInventory : profile.getStatisticsData().get(profile.getLms().getKit()).getLoadouts()) {
+                            if (kitInventory != null && ChatColor.stripColor(kitInventory.getCustomName()).equals(kitName)) {
+                                event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                                event.getPlayer().getInventory().setContents(kitInventory.getContents());
+>>>>>>> Stashed changes
                                 event.getPlayer().getActivePotionEffects().clear();
-                                event.getPlayer().addPotionEffects(profile.getLms().getKit().getKitLoadout().getEffects());
+                                event.getPlayer().addPotionEffects(profile.getLms().getKit().getKitInventory().getEffects());
                                 event.getPlayer().updateInventory();
                                 event.setCancelled(true);
                                 return;

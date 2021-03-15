@@ -304,7 +304,7 @@ public class Array extends JavaPlugin {
             new Placeholders().register();
             logger("&bFound PlaceholderAPI, Registering Expansions....");
         } else {
-            this.logger("&cPlaceholderAPI was NOT found, Holograms will NOT work!");
+            logger("&cPlaceholderAPI was NOT found, Holograms will NOT work!");
         }
 
         //Load the Global Leaderboards (Also a bug fix for leaderboards being blank on start)

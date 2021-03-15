@@ -7,6 +7,10 @@ import me.drizzy.practice.hcf.bard.EffectData;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.profile.Profile;
+<<<<<<< Updated upstream
+=======
+import me.drizzy.practice.util.chat.CC;
+>>>>>>> Stashed changes
 import me.drizzy.practice.util.chat.Color;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -231,7 +235,11 @@ public class Bard extends HCFClasses implements Listener {
         String errorFeedback = null;
         double currentEnergy = bardData.getEnergy();
         if (bardEffect.energyCost > currentEnergy) {
+<<<<<<< Updated upstream
             errorFeedback = Color.translate("&bYou do not have enough energy for this! You need " + bardEffect.energyCost + " energy, but you only have " + currentEnergy);
+=======
+            errorFeedback = CC.translate("&bYou do not have enough energy for this! You need " + bardEffect.energyCost + " energy, but you only have " + currentEnergy);
+>>>>>>> Stashed changes
         }
 
         long remaining = bardData.getRemainingBuffDelay() / 1000;

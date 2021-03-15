@@ -55,7 +55,11 @@ public class License {
 			log(0, "&7&m---------------&8[&bArray-License&8]&7&m----------------");
 			return true;
 		} else {
+<<<<<<< Updated upstream
 			log(1, "            &cLicense is NOT valid!");
+=======
+			log(1, "&cLicense is NOT valid!");
+>>>>>>> Stashed changes
 			log(1, "&7Failed as a result of &b" + vt.toString());
 			log(1, "&cPlugin is probably leaked, &4Disabling Array!");
 			log(1, "&7Contact Drizzy#0278 for License Issues!");

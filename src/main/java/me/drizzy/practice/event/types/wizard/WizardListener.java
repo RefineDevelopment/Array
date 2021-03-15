@@ -27,9 +27,12 @@ import java.util.Map;
 
 public class WizardListener implements Listener {
 
+<<<<<<< Updated upstream
 	int cooldownTime = 5;
 	HashMap<String, Long> cooldown = new HashMap<>();
 
+=======
+>>>>>>> Stashed changes
 	private final FireworkEffectPlayer fireworkEffectPlayer=new FireworkEffectPlayer();
 
 	@EventHandler(ignoreCancelled=true, priority=EventPriority.LOW)
@@ -166,7 +169,11 @@ public class WizardListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player=event.getPlayer();
 		if (Profile.getByUuid(player).isInWizard()) {
+<<<<<<< Updated upstream
 			if (!event.hasItem() || event.getItem().getType() != Material.DIAMOND_HOE || !event.getAction().name().contains("RIGHT_")) {
+=======
+			if (!event.hasItem() || event.getItem().getType() != Material.STICK || !event.getAction().name().contains("RIGHT_")) {
+>>>>>>> Stashed changes
 				return;
 			}
 			Profile profile = Profile.getByUuid(player);
@@ -175,7 +182,11 @@ public class WizardListener implements Listener {
 				event.setCancelled(true);
 				return;
 			} else {
+<<<<<<< Updated upstream
 				profile.setEnderpearlCooldown(new Cooldown(1_000));
+=======
+				profile.setWizardCooldown(new Cooldown(TimeUtil.parseTime("2s")));
+>>>>>>> Stashed changes
 			}
 			final FireworkEffect effect=FireworkEffect.builder().withColor(Color.BLUE).with(FireworkEffect.Type.BALL_LARGE).build();
 			final Snowball snowball=player.launchProjectile(Snowball.class);
@@ -238,6 +249,7 @@ public class WizardListener implements Listener {
 			}
 		}
 	}
+<<<<<<< Updated upstream
 
 	@EventHandler
 	private void onDoubleJump(PlayerToggleFlightEvent event) {
@@ -268,4 +280,6 @@ public class WizardListener implements Listener {
 			player.playSound(player.getLocation(), Sound.EXPLODE, 1.0F, 1.0F);
 		}
 	}
+=======
+>>>>>>> Stashed changes
 }

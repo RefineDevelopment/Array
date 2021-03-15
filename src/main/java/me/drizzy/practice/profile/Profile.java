@@ -37,7 +37,7 @@ import me.drizzy.practice.event.types.sumo.player.SumoPlayer;
 import me.drizzy.practice.event.types.sumo.player.SumoPlayerState;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.kit.KitLeaderboards;
-import me.drizzy.practice.kit.KitLoadout;
+import me.drizzy.practice.kit.KitInventory;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.party.Party;
@@ -64,6 +64,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -312,12 +313,12 @@ public class Profile {
 
             if (kit != null) {
                 JsonArray kitsArray = new JsonParser().parse(kitsDocument.getString(key)).getAsJsonArray();
-                KitLoadout[] loadouts = new KitLoadout[4];
+                KitInventory[] loadouts = new KitInventory[4];
 
                 for (JsonElement kitElement : kitsArray) {
                     JsonObject kitObject = kitElement.getAsJsonObject();
 
-                    KitLoadout loadout = new KitLoadout(kitObject.get("name").getAsString());
+                    KitInventory loadout = new KitInventory(kitObject.get("name").getAsString());
                     loadout.setArmor(InventoryUtil.deserializeInventory(kitObject.get("armor").getAsString()));
                     loadout.setContents(InventoryUtil.deserializeInventory(kitObject.get("contents").getAsString()));
 
@@ -365,7 +366,7 @@ public class Profile {
             JsonArray kitsArray = new JsonArray();
 
             for (int i = 0; i < 4; i++) {
-                KitLoadout loadout = entry.getValue().getLoadout(i);
+                KitInventory loadout = entry.getValue().getLoadout(i);
 
                 if (loadout != null) {
                     JsonObject kitObject = new JsonObject();
@@ -656,20 +657,23 @@ public class Profile {
         }
     }
 
-    public double getWLR() {
+    public String getWLR() {
         double totalWins = this.getTotalWins();
         double totalLosses = this.getTotalLost();
 
         double ratio = totalWins / Math.max(totalLosses, 1);
-        return ratio;
+        DecimalFormat format = new DecimalFormat("#.##");
+        return format.format(ratio);
     }
 
-    public double getKDR() {
+    public String getKDR() {
         double totalKills = this.getTotalKills();
         double totalDeaths = this.getTotalDeaths();
 
         double ratio = totalKills / Math.max(totalDeaths, 1);
-        return ratio;
+        DecimalFormat format = new DecimalFormat("#.##");
+        return format.format(ratio);
+
     }
 
     public void handleVisibility(Player player, Player otherPlayer) {

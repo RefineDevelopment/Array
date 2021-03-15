@@ -81,6 +81,7 @@ public class MenuListener extends BootstrappedListener {
             }
         }
     }
+<<<<<<< Updated upstream
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClose(InventoryCloseEvent event) {
@@ -109,4 +110,6 @@ public class MenuListener extends BootstrappedListener {
         }
     }
 
+=======
+>>>>>>> Stashed changes
 }

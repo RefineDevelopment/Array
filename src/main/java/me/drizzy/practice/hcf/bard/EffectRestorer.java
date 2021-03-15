@@ -3,6 +3,10 @@ package me.drizzy.practice.hcf.bard;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import me.drizzy.practice.hcf.events.ArmorClassUnequipEvent;
+<<<<<<< Updated upstream
+=======
+import me.drizzy.ravespigot.events.potion.PotionEffectExpireEvent;
+>>>>>>> Stashed changes
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 import me.drizzy.practice.Array;
@@ -13,7 +17,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+<<<<<<< Updated upstream
 import pt.foxspigot.jar.event.potion.PotionEffectExpireEvent;
+=======
+>>>>>>> Stashed changes
 
 import java.util.Collection;
 import java.util.UUID;

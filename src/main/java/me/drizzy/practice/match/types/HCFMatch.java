@@ -25,8 +25,11 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+<<<<<<< Updated upstream
 import pt.foxspigot.jar.knockback.KnockbackModule;
 import pt.foxspigot.jar.knockback.KnockbackProfile;
+=======
+>>>>>>> Stashed changes
 
 import java.util.ArrayList;
 import java.util.List;
@@ -186,8 +189,7 @@ public class HCFMatch extends Match {
                             PlayerUtil.reset(player, false);
                             profile.refreshHotbar();
                             profile.handleVisibility();
-                            KnockbackProfile knockbackProfile = KnockbackModule.getDefault();
-                            ((CraftPlayer) player).getHandle().setKnockback(knockbackProfile);
+                            Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
                             Essentials.teleportToSpawn(player);
                             PlayerUtil.reset(player, false);
                             profile.refreshHotbar();

@@ -1,10 +1,17 @@
 package me.drizzy.practice.kiteditor.menu;
 
 import me.drizzy.practice.Array;
+<<<<<<< Updated upstream
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.kit.KitLoadout;
+=======
+import me.drizzy.practice.kit.KitInventory;
+import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.util.chat.CC;
+import me.drizzy.practice.kit.Kit;
+>>>>>>> Stashed changes
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.external.BukkitReflection;
 import me.drizzy.practice.util.external.ItemBuilder;
@@ -59,12 +66,21 @@ public class KitEditorMenu extends Menu {
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         Kit kit = profile.getKitEditor().getSelectedKit();
+<<<<<<< Updated upstream
         KitLoadout kitLoadout = profile.getKitEditor().getSelectedKitLoadout();
 
         buttons.put(18, new ArmorDisplayButton(kitLoadout.getArmor()[3]));
         buttons.put(27, new ArmorDisplayButton(kitLoadout.getArmor()[2]));
         buttons.put(36, new ArmorDisplayButton(kitLoadout.getArmor()[1]));
         buttons.put(45, new ArmorDisplayButton(kitLoadout.getArmor()[0]));
+=======
+        KitInventory kitInventory= profile.getKitEditor().getSelectedKitInventory();
+
+        buttons.put(18, new ArmorDisplayButton(kitInventory.getArmor()[3]));
+        buttons.put(27, new ArmorDisplayButton(kitInventory.getArmor()[2]));
+        buttons.put(36, new ArmorDisplayButton(kitInventory.getArmor()[1]));
+        buttons.put(45, new ArmorDisplayButton(kitInventory.getArmor()[0]));
+>>>>>>> Stashed changes
 
         List<ItemStack> items = kit.getEditRules().getEditorItems();
 
@@ -86,7 +102,11 @@ public class KitEditorMenu extends Menu {
             profile.getKitEditor().setActive(true);
 
             if (profile.getKitEditor().getSelectedKit() != null) {
+<<<<<<< Updated upstream
                 player.getInventory().setContents(profile.getKitEditor().getSelectedKitLoadout().getContents());
+=======
+                player.getInventory().setContents(profile.getKitEditor().getSelectedKitInventory().getContents());
+>>>>>>> Stashed changes
             }
 
             player.updateInventory();
@@ -193,7 +213,11 @@ public class KitEditorMenu extends Menu {
             Profile profile = Profile.getByUuid(player.getUniqueId());
 
             player.getInventory()
+<<<<<<< Updated upstream
                     .setContents(profile.getKitEditor().getSelectedKit().getKitLoadout().getContents());
+=======
+                    .setContents(profile.getKitEditor().getSelectedKit().getKitInventory().getContents());
+>>>>>>> Stashed changes
             player.updateInventory();
         }
 
@@ -223,8 +247,13 @@ public class KitEditorMenu extends Menu {
 
             Profile profile = Profile.getByUuid(player.getUniqueId());
 
+<<<<<<< Updated upstream
             if (profile.getKitEditor().getSelectedKitLoadout() != null) {
                 profile.getKitEditor().getSelectedKitLoadout().setContents(player.getInventory().getContents());
+=======
+            if (profile.getKitEditor().getSelectedKitInventory() != null) {
+                profile.getKitEditor().getSelectedKitInventory().setContents(player.getInventory().getContents());
+>>>>>>> Stashed changes
             }
 
         PlayerUtil.reset(player, false);
@@ -271,8 +300,13 @@ public class KitEditorMenu extends Menu {
 
         @Override
         public void clicked(Player player, int slot, ClickType clickType, int hotbar) {
+<<<<<<< Updated upstream
             Inventory inventory = player.getOpenInventory().getTopInventory();
             ItemStack itemStack = inventory.getItem(slot);
+=======
+            Inventory inventory=player.getOpenInventory().getTopInventory();
+            ItemStack itemStack=inventory.getItem(slot);
+>>>>>>> Stashed changes
 
             inventory.setItem(slot, itemStack);
 

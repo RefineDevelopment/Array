@@ -55,16 +55,18 @@ public class ManagePartySettings extends Menu
             ArrayList<String> lore = new ArrayList<>();
             if (this.partyManageType == PartyManageType.LIMIT) {
                 lore.add(CC.MENU_BAR);
-                lore.add("&bLimit: &f" + profile.getParty().getLimit());
+                lore.add("&bCurrent Limit:");
+                lore.add("&8 • &fLimit: &b" + profile.getParty().getLimit());
                 lore.add("");
-                lore.add("&fLeft-Click to Increase Limit");
-                lore.add("&fRight-Click to Decrease Limit");
+                lore.add("&8(&bLeft-Click&8) - &7Increase Limit");
+                lore.add("&8(&bRight-Click&8) - &7Decrease Limit");
                 lore.add(CC.MENU_BAR);
                 return new ItemBuilder(Material.INK_SACK).durability(2).name("&b" + this.partyManageType.getName()).lore(lore).build();
             }
             if (this.partyManageType == PartyManageType.PUBLIC) {
                 lore.add(CC.MENU_BAR);
-                lore.add("&7Public: " + (profile.getParty().isPublic() ? "&aPublic" : "&eInvite Only"));
+                lore.add("&bCurrent State:");
+                lore.add("&8 • &fPublic: " + (profile.getParty().isPublic() ? "&aPublic" : "&eInvite Only"));
                 lore.add("");
                 lore.add("&bClick to change party state.");
                 lore.add(CC.MENU_BAR);

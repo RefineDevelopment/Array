@@ -83,7 +83,11 @@
             <scope>compile</scope>
         </dependency>
 
+<<<<<<< Updated upstream
         <!--Spigots-->
+=======
+        <!--Spigots
+>>>>>>> Stashed changes
         <dependency>
             <groupId>pt.foxspigot.jar</groupId>
             <artifactId>FoxSpigot</artifactId>
@@ -98,6 +102,17 @@
           <version>1.0-SNAPSHOT</version>
           <scope>system</scope>
           <systemPath>${project.basedir}/lib/spigots/SpigotX.jar</systemPath>
+<<<<<<< Updated upstream
+=======
+        </dependency>-->
+
+        <dependency>
+            <groupId>me.drizzy.spigot</groupId>
+            <artifactId>RaveSpigot</artifactId>
+            <version>1.4-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/RaveSpigot.jar</systemPath>
+>>>>>>> Stashed changes
         </dependency>
 
         <!-- Mongo Driver -->

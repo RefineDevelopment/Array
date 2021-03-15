@@ -1,4 +1,4 @@
-package me.drizzy.practice.kit.command;
+/*package me.drizzy.practice.kit.command;
 
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.util.chat.CC;
@@ -23,3 +23,4 @@ public class KitNetherUHCCommand {
         }
     }
 }
+*/

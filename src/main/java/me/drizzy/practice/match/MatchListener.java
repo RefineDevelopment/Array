@@ -7,7 +7,11 @@ import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.hcf.HCFManager;
 import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.kit.Kit;
+<<<<<<< Updated upstream
 import me.drizzy.practice.kit.KitLoadout;
+=======
+import me.drizzy.practice.kit.KitInventory;
+>>>>>>> Stashed changes
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.match.types.TheBridgeMatch;
@@ -55,7 +59,6 @@ public class MatchListener implements Listener {
             if (!profile.getMatch().isHCFMatch()) {
                 if (match.getKit().getGameRules().isBuild() && profile.getMatch().isFighting()) {
                     if (match.getKit().getGameRules().isSpleef()) {
-                        event.getPlayer().sendMessage(CC.RED + "You can not place blocks in spleef.");
                         event.setCancelled(true);
                         return;
                     }
@@ -89,6 +92,7 @@ public class MatchListener implements Listener {
 
     //TODO: Laggy players double or triple point sometimes (Could try the parkour patch again?)
     @EventHandler
+<<<<<<< Updated upstream
     public void onPortal(PlayerPortalEvent event){
         Player player = event.getPlayer();
         Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -108,6 +112,32 @@ public class MatchListener implements Listener {
                     }
                     TeamPlayer guy = match.getPlayerA().getPlayer() == player ? match.getTeamPlayerB() : match.getTeamPlayerA();
                     match.onDeath(guy.getPlayer(), (Player) PlayerUtil.getLastDamager(guy.getPlayer()));
+=======
+    public void onPortal(EntityPortalEnterEvent event) {
+        if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+            Profile profile=Profile.getByUuid(player.getUniqueId());
+            if (profile.getState() == ProfileState.IN_FIGHT) {
+                if (profile.getMatch().getKit().getGameRules().isBridge()) {
+                    if (player.getLocation().getBlock().getType() == Material.ENDER_PORTAL ||
+                        player.getLocation().getBlock().getType() == Material.ENDER_PORTAL_FRAME) {
+                        if (LocationUtils.isTeamPortal(player)) {
+                            player.teleport(profile.getMatch().getTeamPlayer(player).getPlayerSpawn());
+                            player.sendMessage(CC.translate("&7You Jumped in the wrong portal lmfaoo."));
+                            return;
+                        }
+                        TheBridgeMatch match=(TheBridgeMatch) profile.getMatch();
+                        if (match.getBridgePlayers().contains(player)) return;
+                        if (match.getState() == MatchState.ENDING) return;
+                        for ( TeamPlayer teamPlayer : match.getTeamPlayers() ) {
+                            Player other=teamPlayer.getPlayer();
+                            other.sendMessage(match.getRelationColor(other, player) + player.getDisplayName() + " has scored a Point!");
+                        }
+                        TeamPlayer guy=match.getPlayerA().getPlayer() == player ? match.getTeamPlayerB() : match.getTeamPlayerA();
+                        match.onDeath(guy.getPlayer(), (Player) PlayerUtil.getLastDamager(guy.getPlayer()));
+                        match.getBridgePlayers().add(player);
+                    }
+>>>>>>> Stashed changes
                 }
             }
         }
@@ -119,8 +149,12 @@ public class MatchListener implements Listener {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
         if (profile.isInFight()) {
+<<<<<<< Updated upstream
             Match match = profile.getMatch();
 
+=======
+            Match match=profile.getMatch();
+>>>>>>> Stashed changes
             if (!profile.getMatch().isHCFMatch()) {
                 if (match.getKit().getGameRules().isBuild() && profile.getMatch().isFighting()) {
                     if (match.getKit().getGameRules().isSpleef()) {
@@ -133,7 +167,21 @@ public class MatchListener implements Listener {
                         } else {
                             event.setCancelled(true);
                         }
-                    } else if (!match.getPlacedBlocks().remove(event.getBlock().getLocation())) {
+                        if (match.getKit().getGameRules().isBoxuhc()) {
+                            if (event.getBlock().getType() == Material.WOOD) {
+                                match.getBrokenBlocks().add(event.getBlock().getLocation());
+                                event.getBlock().setType(Material.AIR);
+                                event.getPlayer().getInventory().addItem(new ItemStack(Material.WOOD, 1));
+                                event.getPlayer().updateInventory();
+                            } else {
+                                event.setCancelled(true);
+                            }
+                        }
+                    } else if (match.getPlacedBlocks().remove(event.getBlock().getLocation()) && !match.getKit().getGameRules().isBoxuhc()) {
+                        event.getBlock().setType(Material.AIR);
+                        event.getPlayer().getInventory().addItem(new ItemStack(event.getBlock().getType(), 1));
+                        event.getPlayer().updateInventory();
+                    } else if (!match.getKit().getGameRules().isBoxuhc()){
                         event.setCancelled(true);
                     }
                 } else {
@@ -144,6 +192,7 @@ public class MatchListener implements Listener {
             }
         }
     }
+<<<<<<< Updated upstream
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockDamage(final BlockDamageEvent event) {
         Player player = event.getPlayer();
@@ -159,6 +208,8 @@ public class MatchListener implements Listener {
             event.setCancelled(false);
         }
     }
+=======
+>>>>>>> Stashed changes
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBucketEmptyEvent(final PlayerBucketEmptyEvent event) {
@@ -304,9 +355,18 @@ public class MatchListener implements Listener {
         player.teleport(player.getLocation().add(0.0, 2.0, 0.0));
         if (profile.isInFight()) {
             if (profile.getMatch().isTheBridgeMatch()) {
+<<<<<<< Updated upstream
                 event.getDrops().clear();
                 PlayerUtil.reset(player);
                 profile.getMatch().setupPlayer(player);
+=======
+                TheBridgeMatch bridgeMatch = (TheBridgeMatch) profile.getMatch();
+                PlayerUtil.reset(player);
+                player.getInventory().setArmorContents(bridgeMatch.getKit().getKitInventory().getArmor());
+                player.getInventory().setContents(bridgeMatch.getKit().getKitInventory().getContents());
+                TheBridgeMatch.giveBridgeKit(player);
+                player.teleport(bridgeMatch.getTeamPlayer(player).getPlayerSpawn());
+>>>>>>> Stashed changes
                 return;
             }
         }
@@ -438,6 +498,14 @@ public class MatchListener implements Listener {
                         player.setFallDistance(0);
                         player.setHealth(20.0);
                         player.teleport(match.getTeamPlayer(player).getPlayerSpawn());
+<<<<<<< Updated upstream
+=======
+                        if (profile.getMatch().isTheBridgeMatch()) {
+                            TheBridgeMatch bridgeMatch = (TheBridgeMatch) match;
+                            PlayerUtil.reset(player);
+                            bridgeMatch.setupPlayer(player);
+                        }
+>>>>>>> Stashed changes
                         return;
                     }
                     profile.getMatch().handleDeath(player, null, false);
@@ -671,24 +739,36 @@ public class MatchListener implements Listener {
         if (event.getItem() != null && event.getAction().name().contains("RIGHT") && profile.isInFight()) {
             if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
                 if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DEFAULT_KIT))) {
+<<<<<<< Updated upstream
                     final KitLoadout kitLoadout = profile.getMatch().getKit().getKitLoadout();
                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());
+=======
+                    final KitInventory kitInventory= profile.getMatch().getKit().getKitInventory();
+                    event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                    event.getPlayer().getInventory().setContents(kitInventory.getContents());
+>>>>>>> Stashed changes
                     event.getPlayer().getActivePotionEffects().clear();
-                    if (profile.getMatch().getKit().getKitLoadout().getEffects() != null) {
-                        event.getPlayer().addPotionEffects(profile.getMatch().getKit().getKitLoadout().getEffects());
+                    if (profile.getMatch().getKit().getKitInventory().getEffects() != null) {
+                        event.getPlayer().addPotionEffects(profile.getMatch().getKit().getKitInventory().getEffects());
                     }
                     event.getPlayer().updateInventory();
                     event.setCancelled(true);
                     return;
                 }
                 if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DIAMOND_KIT))) {
+<<<<<<< Updated upstream
                     final KitLoadout kitLoadout = Objects.requireNonNull(Kit.getByName("HCFDIAMOND")).getKitLoadout();
                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());
+=======
+                    final KitInventory kitInventory= Objects.requireNonNull(Kit.getByName("HCFDIAMOND")).getKitInventory();
+                    event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                    event.getPlayer().getInventory().setContents(kitInventory.getContents());
+>>>>>>> Stashed changes
                     event.getPlayer().getActivePotionEffects().clear();
-                    if (kitLoadout.getEffects() != null) {
-                        event.getPlayer().addPotionEffects(kitLoadout.getEffects());
+                    if (kitInventory.getEffects() != null) {
+                        event.getPlayer().addPotionEffects(kitInventory.getEffects());
                     }
                     event.getPlayer().updateInventory();
                     Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
@@ -696,12 +776,18 @@ public class MatchListener implements Listener {
                     return;
                 }
                 if (event.getItem().equals(Hotbar.getItems().get(HotbarType.BARD_KIT))) {
+<<<<<<< Updated upstream
                     final KitLoadout kitLoadout = Objects.requireNonNull(Kit.getByName("HCFBARD")).getKitLoadout();
                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());
+=======
+                    final KitInventory kitInventory= Objects.requireNonNull(Kit.getByName("HCFBARD")).getKitInventory();
+                    event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                    event.getPlayer().getInventory().setContents(kitInventory.getContents());
+>>>>>>> Stashed changes
                     event.getPlayer().getActivePotionEffects().clear();
-                    if (kitLoadout.getEffects() != null) {
-                        event.getPlayer().addPotionEffects(kitLoadout.getEffects());
+                    if (kitInventory.getEffects() != null) {
+                        event.getPlayer().addPotionEffects(kitInventory.getEffects());
                     }
                     event.getPlayer().updateInventory();
                     Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
@@ -709,12 +795,18 @@ public class MatchListener implements Listener {
                     return;
                 }
                 if (event.getItem().equals(Hotbar.getItems().get(HotbarType.ARCHER_KIT))) {
+<<<<<<< Updated upstream
                     final KitLoadout kitLoadout = Objects.requireNonNull(Kit.getByName("HCFARCHER")).getKitLoadout();
                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());
+=======
+                    final KitInventory kitInventory= Objects.requireNonNull(Kit.getByName("HCFARCHER")).getKitInventory();
+                    event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                    event.getPlayer().getInventory().setContents(kitInventory.getContents());
+>>>>>>> Stashed changes
                     event.getPlayer().getActivePotionEffects().clear();
-                    if (kitLoadout.getEffects() != null) {
-                        event.getPlayer().addPotionEffects(kitLoadout.getEffects());
+                    if (kitInventory.getEffects() != null) {
+                        event.getPlayer().addPotionEffects(kitInventory.getEffects());
                     }
                     event.getPlayer().updateInventory();
                     Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
@@ -722,12 +814,18 @@ public class MatchListener implements Listener {
                     return;
                 }
                 if (event.getItem().equals(Hotbar.getItems().get(HotbarType.ROGUE_KIT))) {
+<<<<<<< Updated upstream
                     final KitLoadout kitLoadout = Objects.requireNonNull(Kit.getByName("HCFROGUE")).getKitLoadout();
                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());
+=======
+                    final KitInventory kitInventory= Objects.requireNonNull(Kit.getByName("HCFROGUE")).getKitInventory();
+                    event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                    event.getPlayer().getInventory().setContents(kitInventory.getContents());
+>>>>>>> Stashed changes
                     event.getPlayer().getActivePotionEffects().clear();
-                    if (kitLoadout.getEffects() != null) {
-                        event.getPlayer().addPotionEffects(kitLoadout.getEffects());
+                    if (kitInventory.getEffects() != null) {
+                        event.getPlayer().addPotionEffects(kitInventory.getEffects());
                     }
                     event.getPlayer().updateInventory();
                     Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
@@ -739,12 +837,19 @@ public class MatchListener implements Listener {
                 final String displayName = ChatColor.stripColor(event.getItem().getItemMeta().getDisplayName());
                 if (displayName.endsWith(" (Right-Click)")) {
                     final String kitName = displayName.replace(" (Right-Click)", "");
+<<<<<<< Updated upstream
                     for (final KitLoadout kitLoadout2 : profile.getStatisticsData().get(profile.getMatch().getKit()).getLoadouts()) {
                         if (kitLoadout2 != null && ChatColor.stripColor(kitLoadout2.getCustomName()).equals(kitName)) {
                             event.getPlayer().getInventory().setArmorContents(kitLoadout2.getArmor());
                             event.getPlayer().getInventory().setContents(kitLoadout2.getContents());
+=======
+                    for (final KitInventory kitInventory2 : profile.getStatisticsData().get(profile.getMatch().getKit()).getLoadouts()) {
+                        if (kitInventory2 != null && ChatColor.stripColor(kitInventory2.getCustomName()).equals(kitName)) {
+                            event.getPlayer().getInventory().setArmorContents(kitInventory2.getArmor());
+                            event.getPlayer().getInventory().setContents(kitInventory2.getContents());
+>>>>>>> Stashed changes
                             event.getPlayer().getActivePotionEffects().clear();
-                            event.getPlayer().addPotionEffects(profile.getMatch().getKit().getKitLoadout().getEffects());
+                            event.getPlayer().addPotionEffects(profile.getMatch().getKit().getKitInventory().getEffects());
                             event.getPlayer().updateInventory();
                             event.setCancelled(true);
                             return;
@@ -843,6 +948,7 @@ public class MatchListener implements Listener {
 
     @EventHandler (priority = EventPriority.LOW)
     public void onPearlThrow(final ProjectileLaunchEvent event) {
+<<<<<<< Updated upstream
         final Projectile projectile = event.getEntity();
         if (projectile instanceof EnderPearl) {
             final EnderPearl enderPearl = (EnderPearl) projectile;
@@ -855,6 +961,22 @@ public class MatchListener implements Listener {
                         shooter.sendMessage(CC.RED + "You can't pearl in this arena!");
                         shooter.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 1));
                         event.setCancelled(true);
+=======
+        final Projectile projectile=event.getEntity();
+        if (projectile instanceof EnderPearl) {
+            final EnderPearl enderPearl=(EnderPearl) projectile;
+            final ProjectileSource source=enderPearl.getShooter();
+            if (source instanceof Player) {
+                final Player shooter=(Player) source;
+                final Profile profile=Profile.getByUuid(shooter.getUniqueId());
+                if (profile.getMatch() != null && profile.getMatch().getArena() != null) {
+                    if (profile.getMatch().getArena().isDisablePearls()) {
+                        if (!profile.getEnderpearlCooldown().hasExpired()) {
+                            shooter.sendMessage(CC.RED + "You can't pearl in this arena!");
+                            shooter.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 1));
+                            event.setCancelled(true);
+                        }
+>>>>>>> Stashed changes
                     }
                 }
             }

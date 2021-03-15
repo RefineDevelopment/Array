@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BlockPosition;
+import me.drizzy.practice.Array;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Bukkit;
@@ -325,7 +326,7 @@ public class EntityHider extends PacketAdapter implements Listener{
             }
             return Bukkit.getPlayer(name);
         } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
+            Array.logger("Entity Hider failed a task, You can simple ignore this warning but if its prominent then please contact Drizzy#0278.");
         }
         return null;
     }

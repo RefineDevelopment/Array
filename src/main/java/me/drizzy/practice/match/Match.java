@@ -15,6 +15,7 @@ import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.statistics.StatisticsData;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.array.essentials.Essentials;
@@ -90,7 +91,18 @@ public abstract class Match {
         for (Match match : matches) {
             match.getPlacedBlocks().forEach(location -> location.getBlock().setType(Material.AIR));
             match.getChangedBlocks().forEach((blockState) -> blockState.getLocation().getBlock().setType(blockState.getType()));
+<<<<<<< Updated upstream
             Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), new MatchBoxUHCTask(match), 5L);
+=======
+            if (!Array.getInstance().isDisabling()) {
+                Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), new MatchBoxUHCTask(match), 5L);
+            } else {
+                if (match.getKit().getGameRules().isBoxuhc() && match.getBrokenBlocks().size() > 0) {
+                    match.getBrokenBlocks().forEach(location -> location.getBlock().setType(Material.WOOD));
+                    match.getBrokenBlocks().clear();
+                }
+            }
+>>>>>>> Stashed changes
             match.getEntities().forEach(Entity::remove);
         }
     }

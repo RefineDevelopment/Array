@@ -92,6 +92,7 @@ public class RegisterCommands {
                 new ArenaSaveCommand(),
                 new ArenaReloadCommand(),
                 new ArenaSetIconCommand(),
+                new ArenaSetDisplayNameCommand(),
 
                 //Duel commands
                 new DuelCommand(),
@@ -120,8 +121,8 @@ public class RegisterCommands {
 
                 //Kit command
                 new KitCreateCommand(),
-                new KitGetLoadoutCommand(),
-                new KitSetLoadoutCommand(),
+                new KitGetInvCommand(),
+                new KitSetInvCommand(),
                 new KitSetKnockbackProfileCommand(),
                 new KitListCommand(),
                 new KitCommand(),
@@ -154,7 +155,7 @@ public class RegisterCommands {
                 new KitEnableCommand(),
                 new KitVoidSpawnCommand(),
                 new KitStickSpawnCommand(),
-                new KitNetherUHCCommand(),
+                new KitSetDisplayNameCommand(),
 
                 //Brackets commands
                 new BracketsLeaveCommand(),

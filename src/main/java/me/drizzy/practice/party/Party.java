@@ -243,9 +243,15 @@ public class Party extends Team {
         lines.add(CC.CHAT_BAR);
         lines.add(CC.AQUA + "Party Information");
         lines.add(CC.CHAT_BAR);
+<<<<<<< Updated upstream
         lines.add(CC.AQUA + "&8• &bLeader: " + CC.WHITE + this.getLeader().getUsername());
         lines.add(CC.AQUA + "&8• &bPrivacy: " + CC.WHITE + this.privacy.toString());
         lines.add(CC.AQUA + "&8• &bMembers: " + CC.GRAY + "(" + (this.getTeamPlayers().size() - 1) + ") " + builder.substring(0, builder.length() - 2));
+=======
+        lines.add(CC.translate("&8• &bLeader: " + CC.WHITE + this.getLeader().getUsername()));
+        lines.add(CC.translate("&8• &bPrivacy: " + CC.WHITE + this.privacy.toString()));
+        lines.add(CC.translate("&8• &bMembers: " + CC.GRAY + "(" + (this.getTeamPlayers().size() - 1) + ") " + builder.substring(0, builder.length() - 2)));
+>>>>>>> Stashed changes
         lines.add(CC.CHAT_BAR);
         for ( String line : lines ) {
             player.sendMessage(line);

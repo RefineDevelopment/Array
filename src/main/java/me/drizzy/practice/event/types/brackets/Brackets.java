@@ -6,7 +6,10 @@ import me.drizzy.practice.event.types.brackets.task.BracketsRoundEndTask;
 import me.drizzy.practice.event.types.brackets.task.BracketsRoundStartTask;
 import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.profile.ProfileState;
+<<<<<<< Updated upstream
 import me.drizzy.practice.hotbar.Hotbar;
+=======
+>>>>>>> Stashed changes
 import me.drizzy.practice.Array;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,20 +20,21 @@ import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.util.chat.Clickable;
+<<<<<<< Updated upstream
 import me.drizzy.practice.util.external.ChatComponentBuilder;
+=======
+>>>>>>> Stashed changes
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.external.TimeUtil;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
+<<<<<<< Updated upstream
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+=======
+>>>>>>> Stashed changes
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import pt.foxspigot.jar.knockback.KnockbackModule;
-import pt.foxspigot.jar.knockback.KnockbackProfile;
 
 import java.util.*;
 
@@ -364,11 +368,19 @@ public class Brackets {
 		PlayerUtil.reset(playerB);
 
 		playerA.teleport(Array.getInstance().getBracketsManager().getBracketsSpawn1());
+<<<<<<< Updated upstream
 		playerA.getInventory().setContents(getKit().getKitLoadout().getContents());
 		playerA.getInventory().setArmorContents(getKit().getKitLoadout().getArmor());
 		playerB.teleport(Array.getInstance().getBracketsManager().getBracketsSpawn2());
 		playerB.getInventory().setContents(getKit().getKitLoadout().getContents());
 		playerB.getInventory().setArmorContents(getKit().getKitLoadout().getArmor());
+=======
+		playerA.getInventory().setContents(getKit().getKitInventory().getContents());
+		playerA.getInventory().setArmorContents(getKit().getKitInventory().getArmor());
+		playerB.teleport(Array.getInstance().getBracketsManager().getBracketsSpawn2());
+		playerB.getInventory().setContents(getKit().getKitInventory().getContents());
+		playerB.getInventory().setArmorContents(getKit().getKitInventory().getArmor());
+>>>>>>> Stashed changes
 		setEventTask(new BracketsRoundStartTask(this));
 	}
 

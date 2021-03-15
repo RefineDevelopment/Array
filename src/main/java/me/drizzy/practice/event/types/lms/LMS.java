@@ -324,8 +324,13 @@ public class LMS {
                 player.teleport(target.add(0, 0.5, 0));
                 circleLocations.remove(i);
                 i++;
+<<<<<<< Updated upstream
                 player.getInventory().setContents(getKit().getKitLoadout().getContents());
                 player.getInventory().setArmorContents(getKit().getKitLoadout().getArmor());
+=======
+                player.getInventory().setContents(getKit().getKitInventory().getContents());
+                player.getInventory().setArmorContents(getKit().getKitInventory().getArmor());
+>>>>>>> Stashed changes
         }
         setEventTask(new LMSRoundStartTask(this));
     }
