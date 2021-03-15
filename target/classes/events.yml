@@ -1,0 +1,9 @@
+events:
+  sumo:
+    spawn1: world:0.0:0.0:0.0:0.0:0.0
+    spawn2: world:0.0:0.0:0.0:0.0:0.0
+    spectator: world:0.0:0.0:0.0:0.0:0.0
+  brackets:
+    spawn1: world:0.0:0.0:0.0:0.0:0.0
+    spawn2: world:0.0:0.0:0.0:0.0:0.0
+    spectator: world:0.0:0.0:0.0:0.0:0.0

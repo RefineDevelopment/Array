@@ -3,11 +3,6 @@ package me.drizzy.practice.event.types.wizard;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.util.chat.Clickable;
-<<<<<<< Updated upstream
-import pt.foxspigot.jar.knockback.KnockbackModule;
-import pt.foxspigot.jar.knockback.KnockbackProfile;
-=======
->>>>>>> Stashed changes
 import me.drizzy.practice.Array;
 import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.event.types.wizard.player.WizardPlayer;
@@ -24,10 +19,6 @@ import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.external.TimeUtil;
 import org.bukkit.Bukkit;
-<<<<<<< Updated upstream
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-=======
->>>>>>> Stashed changes
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -317,12 +308,7 @@ public class Wizard {
 		Profile.setKb(player, Array.getInstance().getWizardManager().getWizardKnockbackProfile());
 	}
 	public void onLeave(Player player) {
-<<<<<<< Updated upstream
-		KnockbackProfile kbprofile = KnockbackModule.getDefault();
-		((CraftPlayer) player).getHandle().setKnockback(kbprofile);
-=======
 		Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
->>>>>>> Stashed changes
 	}
 
 	public void onRound() {
@@ -370,15 +356,9 @@ public class Wizard {
 		PlayerUtil.reset(playerB);
 
 		playerA.teleport(Array.getInstance().getWizardManager().getWizardSpawn1());
-<<<<<<< Updated upstream
-		playerA.getInventory().setItem(0, Hotbar.getItems().get(HotbarType.GULAG_EVENT));
-		playerB.teleport(Array.getInstance().getWizardManager().getWizardSpawn2());
-		playerB.getInventory().setItem(0, Hotbar.getItems().get(HotbarType.GULAG_EVENT));
-=======
 		playerA.getInventory().setItem(0, Hotbar.getItems().get(HotbarType.WIZARD_WAND));
 		playerB.teleport(Array.getInstance().getWizardManager().getWizardSpawn2());
 		playerB.getInventory().setItem(0, Hotbar.getItems().get(HotbarType.WIZARD_WAND));
->>>>>>> Stashed changes
 		setEventTask(new WizardRoundStartTask(this));
 	}
 

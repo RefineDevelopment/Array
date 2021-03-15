@@ -27,15 +27,6 @@ import java.util.Map;
 
 public class WizardListener implements Listener {
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-	int cooldownTime = 5;
-	HashMap<String, Long> cooldown = new HashMap<>();
-
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 	private final FireworkEffectPlayer fireworkEffectPlayer=new FireworkEffectPlayer();
 
 	@EventHandler(ignoreCancelled=true, priority=EventPriority.LOW)
@@ -172,15 +163,7 @@ public class WizardListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player=event.getPlayer();
 		if (Profile.getByUuid(player).isInWizard()) {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-			if (!event.hasItem() || event.getItem().getType() != Material.DIAMOND_HOE || !event.getAction().name().contains("RIGHT_")) {
-=======
 			if (!event.hasItem() || event.getItem().getType() != Material.STICK || !event.getAction().name().contains("RIGHT_")) {
->>>>>>> Stashed changes
-=======
-			if (!event.hasItem() || event.getItem().getType() != Material.STICK || !event.getAction().name().contains("RIGHT_")) {
->>>>>>> Stashed changes
 				return;
 			}
 			Profile profile = Profile.getByUuid(player);
@@ -189,15 +172,7 @@ public class WizardListener implements Listener {
 				event.setCancelled(true);
 				return;
 			} else {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-				profile.setEnderpearlCooldown(new Cooldown(1_000));
-=======
 				profile.setWizardCooldown(new Cooldown(TimeUtil.parseTime("2s")));
->>>>>>> Stashed changes
-=======
-				profile.setWizardCooldown(new Cooldown(TimeUtil.parseTime("2s")));
->>>>>>> Stashed changes
 			}
 			final FireworkEffect effect=FireworkEffect.builder().withColor(Color.BLUE).with(FireworkEffect.Type.BALL_LARGE).build();
 			final Snowball snowball=player.launchProjectile(Snowball.class);
@@ -260,40 +235,4 @@ public class WizardListener implements Listener {
 			}
 		}
 	}
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-
-	@EventHandler
-	private void onDoubleJump(PlayerToggleFlightEvent event) {
-
-		Player player = event.getPlayer();
-
-		if (player.getGameMode().equals(GameMode.CREATIVE)) {
-			return;
-		}
-		if (Profile.getByUuid(player).isInWizard()) {
-			Vector launchingLocation = player.getLocation().getDirection(); // 100% coded by veltus
-
-			if (cooldown.get(event.getPlayer().getName()) - System.currentTimeMillis() * 1000 < cooldownTime) {
-				return;
-			}
-
-			if (player.isFlying() ) {
-				player.setVelocity(launchingLocation.multiply(10));
-				player.setFlying(false);
-				cooldown.put(player.getName(), System.currentTimeMillis());
-			} else if (player.isOnGround()) {
-				player.setVelocity(launchingLocation.multiply(10));
-				player.setFlying(false);
-				cooldown.put(player.getName(), System.currentTimeMillis());
-			}
-
-			player.getWorld().spigot().playEffect(player.getLocation(), Effect.SMOKE, 26, 0, 0.2F, 0.5F, 0.2F, 0.2F, 12, 387);
-			player.playSound(player.getLocation(), Sound.EXPLODE, 1.0F, 1.0F);
-		}
-	}
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 }

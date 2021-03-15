@@ -11,6 +11,7 @@ import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.MatchState;
 import me.drizzy.practice.match.task.MatchBridgeStartTask;
+import me.drizzy.practice.match.task.MatchStartTask;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
@@ -42,14 +43,7 @@ public class TheBridgeMatch extends Match {
 
     @Setter private TeamPlayer playerA;
     @Setter private TeamPlayer playerB;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
     @Getter private final List<Player> bridgePlayers = new ArrayList<>();
->>>>>>> Stashed changes
-=======
-    @Getter private final List<Player> bridgePlayers = new ArrayList<>();
->>>>>>> Stashed changes
 
     public TheBridgeMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
         super(queue, kit, arena, queueType);
@@ -120,20 +114,9 @@ public class TheBridgeMatch extends Match {
             player.teleport(spawn.add(0, 2, 0));
         }
         teamPlayer.setPlayerSpawn(spawn);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        player.getInventory().setArmorContents(getKit().getKitLoadout().getArmor());
-        player.getInventory().setContents(getKit().getKitLoadout().getContents());
-=======
         player.getInventory().setArmorContents(getKit().getKitInventory().getArmor());
         player.getInventory().setContents(getKit().getKitInventory().getContents());
         giveBridgeKit(player);
->>>>>>> Stashed changes
-=======
-        player.getInventory().setArmorContents(getKit().getKitInventory().getArmor());
-        player.getInventory().setContents(getKit().getKitInventory().getContents());
-        giveBridgeKit(player);
->>>>>>> Stashed changes
         NameTags.color(player, getOpponentPlayer(player), org.bukkit.ChatColor.RED, getKit().getGameRules().isBuild());
 
     }
@@ -145,13 +128,6 @@ public class TheBridgeMatch extends Match {
 
     @Override
     public void onStart() {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        this.getPlayers().forEach(TheBridgeMatch::giveBridgeKit);
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     }
 
     @Override
@@ -475,7 +451,7 @@ public class TheBridgeMatch extends Match {
     public int getTotalRoundWins() {
         Profile aProfile = Profile.getByUuid(playerA.getUuid());
         Profile bProfile = Profile.getByUuid(playerB.getUuid());
-        return aProfile.getBridgeRounds() + bProfile.getBridgeRounds();
+        return aProfile.getSumoRounds() + bProfile.getSumoRounds();
     }
 
     @Override
@@ -484,9 +460,9 @@ public class TheBridgeMatch extends Match {
         Profile bProfile = Profile.getByUuid(playerB.getUuid());
 
         if (playerA.equals(teamPlayer)) {
-            return 3 - aProfile.getBridgeRounds();
+            return 3 - aProfile.getSumoRounds();
         } else if (playerB.equals(teamPlayer)) {
-            return 3 - bProfile.getBridgeRounds();
+            return 3 - bProfile.getSumoRounds();
         } else {
             return -1;
         }
@@ -505,15 +481,15 @@ public class TheBridgeMatch extends Match {
         if (deadPlayer.isOnline()) {
             if (getRoundsNeeded(playerA) != 0 || getRoundsNeeded(playerB) != 0) {
                 if (getWinningPlayer().getUniqueId().toString().equals(playerA.getUuid().toString())) {
-                    aProfile.setBridgeRounds(aProfile.getBridgeRounds() + 1);
+                    aProfile.setSumoRounds(aProfile.getSumoRounds() + 1);
                 } else if (getWinningPlayer().getUniqueId().toString().equals(playerB.getUuid().toString())) {
-                    bProfile.setBridgeRounds(bProfile.getBridgeRounds() + 1);
+                    bProfile.setSumoRounds(bProfile.getSumoRounds() + 1);
                 }
 
                 getWinningPlayer().getPlayer().sendMessage(CC.translate("&aYou have won this round!"));
                 getOpponentPlayer(getWinningPlayer()).getPlayer().sendMessage(CC.translate("&cYou have lost this round!"));
 
-                if (aProfile.getBridgeRounds() >= 3 || bProfile.getBridgeRounds() >= 3) {
+                if (aProfile.getSumoRounds() >= 3 || bProfile.getSumoRounds() >= 3) {
                     TeamPlayer roundWinner=getTeamPlayer(getWinningPlayer());
                     TeamPlayer roundLoser=getOpponentTeamPlayer(getWinningPlayer());
 
@@ -543,7 +519,7 @@ public class TheBridgeMatch extends Match {
                         onStart();
                         setState(MatchState.STARTING);
                         setStartTimestamp(-1);
-                        new MatchBridgeStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
+                        new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
                     }
                 }
             }

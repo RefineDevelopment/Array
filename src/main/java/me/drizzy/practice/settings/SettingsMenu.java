@@ -117,15 +117,7 @@ public class SettingsMenu extends Menu
                     lines.add("&7Tab Styles for your profile");
                     lines.add("");
                     lines.add((profile.getSettings().isVanillaTab() ? "&a&l■ " : "&8&l■ ") + "&fShow Vanilla Tab");
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-                    lines.add((!profile.getSettings().isVanillaTab() ? "&a&l■ " : "&8&l■ ") + "&fShow DefaultProvider Tab");
-=======
                     lines.add((!profile.getSettings().isVanillaTab() ? "&a&l■ " : "&8&l■ ") + "&fShow Default Tab");
->>>>>>> Stashed changes
-=======
-                    lines.add((!profile.getSettings().isVanillaTab() ? "&a&l■ " : "&8&l■ ") + "&fShow Default Tab");
->>>>>>> Stashed changes
                     break;
                 case TOGGLESHOWPLAYERS:
                     lines.add("&7Toggle player visibility");

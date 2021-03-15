@@ -2,14 +2,6 @@ package me.drizzy.practice.event.types.sumo.task;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.kit.Kit;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-import pt.foxspigot.jar.knockback.KnockbackModule;
-import pt.foxspigot.jar.knockback.KnockbackProfile;
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 import me.drizzy.practice.event.types.sumo.Sumo;
 import me.drizzy.practice.event.types.sumo.SumoState;
 import me.drizzy.practice.event.types.sumo.SumoTask;

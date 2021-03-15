@@ -91,12 +91,6 @@ public abstract class Match {
         for (Match match : matches) {
             match.getPlacedBlocks().forEach(location -> location.getBlock().setType(Material.AIR));
             match.getChangedBlocks().forEach((blockState) -> blockState.getLocation().getBlock().setType(blockState.getType()));
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), new MatchBoxUHCTask(match), 5L);
-=======
-=======
->>>>>>> Stashed changes
             if (!Array.getInstance().isDisabling()) {
                 Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), new MatchBoxUHCTask(match), 5L);
             } else {
@@ -105,10 +99,6 @@ public abstract class Match {
                     match.getBrokenBlocks().clear();
                 }
             }
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
             match.getEntities().forEach(Entity::remove);
         }
     }
@@ -326,12 +316,6 @@ public abstract class Match {
             } else {
                 player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.GRAY + " was killed by " + getRelationColor(player, killerPlayer) + killerPlayer.getName() + CC.GRAY + ".");
             }
-        }
-        CraftEntity killer = PlayerUtil.getLastDamager(deadPlayer);
-        if (killer !=null) {
-            Player player = (Player) killer;
-            Profile profile = Profile.getByUuid(player);
-            profile.getStatisticsData().get(kit).incrementKills();
         }
 
         onDeath(deadPlayer, killerPlayer);

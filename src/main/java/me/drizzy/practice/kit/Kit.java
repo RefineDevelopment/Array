@@ -26,15 +26,7 @@ public class Kit {
 
     @Getter private static final List<Kit> kits = new ArrayList<>();
     private final String name;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    private final KitLoadout kitLoadout = new KitLoadout();
-=======
     private final KitInventory kitInventory= new KitInventory();
->>>>>>> Stashed changes
-=======
-    private final KitInventory kitInventory= new KitInventory();
->>>>>>> Stashed changes
     private final KitEditRules editRules = new KitEditRules();
     private final KitGameRules gameRules = new KitGameRules();
     @Setter private Queue unrankedQueue;
@@ -230,23 +222,6 @@ public class Kit {
                 this.getWinLeaderboards().add(kitLeaderboards);
             }
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        if (!this.getKillsLeaderboards().isEmpty()) this.getKillsLeaderboards().clear();
-        for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("kitStatistics." + getName() + ".kills")).limit(10).into(new ArrayList<>())) {
-            Document kitStatistics = (Document) document.get("kitStatistics");
-            if (kitStatistics.containsKey(getName())) {
-                Document kitDocument = (Document) kitStatistics.get(getName());
-                KitLeaderboards kitLeaderboards = new KitLeaderboards();
-                kitLeaderboards.setName((String) document.get("name"));
-                kitLeaderboards.setElo((Integer) kitDocument.get("kills"));
-                this.getKillsLeaderboards().add(kitLeaderboards);
-            }
-        }
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     }
 
 }

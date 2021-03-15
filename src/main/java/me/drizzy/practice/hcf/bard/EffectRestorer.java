@@ -3,14 +3,7 @@ package me.drizzy.practice.hcf.bard;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import me.drizzy.practice.hcf.events.ArmorClassUnequipEvent;
-<<<<<<< Updated upstream:src/main/java/me/drizzy/practice/hcf/bard/EffectRestorer.java
-<<<<<<< Updated upstream
-=======
 import me.drizzy.ravespigot.events.potion.PotionEffectExpireEvent;
->>>>>>> Stashed changes
-=======
-import me.drizzy.ravespigot.events.potion.PotionEffectExpireEvent;
->>>>>>> Stashed changes:src/main/java/me/drizzy/practice/match/kits/utils/bard/EffectRestorer.java
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 import me.drizzy.practice.Array;
@@ -21,13 +14,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-<<<<<<< Updated upstream:src/main/java/me/drizzy/practice/hcf/bard/EffectRestorer.java
-<<<<<<< Updated upstream
-import pt.foxspigot.jar.event.potion.PotionEffectExpireEvent;
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes:src/main/java/me/drizzy/practice/match/kits/utils/bard/EffectRestorer.java
 
 import java.util.Collection;
 import java.util.UUID;

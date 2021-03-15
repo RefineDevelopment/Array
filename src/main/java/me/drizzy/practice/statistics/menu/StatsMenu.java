@@ -57,17 +57,7 @@ public class StatsMenu extends Menu {
             lore.add(CC.MENU_BAR);
             lore.add("&8 • &bELO: &f" + elo);
             lore.add("&8 • &bWins: &f" + profile.getStatisticsData().get(kit).getWon());
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            lore.add("&8 • &bKills: &f" + profile.getStatisticsData().get(kit).getKills());
             lore.add("&8 • &bLosses: &f" + profile.getStatisticsData().get(kit).getLost());
-            lore.add("&8 • &bDeaths: &f" + profile.getStatisticsData().get(kit).getDeaths());
-=======
-            lore.add("&8 • &bLosses: &f" + profile.getStatisticsData().get(kit).getLost());
->>>>>>> Stashed changes
-=======
-            lore.add("&8 • &bLosses: &f" + profile.getStatisticsData().get(kit).getLost());
->>>>>>> Stashed changes
             lore.add(CC.MENU_BAR);
 
             return new ItemBuilder(kit.getDisplayIcon())
@@ -88,27 +78,10 @@ public class StatsMenu extends Menu {
             lore.add(CC.MENU_BAR);
             lore.add("&8 • &bELO: &r" + profile.getGlobalElo());
             lore.add("&8 • &bWins: &f" + profile.getTotalWins());
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            lore.add("&8 • &bKills: &f" + profile.getTotalKills());
-            lore.add("&8 • &bLosses: &f" + profile.getTotalLost());
-            lore.add("&8 • &bDeaths: &f" + profile.getTotalDeaths());
-            lore.add(CC.MENU_BAR);
-            lore.add("&8 • &bLeague: &f" + profile.getEloLeague());
-            lore.add("&8 • &bW/L Ratio: &f" + profile.getWLR());
-            lore.add("&8 • &bK/D Ratio: &f" + profile.getKDR());
-=======
             lore.add("&8 • &bLosses: &f" + profile.getTotalLost());
             lore.add(CC.MENU_BAR);
             lore.add("&8 • &bLeague: &f" + profile.getEloLeague());
             lore.add("&8 • &bW/L Ratio: &f" + profile.getWLR());
->>>>>>> Stashed changes
-=======
-            lore.add("&8 • &bLosses: &f" + profile.getTotalLost());
-            lore.add(CC.MENU_BAR);
-            lore.add("&8 • &bLeague: &f" + profile.getEloLeague());
-            lore.add("&8 • &bW/L Ratio: &f" + profile.getWLR());
->>>>>>> Stashed changes
             lore.add(CC.MENU_BAR);
 
             return new ItemBuilder(SkullCreator.itemFromUuid(target.getUniqueId()))

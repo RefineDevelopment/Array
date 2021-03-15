@@ -51,9 +51,8 @@ public class MatchBridgeStartTask extends BukkitRunnable {
         match.broadcastMessage(CC.AQUA + (seconds - 2) + "...");
         match.broadcastSound(Sound.NOTE_PLING);
         match.playFirework();
-
-
         ticks++;
+
     }
 
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class KitInventory {
 
-    private String customName = "DefaultProvider";
+    private String customName = "Default";
     private ItemStack[] armor;
     private ItemStack[] contents;
     private List<PotionEffect> effects;

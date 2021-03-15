@@ -21,7 +21,7 @@ public class PartyListener implements Listener {
         Party party = profile.getParty();
 
         if (party != null) {
-            if (chatMessage.startsWith("@") || profile.getSettings().isPartyChat()) {
+            if (chatMessage.startsWith("@")) {
                 event.setCancelled(true);
                 String message = CC.translate("&7» " + player.getDisplayName() + ChatColor.GRAY + ": " + ChatColor.AQUA + chatMessage.replace("@", ""));
                 party.broadcast(message);
@@ -41,9 +41,6 @@ public class PartyListener implements Listener {
             }
             else {
                 profile.getParty().leave(event.getPlayer(), false);
-            }
-            if (Profile.getByUuid(profile.getParty().getPlayers().get(1)).isInMatch()) {
-                profile.getMatch().handleDeath(event.getPlayer(), (Player) PlayerUtil.getLastDamager(event.getPlayer()), true);
             }
         }
     }

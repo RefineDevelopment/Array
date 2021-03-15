@@ -1,0 +1,11 @@
+arenas:
+  RemoveMe:
+    enabled: true
+    type: SHARED
+    icon:
+      material: SNOW_BLOCK
+      durability: 0
+    disable-pearls: false
+    spawn1: world:-12.66282215875464:105.0:-48.49693428069013:89.90397:0.52913266
+    spawn2: world:-156.6947424228934:105.0:-47.58611950856659:269.54514:-0.77263093
+    kits: []

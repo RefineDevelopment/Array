@@ -159,21 +159,9 @@ public class SpleefListener implements Listener {
 				}
 				if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
 					if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DEFAULT_KIT))) {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-						KitLoadout kitLoadout = Spleef.getKit().getKitLoadout();
-						event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
-						event.getPlayer().getInventory().setContents(kitLoadout.getContents());
-=======
 						KitInventory kitInventory= Spleef.getKit().getKitInventory();
 						event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
 						event.getPlayer().getInventory().setContents(kitInventory.getContents());
->>>>>>> Stashed changes
-=======
-						KitInventory kitInventory= Spleef.getKit().getKitInventory();
-						event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
-						event.getPlayer().getInventory().setContents(kitInventory.getContents());
->>>>>>> Stashed changes
 						event.getPlayer().updateInventory();
 						event.setCancelled(true);
 						return;
@@ -186,23 +174,10 @@ public class SpleefListener implements Listener {
 					if (displayName.startsWith("Kit: ")) {
 						String kitName = displayName.replace("Kit: ", "");
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-						for (KitLoadout kitLoadout : profile.getStatisticsData().get(Spleef.getKit()).getLoadouts()) {
-							if (kitLoadout != null && ChatColor.stripColor(kitLoadout.getCustomName()).equals(kitName)) {
-								event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
-								event.getPlayer().getInventory().setContents(kitLoadout.getContents());
-=======
-=======
->>>>>>> Stashed changes
 						for ( KitInventory kitInventory : profile.getStatisticsData().get(Spleef.getKit()).getLoadouts()) {
 							if (kitInventory != null && ChatColor.stripColor(kitInventory.getCustomName()).equals(kitName)) {
 								event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
 								event.getPlayer().getInventory().setContents(kitInventory.getContents());
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 								event.getPlayer().updateInventory();
 								event.setCancelled(true);
 								return;

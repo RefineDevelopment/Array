@@ -50,7 +50,7 @@ public class Board {
         if (aether.getAdapter() != null) {
             objective.setDisplayName(ChatColor.translateAlternateColorCodes('&', aether.getAdapter().getTitle(player)));
         } else {
-            objective.setDisplayName("DefaultProvider Title");
+            objective.setDisplayName("Default Title");
         }
 
         boards.add(this);
