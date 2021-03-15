@@ -8,7 +8,11 @@ import me.drizzy.practice.hcf.HCFManager;
 import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.kit.Kit;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import me.drizzy.practice.kit.KitLoadout;
+=======
+import me.drizzy.practice.kit.KitInventory;
+>>>>>>> Stashed changes
 =======
 import me.drizzy.practice.kit.KitInventory;
 >>>>>>> Stashed changes
@@ -93,6 +97,7 @@ public class MatchListener implements Listener {
     //TODO: Laggy players double or triple point sometimes (Could try the parkour patch again?)
     @EventHandler
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public void onPortal(PlayerPortalEvent event){
         Player player = event.getPlayer();
         Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -113,6 +118,8 @@ public class MatchListener implements Listener {
                     TeamPlayer guy = match.getPlayerA().getPlayer() == player ? match.getTeamPlayerB() : match.getTeamPlayerA();
                     match.onDeath(guy.getPlayer(), (Player) PlayerUtil.getLastDamager(guy.getPlayer()));
 =======
+=======
+>>>>>>> Stashed changes
     public void onPortal(EntityPortalEnterEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
@@ -137,6 +144,9 @@ public class MatchListener implements Listener {
                         match.onDeath(guy.getPlayer(), (Player) PlayerUtil.getLastDamager(guy.getPlayer()));
                         match.getBridgePlayers().add(player);
                     }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                 }
             }
@@ -150,8 +160,12 @@ public class MatchListener implements Listener {
 
         if (profile.isInFight()) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             Match match = profile.getMatch();
 
+=======
+            Match match=profile.getMatch();
+>>>>>>> Stashed changes
 =======
             Match match=profile.getMatch();
 >>>>>>> Stashed changes
@@ -193,6 +207,7 @@ public class MatchListener implements Listener {
         }
     }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockDamage(final BlockDamageEvent event) {
         Player player = event.getPlayer();
@@ -208,6 +223,8 @@ public class MatchListener implements Listener {
             event.setCancelled(false);
         }
     }
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -356,16 +373,22 @@ public class MatchListener implements Listener {
         if (profile.isInFight()) {
             if (profile.getMatch().isTheBridgeMatch()) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 event.getDrops().clear();
                 PlayerUtil.reset(player);
                 profile.getMatch().setupPlayer(player);
 =======
+=======
+>>>>>>> Stashed changes
                 TheBridgeMatch bridgeMatch = (TheBridgeMatch) profile.getMatch();
                 PlayerUtil.reset(player);
                 player.getInventory().setArmorContents(bridgeMatch.getKit().getKitInventory().getArmor());
                 player.getInventory().setContents(bridgeMatch.getKit().getKitInventory().getContents());
                 TheBridgeMatch.giveBridgeKit(player);
                 player.teleport(bridgeMatch.getTeamPlayer(player).getPlayerSpawn());
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                 return;
             }
@@ -499,12 +522,18 @@ public class MatchListener implements Listener {
                         player.setHealth(20.0);
                         player.teleport(match.getTeamPlayer(player).getPlayerSpawn());
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
                         if (profile.getMatch().isTheBridgeMatch()) {
                             TheBridgeMatch bridgeMatch = (TheBridgeMatch) match;
                             PlayerUtil.reset(player);
                             bridgeMatch.setupPlayer(player);
                         }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                         return;
                     }
@@ -740,9 +769,15 @@ public class MatchListener implements Listener {
             if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
                 if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DEFAULT_KIT))) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                     final KitLoadout kitLoadout = profile.getMatch().getKit().getKitLoadout();
                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());
+=======
+                    final KitInventory kitInventory= profile.getMatch().getKit().getKitInventory();
+                    event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                    event.getPlayer().getInventory().setContents(kitInventory.getContents());
+>>>>>>> Stashed changes
 =======
                     final KitInventory kitInventory= profile.getMatch().getKit().getKitInventory();
                     event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
@@ -758,9 +793,15 @@ public class MatchListener implements Listener {
                 }
                 if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DIAMOND_KIT))) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                     final KitLoadout kitLoadout = Objects.requireNonNull(Kit.getByName("HCFDIAMOND")).getKitLoadout();
                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());
+=======
+                    final KitInventory kitInventory= Objects.requireNonNull(Kit.getByName("HCFDIAMOND")).getKitInventory();
+                    event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                    event.getPlayer().getInventory().setContents(kitInventory.getContents());
+>>>>>>> Stashed changes
 =======
                     final KitInventory kitInventory= Objects.requireNonNull(Kit.getByName("HCFDIAMOND")).getKitInventory();
                     event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
@@ -777,9 +818,15 @@ public class MatchListener implements Listener {
                 }
                 if (event.getItem().equals(Hotbar.getItems().get(HotbarType.BARD_KIT))) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                     final KitLoadout kitLoadout = Objects.requireNonNull(Kit.getByName("HCFBARD")).getKitLoadout();
                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());
+=======
+                    final KitInventory kitInventory= Objects.requireNonNull(Kit.getByName("HCFBARD")).getKitInventory();
+                    event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                    event.getPlayer().getInventory().setContents(kitInventory.getContents());
+>>>>>>> Stashed changes
 =======
                     final KitInventory kitInventory= Objects.requireNonNull(Kit.getByName("HCFBARD")).getKitInventory();
                     event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
@@ -796,9 +843,15 @@ public class MatchListener implements Listener {
                 }
                 if (event.getItem().equals(Hotbar.getItems().get(HotbarType.ARCHER_KIT))) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                     final KitLoadout kitLoadout = Objects.requireNonNull(Kit.getByName("HCFARCHER")).getKitLoadout();
                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());
+=======
+                    final KitInventory kitInventory= Objects.requireNonNull(Kit.getByName("HCFARCHER")).getKitInventory();
+                    event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                    event.getPlayer().getInventory().setContents(kitInventory.getContents());
+>>>>>>> Stashed changes
 =======
                     final KitInventory kitInventory= Objects.requireNonNull(Kit.getByName("HCFARCHER")).getKitInventory();
                     event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
@@ -815,9 +868,15 @@ public class MatchListener implements Listener {
                 }
                 if (event.getItem().equals(Hotbar.getItems().get(HotbarType.ROGUE_KIT))) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                     final KitLoadout kitLoadout = Objects.requireNonNull(Kit.getByName("HCFROGUE")).getKitLoadout();
                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());
+=======
+                    final KitInventory kitInventory= Objects.requireNonNull(Kit.getByName("HCFROGUE")).getKitInventory();
+                    event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                    event.getPlayer().getInventory().setContents(kitInventory.getContents());
+>>>>>>> Stashed changes
 =======
                     final KitInventory kitInventory= Objects.requireNonNull(Kit.getByName("HCFROGUE")).getKitInventory();
                     event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
@@ -838,15 +897,21 @@ public class MatchListener implements Listener {
                 if (displayName.endsWith(" (Right-Click)")) {
                     final String kitName = displayName.replace(" (Right-Click)", "");
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                     for (final KitLoadout kitLoadout2 : profile.getStatisticsData().get(profile.getMatch().getKit()).getLoadouts()) {
                         if (kitLoadout2 != null && ChatColor.stripColor(kitLoadout2.getCustomName()).equals(kitName)) {
                             event.getPlayer().getInventory().setArmorContents(kitLoadout2.getArmor());
                             event.getPlayer().getInventory().setContents(kitLoadout2.getContents());
 =======
+=======
+>>>>>>> Stashed changes
                     for (final KitInventory kitInventory2 : profile.getStatisticsData().get(profile.getMatch().getKit()).getLoadouts()) {
                         if (kitInventory2 != null && ChatColor.stripColor(kitInventory2.getCustomName()).equals(kitName)) {
                             event.getPlayer().getInventory().setArmorContents(kitInventory2.getArmor());
                             event.getPlayer().getInventory().setContents(kitInventory2.getContents());
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                             event.getPlayer().getActivePotionEffects().clear();
                             event.getPlayer().addPotionEffects(profile.getMatch().getKit().getKitInventory().getEffects());
@@ -949,6 +1014,7 @@ public class MatchListener implements Listener {
     @EventHandler (priority = EventPriority.LOW)
     public void onPearlThrow(final ProjectileLaunchEvent event) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         final Projectile projectile = event.getEntity();
         if (projectile instanceof EnderPearl) {
             final EnderPearl enderPearl = (EnderPearl) projectile;
@@ -962,6 +1028,8 @@ public class MatchListener implements Listener {
                         shooter.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 1));
                         event.setCancelled(true);
 =======
+=======
+>>>>>>> Stashed changes
         final Projectile projectile=event.getEntity();
         if (projectile instanceof EnderPearl) {
             final EnderPearl enderPearl=(EnderPearl) projectile;
@@ -976,6 +1044,9 @@ public class MatchListener implements Listener {
                             shooter.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 1));
                             event.setCancelled(true);
                         }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                     }
                 }

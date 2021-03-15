@@ -170,10 +170,13 @@ public class DuelAcceptCommand {
         if (!request.isParty()) {
             for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Start-Message.Solo") ) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 final String opponentMessages=this.formatMessages(string, rank.getFullName(player), rank.getFullName(target));
                 final String message=CC.translate(opponentMessages).replace("{kit}", request.getKit().getName().replace("{arena}", request.getArena().getName()));
                 match.broadcastMessage(message);
 =======
+=======
+>>>>>>> Stashed changes
                 if (rank.getFullName(player) != null && rank.getFullName(target) != null) {
                     final String opponentMessages=this.formatMessages(string, rank.getFullName(player), rank.getFullName(target));
                     final String message=CC.translate(opponentMessages).replace("{kit}", request.getKit().getName().replace("{arena}", request.getArena().getName()));
@@ -183,6 +186,9 @@ public class DuelAcceptCommand {
                     final String message=CC.translate(opponentMessages).replace("{kit}", request.getKit().getName().replace("{arena}", request.getArena().getName()));
                     match.broadcastMessage(message);
                 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             }
         }

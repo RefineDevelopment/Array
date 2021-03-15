@@ -2,8 +2,11 @@ main: me.drizzy.practice.Array
 name: Array
 version: Beta 4.2
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 authors: ["Nick", "Drizzy", "Zentil", "Veltus"]
 =======
+=======
+>>>>>>> Stashed changes
 authors: ["Nick", "Drizzy", "Zentil"]
 >>>>>>> Stashed changes
 depend:
@@ -15,7 +18,11 @@ softdepend:
   - ZoomCore
   - AquaCore
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   - Hestia
+=======
+  - Hestia
+>>>>>>> Stashed changes
 =======
   - Hestia
 >>>>>>> Stashed changes

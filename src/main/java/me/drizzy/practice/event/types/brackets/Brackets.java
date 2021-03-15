@@ -7,7 +7,10 @@ import me.drizzy.practice.event.types.brackets.task.BracketsRoundStartTask;
 import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.profile.ProfileState;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import me.drizzy.practice.hotbar.Hotbar;
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 import me.drizzy.practice.Array;
@@ -21,6 +24,7 @@ import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.util.chat.Clickable;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 =======
 >>>>>>> Stashed changes
@@ -31,6 +35,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 =======
+>>>>>>> Stashed changes
+=======
+import me.drizzy.practice.util.external.Cooldown;
+import me.drizzy.practice.util.external.TimeUtil;
+import org.bukkit.Bukkit;
 >>>>>>> Stashed changes
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -369,11 +378,19 @@ public class Brackets {
 
 		playerA.teleport(Array.getInstance().getBracketsManager().getBracketsSpawn1());
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 		playerA.getInventory().setContents(getKit().getKitLoadout().getContents());
 		playerA.getInventory().setArmorContents(getKit().getKitLoadout().getArmor());
 		playerB.teleport(Array.getInstance().getBracketsManager().getBracketsSpawn2());
 		playerB.getInventory().setContents(getKit().getKitLoadout().getContents());
 		playerB.getInventory().setArmorContents(getKit().getKitLoadout().getArmor());
+=======
+		playerA.getInventory().setContents(getKit().getKitInventory().getContents());
+		playerA.getInventory().setArmorContents(getKit().getKitInventory().getArmor());
+		playerB.teleport(Array.getInstance().getBracketsManager().getBracketsSpawn2());
+		playerB.getInventory().setContents(getKit().getKitInventory().getContents());
+		playerB.getInventory().setArmorContents(getKit().getKitInventory().getArmor());
+>>>>>>> Stashed changes
 =======
 		playerA.getInventory().setContents(getKit().getKitInventory().getContents());
 		playerA.getInventory().setArmorContents(getKit().getKitInventory().getArmor());

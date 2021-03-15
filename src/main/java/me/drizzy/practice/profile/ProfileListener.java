@@ -296,13 +296,19 @@ public class ProfileListener implements Listener {
         Profile.getPlayerList().remove(event.getPlayer());
         if (profile.getMatch() != null) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             profile.getMatch().handleDeath(event.getPlayer(), profile.getMatch().getOpponentPlayer(event.getPlayer()), true);
 =======
+=======
+>>>>>>> Stashed changes
             if (profile.getMatch().isSoloMatch() || profile.getMatch().isSumoMatch() || profile.getMatch().isTheBridgeMatch()) {
                 profile.getMatch().handleDeath(event.getPlayer(), profile.getMatch().getOpponentPlayer(event.getPlayer()), true);
             } else {
                 profile.getMatch().handleDeath(event.getPlayer(), profile.getMatch().getOpponentTeam(event.getPlayer()).getLeader().getPlayer(), true);
             }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
         if (profile.isInQueue()) {
@@ -311,7 +317,11 @@ public class ProfileListener implements Listener {
         profile.save();
         if (profile.getRematchData() != null) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             Player target=Array.getInstance().getServer().getPlayer(profile.getRematchData().getTarget());
+=======
+            Player target = Array.getInstance().getServer().getPlayer(profile.getRematchData().getTarget());
+>>>>>>> Stashed changes
 =======
             Player target = Array.getInstance().getServer().getPlayer(profile.getRematchData().getTarget());
 >>>>>>> Stashed changes

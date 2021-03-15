@@ -3,7 +3,11 @@ package me.drizzy.practice.knockback;
 import lombok.Getter;
 import me.drizzy.practice.Array;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import me.drizzy.practice.knockback.types.FoxSpigot;
+=======
+import me.drizzy.practice.knockback.types.Rave;
+>>>>>>> Stashed changes
 =======
 import me.drizzy.practice.knockback.types.Rave;
 >>>>>>> Stashed changes
@@ -19,8 +23,13 @@ public class KnockbackManager {
     public void preload() {
         try {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             Class.forName("pt.foxspigot.jar.knockback.KnockbackModule");
             this.knockbackType = new FoxSpigot();
+=======
+            Class.forName("me.drizzy.ravespigot.knockback.KnockbackModule");
+            this.knockbackType = new Rave();
+>>>>>>> Stashed changes
 =======
             Class.forName("me.drizzy.ravespigot.knockback.KnockbackModule");
             this.knockbackType = new Rave();

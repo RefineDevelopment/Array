@@ -41,15 +41,21 @@ public class Hotbar
         Hotbar.items.put(HotbarType.EVENT_JOIN, new ItemBuilder(Material.NETHER_STAR).name(CC.AQUA + "Join Event" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.SUMO_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Sumo" + CC.GRAY + " (Right-Click)").build());
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         Hotbar.items.put(HotbarType.GULAG_EVENT, new ItemBuilder(Material.DIAMOND_HOE).name(CC.AQUA + "Glock 19 " + CC.GRAY + "(Loaded)").build());
         Hotbar.items.put(HotbarType.GULAG_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Wizard" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.BRACKETS_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Brackets" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.LMS_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave KoTH" + CC.GRAY + " (Right-Click)").build());
 =======
+=======
+>>>>>>> Stashed changes
         Hotbar.items.put(HotbarType.WIZARD_WAND, new ItemBuilder(Material.DIAMOND_HOE).name(CC.AQUA + "Elder's Wand").build());
         Hotbar.items.put(HotbarType.WIZARD_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Wizard" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.BRACKETS_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Brackets" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.LMS_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave LMS" + CC.GRAY + " (Right-Click)").build());
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         Hotbar.items.put(HotbarType.PARKOUR_SPAWN, new ItemBuilder(Material.ARROW).name(CC.GREEN + "Back to Checkpoint" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.PARKOUR_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Parkour" + CC.GRAY + " (Right-Click)").build());
@@ -58,7 +64,11 @@ public class Hotbar
         Hotbar.items.put(HotbarType.REMATCH_ACCEPT, new ItemBuilder(Material.DIAMOND).name(CC.AQUA + "Accept Rematch" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.OITC_KIT, new ItemBuilder(Material.BLAZE_POWDER).name(CC.AQUA + "OITC Kit" + CC.GRAY + " (Right-Click)").build());
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         Hotbar.items.put(HotbarType.DEFAULT_KIT, new ItemBuilder(Material.BOOK).name(CC.AQUA + "DefaultProvider Kit" + CC.GRAY + " (Right-Click)").build());
+=======
+        Hotbar.items.put(HotbarType.DEFAULT_KIT, new ItemBuilder(Material.BOOK).name(CC.AQUA + "Default Kit" + CC.GRAY + " (Right-Click)").build());
+>>>>>>> Stashed changes
 =======
         Hotbar.items.put(HotbarType.DEFAULT_KIT, new ItemBuilder(Material.BOOK).name(CC.AQUA + "Default Kit" + CC.GRAY + " (Right-Click)").build());
 >>>>>>> Stashed changes
@@ -117,7 +127,11 @@ public class Hotbar
             }
             case GULAG_SPECTATE: {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 toReturn[0] = Hotbar.items.get(HotbarType.GULAG_LEAVE);
+=======
+                toReturn[0] = Hotbar.items.get(HotbarType.WIZARD_LEAVE);
+>>>>>>> Stashed changes
 =======
                 toReturn[0] = Hotbar.items.get(HotbarType.WIZARD_LEAVE);
 >>>>>>> Stashed changes

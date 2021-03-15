@@ -30,6 +30,7 @@ public enum HotbarType
     SPLEEF_LEAVE("spleef leave"),
     REMATCH_REQUEST("rematch"), 
     REMATCH_ACCEPT("rematch"),
+<<<<<<< Updated upstream:src/main/java/me/drizzy/practice/enums/HotbarType.java
 <<<<<<< Updated upstream
     GULAG_EVENT(null),
     GULAG_LEAVE("wizard leave"),
@@ -37,6 +38,10 @@ public enum HotbarType
     WIZARD_WAND(null),
     WIZARD_LEAVE("wizard leave"),
 >>>>>>> Stashed changes
+=======
+    WIZARD_WAND(null),
+    WIZARD_LEAVE("wizard leave"),
+>>>>>>> Stashed changes:src/main/java/me/drizzy/practice/hotbar/HotbarItem.java
     OITC_LEAVE("oitc leave"),
     OITC_KIT(null),
     DEFAULT_KIT(null), 

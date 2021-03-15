@@ -1,0 +1,13 @@
+main: me.drizzy.practice.Array
+name: Array
+version: Beta 4.2
+authors: ["Nick", "Drizzy", "Zentil"]
+depend:
+  - ProtocolLib
+softdepend:
+  - HolographicDisplays
+  - PlaceholderAPI
+  - MizuCore
+  - ZoomCore
+  - AquaCore
+  - Hestia

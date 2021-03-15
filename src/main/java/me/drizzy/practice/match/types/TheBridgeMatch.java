@@ -43,6 +43,10 @@ public class TheBridgeMatch extends Match {
     @Setter private TeamPlayer playerA;
     @Setter private TeamPlayer playerB;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+    @Getter private final List<Player> bridgePlayers = new ArrayList<>();
+>>>>>>> Stashed changes
 =======
     @Getter private final List<Player> bridgePlayers = new ArrayList<>();
 >>>>>>> Stashed changes
@@ -117,8 +121,14 @@ public class TheBridgeMatch extends Match {
         }
         teamPlayer.setPlayerSpawn(spawn);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         player.getInventory().setArmorContents(getKit().getKitLoadout().getArmor());
         player.getInventory().setContents(getKit().getKitLoadout().getContents());
+=======
+        player.getInventory().setArmorContents(getKit().getKitInventory().getArmor());
+        player.getInventory().setContents(getKit().getKitInventory().getContents());
+        giveBridgeKit(player);
+>>>>>>> Stashed changes
 =======
         player.getInventory().setArmorContents(getKit().getKitInventory().getArmor());
         player.getInventory().setContents(getKit().getKitInventory().getContents());
@@ -136,7 +146,10 @@ public class TheBridgeMatch extends Match {
     @Override
     public void onStart() {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         this.getPlayers().forEach(TheBridgeMatch::giveBridgeKit);
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     }

@@ -1,5 +1,9 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 package me.drizzy.practice.knockback.types;
+=======
+/*package me.drizzy.practice.knockback.types;
+>>>>>>> Stashed changes
 =======
 /*package me.drizzy.practice.knockback.types;
 >>>>>>> Stashed changes
@@ -41,7 +45,11 @@ public class FoxSpigot implements KnockbackType {
         ((CraftPlayer) p).getHandle().setKnockback(knockbackProfile);
     }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 }
+=======
+}*/
+>>>>>>> Stashed changes
 =======
 }*/
 >>>>>>> Stashed changes

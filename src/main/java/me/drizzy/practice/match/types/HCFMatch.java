@@ -26,8 +26,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import pt.foxspigot.jar.knockback.KnockbackModule;
 import pt.foxspigot.jar.knockback.KnockbackProfile;
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 

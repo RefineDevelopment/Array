@@ -28,9 +28,12 @@ import java.util.Map;
 public class WizardListener implements Listener {
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	int cooldownTime = 5;
 	HashMap<String, Long> cooldown = new HashMap<>();
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 	private final FireworkEffectPlayer fireworkEffectPlayer=new FireworkEffectPlayer();
@@ -170,7 +173,11 @@ public class WizardListener implements Listener {
 		Player player=event.getPlayer();
 		if (Profile.getByUuid(player).isInWizard()) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 			if (!event.hasItem() || event.getItem().getType() != Material.DIAMOND_HOE || !event.getAction().name().contains("RIGHT_")) {
+=======
+			if (!event.hasItem() || event.getItem().getType() != Material.STICK || !event.getAction().name().contains("RIGHT_")) {
+>>>>>>> Stashed changes
 =======
 			if (!event.hasItem() || event.getItem().getType() != Material.STICK || !event.getAction().name().contains("RIGHT_")) {
 >>>>>>> Stashed changes
@@ -183,7 +190,11 @@ public class WizardListener implements Listener {
 				return;
 			} else {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 				profile.setEnderpearlCooldown(new Cooldown(1_000));
+=======
+				profile.setWizardCooldown(new Cooldown(TimeUtil.parseTime("2s")));
+>>>>>>> Stashed changes
 =======
 				profile.setWizardCooldown(new Cooldown(TimeUtil.parseTime("2s")));
 >>>>>>> Stashed changes
@@ -250,6 +261,7 @@ public class WizardListener implements Listener {
 		}
 	}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 	@EventHandler
 	private void onDoubleJump(PlayerToggleFlightEvent event) {
@@ -280,6 +292,8 @@ public class WizardListener implements Listener {
 			player.playSound(player.getLocation(), Sound.EXPLODE, 1.0F, 1.0F);
 		}
 	}
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 }

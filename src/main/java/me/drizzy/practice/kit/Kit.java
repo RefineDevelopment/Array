@@ -27,7 +27,11 @@ public class Kit {
     @Getter private static final List<Kit> kits = new ArrayList<>();
     private final String name;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private final KitLoadout kitLoadout = new KitLoadout();
+=======
+    private final KitInventory kitInventory= new KitInventory();
+>>>>>>> Stashed changes
 =======
     private final KitInventory kitInventory= new KitInventory();
 >>>>>>> Stashed changes
@@ -227,6 +231,7 @@ public class Kit {
             }
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         if (!this.getKillsLeaderboards().isEmpty()) this.getKillsLeaderboards().clear();
         for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("kitStatistics." + getName() + ".kills")).limit(10).into(new ArrayList<>())) {
             Document kitStatistics = (Document) document.get("kitStatistics");
@@ -238,6 +243,8 @@ public class Kit {
                 this.getKillsLeaderboards().add(kitLeaderboards);
             }
         }
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     }

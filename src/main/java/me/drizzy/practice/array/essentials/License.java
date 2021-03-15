@@ -56,7 +56,11 @@ public class License {
 			return true;
 		} else {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 			log(1, "            &cLicense is NOT valid!");
+=======
+			log(1, "&cLicense is NOT valid!");
+>>>>>>> Stashed changes
 =======
 			log(1, "&cLicense is NOT valid!");
 >>>>>>> Stashed changes
