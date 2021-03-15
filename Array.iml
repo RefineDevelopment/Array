@@ -33,18 +33,9 @@
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.1" level="project" />
     <orderEntry type="module-library">
-      <library name="Maven: club.vaxel:RaveSpigot:1.0-SNAPSHOT">
+      <library name="Maven: me.drizzy.spigot:RaveSpigot:1.4-SNAPSHOT">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/server.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: org.spigotmc:Spigot:1.7.10.R4-SNAPSHOT">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/spigot-1.7.10.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/RaveSpigot.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -61,25 +52,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: club.vaxel.core:Synth:1.0">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/Synth.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: us.myles:ViaVersion:3.2.1">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/ViaVersion.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: io.github.thatkawaiisam:Ziggurat:1.0">
+      <library name="Maven: me.allen.ziggurat:Ziggurat:1.0">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/ziggurat.jar!/" />
         </CLASSES>
@@ -90,7 +63,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.moonsworth:LunarClient-API:LATEST">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/LunarAPi.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/api/LunarAPI-GIT.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -99,7 +72,61 @@
     <orderEntry type="module-library">
       <library name="Maven: net.mineaus:LunarClient-API:LATEST">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/LunarClientAPI-1.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/api/LunarAPI-MCM.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: me.activated.core:AquaCore-API:2.5.8">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/api/AquaCoreAPI.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: club.frozed:Zoom-API:1.1-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/api/ZoomAPI-1.1-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: me.quartz:Hestia-API:1.0-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/api/HestiaAPI.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.broustudio:Mizu-API:1.0-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/api/MizuAPI.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.allatori:Allatori:1.0-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/obfuscator/allatori.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.allatori:annotations:1.0-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/obfuscator/allatori-annotations.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -108,16 +135,7 @@
     <orderEntry type="module-library">
       <library name="Maven: me.clip:placeholderapi:2.10.3">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/PlaceholderAPI.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/HolographicDisplays.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/api/PlaceholderAPI.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
