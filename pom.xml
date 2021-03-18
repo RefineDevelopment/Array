@@ -83,29 +83,13 @@
             <scope>compile</scope>
         </dependency>
 
-        <!--Spigots
+        <!--Spigots-->
         <dependency>
             <groupId>pt.foxspigot.jar</groupId>
             <artifactId>FoxSpigot</artifactId>
             <version>0.5-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigots/FoxSpigot.jar</systemPath>
-        </dependency>
-
-        <dependency>
-          <groupId>me.joeleoli</groupId>
-          <artifactId>SpigotX</artifactId>
-          <version>1.0-SNAPSHOT</version>
-          <scope>system</scope>
-          <systemPath>${project.basedir}/lib/spigots/SpigotX.jar</systemPath>
-        </dependency>-->
-
-        <dependency>
-            <groupId>me.drizzy.spigot</groupId>
-            <artifactId>RaveSpigot</artifactId>
-            <version>1.4-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/RaveSpigot.jar</systemPath>
         </dependency>
 
         <!-- Mongo Driver -->

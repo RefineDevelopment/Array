@@ -1,4 +1,4 @@
-/*package me.drizzy.practice.knockback.types;
+package me.drizzy.practice.knockback.types;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.kit.Kit;
@@ -36,4 +36,4 @@ public class FoxSpigot implements KnockbackType {
         KnockbackProfile knockbackProfile = KnockbackModule.getDefault();
         ((CraftPlayer) p).getHandle().setKnockback(knockbackProfile);
     }
-}*/
+}

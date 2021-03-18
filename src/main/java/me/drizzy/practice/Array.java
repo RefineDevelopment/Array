@@ -135,22 +135,22 @@ public class Array extends JavaPlugin {
 
         //To Prevent Stealing and Renaming (Skidding)
         if (!Description.getAuthor().contains("Drizzy")) {
-            this.logger("------------------------------------------------");
+            this.logger(CC.CHAT_BAR);
             this.logger("&cYou edited the plugin.yml, please don't do that");
             this.logger( "&cPlease check your plugin.yml and try again.");
             this.logger("            &cDisabling Array");
-            this.logger("------------------------------------------------");
+            this.logger(CC.CHAT_BAR);
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
         //To Prevent Stealing and Renaming (Skidding)
         if (!Description.getName().contains("Array")) {
-            this.logger("------------------------------------------------");
+            this.logger(CC.CHAT_BAR);
             this.logger("&cYou edited the plugin.yml, please don't do that");
             this.logger(" &cPlease check your plugin.yml and try again.");
             this.logger("            &cDisabling Array");
-            this.logger("------------------------------------------------");
+            this.logger(CC.CHAT_BAR);
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }

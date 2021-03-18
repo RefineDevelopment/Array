@@ -33,9 +33,9 @@
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.1" level="project" />
     <orderEntry type="module-library">
-      <library name="Maven: me.drizzy.spigot:RaveSpigot:1.4-SNAPSHOT">
+      <library name="Maven: pt.foxspigot.jar:FoxSpigot:0.5-SNAPSHOT">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/RaveSpigot.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/spigots/FoxSpigot.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
