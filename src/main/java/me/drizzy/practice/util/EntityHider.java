@@ -247,10 +247,8 @@ public class EntityHider extends PacketAdapter implements Listener{
             if(PLUGIN_CONFLICT_RESOLUTION == PluginConflictResolution.OVERRIDE) {
                 event.setCancelled(true);
                 event.getEntity().remove();
-            }else if(PLUGIN_CONFLICT_RESOLUTION == PluginConflictResolution.WARN) {
+            } else if (PLUGIN_CONFLICT_RESOLUTION == PluginConflictResolution.WARN) {
                 new PluginConflictException().printStackTrace();
-            }else {
-
             }
         }
     }

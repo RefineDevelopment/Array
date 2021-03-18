@@ -8,6 +8,7 @@ import me.drizzy.practice.kiteditor.KitEditRules;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueType;
+import me.drizzy.practice.statistics.LeaderboardsAdapter;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.InventoryUtil;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
@@ -35,9 +36,9 @@ public class Kit {
     @Setter private String knockbackProfile;
     @Setter private ItemStack displayIcon;
     @Setter private String displayName;
-    private final List<KitLeaderboards> rankedEloLeaderboards = new ArrayList<>();
-    private final List<KitLeaderboards> winLeaderboards = new ArrayList<>();
-    private final List<KitLeaderboards> killsLeaderboards = new ArrayList<>();
+    private final List<LeaderboardsAdapter> rankedEloLeaderboards = new ArrayList<>();
+    private final List<LeaderboardsAdapter> winLeaderboards = new ArrayList<>();
+    private final List<LeaderboardsAdapter> killsLeaderboards = new ArrayList<>();
 
     public Kit(String name) {
         this.name = name;
@@ -91,16 +92,15 @@ public class Kit {
             kit.getGameRules().setPartysplit(config.getBoolean(path + ".game-rules.partysplit"));
             kit.getGameRules().setEditable(config.getBoolean(path + ".game-rules.editable"));
             kit.getGameRules().setAntifoodloss(config.getBoolean(path + ".game-rules.antifoodloss"));
-            kit.getGameRules().setFfacenter(config.getBoolean(path + ".game-rules.ffacenter"));
             kit.getGameRules().setNoitems(config.getBoolean(path + ".game-rules.noitems"));
             kit.getGameRules().setBuild(config.getBoolean(path + ".game-rules.build"));
-            kit.getGameRules().setBridge(config.getBoolean(path + ".game-rules.bridge"));
+            //kit.getGameRules().setBridge(config.getBoolean(path + ".game-rules.bridge"));
             kit.getGameRules().setSpleef(config.getBoolean(path + ".game-rules.spleef"));
             kit.getGameRules().setParkour(config.getBoolean(path + ".game-rules.parkour"));
             kit.getGameRules().setCombo(config.getBoolean(path + ".game-rules.combo"));
             kit.getGameRules().setStickspawn(config.getBoolean(path + ".game-rules.stickspawn"));
             kit.getGameRules().setVoidspawn(config.getBoolean(path + ".game-rules.voidspawn"));
-            //kit.getGameRules().setNetheruhc(config.contains(path + ".game-rules.netheruhc"));
+            kit.getGameRules().setDisablefalldamage(config.contains(path + ".game-rules.disable-fall-damage"));
             kit.getGameRules().setSumo(config.getBoolean(path + ".game-rules.sumo"));
             kit.getGameRules().setBoxuhc(config.getBoolean(path + ".game-rules.boxuhc"));
             kit.getGameRules().setTimed(config.getBoolean(path + ".game-rules.timed"));
@@ -169,13 +169,12 @@ public class Kit {
         configFile.getConfiguration().set(path + ".game-rules.partysplit", gameRules.isPartysplit());
         configFile.getConfiguration().set(path + ".game-rules.editable", gameRules.isEditable());
         configFile.getConfiguration().set(path + ".game-rules.antifoodloss", gameRules.isAntifoodloss());
-        configFile.getConfiguration().set(path + ".game-rules.ffacenter", gameRules.isFfacenter());
         configFile.getConfiguration().set(path + ".game-rules.noitems", gameRules.isNoitems());
         configFile.getConfiguration().set(path + ".game-rules.build", gameRules.isBuild());
-        configFile.getConfiguration().set(path + ".game-rules.bridge", gameRules.isBridge());
+        //configFile.getConfiguration().set(path + ".game-rules.bridge", gameRules.isBridge());
         configFile.getConfiguration().set(path + ".game-rules.spleef", gameRules.isSpleef());
         configFile.getConfiguration().set(path + ".game-rules.parkour", gameRules.isParkour());
-        //configFile.getConfiguration().set(path + ".game-rules.netheruhc", gameRules.isNetheruhc());
+        configFile.getConfiguration().set(path + ".game-rules.disable-fall-damage", gameRules.isDisablefalldamage());
         configFile.getConfiguration().set(path + ".game-rules.stickspawn", gameRules.isStickspawn());
         configFile.getConfiguration().set(path + ".game-rules.voidspawn", gameRules.isVoidspawn());
         configFile.getConfiguration().set(path + ".game-rules.combo", gameRules.isCombo());
@@ -205,10 +204,10 @@ public class Kit {
             Document kitStatistics = (Document) document.get("kitStatistics");
             if (kitStatistics.containsKey(getName())) {
                 Document kitDocument = (Document) kitStatistics.get(getName());
-                KitLeaderboards kitLeaderboards = new KitLeaderboards();
-                kitLeaderboards.setName((String) document.get("name"));
-                kitLeaderboards.setElo((Integer) kitDocument.get("elo"));
-                this.getRankedEloLeaderboards().add(kitLeaderboards);
+                LeaderboardsAdapter leaderboardsAdapter= new LeaderboardsAdapter();
+                leaderboardsAdapter.setName((String) document.get("name"));
+                leaderboardsAdapter.setElo((Integer) kitDocument.get("elo"));
+                this.getRankedEloLeaderboards().add(leaderboardsAdapter);
             }
         }
         if (!this.getWinLeaderboards().isEmpty()) this.getWinLeaderboards().clear();
@@ -216,10 +215,10 @@ public class Kit {
             Document kitStatistics = (Document) document.get("kitStatistics");
             if (kitStatistics.containsKey(getName())) {
                 Document kitDocument = (Document) kitStatistics.get(getName());
-                KitLeaderboards kitLeaderboards = new KitLeaderboards();
-                kitLeaderboards.setName((String) document.get("name"));
-                kitLeaderboards.setElo((Integer) kitDocument.get("won"));
-                this.getWinLeaderboards().add(kitLeaderboards);
+                LeaderboardsAdapter leaderboardsAdapter= new LeaderboardsAdapter();
+                leaderboardsAdapter.setName((String) document.get("name"));
+                leaderboardsAdapter.setElo((Integer) kitDocument.get("won"));
+                this.getWinLeaderboards().add(leaderboardsAdapter);
             }
         }
     }

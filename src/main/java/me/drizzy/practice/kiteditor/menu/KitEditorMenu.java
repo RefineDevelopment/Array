@@ -271,8 +271,8 @@ public class KitEditorMenu extends Menu {
 
         @Override
         public void clicked(Player player, int slot, ClickType clickType, int hotbar) {
-            Inventory inventory=player.getOpenInventory().getTopInventory();
-            ItemStack itemStack=inventory.getItem(slot);
+            Inventory inventory = player.getOpenInventory().getTopInventory();
+            ItemStack itemStack = inventory.getItem(slot);
 
             inventory.setItem(slot, itemStack);
 

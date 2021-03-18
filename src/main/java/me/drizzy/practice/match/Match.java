@@ -212,10 +212,10 @@ public abstract class Match {
     }
 
     public void onDisconnect(Player dead) {
-        if (getKit().getGameRules().isBridge()) {
+        /*if (getKit().getGameRules().isBridge()) {
             end();
             return;
-        }
+        }*/
 
         // Don't continue if the match is already ending
         if (!(state == MatchState.STARTING || state == MatchState.FIGHTING)) {

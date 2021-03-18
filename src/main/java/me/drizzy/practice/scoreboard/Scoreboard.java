@@ -3,7 +3,7 @@ package me.drizzy.practice.scoreboard;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.ArrayCache;
 import me.drizzy.practice.event.types.brackets.Brackets;
-import me.drizzy.practice.event.types.wizard.Wizard;
+import me.drizzy.practice.event.types.gulag.Gulag;
 import me.drizzy.practice.event.types.lms.LMS;
 import me.drizzy.practice.event.types.parkour.Parkour;
 import me.drizzy.practice.event.types.spleef.Spleef;
@@ -68,7 +68,7 @@ public class Scoreboard implements BoardAdapter {
                 }
             }
             if (profile.isInQueue()) {
-                final Queue queue=profile.getQueue();
+                final Queue queue = profile.getQueue();
                 lines.add(CC.SB_BAR);
                 lines.add("&b" + queue.getQueueName());
                 lines.add("&fDuration: &b" + queue.getDuration(player));
@@ -177,7 +177,7 @@ public class Scoreboard implements BoardAdapter {
             final Brackets brackets=profile.getBrackets();
             final Parkour parkour=profile.getParkour();
             final Spleef spleef=profile.getSpleef();
-            final Wizard wizard=profile.getWizard();
+            final Gulag gulag=profile.getGulag();
             if (match != null) {
                 if (!match.isHCFMatch()) {
                     lines.add("&fKit: &b" + match.getKit().getName());
@@ -226,33 +226,33 @@ public class Scoreboard implements BoardAdapter {
                     lines.add("&7vs");
                     lines.add("&b" + sumo.getRoundPlayerB().getUsername() + " &8(&b" + playerb + "&8)");
                 }
-            } else if (wizard != null) {
-                if (wizard.isWaiting()) {
-                    lines.add("&b&lWizard Event");
+            } else if (gulag != null) {
+                if (gulag.isWaiting()) {
+                    lines.add("&b&lGulag Event");
                     lines.add("");
-                    lines.add(CC.translate("&fHost: &b" + wizard.getName()));
-                    lines.add("&fPlayers: &b" + wizard.getEventPlayers().size() + "/" + Wizard.getMaxPlayers());
+                    lines.add(CC.translate("&fHost: &b" + gulag.getName()));
+                    lines.add("&fPlayers: &b" + gulag.getEventPlayers().size() + "/" + Gulag.getMaxPlayers());
                     lines.add("");
-                    if (wizard.getCooldown() == null) {
+                    if (gulag.getCooldown() == null) {
                         lines.add(CC.translate("&fWaiting for players..."));
                     } else {
-                        String remaining=TimeUtil.millisToSeconds(wizard.getCooldown().getRemaining());
+                        String remaining=TimeUtil.millisToSeconds(gulag.getCooldown().getRemaining());
                         if (remaining.startsWith("-")) {
                             remaining="0";
                         }
                         lines.add(CC.translate("&fStarting in " + CC.AQUA + remaining + "&fs"));
                     }
                 } else {
-                    int playera=PlayerUtil.getPing(wizard.getRoundPlayerA().getPlayer());
-                    int playerb=PlayerUtil.getPing(wizard.getRoundPlayerB().getPlayer());
-                    lines.add("&b&lWizard Event");
+                    int playera=PlayerUtil.getPing(gulag.getRoundPlayerA().getPlayer());
+                    int playerb=PlayerUtil.getPing(gulag.getRoundPlayerB().getPlayer());
+                    lines.add("&b&lGulag Event");
                     lines.add("");
-                    lines.add("&fPlayers: &b" + wizard.getRemainingPlayers().size() + "/" + Wizard.getMaxPlayers());
-                    lines.add("&fDuration: &b" + wizard.getRoundDuration());
+                    lines.add("&fPlayers: &b" + gulag.getRemainingPlayers().size() + "/" + Gulag.getMaxPlayers());
+                    lines.add("&fDuration: &b" + gulag.getRoundDuration());
                     lines.add("");
-                    lines.add("&b" + wizard.getRoundPlayerA().getUsername() + " &8(&b" + playera + "&8)");
+                    lines.add("&b" + gulag.getRoundPlayerA().getUsername() + " &8(&b" + playera + "&8)");
                     lines.add("&7vs");
-                    lines.add("&b" + wizard.getRoundPlayerB().getUsername() + " &8(&b" + playerb + "&8)");
+                    lines.add("&b" + gulag.getRoundPlayerB().getUsername() + " &8(&b" + playerb + "&8)");
                 }
             } else if (ffa != null) {
                 if (ffa.isWaiting()) {
@@ -378,34 +378,34 @@ public class Scoreboard implements BoardAdapter {
                 lines.add("&7vs");
                 lines.add("&b" + sumo2.getRoundPlayerB().getUsername() + " &8(&b" + playerb + "&8)");
             }
-        } else if (profile.isInWizard()) {
-            final Wizard wizard2=profile.getWizard();
-            if (wizard2.isWaiting()) {
-                lines.add("&b&lWizard Event");
+        } else if (profile.isInGulag()) {
+            final Gulag gulag2=profile.getGulag();
+            if (gulag2.isWaiting()) {
+                lines.add("&b&lGulag Event");
                 lines.add("");
-                lines.add(CC.translate("&fHost: &b" + wizard2.getName()));
-                lines.add("&fPlayers: &b" + wizard2.getEventPlayers().size() + "/" + Wizard.getMaxPlayers());
+                lines.add(CC.translate("&fHost: &b" + gulag2.getName()));
+                lines.add("&fPlayers: &b" + gulag2.getEventPlayers().size() + "/" + Gulag.getMaxPlayers());
                 lines.add("");
-                if (wizard2.getCooldown() == null) {
+                if (gulag2.getCooldown() == null) {
                     lines.add(CC.translate("&fWaiting for players..."));
                 } else {
-                    String remaining=TimeUtil.millisToSeconds(wizard2.getCooldown().getRemaining());
+                    String remaining=TimeUtil.millisToSeconds(gulag2.getCooldown().getRemaining());
                     if (remaining.startsWith("-")) {
                         remaining="0";
                     }
                     lines.add(CC.translate("&fStarting in " + CC.AQUA + remaining + "&fs"));
                 }
             } else {
-                int playera=PlayerUtil.getPing(wizard2.getRoundPlayerA().getPlayer());
-                int playerb=PlayerUtil.getPing(wizard2.getRoundPlayerB().getPlayer());
-                lines.add("&b&lWizard Event");
+                int playera=PlayerUtil.getPing(gulag2.getRoundPlayerA().getPlayer());
+                int playerb=PlayerUtil.getPing(gulag2.getRoundPlayerB().getPlayer());
+                lines.add("&b&lGulag Event");
                 lines.add("");
-                lines.add("&fPlayers: &b" + wizard2.getRemainingPlayers().size() + "/" + Wizard.getMaxPlayers());
-                lines.add("&fDuration: &b" + wizard2.getRoundDuration());
+                lines.add("&fPlayers: &b" + gulag2.getRemainingPlayers().size() + "/" + Gulag.getMaxPlayers());
+                lines.add("&fDuration: &b" + gulag2.getRoundDuration());
                 lines.add("");
-                lines.add("&b" + wizard2.getRoundPlayerA().getUsername() + " &8(&b" + playera + "&8)");
+                lines.add("&b" + gulag2.getRoundPlayerA().getUsername() + " &8(&b" + playera + "&8)");
                 lines.add("&7vs");
-                lines.add("&b" + wizard2.getRoundPlayerB().getUsername() + " &8(&b" + playerb + "&8)");
+                lines.add("&b" + gulag2.getRoundPlayerB().getUsername() + " &8(&b" + playerb + "&8)");
             }
         } else if (profile.isInBrackets()) {
             final Brackets brackets2=profile.getBrackets();
@@ -515,7 +515,7 @@ public class Scoreboard implements BoardAdapter {
             lines.add(" &7&lSilent Mode");
         }
         lines.add("");
-        lines.add(CC.translate("&7&opurgecommunity.club"));
+        lines.add(CC.translate("&7&opurgecommunity.com"));
         lines.add(CC.SB_BAR);
         return lines;
     }

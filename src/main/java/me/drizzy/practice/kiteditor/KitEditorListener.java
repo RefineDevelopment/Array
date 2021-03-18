@@ -17,9 +17,9 @@ import org.bukkit.inventory.Inventory;
 
 public class KitEditorListener implements Listener {
 
-    @EventHandler(priority=EventPriority.LOWEST, ignoreCancelled=true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
-        Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
+        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
         if (profile.getKitEditor().isRenaming()) {
             event.setCancelled(true);
@@ -46,10 +46,10 @@ public class KitEditorListener implements Listener {
         }
     }
 
-    @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryClickEvent(InventoryClickEvent event) {
         if (event.getWhoClicked() instanceof Player) {
-            Player player=(Player) event.getWhoClicked();
+            Player player = (Player) event.getWhoClicked();
 
             if (event.getClickedInventory() != null && event.getClickedInventory() instanceof CraftingInventory) {
                 if (player.getGameMode() != GameMode.CREATIVE) {
@@ -58,11 +58,11 @@ public class KitEditorListener implements Listener {
                 }
             }
 
-            Profile profile=Profile.getByUuid(player.getUniqueId());
+            Profile profile = Profile.getByUuid(player.getUniqueId());
 
             if (!profile.isInSomeSortOfFight() && player.getGameMode() == GameMode.SURVIVAL) {
-                if (!profile.isInBrackets() && !profile.isInLMS() && !profile.isInWizard() && !profile.isInEvent()) {
-                    Inventory clicked=event.getClickedInventory();
+                if (!profile.isInBrackets() && !profile.isInLMS()) {
+                    Inventory clicked = event.getClickedInventory();
 
                     if (profile.getKitEditor().isActive()) {
                         if (clicked == null) {
@@ -71,22 +71,22 @@ public class KitEditorListener implements Listener {
                             player.updateInventory();
                         } else if (clicked.equals(player.getOpenInventory().getTopInventory())) {
                             if (event.getCursor().getType() != Material.AIR &&
-                                event.getCurrentItem().getType() == Material.AIR ||
-                                event.getCursor().getType() != Material.AIR &&
-                                event.getCurrentItem().getType() != Material.AIR) {
+                                    event.getCurrentItem().getType() == Material.AIR ||
+                                    event.getCursor().getType() != Material.AIR &&
+                                            event.getCurrentItem().getType() != Material.AIR) {
                                 event.setCancelled(true);
                                 event.setCursor(null);
                                 player.updateInventory();
                             }
-                        } else {
-                            if (clicked.equals(player.getInventory())) {
-                                event.setCancelled(true);
-                            }
+                        }
+                    } else {
+                        if (clicked != null && clicked.equals(player.getInventory())) {
+                            event.setCancelled(true);
                         }
                     }
                 }
             }
-
         }
     }
+
 }

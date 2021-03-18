@@ -15,7 +15,7 @@ import me.drizzy.practice.duel.command.RematchCommand;
 import me.drizzy.practice.event.EventCommand;
 import me.drizzy.practice.event.EventHelpCommand;
 import me.drizzy.practice.event.types.brackets.command.*;
-import me.drizzy.practice.event.types.wizard.command.*;
+import me.drizzy.practice.event.types.gulag.command.*;
 import me.drizzy.practice.event.types.lms.command.*;
 import me.drizzy.practice.event.types.parkour.command.*;
 import me.drizzy.practice.event.types.spleef.command.*;
@@ -78,8 +78,8 @@ public class RegisterCommands {
                 new ArenaRemoveKitCommand(),
                 new ArenaAddBuildKitsCommand(),
                 new ArenaDisablePearlsCommand(),
-                new ArenaSetPortalCommand(),
-                new ArenaPortalWandCommand(),
+                //new ArenaSetCuboidlCommand(),
+               // new ArenaPortalWandCommand(),
                 new ArenaSetSpawnCommand(),
                 new ArenaCreateCommand(),
                 new ArenaAddNormalKitCommand(),
@@ -87,6 +87,7 @@ public class RegisterCommands {
                 new ArenasCommand(),
                 new ArenaTpCommand(),
                 new ArenaCommand(),
+                //new ArenaSetBridgdeSpawnCommand(),
                 new ArenasCommand(),
                 new ArenaKitListCommand(),
                 new ArenaSaveCommand(),
@@ -130,7 +131,7 @@ public class RegisterCommands {
                 new KitRemoveCommand(),
                 new KitSetIconCommand(),
                 new KitSetHitDelayCommand(),
-                new KitBridgeCommand(),
+                //new KitBridgeCommand(),
                 new KitSetRankedCommand(),
                 new KitSumoCommand(),
                 new KitBuildCommand(),
@@ -169,17 +170,17 @@ public class RegisterCommands {
                 new BracketsKnockbackCommand(),
                 new BracketsForceStartCommand(),
 
-                //Wizard Commands
-                new WizardLeaveCommand(),
-                new WizardCancelCommand(),
-                new WizardCooldownCommand(),
-                new WizardJoinCommand(),
-                new WizardForceStartCommand(),
-                new WizardHostCommand(),
-                new WizardHelpCommand(),
-                new WizardSetSpawnCommand(),
-                new WizardTpCommand(),
-                new WizardKnockbackCommand(),
+                //Gulag Commands
+                new GulagLeaveCommand(),
+                new GulagCancelCommand(),
+                new GulagCooldownCommand(),
+                new GulagJoinCommand(),
+                new GulagForceStartCommand(),
+                new GulagHostCommand(),
+                new GulagHelpCommand(),
+                new GulagSetSpawnCommand(),
+                new GulagTpCommand(),
+                new GulagKnockbackCommand(),
 
                 //Sumo commands
                 new SumoCancelCommand(),

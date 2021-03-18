@@ -79,10 +79,16 @@ public class QueueThread extends Thread {
                             if (arena == null) {
                                 queue.getPlayers().remove(firstQueueProfile);
                                 queue.getPlayers().remove(secondQueueProfile);
+                                queue.removePlayer(firstQueueProfile);
+                                queue.removePlayer(secondQueueProfile);
+                                firstProfile.refreshHotbar();
+                                secondProfile.refreshHotbar();
                                 firstPlayer.sendMessage(CC.translate("&cNo arenas available."));
                                 secondPlayer.sendMessage(CC.translate("&cNo arenas available."));
                                 continue;
                             }
+
+
 
                             if (arena.isActive()) continue;
 
@@ -108,9 +114,9 @@ public class QueueThread extends Thread {
                             if (queue.getKit().getGameRules().isSumo()) {
                                 match = new SumoMatch(queue, firstMatchPlayer, secondMatchPlayer,
                                         queue.getKit(), arena, queue.getQueueType());
-                            } else if (queue.getKit().getGameRules().isBuild() && queue.getKit().getGameRules().isBridge()) {
-                                match = new TheBridgeMatch(queue, firstMatchPlayer, secondMatchPlayer,
-                                        queue.getKit(), arena, queue.getQueueType());
+                            //} else if (queue.getKit().getGameRules().isBuild() && queue.getKit().getGameRules().isBridge()) {
+                            //    match = new TheBridgeMatch(queue, firstMatchPlayer, secondMatchPlayer,
+                            //            queue.getKit(), arena, queue.getQueueType());
                             } else {
                                 match = new SoloMatch(queue, firstMatchPlayer, secondMatchPlayer,
                                         queue.getKit(), arena, queue.getQueueType(), 0, 0);

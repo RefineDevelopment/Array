@@ -2,7 +2,7 @@ package me.drizzy.practice.event.menu;
 
 import lombok.AllArgsConstructor;
 import me.drizzy.practice.enums.EventType;
-import me.drizzy.practice.event.types.wizard.command.WizardHostCommand;
+import me.drizzy.practice.event.types.gulag.command.GulagHostCommand;
 import org.bukkit.Material;
 import me.drizzy.practice.event.types.brackets.command.BracketsHostCommand;
 import me.drizzy.practice.event.types.lms.command.LMSHostCommand;
@@ -46,7 +46,7 @@ public class EventSelectEventMenu extends Menu {
         buttons.put(13, new SelectEventButton(EventType.BRACKETS));
         buttons.put(12, new SelectEventButton(EventType.SUMO));
         buttons.put(14, new SelectEventButton(EventType.PARKOUR));
-        buttons.put(32, new SelectEventButton(EventType.WIZARD));
+        buttons.put(32, new SelectEventButton(EventType.GULAG));
         buttons.put(30, new SelectEventButton(EventType.SPLEEF));
         return buttons;
     }
@@ -96,10 +96,10 @@ public class EventSelectEventMenu extends Menu {
                     lore.add("");
                     lore.add("&bClick to host...");
                     break;
-                case "&b&lWizard":
+                case "&b&lGulag":
                     lore.add(CC.GRAY + "Fight for your life and");
                     lore.add(CC.GRAY + "beat your opponent in");
-                    lore.add(CC.GRAY + "1v1 Duels with wands!");
+                    lore.add(CC.GRAY + "1v1 Duels with guns!");
                     lore.add("");
                     lore.add("&bClick to host...");
                     break;
@@ -177,9 +177,9 @@ public class EventSelectEventMenu extends Menu {
                             player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.purgemc.club &7!"));
                         }
                         break;
-                    case "&b&lWizard":
-                        if (player.hasPermission("array.host.wizard")) {
-                            WizardHostCommand.execute(player);
+                    case "&b&lGulag":
+                        if (player.hasPermission("array.host.gulag")) {
+                            GulagHostCommand.execute(player);
                         } else {
                             player.sendMessage(CC.translate("&7You do not have permission to execute this command."));
                             player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.purgemc.club &7!"));

@@ -15,19 +15,19 @@ public class MatchStatusCommand {
         final Match match = profile.getMatch();
         if (profile.isInSomeSortOfFight()) {
             if (match != null) {
-                if (match.isSoloMatch() && match.isSumoMatch()) {
+                if (match.isSoloMatch() || match.isSumoMatch() || match.isTheBridgeMatch()) {
                     final TeamPlayer self=match.getTeamPlayer(player);
                     final TeamPlayer opponent=match.getOpponentTeamPlayer(player);
                     player.sendMessage(CC.CHAT_BAR);
                     player.sendMessage(CC.translate("&b&l        Match Status "));
                     player.sendMessage("");
-                    player.sendMessage(CC.translate("&fPing: &b " + PlayerUtil.getPing(self.getPlayer()) + "ms &7&l⎜ &c" + PlayerUtil.getPing(opponent.getPlayer()) + "ms"));
+                    player.sendMessage(CC.translate("&fPing: &b " + PlayerUtil.getPing(self.getPlayer()) + "ms &7⎜ &c" + PlayerUtil.getPing(opponent.getPlayer()) + "ms"));
                     player.sendMessage(CC.translate("&fMap: &b " + match.getArena().getDisplayName()));
                     player.sendMessage(CC.CHAT_BAR);
                 }
                  else {
                      player.sendMessage(CC.translate("&fYour Ping: &b" + PlayerUtil.getPing(player)));
-                     player.sendMessage(CC.translate("&Current Map: &b" + match.getArena().getDisplayName()));
+                     player.sendMessage(CC.translate("&fCurrent Map: &b" + match.getArena().getDisplayName()));
                 }
             }
         }

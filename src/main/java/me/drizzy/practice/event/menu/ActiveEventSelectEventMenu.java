@@ -3,7 +3,7 @@ package me.drizzy.practice.event.menu;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.enums.EventType;
 import me.drizzy.practice.event.types.brackets.command.BracketsJoinCommand;
-import me.drizzy.practice.event.types.wizard.command.WizardJoinCommand;
+import me.drizzy.practice.event.types.gulag.command.GulagJoinCommand;
 import me.drizzy.practice.event.types.lms.command.LMSJoinCommand;
 import me.drizzy.practice.event.types.parkour.command.ParkourJoinCommand;
 import me.drizzy.practice.event.types.spleef.command.SpleefJoinCommand;
@@ -65,9 +65,9 @@ public class ActiveEventSelectEventMenu extends Menu {
                     i++;
                 }
             }
-            if (eventType.getTitle().equals("&b&lWizard")) {
-                if (Array.getInstance().getWizardManager().getActiveWizard() != null && Array.getInstance().getWizardManager().getActiveWizard().isWaiting()) {
-                    buttons.put(i, new SelectEventButton(EventType.WIZARD));
+            if (eventType.getTitle().equals("&b&lGulag")) {
+                if (Array.getInstance().getGulagManager().getActiveGulag() != null && Array.getInstance().getGulagManager().getActiveGulag().isWaiting()) {
+                    buttons.put(i, new SelectEventButton(EventType.GULAG));
                     i++;
                 }
             }
@@ -101,8 +101,8 @@ public class ActiveEventSelectEventMenu extends Menu {
                 case "&b&lSpleef":
                     lore=Array.getInstance().getSpleefManager().getActiveSpleef().getLore();
                     break;
-                case "&b&lWizard":
-                    lore=Array.getInstance().getWizardManager().getActiveWizard().getLore();
+                case "&b&lGulag":
+                    lore=Array.getInstance().getGulagManager().getActiveGulag().getLore();
                     break;
             }
             lore.add("&bClick to join");
@@ -135,8 +135,8 @@ public class ActiveEventSelectEventMenu extends Menu {
                 case "&b&lSpleef":
                     SpleefJoinCommand.execute(player);
                     break;
-                case "&b&lWizard":
-                    WizardJoinCommand.execute(player);
+                case "&b&lGulag":
+                    GulagJoinCommand.execute(player);
                     break;
             }
         }

@@ -3,6 +3,7 @@ package me.drizzy.practice.match.task;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchState;
+import me.drizzy.practice.match.types.TheBridgeMatch;
 import me.drizzy.practice.util.chat.CC;
 import org.bukkit.Material;
 import org.bukkit.Sound;

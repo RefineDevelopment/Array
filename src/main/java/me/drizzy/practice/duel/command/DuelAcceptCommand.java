@@ -20,8 +20,6 @@ import org.bukkit.entity.Player;
 @CommandMeta(label = "duel accept")
 public class DuelAcceptCommand {
 
-    RankType rank = Array.getInstance().getRankManager();
-
     public void execute(Player player, @CPL("player") Player target) {
         if (target == null) {
             player.sendMessage(CC.RED + "That player is no longer online.");
@@ -38,14 +36,14 @@ public class DuelAcceptCommand {
             return;
         }
 
-        Profile senderProfile = Profile.getByUuid(player.getUniqueId());
+        Profile senderProfile=Profile.getByUuid(player.getUniqueId());
 
         if (senderProfile.isBusy(player)) {
             player.sendMessage(CC.RED + "You cannot duel anyone right now.");
             return;
         }
 
-        Profile receiverProfile = Profile.getByUuid(target.getUniqueId());
+        Profile receiverProfile=Profile.getByUuid(target.getUniqueId());
 
         if (!receiverProfile.isPendingDuelRequest(player)) {
             player.sendMessage(CC.RED + "You do not have a pending duel request from " + target.getName() + CC.RED + ".");
@@ -57,7 +55,7 @@ public class DuelAcceptCommand {
             return;
         }
 
-        DuelRequest request = receiverProfile.getSentDuelRequests().get(player.getUniqueId());
+        DuelRequest request=receiverProfile.getSentDuelRequests().get(player.getUniqueId());
 
         if (request == null) {
             return;
@@ -81,7 +79,7 @@ public class DuelAcceptCommand {
             }
         }
 
-        Arena arena = request.getArena();
+        Arena arena=request.getArena();
 
         if (arena == null) {
             player.sendMessage(CC.RED + "Tried to start a match but the arena was invalid.");
@@ -90,13 +88,13 @@ public class DuelAcceptCommand {
 
         if (arena.isActive()) {
             if (arena.getType().equals(ArenaType.STANDALONE)) {
-                StandaloneArena sarena = (StandaloneArena) arena;
+                StandaloneArena sarena=(StandaloneArena) arena;
                 if (sarena.getDuplicates() != null) {
-                    boolean foundarena = false;
-                    for (Arena darena : sarena.getDuplicates()) {
+                    boolean foundarena=false;
+                    for ( Arena darena : sarena.getDuplicates() ) {
                         if (!darena.isActive()) {
-                            arena = darena;
-                            foundarena = true;
+                            arena=darena;
+                            foundarena=true;
                             break;
                         }
                     }
@@ -117,67 +115,59 @@ public class DuelAcceptCommand {
         Match match;
 
         if (request.isParty()) {
+            Team teamA=new Team(new TeamPlayer(player));
             if (request.getKit().getName().equals("HCFTeamFight")) {
-                Team teamA = new Team(new TeamPlayer(player));
 
-                for (Player partyMember : senderProfile.getParty().getPlayers()) {
+                for ( Player partyMember : senderProfile.getParty().getPlayers() ) {
                     if (!partyMember.getPlayer().equals(player)) {
                         teamA.getTeamPlayers().add(new TeamPlayer(partyMember));
                     }
                 }
 
-                Team teamB = new Team(new TeamPlayer(target));
+                Team teamB=new Team(new TeamPlayer(target));
 
-                for (Player partyMember : receiverProfile.getParty().getPlayers()) {
+                for ( Player partyMember : receiverProfile.getParty().getPlayers() ) {
                     if (!partyMember.getPlayer().equals(target)) {
                         teamB.getTeamPlayers().add(new TeamPlayer(partyMember));
                     }
                 }
 
-                match = new HCFMatch(teamA, teamB, arena);
+                match=new HCFMatch(teamA, teamB, arena);
             } else {
-                Team teamA = new Team(new TeamPlayer(player));
-
-                for (Player partyMember : senderProfile.getParty().getPlayers()) {
+                for ( Player partyMember : senderProfile.getParty().getPlayers() ) {
                     if (!partyMember.getPlayer().equals(player)) {
                         teamA.getTeamPlayers().add(new TeamPlayer(partyMember));
                     }
                 }
 
-                Team teamB = new Team(new TeamPlayer(target));
+                Team teamB=new Team(new TeamPlayer(target));
 
-                for (Player partyMember : receiverProfile.getParty().getPlayers()) {
+                for ( Player partyMember : receiverProfile.getParty().getPlayers() ) {
                     if (!partyMember.getPlayer().equals(target)) {
                         teamB.getTeamPlayers().add(new TeamPlayer(partyMember));
                     }
                 }
 
                 if (request.getKit().getGameRules().isSumo()) {
-                    match = new SumoTeamMatch(teamA, teamB, request.getKit(), arena);
+                    match=new SumoTeamMatch(teamA, teamB, request.getKit(), arena);
                 } else {
-                    match = new TeamMatch(teamA, teamB, request.getKit(), arena);
+                    match=new TeamMatch(teamA, teamB, request.getKit(), arena);
                 }
 
             }
         } else {
-            if(request.getKit().getGameRules().isSumo()) {
-                match = new SumoMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena, QueueType.UNRANKED);
+            if (request.getKit().getGameRules().isSumo()) {
+                match=new SumoMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena, QueueType.UNRANKED);
             } else {
-                match = new SoloMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,
+                match=new SoloMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,
                         QueueType.UNRANKED, 0, 0);
             }
         }
         if (!request.isParty()) {
             for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Start-Message.Solo") ) {
-                if (rank.getFullName(player) != null && rank.getFullName(target) != null) {
-                    final String opponentMessages=this.formatMessages(string, rank.getFullName(player), rank.getFullName(target));
-                    final String message=CC.translate(opponentMessages).replace("{kit}", request.getKit().getName().replace("{arena}", request.getArena().getName()));
-                    match.broadcastMessage(message);
-                } else {
-                    final String opponentMessages=this.formatMessages(string, player.getDisplayName(), target.getDisplayName());
-                    final String message=CC.translate(opponentMessages).replace("{kit}", request.getKit().getName().replace("{arena}", request.getArena().getName()));
-                    match.broadcastMessage(message);
-                }
+                final String opponentMessages=this.formatMessages(string, player.getDisplayName(), target.getDisplayName());
+                final String message=CC.translate(opponentMessages).replace("{kit}", match.getKit().getName()).replace("{arena}", request.getArena().getName());
+                match.broadcastMessage(message);
             }
         }
         match.start();

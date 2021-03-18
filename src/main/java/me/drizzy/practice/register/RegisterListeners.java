@@ -6,7 +6,7 @@ import me.drizzy.practice.array.listener.GoldenHeads;
 import me.drizzy.practice.array.listener.MOTDListener;
 import me.drizzy.practice.array.listener.ToggleSprintFix;
 import me.drizzy.practice.event.types.brackets.BracketsListener;
-import me.drizzy.practice.event.types.wizard.WizardListener;
+import me.drizzy.practice.event.types.gulag.GulagListener;
 import me.drizzy.practice.event.types.lms.LMSListener;
 import me.drizzy.practice.event.types.parkour.ParkourListener;
 import me.drizzy.practice.event.types.spleef.SpleefListener;
@@ -31,7 +31,7 @@ public class RegisterListeners {
                 new ProfileListener(),
                 new MenuListener(Array.getInstance()),
                 new SumoListener(),
-                new WizardListener(),
+                new GulagListener(),
                 new BracketsListener(),
                 new LMSListener(),
                 new ParkourListener(),

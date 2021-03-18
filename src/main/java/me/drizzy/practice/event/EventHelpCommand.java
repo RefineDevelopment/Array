@@ -17,7 +17,7 @@ public class EventHelpCommand {
         player.sendMessage(CC.translate(" &8• &b/sumo &8- &8&o(&7&oView Sumo Commands&8&o)"));
         player.sendMessage(CC.translate(" &8• &b/lms &8- &8&o(&7&oView LMS Commands&8&o)"));
         player.sendMessage(CC.translate(" &8• &b/parkour&8- &8&o(&7&oView Parkour Commands&8&o)"));
-        player.sendMessage(CC.translate(" &8• &b/wizard &8- &8&o(&7&oView Wizard Commands&8&o)"));
+        player.sendMessage(CC.translate(" &8• &b/gulag &8- &8&o(&7&oView Gulag Commands&8&o)"));
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b&m--------&7&m" + StringUtils.repeat("-", 37) + "&b&m--------"));
     }
 }

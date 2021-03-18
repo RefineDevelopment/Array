@@ -21,7 +21,6 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -224,6 +223,7 @@ public class HCFMatch extends Match {
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
         components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7(Click name to view inventory)").create());
+        components.add(new ChatComponentBuilder("").parse("").create());
         components.add(winnerInventories.create());
         components.add(loserInventories.create());
         components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());

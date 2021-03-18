@@ -4,9 +4,9 @@ import com.allatori.annotations.DoNotRename;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.drizzy.practice.ArrayCache;
 import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.statistics.LeaderboardsAdapter;
 import org.bukkit.entity.Player;
 import me.drizzy.practice.kit.Kit;
-import me.drizzy.practice.kit.KitLeaderboards;
 
 @DoNotRename
 public class HologramPlaceholders extends PlaceholderExpansion {
@@ -41,28 +41,28 @@ public class HologramPlaceholders extends PlaceholderExpansion {
         if (identifier.contains("global")) {
             String[] splitstring = identifier.split("_");
             int number = Integer.parseInt(splitstring[1]) - 1;
-            KitLeaderboards kitLeaderboards;
+            LeaderboardsAdapter leaderboardsAdapter;
 
             try {
-                kitLeaderboards = Profile.getGlobalEloLeaderboards().get(number);
+                leaderboardsAdapter= Profile.getGlobalEloLeaderboards().get(number);
             } catch (Exception e) {
                 return "&7";
             }
 
-            if (kitLeaderboards == null) {
+            if (leaderboardsAdapter == null) {
                 return "&7";
             }
 
-            Profile profile = Profile.getByUuid(ArrayCache.getUUID(kitLeaderboards.getName()));
+            Profile profile = Profile.getByUuid(ArrayCache.getUUID(leaderboardsAdapter.getName()));
 
-            return "&b" + (number + 1) + ". &f" + kitLeaderboards.getName() + ": &b" + kitLeaderboards.getElo() + " &7(" + profile.getEloLeague() + ")";
+            return "&b" + (number + 1) + ". &f" + leaderboardsAdapter.getName() + ": &b" + leaderboardsAdapter.getElo() + " &7(" + profile.getEloLeague() + ")";
         }
 
         /**
          * Originally coded by Nick and improved by Drizzy.
          * Note: The Player Cache in profile should not be null for it to work!
          *
-         * @param KitLeaderboards - array_lb_<Kit>_<position>
+         * @param LeaderboardsAdapter - array_lb_<Kit>_<position>
          */
         if (identifier.contains("lb")) {
             String[] splitstring = identifier.split("_");
@@ -72,21 +72,21 @@ public class HologramPlaceholders extends PlaceholderExpansion {
 
             if (kit == null) return "&7";
 
-            KitLeaderboards kitLeaderboards;
+            LeaderboardsAdapter leaderboardsAdapter;
 
             try {
-                kitLeaderboards = kit.getRankedEloLeaderboards().get(number);
+                leaderboardsAdapter= kit.getRankedEloLeaderboards().get(number);
             } catch (Exception e) {
                 return "&7";
             }
 
-            if (kitLeaderboards == null) {
+            if (leaderboardsAdapter == null) {
                 return "&7";
             }
 
-            Profile profile = Profile.getByUuid(ArrayCache.getUUID(kitLeaderboards.getName()));
+            Profile profile = Profile.getByUuid(ArrayCache.getUUID(leaderboardsAdapter.getName()));
 
-            return "&b" + (number + 1) + ". &f" + kitLeaderboards.getName() + ": &b" + kitLeaderboards.getElo() + " &7(" + profile.getEloLeague() + ")";
+            return "&b" + (number + 1) + ". &f" + leaderboardsAdapter.getName() + ": &b" + leaderboardsAdapter.getElo() + " &7(" + profile.getEloLeague() + ")";
         }
         return null;
     }

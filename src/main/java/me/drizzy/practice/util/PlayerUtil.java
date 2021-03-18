@@ -2,6 +2,7 @@ package me.drizzy.practice.util;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import me.drizzy.practice.Array;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -10,6 +11,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.AsyncCatcher;
@@ -75,8 +77,7 @@ public class PlayerUtil {
     }
 
     public static int getPing(Player player) {
-
-        return ((CraftPlayer)player).getHandle().ping;
+        return ((CraftPlayer)player).getHandle() != null ? ((CraftPlayer)player).getHandle().ping : 0;
     }
 
     public static void spectator(Player player) {
@@ -125,6 +126,18 @@ public class PlayerUtil {
             value="";
         }
         return getHead(value);
+    }
+
+    public static void setLastAttacker(Player victim, Player attacker) {
+        victim.setMetadata("lastAttacker", new FixedMetadataValue(Array.getInstance(), attacker.getUniqueId()));
+    }
+
+    public static Player getLastAttacker(Player victim) {
+        if (victim.hasMetadata("lastAttacker")) {
+            return Bukkit.getPlayer((UUID) victim.getMetadata("lastAttacker").get(0).value());
+        } else {
+            return null;
+        }
     }
 
     static String getHeadValue(String name){

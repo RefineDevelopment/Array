@@ -163,10 +163,14 @@ public class Arena {
 
             if (!arena.getKits().contains(kit.getName())) continue;
 
-            if (!arena.isActive() && (arena.getType() == ArenaType.STANDALONE || arena.getType() == ArenaType.DUPLICATE || arena.getType() == ArenaType.THEBRIDGE)) {
+            //if ((arena.getType() == ArenaType.STANDALONE || arena.getType() == ArenaType.DUPLICATE || arena.getType() == ArenaType.SHARED) && kit.getGameRules().isBridge()) continue;
+
+            if (!arena.isActive() && (arena.getType() == ArenaType.STANDALONE || arena.getType() == ArenaType.DUPLICATE)) {
                 _arenas.add(arena);
             } else if (!kit.getGameRules().isBuild() && arena.getType() == ArenaType.SHARED) {
                 _arenas.add(arena);
+            //} else if (kit.getGameRules().isBridge() && arena.getType() == ArenaType.THEBRIDGE) {
+            //    _arenas.add(arena);
             }
         }
 

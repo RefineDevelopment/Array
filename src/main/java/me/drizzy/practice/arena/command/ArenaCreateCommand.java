@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 @CommandMeta(label = "arena create", permission = "array.dev")
 public class ArenaCreateCommand {
 
-    public void execute(Player player, @CPL("name") String name, @CPL("[shared|standalone|bridge]") String type) {
+    public void execute(Player player, @CPL("name") String name, @CPL("[shared|standalone]") String type) {
         if (!type.equalsIgnoreCase("standalone") && !type.equalsIgnoreCase("shared") && !type.equalsIgnoreCase("bridge")) {
             player.sendMessage(CC.translate("&8[&b&lArray&8] &7Invalid Type."));
             return;
@@ -45,9 +45,9 @@ public class ArenaCreateCommand {
         } else {
             if (type.equalsIgnoreCase("shared")){
                 arena = new SharedArena(name);
-            } else if (type.equalsIgnoreCase("bridge")) {
-                arena = new TheBridgeArena(name);
-                player.sendMessage(CC.translate("&8[&bTIP&8] &7Please note that 'Red' is set to Spawn 1 and 'Blue' is set to Spawn 2."));
+           //} else if (type.equalsIgnoreCase("bridge")) {
+           //     arena = new TheBridgeArena(name);
+            //    player.sendMessage(CC.translate("&8[&bTIP&8] &7Please note that 'Red' is set to Spawn 1 and 'Blue' is set to Spawn 2."));
             } else if (type.equalsIgnoreCase("standalone")){
                arena = new StandaloneArena(name);
             } else {

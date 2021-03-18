@@ -1,6 +1,7 @@
 package me.drizzy.practice.statistics.command;
 
 import me.drizzy.practice.statistics.menu.StatsMenu;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,7 +30,11 @@ public class StatsCommand extends Command {
         }
         if (args.length == 1) {
             String target2 = args[0];
-            Player target = Bukkit.getOfflinePlayer(target2).getPlayer();
+            Player target = Bukkit.getPlayer(target2);
+            if (target == null) {
+                player.sendMessage(CC.translate("&7That player is not online."));
+                return true;
+            }
             new StatsMenu(target).openMenu(player);
 
         }

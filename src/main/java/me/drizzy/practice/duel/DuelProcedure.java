@@ -45,8 +45,8 @@ public class DuelProcedure {
         senderProfile.setDuelProcedure(null);
         senderProfile.getSentDuelRequests().put(target.getUniqueId(), request);
 
-        this.sender.sendMessage(CC.translate("&8[&b&lDuel&8] &fYou sent a duel request to &b" + this.target.getName() + "&f with kit &b" + (this.kit.getName())));
-        this.target.sendMessage(CC.translate("&8[&b&lDuel&8] &b" + this.sender.getName() + " &fhas sent you a duel request with kit &b" + (this.kit.getName())));
+        this.sender.sendMessage(CC.translate("&8[&b&lDuel&8] &fYou sent a duel request to &b" + this.target.getName() + "&f with kit &b" + (this.kit.getName()) + " &fon the arena &b" + arena.getDisplayName()));
+        this.target.sendMessage(CC.translate("&8[&b&lDuel&8] &b" + this.sender.getName() + " &fhas sent you a duel request with kit &b" + (this.kit.getName()) + " &fon the arena &b" + arena.getDisplayName()));
         target.spigot().sendMessage(new ChatComponentBuilder("")
                 .parse("&a(Click to accept)")
                 .attachToEachPart(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/duel accept " + sender.getName()))

@@ -3,8 +3,9 @@ package me.drizzy.practice.tablist;
 import me.allen.ziggurat.ZigguratAdapter;
 import me.allen.ziggurat.objects.BufferedTabObject;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.ArrayCache;
 import me.drizzy.practice.event.types.brackets.Brackets;
-import me.drizzy.practice.event.types.wizard.Wizard;
+import me.drizzy.practice.event.types.gulag.Gulag;
 import me.drizzy.practice.event.types.lms.LMS;
 import me.drizzy.practice.event.types.parkour.Parkour;
 import me.drizzy.practice.event.types.sumo.Sumo;
@@ -14,15 +15,13 @@ import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.tournament.Tournament;
 import me.drizzy.practice.util.chat.CC;
-import org.bukkit.ChatColor;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.event.types.spleef.Spleef;
-
-import java.util.*;
-
-import org.bukkit.Bukkit;
 import me.drizzy.practice.profile.Profile;
 import org.bukkit.entity.Player;
+import org.bukkit.ChatColor;
+
+import java.util.*;
 
 public class Tab implements ZigguratAdapter {
 
@@ -45,9 +44,9 @@ public class Tab implements ZigguratAdapter {
         final int[] ipSlots = { 2, 22, 42, 20, 40, 60 };
             elements.add(new BufferedTabObject().slot(21).text("&b&lPractice &7| &f&lEU"));
         for (final int ipSlot : ipSlots) {
-            elements.add(new BufferedTabObject().slot(19).text("&7store.purgemc.club"));
-            elements.add(new BufferedTabObject().slot(59).text("&7discord.purgemc.club"));
-            elements.add(new BufferedTabObject().slot(39).text("&7www.purgemc.club"));
+            elements.add(new BufferedTabObject().slot(19).text("&7store.purge.com"));
+            elements.add(new BufferedTabObject().slot(59).text("&7discord.purge.com"));
+            elements.add(new BufferedTabObject().slot(39).text("&7www.purge.com"));
             elements.add(new BufferedTabObject().slot(ipSlot).text("&7&m----------------"));
             tabSlots.add(ipSlot);
         }
@@ -76,9 +75,9 @@ public class Tab implements ZigguratAdapter {
                     }
                 }
                 elements.add(new BufferedTabObject().slot(23).text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "Lobby Info"));
-                elements.add(new BufferedTabObject().slot(24).text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Online: " + Array.getInstance().getMainConfig().getString("Tab.Color.Main") + Bukkit.getOnlinePlayers().size()));
-                elements.add(new BufferedTabObject().slot(25).text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "In Queue: " + Array.getInstance().getMainConfig().getString("Tab.Color.Main") + this.getInQueues()));
-                elements.add(new BufferedTabObject().slot(26).text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "In Fight: " + Array.getInstance().getMainConfig().getString("Tab.Color.Main") + this.getInFights()));
+                elements.add(new BufferedTabObject().slot(24).text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Online: " + Array.getInstance().getMainConfig().getString("Tab.Color.Main") + ArrayCache.getOnline()));
+                elements.add(new BufferedTabObject().slot(25).text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "In Queue: " + Array.getInstance().getMainConfig().getString("Tab.Color.Main") + ArrayCache.getInQueues()));
+                elements.add(new BufferedTabObject().slot(26).text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "In Fight: " + Array.getInstance().getMainConfig().getString("Tab.Color.Main") + ArrayCache.getInFights()));
                 elements.add(new BufferedTabObject().slot(43).text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "Party List"));
                 if (profile.getParty() != null) {
                     int partyslots = 44;
@@ -210,18 +209,18 @@ public class Tab implements ZigguratAdapter {
                 }
             }
         }
-        else if (profile.isInWizard()) {
-            final Wizard wizard = profile.getWizard();
-            elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "Wizard").slot(23));
+        else if (profile.isInGulag()) {
+            final Gulag gulag = profile.getGulag();
+            elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "Gulag").slot(23));
             int pl = 0;
             for (int added4 = 0; added4 < 60; ++added4) {
                 if (!tabSlots.contains(added4)) {
-                    if (wizard.getRemainingPlayers().size() <= pl) {
+                    if (gulag.getRemainingPlayers().size() <= pl) {
                         break;
                     }
-                    final Player wizardPlayer = wizard.getRemainingPlayers().get(pl).getPlayer();
+                    final Player gulagPlayer = gulag.getRemainingPlayers().get(pl).getPlayer();
                     ++pl;
-                    elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + wizardPlayer.getName()).slot(added4));
+                    elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + gulagPlayer.getName()).slot(added4));
                 }
             }
         }
@@ -242,7 +241,7 @@ public class Tab implements ZigguratAdapter {
         }
         else if (profile.isInLMS()) {
             final LMS ffa = profile.getLms();
-            elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "KoTH").slot(23));
+            elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "LMS").slot(23));
             int pl = 0;
             for (int added4 = 4; added4 < 60; ++added4) {
                 if (!tabSlots.contains(added4)) {
@@ -342,33 +341,5 @@ public class Tab implements ZigguratAdapter {
         }
     }
         return elements;
-    }
-
-    public int getInQueues() {
-        int inQueues = 0;
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            Profile profile = Profile.getByUuid(player.getUniqueId());
-
-            if (profile.isInQueue()) {
-                inQueues++;
-            }
-        }
-
-        return inQueues;
-    }
-
-    public int getInFights() {
-        int inFights = 0;
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            Profile profile = Profile.getByUuid(player.getUniqueId());
-
-            if (profile.isInFight() || profile.isInEvent()) {
-                inFights++;
-            }
-        }
-
-        return inFights;
     }
 }

@@ -4,7 +4,7 @@ import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.event.menu.ActiveEventSelectEventMenu;
 import me.drizzy.practice.event.types.lms.LMS;
 import me.drizzy.practice.event.types.parkour.Parkour;
-import me.drizzy.practice.event.types.wizard.Wizard;
+import me.drizzy.practice.event.types.gulag.Gulag;
 import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.event.types.brackets.Brackets;
@@ -178,7 +178,7 @@ public class HotbarListener implements Listener
                     break;
                 }
                 case BRACKETS_LEAVE: {
-                    final Brackets activeBrackets = Array.getInstance().getBracketsManager().getActiveBrackets();
+                    final Brackets activeBrackets=Array.getInstance().getBracketsManager().getActiveBrackets();
                     if (activeBrackets == null) {
                         player.sendMessage(CC.RED + "There is no active brackets.");
                         return;
@@ -216,17 +216,17 @@ public class HotbarListener implements Listener
                     Array.getInstance().getParkourManager().getActiveParkour().handleLeave(player);
                     break;
                 }
-                case WIZARD_LEAVE: {
-                    final Wizard activeWizard = Array.getInstance().getWizardManager().getActiveWizard();
-                    if (activeWizard == null) {
-                        player.sendMessage(CC.RED + "There is no active Wizard.");
+                case GULAG_LEAVE: {
+                    final Gulag activeGulag = Array.getInstance().getGulagManager().getActiveGulag();
+                    if (activeGulag == null) {
+                        player.sendMessage(CC.RED + "There is no active Gulag.");
                         return;
                     }
-                    if (!profile.isInParkour() || !activeWizard.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(CC.RED + "You are not apart of the active Wizard.");
+                    if (!profile.isInParkour() || !activeGulag.getEventPlayers().containsKey(player.getUniqueId())) {
+                        player.sendMessage(CC.RED + "You are not apart of the active Gulag.");
                         return;
                     }
-                    Array.getInstance().getWizardManager().getActiveWizard().handleLeave(player);
+                    Array.getInstance().getGulagManager().getActiveGulag().handleLeave(player);
                     break;
                 }
                 case PARKOUR_SPAWN: {

@@ -4,7 +4,7 @@ import lombok.Setter;
 import me.drizzy.practice.Array;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import me.drizzy.practice.event.types.wizard.Wizard;
+import me.drizzy.practice.event.types.gulag.Gulag;
 import org.bukkit.Material;
 import me.drizzy.practice.event.types.brackets.Brackets;
 import me.drizzy.practice.event.types.parkour.Parkour;
@@ -18,7 +18,7 @@ public enum EventType {
     SUMO(Array.getInstance().getSumoManager().getActiveSumo(), "&b&lSumo", Material.LEASH, Sumo.isEnabled(), Sumo.getMaxPlayers()),
     LMS(Array.getInstance().getLMSManager().getActiveLMS(), "&b&lLMS", Material.DIAMOND_SWORD, me.drizzy.practice.event.types.lms.LMS.isEnabled(), me.drizzy.practice.event.types.lms.LMS.getMaxPlayers()),
     PARKOUR(Array.getInstance().getParkourManager().getActiveParkour(), "&b&lParkour", Material.FEATHER, Parkour.isEnabled(), Parkour.getMaxPlayers()),
-    WIZARD(Array.getInstance().getWizardManager().getActiveWizard(), "&b&lWizard", Material.IRON_FENCE, Wizard.isEnabled(), Wizard.getMaxPlayers()),
+    GULAG(Array.getInstance().getGulagManager().getActiveGulag(), "&b&lGulag", Material.IRON_FENCE, Gulag.isEnabled(), Gulag.getMaxPlayers()),
     SPLEEF(Array.getInstance().getSpleefManager().getActiveSpleef(), "&b&lSpleef", Material.SNOW_BALL, Spleef.isEnabled(), Spleef.getMaxPlayers()),
     OITC(null, "&c&lOITC", Material.BOW, false, 0),
     KOTH(null, "&c&lKoTH", Material.IRON_BOOTS, false, 0);

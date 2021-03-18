@@ -18,9 +18,9 @@ import me.drizzy.practice.duel.DuelRequest;
 import me.drizzy.practice.event.types.brackets.Brackets;
 import me.drizzy.practice.event.types.brackets.player.BracketsPlayer;
 import me.drizzy.practice.event.types.brackets.player.BracketsPlayerState;
-import me.drizzy.practice.event.types.wizard.Wizard;
-import me.drizzy.practice.event.types.wizard.player.WizardPlayer;
-import me.drizzy.practice.event.types.wizard.player.WizardPlayerState;
+import me.drizzy.practice.event.types.gulag.Gulag;
+import me.drizzy.practice.event.types.gulag.player.GulagPlayer;
+import me.drizzy.practice.event.types.gulag.player.GulagPlayerState;
 import me.drizzy.practice.event.types.lms.LMS;
 import me.drizzy.practice.event.types.lms.player.LMSPlayer;
 import me.drizzy.practice.event.types.lms.player.LMSPlayerState;
@@ -36,7 +36,7 @@ import me.drizzy.practice.event.types.sumo.Sumo;
 import me.drizzy.practice.event.types.sumo.player.SumoPlayer;
 import me.drizzy.practice.event.types.sumo.player.SumoPlayerState;
 import me.drizzy.practice.kit.Kit;
-import me.drizzy.practice.kit.KitLeaderboards;
+import me.drizzy.practice.statistics.LeaderboardsAdapter;
 import me.drizzy.practice.kit.KitInventory;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.TeamPlayer;
@@ -72,7 +72,7 @@ import java.util.stream.Collectors;
 public class Profile {
     @Getter private static final Map<UUID, Profile> profiles = new HashMap<>();
     @Getter static final List<Player> playerList = new ArrayList<>();
-    @Getter private static final List<KitLeaderboards> globalEloLeaderboards = new ArrayList<>();
+    @Getter private static final List<LeaderboardsAdapter> globalEloLeaderboards = new ArrayList<>();
     @Getter private static Map<Integer, String> eloLeagues = new HashMap<>();
     @Getter private static MongoCollection<Document> allProfiles;
     private static MongoCollection<Document> collection;
@@ -91,14 +91,13 @@ public class Profile {
     @Getter @Setter private Brackets brackets;
     @Getter @Setter private LMS lms;
     @Getter @Setter private Parkour parkour;
-    @Getter @Setter private Wizard wizard;
+    @Getter @Setter private Gulag gulag;
     @Getter @Setter private OITC OITC;
     @Getter @Setter private Spleef spleef;
     @Getter @Setter private Queue queue;
     @Getter @Setter private QueueProfile queueProfile;
     @Getter @Setter private String hcfClass = "HCFDIAMOND";
     @Getter @Setter private Cooldown enderpearlCooldown = new Cooldown(0);
-    @Getter @Setter private Cooldown wizardReloadCooldown = new Cooldown(0);
     @Getter private final Map<UUID, DuelRequest> sentDuelRequests = new HashMap<>();
     @Getter @Setter private DuelProcedure duelProcedure;
     @Getter @Setter private ProfileRematchData rematchData;
@@ -241,10 +240,10 @@ public class Profile {
     public static void loadGlobalLeaderboards() {
         if (!getGlobalEloLeaderboards().isEmpty()) getGlobalEloLeaderboards().clear();
         for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("globalElo")).limit(10).into(new ArrayList<>())) {
-            KitLeaderboards kitLeaderboards = new KitLeaderboards();
-            kitLeaderboards.setName((String) document.get("name"));
-            kitLeaderboards.setElo((Integer) document.get("globalElo"));
-            getGlobalEloLeaderboards().add(kitLeaderboards);
+            LeaderboardsAdapter leaderboardsAdapter= new LeaderboardsAdapter();
+            leaderboardsAdapter.setName((String) document.get("name"));
+            leaderboardsAdapter.setElo((Integer) document.get("globalElo"));
+            getGlobalEloLeaderboards().add(leaderboardsAdapter);
         }
     }
 
@@ -398,6 +397,17 @@ public class Profile {
         this.globalElo = Math.round(globalElo / kitCounter);
     }
 
+    public void updateElo() {
+        Document document = collection.find(Filters.eq("uuid", uuid.toString())).first();
+        Document kitStatistics = (Document) document.get("kitStatistics");
+
+        for (String key : kitStatistics.keySet()) {
+            Document kitDocument=(Document) kitStatistics.get(key);
+            Kit kit=Kit.getByName(key);
+            this.getStatisticsData().get(kit).setElo(kitDocument.getInteger("elo"));
+        }
+    }
+
     public String getEloLeague() {
         String toReturn = "&8Bronze 1";
         for (Integer elo : getEloLeagues().keySet()) {
@@ -480,7 +490,7 @@ public class Profile {
         return state == ProfileState.SPECTATE_MATCH && (
                 match != null || sumo != null ||
                 brackets != null || lms != null ||
-                parkour != null || wizard !=null ||
+                parkour != null || gulag !=null ||
                 OITC !=null || spleef != null);
     }
 
@@ -516,8 +526,8 @@ public class Profile {
         return state == ProfileState.IN_EVENT && spleef != null;
     }
 
-    public boolean isInWizard() {
-        return state == ProfileState.IN_EVENT && wizard !=null;
+    public boolean isInGulag() {
+        return state == ProfileState.IN_EVENT && gulag !=null;
     }
 
     public boolean isInOITC() {
@@ -576,7 +586,7 @@ public class Profile {
                             || (Array.getInstance().getBracketsManager().getActiveBrackets() != null && Array.getInstance().getBracketsManager().getActiveBrackets().isWaiting())
                             || (Array.getInstance().getLMSManager().getActiveLMS() != null && Array.getInstance().getLMSManager().getActiveLMS().isWaiting())
                             || (Array.getInstance().getParkourManager().getActiveParkour() != null && Array.getInstance().getParkourManager().getActiveParkour().isWaiting())
-                            || (Array.getInstance().getWizardManager().getActiveWizard() != null && Array.getInstance().getWizardManager().getActiveWizard().isWaiting())
+                            || (Array.getInstance().getGulagManager().getActiveGulag() != null && Array.getInstance().getGulagManager().getActiveGulag().isWaiting())
                             || (Array.getInstance().getOITCManager().getActiveOITC() != null && Array.getInstance().getOITCManager().getActiveOITC().isWaiting())
                             || (Array.getInstance().getSpleefManager().getActiveSpleef() != null && Array.getInstance().getSpleefManager().getActiveSpleef().isWaiting());
                     int eventSlot=player.getInventory().first(Hotbar.getItems().get(HotbarType.EVENT_JOIN));
@@ -642,8 +652,8 @@ public class Profile {
                     PlayerUtil.spectator(player);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.OITC_SPECTATE, this));
-            } else if(isInWizard()) {
-                if (getWizard().getEventPlayer(player).getState().equals(WizardPlayerState.ELIMINATED)) {
+            } else if(isInGulag()) {
+                if (getGulag().getEventPlayer(player).getState().equals(GulagPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.GULAG_SPECTATE, this));
@@ -704,9 +714,9 @@ public class Profile {
                 if (bracketsPlayer != null && bracketsPlayer.getState() == BracketsPlayerState.WAITING) {
                     hide = false;
                 }
-            } else if (wizard != null) {
-                WizardPlayer wizardPlayer = wizard.getEventPlayer(otherPlayer);
-                if (wizardPlayer != null && wizardPlayer.getState() == WizardPlayerState.WAITING) {
+            } else if (gulag != null) {
+                GulagPlayer gulagPlayer= gulag.getEventPlayer(otherPlayer);
+                if (gulagPlayer != null && gulagPlayer.getState() == GulagPlayerState.WAITING) {
                     hide = false;
                 }
             } else if (lms != null) {
@@ -743,9 +753,9 @@ public class Profile {
                 if (bracketsPlayer != null && bracketsPlayer.getState() == BracketsPlayerState.WAITING) {
                     hide = false;
                 }
-            } else if (wizard != null) {
-                WizardPlayer wizardPlayer = wizard.getEventPlayer(otherPlayer);
-                if (wizardPlayer != null && wizardPlayer.getState() == WizardPlayerState.WAITING) {
+            } else if (gulag != null) {
+                GulagPlayer gulagPlayer= gulag.getEventPlayer(otherPlayer);
+                if (gulagPlayer != null && gulagPlayer.getState() == GulagPlayerState.WAITING) {
                     hide = false;
                 }
             } else if (lms != null) {
@@ -809,19 +819,6 @@ public class Profile {
             final Player player = this.getPlayer();
             if (player != null) {
                 LunarClientAPI.getInstance().sendCooldown(player, new LCCooldown("EnderPearl", cooldown.getDuration(), TimeUnit.MILLISECONDS, Material.ENDER_PEARL));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void setWizardCooldown(Cooldown cooldown) {
-        this.wizardReloadCooldown = cooldown;
-
-        try {
-            final Player player = this.getPlayer();
-            if (player != null) {
-                LunarClientAPI.getInstance().sendCooldown(player, new LCCooldown("Reload", cooldown.getDuration(), TimeUnit.MILLISECONDS, Material.DIAMOND_HOE));
             }
         } catch (Exception e) {
             e.printStackTrace();

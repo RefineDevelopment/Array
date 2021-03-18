@@ -16,6 +16,7 @@ import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.BlockUtil;
 import me.drizzy.practice.util.LocationUtils;
 import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.external.TimeUtil;
@@ -39,6 +40,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,8 +88,7 @@ public class MatchListener implements Listener {
         }
     }
 
-    //TODO: Laggy players double or triple point sometimes (Could try the parkour patch again?)
-    @EventHandler
+/*    @EventHandler
     public void onPortal(EntityPortalEnterEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
@@ -98,7 +99,7 @@ public class MatchListener implements Listener {
                         player.getLocation().getBlock().getType() == Material.ENDER_PORTAL_FRAME) {
                         if (LocationUtils.isTeamPortal(player)) {
                             player.teleport(profile.getMatch().getTeamPlayer(player).getPlayerSpawn());
-                            player.sendMessage(CC.translate("&7You Jumped in the wrong portal lmfaoo."));
+                            player.sendMessage(CC.translate("&cYou Jumped in the wrong portal."));
                             return;
                         }
                         TheBridgeMatch match=(TheBridgeMatch) profile.getMatch();
@@ -109,14 +110,40 @@ public class MatchListener implements Listener {
                             teamPlayer.getPlayer().teleport(teamPlayer.getPlayerSpawn());
                         }
                         TeamPlayer guy=match.getPlayerA().getPlayer() == player ? match.getTeamPlayerB() : match.getTeamPlayerA();
-                        match.onDeath(guy.getPlayer(), (Player) PlayerUtil.getLastDamager(guy.getPlayer()));
+                        match.onDeath(guy.getPlayer(), PlayerUtil.getLastAttacker(guy.getPlayer()));
                     }
                 }
             }
         }
     }
 
-    //TODO: For some reason now, you can't break blocks
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onEntityDamageByEntityMonitor(EntityDamageByEntityEvent event) {
+        if (event.getEntity() instanceof Player) {
+            Player victim=(Player) event.getEntity();
+            Profile profile=Profile.getByUuid(victim.getUniqueId());
+            Player attacker=null;
+            if (profile.isInFight()) {
+                if (event.getDamager() instanceof Player) {
+                    attacker=(Player) event.getDamager();
+                } else if (event.getDamager() instanceof Projectile) {
+                    Projectile projectile=(Projectile) event.getDamager();
+
+                    if (projectile.getShooter() instanceof Player) {
+                        attacker=(Player) projectile.getShooter();
+                    }
+                }
+
+                if (attacker != null) {
+                    PlayerUtil.setLastAttacker(victim, attacker);
+                    if (profile.getMatch() != null && profile.getMatch().getKit().getGameRules().isBridge()) {
+                        TaskUtil.runLater(() -> victim.removeMetadata("lastAttacker", Array.getInstance()), 20L * 15);
+                    }
+                }
+            }
+        }
+    }*/
+
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockBreakEvent(BlockBreakEvent event) {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
@@ -182,32 +209,6 @@ public class MatchListener implements Listener {
                 }
             } else {
                 event.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onBlockMove(final BlockFromToEvent event) {
-        final int id = event.getBlock().getTypeId();
-        if (id >= 8 && id <= 11) {
-            final Block b = event.getToBlock();
-            final int toId = b.getTypeId();
-            if (toId == 0 && BlockUtil.generatesCobble(id, b)) {
-                event.setCancelled(true);
-            }
-        }
-        final Location l = event.getToBlock().getLocation();
-        final List<UUID> playersIsInArena = new ArrayList<>();
-        for (final Entity entity : BlockUtil.getNearbyEntities(l, 50)) {
-            if (entity instanceof Player) {
-                playersIsInArena.add(((Player) entity).getPlayer().getUniqueId());
-            }
-        }
-        if (playersIsInArena.size() > 0) {
-            final Profile profile = Profile.getByUuid(playersIsInArena.get(0));
-            if (profile.isInFight()) {
-                final Match match = profile.getMatch();
-                match.getPlacedBlocks().add(event.getToBlock().getLocation());
             }
         }
     }
@@ -304,11 +305,19 @@ public class MatchListener implements Listener {
         player.teleport(player.getLocation().add(0.0, 2.0, 0.0));
         if (profile.isInFight()) {
             if (profile.getMatch().isTheBridgeMatch()) {
+                event.getDrops().clear();
                 TheBridgeMatch bridgeMatch = (TheBridgeMatch) profile.getMatch();
-                PlayerUtil.reset(player);
-                player.getInventory().setArmorContents(bridgeMatch.getKit().getKitInventory().getArmor());
-                player.getInventory().setContents(bridgeMatch.getKit().getKitInventory().getContents());
-                TheBridgeMatch.giveBridgeKit(player);
+                player.setHealth(20.0);
+                player.getInventory().setContents(null);
+                player.getInventory().setArmorContents(null);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        player.getInventory().setArmorContents(bridgeMatch.getKit().getKitInventory().getArmor());
+                        player.getInventory().setContents(bridgeMatch.getKit().getKitInventory().getContents());
+                        TheBridgeMatch.giveBridgeKit(player);
+                    }
+                }.runTaskLaterAsynchronously(Array.getInstance(), 2L);
                 player.teleport(bridgeMatch.getTeamPlayer(player).getPlayerSpawn());
                 return;
             }
@@ -398,7 +407,7 @@ public class MatchListener implements Listener {
             Match match=profile.getMatch();
             if (profile.getMatch().getKit() != null) {
                 if (profile.getMatch().isSumoMatch() || profile.getMatch().isSumoTeamMatch() || profile.getMatch().getKit().getGameRules().isStickspawn()
-                    || profile.getMatch().getKit().getGameRules().isSumo() || profile.getMatch().isTheBridgeMatch() || profile.getMatch().getKit().getGameRules().isBridge()) {
+                    || profile.getMatch().getKit().getGameRules().isSumo() || profile.getMatch().isTheBridgeMatch()) {
                     if (match.getState() == MatchState.STARTING) {
                         Location from=event.getFrom();
                         Location to=event.getTo();
@@ -436,7 +445,7 @@ public class MatchListener implements Listener {
             if (profile.isInFight()) {
                 final Match match = profile.getMatch();
                 if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                    if (profile.getMatch().getKit().getGameRules().isVoidspawn() || profile.getMatch().isTheBridgeMatch() || profile.getMatch().getKit().getGameRules().isBridge()) {
+                    if (profile.getMatch().getKit().getGameRules().isVoidspawn() || profile.getMatch().isTheBridgeMatch()) {
                         event.setDamage(0.0);
                         player.setFallDistance(0);
                         player.setHealth(20.0);
@@ -450,6 +459,13 @@ public class MatchListener implements Listener {
                     }
                     profile.getMatch().handleDeath(player, null, false);
                     return;
+                }
+                if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
+                    if (match != null) {
+                        if (profile.getMatch().isTheBridgeMatch() || profile.getMatch().getKit().getGameRules().isDisablefalldamage()) {
+                            event.setCancelled(true);
+                        }
+                    }
                 }
                 if (event.getCause() == EntityDamageEvent.DamageCause.LAVA && !profile.getMatch().isHCFMatch()  && profile.getMatch().getKit().getGameRules().isLavakill()) {
                     profile.getMatch().handleDeath(player, null, false);

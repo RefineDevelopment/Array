@@ -130,7 +130,7 @@ public class SoloMatch extends Match {
             player.teleport(spawn.add(0, 2, 0));
         }
         teamPlayer.setPlayerSpawn(spawn);
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), () -> NameTags.color(player, this.getOpponentPlayer(player), org.bukkit.ChatColor.RED, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()), 60L);
+        NameTags.color(player, this.getOpponentPlayer(player), org.bukkit.ChatColor.RED, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
     }
 
     @Override
@@ -300,7 +300,7 @@ public class SoloMatch extends Match {
         }
 
         List<BaseComponent[]> CHAT_BAR = new ArrayList<>();
-        CHAT_BAR.add(0, new ChatComponentBuilder("").parse(CC.WHITE + CC.STRIKE_THROUGH + "------------------------------------------------").create());
+        CHAT_BAR.add(0, new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
 
         for (Player player : new Player[]{winningPlayer, losingPlayer}) {
             CHAT_BAR.forEach(components1 -> player.spigot().sendMessage(components1));

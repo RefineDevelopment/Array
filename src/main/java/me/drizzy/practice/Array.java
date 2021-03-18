@@ -2,7 +2,7 @@ package me.drizzy.practice;
 
 import lombok.Setter;
 import me.drizzy.practice.event.types.brackets.BracketsManager;
-import me.drizzy.practice.event.types.wizard.WizardManager;
+import me.drizzy.practice.event.types.gulag.GulagManager;
 import me.drizzy.practice.event.types.lms.LMSManager;
 import me.drizzy.practice.event.types.oitc.OITCManager;
 import me.drizzy.practice.event.types.parkour.ParkourManager;
@@ -19,6 +19,7 @@ import me.drizzy.practice.profile.rank.apis.DefaultProvider;
 import me.drizzy.practice.queue.QueueThread;
 import me.drizzy.practice.register.RegisterCommands;
 import me.drizzy.practice.register.RegisterListeners;
+import me.drizzy.practice.statistics.task.EloRegulatorTask;
 import me.drizzy.practice.util.*;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ItemBuilder;
@@ -98,7 +99,7 @@ public class Array extends JavaPlugin {
 
     private OITCManager OITCManager;
 
-    private WizardManager wizardManager;
+    private GulagManager gulagManager;
 
     private KnockbackManager knockbackManager;
 
@@ -168,7 +169,7 @@ public class Array extends JavaPlugin {
         LMSManager = new LMSManager();
         parkourManager = new ParkourManager();
         spleefManager = new SpleefManager();
-        wizardManager = new WizardManager();
+        gulagManager= new GulagManager();
         OITCManager = new OITCManager();
 
         if (mainConfig.getBoolean("Array.Core-Hook")) {
@@ -309,6 +310,7 @@ public class Array extends JavaPlugin {
 
         //Load the Global Leaderboards (Also a bug fix for leaderboards being blank on start)
         Profile.loadGlobalLeaderboards();
+        Bukkit.getScheduler().runTaskTimer(this, new EloRegulatorTask(), 6000L, 6000L);
     }
 
     public static void logger(String message) {

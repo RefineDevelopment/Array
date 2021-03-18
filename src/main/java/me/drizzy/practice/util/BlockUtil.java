@@ -273,13 +273,13 @@ public class BlockUtil {
 
     public static Entity[] getNearbyEntities(final Location l, final int radius) {
         final int chunkRadius = (radius < 16) ? 1 : ((radius - radius % 16) / 16);
-        final HashSet<Entity> radiusEntities = new HashSet<Entity>();
+        final HashSet<Entity> radiusEntities = new HashSet<>();
         for (int chX = 0 - chunkRadius; chX <= chunkRadius; ++chX) {
             for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; ++chZ) {
                 final int x = (int)l.getX();
                 final int y = (int)l.getY();
                 final int z = (int)l.getZ();
-                for (final Entity e : new Location(l.getWorld(), (double)(x + chX * 16), (double)y, (double)(z + chZ * 16)).getChunk().getEntities()) {
+                for (final Entity e : new Location(l.getWorld(), (x + chX * 16), y, (z + chZ * 16)).getChunk().getEntities()) {
                     if (e.getLocation().distance(l) <= radius && e.getLocation().getBlock() != l.getBlock()) {
                         radiusEntities.add(e);
                     }

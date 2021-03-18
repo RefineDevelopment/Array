@@ -71,7 +71,7 @@ public class Queue {
     }
 
     public String getDuration(Player player) {
-        return TimeUtil.millisToTimer(this.getPlayerQueueTime(player.getUniqueId()));
+        return TimeUtil.millisToTimer(System.currentTimeMillis() - this.getPlayerQueueTime(player.getUniqueId()));
     }
 
     public void addPlayer(Player player, int elo) {

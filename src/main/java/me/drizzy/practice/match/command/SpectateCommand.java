@@ -29,11 +29,6 @@ public class SpectateCommand {
 
         Profile targetProfile = Profile.getByUuid(target.getUniqueId());
 
-        if (targetProfile.isInTournament(target)) {
-            player.sendMessage(CC.RED + "That player is in a tournament, Tournament spectating is currently in development!");
-            return;
-        }
-
         if (!targetProfile.getSettings().isAllowSpectators() && !player.hasPermission("array.staff")) {
             player.sendMessage(CC.RED + "That player is not allowing spectators.");
             return;
@@ -55,7 +50,7 @@ public class SpectateCommand {
             }
         }
 
-        if (targetProfile.isInFight()) {
+        if (targetProfile.isInFight() || targetProfile.isInTournament(target)) {
             targetProfile.getMatch().addSpectator(player, target);
         } else if (targetProfile.isInSumo()) {
             targetProfile.getSumo().addSpectator(player);

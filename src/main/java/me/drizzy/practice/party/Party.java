@@ -148,6 +148,10 @@ public class Party extends Team {
             profile.handleVisibility();
             PlayerUtil.reset(player, false);
             profile.refreshHotbar();
+            for ( Player other : Bukkit.getOnlinePlayers() ) {
+                NameTags.reset(player, other);
+                NameTags.color(player, other, ChatColor.GREEN, false);
+            }
         }
         if (profile.isInFight()) {
             profile.getMatch().handleDeath(player, null, true);
@@ -217,12 +221,14 @@ public class Party extends Team {
                 Profile.getByUuid(player.getUniqueId()).refreshHotbar();
                 Profile.getByUuid(player.getUniqueId()).handleVisibility();
                 NameTags.reset(player, this.getLeader().getPlayer());
+                NameTags.color(player, this.getLeader().getPlayer(), ChatColor.GREEN, false);
             }
         });
         Party.parties.remove(this);
         this.disbanded = true;
         for(Player partyps : this.getPlayers()) {
             NameTags.reset(partyps, getLeader().getPlayer());
+            NameTags.color(partyps, this.getLeader().getPlayer(), ChatColor.GREEN, false);
         }
     }
     

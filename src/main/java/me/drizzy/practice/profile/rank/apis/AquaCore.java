@@ -27,7 +27,6 @@ public class AquaCore implements RankType {
 
     @Override
     public String getFullName(OfflinePlayer player) {
-        PlayerData data = AquaCoreAPI.INSTANCE.getPlayerData(player.getUniqueId());
-        return (data == null) ? "" : data.getHighestRank().getPrefix() + player.getName();
+        return player.getPlayer().getDisplayName();
     }
 }

@@ -114,12 +114,6 @@ public class SumoListener implements Listener {
 		Profile profile = Profile.getByUuid(player);
 		Sumo sumo = profile.getSumo();
 
-		if (profile.getMatch() !=null && profile.getMatch().isSumoMatch() || profile.getMatch() !=null && profile.getMatch().isSumoTeamMatch()) {
-			if (BlockUtil.isOnLiquid(e.getFrom(), 1)) {
-				profile.getMatch().handleDeath(player, profile.getMatch().getOpponentPlayer(player), false);
-			}
-		}
-
 		if (sumo == null) {
 			return;
 		}
@@ -133,7 +127,7 @@ public class SumoListener implements Listener {
 		}
 
 		if (to.getX() != from.getX() || to.getZ() != from.getZ()) {
-			if (sumo.getState() == SumoState.ROUND_STARTING) {
+			if (sumo.getState() == SumoState.ROUND_STARTING && sumo.getRoundPlayerA().getPlayer() == player || sumo.getState() == SumoState.ROUND_STARTING && sumo.getRoundPlayerB().getPlayer() == player ) {
 				player.teleport(from);
 				((CraftPlayer) player).getHandle().playerConnection.checkMovement = false;
 			}
