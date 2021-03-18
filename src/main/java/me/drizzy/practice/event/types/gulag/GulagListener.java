@@ -18,8 +18,54 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.scheduler.BukkitScheduler;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class GulagListener implements Listener {
+
+	private final List<UUID> cooldown = new ArrayList<>();
+
+	@EventHandler
+	public void onToggleFlight(PlayerToggleFlightEvent event) {
+		Player player = event.getPlayer();
+		Profile profile = Profile.getByUuid(player);
+
+		if (profile.isInGulag()) {
+			if (profile.getGulag().isFighting()) {
+				if (!cooldown.contains(player.getUniqueId())) {
+					player.setVelocity(player.getLocation().getDirection().multiply(10.).setY(1));
+					player.setAllowFlight(false);
+					cooldown.add(player.getUniqueId());
+
+					BukkitScheduler scheduler = Bukkit.getScheduler();
+
+					scheduler.scheduleSyncDelayedTask(Array.getInstance(), () -> {
+						cooldown.remove(player.getUniqueId());
+						player.sendMessage(CC.translate("&aYour double jump cooldown has expired."));
+					}, 60L);
+				}
+			}
+		}
+	}
+
+	@EventHandler
+	public void onMove(PlayerMoveEvent event) {
+		Player player = event.getPlayer();
+		Profile profile = Profile.getByUuid(player);
+
+		if (profile.isInGulag()) {
+			if (profile.getGulag().isFighting()) {
+				if (!(cooldown.contains(player.getUniqueId()))) {
+					if (!player.getAllowFlight()) {
+						player.setAllowFlight(true);
+					}
+				}
+			}
+		}
+	}
 
 	@EventHandler(ignoreCancelled=true, priority=EventPriority.LOW)
 	public void onDeath(EntityDeathEvent event) {

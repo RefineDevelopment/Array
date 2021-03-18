@@ -40,7 +40,7 @@ public class Hotbar
         Hotbar.items.put(HotbarType.VIEW_INVENTORY, new ItemBuilder(Material.BOOK).name(CC.AQUA + "View Inventory" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.EVENT_JOIN, new ItemBuilder(Material.NETHER_STAR).name(CC.AQUA + "Join Event" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.SUMO_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Sumo" + CC.GRAY + " (Right-Click)").build());
-        Hotbar.items.put(HotbarType.GULAG_GUN, new ItemBuilder(Material.STICK).name(CC.AQUA + "Glock 19" + CC.GRAY + " (Loaded)").build());
+        Hotbar.items.put(HotbarType.GULAG_GUN, new ItemBuilder(Material.DIAMOND_HOE).name(CC.AQUA + "Glock 19" + CC.GRAY + " (Loaded)").build());
         Hotbar.items.put(HotbarType.GULAG_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Gulag" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.BRACKETS_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Brackets" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.LMS_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave LMS" + CC.GRAY + " (Right-Click)").build());
