@@ -68,7 +68,8 @@ public class Party extends Team {
     private final List<Player> banned;
     //Simple boolean to execute the disband method
     private boolean disbanded;
-    
+
+    //Constructor for Party
     public Party(final Player player) {
         super(new TeamPlayer(player.getUniqueId(), player.getName()));
         this.Limit = 10;
@@ -78,12 +79,14 @@ public class Party extends Team {
         this.banned = new ArrayList<>();
         Party.parties.add(this);
     }
-    
+
+    //Set Privacy
     public void setPrivacy(final PartyPrivacyType privacy) {
         this.privacy = privacy;
         this.broadcast(PartyMessageType.PRIVACY_CHANGED.format(privacy.toString()));
     }
-    
+
+    //Get Invite from our list
     public PartyInvite getInvite(final UUID uuid) {
         for ( PartyInvite invite : this.invites )
             if (invite.getUuid().equals(uuid)) {
@@ -94,7 +97,8 @@ public class Party extends Team {
             }
         return null;
     }
-    
+
+    //Invite someone
     public void invite(final Player target) {
 
         this.invites.add(new PartyInvite(target.getUniqueId()));
@@ -104,7 +108,7 @@ public class Party extends Team {
 
         this.broadcast(PartyMessageType.PLAYER_INVITED.format(target.getName()));
     }
-    
+
     public void ban(final Player target) {
         this.banned.add(target);
     }
@@ -170,6 +174,9 @@ public class Party extends Team {
                     NameTags.reset(player, secondPlayer);
                 }
             }
+            if (profile.isSpectating()) {
+                profile.getMatch().removeSpectator(player);
+            }
             player.setFireTicks(0);
             player.updateInventory();
             profile.setState(ProfileState.IN_LOBBY);
@@ -198,6 +205,7 @@ public class Party extends Team {
                 targetprofile.getParty().setLeader(teamPlayer);
             }
         }
+        this.broadcast(CC.translate(CC.AQUA  + target + " &ahas been promoted to leader in your party."));
         if (profile.isInLobby()) {
         PlayerUtil.reset(player, false);
         profile.refreshHotbar();
@@ -224,12 +232,13 @@ public class Party extends Team {
                 NameTags.color(player, this.getLeader().getPlayer(), ChatColor.GREEN, false);
             }
         });
+        for(Player partyps : this.getPlayers()) {
+            for ( Player player : Bukkit.getOnlinePlayers() ) {
+                NameTags.color(partyps, player, ChatColor.GREEN, false);
+            }
+        }
         Party.parties.remove(this);
         this.disbanded = true;
-        for(Player partyps : this.getPlayers()) {
-            NameTags.reset(partyps, getLeader().getPlayer());
-            NameTags.color(partyps, this.getLeader().getPlayer(), ChatColor.GREEN, false);
-        }
     }
     
     public void sendInformation(final Player player) {

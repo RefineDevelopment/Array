@@ -6,8 +6,10 @@ import me.drizzy.practice.kit.KitInventory;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.enums.HotbarType;
+import me.drizzy.practice.util.BlockUtil;
 import me.drizzy.practice.util.PlayerUtil;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -147,60 +149,13 @@ public class SpleefListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
-	public void onPlayerInteractEvent(PlayerInteractEvent event) {
-		if (event.getItem() != null && event.getAction().name().contains("RIGHT")) {
-			Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
-
-			if (profile.isInSpleef()) {
-				if (profile.getSpleef().getEventPlayer(event.getPlayer()).getState().equals(SpleefPlayerState.ELIMINATED)) {
-					event.setCancelled(true);
-					return;
-				}
-				if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
-					if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DEFAULT_KIT))) {
-						KitInventory kitInventory= Spleef.getKit().getKitInventory();
-						event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
-						event.getPlayer().getInventory().setContents(kitInventory.getContents());
-						event.getPlayer().updateInventory();
-						event.setCancelled(true);
-						return;
-					}
-				}
-
-				if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
-					String displayName = ChatColor.stripColor(event.getItem().getItemMeta().getDisplayName());
-
-					if (displayName.startsWith("Kit: ")) {
-						String kitName = displayName.replace("Kit: ", "");
-
-						for ( KitInventory kitInventory : profile.getStatisticsData().get(Spleef.getKit()).getLoadouts()) {
-							if (kitInventory != null && ChatColor.stripColor(kitInventory.getCustomName()).equals(kitName)) {
-								event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
-								event.getPlayer().getInventory().setContents(kitInventory.getContents());
-								event.getPlayer().updateInventory();
-								event.setCancelled(true);
-								return;
-							}
-						}
-					}
-				}
-
-				Player player = event.getPlayer();
-				if (((event.getAction() == Action.RIGHT_CLICK_BLOCK) || (event.getAction() == Action.RIGHT_CLICK_AIR)) &&
-						(player.getItemInHand().getType() == Material.MUSHROOM_SOUP))
-				{
-					int health = (int)player.getHealth();
-					if ((health == 20)) {
-						player.getItemInHand().setType(Material.MUSHROOM_SOUP);
-					} else if (health >= 13) {
-						player.setHealth(20.0D);
-						player.getItemInHand().setType(Material.BOWL);
-					} else {
-						player.setHealth(health + 7);
-						player.getItemInHand().setType(Material.BOWL);
-					}
-				}
+	@EventHandler
+	public void onMove(PlayerMoveEvent event) {
+		Location to = event.getTo();
+		Profile profile=Profile.getByUuid(event.getPlayer());
+		if (profile.isInSpleef() && profile.getSpleef().getState() == SpleefState.ROUND_FIGHTING) {
+			if (BlockUtil.isOnLiquid(to, 0) || BlockUtil.isOnLiquid(to, 1)) {
+				profile.getSpleef().handleDeath(event.getPlayer());
 			}
 		}
 	}

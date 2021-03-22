@@ -21,6 +21,9 @@ public class ArenaAddBuildKitsCommand {
                 player.sendMessage(CC.translate("&8[&b&lArray&8] &7There are no kits setup."));
                 return;
             }
+            if (!kit.getGameRules().isBuild()) {
+                return;
+            }
             if (kit.getGameRules().isBuild()) {
                 if (!arena.getKits().contains(kit.getName())) {
                     arena.getKits().add(kit.getName());

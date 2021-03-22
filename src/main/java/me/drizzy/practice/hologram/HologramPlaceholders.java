@@ -1,6 +1,5 @@
 package me.drizzy.practice.hologram;
 
-import com.allatori.annotations.DoNotRename;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.drizzy.practice.ArrayCache;
 import me.drizzy.practice.profile.Profile;
@@ -8,7 +7,6 @@ import me.drizzy.practice.statistics.LeaderboardsAdapter;
 import org.bukkit.entity.Player;
 import me.drizzy.practice.kit.Kit;
 
-@DoNotRename
 public class HologramPlaceholders extends PlaceholderExpansion {
     @Override
     public String getIdentifier() {

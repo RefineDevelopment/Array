@@ -19,6 +19,8 @@ public class TheBridgeArena extends Arena {
     private final List<Arena> duplicates = new ArrayList<>();
     @Setter private Cuboid redCuboid;
     @Setter private Cuboid blueCuboid;
+    @Setter private Cuboid redPortal;
+    @Setter private Cuboid bluePortal;
 
     public TheBridgeArena(String name) {
         super(name);
@@ -50,13 +52,21 @@ public class TheBridgeArena extends Arena {
 
         configuration.set(path + ".kits", getKits());
 
-        if(redCuboid != null){
+        if (redCuboid != null) {
             configuration.set(path + ".redCuboid.location1", LocationUtil.serialize(redCuboid.getLowerCorner()));
             configuration.set(path + ".redCuboid.location2", LocationUtil.serialize(redCuboid.getUpperCorner()));
         }
-        if(blueCuboid != null){
+        if (redPortal != null) {
+            configuration.set(path + ".redPortal.location1", LocationUtil.serialize(redPortal.getLowerCorner()));
+            configuration.set(path + ".redPortal.location2", LocationUtil.serialize(redPortal.getUpperCorner()));
+        }
+        if (blueCuboid != null) {
             configuration.set(path + ".blueCuboid.location1", LocationUtil.serialize(blueCuboid.getLowerCorner()));
             configuration.set(path + ".blueCuboid.location2", LocationUtil.serialize(blueCuboid.getUpperCorner()));
+        }
+        if (bluePortal != null) {
+            configuration.set(path + ".bluePortal.location1", LocationUtil.serialize(bluePortal.getLowerCorner()));
+            configuration.set(path + ".bluePortal.location2", LocationUtil.serialize(bluePortal.getUpperCorner()));
         }
 
         if (!duplicates.isEmpty()) {

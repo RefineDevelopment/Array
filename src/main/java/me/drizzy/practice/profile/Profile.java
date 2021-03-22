@@ -36,6 +36,7 @@ import me.drizzy.practice.event.types.sumo.Sumo;
 import me.drizzy.practice.event.types.sumo.player.SumoPlayer;
 import me.drizzy.practice.event.types.sumo.player.SumoPlayerState;
 import me.drizzy.practice.kit.Kit;
+import me.drizzy.practice.profile.meta.EloLeague;
 import me.drizzy.practice.statistics.LeaderboardsAdapter;
 import me.drizzy.practice.kit.KitInventory;
 import me.drizzy.practice.match.Match;
@@ -73,7 +74,6 @@ public class Profile {
     @Getter private static final Map<UUID, Profile> profiles = new HashMap<>();
     @Getter static final List<Player> playerList = new ArrayList<>();
     @Getter private static final List<LeaderboardsAdapter> globalEloLeaderboards = new ArrayList<>();
-    @Getter private static Map<Integer, String> eloLeagues = new HashMap<>();
     @Getter private static MongoCollection<Document> allProfiles;
     private static MongoCollection<Document> collection;
     @Getter private final SettingsMeta settings = new SettingsMeta();
@@ -137,39 +137,6 @@ public class Profile {
 
             profiles.put(player.getUniqueId(), profile);
         }
-        getEloLeagues().put(1019, "Diamond III");
-        getEloLeagues().put(1018, "Diamond III");
-        getEloLeagues().put(1017, "Diamond II");
-        getEloLeagues().put(1016, "Diamond II");
-        getEloLeagues().put(1015, "Diamond I");
-        getEloLeagues().put(1014, "Diamond I");
-        getEloLeagues().put(1013, "Gold III");
-        getEloLeagues().put(1012, "Gold III");
-        getEloLeagues().put(1011, "Gold II");
-        getEloLeagues().put(1010, "Gold II");
-        getEloLeagues().put(1009, "Gold I");
-        getEloLeagues().put(1008, "Gold I");
-        getEloLeagues().put(1007, "Silver IV");
-        getEloLeagues().put(1006, "Silver IV");
-        getEloLeagues().put(1005, "Silver III");
-        getEloLeagues().put(1004, "Silver III");
-        getEloLeagues().put(1003, "Silver II");
-        getEloLeagues().put(1002, "Silver II");
-        getEloLeagues().put(1001, "Silver I");
-        getEloLeagues().put(1000, "Silver I");
-        getEloLeagues().put(999, "Bronze V");
-        getEloLeagues().put(998, "Bronze V");
-        getEloLeagues().put(997, "Bronze IV");
-        getEloLeagues().put(996, "Bronze IV");
-        getEloLeagues().put(995, "Bronze III");
-        getEloLeagues().put(994, "Bronze III");
-        getEloLeagues().put(993, "Bronze II");
-        getEloLeagues().put(992, "Bronze II");
-        getEloLeagues().put(991, "Bronze I");
-        getEloLeagues().put(990, "Bronze I");
-        eloLeagues = eloLeagues.entrySet().stream()
-                .sorted(Map.Entry.<Integer, String>comparingByKey().reversed())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
         // Save every minute to prevent data loss
         new BukkitRunnable() {
@@ -401,23 +368,14 @@ public class Profile {
         Document document = collection.find(Filters.eq("uuid", uuid.toString())).first();
         Document kitStatistics = (Document) document.get("kitStatistics");
 
-        for (String key : kitStatistics.keySet()) {
-            Document kitDocument=(Document) kitStatistics.get(key);
-            Kit kit=Kit.getByName(key);
+        for (Kit kit : Kit.getKits()) {
+            Document kitDocument = (Document) kitStatistics.get(kit.getName());
             this.getStatisticsData().get(kit).setElo(kitDocument.getInteger("elo"));
         }
     }
 
     public String getEloLeague() {
-        String toReturn = "&8Bronze 1";
-        for (Integer elo : getEloLeagues().keySet()) {
-            if (this.globalElo >= elo) {
-                toReturn = getEloLeagues().get(elo);
-                break;
-            }
-        }
-        if (this.globalElo >= 1020) toReturn = "&b&lPurge";
-        return toReturn;
+        return EloLeague.getDivision(this);
     }
 
     public Integer getTotalWins() {

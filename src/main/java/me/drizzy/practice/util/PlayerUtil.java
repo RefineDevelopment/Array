@@ -3,6 +3,8 @@ package me.drizzy.practice.util;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.enums.HotbarType;
+import me.drizzy.practice.hotbar.Hotbar;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -88,6 +90,7 @@ public class PlayerUtil {
         player.setFlying(true);
         player.setFlySpeed(0.2F);
         player.updateInventory();
+        player.getInventory().setItem(8, Hotbar.getItems().get(HotbarType.SPEC_LEAVE));
     }
 
     public static void denyMovement(Player player) {

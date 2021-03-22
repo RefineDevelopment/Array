@@ -39,6 +39,7 @@ public class SumoMatch extends Match {
 
     @Setter private TeamPlayer playerA;
     @Setter private TeamPlayer playerB;
+    List<Player> catchlist = new ArrayList<>();
 
     public SumoMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
         super(queue, kit, arena, queueType);
@@ -494,20 +495,13 @@ public class SumoMatch extends Match {
 
                     end();
                 } else {
-                    for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Sumo-Round-Message") ) {
-                        //Send Round Messages
+                    for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Round-Message.Sumo") ) {
                         playerA.getPlayer().sendMessage(CC.translate(string.replace("{rounds}", String.valueOf(getRoundsNeeded(playerA)).replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName()))));
                         playerB.getPlayer().sendMessage(CC.translate(string.replace("{rounds}", String.valueOf(getRoundsNeeded(playerB)).replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName()))));
-
-                        //Setup the Player
                         setupPlayer(playerA.getPlayer());
                         setupPlayer(playerB.getPlayer());
-
-                        //Handle visibility for both
                         playerA.getPlayer().showPlayer(playerB.getPlayer());
                         playerB.getPlayer().showPlayer(playerA.getPlayer());
-
-                        //Restart the match
                         onStart();
                         setState(MatchState.STARTING);
                         setStartTimestamp(-1);

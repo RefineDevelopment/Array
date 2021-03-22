@@ -109,7 +109,7 @@ public class ParkourListener implements Listener {
 		if (profile.isInParkour()) {
 			Parkour parkour = profile.getParkour();
 			if (!parkour.getState().equals(ParkourState.ROUND_ENDING)) {
-				if (profile.getPlates() !=null) {
+				if (event.getClickedBlock().getLocation() !=null && profile.getPlates() !=null) {
 					if (profile.getPlates().contains(event.getClickedBlock().getLocation())) {
 						event.setCancelled(true);
 						return;
@@ -134,6 +134,22 @@ public class ParkourListener implements Listener {
 			}
 		}
 	}
+
+	@EventHandler
+	public void onArrow(PlayerInteractEvent event) {
+		Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
+		Player player=event.getPlayer();
+		if (profile.isInParkour() && event.getClickedBlock().getType() == Material.ARROW && event.getAction().name().equals("RIGHT")) {
+			if (profile.getParkour().getState() == ParkourState.ROUND_FIGHTING) {
+				if (profile.getParkour().getEventPlayer(player).getLastLocation() != null) {
+					player.teleport(profile.getParkour().getEventPlayer(player).getLastLocation());
+				} else {
+					player.teleport(Array.getInstance().getParkourManager().getParkourSpawn());
+				}
+			}
+		}
+	}
+
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());

@@ -3,10 +3,13 @@ package me.drizzy.practice.knockback.types;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.knockback.KnockbackType;
+import net.minecraft.server.v1_8_R3.EntityPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import pt.foxspigot.jar.knockback.KnockbackModule;
 import pt.foxspigot.jar.knockback.KnockbackProfile;
+
+import java.lang.reflect.Method;
 
 public class FoxSpigot implements KnockbackType {
 
@@ -17,7 +20,16 @@ public class FoxSpigot implements KnockbackType {
     @Override
     public void applyKnockback(Player p, String s) {
       KnockbackProfile knockbackProfile = KnockbackModule.INSTANCE.profiles.get(s);
-      ((CraftPlayer)p).getHandle().setKnockback(knockbackProfile);
+      try {
+          Class<?> player = ((CraftPlayer)p).getClass();
+          EntityPlayer craftPlayer = ((CraftPlayer)p).getHandle();
+          Method getHandle = player.getMethod("getHandle");
+          Object nms = getHandle.invoke(p);
+          Method setKnockback = nms.getClass().getMethod("setKnockback", KnockbackProfile.class);
+          setKnockback.invoke(craftPlayer, knockbackProfile);
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
     }
 
     @Override
@@ -28,12 +40,30 @@ public class FoxSpigot implements KnockbackType {
         } else {
             knockbackProfile = KnockbackModule.getDefault();
         }
-        ((CraftPlayer) p).getHandle().setKnockback(knockbackProfile);
+        try {
+            Class<?> player = ((CraftPlayer)p).getClass();
+            EntityPlayer craftPlayer = ((CraftPlayer)p).getHandle();
+            Method getHandle = player.getMethod("getHandle");
+            Object nms = getHandle.invoke(p);
+            Method setKnockback = nms.getClass().getMethod("setKnockback", KnockbackProfile.class);
+            setKnockback.invoke(craftPlayer, knockbackProfile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void applyDefaultKnockback(Player p) {
         KnockbackProfile knockbackProfile = KnockbackModule.getDefault();
-        ((CraftPlayer) p).getHandle().setKnockback(knockbackProfile);
+        try {
+            Class<?> player = ((CraftPlayer)p).getClass();
+            EntityPlayer craftPlayer = ((CraftPlayer)p).getHandle();
+            Method getHandle = player.getMethod("getHandle");
+            Object nms = getHandle.invoke(p);
+            Method setKnockback = nms.getClass().getMethod("setKnockback", KnockbackProfile.class);
+            setKnockback.invoke(craftPlayer, knockbackProfile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -126,6 +126,12 @@ public class SumoListener implements Listener {
 			}
 		}
 
+		if (profile.getMatch().isSumoMatch() || profile.getMatch().isTeamMatch()) {
+			if (BlockUtil.isOnLiquid(to, 0) || BlockUtil.isOnLiquid(to, 1)) {
+				profile.getMatch().onDeath(player, profile.getMatch().getOpponentPlayer(player));
+			}
+		}
+
 		if (to.getX() != from.getX() || to.getZ() != from.getZ()) {
 			if (sumo.getState() == SumoState.ROUND_STARTING && sumo.getRoundPlayerA().getPlayer() == player || sumo.getState() == SumoState.ROUND_STARTING && sumo.getRoundPlayerB().getPlayer() == player ) {
 				player.teleport(from);

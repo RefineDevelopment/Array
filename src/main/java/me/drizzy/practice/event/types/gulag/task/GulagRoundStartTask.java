@@ -27,13 +27,11 @@ public class GulagRoundStartTask extends GulagTask {
 			if (playerA != null) {
 				playerA.playSound(playerA.getLocation(), Sound.NOTE_BASS, 1.0F, 1.0F);
 				PlayerUtil.allowMovement(playerA);
-				playerA.setAllowFlight(true);
 			}
 
 			if (playerB != null) {
 				playerB.playSound(playerB.getLocation(), Sound.NOTE_BASS, 1.0F, 1.0F);
 				PlayerUtil.allowMovement(playerB);
-				playerB.setAllowFlight(true);
 			}
 
 			(this.getGulag()).setRoundStart(System.currentTimeMillis());

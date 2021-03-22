@@ -4,10 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.event.types.spleef.player.SpleefPlayer;
 import me.drizzy.practice.event.types.spleef.player.SpleefPlayerState;
 import me.drizzy.practice.event.types.spleef.task.SpleefRoundEndTask;
 import me.drizzy.practice.event.types.spleef.task.SpleefRoundStartTask;
+import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
@@ -338,10 +340,8 @@ public class Spleef {
 					profile.refreshHotbar();
 				}
 				PlayerUtil.reset(player);
+				player.getInventory().addItem(Hotbar.getItems().get(HotbarType.SPLEEF_MATCH));
 			}
-
-			assert player != null;
-			Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
 		}
 		setEventTask(new SpleefRoundStartTask(this));
 	}

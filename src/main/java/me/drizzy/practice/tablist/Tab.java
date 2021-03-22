@@ -189,8 +189,8 @@ public class Tab implements ZigguratAdapter {
                     final Team team = match2.getTeam(player);
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "&lMatch Info").slot(23));
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Opponents: " + Array.getInstance().getMainConfig().getString("Tab.Color.Main") + team.getAliveCount() + "/" + team.getTeamPlayers().size()).slot(25));
-                    elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Duration:").slot(27));
-                    elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + match2.getDuration()).slot(28));
+                    elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Duration: " + Array.getInstance().getMainConfig().getString("Tab.Color.Main") + match2.getDuration()).slot(27));
+                    elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Arena: " + Array.getInstance().getMainConfig().getString("Tab.Color.Main") + match2.getArena().getDisplayName()).slot(27));
                 }
             }
         }

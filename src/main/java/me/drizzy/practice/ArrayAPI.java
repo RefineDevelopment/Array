@@ -3,6 +3,7 @@ package me.drizzy.practice;
 import me.drizzy.practice.profile.Profile;
 import org.bukkit.entity.Player;
 
+@SuppressWarnings("all")
 public class ArrayAPI {
 
     public static boolean isInLobby(Player player) {

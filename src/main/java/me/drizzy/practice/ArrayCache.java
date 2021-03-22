@@ -1,6 +1,5 @@
 package me.drizzy.practice;
 
-import com.allatori.annotations.DoNotRename;
 import lombok.Getter;
 import me.drizzy.practice.profile.Profile;
 import org.bukkit.Bukkit;
@@ -10,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@DoNotRename
 public class ArrayCache {
 
     @Getter

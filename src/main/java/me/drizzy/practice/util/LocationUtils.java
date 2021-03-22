@@ -48,9 +48,9 @@ public class LocationUtils {
         TheBridgeArena arena = (TheBridgeArena) match.getArena();
 
         if (match.getTeamPlayerA().getPlayer() == player) {
-            return arena.getRedCuboid().contains(player.getLocation());
+            return arena.getRedPortal().contains(player.getLocation());
         } else {
-            return arena.getBlueCuboid().contains(player.getLocation());
+            return arena.getBluePortal().contains(player.getLocation());
         }
     }
 

@@ -119,7 +119,7 @@ public class TheBridgeMatch extends Match {
         player.getInventory().setArmorContents(getKit().getKitInventory().getArmor());
         player.getInventory().setContents(getKit().getKitInventory().getContents());
         giveBridgeKit(player);
-        NameTags.color(player, getOpponentPlayer(player), (this.getTeamPlayerA().getPlayer() == player ? org.bukkit.ChatColor.RED :  org.bukkit.ChatColor.BLUE), getKit().getGameRules().isBuild());
+        NameTags.color(player, getOpponentPlayer(player), (this.getTeamPlayerA().getPlayer() == player ? org.bukkit.ChatColor.BLUE :  org.bukkit.ChatColor.RED), getKit().getGameRules().isBuild());
 
     }
 
@@ -498,10 +498,12 @@ public class TheBridgeMatch extends Match {
                     getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
 
                     PlayerUtil.reset(deadPlayer);
-                    for ( Player otherPlayer : getPlayersAndSpectators() ) {
-                        Profile profile=Profile.getByUuid(otherPlayer.getUniqueId());
+
+                    for (Player otherPlayer : getPlayersAndSpectators()) {
+                        Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
                         profile.handleVisibility(otherPlayer, deadPlayer);
                     }
+
                     end();
                 } else {
                     for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Round-Message") ) {
@@ -520,8 +522,7 @@ public class TheBridgeMatch extends Match {
                         onStart();
                         setState(MatchState.STARTING);
                         setStartTimestamp(-1);
-                        new MatchStartTask(this).runTask(Array.getInstance());
-
+                        new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
                 }
             }
         }

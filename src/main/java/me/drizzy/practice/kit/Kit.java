@@ -65,6 +65,7 @@ public class Kit {
             String path = "kits." + key;
 
             Kit kit = new Kit(key);
+            kit.setDisplayName(CC.AQUA + kit.getName());
             kit.setEnabled(config.getBoolean(path + ".enabled"));
             if (config.contains(path + ".display-name")) {
                 kit.setDisplayName(CC.translate(config.getString(path + ".display-name")));

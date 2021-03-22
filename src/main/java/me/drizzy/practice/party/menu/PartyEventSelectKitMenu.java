@@ -1,5 +1,6 @@
 package me.drizzy.practice.party.menu;
 
+import lombok.AllArgsConstructor;
 import me.drizzy.practice.enums.PartyEventType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -22,8 +23,9 @@ import me.drizzy.practice.util.external.menu.Menu;
 import java.beans.ConstructorProperties;
 import java.util.*;
 
-public class PartyEventSelectKitMenu extends Menu
-{
+@AllArgsConstructor
+public class PartyEventSelectKitMenu extends Menu {
+
     private final PartyEventType partyEventType;
 
     @Override
@@ -42,13 +44,9 @@ public class PartyEventSelectKitMenu extends Menu
         return buttons;
     }
 
-    @ConstructorProperties({ "partyEventType" })
-    public PartyEventSelectKitMenu(final PartyEventType partyEventType) {
-        this.partyEventType=partyEventType;
-    }
+    @AllArgsConstructor
+    private static class SelectKitButton extends Button {
 
-    private static class SelectKitButton extends Button
-    {
         private final PartyEventType partyEventType;
         private final Kit kit;
 
@@ -67,7 +65,7 @@ public class PartyEventSelectKitMenu extends Menu
                 return;
             }
             if (profile.getParty().getTeamPlayers().size() <= 1) {
-                player.sendMessage(CC.RED + "You do not have enough players in your party to start an sumo.");
+                player.sendMessage(CC.RED + "You do not have enough players in your party to start a party event.");
                 return;
             }
             final Party party = profile.getParty();
@@ -79,9 +77,6 @@ public class PartyEventSelectKitMenu extends Menu
             arena.setActive(true);
             Match match;
             if (this.partyEventType == PartyEventType.FFA) {
-                if (this.kit.getGameRules().isSumo()) {
-                    player.sendMessage(CC.RED + "You cannot start an ffa with the kit sumo!");
-                }
                 final Team team = new Team(new TeamPlayer(party.getLeader().getPlayer()));
                 final List<Player> players=new ArrayList<>(party.getPlayers());
                 match = new FFAMatch(team, this.kit, arena);
@@ -117,12 +112,6 @@ public class PartyEventSelectKitMenu extends Menu
                 }
             }
             match.start();
-        }
-
-        @ConstructorProperties({ "partyEventType", "kit" })
-        public SelectKitButton(final PartyEventType partyEventType, final Kit kit) {
-            this.partyEventType=partyEventType;
-            this.kit = kit;
         }
     }
 }

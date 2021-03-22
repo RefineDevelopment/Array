@@ -102,8 +102,8 @@ public class KitEditorMenu extends Menu {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                PlayerUtil.reset(player, false);
-                profile.refreshHotbar();
+                    PlayerUtil.reset(player, false);
+                    profile.refreshHotbar();
                 }
             }.runTask(Array.getInstance());
         }

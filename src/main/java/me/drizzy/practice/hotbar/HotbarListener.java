@@ -82,6 +82,13 @@ public class HotbarListener implements Listener
                     }
                     break;
                 }
+                case SPEC_LEAVE: {
+                    if (profile.isSpectating()) {
+                        if (profile.getMatch() !=null) {
+                            profile.getMatch().removeSpectator(player);
+                        }
+                    }
+                }
                 case PARTY_EVENTS: {
                     new PartyEventSelectEventMenu().openMenu(player);
                     break;
@@ -222,29 +229,12 @@ public class HotbarListener implements Listener
                         player.sendMessage(CC.RED + "There is no active Gulag.");
                         return;
                     }
-                    if (!profile.isInParkour() || !activeGulag.getEventPlayers().containsKey(player.getUniqueId())) {
+                    if (!profile.isInGulag() || !activeGulag.getEventPlayers().containsKey(player.getUniqueId())) {
                         player.sendMessage(CC.RED + "You are not apart of the active Gulag.");
                         return;
                     }
                     Array.getInstance().getGulagManager().getActiveGulag().handleLeave(player);
                     break;
-                }
-                case PARKOUR_SPAWN: {
-                    final Parkour activeParkour = Array.getInstance().getParkourManager().getActiveParkour();
-                    if (activeParkour == null) {
-                        player.sendMessage(CC.RED + "There is no active Parkour.");
-                        return;
-                    }
-                    if (!profile.isInParkour() || !activeParkour.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(CC.RED + "You are not apart of the active Parkour.");
-                        return;
-                    }
-                    if (profile.getParkour().getEventPlayer(player).getLastLocation() != null) {
-                        player.teleport(profile.getParkour().getEventPlayer(player).getLastLocation());
-                        break;
-                    } else {
-                        player.teleport(Array.getInstance().getParkourManager().getParkourSpawn());
-                    }
                 }
                 case SPLEEF_LEAVE: {
                     final Spleef activeSpleef = Array.getInstance().getSpleefManager().getActiveSpleef();

@@ -29,6 +29,7 @@ public class Hotbar
         Hotbar.items.put(HotbarType.PARTY_EVENTS, new ItemBuilder(Material.DIAMOND_AXE).name(CC.AQUA + "Party Events" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.PARTY_CREATE, new ItemBuilder(Material.NAME_TAG).name(CC.AQUA + "Create Party" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.PARTY_DISBAND, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Disband Party" + CC.GRAY + " (Right-Click)").build());
+        Hotbar.items.put(HotbarType.SPEC_LEAVE, new ItemBuilder(Material.RED_ROSE).name(CC.RED + "Leave Spectator Mode" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.PARTY_SETTINGS, new ItemBuilder(Material.ANVIL).name(CC.AQUA + "Party Settings" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.PARTY_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Party" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.PARTY_INFO, new ItemBuilder(Material.PAPER).name(CC.AQUA + "Party Information" + CC.GRAY + " (Right-Click)").build());
@@ -37,6 +38,7 @@ public class Hotbar
         Hotbar.items.put(HotbarType.SETTINGS_MENU, new ItemBuilder(Material.ANVIL).name(CC.AQUA + "Settings" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.KIT_EDITOR, new ItemBuilder(Material.BOOK).name(CC.AQUA + "Kit Editor" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.SPECTATE_STOP, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.AQUA + CC.BOLD + "Stop Spectating" + CC.GRAY + " (Right-Click)").build());
+        Hotbar.items.put(HotbarType.SPLEEF_MATCH, new ItemBuilder(Material.DIAMOND_SPADE).name(CC.AQUA + "Spleef Shovel" + CC.GRAY + " (Left-Click)").build());
         Hotbar.items.put(HotbarType.VIEW_INVENTORY, new ItemBuilder(Material.BOOK).name(CC.AQUA + "View Inventory" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.EVENT_JOIN, new ItemBuilder(Material.NETHER_STAR).name(CC.AQUA + "Join Event" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.SUMO_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Sumo" + CC.GRAY + " (Right-Click)").build());

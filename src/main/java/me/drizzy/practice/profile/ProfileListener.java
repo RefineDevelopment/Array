@@ -13,8 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -23,7 +22,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.StringUtil;
 import me.drizzy.practice.util.PlayerUtil;
@@ -335,6 +338,64 @@ public class ProfileListener implements Listener {
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
             if (StringUtil.startsWithIgnoreCase(p.getName(), token)) {
                 completions.add(p.getName());
+            }
+        }
+    }
+
+    @EventHandler (priority = EventPriority.LOW)
+    public void onPearlThrow(final ProjectileLaunchEvent event) {
+        final ProjectileSource source=event.getEntity().getShooter();
+        if (source instanceof Player) {
+            final Player shooter=(Player) source;
+            final Profile profile=Profile.getByUuid(shooter.getUniqueId());
+            if (profile.isInLobby() || profile.isInQueue()) {
+                event.setCancelled(true);
+                profile.getKitEditor().setActive(false);
+                PlayerUtil.reset(shooter);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        profile.refreshHotbar();
+                    }
+                }.runTaskLaterAsynchronously(Array.getInstance(), 2L);
+            }
+        }
+    }
+
+    @EventHandler (priority = EventPriority.LOW)
+    public void onPotionThrow(final PotionSplashEvent event) {
+        ProjectileSource source = event.getPotion().getShooter();
+            if (source instanceof Player) {
+                final Player shooter=(Player) source;
+                final Profile profile=Profile.getByUuid(shooter.getUniqueId());
+                if (profile.isInLobby() || profile.isInQueue()) {
+                    event.setCancelled(true);
+                    profile.getKitEditor().setActive(false);
+                    PlayerUtil.reset(shooter);
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            profile.refreshHotbar();
+                        }
+                    }.runTaskLaterAsynchronously(Array.getInstance(), 2L);
+                }
+            }
+    }
+
+    @EventHandler
+    public void onUse(PlayerInteractEvent event) {
+        final Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
+        if (profile.isInLobby()) {
+            if (profile.getKitEditor().isActive()) {
+                event.setCancelled(true);
+                profile.getKitEditor().setActive(false);
+                PlayerUtil.reset(event.getPlayer());
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        profile.refreshHotbar();
+                    }
+                }.runTaskLaterAsynchronously(Array.getInstance(), 2L);
             }
         }
     }

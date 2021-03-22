@@ -1,6 +1,7 @@
 package me.drizzy.practice;
 
 import lombok.Setter;
+import me.allen.ziggurat.Ziggurat;
 import me.drizzy.practice.event.types.brackets.BracketsManager;
 import me.drizzy.practice.event.types.gulag.GulagManager;
 import me.drizzy.practice.event.types.lms.LMSManager;
@@ -24,6 +25,7 @@ import me.drizzy.practice.util.*;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ItemBuilder;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.yaml.snakeyaml.error.YAMLException;
@@ -32,7 +34,6 @@ import me.drizzy.practice.util.scoreboard.Aether;
 import com.mongodb.*;
 import com.mongodb.client.MongoDatabase;
 import me.drizzy.practice.util.command.Honcho;
-import me.allen.ziggurat.Ziggurat;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.enums.ArenaType;
 import me.drizzy.practice.arena.ArenaTypeAdapter;
@@ -163,7 +164,6 @@ public class Array extends JavaPlugin {
             registerAll();
             RegisterCommands.register();
         }
-        knockbackManager = new KnockbackManager();
         sumoManager = new SumoManager();
         bracketsManager = new BracketsManager();
         LMSManager = new LMSManager();
@@ -279,7 +279,9 @@ public class Array extends JavaPlugin {
         new Hotbar();
         Match.preload();
         Party.preload();
-
+        TaskUtil.runAsync(() -> {
+            knockbackManager=new KnockbackManager();
+        });
         essentials = new Essentials();
 
         honcho.registerTypeAdapter(Arena.class, new ArenaTypeAdapter());
@@ -291,8 +293,9 @@ public class Array extends JavaPlugin {
     private void registerEssentials() {
         //Setup Scoreboard & Tab (Spent 2 Days figuring out why scoreboard was not working,
         // turns out you gotta register it before tab)
-        this.scoreboard = new Aether(this, new Scoreboard());
+        this.scoreboard=new Aether(this, new Scoreboard());
         this.scoreboard.getOptions().hook(true);
+        //Setup Tab
         if (mainConfig.getBoolean("Tab.Enabled")) {
             this.tab=new Ziggurat(this, new Tab());
         }
@@ -300,7 +303,7 @@ public class Array extends JavaPlugin {
         new QueueThread().start();
 
         //PlaceholderAPI Hook
-        if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new HologramPlaceholders().register();
             new Placeholders().register();
             logger("&bFound PlaceholderAPI, Registering Expansions....");
@@ -310,7 +313,7 @@ public class Array extends JavaPlugin {
 
         //Load the Global Leaderboards (Also a bug fix for leaderboards being blank on start)
         Profile.loadGlobalLeaderboards();
-        Bukkit.getScheduler().runTaskTimer(this, new EloRegulatorTask(), 6000L, 6000L);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, new EloRegulatorTask(), 6000L, 6000L);
     }
 
     public static void logger(String message) {

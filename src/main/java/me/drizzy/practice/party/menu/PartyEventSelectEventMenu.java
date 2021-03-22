@@ -1,7 +1,6 @@
 package me.drizzy.practice.party.menu;
 
-import java.beans.ConstructorProperties;
-
+import lombok.AllArgsConstructor;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.enums.PartyEventType;
@@ -28,8 +27,8 @@ import java.util.Map;
 import org.bukkit.entity.Player;
 import me.drizzy.practice.util.external.menu.Menu;
 
-public class PartyEventSelectEventMenu extends Menu
-{
+public class PartyEventSelectEventMenu extends Menu {
+
     @Override
     public String getTitle(final Player player) {
         return "&bSelect a party event";
@@ -49,8 +48,9 @@ public class PartyEventSelectEventMenu extends Menu
         return buttons;
     }
 
-    private static class SelectEventButton extends Button
-    {
+    @AllArgsConstructor
+    private static class SelectEventButton extends Button {
+
         private final PartyEventType partyEventType;
 
         @Override
@@ -85,6 +85,13 @@ public class PartyEventSelectEventMenu extends Menu
             if (profile.getParty() == null) {
                 player.sendMessage(CC.RED + "You are not in a party.");
                 return;
+            }
+            for (Player players : profile.getParty().getPlayers()) {
+                Profile profile1 = Profile.getByUuid(players);
+                if (profile1.isBusy(players)) {
+                    player.sendMessage(CC.translate("&cYour party members are busy right now, please try again."));
+                    return;
+                }
             }
             if (this.partyEventType == PartyEventType.FFA || this.partyEventType == PartyEventType.SPLIT) {
                 Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
@@ -136,11 +143,6 @@ public class PartyEventSelectEventMenu extends Menu
                 }
                 match.start();
             }
-        }
-
-        @ConstructorProperties({ "partyEventType" })
-        public SelectEventButton(final PartyEventType partyEventType) {
-            this.partyEventType=partyEventType;
         }
     }
 }

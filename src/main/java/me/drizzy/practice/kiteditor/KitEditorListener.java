@@ -1,8 +1,11 @@
 package me.drizzy.practice.kiteditor;
 
+import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.kiteditor.menu.KitManagementMenu;
 import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
+import me.drizzy.practice.util.external.menu.Menu;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -11,9 +14,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class KitEditorListener implements Listener {
 
@@ -85,6 +91,34 @@ public class KitEditorListener implements Listener {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onClose(InventoryInteractEvent event) {
+        Player player=(Player) event.getWhoClicked();
+        Profile profile=Profile.getByUuid(player);
+        if (profile.isInLobby() && player.getOpenInventory() == null) {
+            if (profile.getKitEditor().isActive()) {
+                PlayerUtil.reset(player, false);
+                profile.refreshHotbar();
+                profile.getKitEditor().setActive(false);
+                player.sendMessage(CC.translate("&7You were caught doing the kit editor bug!"));
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onClose(InventoryClickEvent event) {
+        Player player=(Player) event.getWhoClicked();
+        Profile profile=Profile.getByUuid(player);
+        if (profile.isInLobby() && player.getOpenInventory() == null) {
+            if (profile.getKitEditor().isActive()) {
+                PlayerUtil.reset(player, false);
+                profile.refreshHotbar();
+                profile.getKitEditor().setActive(false);
+                player.sendMessage(CC.translate("&7You were caught doing the kit editor bug!"));
             }
         }
     }

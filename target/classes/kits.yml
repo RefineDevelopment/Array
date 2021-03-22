@@ -30,7 +30,12 @@ kits:
       show-health: false
       hit-delay: 20
       bow-hp: false
-      BoxUHC: false 
+      netheruhc: false
+      stickspawn: false
+      voidspawn: false
+      boxuhc: false
+      bridge: false
+      disable-fall-damage: false
     edit-rules:
       allow-potion-fill: false
       items:
@@ -50,9 +55,10 @@ kits:
           material: POTION
           amount: 1
           durability: 8226
+    display-name: §bNoDebuff
   Debuff:
     enabled: true
-    knockback-profile: default
+    knockback-profile: lunar
     icon:
       material: POTION
       durability: 16452
@@ -81,7 +87,14 @@ kits:
       show-health: false
       hit-delay: 20
       bow-hp: false
-      BoxUHC: false 
+      BoxUHC: false
+      brige: false
+      netheruhc: false
+      stickspawn: false
+      voidspawn: false
+      boxuhc: false
+      bridge: false
+      disable-fall-damage: false
     edit-rules:
       allow-potion-fill: false
       items:
@@ -101,6 +114,7 @@ kits:
           material: POTION
           amount: 1
           durability: 16452
+    display-name: §bDebuff
   Combo:
     enabled: true
     knockback-profile: combo
@@ -121,7 +135,7 @@ kits:
       build: false
       spleef: false
       parkour: false
-      combo: false
+      combo: true
       sumo: false
       infinite-speed: false
       infinite-strength: false
@@ -133,8 +147,16 @@ kits:
       hit-delay: 3
       bow-hp: false
       BoxUHC: false
+      brige: false
+      netheruhc: false
+      stickspawn: false
+      voidspawn: false
+      boxuhc: false
+      bridge: false
+      disable-fall-damage: false
     edit-rules:
       allow-potion-fill: false
+    display-name: §bCombo
   BuildUHC:
     enabled: true
     knockback-profile: builduhc
@@ -166,9 +188,17 @@ kits:
       show-health: true
       hit-delay: 20
       bow-hp: true
-      BoxUHC: false     
+      BoxUHC: false
+      brige: false
+      netheruhc: false
+      stickspawn: false
+      voidspawn: false
+      boxuhc: false
+      bridge: false
+      disable-fall-damage: false
     edit-rules:
       allow-potion-fill: false
+    display-name: §bBuildUHC
   Sumo:
     enabled: true
     knockback-profile: sumo
@@ -201,8 +231,16 @@ kits:
       hit-delay: 20
       bow-hp: false
       BoxUHC: false
+      brige: false
+      netheruhc: false
+      stickspawn: false
+      voidspawn: false
+      boxuhc: false
+      bridge: false
+      disable-fall-damage: false
     edit-rules:
       allow-potion-fill: false
+    display-name: §bSumo
   Classic:
     enabled: true
     icon:
@@ -210,7 +248,7 @@ kits:
       durability: 0
     loadout:
       armor: t@309:e@34@2;t@308:e@34@2;t@311:e@34@2;t@306:e@34@2;
-      contents: t@267;t@346;t@261;t@322:a@5;null;null;null;null;t@259;t@262:a@5;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;null;
+      contents: t@267;t@346;t@261;t@322:a@5;t@0;t@0;t@0;t@0;t@259;t@262:a@5;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;
     game-rules:
       ranked: true
       partyffa: true
@@ -233,42 +271,58 @@ kits:
       show-health: true
       hit-delay: 20
       bow-hp: false
+      brige: false
+      netheruhc: false
+      stickspawn: false
+      voidspawn: false
+      boxuhc: false
+      bridge: false
+      disable-fall-damage: false
     edit-rules:
       allow-potion-fill: false
+    display-name: §bClassic
   HCFTeamFight:
-      enabled: false
-      icon:
-        material: WOOD_DOOR
-        durability: 0
-      loadout:
-        armor: t@0;t@0;t@0;t@0;
-        contents: t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;
-      game-rules:
-        ranked: true
-        partyffa: false
-        partysplit: false
-        editable: true
-        antifoodloss: true
-        ffacenter: false
-        noitems: false
-        build: true
-        spleef: false
-        parkour: false
-        combo: false
-        sumo: false
-        infinite-speed: false
-        infinite-strength: false
-        timed: false
-        water-kill: false
-        lava-kill: false
-        health-regeneration: true
-        show-health: false
-        hit-delay: 20
-        bow-hp: false
-        BoxUHC: false
-      edit-rules:
-        allow-potion-fill: false
-      knockback-profile: default
+    enabled: false
+    icon:
+      material: WOOD_DOOR
+      durability: 0
+    loadout:
+      armor: t@0;t@0;t@0;t@0;
+      contents: t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;
+    game-rules:
+      ranked: true
+      partyffa: false
+      partysplit: false
+      editable: true
+      antifoodloss: true
+      ffacenter: false
+      noitems: false
+      build: false
+      spleef: false
+      parkour: false
+      combo: false
+      sumo: false
+      infinite-speed: false
+      infinite-strength: false
+      timed: false
+      water-kill: false
+      lava-kill: false
+      health-regeneration: true
+      show-health: false
+      hit-delay: 20
+      bow-hp: false
+      BoxUHC: false
+      brige: false
+      netheruhc: false
+      stickspawn: false
+      voidspawn: false
+      boxuhc: false
+      bridge: false
+      disable-fall-damage: false
+    edit-rules:
+      allow-potion-fill: false
+    knockback-profile: lunar
+    display-name: §bHCFTeamFight
   Soup:
     enabled: true
     icon:
@@ -300,9 +354,17 @@ kits:
       hit-delay: 20
       bow-hp: false
       BoxUHC: false
+      brige: false
+      netheruhc: false
+      stickspawn: false
+      voidspawn: false
+      boxuhc: false
+      bridge: false
+      disable-fall-damage: false
     edit-rules:
       allow-potion-fill: false
-    knockback-profile: default
+    knockback-profile: lunar
+    display-name: §bSoup
   Axe:
     enabled: true
     icon:
@@ -334,9 +396,17 @@ kits:
       hit-delay: 20
       bow-hp: false
       BoxUHC: false
+      brige: false
+      netheruhc: false
+      stickspawn: false
+      voidspawn: false
+      boxuhc: false
+      bridge: false
+      disable-fall-damage: false
     edit-rules:
       allow-potion-fill: false
-    knockback-profile: default
+    knockback-profile: lunar
+    display-name: §bAxe
   Gapple:
     enabled: true
     icon:
@@ -344,7 +414,7 @@ kits:
       durability: 0
     loadout:
       armor: t@313:e@0@3:e@34@5;t@312:e@0@3:e@34@5;t@311:e@0@3:e@34@5;t@310:e@0@3:e@34@5;
-      contents: t@276:e@34@4;t@322:d@1:a@64;t@310:e@0@3:e@34@5;t@311:e@0@3:e@34@5;t@312:e@0@3:e@34@5;t@313:e@0@3:e@34@5;t@373:d@8265;t@373:d@8226;t@373:d@8226;null;null;null;null;null;null;t@373:d@8265;t@373:d@8226;t@373:d@8226;null;null;null;null;null;null;t@373:d@8265;t@373:d@8226;t@373:d@8226;null;null;null;null;null;null;t@373:d@8265;t@373:d@8226;t@373:d@8226;
+      contents: t@276:e@34@4;t@322:d@1:a@64;t@310:e@0@3:e@34@5;t@311:e@0@3:e@34@5;t@312:e@0@3:e@34@5;t@313:e@0@3:e@34@5;t@373:d@8265;t@373:d@8226;t@373:d@8226;t@0;t@0;t@0;t@0;t@0;t@0;t@373:d@8265;t@373:d@8226;t@373:d@8226;t@0;t@0;t@0;t@0;t@0;t@0;t@373:d@8265;t@373:d@8226;t@373:d@8226;t@0;t@0;t@0;t@0;t@0;t@0;t@373:d@8265;t@373:d@8226;t@373:d@8226;
     game-rules:
       ranked: true
       partyffa: true
@@ -368,9 +438,17 @@ kits:
       hit-delay: 20
       bow-hp: false
       BoxUHC: false
+      brige: false
+      netheruhc: false
+      stickspawn: false
+      voidspawn: false
+      boxuhc: false
+      bridge: false
+      disable-fall-damage: false
     edit-rules:
       allow-potion-fill: false
-    knockback-profile: default
+    knockback-profile: lunar
+    display-name: §bGapple
   HCFDIAMOND:
     enabled: false
     icon:
@@ -397,9 +475,21 @@ kits:
       health-regeneration: false
       show-health: false
       hit-delay: 20
+      brige: false
+      netheruhc: false
+      stickspawn: false
+      voidspawn: false
+      combo: false
+      boxuhc: false
+      infinite-speed: false
+      infinite-strength: false
+      bow-hp: false
+      bridge: false
+      disable-fall-damage: false
     edit-rules:
       allow-potion-fill: false
-    knockback-profile: default
+    knockback-profile: lunar
+    display-name: §bHCFDIAMOND
   HCFBARD:
     enabled: false
     icon:
@@ -426,9 +516,21 @@ kits:
       health-regeneration: false
       show-health: false
       hit-delay: 20
+      brige: false
+      netheruhc: false
+      stickspawn: false
+      voidspawn: false
+      combo: false
+      boxuhc: false
+      infinite-speed: false
+      infinite-strength: false
+      bow-hp: false
+      bridge: false
+      disable-fall-damage: false
     edit-rules:
       allow-potion-fill: false
-    knockback-profile: default
+    knockback-profile: lunar
+    display-name: §bHCFBARD
   HCFARCHER:
     enabled: false
     icon:
@@ -455,9 +557,21 @@ kits:
       health-regeneration: false
       show-health: false
       hit-delay: 20
+      brige: false
+      netheruhc: false
+      stickspawn: false
+      voidspawn: false
+      combo: false
+      boxuhc: false
+      infinite-speed: false
+      infinite-strength: false
+      bow-hp: false
+      bridge: false
+      disable-fall-damage: false
     edit-rules:
       allow-potion-fill: false
-    knockback-profile: default
+    knockback-profile: lunar
+    display-name: §bHCFARCHER
   HCFROGUE:
     enabled: false
     icon:
@@ -484,6 +598,59 @@ kits:
       health-regeneration: false
       show-health: false
       hit-delay: 20
+      brige: false
+      netheruhc: false
+      stickspawn: false
+      voidspawn: false
+      combo: false
+      boxuhc: false
+      infinite-speed: false
+      infinite-strength: false
+      bow-hp: false
+      bridge: false
+      disable-fall-damage: false
     edit-rules:
       allow-potion-fill: false
-    knockback-profile: default    
+    knockback-profile: lunar
+    display-name: §bHCFROGUE
+  TheBridge:
+    enabled: false
+    knockback-profile: lunar
+    icon:
+      material: STAINED_CLAY
+      durability: 0
+    loadout:
+      armor: t@0:d@-1:a@0;t@0:d@-1:a@0;t@0:d@-1:a@0;t@0:d@-1:a@0;
+      contents: t@267:e@16@2;t@261:e@48@2;t@159:a@64;t@159:a@64;t@278:e@32@4;t@0;t@0;t@322:a@5:dn@§bAdam's Apple;t@262:a@5;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;t@0;
+    game-rules:
+      ranked: true
+      partyffa: false
+      partysplit: false
+      editable: false
+      antifoodloss: false
+      ffacenter: false
+      noitems: false
+      build: true
+      brige: true
+      spleef: false
+      parkour: false
+      netheruhc: false
+      stickspawn: false
+      voidspawn: true
+      combo: false
+      sumo: false
+      boxuhc: false
+      timed: false
+      water-kill: false
+      lava-kill: false
+      health-regeneration: false
+      infinite-speed: false
+      infinite-strength: false
+      show-health: false
+      hit-delay: 20
+      bow-hp: false
+      bridge: true
+      disable-fall-damage: false
+    edit-rules:
+      allow-potion-fill: false
+    display-name: §bTheBridge

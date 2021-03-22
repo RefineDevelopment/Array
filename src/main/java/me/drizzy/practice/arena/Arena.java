@@ -167,7 +167,7 @@ public class Arena {
 
             if (!arena.isActive() && (arena.getType() == ArenaType.STANDALONE || arena.getType() == ArenaType.DUPLICATE)) {
                 _arenas.add(arena);
-            } else if (!kit.getGameRules().isBuild() && arena.getType() == ArenaType.SHARED) {
+            } else if (!kit.getGameRules().isBuild() /*&& !kit.getGameRules().isBridge() */&& arena.getType() == ArenaType.SHARED) {
                 _arenas.add(arena);
             //} else if (kit.getGameRules().isBridge() && arena.getType() == ArenaType.THEBRIDGE) {
             //    _arenas.add(arena);

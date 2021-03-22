@@ -10,13 +10,13 @@ import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.kit.KitInventory;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.match.types.SumoMatch;
 import me.drizzy.practice.match.types.TheBridgeMatch;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.BlockUtil;
 import me.drizzy.practice.util.LocationUtils;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.external.TimeUtil;
@@ -31,7 +31,9 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.*;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
@@ -40,12 +42,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 public class MatchListener implements Listener {
 
@@ -88,7 +86,7 @@ public class MatchListener implements Listener {
         }
     }
 
-/*    @EventHandler
+  /*  @EventHandler
     public void onPortal(EntityPortalEnterEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
@@ -97,47 +95,22 @@ public class MatchListener implements Listener {
                 if (profile.getMatch().getKit().getGameRules().isBridge()) {
                     if (player.getLocation().getBlock().getType() == Material.ENDER_PORTAL ||
                         player.getLocation().getBlock().getType() == Material.ENDER_PORTAL_FRAME) {
+                        TheBridgeMatch match=(TheBridgeMatch) profile.getMatch();
                         if (LocationUtils.isTeamPortal(player)) {
-                            player.teleport(profile.getMatch().getTeamPlayer(player).getPlayerSpawn());
+                            player.setHealth(20.0);
+                            player.teleport(match.getTeamPlayer(player).getPlayerSpawn());
+                            PlayerUtil.reset(player);
+                            match.setupPlayer(player);
                             player.sendMessage(CC.translate("&cYou Jumped in the wrong portal."));
                             return;
                         }
-                        TheBridgeMatch match=(TheBridgeMatch) profile.getMatch();
                         if (match.getState() == MatchState.ENDING) return;
                         for ( TeamPlayer teamPlayer : match.getTeamPlayers() ) {
                             Player other=teamPlayer.getPlayer();
                             other.sendMessage(match.getRelationColor(other, player) + player.getDisplayName() + " has scored a Point!");
                             teamPlayer.getPlayer().teleport(teamPlayer.getPlayerSpawn());
                         }
-                        TeamPlayer guy=match.getPlayerA().getPlayer() == player ? match.getTeamPlayerB() : match.getTeamPlayerA();
-                        match.onDeath(guy.getPlayer(), PlayerUtil.getLastAttacker(guy.getPlayer()));
-                    }
-                }
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onEntityDamageByEntityMonitor(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player victim=(Player) event.getEntity();
-            Profile profile=Profile.getByUuid(victim.getUniqueId());
-            Player attacker=null;
-            if (profile.isInFight()) {
-                if (event.getDamager() instanceof Player) {
-                    attacker=(Player) event.getDamager();
-                } else if (event.getDamager() instanceof Projectile) {
-                    Projectile projectile=(Projectile) event.getDamager();
-
-                    if (projectile.getShooter() instanceof Player) {
-                        attacker=(Player) projectile.getShooter();
-                    }
-                }
-
-                if (attacker != null) {
-                    PlayerUtil.setLastAttacker(victim, attacker);
-                    if (profile.getMatch() != null && profile.getMatch().getKit().getGameRules().isBridge()) {
-                        TaskUtil.runLater(() -> victim.removeMetadata("lastAttacker", Array.getInstance()), 20L * 15);
+                        match.onDeath(match.getOpponentPlayer(player), player);
                     }
                 }
             }
@@ -162,20 +135,19 @@ public class MatchListener implements Listener {
                         } else {
                             event.setCancelled(true);
                         }
-                        if (match.getKit().getGameRules().isBoxuhc()) {
-                            if (event.getBlock().getType() == Material.WOOD) {
-                                match.getBrokenBlocks().add(event.getBlock().getLocation());
-                                event.getBlock().setType(Material.AIR);
-                                event.getPlayer().getInventory().addItem(new ItemStack(Material.WOOD, 1));
-                                event.getPlayer().updateInventory();
-                            } else {
-                                event.setCancelled(true);
-                            }
+                    } else if (match.getKit().getGameRules().isBoxuhc()) {
+                        if (event.getBlock().getType() == Material.WOOD) {
+                            match.getBrokenBlocks().add(event.getBlock().getLocation());
+                            event.getBlock().setType(Material.AIR);
+                            event.getPlayer().getInventory().addItem(new ItemStack(Material.WOOD, 1));
+                            event.getPlayer().updateInventory();
+                        } else {
+                            event.setCancelled(true);
                         }
                     } else if (match.getPlacedBlocks().remove(event.getBlock().getLocation()) && !match.getKit().getGameRules().isBoxuhc()) {
-                        event.getBlock().setType(Material.AIR);
                         event.getPlayer().getInventory().addItem(new ItemStack(event.getBlock().getType(), 1));
                         event.getPlayer().updateInventory();
+                        event.getBlock().setType(Material.AIR);
                     } else if (!match.getKit().getGameRules().isBoxuhc()){
                         event.setCancelled(true);
                     }
@@ -308,17 +280,9 @@ public class MatchListener implements Listener {
                 event.getDrops().clear();
                 TheBridgeMatch bridgeMatch = (TheBridgeMatch) profile.getMatch();
                 player.setHealth(20.0);
-                player.getInventory().setContents(null);
-                player.getInventory().setArmorContents(null);
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        player.getInventory().setArmorContents(bridgeMatch.getKit().getKitInventory().getArmor());
-                        player.getInventory().setContents(bridgeMatch.getKit().getKitInventory().getContents());
-                        TheBridgeMatch.giveBridgeKit(player);
-                    }
-                }.runTaskLaterAsynchronously(Array.getInstance(), 2L);
                 player.teleport(bridgeMatch.getTeamPlayer(player).getPlayerSpawn());
+                PlayerUtil.reset(player);
+                bridgeMatch.setupPlayer(player);
                 return;
             }
         }
@@ -392,13 +356,7 @@ public class MatchListener implements Listener {
         }
     }
 
-    /**
-     * Custom Stick Spawn Task {@link PlayerMoveEvent}
-     * We could have used Movement Handlers but that is not
-     * in all spigots hence PlayerMoveEvent is the next Solution
-     * If the direction where player is moving is more than .5 in its axis
-     * then we teleport them back.
-     */
+
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         final Player player = event.getPlayer();
@@ -417,22 +375,6 @@ public class MatchListener implements Listener {
                         }
                     }
                 }
-                //Just Drizzy messing around with MetaData
-            } else if (player.hasMetadata("ArrayTest")) {
-                event.getPlayer().teleport(event.getPlayer().getLocation());
-            }
-        }
-    }
-    
-    @EventHandler(ignoreCancelled=true)
-    public void onWater(PlayerMoveEvent event) {
-        Player player =event.getPlayer();
-        Location to = event.getTo();
-        Profile profile = Profile.getByUuid(player);
-        if (profile.getMatch() !=null && profile.getMatch().isSumoMatch() || profile.getMatch() != null && profile.getMatch().isSumoTeamMatch()) {
-            Match match = profile.getMatch();
-            if (BlockUtil.isOnLiquid(to, 0) || BlockUtil.isOnLiquid(to, 1)) {
-                match.handleDeath(player, match.getOpponentPlayer(player), false);
             }
         }
     }
