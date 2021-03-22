@@ -94,33 +94,4 @@ public class KitEditorListener implements Listener {
             }
         }
     }
-
-    @EventHandler(priority = EventPriority.LOW)
-    public void onClose(InventoryInteractEvent event) {
-        Player player=(Player) event.getWhoClicked();
-        Profile profile=Profile.getByUuid(player);
-        if (profile.isInLobby() && player.getOpenInventory() == null) {
-            if (profile.getKitEditor().isActive()) {
-                PlayerUtil.reset(player, false);
-                profile.refreshHotbar();
-                profile.getKitEditor().setActive(false);
-                player.sendMessage(CC.translate("&7You were caught doing the kit editor bug!"));
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOW)
-    public void onClose(InventoryClickEvent event) {
-        Player player=(Player) event.getWhoClicked();
-        Profile profile=Profile.getByUuid(player);
-        if (profile.isInLobby() && player.getOpenInventory() == null) {
-            if (profile.getKitEditor().isActive()) {
-                PlayerUtil.reset(player, false);
-                profile.refreshHotbar();
-                profile.getKitEditor().setActive(false);
-                player.sendMessage(CC.translate("&7You were caught doing the kit editor bug!"));
-            }
-        }
-    }
-
 }
