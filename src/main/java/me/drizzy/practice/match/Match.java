@@ -211,28 +211,6 @@ public abstract class Match {
         Bukkit.getPluginManager().callEvent(event);
     }
 
-    public void onDisconnect(Player dead) {
-        /*if (getKit().getGameRules().isBridge()) {
-            end();
-            return;
-        }*/
-
-        // Don't continue if the match is already ending
-        if (!(state == MatchState.STARTING || state == MatchState.FIGHTING)) {
-            return;
-        }
-
-        TeamPlayer deadGamePlayer = getTeamPlayer(dead);
-
-        if (deadGamePlayer != null) {
-            deadGamePlayer.setDisconnected(true);
-
-            if (deadGamePlayer.isAlive()) {
-                onDeath(dead, (Player) PlayerUtil.getLastDamager(dead));
-            }
-        }
-    }
-
     public void end() {
         if (onEnd()) {
             state = MatchState.ENDING;
