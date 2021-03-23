@@ -36,6 +36,19 @@ Note : To fix any errors, just install the Lombok Plugin
 
 You Need Intelli J to compile, This does NOT support Eclipse
 
+## Permissions
+
+- Party Settings: array.donator
+- Duel Arena Selector: array.donator
+- Event: array.host.<event>
+- Admin Commands: array.dev
+- Staff Commands Like Tournament cancel, Silent mode: array.staff
+- Ping Factor Setting: array.donator+
+- Toggle Lightning: array.donator
+- Event Cooldown Reset: array.staff
+- Event Cancel Command: array.staff
+- Event ForceStart Command: array.staff
+
 ## Credits
 
 Drizzy, Nick, Joeloeli, Veltus
