@@ -1,5 +1,6 @@
 package me.drizzy.practice.tournament.command;
 
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.tournament.Tournament;
 import me.drizzy.practice.party.Party;
@@ -42,6 +43,10 @@ public class TournamentJoinCommand {
         if (party == null) {
             player.chat("/party create");
             party = Profile.getByUuid(player.getUniqueId()).getParty();
+        }
+        if (Tournament.CURRENT_TOURNAMENT.getParticipants().contains(party)) {
+            player.sendMessage(CC.translate("&7You are already in the tournament"));
+            return;
         }
         Tournament.CURRENT_TOURNAMENT.participate(party);
     }

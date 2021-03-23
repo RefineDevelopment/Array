@@ -43,6 +43,9 @@ Ranked:
   Required:
    - "&7You need to win at least &b10 Unranked Matches &7 to queue Ranked!"
    - "&7&oYou can bypass this limit by upgrading your rank at &b&ostore.purgemc.club"
+PERMISSION-REQUIRED:
+  - "&7You do not have permission to use this."
+  - "&7&oPlease upgrading your Rank at &b&ostore.purgemc.club &7!"
 Event:
   Sumo:
     Not-Active: "&cThere is no Active Sumo."

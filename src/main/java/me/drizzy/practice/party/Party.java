@@ -152,11 +152,10 @@ public class Party extends Team {
             profile.handleVisibility();
             PlayerUtil.reset(player, false);
             profile.refreshHotbar();
-            for ( Player other : Bukkit.getOnlinePlayers() ) {
-                NameTags.reset(player, other);
-                NameTags.color(player, other, ChatColor.GREEN, false);
-            }
-        }
+           for ( Player other : Bukkit.getOnlinePlayers() ) {
+               NameTags.color(player, other, ChatColor.GREEN, false);
+              }
+           }
         if (profile.isInFight()) {
             profile.getMatch().handleDeath(player, null, true);
             if (profile.getMatch().isTeamMatch() || profile.getMatch().isHCFMatch()) {
@@ -232,13 +231,13 @@ public class Party extends Team {
                 NameTags.color(player, this.getLeader().getPlayer(), ChatColor.GREEN, false);
             }
         });
+        Party.parties.remove(this);
+        this.disbanded = true;
         for(Player partyps : this.getPlayers()) {
             for ( Player player : Bukkit.getOnlinePlayers() ) {
                 NameTags.color(partyps, player, ChatColor.GREEN, false);
             }
         }
-        Party.parties.remove(this);
-        this.disbanded = true;
     }
     
     public void sendInformation(final Player player) {
@@ -280,6 +279,9 @@ public class Party extends Team {
         new BukkitRunnable() {
             public void run() {
                 for (final Party party : Party.getParties()) {
+                    if (party == null || party.isDisbanded() || party.getPlayers().isEmpty() || party.getLeader() == null ) {
+                        return;
+                    }
                     if (party.isPublic()) {
                         Bukkit.getServer().getOnlinePlayers().forEach(player -> player.sendMessage(PartyMessageType.PUBLIC.format(party.getLeader().getUsername())));
                         Bukkit.getServer().getOnlinePlayers().forEach(player -> player.spigot().sendMessage(new ChatComponentBuilder("").parse(PartyMessageType.CLICK_TO_JOIN.format()).attachToEachPart(ChatHelper.click("/party join " + party.getLeader().getUsername())).attachToEachPart(ChatHelper.hover(PartyMessageType.CLICK_TO_JOIN.format())).create()));

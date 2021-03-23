@@ -5,6 +5,7 @@ import me.drizzy.practice.ArrayCache;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.events.MatchEvent;
 import me.drizzy.practice.match.events.MatchStartEvent;
+import me.drizzy.practice.tournament.Tournament;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.array.essentials.Essentials;
@@ -247,41 +248,37 @@ public class ProfileListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         event.setJoinMessage(null);
-        Player player = event.getPlayer();
+        Player player=event.getPlayer();
         Profile.getPlayerList().add(player);
-        Profile profile = new Profile(player.getUniqueId());
+        Profile profile=new Profile(player.getUniqueId());
         //TODO: Clean this up
-        TaskUtil.runAsync(() -> {
-            for ( Profile other : Profile.getProfiles().values() ) {
-                other.handleVisibility();
-            }
-            if (!ArrayCache.getPlayerCache().containsKey(player.getName())) {
-                ArrayCache.getPlayerCache().put(player.getName(), player.getUniqueId());
-            }
-            try {
-                profile.load();
-            } catch (Exception e) {
-                e.printStackTrace();
-                event.getPlayer().kickPlayer(CC.AQUA + "Failed to load your profile, Please contact an Administrator!");
-                return;
-            }
-            Profile.getProfiles().put(player.getUniqueId(), profile);
-            profile.setName(player.getName());
-            Essentials.teleportToSpawn(player);
-            profile.getKitEditor().setActive(false);
-            profile.getKitEditor().setRename(false);
-            profile.refreshHotbar();
-        });
+        for ( Profile other : Profile.getProfiles().values() ) {
+            other.handleVisibility();
+        }
+        if (!ArrayCache.getPlayerCache().containsKey(player.getName())) {
+            ArrayCache.getPlayerCache().put(player.getName(), player.getUniqueId());
+        }
+        try {
+            profile.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+            event.getPlayer().kickPlayer(CC.AQUA + "Failed to load your profile, Please contact an Administrator!");
+            return;
+        }
+        Profile.getProfiles().put(player.getUniqueId(), profile);
+        profile.setName(player.getName());
+        Essentials.teleportToSpawn(player);
+        profile.refreshHotbar();
         //Visibility Bug Fix :)
         new BukkitRunnable() {
             @Override
             public void run() {
-            profile.handleVisibility();
+                profile.handleVisibility();
             }
         }.runTaskLaterAsynchronously(Array.getInstance(), 5L);
 
         //TODO: Remove this with a NameTagHandler Thread
-        for(Player ps : Bukkit.getOnlinePlayers()) {
+        for ( Player ps : Bukkit.getOnlinePlayers() ) {
             NameTags.color(player, ps, ChatColor.GREEN, false);
             if (!Profile.getByUuid(ps).isBusy(ps) && !Profile.getByUuid(ps).isInSomeSortOfFight()) {
                 if (Profile.getByUuid(ps).getState() == ProfileState.IN_LOBBY || Profile.getByUuid(ps).getState() == ProfileState.IN_QUEUE)
@@ -311,6 +308,9 @@ public class ProfileListener implements Listener {
             if (target != null && target.isOnline()) {
                 Profile.getByUuid(target.getUniqueId()).checkForHotbarUpdate();
             }
+        }
+        if (profile.getParty() !=null && Tournament.CURRENT_TOURNAMENT !=null && Tournament.CURRENT_TOURNAMENT.isParticipating(event.getPlayer())) {
+            Tournament.CURRENT_TOURNAMENT.leave(profile.getParty());
         }
     }
 

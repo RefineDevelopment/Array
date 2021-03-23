@@ -177,7 +177,7 @@ public class SumoMatch extends Match {
                     }
                 }
             }
-        }.runTaskLaterAsynchronously(Array.getInstance(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isSumo() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
+        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isSumo() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
 
         Player winningPlayer = getWinningPlayer();
         Player losingPlayer = getOpponentPlayer(winningPlayer);

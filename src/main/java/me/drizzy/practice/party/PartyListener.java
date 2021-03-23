@@ -1,6 +1,7 @@
 package me.drizzy.practice.party;
 
 import me.drizzy.practice.match.Match;
+import me.drizzy.practice.tournament.Tournament;
 import me.drizzy.practice.util.PlayerUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -42,6 +43,10 @@ public class PartyListener implements Listener {
                     profile.getMatch().handleDeath(event.getPlayer(), profile.getMatch().getOpponentTeam(event.getPlayer()).getLeader().getPlayer(), true);
                 }
             }
+            if (profile.getParty() !=null && Tournament.CURRENT_TOURNAMENT !=null && Tournament.CURRENT_TOURNAMENT.isParticipating(event.getPlayer())) {
+                Tournament.CURRENT_TOURNAMENT.leave(profile.getParty());
+            }
+            assert profile.getParty() != null;
             if (profile.getParty().isLeader(event.getPlayer().getUniqueId())) {
                 profile.getParty().leader(event.getPlayer(), profile.getParty().getPlayers().get(1));
             }

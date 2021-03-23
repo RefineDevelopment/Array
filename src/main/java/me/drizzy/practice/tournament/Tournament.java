@@ -76,7 +76,7 @@ public class Tournament {
         if (party == null) {
             return false;
         }
-        return participants.contains(Profile.getByUuid(player.getUniqueId()).getParty());
+        return participants.contains(party);
     }
 
     public boolean hasStarted() {
@@ -126,13 +126,14 @@ public class Tournament {
     }
 
     public void tournamentstart(){
+        round = 0;
         Collections.shuffle(participants);
         if(participatingCount == 0){
             participatingCount = participants.size();
         }
         for ( Player player : Bukkit.getOnlinePlayers() ) {
             if (Profile.getByUuid(player).getSettings().isAllowTournamentMessages()) {
-                player.sendMessage(CC.translate("&8[&9Round&8] &b" + (round) + ChatColor.GRAY + " has started!."));
+                player.sendMessage(CC.translate("&8[&9Round&8] &b" + round + ChatColor.GRAY + " has started!."));
             }
         }
         Iterator<Party> iterator = participants.iterator();
@@ -169,11 +170,11 @@ public class Tournament {
                         teamB.getTeamPlayers().add(new TeamPlayer(player1));
                     }
                 }
+
             }
+            round++;
             tournamentMatch.start();
             tournamentMatches.add(tournamentMatch);
-
-
         }
     }
 

@@ -213,7 +213,7 @@ public class SoloMatch extends Match {
                     }
                 }
             }
-        }.runTaskLaterAsynchronously(Array.getInstance(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 70L);
+        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 70L);
 
         Player winningPlayer = getWinningPlayer();
         Player losingPlayer = getOpponentPlayer(winningPlayer);

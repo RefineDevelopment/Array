@@ -155,15 +155,10 @@ public class Array extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-        if (this.mainConfig.getBoolean("Performance-mode")) {
-            TaskUtil.runAsync(() -> {
-            registerAll();
-            RegisterCommands.register();
-          });
-        } else {
-            registerAll();
-            RegisterCommands.register();
-        }
+        //Register Main Aspects and Commands
+        registerAll();
+        RegisterCommands.register();
+
         sumoManager = new SumoManager();
         bracketsManager = new BracketsManager();
         LMSManager = new LMSManager();
@@ -199,16 +194,10 @@ public class Array extends JavaPlugin {
         for ( World world : this.getServer().getWorlds() ) {
             world.setDifficulty(Difficulty.EASY);
          }
+        //Register Essentials and Listeners
+        RegisterListeners.register();
+        this.registerEssentials();
 
-        if (this.mainConfig.getBoolean("Performance-mode")) {
-            TaskUtil.runAsync(() -> {
-                RegisterListeners.register();
-                this.registerEssentials();
-            });
-        } else {
-            RegisterListeners.register();
-            this.registerEssentials();
-        }
     }
 
     @Override
@@ -235,7 +224,7 @@ public class Array extends JavaPlugin {
     private void registerAll() {
         try {
             preLoadMongo();
-        } catch (NullPointerException | MongoInterruptedException | MongoInternalException | MongoCommandException | MongoClientException e) {
+        } catch (Exception e) {
             this.logger(CC.CHAT_BAR);
             this.logger("            &4&lMongo Internal Error");
             this.logger("        &cMongo is not setup correctly!");
@@ -314,7 +303,7 @@ public class Array extends JavaPlugin {
 
         //Load the Global Leaderboards (Also a bug fix for leaderboards being blank on start)
         Profile.loadGlobalLeaderboards();
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, new EloRegulatorTask(), 6000L, 6000L);
+        Bukkit.getScheduler().runTaskTimer(this, new EloRegulatorTask(), 6000L, 6000L);
     }
 
     public static void logger(String message) {
