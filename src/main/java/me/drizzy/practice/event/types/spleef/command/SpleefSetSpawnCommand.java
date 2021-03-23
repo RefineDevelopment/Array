@@ -5,7 +5,7 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "spleef setspawn", permission = "array.staff")
+@CommandMeta(label = "spleef setspawn", permission = "array.dev")
 public class SpleefSetSpawnCommand {
 
 	public void execute(Player player) {

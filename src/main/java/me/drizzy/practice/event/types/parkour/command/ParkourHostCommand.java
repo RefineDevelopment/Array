@@ -7,7 +7,7 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = { "parkour host" }, permission = "practice.host.parkour")
+@CommandMeta(label = { "parkour host" }, permission = "array.host.parkour")
 public class ParkourHostCommand {
 
 	public static void execute(Player player) {

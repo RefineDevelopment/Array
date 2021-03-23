@@ -5,7 +5,7 @@ import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "lms setspawn", permission = "practice.lms")
+@CommandMeta(label = "lms setspawn", permission = "array.dev")
 public class LMSSetSpawnCommand {
 
     public void execute(Player player) {

@@ -151,6 +151,7 @@ public class RegisterCommands {
                 new KitPartySplitCommand(),
                 new KitDisableCommand(),
                 new KitLavaKillCommand(),
+                new KitDisableFallDamageCommand(),
                 new KitWaterKillCommand(),
                 new KitSetNoItemsCommand(),
                 new KitShowHealthCommand(),
@@ -216,7 +217,7 @@ public class RegisterCommands {
                 new ParkourSetSpawnCommand(),
                 new ParkourTpCommand(),
                 new ParkourHelpCommand(),
-                new ParkourForceStartComman(),
+                new ParkourForceStartCommand(),
 
                 //Spleef commands
                 new SpleefCancelCommand(),

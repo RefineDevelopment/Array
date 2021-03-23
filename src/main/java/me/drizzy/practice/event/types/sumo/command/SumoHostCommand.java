@@ -7,7 +7,7 @@ import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = { "sumo host" }, permission = "practice.sumo.host")
+@CommandMeta(label = { "sumo host" }, permission = "array.host.sumo")
 public class SumoHostCommand {
 
 	public static void execute(Player player) {

@@ -6,7 +6,7 @@ import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "sumo setknockbackprofile", permission = "array.staff")
+@CommandMeta(label = "sumo setknockbackprofile", permission = "array.dev")
 public class SumoKnockbackCommand {
 
     public void execute(Player player, @CPL("knockback-profile") String kb) {

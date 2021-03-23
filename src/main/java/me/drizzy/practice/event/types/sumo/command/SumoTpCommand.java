@@ -5,7 +5,7 @@ import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "sumo tp", permission = "practice.sumo.tp")
+@CommandMeta(label = "sumo tp", permission = "array.dev")
 public class SumoTpCommand {
 
 	public void execute(Player player) {

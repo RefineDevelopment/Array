@@ -4,7 +4,7 @@ import me.drizzy.practice.event.menu.EventSelectKitMenu;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = {"lms host"}, permission = "practice.host.lms")
+@CommandMeta(label = {"lms host"}, permission = "array.host.lms")
 public class LMSHostCommand {
 
     public static void execute(Player player) {

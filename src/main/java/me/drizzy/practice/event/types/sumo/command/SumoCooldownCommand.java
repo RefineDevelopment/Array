@@ -6,7 +6,7 @@ import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "sumo cooldown", permission = "practice.sumo.cooldown")
+@CommandMeta(label = "sumo cooldown", permission = "array.staff")
 public class SumoCooldownCommand {
 
 	public void execute(CommandSender sender) {

@@ -164,7 +164,6 @@ public class Bard extends HCFClasses implements Listener {
                 return;
             }
 
-            UUID uuid = player.getUniqueId();
             long timestamp = archerJumpCooldowns.getOrDefault(event.getPlayer().getUniqueId(), 0L);
             long millis = System.currentTimeMillis();
             long remaining = timestamp - millis;
@@ -222,7 +221,7 @@ public class Bard extends HCFClasses implements Listener {
 
                     @SuppressWarnings("unused")
                     double newEnergy = this.setEnergy(player, bardData.getEnergy() - bardEffect.energyCost);
-                    player.sendMessage(Color.translate("&bYou have just used a &lBard Buff &bthat cost you " + bardEffect.energyCost + " &bof your Energy."));
+                    player.sendMessage(Color.translate("&7You have just used a &b&lBard Buff &7that cost you &b" + bardEffect.energyCost + " &7of your Energy."));
                 }
             }
         }

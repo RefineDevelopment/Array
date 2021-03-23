@@ -1,5 +1,3 @@
-
-
 package me.drizzy.practice.party.command;
 
 import me.drizzy.practice.util.command.command.CPL;

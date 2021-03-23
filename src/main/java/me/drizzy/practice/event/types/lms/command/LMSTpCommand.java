@@ -5,7 +5,7 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "lms tp", permission = "practice.lms")
+@CommandMeta(label = "lms tp", permission = "array.dev")
 public class LMSTpCommand {
 
     public void execute(Player player) {

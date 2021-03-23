@@ -6,7 +6,7 @@ import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "gulag setknockbackprofile", permission = "array.staff")
+@CommandMeta(label = "gulag setknockbackprofile", permission = "array.dev")
 public class GulagKnockbackCommand {
 
     public void execute(Player player, @CPL("knockback-profile") String kb) {

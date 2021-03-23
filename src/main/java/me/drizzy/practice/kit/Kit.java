@@ -101,7 +101,7 @@ public class Kit {
             kit.getGameRules().setCombo(config.getBoolean(path + ".game-rules.combo"));
             kit.getGameRules().setStickspawn(config.getBoolean(path + ".game-rules.stickspawn"));
             kit.getGameRules().setVoidspawn(config.getBoolean(path + ".game-rules.voidspawn"));
-            kit.getGameRules().setDisablefalldamage(config.contains(path + ".game-rules.disable-fall-damage"));
+            kit.getGameRules().setDisablefalldamage(config.getBoolean(path + ".game-rules.disable-fall-damage"));
             kit.getGameRules().setSumo(config.getBoolean(path + ".game-rules.sumo"));
             kit.getGameRules().setBoxuhc(config.getBoolean(path + ".game-rules.boxuhc"));
             kit.getGameRules().setTimed(config.getBoolean(path + ".game-rules.timed"));

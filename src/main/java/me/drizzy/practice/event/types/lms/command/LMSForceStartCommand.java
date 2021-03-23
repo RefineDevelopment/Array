@@ -4,7 +4,7 @@ import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.profile.Profile;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label="lms forcestart", permission="lms.forcestart")
+@CommandMeta(label="lms forcestart", permission="array.dev")
 public class LMSForceStartCommand {
     public void execute(Player player) {
         Profile profile = Profile.getByUuid(player.getUniqueId());

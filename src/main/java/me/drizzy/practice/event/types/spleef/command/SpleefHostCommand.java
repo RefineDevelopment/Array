@@ -7,7 +7,7 @@ import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = { "spleef host" }, permission = "practice.host.spleef")
+@CommandMeta(label = { "spleef host" }, permission = "array.host.spleef")
 public class SpleefHostCommand {
 
 	public static void execute(Player player) {

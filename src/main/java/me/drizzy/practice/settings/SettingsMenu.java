@@ -1,5 +1,6 @@
 package me.drizzy.practice.settings;
 
+import me.drizzy.practice.Array;
 import me.drizzy.practice.enums.SettingsType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -72,8 +73,9 @@ public class SettingsMenu extends Menu
                         lines.add("&7Enable or Disable queueing with");
                         lines.add("&7players of similar ping as you.");
                         lines.add("");
-                        lines.add("&7This Option is Donator only!");
-                        lines.add("&7Please Upgrade your rank at &bstore.purgemc.club.");
+                        for ( String string : Array.getInstance().getMessagesConfig().getStringList("PERMISSION-REQUIRED")) {
+                            lines.add(CC.translate(string));
+                        }
                     }
                     break;
                 case TOGGLESPECTATORS:
@@ -94,8 +96,9 @@ public class SettingsMenu extends Menu
                         lines.add("&7Enable or Disable Lightning");
                         lines.add("&7Death effect for your Profile.");
                         lines.add("");
-                        lines.add("&7This Option is Donator only!");
-                        lines.add("&7Please Upgrade your rank at &bstore.purgemc.club.");
+                        for ( String string : Array.getInstance().getMessagesConfig().getStringList("PERMISSION-REQUIRED")) {
+                            lines.add(CC.translate(string));
+                        }
                     }
                     break;
                 case TOGGLEPINGONSCOREBOARD:

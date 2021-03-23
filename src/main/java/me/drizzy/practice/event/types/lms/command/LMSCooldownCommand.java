@@ -6,7 +6,7 @@ import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.util.external.Cooldown;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "lms cooldown", permission = "practice.lms")
+@CommandMeta(label = "lms cooldown", permission = "array.staff")
 public class LMSCooldownCommand {
 
     public void execute(CommandSender sender) {

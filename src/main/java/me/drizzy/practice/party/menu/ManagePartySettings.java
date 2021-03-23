@@ -1,8 +1,7 @@
 package me.drizzy.practice.party.menu;
 
-import java.beans.ConstructorProperties;
-
 import lombok.AllArgsConstructor;
+import me.drizzy.practice.Array;
 import me.drizzy.practice.enums.PartyManageType;
 import me.drizzy.practice.enums.PartyPrivacyType;
 import me.drizzy.practice.profile.Profile;
@@ -44,9 +43,10 @@ public class ManagePartySettings extends Menu
         buttons.put(15, new SelectManageButton(PartyManageType.MANAGE));
         return buttons;
     }
-    
-    private static class SelectManageButton extends Button
-    {
+
+    @AllArgsConstructor
+    private static class SelectManageButton extends Button {
+
         private final PartyManageType partyManageType;
         
         @Override
@@ -92,8 +92,9 @@ public class ManagePartySettings extends Menu
                 return;
             }
             if (!player.hasPermission("array.donator")) {
-                player.sendMessage(CC.translate("&7You do not have permission to use Party Settings."));
-                player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.purgemc.club &7!"));
+                for ( String string : Array.getInstance().getMessagesConfig().getStringList("PERMISSION-REQUIRED")) {
+                    player.sendMessage(CC.translate(string));
+                }
                 Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
                 player.closeInventory();
                 return;
@@ -125,11 +126,6 @@ public class ManagePartySettings extends Menu
             } else if (this.partyManageType == PartyManageType.MANAGE) {
                 new PartyListMenu().openMenu(player);
             }
-        }
-        
-        @ConstructorProperties({ "partyManageType" })
-        public SelectManageButton(final PartyManageType partyManageType) {
-            this.partyManageType=partyManageType;
         }
     }
     @AllArgsConstructor

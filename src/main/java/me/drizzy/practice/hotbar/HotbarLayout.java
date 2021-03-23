@@ -1,5 +1,3 @@
-
-
 package me.drizzy.practice.hotbar;
 
 public enum HotbarLayout

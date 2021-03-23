@@ -5,7 +5,7 @@ import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "sumo cancel", permission = "practice.sumo.cancel")
+@CommandMeta(label = "sumo cancel", permission = "array.staff")
 public class SumoCancelCommand {
 
 	public void execute(CommandSender sender) {

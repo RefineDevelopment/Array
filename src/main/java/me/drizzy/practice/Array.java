@@ -185,7 +185,8 @@ public class Array extends JavaPlugin {
         if (mainConfig.getBoolean("Array.HCF-Enabled")) {
             //Create HCF's Duel Kit
             this.hcfKit = new Kit("HCFTeamFight");
-            this.hcfKit.setDisplayIcon(new ItemBuilder(Material.BEACON).clearEnchantments().clearFlags().build());
+            Kit.getByName("HCFTeamFight").setDisplayIcon(new ItemBuilder(Material.BEACON).clearEnchantments().clearFlags().build());
+            Kit.getByName("HCFTeamFight").save();
         }
 
         Arrays.asList(Material.WORKBENCH,

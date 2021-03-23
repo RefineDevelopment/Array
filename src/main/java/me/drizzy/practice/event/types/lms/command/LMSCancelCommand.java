@@ -5,7 +5,7 @@ import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.command.CommandSender;
 
-@CommandMeta(label = "lms cancel", permission = "practice.lms")
+@CommandMeta(label = "lms cancel", permission = "array.staff")
 public class LMSCancelCommand {
 
     public void execute(CommandSender sender) {

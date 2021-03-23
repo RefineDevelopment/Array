@@ -6,7 +6,7 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "spleef setknockbackprofile", permission = "array.staff")
+@CommandMeta(label = "spleef setknockbackprofile", permission = "array.dev")
 public class SpleefKnockbackCommand {
 
     public void execute(Player player, @CPL("knockback-profile") String kb) {

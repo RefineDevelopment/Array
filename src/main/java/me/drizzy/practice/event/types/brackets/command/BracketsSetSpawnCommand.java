@@ -6,7 +6,7 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "brackets setspawn", permission = "array.staff")
+@CommandMeta(label = "brackets setspawn", permission = "array.dev")
 public class BracketsSetSpawnCommand {
 
 	public void execute(Player player, @CPL("[one|two|spec]") String position) {
