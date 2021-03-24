@@ -13,6 +13,7 @@ import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.queue.QueueType;
+import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
@@ -100,7 +101,7 @@ public class SumoTeamMatch extends Match {
             Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
         }
 
-        Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
+        TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit()));
 
         Team team = getTeam(player);
 
@@ -182,7 +183,7 @@ public class SumoTeamMatch extends Match {
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
                             profile.handleVisibility();
-                            Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
+                            TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player));
                             teleportToSpawn(player);
                             PlayerUtil.reset(player, false);
                             profile.refreshHotbar();

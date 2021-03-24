@@ -12,6 +12,7 @@ import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.PlayerSnapshot;
 import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.util.chat.Clickable;
@@ -158,7 +159,6 @@ public class Brackets {
 		profile.setBrackets(this);
 		profile.setState(ProfileState.IN_EVENT);
 		profile.refreshHotbar();
-        Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
 		player.teleport(Array.getInstance().getBracketsManager().getBracketsSpectator());
 
 		new BukkitRunnable() {
@@ -191,7 +191,6 @@ public class Brackets {
 		profile.setState(ProfileState.IN_LOBBY);
 		profile.setBrackets(null);
 		profile.refreshHotbar();
-		Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
 		Essentials.teleportToSpawn(player);
 
 		new BukkitRunnable() {
@@ -303,10 +302,10 @@ public class Brackets {
 	}
 
 	public void onJoin(Player player) {
-		Array.getInstance().getKnockbackManager().getKnockbackType().applyKnockback(player, Array.getInstance().getBracketsManager().getBracketsKnockbackProfile());
+		TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyKnockback(player, Array.getInstance().getBracketsManager().getBracketsKnockbackProfile()));
 	}
 	public void onLeave(Player player) {
-		Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
+		TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player));
 	}
 
 	public void onRound() {

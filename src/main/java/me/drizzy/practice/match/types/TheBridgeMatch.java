@@ -10,7 +10,6 @@ import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.MatchState;
-import me.drizzy.practice.match.task.MatchBridgeStartTask;
 import me.drizzy.practice.match.task.MatchStartTask;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
@@ -106,7 +105,7 @@ public class TheBridgeMatch extends Match {
             player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 2));
         }
 
-        Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
+        TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit()));
 
         Location spawn = playerA.equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
 
@@ -176,7 +175,7 @@ public class TheBridgeMatch extends Match {
                             NameTags.reset(player, teamPlayer.getPlayer());
                             TaskUtil.runSync(profile::refreshHotbar);
                             profile.handleVisibility();
-                            Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
+                            TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player));
 
                             if (opponent != null) {
                                 profile.setRematchData(new ProfileRematchData(rematchKey, player.getUniqueId(),

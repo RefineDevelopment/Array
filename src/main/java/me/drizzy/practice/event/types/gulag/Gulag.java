@@ -2,6 +2,7 @@ package me.drizzy.practice.event.types.gulag;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.array.essentials.Essentials;
@@ -308,7 +309,7 @@ public class Gulag {
 		Profile.setKb(player, Array.getInstance().getGulagManager().getGulagKnockbackProfile());
 	}
 	public void onLeave(Player player) {
-		Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
+		TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player));
 	}
 
 	public void onRound() {

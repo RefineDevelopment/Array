@@ -16,6 +16,7 @@ import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.Circle;
 import me.drizzy.practice.util.PlayerSnapshot;
 import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
@@ -316,10 +317,10 @@ public class Spleef {
 	}
 
 	public void onJoin(Player player) {
-		Array.getInstance().getKnockbackManager().getKnockbackType().applyKnockback(player, Array.getInstance().getBracketsManager().getBracketsKnockbackProfile());
+		TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyKnockback(player, Array.getInstance().getBracketsManager().getBracketsKnockbackProfile()));
 	}
 	public void onLeave(Player player) {
-		Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
+		TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player));
 	}
 
 	public void onRound() {

@@ -303,7 +303,7 @@ public class Array extends JavaPlugin {
 
         //Load the Global Leaderboards (Also a bug fix for leaderboards being blank on start)
         Profile.loadGlobalLeaderboards();
-        Bukkit.getScheduler().runTaskTimer(this, new EloRegulatorTask(), 6000L, 6000L);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, new EloRegulatorTask(), 6000L, 6000L);
     }
 
     public static void logger(String message) {

@@ -83,12 +83,14 @@ public class ProfileListener implements Listener {
         Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
 
         if (!profile.isBusy(event.getPlayer()) && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-            PlayerUtil.reset(event.getPlayer(), false);
-            Player player = event.getPlayer();
-            player.getActivePotionEffects().clear();
-            player.setHealth(20.0D);
-            player.setFoodLevel(20);
-            profile.refreshHotbar();
+            TaskUtil.runAsync(() -> {
+                PlayerUtil.reset(event.getPlayer(), false);
+                Player player = event.getPlayer();
+                player.getActivePotionEffects().clear();
+                player.setHealth(20.0D);
+                player.setFoodLevel(20);
+                profile.refreshHotbar();
+            });
             profile.handleVisibility();
         }
         for ( Player ps : Bukkit.getOnlinePlayers() ) {
@@ -255,27 +257,29 @@ public class ProfileListener implements Listener {
         for ( Profile other : Profile.getProfiles().values() ) {
             other.handleVisibility();
         }
-        if (!ArrayCache.getPlayerCache().containsKey(player.getName())) {
-            ArrayCache.getPlayerCache().put(player.getName(), player.getUniqueId());
-        }
-        try {
-            profile.load();
-        } catch (Exception e) {
-            e.printStackTrace();
-            event.getPlayer().kickPlayer(CC.AQUA + "Failed to load your profile, Please contact an Administrator!");
-            return;
-        }
-        Profile.getProfiles().put(player.getUniqueId(), profile);
-        profile.setName(player.getName());
-        Essentials.teleportToSpawn(player);
-        profile.refreshHotbar();
+        TaskUtil.runAsync(() -> {
+            if (!ArrayCache.getPlayerCache().containsKey(player.getName())) {
+                ArrayCache.getPlayerCache().put(player.getName(), player.getUniqueId());
+            }
+            try {
+                profile.load();
+            } catch (Exception e) {
+                e.printStackTrace();
+                event.getPlayer().kickPlayer(CC.AQUA + "Failed to load your profile, Please contact an Administrator!");
+                return;
+            }
+            Profile.getProfiles().put(player.getUniqueId(), profile);
+            profile.setName(player.getName());
+            Essentials.teleportToSpawn(player);
+            profile.refreshHotbar();
+        });
         //Visibility Bug Fix :)
         new BukkitRunnable() {
             @Override
             public void run() {
                 profile.handleVisibility();
             }
-        }.runTaskLaterAsynchronously(Array.getInstance(), 5L);
+        }.runTaskLater(Array.getInstance(), 5L);
 
         //TODO: Remove this with a NameTagHandler Thread
         for ( Player ps : Bukkit.getOnlinePlayers() ) {
@@ -287,7 +291,7 @@ public class ProfileListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         event.setQuitMessage(null);
         Profile profile=Profile.getProfiles().get(event.getPlayer().getUniqueId());

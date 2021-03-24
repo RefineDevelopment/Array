@@ -120,7 +120,7 @@ public class SoloMatch extends Match {
             player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 1));
         }
 
-        Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
+        TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit()));
 
         Location spawn = playerA.equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
 
@@ -202,7 +202,7 @@ public class SoloMatch extends Match {
                             NameTags.reset(player, teamPlayer.getPlayer());
                             TaskUtil.runSync(profile::refreshHotbar);
                             profile.handleVisibility();
-                            Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
+                            TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player));
                             if (opponent != null) {
                                 profile.setRematchData(new ProfileRematchData(rematchKey, player.getUniqueId(),
                                         opponent.getUniqueId(), getKit(), getArena()));

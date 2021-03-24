@@ -52,6 +52,7 @@ import me.drizzy.practice.queue.QueueProfile;
 import me.drizzy.practice.settings.meta.SettingsMeta;
 import me.drizzy.practice.statistics.StatisticsData;
 import me.drizzy.practice.tournament.Tournament;
+import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.InventoryUtil;
 import me.drizzy.practice.util.PlayerUtil;
@@ -767,7 +768,7 @@ public class Profile {
     }
 
     public static void setKb(Player player, String kb) {
-       Array.getInstance().getKnockbackManager().getKnockbackType().applyKnockback(player, kb);
+       TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyKnockback(player, kb));
     }
 
     public void setEnderpearlCooldown(Cooldown cooldown) {

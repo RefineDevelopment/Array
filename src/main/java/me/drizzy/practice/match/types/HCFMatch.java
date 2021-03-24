@@ -14,6 +14,7 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.nametag.NameTags;
@@ -123,7 +124,7 @@ public class HCFMatch extends Match {
 
     @Override
     public void onStart() {
-        getPlayers().forEach(player1 -> Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player1, Kit.getByName("NoDebuff")));
+        TaskUtil.runAsync(() -> getPlayers().forEach(player1 -> Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player1, Kit.getByName("NoDebuff"))));
 
     }
 
@@ -183,7 +184,7 @@ public class HCFMatch extends Match {
                             PlayerUtil.reset(player, false);
                             profile.refreshHotbar();
                             profile.handleVisibility();
-                            Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
+                            TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player));
                             Essentials.teleportToSpawn(player);
                             PlayerUtil.reset(player, false);
                             profile.refreshHotbar();

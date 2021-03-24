@@ -297,11 +297,11 @@ public class Sumo {
 	}
 
 	public void onJoin(Player player) {
-	 Profile.setKb(player, Array.getInstance().getSumoManager().getSumoKnockbackProfile());
+	  Profile.setKb(player, Array.getInstance().getSumoManager().getSumoKnockbackProfile());
 	}
 
 	public void onLeave(Player player) {
-     Profile.setKb(player, Array.getInstance().getSumoManager().getSumoKnockbackProfile());
+      Profile.setKb(player, Array.getInstance().getSumoManager().getSumoKnockbackProfile());
 	}
 
 	public void onRound() {
