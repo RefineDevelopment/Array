@@ -20,7 +20,6 @@ import me.drizzy.practice.profile.rank.apis.DefaultProvider;
 import me.drizzy.practice.queue.QueueThread;
 import me.drizzy.practice.register.RegisterCommands;
 import me.drizzy.practice.register.RegisterListeners;
-import me.drizzy.practice.statistics.task.EloRegulatorTask;
 import me.drizzy.practice.util.*;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ItemBuilder;
@@ -303,7 +302,6 @@ public class Array extends JavaPlugin {
 
         //Load the Global Leaderboards (Also a bug fix for leaderboards being blank on start)
         Profile.loadGlobalLeaderboards();
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, new EloRegulatorTask(), 6000L, 6000L);
     }
 
     public static void logger(String message) {

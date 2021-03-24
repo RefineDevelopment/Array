@@ -295,27 +295,29 @@ public class ProfileListener implements Listener {
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         event.setQuitMessage(null);
         Profile profile=Profile.getProfiles().get(event.getPlayer().getUniqueId());
-        Profile.getPlayerList().remove(event.getPlayer());
-        if (profile.getMatch() != null) {
-            if (profile.getMatch().isSoloMatch() || profile.getMatch().isSumoMatch() || profile.getMatch().isTheBridgeMatch()) {
-                profile.getMatch().handleDeath(event.getPlayer(), profile.getMatch().getOpponentPlayer(event.getPlayer()), true);
-            } else {
-                profile.getMatch().handleDeath(event.getPlayer(), profile.getMatch().getOpponentTeam(event.getPlayer()).getLeader().getPlayer(), true);
-            }
-        }
-        if (profile.isInQueue()) {
-            profile.getQueue().removePlayer(profile.getQueueProfile());
-        }
-        profile.save();
-        if (profile.getRematchData() != null) {
-            Player target = Array.getInstance().getServer().getPlayer(profile.getRematchData().getTarget());
-            if (target != null && target.isOnline()) {
-                Profile.getByUuid(target.getUniqueId()).checkForHotbarUpdate();
-            }
-        }
-        if (profile.getParty() !=null && Tournament.CURRENT_TOURNAMENT !=null && Tournament.CURRENT_TOURNAMENT.isParticipating(event.getPlayer())) {
-            Tournament.CURRENT_TOURNAMENT.leave(profile.getParty());
-        }
+        TaskUtil.runAsync(() -> {
+                Profile.getPlayerList().remove(event.getPlayer());
+                if (profile.getMatch() != null) {
+                    if (profile.getMatch().isSoloMatch() || profile.getMatch().isSumoMatch() || profile.getMatch().isTheBridgeMatch()) {
+                        profile.getMatch().handleDeath(event.getPlayer(), profile.getMatch().getOpponentPlayer(event.getPlayer()), true);
+                    } else {
+                        profile.getMatch().handleDeath(event.getPlayer(), profile.getMatch().getOpponentTeam(event.getPlayer()).getLeader().getPlayer(), true);
+                    }
+                }
+                if (profile.isInQueue()) {
+                    profile.getQueue().removePlayer(profile.getQueueProfile());
+                }
+                profile.save();
+                if (profile.getRematchData() != null) {
+                    Player target = Array.getInstance().getServer().getPlayer(profile.getRematchData().getTarget());
+                    if (target != null && target.isOnline()) {
+                        Profile.getByUuid(target.getUniqueId()).checkForHotbarUpdate();
+                    }
+                }
+                if (profile.getParty() !=null && Tournament.CURRENT_TOURNAMENT !=null && Tournament.CURRENT_TOURNAMENT.isParticipating(event.getPlayer())) {
+                    Tournament.CURRENT_TOURNAMENT.leave(profile.getParty());
+                }
+            });
     }
 
     @EventHandler
