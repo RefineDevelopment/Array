@@ -93,10 +93,6 @@ public class HCFMatch extends Match {
 
         PlayerUtil.reset(player);
 
-        for (ItemStack itemStack : HCFManager.getHCFKitItems()) {
-            player.getInventory().addItem(itemStack);
-        }
-
         Team team = getTeam(player);
 
         for (Player friendly : team.getPlayers()) {
@@ -115,6 +111,10 @@ public class HCFMatch extends Match {
             player.teleport(spawn.add(0, 2, 0));
         }
         teamPlayer.setPlayerSpawn(spawn);
+
+        for (ItemStack itemStack : HCFManager.getHCFKitItems()) {
+            player.getInventory().addItem(itemStack);
+        }
     }
 
     @Override
@@ -125,7 +125,6 @@ public class HCFMatch extends Match {
     @Override
     public void onStart() {
         TaskUtil.runAsync(() -> getPlayers().forEach(player1 -> Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player1, Kit.getByName("NoDebuff"))));
-
     }
 
     @Override
@@ -181,8 +180,6 @@ public class HCFMatch extends Match {
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
                             NameTags.reset(player, firstTeamPlayer.getPlayer());
-                            PlayerUtil.reset(player, false);
-                            profile.refreshHotbar();
                             profile.handleVisibility();
                             TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player));
                             Essentials.teleportToSpawn(player);
