@@ -110,7 +110,7 @@ public class MatchListener implements Listener {
                             other.sendMessage(match.getRelationColor(other, player) + player.getDisplayName() + " has scored a Point!");
                             teamPlayer.getPlayer().teleport(teamPlayer.getPlayerSpawn());
                         }
-                        match.onDeath(match.getOpponentPlayer(player), player);
+                        match.handleDeath(match.getOpponentPlayer(player), null, false);
                     }
                 }
             }
@@ -278,10 +278,9 @@ public class MatchListener implements Listener {
         if (profile.isInFight()) {
             if (profile.getMatch().isTheBridgeMatch()) {
                 event.getDrops().clear();
-                TheBridgeMatch bridgeMatch = (TheBridgeMatch) profile.getMatch();
-                player.setHealth(20.0);
-                player.teleport(bridgeMatch.getTeamPlayer(player).getPlayerSpawn());
                 PlayerUtil.reset(player);
+                TheBridgeMatch bridgeMatch = (TheBridgeMatch) profile.getMatch();
+                player.teleport(bridgeMatch.getTeamPlayer(player).getPlayerSpawn());
                 bridgeMatch.setupPlayer(player);
                 return;
             }
@@ -357,7 +356,7 @@ public class MatchListener implements Listener {
     }
 
 
-    @EventHandler
+    /*@EventHandler
     public void onMove(PlayerMoveEvent event) {
         final Player player = event.getPlayer();
         final Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -377,7 +376,7 @@ public class MatchListener implements Listener {
                 }
             }
         }
-    }
+    }*/
 
     @EventHandler(ignoreCancelled = true)
     public void onEntityDamage(final EntityDamageEvent event) {

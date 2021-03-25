@@ -92,9 +92,8 @@ public class ManagePartySettings extends Menu
                 return;
             }
             if (!player.hasPermission("array.donator")) {
-                for ( String string : Array.getInstance().getMessagesConfig().getStringList("PERMISSION-REQUIRED")) {
-                    player.sendMessage(CC.translate(string));
-                }
+                player.sendMessage(CC.translate("&7You do not have permission to use this."));
+                player.sendMessage(CC.translate("&7&oPlease upgrading your Rank at &b&ostore.purgemc.club &7"));
                 Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
                 player.closeInventory();
                 return;

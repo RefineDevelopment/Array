@@ -182,7 +182,7 @@ public class FFAMatch extends Match {
                             PlayerUtil.reset(player, false);
                             profile.refreshHotbar();
                             //Reset their Knockback Profile and Teleport them to Spawn
-                            TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit()));
+                            Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
                             Essentials.teleportToSpawn(player);
                         }
                     }

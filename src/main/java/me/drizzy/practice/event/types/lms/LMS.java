@@ -309,7 +309,7 @@ public class LMS {
         Profile.setKb(player, Array.getInstance().getLMSManager().getLmsKnockbackProfile());
     }
     public void onLeave(Player player) {
-        TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player));
+        Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
     }
 
     public void onRound() {

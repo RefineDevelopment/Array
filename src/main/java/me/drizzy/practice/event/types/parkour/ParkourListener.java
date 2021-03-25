@@ -139,7 +139,7 @@ public class ParkourListener implements Listener {
 	public void onArrow(PlayerInteractEvent event) {
 		Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
 		Player player=event.getPlayer();
-		if (profile.isInParkour() && event.getClickedBlock().getType() == Material.ARROW && event.getAction().name().equals("RIGHT")) {
+		if (profile.isInParkour() && event.getMaterial() == Material.ARROW && event.getAction().name().contains("RIGHT")) {
 			if (profile.getParkour().getState() == ParkourState.ROUND_FIGHTING) {
 				if (profile.getParkour().getEventPlayer(player).getLastLocation() != null) {
 					player.teleport(profile.getParkour().getEventPlayer(player).getLastLocation());

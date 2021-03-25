@@ -105,7 +105,7 @@ public class TheBridgeMatch extends Match {
             player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 2));
         }
 
-        TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit()));
+        Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
 
         Location spawn = playerA.equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
 
@@ -175,7 +175,7 @@ public class TheBridgeMatch extends Match {
                             NameTags.reset(player, teamPlayer.getPlayer());
                             TaskUtil.runSync(profile::refreshHotbar);
                             profile.handleVisibility();
-                            TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player));
+                            Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
 
                             if (opponent != null) {
                                 profile.setRematchData(new ProfileRematchData(rematchKey, player.getUniqueId(),

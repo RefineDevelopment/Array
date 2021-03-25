@@ -309,7 +309,7 @@ public class Gulag {
 		Profile.setKb(player, Array.getInstance().getGulagManager().getGulagKnockbackProfile());
 	}
 	public void onLeave(Player player) {
-		TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player));
+		Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
 	}
 
 	public void onRound() {

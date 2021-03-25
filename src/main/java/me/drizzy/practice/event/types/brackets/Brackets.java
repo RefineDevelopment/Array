@@ -305,7 +305,7 @@ public class Brackets {
 		TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyKnockback(player, Array.getInstance().getBracketsManager().getBracketsKnockbackProfile()));
 	}
 	public void onLeave(Player player) {
-		TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player));
+		Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
 	}
 
 	public void onRound() {

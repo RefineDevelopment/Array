@@ -6,6 +6,7 @@ import me.drizzy.practice.knockback.KnockbackType;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import spg.lgdev.knockback.Knockback;
 
 import java.lang.reflect.Method;
@@ -19,16 +20,20 @@ public class iSpigot implements KnockbackType {
     @Override
     public void applyKnockback(Player p, String s) {
         Knockback knockbackProfile = spg.lgdev.iSpigot.INSTANCE.getKnockbackHandler().getKnockbackProfile(s);
-        try {
-            Class<?> player = ((CraftPlayer)p).getClass();
-            EntityPlayer craftPlayer = ((CraftPlayer)p).getHandle();
-            Method getHandle = player.getMethod("getHandle");
-            Object nms = getHandle.invoke(p);
-            Method setKnockback = nms.getClass().getMethod("setKnockback", Knockback.class);
-            setKnockback.invoke(craftPlayer, knockbackProfile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    Class<?> player = ((CraftPlayer)p).getClass();
+                    Method getHandle = player.getMethod("getHandle");
+                    Object nms = getHandle.invoke(p);
+                    Method setKnockback = nms.getClass().getMethod("setKnockback", Knockback.class);
+                    setKnockback.invoke(nms, knockbackProfile);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.runTaskAsynchronously(Array.getInstance());
     }
 
     @Override
@@ -39,31 +44,39 @@ public class iSpigot implements KnockbackType {
         } else {
             knockbackProfile = spg.lgdev.iSpigot.INSTANCE.getKnockbackHandler().getDefaultKnockback();
         }
-        try {
-            Class<?> player = ((CraftPlayer)p).getClass();
-            EntityPlayer craftPlayer = ((CraftPlayer)p).getHandle();
-            Method getHandle = player.getMethod("getHandle");
-            Object nms = getHandle.invoke(p);
-            Method setKnockback = nms.getClass().getMethod("setKnockback", Knockback.class);
-            setKnockback.invoke(craftPlayer, knockbackProfile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    Class<?> player = ((CraftPlayer)p).getClass();
+                    Method getHandle = player.getMethod("getHandle");
+                    Object nms = getHandle.invoke(p);
+                    Method setKnockback = nms.getClass().getMethod("setKnockback", Knockback.class);
+                    setKnockback.invoke(nms, knockbackProfile);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.runTaskAsynchronously(Array.getInstance());
     }
 
     @Override
     public void applyDefaultKnockback(Player p) {
         Knockback knockbackProfile = spg.lgdev.iSpigot.INSTANCE.getKnockbackHandler().getDefaultKnockback();
-        try {
-            Class<?> player = ((CraftPlayer)p).getClass();
-            EntityPlayer craftPlayer = ((CraftPlayer)p).getHandle();
-            Method getHandle = player.getMethod("getHandle");
-            Object nms = getHandle.invoke(p);
-            Method setKnockback = nms.getClass().getMethod("setKnockback", Knockback.class);
-            setKnockback.invoke(craftPlayer, knockbackProfile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    Class<?> player = ((CraftPlayer)p).getClass();
+                    Method getHandle = player.getMethod("getHandle");
+                    Object nms = getHandle.invoke(p);
+                    Method setKnockback = nms.getClass().getMethod("setKnockback", Knockback.class);
+                    setKnockback.invoke(nms, knockbackProfile);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.runTaskAsynchronously(Array.getInstance());
     }
 }
 

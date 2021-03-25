@@ -73,9 +73,8 @@ public class SettingsMenu extends Menu
                         lines.add("&7Enable or Disable queueing with");
                         lines.add("&7players of similar ping as you.");
                         lines.add("");
-                        for ( String string : Array.getInstance().getMessagesConfig().getStringList("PERMISSION-REQUIRED")) {
-                            lines.add(CC.translate(string));
-                        }
+                        lines.add("&7You do not have permission to use this.");
+                        lines.add("&7&oPlease upgrading your Rank at &b&ostore.purgemc.club &7");
                     }
                     break;
                 case TOGGLESPECTATORS:
@@ -96,9 +95,8 @@ public class SettingsMenu extends Menu
                         lines.add("&7Enable or Disable Lightning");
                         lines.add("&7Death effect for your Profile.");
                         lines.add("");
-                        for ( String string : Array.getInstance().getMessagesConfig().getStringList("PERMISSION-REQUIRED")) {
-                            lines.add(CC.translate(string));
-                        }
+                        lines.add("&7You do not have permission to use this.");
+                        lines.add("&7&oPlease upgrading your Rank at &b&ostore.purgemc.club &7");
                     }
                     break;
                 case TOGGLEPINGONSCOREBOARD:

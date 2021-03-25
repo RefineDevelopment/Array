@@ -181,7 +181,7 @@ public class HCFMatch extends Match {
                             profile.setMatch(null);
                             NameTags.reset(player, firstTeamPlayer.getPlayer());
                             profile.handleVisibility();
-                            TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player));
+                            Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
                             Essentials.teleportToSpawn(player);
                             PlayerUtil.reset(player, false);
                             profile.refreshHotbar();

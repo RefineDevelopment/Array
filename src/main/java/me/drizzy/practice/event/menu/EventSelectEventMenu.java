@@ -59,7 +59,7 @@ public class EventSelectEventMenu extends Menu {
 
         @Override
         public ItemStack getButtonItem(Player player) {
-            List<String> lore = new ArrayList<>();
+            List<String> lore=new ArrayList<>();
             lore.add(CC.MENU_BAR);
             switch (eventType.getTitle()) {
                 case "&b&lBrackets":
@@ -137,68 +137,62 @@ public class EventSelectEventMenu extends Menu {
                 return;
             }
 
-                switch (eventType.getTitle()) {
-                    case "&b&lBrackets":
-                        if (player.hasPermission("array.host.brackets")) {
-                            BracketsHostCommand.execute(player);
-                        } else {
-                                            for ( String string : Array.getInstance().getMessagesConfig().getStringList("PERMISSION-REQUIRED")) {
-                    player.sendMessage(CC.translate(string));
-                }
-                        }
-                        break;
-                    case "&b&lSumo":
-                        if (player.hasPermission("array.host.sumo")) {
-                            SumoHostCommand.execute(player);
-                        } else {
-                                            for ( String string : Array.getInstance().getMessagesConfig().getStringList("PERMISSION-REQUIRED")) {
-                    player.sendMessage(CC.translate(string));
-                }
-                        }
-                        break;
-                    case "&b&lLMS":
-                        if (player.hasPermission("array.host.lms")) {
-                            LMSHostCommand.execute(player);
-                        } else {
-                                            for ( String string : Array.getInstance().getMessagesConfig().getStringList("PERMISSION-REQUIRED")) {
-                    player.sendMessage(CC.translate(string));
-                }
-                        }
-                        break;
-                    case "&b&lParkour":
-                        if (player.hasPermission("array.host.parkour")) {
-                            ParkourHostCommand.execute(player);
-                        } else {
-                                            for ( String string : Array.getInstance().getMessagesConfig().getStringList("PERMISSION-REQUIRED")) {
-                    player.sendMessage(CC.translate(string));
-                }
-                        }
-                        break;
-                    case "&b&lSpleef":
-                        if (player.hasPermission("array.host.spleef")) {
-                            SpleefHostCommand.execute(player);
-                        } else {
-                                            for ( String string : Array.getInstance().getMessagesConfig().getStringList("PERMISSION-REQUIRED")) {
-                    player.sendMessage(CC.translate(string));
-                }
-                        }
-                        break;
-                    case "&b&lGulag":
-                        if (player.hasPermission("array.host.gulag")) {
-                            GulagHostCommand.execute(player);
-                        } else {
-                            for ( String string : Array.getInstance().getMessagesConfig().getStringList("PERMISSION-REQUIRED")) {
-                                player.sendMessage(CC.translate(string));
-                            }
-                        }
-                        break;
-                    case "&c&lRunner":
-                        player.sendMessage(CC.translate("&cThis event is currently in development, please try again!"));
-                        break;
-                }
+            switch (eventType.getTitle()) {
+                case "&b&lBrackets":
+                    if (player.hasPermission("array.host.brackets")) {
+                        BracketsHostCommand.execute(player);
+                    } else {
+                        player.sendMessage(CC.translate("&7You do not have permission to use this."));
+                        player.sendMessage(CC.translate("&7&oPlease upgrading your Rank at &b&ostore.purgemc.club &7"));
+                    }
+                    break;
+                case "&b&lSumo":
+                    if (player.hasPermission("array.host.sumo")) {
+                        SumoHostCommand.execute(player);
+                    } else {
+                        player.sendMessage(CC.translate("&7You do not have permission to use this."));
+                        player.sendMessage(CC.translate("&7&oPlease upgrading your Rank at &b&ostore.purgemc.club &7"));
+                    }
+                    break;
+                case "&b&lLMS":
+                    if (player.hasPermission("array.host.lms")) {
+                        LMSHostCommand.execute(player);
+                    } else {
+                        player.sendMessage(CC.translate("&7You do not have permission to use this."));
+                        player.sendMessage(CC.translate("&7&oPlease upgrading your Rank at &b&ostore.purgemc.club &7"));
+                    }
+                    break;
+                case "&b&lParkour":
+                    if (player.hasPermission("array.host.parkour")) {
+                        ParkourHostCommand.execute(player);
+                    } else {
+                        player.sendMessage(CC.translate("&7You do not have permission to use this."));
+                        player.sendMessage(CC.translate("&7&oPlease upgrading your Rank at &b&ostore.purgemc.club &7"));
+                    }
+                    break;
+                case "&b&lSpleef":
+                    if (player.hasPermission("array.host.spleef")) {
+                        SpleefHostCommand.execute(player);
+                    } else {
+                        player.sendMessage(CC.translate("&7You do not have permission to use this."));
+                        player.sendMessage(CC.translate("&7&oPlease upgrading your Rank at &b&ostore.purgemc.club &7"));
+                    }
+                    break;
+                case "&b&lGulag":
+                    if (player.hasPermission("array.host.gulag")) {
+                        GulagHostCommand.execute(player);
+                    } else {
+                        player.sendMessage(CC.translate("&7You do not have permission to use this."));
+                        player.sendMessage(CC.translate("&7&oPlease upgrading your Rank at &b&ostore.purgemc.club &7"));
+                    }
+                    break;
+                case "&c&lRunner":
+                    player.sendMessage(CC.translate("&cThis event is currently in development, please try again!"));
+                    break;
             }
-
         }
+    }
+
     @AllArgsConstructor
     private static class GlassButton extends Button {
 
