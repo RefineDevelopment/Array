@@ -94,6 +94,8 @@ public class SumoMatch extends Match {
 
         PlayerUtil.reset(player);
 
+        PlayerUtil.denyMovement(player);
+
         if (getKit().getGameRules().isInfinitespeed()) {
             player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 2));
         }

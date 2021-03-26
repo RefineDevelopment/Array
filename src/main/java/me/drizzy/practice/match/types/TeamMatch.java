@@ -113,6 +113,10 @@ public class TeamMatch extends Match {
             Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
         }
 
+        if (getKit().getGameRules().isStickspawn()) {
+            PlayerUtil.denyMovement(player);
+        }
+
         Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
 
         Team team = getTeam(player);

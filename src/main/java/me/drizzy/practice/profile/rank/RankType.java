@@ -11,4 +11,6 @@ public interface RankType {
     String getRankSuffix(OfflinePlayer player);
 
     String getFullName(OfflinePlayer player);
+
+    String getRankColor(OfflinePlayer player);
 }

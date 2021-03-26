@@ -2,6 +2,7 @@ package me.drizzy.practice.profile.rank.apis;
 
 import me.drizzy.practice.profile.rank.RankType;
 import me.drizzy.practice.util.chat.CC;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 
 public class DefaultProvider implements RankType {
@@ -24,5 +25,10 @@ public class DefaultProvider implements RankType {
     @Override
     public String getFullName(OfflinePlayer player) {
         return player.getPlayer().getDisplayName();
+    }
+
+    @Override
+    public String getRankColor(OfflinePlayer player) {
+        return ChatColor.GREEN.toString();
     }
 }

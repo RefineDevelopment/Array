@@ -13,7 +13,6 @@ import me.drizzy.practice.hcf.HCFManager;
 import me.drizzy.practice.hcf.bard.EffectRestorer;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.hotbar.Hotbar;
-import me.drizzy.practice.placeholders.Placeholders;
 import me.drizzy.practice.profile.rank.Rank;
 import me.drizzy.practice.profile.rank.RankType;
 import me.drizzy.practice.profile.rank.apis.DefaultProvider;
@@ -24,7 +23,6 @@ import me.drizzy.practice.util.*;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ItemBuilder;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.yaml.snakeyaml.error.YAMLException;
@@ -294,7 +292,6 @@ public class Array extends JavaPlugin {
         //PlaceholderAPI Hook
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new HologramPlaceholders().register();
-            new Placeholders().register();
             logger("&bFound PlaceholderAPI, Registering Expansions....");
         } else {
             logger("&cPlaceholderAPI was NOT found, Holograms will NOT work!");

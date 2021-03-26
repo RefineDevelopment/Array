@@ -92,7 +92,6 @@ public class FFAMatch extends Match {
             player.setNoDamageTicks(3);
         }
 
-
         if (getKit().getGameRules().isStickspawn()) {
             PlayerUtil.denyMovement(player);
         }

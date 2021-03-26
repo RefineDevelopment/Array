@@ -3,7 +3,6 @@ package me.drizzy.practice.profile;
 import io.netty.channel.Channel;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.ArrayCache;
-import me.drizzy.practice.handler.PacketHandler;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.events.MatchEvent;
 import me.drizzy.practice.match.events.MatchStartEvent;
@@ -275,25 +274,6 @@ public class ProfileListener implements Listener {
                 return;
             }
 
-            try {
-                NetworkManager networkManager = ((CraftPlayer) player).getHandle().playerConnection.networkManager;
-
-                Field channelField = networkManager.getClass().getDeclaredField("channel");
-                channelField.setAccessible(true);
-
-                Channel channel = (Channel) channelField.get(networkManager);
-                channelField.setAccessible(false);
-
-                PacketHandler packetHandler = new PacketHandler(player);
-
-                channel.eventLoop().submit(() -> {
-                    channel.pipeline().addBefore("packet_handler", "custom-handler-" + player.getUniqueId().toString(),
-                            packetHandler);
-                });
-            } catch (NoSuchFieldException | SecurityException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-
             Profile.getProfiles().put(player.getUniqueId(), profile);
             profile.setName(player.getName());
             Essentials.teleportToSpawn(player);
@@ -321,7 +301,6 @@ public class ProfileListener implements Listener {
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         event.setQuitMessage(null);
         Profile profile=Profile.getProfiles().get(event.getPlayer().getUniqueId());
-        Player player = event.getPlayer();
         TaskUtil.runAsync(() -> {
                 Profile.getPlayerList().remove(event.getPlayer());
                 if (profile.getMatch() != null) {
@@ -344,25 +323,6 @@ public class ProfileListener implements Listener {
                 if (profile.getParty() !=null && Tournament.CURRENT_TOURNAMENT !=null && Tournament.CURRENT_TOURNAMENT.isParticipating(event.getPlayer())) {
                     Tournament.CURRENT_TOURNAMENT.leave(profile.getParty());
                 }
-
-
-            try {
-                NetworkManager networkManager = ((CraftPlayer) player).getHandle().playerConnection.networkManager;
-
-                Field channelField = networkManager.getClass().getDeclaredField("channel");
-                channelField.setAccessible(true);
-
-                Channel channel = (Channel) channelField.get(networkManager);
-                channelField.setAccessible(false);
-
-                channel.eventLoop().submit(() -> {
-                    channel.pipeline().remove("custom-handler-" + player.getUniqueId().toString());
-                });
-
-            } catch (NoSuchFieldException | SecurityException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-
         });
     }
 

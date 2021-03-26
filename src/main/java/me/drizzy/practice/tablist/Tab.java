@@ -47,7 +47,7 @@ public class Tab implements ZigguratAdapter {
             elements.add(new BufferedTabObject().slot(19).text("&7store.purge.com"));
             elements.add(new BufferedTabObject().slot(59).text("&7discord.purge.com"));
             elements.add(new BufferedTabObject().slot(39).text("&7www.purge.com"));
-            elements.add(new BufferedTabObject().slot(ipSlot).text("&7&m----------------"));
+            elements.add(new BufferedTabObject().slot(ipSlot).text("&8&m----------------"));
             tabSlots.add(ipSlot);
         }
         tabSlots.add(0);
@@ -336,7 +336,7 @@ public class Tab implements ZigguratAdapter {
                 }
                 Player player1 = Profile.getPlayerList().get(pl).getPlayer();
                 ++pl;
-                elements.add(new BufferedTabObject().text(ChatColor.GREEN + player1.getName()).slot(added4).ping(player1.spigot().getPing()));
+                elements.add(new BufferedTabObject().text(Array.getInstance().getRankManager().getRankColor(player1) + player1.getName()).slot(added4).ping(player1.spigot().getPing()));
             }
         }
     }

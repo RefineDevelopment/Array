@@ -37,18 +37,26 @@ public class DuelSelectKitMenu extends Menu {
 
         boolean party = Profile.getByUuid(player.getUniqueId()).getParty() != null;
 
-        if (Array.getInstance().getMainConfig().getBoolean("Array.HCF-Enabled")) {
-            for ( Kit kit : Kit.getKits() ) {
-                if (kit.isEnabled() || kit.getName().equalsIgnoreCase("HCFTeamFight")) {
-                    if (!(kit.getGameRules().isTimed() && party))
-                        buttons.put(buttons.size(), new SelectKitButton(kit));
+        if (party) {
+            if (Array.getInstance().getMainConfig().getBoolean("Array.HCF-Enabled")) {
+                for ( Kit kit : Kit.getKits() ) {
+                    if (kit.isEnabled() || kit.getName().equalsIgnoreCase("HCFTeamFight")) {
+                        if (!(kit.getGameRules().isTimed() && party))
+                            buttons.put(buttons.size(), new SelectKitButton(kit));
+                    }
+                }
+            } else {
+                for ( Kit kit : Kit.getKits() ) {
+                    if (kit.isEnabled() && !kit.getName().equalsIgnoreCase("HCFTeamFight")) {
+                        if (!(kit.getGameRules().isTimed() && party))
+                            buttons.put(buttons.size(), new SelectKitButton(kit));
+                    }
                 }
             }
         } else {
             for ( Kit kit : Kit.getKits() ) {
                 if (kit.isEnabled() && !kit.getName().equalsIgnoreCase("HCFTeamFight")) {
-                    if (!(kit.getGameRules().isTimed() && party))
-                        buttons.put(buttons.size(), new SelectKitButton(kit));
+                    buttons.put(buttons.size(), new SelectKitButton(kit));
                 }
             }
         }

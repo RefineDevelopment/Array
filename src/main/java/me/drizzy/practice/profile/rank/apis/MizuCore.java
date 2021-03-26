@@ -25,4 +25,9 @@ public class MizuCore implements RankType {
     public String getFullName(OfflinePlayer player) {
         return MizuAPI.getAPI().getRankPrefix(MizuAPI.getAPI().getRank(player.getUniqueId())) + player.getName();
     }
+
+    @Override
+    public String getRankColor(OfflinePlayer player) {
+        return MizuAPI.getAPI().getRankColor(MizuAPI.getAPI().getRank(player.getUniqueId()));
+    }
 }

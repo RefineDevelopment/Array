@@ -25,4 +25,9 @@ public class HestiaCore implements RankType {
     public String getFullName(OfflinePlayer player) {
         return HestiaAPI.instance.getRankPrefix(player.getUniqueId()) + player.getName();
     }
+
+    @Override
+    public String getRankColor(OfflinePlayer player) {
+        return HestiaAPI.instance.getRankColor(player.getUniqueId()).toString();
+    }
 }

@@ -103,7 +103,7 @@ public class PlayerUtil {
 
     public static void allowMovement(Player player) {
         player.setWalkSpeed(0.2F);
-        player.setFlySpeed(0.1F);
+        player.setFlySpeed(0.0001F);
         player.setFoodLevel(20);
         player.setSprinting(true);
         player.removePotionEffect(PotionEffectType.JUMP);

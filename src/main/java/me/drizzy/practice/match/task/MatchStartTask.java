@@ -30,6 +30,7 @@ public class MatchStartTask extends BukkitRunnable {
 
         if (match.isHCFMatch()) {
             if (seconds == 2) {
+                match.getPlayers().forEach(PlayerUtil::allowMovement);
                 match.setState(MatchState.FIGHTING);
                 match.setStartTimestamp(System.currentTimeMillis());
                 match.broadcastMessage(CC.GREEN + "Match Started!");
@@ -40,7 +41,6 @@ public class MatchStartTask extends BukkitRunnable {
                     }
                 }
                 match.broadcastSound(Sound.LEVEL_UP);
-                match.getPlayers().forEach(PlayerUtil::allowMovement);
                 cancel();
                 return;
             }
@@ -71,6 +71,7 @@ public class MatchStartTask extends BukkitRunnable {
                 match.broadcastSound(Sound.NOTE_PLING);
             } else {
                 if (seconds == 2) {
+                    match.getPlayers().forEach(PlayerUtil::allowMovement);
                     match.setState(MatchState.FIGHTING);
                     match.setStartTimestamp(System.currentTimeMillis());
                     match.broadcastMessage(CC.GREEN + "Match Started!");

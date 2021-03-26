@@ -20,8 +20,6 @@ public class StatisticsData {
     private int elo = 1000;
     private int won = 0;
     private int lost = 0;
-    private int kills = 0;
-    private int deaths = 0;
     private KitInventory[] loadouts = new KitInventory[4];
 
     public void incrementWon() {
@@ -30,14 +28,6 @@ public class StatisticsData {
 
     public void incrementLost() {
         this.lost++;
-    }
-
-    public void incrementKills() {
-        this.kills++;
-    }
-
-    public void incrementDeaths() {
-        this.deaths++;
     }
 
     public KitInventory getLoadout(int index) {

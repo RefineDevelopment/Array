@@ -88,6 +88,8 @@ public class SumoTeamMatch extends Match {
         if (teamPlayer.isDisconnected()) {
             return;
         }
+
+        PlayerUtil.denyMovement(player);
         
         Profile.getByUuid(player.getUniqueId()).setState(ProfileState.IN_FIGHT);
 

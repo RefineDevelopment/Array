@@ -24,4 +24,9 @@ public class ZoomCore implements RankType {
     public String getFullName(OfflinePlayer player) {
         return ZoomAPI.getRankPrefix(player.getPlayer()) + player.getName();
     }
+
+    @Override
+    public String getRankColor(OfflinePlayer player) {
+        return ZoomAPI.getRankColor(player.getPlayer()).toString();
+    }
 }
