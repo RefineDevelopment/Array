@@ -1,23 +1,23 @@
 package me.drizzy.practice.profile;
 
-import io.netty.channel.Channel;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.ArrayCache;
+import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.array.essentials.event.SpawnTeleportEvent;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.events.MatchEvent;
 import me.drizzy.practice.match.events.MatchStartEvent;
 import me.drizzy.practice.tournament.Tournament;
-import me.drizzy.practice.util.chat.CC;
+import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.TaskUtil;
-import me.drizzy.practice.array.essentials.Essentials;
-import net.minecraft.server.v1_8_R3.NetworkManager;
+import me.drizzy.practice.util.chat.CC;
+import me.drizzy.practice.util.nametag.NameTags;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.*;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -29,15 +29,10 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.StringUtil;
-import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.array.essentials.event.SpawnTeleportEvent;
-import me.drizzy.practice.util.nametag.NameTags;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 public class ProfileListener implements Listener {
@@ -257,7 +252,6 @@ public class ProfileListener implements Listener {
         Player player=event.getPlayer();
         Profile.getPlayerList().add(player);
         Profile profile=new Profile(player.getUniqueId());
-        //TODO: Clean this up
         for ( Profile other : Profile.getProfiles().values() ) {
             other.handleVisibility();
         }
