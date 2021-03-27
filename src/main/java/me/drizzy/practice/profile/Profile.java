@@ -259,16 +259,6 @@ public class Profile {
                 } else {
                     kitDocument.put("lost", 0);
                 }
-                if (kitDocument.getInteger("kills") !=null) {
-                    statisticsData.setKills(kitDocument.getInteger("kills"));
-                } else {
-                    kitDocument.put("kills", 0);
-                }
-                if (kitDocument.getInteger("deaths") !=null) {
-                    statisticsData.setDeaths(kitDocument.getInteger("deaths"));
-                } else {
-                    kitDocument.put("deaths", 0);
-                }
                 this.statisticsData.put(kit, statisticsData);
             }
         }
@@ -321,8 +311,6 @@ public class Profile {
             kitDocument.put("elo", entry.getValue().getElo());
             kitDocument.put("won", entry.getValue().getWon());
             kitDocument.put("lost", entry.getValue().getLost());
-            kitDocument.put("kills", entry.getValue().getKills());
-            kitDocument.put("deaths", entry.getValue().getDeaths());
             kitStatisticsDocument.put(entry.getKey().getName(), kitDocument);
         }
         document.put("kitStatistics", kitStatisticsDocument);
@@ -387,13 +375,6 @@ public class Profile {
         return this.statisticsData.values().stream().mapToInt(StatisticsData::getLost).sum();
     }
 
-    public Integer getTotalDeaths() {
-        return this.statisticsData.values().stream().mapToInt(StatisticsData::getDeaths).sum();
-    }
-
-    public Integer getTotalKills() {
-        return this.statisticsData.values().stream().mapToInt(StatisticsData::getKills).sum();
-    }
 
     public Player getPlayer() {
         return Bukkit.getPlayer(uuid);
@@ -633,16 +614,6 @@ public class Profile {
         double ratio = totalWins / Math.max(totalLosses, 1);
         DecimalFormat format = new DecimalFormat("#.##");
         return format.format(ratio);
-    }
-
-    public String getKDR() {
-        double totalKills = this.getTotalKills();
-        double totalDeaths = this.getTotalDeaths();
-
-        double ratio = totalKills / Math.max(totalDeaths, 1);
-        DecimalFormat format = new DecimalFormat("#.##");
-        return format.format(ratio);
-
     }
 
     public void handleVisibility(Player player, Player otherPlayer) {
