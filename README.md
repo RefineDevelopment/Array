@@ -7,10 +7,7 @@ Commerical Praxi Fork
 You are NOT allowed to:
 
 - Redestribute this plugin
-- Invite anyone to this repo
-- Commit without permission
-- Change any settings
-- Claim this plugin as yours (Neither have I)
+- Claim this plugin as yours
 - Attempt to sell the plugin
 - Rename the plugin
 
