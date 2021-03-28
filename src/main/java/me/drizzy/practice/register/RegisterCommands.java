@@ -151,7 +151,7 @@ public class RegisterCommands {
                 new KitPartySplitCommand(),
                 new KitDisableCommand(),
                 new KitLavaKillCommand(),
-                new KitDisableFallDamageCommand(),
+                new KitSetFallDamageCommand(),
                 new KitWaterKillCommand(),
                 new KitSetNoItemsCommand(),
                 new KitShowHealthCommand(),

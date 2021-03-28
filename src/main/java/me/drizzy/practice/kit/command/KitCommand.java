@@ -34,6 +34,7 @@ public class KitCommand {
         player.sendMessage(CC.translate(" &8• &b/kit showhealth &8<&7kit&8> &8- &8&o(&7&oToggle show-health mode for a Kit&8&o)"));
         player.sendMessage(CC.translate(" &8• &b/kit stickspawn &8<&7kit&8> &8- &8&o(&7&oToggle Stick-spawn mode for a Kit&8&o)"));
         player.sendMessage(CC.translate(" &8• &b/kit boxuhc &8<&7kit&8> &8- &8&o(&7&oToggle Box-UHC mode for a Kit&8&o)"));
+        player.sendMessage(CC.translate(" &8• &b/kit falldamage &8<&7kit&8> &8- &8&o(&7&oToggle Fall Damage for a Kit&8&o)"));
         player.sendMessage(CC.translate(" &8• &b/kit spleef &8<&7kit&8> &8- &8&o(&7&oToggle spleef mode for a Kit&8&o)"));
         player.sendMessage(CC.translate(" &8• &b/kit timed &8<&7kit&8> &8- &8&o(&7&oToggle timed mode for a Kit&8&o)"));
         player.sendMessage(CC.translate(" &8• &b/kit setinv &8- &8&o(&7&oSets the inventory of the kit as your inventory&8&o)"));

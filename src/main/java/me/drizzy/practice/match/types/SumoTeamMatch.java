@@ -13,9 +13,8 @@ import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.queue.QueueType;
-import me.drizzy.practice.util.TaskUtil;
-import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.nametag.NameTags;
 import net.md_5.bungee.api.ChatColor;
@@ -495,9 +494,10 @@ public class SumoTeamMatch extends Match {
                 if (teamA.getSumoRounds() >= 3 || teamB.getSumoRounds() >= 3) {
                     end();
                 } else {
-                    teamA.broadcast(CC.translate("&fYou need to win &b" + getRoundsNeeded(teamA) + " &fmore rounds!"));
-                    teamB.broadcast(CC.translate("&fYou need to win &b" + getRoundsNeeded(teamB) + " &fmore rounds!"));
-
+                    for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Round-Message.Sumo") ) {
+                        teamA.broadcast(CC.translate(string.replace("{rounds}", String.valueOf(getRoundsNeeded(teamA)).replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName()))));
+                        teamB.broadcast(CC.translate(string.replace("{rounds}", String.valueOf(getRoundsNeeded(teamB)).replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName()))));
+                    }
                     teamA.getPlayers().forEach(this::setupPlayer);
                     teamB.getPlayers().forEach(this::setupPlayer);
 

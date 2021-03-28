@@ -93,6 +93,10 @@ public class TeamMatch extends Match {
 
         PlayerUtil.reset(player);
 
+        if (getKit().getGameRules().isStickspawn()) {
+            PlayerUtil.denyMovement(player);
+        }
+
         if (!getKit().getGameRules().isCombo()) {
             player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
         }
@@ -111,10 +115,6 @@ public class TeamMatch extends Match {
 
         if (!getKit().getGameRules().isNoitems()) {
             Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
-        }
-
-        if (getKit().getGameRules().isStickspawn()) {
-            PlayerUtil.denyMovement(player);
         }
 
         Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());

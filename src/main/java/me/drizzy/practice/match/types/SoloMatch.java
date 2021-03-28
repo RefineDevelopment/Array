@@ -97,6 +97,10 @@ public class SoloMatch extends Match {
 
         PlayerUtil.reset(player);
 
+        if (getKit().getGameRules().isStickspawn()) {
+            PlayerUtil.denyMovement(player);
+        }
+
         if (!getKit().getGameRules().isNoitems()) {
             TaskUtil.runLater(() -> Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
         }
@@ -107,10 +111,6 @@ public class SoloMatch extends Match {
         if (getKit().getGameRules().isCombo()) {
             player.setMaximumNoDamageTicks(0);
             player.setNoDamageTicks(3);
-        }
-
-        if (getKit().getGameRules().isStickspawn()) {
-            PlayerUtil.denyMovement(player);
         }
 
         if (getKit().getGameRules().isInfinitespeed()) {

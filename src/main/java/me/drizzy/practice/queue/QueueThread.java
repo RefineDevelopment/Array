@@ -2,6 +2,8 @@ package me.drizzy.practice.queue;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
+import me.drizzy.practice.arena.impl.TheBridgeArena;
+import me.drizzy.practice.enums.ArenaType;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.TeamPlayer;
@@ -88,7 +90,20 @@ public class QueueThread extends Thread {
                                 continue;
                             }
 
-
+                            if (arena.getType() == ArenaType.THEBRIDGE) {
+                                if (((TheBridgeArena) arena).getBluePortal() == null || ((TheBridgeArena) arena).getRedPortal() == null
+                                 || ((TheBridgeArena) arena).getBlueCuboid() == null || ((TheBridgeArena) arena).getRedCuboid() == null) {
+                                    queue.getPlayers().remove(firstQueueProfile);
+                                    queue.getPlayers().remove(secondQueueProfile);
+                                    queue.removePlayer(firstQueueProfile);
+                                    queue.removePlayer(secondQueueProfile);
+                                    firstProfile.refreshHotbar();
+                                    secondProfile.refreshHotbar();
+                                    firstPlayer.sendMessage(CC.translate("&cNo arenas available."));
+                                    secondPlayer.sendMessage(CC.translate("&cNo arenas available."));
+                                    continue;
+                                }
+                            }
 
                             if (arena.isActive()) continue;
 

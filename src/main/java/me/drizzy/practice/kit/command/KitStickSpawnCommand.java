@@ -19,7 +19,7 @@ public class KitStickSpawnCommand {
                 kit.getGameRules().setStickspawn(true);
             }
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated sumo mode for &b" + kit.getName() +  " &7to &b" + (kit.getGameRules().isSumo() ? "true!" : "false!")));
+            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated stick spawn mode for &b" + kit.getName() +  " &7to &b" + (kit.getGameRules().isStickspawn() ? "true!" : "false!")));
         }
     }
 }

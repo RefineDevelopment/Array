@@ -6,8 +6,8 @@ import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label = "kit disablefalldamage", permission = "array.dev")
-public class KitDisableFallDamageCommand {
+@CommandMeta(label = {"kit set falldamage", "kit falldamage"}, permission = "array.dev")
+public class KitSetFallDamageCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {
             player.sendMessage(CC.translate("&8[&b&lArray&8] &7That kit does not exist."));
@@ -18,7 +18,7 @@ public class KitDisableFallDamageCommand {
                 kit.getGameRules().setDisablefalldamage(true);
             }
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated disable-fall-damage mode for &b" + kit.getName() + " &7to &b" + (kit.getGameRules().isDisablefalldamage() ? "true!" : "false!")));
+            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated fall-damage for &b" + kit.getName() + " &7to &b" + (kit.getGameRules().isDisablefalldamage() ? "true!" : "false!")));
         }
     }
 }

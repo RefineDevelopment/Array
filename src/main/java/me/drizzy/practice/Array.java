@@ -124,7 +124,7 @@ public class Array extends JavaPlugin {
         random = new Random();
         honcho = new Honcho(this);
 
-        //Seteup All the Configs
+        //Setup All the Configs
         mainConfig = new BasicConfigurationFile(this, "config");
         arenasConfig = new BasicConfigurationFile(this, "arenas");
         kitsConfig = new BasicConfigurationFile(this, "kits");
@@ -133,22 +133,22 @@ public class Array extends JavaPlugin {
 
         //To Prevent Stealing and Renaming (Skidding)
         if (!Description.getAuthor().contains("Drizzy")) {
-            this.logger(CC.CHAT_BAR);
-            this.logger("&cYou edited the plugin.yml, please don't do that");
-            this.logger( "&cPlease check your plugin.yml and try again.");
-            this.logger("            &cDisabling Array");
-            this.logger(CC.CHAT_BAR);
+            logger(CC.CHAT_BAR);
+            logger("&cYou edited the plugin.yml, please don't do that");
+            logger( "&cPlease check your plugin.yml and try again.");
+            logger("            &cDisabling Array");
+            logger(CC.CHAT_BAR);
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
         //To Prevent Stealing and Renaming (Skidding)
         if (!Description.getName().contains("Array")) {
-            this.logger(CC.CHAT_BAR);
-            this.logger("&cYou edited the plugin.yml, please don't do that");
-            this.logger(" &cPlease check your plugin.yml and try again.");
-            this.logger("            &cDisabling Array");
-            this.logger(CC.CHAT_BAR);
+            logger(CC.CHAT_BAR);
+            logger("&cYou edited the plugin.yml, please don't do that");
+            logger(" &cPlease check your plugin.yml and try again.");
+            logger("            &cDisabling Array");
+            logger(CC.CHAT_BAR);
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -177,8 +177,8 @@ public class Array extends JavaPlugin {
         if (mainConfig.getBoolean("Array.HCF-Enabled")) {
             //Create HCF's Duel Kit
             this.hcfKit = new Kit("HCFTeamFight");
-            Kit.getByName("HCFTeamFight").setDisplayIcon(new ItemBuilder(Material.BEACON).clearEnchantments().clearFlags().build());
-            Kit.getByName("HCFTeamFight").save();
+            hcfKit.setDisplayIcon(new ItemBuilder(Material.BEACON).clearEnchantments().clearFlags().build());
+            hcfKit.save();
         }
 
         Arrays.asList(Material.WORKBENCH,
@@ -222,53 +222,51 @@ public class Array extends JavaPlugin {
         try {
             preLoadMongo();
         } catch (Exception e) {
-            this.logger(CC.CHAT_BAR);
-            this.logger("            &4&lMongo Internal Error");
-            this.logger("        &cMongo is not setup correctly!");
-            this.logger(     "&cPlease check your mongo and try again.");
-            this.logger("              &4&lDisabling Array");
-            this.logger(CC.CHAT_BAR);
+            logger(CC.CHAT_BAR);
+            logger("            &4&lMongo Internal Error");
+            logger("        &cMongo is not setup correctly!");
+            logger(     "&cPlease check your mongo and try again.");
+            logger("              &4&lDisabling Array");
+            logger(CC.CHAT_BAR);
             this.shutDown();
             return;
         }
 
-        this.logger("&bLoading Profiles!");
+        logger("&bLoading Profiles!");
         Profile.preload();
-        this.logger("&aLoaded Profiles!");
+        logger("&aLoaded Profiles!");
 
         try {
-            this.logger("&bLoading Kits!");
+            logger("&bLoading Kits!");
             Kit.preload();
-            this.logger("&aLoaded Kits!");
+            logger("&aLoaded Kits!");
         } catch (YAMLException e) {
-            this.logger(CC.CHAT_BAR);
-            this.logger("       &cError Loading Kits: &cYAML Error");
-            this.logger("    &cThis means your configuration was wrong.");
-            this.logger("  &cPlease check your Kits config and try again!");
-            this.logger("               &4&lDisabling Array");
-            this.logger(CC.CHAT_BAR);
+            logger(CC.CHAT_BAR);
+            logger("       &cError Loading Kits: &cYAML Error");
+            logger("    &cThis means your configuration was wrong.");
+            logger("  &cPlease check your Kits config and try again!");
+            logger("               &4&lDisabling Array");
+            logger(CC.CHAT_BAR);
             this.shutDown();
             return;
         }
         try {
-            this.logger("&bLoading Arenas!");
+            logger("&bLoading Arenas!");
             Arena.preload();
         } catch (YAMLException e) {
-            this.logger(CC.CHAT_BAR);
-            this.logger("      &cError Loading Kits: &cYAML Error");
-            this.logger("   &cThis means your configuration was wrong.");
-            this.logger(" &cPlease check your Arenas config and try again!");
-            this.logger("              &4&lDisabling Array");
-            this.logger(CC.CHAT_BAR);
+            logger(CC.CHAT_BAR);
+            logger("      &cError Loading Kits: &cYAML Error");
+            logger("   &cThis means your configuration was wrong.");
+            logger(" &cPlease check your Arenas config and try again!");
+            logger("              &4&lDisabling Array");
+            logger(CC.CHAT_BAR);
             this.shutDown();
             return;
         }
         new Hotbar();
         Match.preload();
         Party.preload();
-        TaskUtil.runAsync(() -> {
-            knockbackManager=new KnockbackManager();
-        });
+        TaskUtil.runAsync(() -> knockbackManager = new KnockbackManager());
         essentials = new Essentials();
 
         honcho.registerTypeAdapter(Arena.class, new ArenaTypeAdapter());
