@@ -44,7 +44,6 @@ import me.drizzy.practice.kiteditor.KitEditor;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.party.Party;
-import me.drizzy.practice.profile.meta.EloLeague;
 import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueProfile;
@@ -367,7 +366,7 @@ public class Profile {
     }
 
     public String getEloLeague() {
-        return EloLeague.getDivision(this);
+        return Array.getInstance().getDivisionsManager().getDivision(this);
     }
 
     public Integer getTotalWins() {

@@ -10,6 +10,7 @@ import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.arena.ArenaTypeAdapter;
 import me.drizzy.practice.arena.ArenaTypeTypeAdapter;
 import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.divisions.Divisions;
 import me.drizzy.practice.enums.ArenaType;
 import me.drizzy.practice.events.types.brackets.BracketsManager;
 import me.drizzy.practice.events.types.gulag.GulagManager;
@@ -72,6 +73,7 @@ public class Array extends JavaPlugin {
     private BasicConfigurationFile kitsConfig;
     private BasicConfigurationFile eventsConfig;
     private BasicConfigurationFile messagesConfig;
+    private BasicConfigurationFile divisionsConfig;
 
     /**
      * All ours Async Threads
@@ -110,6 +112,11 @@ public class Array extends JavaPlugin {
     private GulagManager gulagManager;
 
     /**
+     * Custom Divisions Handler
+     */
+    private Divisions divisionsManager;
+
+    /**
      * Miscellaneous Managers
      */
     private KnockbackManager knockbackManager;
@@ -143,6 +150,7 @@ public class Array extends JavaPlugin {
         kitsConfig = new BasicConfigurationFile(this, "kits");
         eventsConfig = new BasicConfigurationFile(this, "events");
         messagesConfig = new BasicConfigurationFile(this, "messages");
+        divisionsConfig = new BasicConfigurationFile(this, "divisions");
 
         //To Prevent Stealing and Renaming (Skidding)
         if (!Description.getAuthor().contains("Drizzy")) {
@@ -274,6 +282,7 @@ public class Array extends JavaPlugin {
             return;
         }
         new Hotbar();
+        this.divisionsManager = new Divisions();
         Match.preload();
         Party.preload();
         TaskUtil.runAsync(() -> knockbackManager = new KnockbackManager());
