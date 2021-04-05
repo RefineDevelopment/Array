@@ -26,10 +26,9 @@ public class FoxSpigot implements KnockbackType {
             @Override
             public void run() {
                 try {
-                    Class<?> player=((CraftPlayer) p).getClass();
-                    Method getHandle=player.getMethod("getHandle");
-                    Object nms=getHandle.invoke(p);
-                    Method setKnockback=nms.getClass().getMethod("setKnockback", KnockbackProfile.class);
+                    Method getHandle = p.getClass().getMethod("getHandle");
+                    Object nms = getHandle.invoke(p);
+                    Method setKnockback = nms.getClass().getMethod("setKnockback", KnockbackProfile.class);
                     setKnockback.invoke(nms, knockbackProfile);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -50,8 +49,7 @@ public class FoxSpigot implements KnockbackType {
             @Override
             public void run() {
                 try {
-                    Class<?> player = ((CraftPlayer)p).getClass();
-                    Method getHandle = player.getMethod("getHandle");
+                    Method getHandle = p.getClass().getMethod("getHandle");
                     Object nms = getHandle.invoke(p);
                     Method setKnockback = nms.getClass().getMethod("setKnockback", KnockbackProfile.class);
                     setKnockback.invoke(nms, knockbackProfile);
@@ -69,8 +67,7 @@ public class FoxSpigot implements KnockbackType {
             @Override
             public void run() {
                 try {
-                    Class<?> player = ((CraftPlayer)p).getClass();
-                    Method getHandle = player.getMethod("getHandle");
+                    Method getHandle = p.getClass().getMethod("getHandle");
                     Object nms = getHandle.invoke(p);
                     Method setKnockback = nms.getClass().getMethod("setKnockback", KnockbackProfile.class);
                     setKnockback.invoke(nms, knockbackProfile);

@@ -1,15 +1,15 @@
 package me.drizzy.practice.hotbar;
 
 import me.drizzy.practice.enums.HotbarType;
-import me.drizzy.practice.event.menu.ActiveEventSelectEventMenu;
-import me.drizzy.practice.event.types.lms.LMS;
-import me.drizzy.practice.event.types.parkour.Parkour;
-import me.drizzy.practice.event.types.gulag.Gulag;
+import me.drizzy.practice.events.menu.ActiveEventSelectEventMenu;
+import me.drizzy.practice.events.types.lms.LMS;
+import me.drizzy.practice.events.types.parkour.Parkour;
+import me.drizzy.practice.events.types.gulag.Gulag;
 import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.Array;
-import me.drizzy.practice.event.types.brackets.Brackets;
-import me.drizzy.practice.event.types.spleef.Spleef;
-import me.drizzy.practice.event.types.sumo.Sumo;
+import me.drizzy.practice.events.types.brackets.Brackets;
+import me.drizzy.practice.events.types.spleef.Spleef;
+import me.drizzy.practice.events.types.sumo.Sumo;
 import me.drizzy.practice.kiteditor.menu.KitEditorSelectKitMenu;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.enums.PartyMessageType;

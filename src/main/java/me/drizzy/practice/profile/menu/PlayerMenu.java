@@ -1,7 +1,7 @@
 package me.drizzy.practice.profile.menu;
 
 import lombok.AllArgsConstructor;
-import me.drizzy.practice.event.EventCommand;
+import me.drizzy.practice.events.EventCommand;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;

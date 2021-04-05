@@ -22,7 +22,7 @@ public enum HotbarType
     KIT_EDITOR(null), 
     SPECTATE_STOP("stopspectating"), 
     VIEW_INVENTORY(null), 
-    EVENT_JOIN("event"), 
+    EVENT_JOIN("events"),
     SUMO_LEAVE("sumo leave"), 
     BRACKETS_LEAVE("brackets leave"), 
     LMS_LEAVE("lms leave"),

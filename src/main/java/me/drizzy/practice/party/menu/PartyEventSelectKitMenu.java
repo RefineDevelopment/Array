@@ -66,7 +66,7 @@ public class PartyEventSelectKitMenu extends Menu {
                 return;
             }
             if (profile.getParty().getTeamPlayers().size() <= 1) {
-                player.sendMessage(CC.RED + "You do not have enough players in your party to start a party event.");
+                player.sendMessage(CC.RED + "You do not have enough players in your party to start a party events.");
                 return;
             }
             final Party party = profile.getParty();

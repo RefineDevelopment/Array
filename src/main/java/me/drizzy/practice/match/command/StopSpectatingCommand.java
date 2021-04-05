@@ -35,7 +35,7 @@ public class StopSpectatingCommand {
                 profile.getSpleef().removeSpectator(player);
             }
         } else {
-            player.sendMessage(CC.RED + "You are not spectating a match or event.");
+            player.sendMessage(CC.RED + "You are not spectating a match or events.");
         }
     }
 

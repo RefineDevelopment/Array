@@ -25,8 +25,7 @@ public class SpigotX implements KnockbackType {
             knockbackProfile=com.minexd.spigot.SpigotX.INSTANCE.getConfig().getCurrentKb();
         }
         try {
-            Class<?> player = ((CraftPlayer)p).getClass();
-            Method getHandle = player.getMethod("getHandle");
+            Method getHandle = p.getClass().getMethod("getHandle");
             Object nms = getHandle.invoke(p);
             Method setKnockback = nms.getClass().getMethod("setKnockbackProfile", KnockbackProfile.class);
             setKnockback.invoke(nms, knockbackProfile);
@@ -46,8 +45,7 @@ public class SpigotX implements KnockbackType {
                     knockbackProfile=com.minexd.spigot.SpigotX.INSTANCE.getConfig().getCurrentKb();
                 }
                 try {
-                    Class<?> player = ((CraftPlayer)p).getClass();
-                    Method getHandle = player.getMethod("getHandle");
+                    Method getHandle = p.getClass().getMethod("getHandle");
                     Object nms = getHandle.invoke(p);
                     Method setKnockback = nms.getClass().getMethod("setKnockbackProfile", KnockbackProfile.class);
                     setKnockback.invoke(nms, knockbackProfile);
@@ -65,7 +63,7 @@ public class SpigotX implements KnockbackType {
             public void run() {
                 KnockbackProfile knockbackProfile = com.minexd.spigot.SpigotX.INSTANCE.getConfig().getCurrentKb();
                 try {
-                    Class<?> player = ((CraftPlayer)p).getClass();Method getHandle = player.getMethod("getHandle");
+                    Method getHandle = p.getClass().getMethod("getHandle");
                     Object nms = getHandle.invoke(p);
                     Method setKnockback = nms.getClass().getMethod("setKnockbackProfile", KnockbackProfile.class);
                     setKnockback.invoke(nms, knockbackProfile);

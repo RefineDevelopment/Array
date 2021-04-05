@@ -25,8 +25,7 @@ public class RaveSpigot implements KnockbackType {
             @Override
             public void run() {
                 try {
-                    Class<?> player = ((CraftPlayer)p).getClass();
-                    Method getHandle = player.getMethod("getHandle");
+                    Method getHandle = p.getClass().getMethod("getHandle");
                     Object nms = getHandle.invoke(p);
                     Method setKnockback = nms.getClass().getMethod("setKnockback", KnockbackProfile.class);
                     setKnockback.invoke(nms, knockbackProfile);
@@ -49,8 +48,7 @@ public class RaveSpigot implements KnockbackType {
             @Override
             public void run() {
                 try {
-                    Class<?> player = ((CraftPlayer)p).getClass();
-                    Method getHandle = player.getMethod("getHandle");
+                    Method getHandle = p.getClass().getMethod("getHandle");
                     Object nms = getHandle.invoke(p);
                     Method setKnockback = nms.getClass().getMethod("setKnockback", KnockbackProfile.class);
                     setKnockback.invoke(nms, knockbackProfile);
@@ -68,8 +66,7 @@ public class RaveSpigot implements KnockbackType {
             @Override
             public void run() {
                 try {
-                    Class<?> player = ((CraftPlayer)p).getClass();
-                    Method getHandle = player.getMethod("getHandle");
+                    Method getHandle = p.getClass().getMethod("getHandle");
                     Object nms = getHandle.invoke(p);
                     Method setKnockback = nms.getClass().getMethod("setKnockback", KnockbackProfile.class);
                     setKnockback.invoke(nms, knockbackProfile);

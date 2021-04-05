@@ -21,12 +21,11 @@ public class ArenaAddNormalKitCommand {
                 player.sendMessage(CC.translate("&8[&b&lArray&8] &7There are no kits."));
                 return;
             }
-        if (kit.getGameRules().isBuild() || kit.getGameRules().isBoxUHC() || kit.getGameRules().isSpleef() || kit.getGameRules().isSumo() || kit.getGameRules().isParkour() || kit.getGameRules().isNoItems() || kit.getGameRules().isWaterKill()) {
+        if (kit.getGameRules().isBuild() || kit.getGameRules().isBoxUHC() || kit.getGameRules().isSpleef() || kit.getGameRules().isSumo() || kit.getGameRules().isParkour() || kit.getGameRules().isWaterKill()) {
             return;
         }
 
-        if (!arena.getKits().contains(kit.getName()))
-            arena.getKits().add(kit.getName());
+        if (!arena.getKits().contains(kit.getName())) arena.getKits().add(kit.getName());
         player.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully added the kit &b" + kit.getName() + "&7 to &b" + arena.getName() + "&7."));
     }
         arena.save();

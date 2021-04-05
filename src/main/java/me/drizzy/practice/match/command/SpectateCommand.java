@@ -63,7 +63,7 @@ public class SpectateCommand {
         } else if (targetProfile.isInSpleef()) {
             targetProfile.getSpleef().addSpectator(player);
         } else {
-            player.sendMessage(CC.RED + "That player is not in a match or running event.");
+            player.sendMessage(CC.RED + "That player is not in a match or running events.");
         }
 
     }

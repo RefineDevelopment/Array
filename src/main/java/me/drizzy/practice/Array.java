@@ -11,13 +11,13 @@ import me.drizzy.practice.arena.ArenaTypeAdapter;
 import me.drizzy.practice.arena.ArenaTypeTypeAdapter;
 import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.enums.ArenaType;
-import me.drizzy.practice.event.types.brackets.BracketsManager;
-import me.drizzy.practice.event.types.gulag.GulagManager;
-import me.drizzy.practice.event.types.lms.LMSManager;
-import me.drizzy.practice.event.types.oitc.OITCManager;
-import me.drizzy.practice.event.types.parkour.ParkourManager;
-import me.drizzy.practice.event.types.spleef.SpleefManager;
-import me.drizzy.practice.event.types.sumo.SumoManager;
+import me.drizzy.practice.events.types.brackets.BracketsManager;
+import me.drizzy.practice.events.types.gulag.GulagManager;
+import me.drizzy.practice.events.types.lms.LMSManager;
+import me.drizzy.practice.events.types.oitc.OITCManager;
+import me.drizzy.practice.events.types.parkour.ParkourManager;
+import me.drizzy.practice.events.types.spleef.SpleefManager;
+import me.drizzy.practice.events.types.sumo.SumoManager;
 import me.drizzy.practice.hcf.HCFManager;
 import me.drizzy.practice.hcf.bard.EffectRestorer;
 import me.drizzy.practice.hologram.HologramPlaceholders;
@@ -74,7 +74,7 @@ public class Array extends JavaPlugin {
     private BasicConfigurationFile messagesConfig;
 
     /**
-     * All ours Async Threads (What makes this plugin multi-threaded)
+     * All ours Async Threads
      */
     public Executor mainThread;
     public Executor taskThread;

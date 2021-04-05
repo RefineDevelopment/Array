@@ -2,12 +2,12 @@ package me.drizzy.practice.scoreboard;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.ArrayCache;
-import me.drizzy.practice.event.types.brackets.Brackets;
-import me.drizzy.practice.event.types.gulag.Gulag;
-import me.drizzy.practice.event.types.lms.LMS;
-import me.drizzy.practice.event.types.parkour.Parkour;
-import me.drizzy.practice.event.types.spleef.Spleef;
-import me.drizzy.practice.event.types.sumo.Sumo;
+import me.drizzy.practice.events.types.brackets.Brackets;
+import me.drizzy.practice.events.types.gulag.Gulag;
+import me.drizzy.practice.events.types.lms.LMS;
+import me.drizzy.practice.events.types.parkour.Parkour;
+import me.drizzy.practice.events.types.spleef.Spleef;
+import me.drizzy.practice.events.types.sumo.Sumo;
 import me.drizzy.practice.hcf.HCFClasses;
 import me.drizzy.practice.hcf.classes.Bard;
 import me.drizzy.practice.match.Match;

@@ -4,11 +4,11 @@ import me.allen.ziggurat.ZigguratAdapter;
 import me.allen.ziggurat.objects.BufferedTabObject;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.ArrayCache;
-import me.drizzy.practice.event.types.brackets.Brackets;
-import me.drizzy.practice.event.types.gulag.Gulag;
-import me.drizzy.practice.event.types.lms.LMS;
-import me.drizzy.practice.event.types.parkour.Parkour;
-import me.drizzy.practice.event.types.sumo.Sumo;
+import me.drizzy.practice.events.types.brackets.Brackets;
+import me.drizzy.practice.events.types.gulag.Gulag;
+import me.drizzy.practice.events.types.lms.LMS;
+import me.drizzy.practice.events.types.parkour.Parkour;
+import me.drizzy.practice.events.types.sumo.Sumo;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
@@ -16,10 +16,9 @@ import me.drizzy.practice.party.Party;
 import me.drizzy.practice.tournament.Tournament;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.kit.Kit;
-import me.drizzy.practice.event.types.spleef.Spleef;
+import me.drizzy.practice.events.types.spleef.Spleef;
 import me.drizzy.practice.profile.Profile;
 import org.bukkit.entity.Player;
-import org.bukkit.ChatColor;
 
 import java.util.*;
 

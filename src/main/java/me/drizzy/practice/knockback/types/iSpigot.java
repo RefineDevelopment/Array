@@ -24,8 +24,7 @@ public class iSpigot implements KnockbackType {
             @Override
             public void run() {
                 try {
-                    Class<?> player = ((CraftPlayer)p).getClass();
-                    Method getHandle = player.getMethod("getHandle");
+                    Method getHandle = p.getClass().getMethod("getHandle");
                     Object nms = getHandle.invoke(p);
                     Method setKnockback = nms.getClass().getMethod("setKnockback", Knockback.class);
                     setKnockback.invoke(nms, knockbackProfile);
@@ -48,8 +47,7 @@ public class iSpigot implements KnockbackType {
             @Override
             public void run() {
                 try {
-                    Class<?> player = ((CraftPlayer)p).getClass();
-                    Method getHandle = player.getMethod("getHandle");
+                    Method getHandle = p.getClass().getMethod("getHandle");
                     Object nms = getHandle.invoke(p);
                     Method setKnockback = nms.getClass().getMethod("setKnockback", Knockback.class);
                     setKnockback.invoke(nms, knockbackProfile);
@@ -67,8 +65,7 @@ public class iSpigot implements KnockbackType {
             @Override
             public void run() {
                 try {
-                    Class<?> player = ((CraftPlayer)p).getClass();
-                    Method getHandle = player.getMethod("getHandle");
+                    Method getHandle = p.getClass().getMethod("getHandle");
                     Object nms = getHandle.invoke(p);
                     Method setKnockback = nms.getClass().getMethod("setKnockback", Knockback.class);
                     setKnockback.invoke(nms, knockbackProfile);
