@@ -37,7 +37,7 @@ You Need Intelli J to compile, This does NOT support Eclipse
 
 - Party Settings: array.donator
 - Duel Arena Selector: array.donator
-- Event: array.host.<event>
+- Event: array.host.[event]
 - Admin Commands: array.dev
 - Staff Commands: array.staff
 - Ping Factor Setting: array.donator+
