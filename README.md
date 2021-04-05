@@ -45,9 +45,11 @@ You Need Intelli J to compile, This does NOT support Eclipse
 - Event Cooldown Reset: array.staff
 - Event Cancel Command: array.staff
 - Event ForceStart Command: array.staff
+- Build Permission: array.build (also the player has to be in gamemode creative)
 
 ## Credits
 
 Drizzy, Nick, Joeloeli, Veltus
 
-> Leak this, and you are fucked nigga
+
+#A Project by Purge Community
