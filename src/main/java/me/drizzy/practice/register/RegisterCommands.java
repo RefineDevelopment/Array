@@ -7,7 +7,6 @@ import me.drizzy.practice.array.commands.*;
 import me.drizzy.practice.array.commands.donator.FlyCommand;
 import me.drizzy.practice.array.commands.staff.FollowCommand;
 import me.drizzy.practice.array.commands.staff.GetUUIDCommand;
-import me.drizzy.practice.array.commands.staff.SilentCommand;
 import me.drizzy.practice.array.commands.staff.UnFollowCommand;
 import me.drizzy.practice.duel.command.DuelAcceptCommand;
 import me.drizzy.practice.duel.command.DuelCommand;
@@ -39,7 +38,6 @@ public class RegisterCommands {
         Array.logger("&bRegistering Commands...");
         for (Object command : Arrays.asList(
                 //Staff commands
-                new SilentCommand(),
                 new FollowCommand(),
                 new UnFollowCommand(),
 
@@ -63,7 +61,7 @@ public class RegisterCommands {
                 new ArrayToggleScoreboardCommand(),
                 new ArrayToggleDuelCommand(),
                 new ArrayVerCommand(),
-                new ArrayWoldCommand(),
+                new ArrayWorldCommand(),
                 new ArrayDebugCommand(),
 
                 //Player command
@@ -133,7 +131,8 @@ public class RegisterCommands {
                 new KitRemoveCommand(),
                 new KitSetIconCommand(),
                 new KitSetHitDelayCommand(),
-                //new KitBridgeCommand(),
+                new KitBridgeCommand(),
+                new KitBedwarsCommand(),
                 new KitSetRankedCommand(),
                 new KitSumoCommand(),
                 new KitBuildCommand(),

@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 
@@ -14,7 +15,7 @@ public class StatsCommand extends Command {
 
     public StatsCommand() {
         super("stats");
-        this.setAliases(Collections.singletonList("statistics"));
+        this.setAliases(Arrays.asList("statistics", "elo"));
         this.usageMessage = "/stats";
     }
 

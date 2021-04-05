@@ -65,6 +65,7 @@ public class MatchDetailsMenu extends Menu {
         buttons.put(pos, new StatisticsButton(snapshot.getTeamPlayer()));
 
         if (this.snapshot.getSwitchTo() != null || this.opponent != null) {
+            buttons.put(44, new SwitchInventoryButton(this.snapshot.getSwitchTo()));
             buttons.put(53, new SwitchInventoryButton(this.snapshot.getSwitchTo()));
         }
 

@@ -16,7 +16,6 @@ import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.util.elo.EloUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
@@ -27,7 +26,6 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -96,10 +94,10 @@ public class SumoMatch extends Match {
 
         PlayerUtil.denyMovement(player);
 
-        if (getKit().getGameRules().isInfinitespeed()) {
+        if (getKit().getGameRules().isInfiniteSpeed()) {
             player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 2));
         }
-        if (getKit().getGameRules().isInfinitestrength()) {
+        if (getKit().getGameRules().isInfiniteStrength()) {
             player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 2));
         }
 
@@ -144,12 +142,11 @@ public class SumoMatch extends Match {
         }
 
         if (getKit().getGameRules().isTimed()) {
-            TeamPlayer roundLoser = getTeamPlayer(getWinningPlayer());
-            TeamPlayer roundWinner = getOpponentTeamPlayer(getOpponentPlayer(getWinningPlayer()));
+            TeamPlayer roundLoser=getTeamPlayer(getWinningPlayer());
+            TeamPlayer roundWinner=getOpponentTeamPlayer(getOpponentPlayer(getWinningPlayer()));
 
             getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
         }
-
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -179,7 +176,7 @@ public class SumoMatch extends Match {
                     }
                 }
             }
-        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isSumo() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
+        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isSumo() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
 
         Player winningPlayer = getWinningPlayer();
         Player losingPlayer = getOpponentPlayer(winningPlayer);
@@ -209,10 +206,10 @@ public class SumoMatch extends Match {
 
 
         if (getQueueType() == QueueType.RANKED) {
-            int oldWinnerElo = winningTeamPlayer.getElo();
-            int oldLoserElo = losingTeamPlayer.getElo();
-            int newWinnerElo = EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
-            int newLoserElo = EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
+            int oldWinnerElo=winningTeamPlayer.getElo();
+            int oldLoserElo=losingTeamPlayer.getElo();
+            int newWinnerElo=EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
+            int newLoserElo=EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
             winningProfile.getStatisticsData().get(getKit()).setElo(newWinnerElo);
             losingProfile.getStatisticsData().get(getKit()).setElo(newLoserElo);
             winningProfile.getStatisticsData().get(getKit()).incrementWon();
@@ -220,8 +217,8 @@ public class SumoMatch extends Match {
             winningProfile.calculateGlobalElo();
             losingProfile.calculateGlobalElo();
 
-            int winnerEloChange = newWinnerElo - oldWinnerElo;
-            int loserEloChange = oldLoserElo - newLoserElo;
+            int winnerEloChange=newWinnerElo - oldWinnerElo;
+            int loserEloChange=oldLoserElo - newLoserElo;
 
             components.add(new ChatComponentBuilder("")
                     .parse("&a" + winningPlayer.getName() + " +" + winnerEloChange + " (" +
@@ -236,24 +233,16 @@ public class SumoMatch extends Match {
             ArrayList<Player> specs = new ArrayList<>(getSpectators());
             int i = 0;
             for (Player spectator : getSpectators()) {
-                Profile profile = Profile.getByUuid(spectator.getUniqueId());
                 if (getSpectators().size() >= 1) {
-                    if (profile.isSilent()) {
-                        specs.remove(spectator);
-                    } else {
-                        if (!specs.contains(spectator))
-                            specs.add(spectator);
-                    }
+                    if (!specs.contains(spectator))
+                        specs.add(spectator);
+
                     if (i != getSpectators().size()) {
                         i++;
                         if (i == getSpectators().size()) {
-                            if (!profile.isSilent()) {
-                                builder.append(CC.GRAY).append(spectator.getName());
-                            }
+                            builder.append(CC.GRAY).append(spectator.getName());
                         } else {
-                            if (!profile.isSilent()) {
-                                builder.append(CC.GRAY).append(spectator.getName()).append(CC.GRAY).append(", ");
-                            }
+                            builder.append(CC.GRAY).append(spectator.getName()).append(CC.GRAY).append(", ");
                         }
 
                     }
@@ -500,6 +489,7 @@ public class SumoMatch extends Match {
                     for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Round-Message.Sumo") ) {
                         playerA.getPlayer().sendMessage(CC.translate(string.replace("{rounds}", String.valueOf(getRoundsNeeded(playerA)).replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName()))));
                         playerB.getPlayer().sendMessage(CC.translate(string.replace("{rounds}", String.valueOf(getRoundsNeeded(playerB)).replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName()))));
+                    }
                         setupPlayer(playerA.getPlayer());
                         setupPlayer(playerB.getPlayer());
                         playerA.getPlayer().showPlayer(playerB.getPlayer());
@@ -508,7 +498,7 @@ public class SumoMatch extends Match {
                         setState(MatchState.STARTING);
                         setStartTimestamp(-1);
                         new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
-                    }
+
                 }
             }
         }

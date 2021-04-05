@@ -2,7 +2,6 @@ package me.drizzy.practice.match.types;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.array.essentials.Essentials;
@@ -18,7 +17,6 @@ import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueType;
-import me.drizzy.practice.util.FireworkEffectPlayer;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.util.chat.CC;
@@ -44,7 +42,8 @@ public class TheBridgeMatch extends Match {
 
     @Setter private TeamPlayer playerA;
     @Setter private TeamPlayer playerB;
-    @Getter private final List<Player> bridgePlayers = new ArrayList<>();
+    @Getter private final List<Player> caughtPlayers = new ArrayList<>();
+    @Setter private int round = 0;
 
     public TheBridgeMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
         super(queue, kit, arena, queueType);
@@ -100,10 +99,10 @@ public class TheBridgeMatch extends Match {
 
         PlayerUtil.denyMovement(player);
 
-        if (getKit().getGameRules().isInfinitespeed()) {
+        if (getKit().getGameRules().isInfiniteSpeed()) {
             player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 2));
         }
-        if (getKit().getGameRules().isInfinitestrength()) {
+        if (getKit().getGameRules().isInfiniteStrength()) {
             player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 2));
         }
 
@@ -120,7 +119,7 @@ public class TheBridgeMatch extends Match {
         player.getInventory().setArmorContents(getKit().getKitInventory().getArmor());
         player.getInventory().setContents(getKit().getKitInventory().getContents());
         giveBridgeKit(player);
-        NameTags.color(player, getOpponentPlayer(player), (this.getTeamPlayerA().getPlayer() == player ? org.bukkit.ChatColor.BLUE :  org.bukkit.ChatColor.RED), getKit().getGameRules().isBuild());
+        NameTags.color(player, getOpponentPlayer(player), (this.getPlayerA().getPlayer() == player ? org.bukkit.ChatColor.BLUE :  org.bukkit.ChatColor.RED), getKit().getGameRules().isBuild());
 
     }
 
@@ -131,31 +130,32 @@ public class TheBridgeMatch extends Match {
 
     @Override
     public void onStart() {
+        this.round++;
     }
 
     @Override
     public boolean onEnd() {
-        UUID rematchKey = UUID.randomUUID();
+        UUID rematchKey=UUID.randomUUID();
 
-        for (TeamPlayer teamPlayer : new TeamPlayer[]{getTeamPlayerA(), getTeamPlayerB()}) {
-            if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
-                Player player = teamPlayer.getPlayer();
+            for ( TeamPlayer teamPlayer : new TeamPlayer[]{getTeamPlayerA(), getTeamPlayerB()} ) {
+                if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
+                    Player player=teamPlayer.getPlayer();
 
-                if (player != null) {
-                    if (teamPlayer.isAlive()) {
-                        MatchSnapshot snapshot = new MatchSnapshot(teamPlayer, getOpponentTeamPlayer(player));
-                        getSnapshots().add(snapshot);
+                    if (player != null) {
+                        if (teamPlayer.isAlive()) {
+                            MatchSnapshot snapshot=new MatchSnapshot(teamPlayer, getOpponentTeamPlayer(player));
+                            getSnapshots().add(snapshot);
+                        }
                     }
                 }
             }
-        }
 
-        if (getKit().getGameRules().isTimed()) {
-            TeamPlayer roundLoser = getTeamPlayer(getWinningPlayer());
-            TeamPlayer roundWinner = getOpponentTeamPlayer(getOpponentPlayer(getWinningPlayer()));
+            if (getKit().getGameRules().isTimed()) {
+                TeamPlayer roundLoser=getTeamPlayer(getWinningPlayer());
+                TeamPlayer roundWinner=getOpponentTeamPlayer(getOpponentPlayer(getWinningPlayer()));
 
-            getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
-        }
+                getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
+            }
 
         new BukkitRunnable() {
             @Override
@@ -189,7 +189,7 @@ public class TheBridgeMatch extends Match {
                     }
                 }
             }
-        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isSumo() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
+        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isSumo() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
 
         Player winningPlayer = getWinningPlayer();
         Player losingPlayer = getOpponentPlayer(winningPlayer);
@@ -212,33 +212,33 @@ public class TheBridgeMatch extends Match {
         Profile winningProfile = Profile.getByUuid(winningPlayer.getUniqueId());
         Profile losingProfile = Profile.getByUuid(losingPlayer.getUniqueId());
 
-        if (getQueueType() == QueueType.UNRANKED) {
-            winningProfile.getStatisticsData().get(getKit()).incrementWon();
-            losingProfile.getStatisticsData().get(getKit()).incrementLost();
-        }
+            if (getQueueType() == QueueType.UNRANKED) {
+                winningProfile.getStatisticsData().get(getKit()).incrementWon();
+                losingProfile.getStatisticsData().get(getKit()).incrementLost();
+            }
 
 
-        if (getQueueType() == QueueType.RANKED) {
-            int oldWinnerElo = winningTeamPlayer.getElo();
-            int oldLoserElo = losingTeamPlayer.getElo();
-            int newWinnerElo = EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
-            int newLoserElo = EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
-            winningProfile.getStatisticsData().get(getKit()).setElo(newWinnerElo);
-            losingProfile.getStatisticsData().get(getKit()).setElo(newLoserElo);
-            winningProfile.getStatisticsData().get(getKit()).incrementWon();
-            losingProfile.getStatisticsData().get(getKit()).incrementLost();
-            winningProfile.calculateGlobalElo();
-            losingProfile.calculateGlobalElo();
+            if (getQueueType() == QueueType.RANKED) {
+                int oldWinnerElo=winningTeamPlayer.getElo();
+                int oldLoserElo=losingTeamPlayer.getElo();
+                int newWinnerElo=EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
+                int newLoserElo=EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
+                winningProfile.getStatisticsData().get(getKit()).setElo(newWinnerElo);
+                losingProfile.getStatisticsData().get(getKit()).setElo(newLoserElo);
+                winningProfile.getStatisticsData().get(getKit()).incrementWon();
+                losingProfile.getStatisticsData().get(getKit()).incrementLost();
+                winningProfile.calculateGlobalElo();
+                losingProfile.calculateGlobalElo();
 
-            int winnerEloChange = newWinnerElo - oldWinnerElo;
-            int loserEloChange = oldLoserElo - newLoserElo;
+                int winnerEloChange=newWinnerElo - oldWinnerElo;
+                int loserEloChange=oldLoserElo - newLoserElo;
 
-            components.add(new ChatComponentBuilder("")
-                    .parse("&a" + winningPlayer.getName() + " +" + winnerEloChange + " (" +
-                            newWinnerElo + ") &7⎜ &c" + losingPlayer.getName() + " -" + loserEloChange + " (" + newLoserElo +
-                            ")")
-                    .create());
-        }
+                components.add(new ChatComponentBuilder("")
+                        .parse("&a" + winningPlayer.getName() + " +" + winnerEloChange + " (" +
+                                newWinnerElo + ") &7⎜ &c" + losingPlayer.getName() + " -" + loserEloChange + " (" + newLoserElo +
+                                ")")
+                        .create());
+            }
 
         StringBuilder builder = new StringBuilder();
 
@@ -246,24 +246,16 @@ public class TheBridgeMatch extends Match {
             ArrayList<Player> specs = new ArrayList<>(getSpectators());
             int i = 0;
             for (Player spectator : getSpectators()) {
-                Profile profile = Profile.getByUuid(spectator.getUniqueId());
                 if (getSpectators().size() >= 1) {
-                    if (profile.isSilent()) {
-                        specs.remove(spectator);
-                    } else {
-                        if (!specs.contains(spectator))
-                            specs.add(spectator);
-                    }
+                    if (!specs.contains(spectator))
+                        specs.add(spectator);
+
                     if (i != getSpectators().size()) {
                         i++;
                         if (i == getSpectators().size()) {
-                            if (!profile.isSilent()) {
-                                builder.append(CC.GRAY).append(spectator.getName());
-                            }
+                            builder.append(CC.GRAY).append(spectator.getName());
                         } else {
-                            if (!profile.isSilent()) {
-                                builder.append(CC.GRAY).append(spectator.getName()).append(CC.GRAY).append(", ");
-                            }
+                            builder.append(CC.GRAY).append(spectator.getName()).append(CC.GRAY).append(", ");
                         }
 
                     }
@@ -292,13 +284,6 @@ public class TheBridgeMatch extends Match {
         if (getRoundsNeeded(playerA) == 0 || getRoundsNeeded(playerB) == 0)
             return true;
         return playerA.isDisconnected() || playerB.isDisconnected();
-    }
-
-    @SneakyThrows
-    public void playFirework() {
-        final FireworkEffect effect=FireworkEffect.builder().withColor(Color.BLUE).with(FireworkEffect.Type.BALL_LARGE).build();
-        for ( Player players : getPlayers() )
-        new FireworkEffectPlayer().playFirework(players.getWorld(), players.getLocation(), effect);
     }
 
     @Override
@@ -504,14 +489,13 @@ public class TheBridgeMatch extends Match {
                         Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
                         profile.handleVisibility(otherPlayer, deadPlayer);
                     }
-
+                    caughtPlayers.clear();
                     end();
                 } else {
-                    for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Round-Message") ) {
-                        //Send Round Message
-                        playerA.getPlayer().sendMessage(CC.translate(string.replace("{rounds}", String.valueOf(getRoundsNeeded(playerA)).replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName()))));
-                        playerB.getPlayer().sendMessage(CC.translate(string.replace("{rounds}", String.valueOf(getRoundsNeeded(playerB)).replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName()))));
-                    }
+                        //Cleanup the blocks and the multiple goal catcher
+                        caughtPlayers.clear();
+                        cleanup();
+
                         //Setup Both Players
                         setupPlayer(playerA.getPlayer());
                         setupPlayer(playerB.getPlayer());
@@ -519,8 +503,17 @@ public class TheBridgeMatch extends Match {
                         //Show The Players if their visibility is fucked
                         playerA.getPlayer().showPlayer(playerB.getPlayer());
                         playerB.getPlayer().showPlayer(playerA.getPlayer());
+
                         //Restart the Match
                         onStart();
+                    for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Round-Message.TheBridge") ) {
+                        //Send Round Message
+                        broadcastMessage(CC.translate(string.replace("{round_number}", String.valueOf(this.getRound()))
+                                .replace("{playerA_points}", String.valueOf(Profile.getByUuid(playerA.getPlayer()).getBridgeRounds()))
+                                .replace("{playerB_points}", String.valueOf(Profile.getByUuid(playerB.getPlayer()).getBridgeRounds())))
+                                .replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName()));
+                    }
+                        //Continue the Match
                         setState(MatchState.STARTING);
                         setStartTimestamp(-1);
                         new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
@@ -547,7 +540,7 @@ public class TheBridgeMatch extends Match {
         }
     }
 
-    public static void giveBridgeKit(Player player){
+    public static void giveBridgeKit(Player player) {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         TheBridgeMatch teamMatch = (TheBridgeMatch) profile.getMatch();
         ItemStack[] armorRed = leatherArmor(Color.RED);

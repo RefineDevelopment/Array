@@ -18,11 +18,13 @@ public class ArrayCommand {
             p.sendMessage(CC.translate(" &8• &b/array savearenas &8- &8&o(&7&oSave all Arenas&8&o)"));
             p.sendMessage(CC.translate(" &8• &b/array savedata &8- &8&o(&7&oSave all Profiles&8&o)"));
             p.sendMessage(CC.translate(" &8• &b/array goldenhead &8- &8&o(&7&oReceive a pre-made G-Head&8&o)"));
+            p.sendMessage(CC.translate(" &8• &b/array refill &8- &8&o(&7&oRefill your Inventory with potions or soup&8&o)"));
             p.sendMessage(CC.translate(" &8• &b/array update &8- &8&o(&7&oUpdate all leaderboards&8&o)"));
             p.sendMessage(CC.translate(" &8• &b/array savedata &8- &8&o(&7&oSave all Profiles&8&o)"));
             p.sendMessage(CC.translate(" &8• &b/array savearenas &8- &8&o(&7&oSave all Arenas&8&o)"));
             p.sendMessage(CC.translate(" &8• &b/array savekits &8- &8&o(&7&oSave all Kits&8&o)"));
             p.sendMessage(CC.translate(" &8• &b/array hcf &8- &8&o(&7&oHelp on how to setup HCF&8&o)"));
+            p.sendMessage(CC.translate(" &8• &b/array worlds &8- &8&o(&7&oShow a Worlds Menu&8&o)"));
             p.sendMessage(CC.translate(" &8• &b/array resetstats &8<&7name&8> &8- &8&o(&7&oResets a profile&8&o)"));
             p.sendMessage(CC.translate(" &8• &b/array rename &8<&7name&8> &8- &8&o(&7&oRenames item in hand&8&o)"));
             p.sendMessage(CC.translate(" &8• &b/array spawn &8- &8&o(&7&oRefresh Profile & Teleport to spawn&8&o)"));
@@ -32,7 +34,7 @@ public class ArrayCommand {
         } else {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b&m--------&7&m" + StringUtils.repeat("-", 37) + "&b&m--------"));
             p.sendMessage(CC.translate("&7This server is running &bArray &8[&7Commercial Build&8]"));
-            p.sendMessage(CC.translate("&7Array is made By &bDrizzy&7, &bNick &7and &bZentil"));
+            p.sendMessage(CC.translate("&7Array is made By &bDrizzy&7, &b&lNick &7[Base By Him], &bJoeleoli and &bVeltus"));
             p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b&m--------&7&m" + StringUtils.repeat("-", 37) + "&b&m--------"));
 
         }

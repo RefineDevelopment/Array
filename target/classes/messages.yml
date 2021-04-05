@@ -33,7 +33,9 @@ Match:
       Sumo:
       - "&fYou need to win &b{rounds} &fmore rounds to win!"
       TheBridge:
-      - "&fYou need to win &b{rounds} &fmore rounds to win!"
+      - " &b&lRound #{round_number}"
+      - "  &fYour Points: &b{playerA_points}"
+      - "  &fTheir Points: &b{playerB_points}"
   Disclaimer-Message:
     Enabled: true
     Message:

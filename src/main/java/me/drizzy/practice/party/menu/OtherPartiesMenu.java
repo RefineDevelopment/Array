@@ -1,6 +1,6 @@
 package me.drizzy.practice.party.menu;
 
-import java.beans.ConstructorProperties;
+import lombok.AllArgsConstructor;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.Profile;
@@ -17,8 +17,8 @@ import me.drizzy.practice.util.external.menu.Button;
 import java.util.Map;
 import org.bukkit.entity.Player;
 
-public class OtherPartiesMenu extends Menu
-{
+public class OtherPartiesMenu extends Menu {
+
     @Override
     public String getTitle(final Player player) {
         return "&bOther Parties";
@@ -31,8 +31,9 @@ public class OtherPartiesMenu extends Menu
         return buttons;
     }
 
-    public static class OtherPartyButton extends Button
-    {
+    @AllArgsConstructor
+    public static class OtherPartyButton extends Button {
+
         private final Party party;
         
         @Override
@@ -94,11 +95,6 @@ public class OtherPartiesMenu extends Menu
                 return;
             }
             player.chat("/duel " + party.getLeader().getPlayer().getName());
-        }
-        
-        @ConstructorProperties({ "party" })
-        public OtherPartyButton(final Party party) {
-            this.party = party;
         }
     }
 }

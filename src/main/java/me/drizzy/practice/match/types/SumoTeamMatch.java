@@ -98,7 +98,7 @@ public class SumoTeamMatch extends Match {
 
 		player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
 
-        if (!getKit().getGameRules().isNoitems()) {
+        if (!getKit().getGameRules().isNoItems()) {
             Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
         }
 
@@ -136,11 +136,11 @@ public class SumoTeamMatch extends Match {
     public boolean onEnd() {
         for (TeamPlayer teamPlayer : getTeamPlayers()) {
             if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
-                Player player = teamPlayer.getPlayer();
+                Player player=teamPlayer.getPlayer();
 
                 if (player != null) {
                     if (teamPlayer.isAlive()) {
-                        MatchSnapshot snapshot = new MatchSnapshot(teamPlayer);
+                        MatchSnapshot snapshot=new MatchSnapshot(teamPlayer);
                         getSnapshots().add(snapshot);
                     }
                 }
@@ -192,7 +192,7 @@ public class SumoTeamMatch extends Match {
                     }
                 }
             }
-        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isSumo() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
+        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isSumo() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
 
         Team winningTeam = getWinningTeam();
         Team losingTeam = getOpponentTeam(winningTeam);

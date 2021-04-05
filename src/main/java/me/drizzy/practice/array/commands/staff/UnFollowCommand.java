@@ -17,7 +17,6 @@ public class UnFollowCommand
 
         Profile.getByUuid(profile.getFollowing().getUniqueId()).getFollower().remove(player);
         profile.setFollowMode(false);
-        profile.setSilent(false);
         profile.setFollowing(null);
 
         player.sendMessage(CC.translate("&7You have &cexited &7follow mode."));

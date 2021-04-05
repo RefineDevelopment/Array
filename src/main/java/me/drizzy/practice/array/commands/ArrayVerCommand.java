@@ -11,7 +11,7 @@ public class ArrayVerCommand {
     public void execute(Player p) {
         p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b&m--------&7&m" + StringUtils.repeat("-", 37) + "&b&m--------"));
         p.sendMessage(CC.translate("&7This server is running &bArray &8[&7Commercial Build&8]"));
-        p.sendMessage(CC.translate("&7Array is made By &bDrizzy&7, &b&lNick &7(Base by Him) and &bZentil."));
+        p.sendMessage(CC.translate("&7Array is made By &bDrizzy&7, &b&lNick &7[Base By Him], &bJoeleoli and &bVeltus"));
         p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b&m--------&7&m" + StringUtils.repeat("-", 37) + "&b&m--------"));
     }
 }

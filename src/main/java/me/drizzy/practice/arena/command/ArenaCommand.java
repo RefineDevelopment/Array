@@ -17,7 +17,9 @@ public class ArenaCommand {
         player.sendMessage(CC.translate(" &8• &b/arena portalwand &8- &8&o(&7&oReceive a wand to select the portal for TheBridge Arena&8&o)"));
         player.sendMessage(CC.translate(" &8• &b/arena kitlist &8<&7Arena&8> &8- &8&o(&7&oLists all the kits of an arena&8&o)"));
         player.sendMessage(CC.translate(" &8• &b/arena seticon &8<&7Arena&8> &8- &8&o(&7&oSets the item your holding as Arena Icon&8&o)"));
+        player.sendMessage(CC.translate(" &8• &b/arena setcuboid &8<&7red|blue&8> &8- &8&o(&7&oSets red/blue cuboid from your selection&8&o)"));
         player.sendMessage(CC.translate(" &8• &b/arena setportal &8<&7red|blue&8> &8- &8&o(&7&oSets red/blue portal from your selection&8&o)"));
+        player.sendMessage(CC.translate(" &8• &b/arena setbridgespawn &8<&7red|blue&8> &8- &8&o(&7&oSet red/blue spawn of arena&8&o)"));
         player.sendMessage(CC.translate(" &8• &b/arena setspawn &8<&71/2&8> &8<&71/2&8> &8- &8&o(&7&oSet 1/2 spawn of arena&8&o)"));
         player.sendMessage(CC.translate(" &8• &b/arena addkit &8<&7Arena&8> &8<&7Kit&8> &8- &8&o(&7&oAdd a kit to the arena&8&o)"));
         player.sendMessage(CC.translate(" &8• &b/arena addnormalkits &8<&7Arena&8> &8<&7Kit&8> &8- &8&o(&7&oAdd all the normal kits to the arena&8&o)"));

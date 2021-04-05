@@ -32,7 +32,7 @@ public class EventSelectKitMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
         for (Kit kit : Kit.getKits()) {
-            if (kit.isEnabled() && !kit.getGameRules().isNoitems() && !kit.getGameRules().isLavakill() && !kit.getGameRules().isWaterkill() && !kit.getGameRules().isSpleef() && !kit.getGameRules().isBuild() && !kit.getGameRules().isSumo()) {
+            if (kit.isEnabled() && !kit.getGameRules().isNoItems() && !kit.getGameRules().isLavaKill() && !kit.getGameRules().isWaterKill() && !kit.getGameRules().isSpleef() && !kit.getGameRules().isBuild() && !kit.getGameRules().isSumo()) {
                 buttons.put(buttons.size(), new SelectKitButton(event, kit));
             }
         }

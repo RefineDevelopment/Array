@@ -1,22 +1,22 @@
 package me.drizzy.practice.statistics.menu;
 
 import lombok.AllArgsConstructor;
-import me.drizzy.practice.util.chat.CC;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.SkullCreator;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.menu.Button;
 import me.drizzy.practice.util.external.menu.Menu;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-import java.beans.ConstructorProperties;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@AllArgsConstructor
 public class StatsMenu extends Menu {
 
     private final Player target;
@@ -37,11 +37,6 @@ public class StatsMenu extends Menu {
         }
 
         return buttons;
-    }
-
-    @ConstructorProperties ({"target"})
-    public StatsMenu(final Player target) {
-        this.target = target;
     }
 
     @AllArgsConstructor
@@ -68,7 +63,6 @@ public class StatsMenu extends Menu {
 
     }
 
-    @AllArgsConstructor
     private class GlobalStatsButton extends Button {
 
         @Override

@@ -24,7 +24,6 @@ import me.drizzy.practice.util.nametag.NameTags;
 import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -97,11 +96,11 @@ public class SoloMatch extends Match {
 
         PlayerUtil.reset(player);
 
-        if (getKit().getGameRules().isStickspawn()) {
+        if (getKit().getGameRules().isStickSpawn()) {
             PlayerUtil.denyMovement(player);
         }
 
-        if (!getKit().getGameRules().isNoitems()) {
+        if (!getKit().getGameRules().isNoItems()) {
             TaskUtil.runLater(() -> Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
         }
         if (!getKit().getGameRules().isCombo()) {
@@ -113,10 +112,10 @@ public class SoloMatch extends Match {
             player.setNoDamageTicks(3);
         }
 
-        if (getKit().getGameRules().isInfinitespeed()) {
+        if (getKit().getGameRules().isInfiniteSpeed()) {
             player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 2));
         }
-        if (getKit().getGameRules().isInfinitestrength()) {
+        if (getKit().getGameRules().isInfiniteStrength()) {
             player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 1));
         }
 
@@ -130,6 +129,11 @@ public class SoloMatch extends Match {
             player.teleport(spawn.add(0, 2, 0));
         }
         teamPlayer.setPlayerSpawn(spawn);
+
+        if (getKit().getGameRules().isParkour()) {
+            teamPlayer.setParkourCheckpoint(spawn);
+        }
+
         NameTags.color(player, this.getOpponentPlayer(player), org.bukkit.ChatColor.RED, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
     }
 
@@ -178,8 +182,8 @@ public class SoloMatch extends Match {
         if (getKit().getGameRules().isTimed()) {
             TeamPlayer roundLoser = getTeamPlayer(getWinningPlayer());
             TeamPlayer roundWinner = getOpponentTeamPlayer(getOpponentPlayer(getWinningPlayer()));
-
             getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
+            this.setState(MatchState.ENDING);
         }
 
         new BukkitRunnable() {
@@ -212,7 +216,7 @@ public class SoloMatch extends Match {
                     }
                 }
             }
-        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 70L);
+        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : 70L);
 
         Player winningPlayer = getWinningPlayer();
         Player losingPlayer = getOpponentPlayer(winningPlayer);
@@ -242,10 +246,10 @@ public class SoloMatch extends Match {
 
 
         if (getQueueType() == QueueType.RANKED) {
-            int oldWinnerElo = winningTeamPlayer.getElo();
-            int oldLoserElo = losingTeamPlayer.getElo();
-            int newWinnerElo = EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
-            int newLoserElo = EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
+            int oldWinnerElo=winningTeamPlayer.getElo();
+            int oldLoserElo=losingTeamPlayer.getElo();
+            int newWinnerElo=EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
+            int newLoserElo=EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
             winningProfile.getStatisticsData().get(getKit()).setElo(newWinnerElo);
             losingProfile.getStatisticsData().get(getKit()).setElo(newLoserElo);
             winningProfile.getStatisticsData().get(getKit()).incrementWon();
@@ -253,8 +257,8 @@ public class SoloMatch extends Match {
             winningProfile.calculateGlobalElo();
             losingProfile.calculateGlobalElo();
 
-            int winnerEloChange = newWinnerElo - oldWinnerElo;
-            int loserEloChange = oldLoserElo - newLoserElo;
+            int winnerEloChange=newWinnerElo - oldWinnerElo;
+            int loserEloChange=oldLoserElo - newLoserElo;
 
             components.add(new ChatComponentBuilder("")
                     .parse("&a" + winningPlayer.getName() + " +" + winnerEloChange + " (" +
@@ -263,31 +267,22 @@ public class SoloMatch extends Match {
                     .create());
         }
 
-
         StringBuilder builder = new StringBuilder();
 
         if (!(getSpectators().size() <= 0)) {
             ArrayList<Player> specs = new ArrayList<>(getSpectators());
             int i = 0;
             for (Player spectator : getSpectators()) {
-                Profile profile = Profile.getByUuid(spectator.getUniqueId());
                 if (getSpectators().size() >= 1) {
-                    if (profile.isSilent()) {
-                        specs.remove(spectator);
-                    } else {
-                        if (!specs.contains(spectator))
-                            specs.add(spectator);
-                    }
+                    if (!specs.contains(spectator))
+                        specs.add(spectator);
+
                     if (i != getSpectators().size()) {
                         i++;
                         if (i == getSpectators().size()) {
-                            if (!profile.isSilent()) {
-                                builder.append(CC.GRAY).append(spectator.getName());
-                            }
+                            builder.append(CC.GRAY).append(spectator.getName());
                         } else {
-                            if (!profile.isSilent()) {
-                                builder.append(CC.GRAY).append(spectator.getName()).append(CC.GRAY).append(", ");
-                            }
+                            builder.append(CC.GRAY).append(spectator.getName()).append(CC.GRAY).append(", ");
                         }
 
                     }
@@ -493,7 +488,6 @@ public class SoloMatch extends Match {
 
     @Override
     public void onDeath(Player deadPlayer, Player killerPlayer) {
-        if (!getKit().getGameRules().isSumo()) {
             TeamPlayer roundLoser = getTeamPlayer(deadPlayer);
             TeamPlayer roundWinner = getOpponentTeamPlayer(deadPlayer);
 
@@ -505,19 +499,6 @@ public class SoloMatch extends Match {
                 Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
                 profile.handleVisibility(otherPlayer, deadPlayer);
             }
-        } else if (getKit().getGameRules().isSumo() && getRoundsNeeded(getPlayerA()) == 0 || getRoundsNeeded(getPlayerB()) == 0) {
-            TeamPlayer roundLoser = getTeamPlayer(deadPlayer);
-            TeamPlayer roundWinner = getOpponentTeamPlayer(deadPlayer);
-
-            getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
-
-            PlayerUtil.reset(deadPlayer);
-
-            for (Player otherPlayer : getPlayersAndSpectators()) {
-                Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
-                profile.handleVisibility(otherPlayer, deadPlayer);
-            }
-        }
     }
 
     @Override

@@ -99,6 +99,17 @@ public class Arena {
                     location1 = LocationUtil.deserialize(configuration.getString(path + ".blueCuboid.location1"));
                     location2 = LocationUtil.deserialize(configuration.getString(path + ".blueCuboid.location2"));
                     standaloneArena.setBlueCuboid(new Cuboid(location1, location2));
+
+                    //If "bluePortal" location exist then load it
+                    location1 = LocationUtil.deserialize(configuration.getString(path + ".bluePortal.location1"));
+                    location2 = LocationUtil.deserialize(configuration.getString(path + ".bluePortal.location2"));
+                    standaloneArena.setBluePortal(new Cuboid(location1, location2));
+
+                    //If "redPortal" location exist then load it
+                    location1 = LocationUtil.deserialize(configuration.getString(path + ".redPortal.location1"));
+                    location2 = LocationUtil.deserialize(configuration.getString(path + ".redPortal.location2"));
+                    standaloneArena.setRedPortal(new Cuboid(location1, location2));
+
                 }
 
                 if (configuration.contains(path + ".kits")) {
@@ -163,14 +174,14 @@ public class Arena {
 
             if (!arena.getKits().contains(kit.getName())) continue;
 
-            //if ((arena.getType() == ArenaType.STANDALONE || arena.getType() == ArenaType.DUPLICATE || arena.getType() == ArenaType.SHARED) && kit.getGameRules().isBridge()) continue;
+            if ((arena.getType() == ArenaType.STANDALONE || arena.getType() == ArenaType.DUPLICATE || arena.getType() == ArenaType.SHARED) && kit.getGameRules().isBridge()) continue;
 
             if (!arena.isActive() && (arena.getType() == ArenaType.STANDALONE || arena.getType() == ArenaType.DUPLICATE)) {
                 _arenas.add(arena);
-            } else if (!kit.getGameRules().isBuild() /*&& !kit.getGameRules().isBridge() */&& arena.getType() == ArenaType.SHARED) {
+            } else if (!kit.getGameRules().isBuild() && !kit.getGameRules().isBridge() && arena.getType() == ArenaType.SHARED) {
                 _arenas.add(arena);
-            //} else if (kit.getGameRules().isBridge() && arena.getType() == ArenaType.THEBRIDGE) {
-            //    _arenas.add(arena);
+            } else if (kit.getGameRules().isBridge() && arena.getType() == ArenaType.THEBRIDGE) {
+                _arenas.add(arena);
             }
         }
 

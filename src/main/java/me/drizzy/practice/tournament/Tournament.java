@@ -126,7 +126,7 @@ public class Tournament {
     }
 
     public void tournamentstart(){
-        round = 0;
+        round++;
         Collections.shuffle(participants);
         if(participatingCount == 0){
             participatingCount = participants.size();
@@ -172,7 +172,6 @@ public class Tournament {
                 }
 
             }
-            round++;
             tournamentMatch.start();
             tournamentMatches.add(tournamentMatch);
         }

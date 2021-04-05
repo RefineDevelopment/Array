@@ -15,6 +15,7 @@ import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.duel.DuelProcedure;
 import me.drizzy.practice.duel.DuelRequest;
+import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.event.types.brackets.Brackets;
 import me.drizzy.practice.event.types.brackets.player.BracketsPlayer;
 import me.drizzy.practice.event.types.brackets.player.BracketsPlayerState;
@@ -35,27 +36,26 @@ import me.drizzy.practice.event.types.spleef.player.SpleefPlayerState;
 import me.drizzy.practice.event.types.sumo.Sumo;
 import me.drizzy.practice.event.types.sumo.player.SumoPlayer;
 import me.drizzy.practice.event.types.sumo.player.SumoPlayerState;
+import me.drizzy.practice.hotbar.Hotbar;
+import me.drizzy.practice.hotbar.HotbarLayout;
 import me.drizzy.practice.kit.Kit;
-import me.drizzy.practice.profile.meta.EloLeague;
-import me.drizzy.practice.statistics.LeaderboardsAdapter;
 import me.drizzy.practice.kit.KitInventory;
+import me.drizzy.practice.kiteditor.KitEditor;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.party.Party;
-import me.drizzy.practice.hotbar.Hotbar;
-import me.drizzy.practice.enums.HotbarType;
-import me.drizzy.practice.hotbar.HotbarLayout;
-import me.drizzy.practice.kiteditor.KitEditor;
+import me.drizzy.practice.profile.meta.EloLeague;
 import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueProfile;
 import me.drizzy.practice.settings.meta.SettingsMeta;
+import me.drizzy.practice.statistics.LeaderboardsAdapter;
 import me.drizzy.practice.statistics.StatisticsData;
 import me.drizzy.practice.tournament.Tournament;
-import me.drizzy.practice.util.TaskUtil;
-import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.InventoryUtil;
 import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.TaskUtil;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.nametag.NameTags;
 import org.bson.Document;
@@ -68,49 +68,52 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
+@SuppressWarnings(value = "all")
+@Getter
 public class Profile {
+
     @Getter private static final Map<UUID, Profile> profiles = new HashMap<>();
     @Getter static final List<Player> playerList = new ArrayList<>();
     @Getter private static final List<LeaderboardsAdapter> globalEloLeaderboards = new ArrayList<>();
-    @Getter private static MongoCollection<Document> allProfiles;
-    private static MongoCollection<Document> collection;
-    @Getter private final SettingsMeta settings = new SettingsMeta();
-    @Getter private final KitEditor kitEditor = new KitEditor();
-    @Getter private final Map<Kit, StatisticsData> statisticsData= new LinkedHashMap<>();
-    @Getter @Setter String name;
-    @Getter @Setter int globalElo = 1000;
-    @Getter @Setter int bridgeRounds = 0;
-    @Getter @Setter int sumoRounds = 0;
-    @Getter private final UUID uuid;
-    @Getter @Setter private ProfileState state;
-    @Getter @Setter private Party party;
-    @Getter @Setter private Match match;
-    @Getter @Setter private Sumo sumo;
-    @Getter @Setter private Brackets brackets;
-    @Getter @Setter private LMS lms;
-    @Getter @Setter private Parkour parkour;
-    @Getter @Setter private Gulag gulag;
-    @Getter @Setter private OITC OITC;
-    @Getter @Setter private Spleef spleef;
-    @Getter @Setter private Queue queue;
-    @Getter @Setter private QueueProfile queueProfile;
-    @Getter @Setter private String hcfClass = "HCFDIAMOND";
-    @Getter @Setter private Cooldown enderpearlCooldown = new Cooldown(0);
-    @Getter private final Map<UUID, DuelRequest> sentDuelRequests = new HashMap<>();
-    @Getter @Setter private DuelProcedure duelProcedure;
-    @Getter @Setter private ProfileRematchData rematchData;
-    @Getter @Setter private Player lastMessager;
-    @Getter @Setter private boolean silent = false;
-    @Getter @Setter private boolean followMode = false;
-    @Getter @Setter private boolean visibility = false;
-    @Getter private final List<Location> plates = new ArrayList<>();
-    @Getter @Setter private Player following;
-    @Getter @Setter private long lastRunVisibility = 0L;
-    @Getter @Setter private List<Player> follower = new ArrayList<>();
-    @Getter @Setter private Player spectating;
+    @Getter private static MongoCollection<Document> collection;
+    @Setter String name;
+    @Setter int globalElo = 1000;
+    @Setter int bridgeRounds = 0;
+    @Setter int sumoRounds = 0;
+    @Setter private ProfileState state;
+    @Setter private Party party;
+    @Setter private Match match;
+    @Setter private Sumo sumo;
+    @Setter private Brackets brackets;
+    @Setter private LMS lms;
+    @Setter private Parkour parkour;
+    @Setter private Gulag gulag;
+    @Setter private OITC OITC;
+    @Setter private Spleef spleef;
+    @Setter private Queue queue;
+    @Setter private QueueProfile queueProfile;
+    @Setter private String hcfClass = "HCFDIAMOND";
+    @Setter private DuelProcedure duelProcedure;
+    @Setter private ProfileRematchData rematchData;
+    @Setter private Player lastMessager;
+    @Setter private boolean followMode = false;
+    @Setter private boolean visibility = false;
+    @Setter private Player following;
+    @Setter private long lastRunVisibility = 0L;
+    @Setter private List<Player> follower = new ArrayList<>();
+    @Setter private Player spectating;
+    private final UUID uuid;
+    private Cooldown enderpearlCooldown = new Cooldown(0);
+    private Cooldown bowCooldown = new Cooldown(0);
+    private final Map<UUID, DuelRequest> sentDuelRequests = new HashMap<>();
+    private final SettingsMeta settings = new SettingsMeta();
+    private final KitEditor kitEditor = new KitEditor();
+    private final Map<Kit, StatisticsData> statisticsData= new LinkedHashMap<>();
+    private final List<Location> plates = new ArrayList<>();
+    public static Executor mongoThread = Array.getInstance().getMongoThread();
 
     public Profile(UUID uuid) {
         this.uuid = uuid;
@@ -150,11 +153,10 @@ public class Profile {
         }.runTaskTimerAsynchronously(Array.getInstance(), 36000L, 36000L);
 
         // Load all players from database
-        Profile.loadAllProfiles();
         new BukkitRunnable() {
             @Override
             public void run() {
-                Profile.loadAllProfiles();
+                Profile.getProfiles().values().forEach(Profile::load);
                 Kit.getKits().forEach(Kit::updateKitLeaderboards);
             }
         }.runTaskTimerAsynchronously(Array.getInstance(), 600L, 600L);
@@ -175,7 +177,7 @@ public class Profile {
                     profile.checkForHotbarUpdate();
                 }
             }
-        }.runTaskTimerAsynchronously(Array.getInstance(), 60L, 60L);
+        }.runTaskTimerAsynchronously(Array.getInstance(), 40L, 40L);
     }
 
     public static Profile getByUuid(UUID uuid) {
@@ -198,147 +200,148 @@ public class Profile {
         return profile;
     }
 
-    public static void loadAllProfiles() {
-        allProfiles = Array.getInstance().getMongoDatabase().getCollection("profiles");
-    }
 
-
-    //TODO: Change mongo to mysql and sql-lite (For beta 4.3)
 
     public static void loadGlobalLeaderboards() {
         if (!getGlobalEloLeaderboards().isEmpty()) getGlobalEloLeaderboards().clear();
-        for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("globalElo")).limit(10).into(new ArrayList<>())) {
-            LeaderboardsAdapter leaderboardsAdapter= new LeaderboardsAdapter();
-            leaderboardsAdapter.setName((String) document.get("name"));
-            leaderboardsAdapter.setElo((Integer) document.get("globalElo"));
-            getGlobalEloLeaderboards().add(leaderboardsAdapter);
-        }
+            mongoThread.execute(() -> {
+            for ( Document document : Profile.getCollection().find().sort(Sorts.descending("globalElo")).limit(10).into(new ArrayList<>()) ) {
+                LeaderboardsAdapter leaderboardsAdapter=new LeaderboardsAdapter();
+                leaderboardsAdapter.setName((String) document.get("name"));
+                leaderboardsAdapter.setElo((Integer) document.get("globalElo"));
+                getGlobalEloLeaderboards().add(leaderboardsAdapter);
+            }
+        });
     }
 
     public void load() {
-        Document document = collection.find(Filters.eq("uuid", uuid.toString())).first();
+        mongoThread.execute(() -> {
+            Document document=collection.find(Filters.eq("uuid", uuid.toString())).first();
 
-        if (document == null) {
-            this.save();
-            return;
-        }
-
-        this.globalElo = document.getInteger("globalElo");
-
-        Document options = (Document) document.get("settings");
-
-        this.settings.setShowScoreboard(options.getBoolean("showScoreboard"));
-        this.settings.setAllowSpectators(options.getBoolean("allowSpectators"));
-        this.settings.setReceiveDuelRequests(options.getBoolean("receiveDuelRequests"));
-        this.settings.setUsingPingFactor(options.getBoolean("usingPingFactor"));
-        this.settings.setLightning(options.getBoolean("toggleLightning"));
-        this.settings.setPingScoreboard(options.getBoolean("pingScoreboard"));
-        this.settings.setAllowTournamentMessages(options.getBoolean("allowTournamentMessages"));
-        this.settings.setVanillaTab(options.getBoolean("usingVanillaTab"));
-
-        Document kitStatistics = (Document) document.get("kitStatistics");
-
-        for (String key : kitStatistics.keySet()) {
-            Document kitDocument = (Document) kitStatistics.get(key);
-            Kit kit = Kit.getByName(key);
-
-            if (kit != null) {
-                StatisticsData statisticsData= new StatisticsData();
-                if (kitDocument.getInteger("elo") !=null) {
-                    statisticsData.setElo(kitDocument.getInteger("elo"));
-                } else {
-                    kitDocument.put("elo" ,0);
-                }
-                if(kitDocument.getInteger("won") !=null) {
-                    statisticsData.setWon(kitDocument.getInteger("won"));
-                } else {
-                    kitDocument.put("won", 0);
-                }
-                if(kitDocument.getInteger("lost") !=null) {
-                    statisticsData.setLost(kitDocument.getInteger("lost"));
-                } else {
-                    kitDocument.put("lost", 0);
-                }
-                this.statisticsData.put(kit, statisticsData);
+            if (document == null) {
+                this.save();
+                return;
             }
-        }
 
-        Document kitsDocument = (Document) document.get("loadouts");
+            this.globalElo=document.getInteger("globalElo");
 
-        for (String key : kitsDocument.keySet()) {
-            Kit kit = Kit.getByName(key);
+            Document options=(Document) document.get("settings");
 
-            if (kit != null) {
-                JsonArray kitsArray = new JsonParser().parse(kitsDocument.getString(key)).getAsJsonArray();
-                KitInventory[] loadouts = new KitInventory[4];
+            this.settings.setShowScoreboard(options.getBoolean("showScoreboard"));
+            this.settings.setAllowSpectators(options.getBoolean("allowSpectators"));
+            this.settings.setReceiveDuelRequests(options.getBoolean("receiveDuelRequests"));
+            this.settings.setUsingPingFactor(options.getBoolean("usingPingFactor"));
+            this.settings.setLightning(options.getBoolean("toggleLightning"));
+            this.settings.setPingScoreboard(options.getBoolean("pingScoreboard"));
+            this.settings.setAllowTournamentMessages(options.getBoolean("allowTournamentMessages"));
+            this.settings.setVanillaTab(options.getBoolean("usingVanillaTab"));
 
-                for (JsonElement kitElement : kitsArray) {
-                    JsonObject kitObject = kitElement.getAsJsonObject();
+            Document kitStatistics=(Document) document.get("kitStatistics");
 
-                    KitInventory loadout = new KitInventory(kitObject.get("name").getAsString());
-                    loadout.setArmor(InventoryUtil.deserializeInventory(kitObject.get("armor").getAsString()));
-                    loadout.setContents(InventoryUtil.deserializeInventory(kitObject.get("contents").getAsString()));
+            for ( String key : kitStatistics.keySet() ) {
+                Document kitDocument=(Document) kitStatistics.get(key);
+                Kit kit=Kit.getByName(key);
 
-                    loadouts[kitObject.get("index").getAsInt()] = loadout;
+                if (kit != null) {
+                    StatisticsData statisticsData=new StatisticsData();
+                    if (kitDocument.getInteger("elo") != null) {
+                        statisticsData.setElo(kitDocument.getInteger("elo"));
+                    } else {
+                        kitDocument.put("elo", 0);
+                    }
+                    if (kitDocument.getInteger("won") != null) {
+                        statisticsData.setWon(kitDocument.getInteger("won"));
+                    } else {
+                        kitDocument.put("won", 0);
+                    }
+                    if (kitDocument.getInteger("lost") != null) {
+                        statisticsData.setLost(kitDocument.getInteger("lost"));
+                    } else {
+                        kitDocument.put("lost", 0);
+                    }
+                    this.statisticsData.put(kit, statisticsData);
                 }
-
-                statisticsData.get(kit).setLoadouts(loadouts);
             }
-        }
+
+            Document kitsDocument=(Document) document.get("loadouts");
+
+            for ( String key : kitsDocument.keySet() ) {
+                Kit kit=Kit.getByName(key);
+
+                if (kit != null) {
+                    JsonArray kitsArray=new JsonParser().parse(kitsDocument.getString(key)).getAsJsonArray();
+                    KitInventory[] loadouts=new KitInventory[4];
+
+                    for ( JsonElement kitElement : kitsArray ) {
+                        JsonObject kitObject=kitElement.getAsJsonObject();
+
+                        KitInventory loadout=new KitInventory(kitObject.get("name").getAsString());
+                        loadout.setArmor(InventoryUtil.deserializeInventory(kitObject.get("armor").getAsString()));
+                        loadout.setContents(InventoryUtil.deserializeInventory(kitObject.get("contents").getAsString()));
+
+                        loadouts[kitObject.get("index").getAsInt()]=loadout;
+                    }
+
+                    statisticsData.get(kit).setLoadouts(loadouts);
+                }
+            }
+        });
     }
 
     public void save() {
-        Document document = new Document();
-        document.put("uuid", uuid.toString());
-        document.put("name", Bukkit.getOfflinePlayer(uuid).getName());
-        document.put("globalElo", globalElo);
+        mongoThread.execute(() -> {
+            Document document=new Document();
+            document.put("uuid", uuid.toString());
+            document.put("name", Bukkit.getOfflinePlayer(uuid).getName());
+            document.put("globalElo", globalElo);
 
-        Document optionsDocument = new Document();
-        optionsDocument.put("showScoreboard", settings.isShowScoreboard());
-        optionsDocument.put("allowSpectators", settings.isAllowSpectators());
-        optionsDocument.put("receiveDuelRequests", settings.isReceiveDuelRequests());
-        optionsDocument.put("usingPingFactor", settings.isUsingPingFactor());
-        optionsDocument.put("toggleLightning", settings.isLightning());
-        optionsDocument.put("pingScoreboard", settings.isPingScoreboard());
-        optionsDocument.put("allowTournamentMessages", settings.isAllowTournamentMessages());
-        optionsDocument.put("usingVanillaTab", settings.isVanillaTab());
-        document.put("settings", optionsDocument);
+            Document optionsDocument=new Document();
+            optionsDocument.put("showScoreboard", settings.isShowScoreboard());
+            optionsDocument.put("allowSpectators", settings.isAllowSpectators());
+            optionsDocument.put("receiveDuelRequests", settings.isReceiveDuelRequests());
+            optionsDocument.put("usingPingFactor", settings.isUsingPingFactor());
+            optionsDocument.put("toggleLightning", settings.isLightning());
+            optionsDocument.put("pingScoreboard", settings.isPingScoreboard());
+            optionsDocument.put("allowTournamentMessages", settings.isAllowTournamentMessages());
+            optionsDocument.put("usingVanillaTab", settings.isVanillaTab());
+            document.put("settings", optionsDocument);
 
-        Document kitStatisticsDocument = new Document();
+            Document kitStatisticsDocument=new Document();
 
-        for (Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet()) {
-            Document kitDocument = new Document();
-            kitDocument.put("elo", entry.getValue().getElo());
-            kitDocument.put("won", entry.getValue().getWon());
-            kitDocument.put("lost", entry.getValue().getLost());
-            kitStatisticsDocument.put(entry.getKey().getName(), kitDocument);
-        }
-        document.put("kitStatistics", kitStatisticsDocument);
+            for ( Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet() ) {
+                Document kitDocument=new Document();
+                kitDocument.put("elo", entry.getValue().getElo());
+                kitDocument.put("won", entry.getValue().getWon());
+                kitDocument.put("lost", entry.getValue().getLost());
+                kitStatisticsDocument.put(entry.getKey().getName(), kitDocument);
+            }
+            document.put("kitStatistics", kitStatisticsDocument);
 
-        Document kitsDocument = new Document();
+            Document kitsDocument=new Document();
 
-        for (Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet()) {
-            JsonArray kitsArray = new JsonArray();
+            for ( Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet() ) {
+                JsonArray kitsArray=new JsonArray();
 
-            for (int i = 0; i < 4; i++) {
-                KitInventory loadout = entry.getValue().getLoadout(i);
+                for ( int i=0; i < 4; i++ ) {
+                    KitInventory loadout=entry.getValue().getLoadout(i);
 
-                if (loadout != null) {
-                    JsonObject kitObject = new JsonObject();
-                    kitObject.addProperty("index", i);
-                    kitObject.addProperty("name", loadout.getCustomName());
-                    kitObject.addProperty("armor", InventoryUtil.serializeInventory(loadout.getArmor()));
-                    kitObject.addProperty("contents", InventoryUtil.serializeInventory(loadout.getContents()));
-                    kitsArray.add(kitObject);
+                    if (loadout != null) {
+                        JsonObject kitObject=new JsonObject();
+                        kitObject.addProperty("index", i);
+                        kitObject.addProperty("name", loadout.getCustomName());
+                        kitObject.addProperty("armor", InventoryUtil.serializeInventory(loadout.getArmor()));
+                        kitObject.addProperty("contents", InventoryUtil.serializeInventory(loadout.getContents()));
+                        kitsArray.add(kitObject);
+                    }
                 }
+
+                kitsDocument.put(entry.getKey().getName(), kitsArray.toString());
             }
 
-            kitsDocument.put(entry.getKey().getName(), kitsArray.toString());
-        }
+            document.put("loadouts", kitsDocument);
 
-        document.put("loadouts", kitsDocument);
-
-        collection.replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
+            collection.replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
+        });
     }
 
     public void calculateGlobalElo() {
@@ -754,4 +757,20 @@ public class Profile {
             e.printStackTrace();
         }
     }
+
+    public void setBowCooldown(Cooldown cooldown) {
+        this.bowCooldown = cooldown;
+
+        try {
+            final Player player = this.getPlayer();
+            if (player != null) {
+                LunarClientAPI.getInstance().sendCooldown(player, new LCCooldown("Bow", cooldown.getDuration(), TimeUnit.MILLISECONDS, Material.BOW));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 }

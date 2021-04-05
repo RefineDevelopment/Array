@@ -13,7 +13,6 @@ import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.util.Circle;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.nametag.NameTags;
@@ -92,18 +91,18 @@ public class FFAMatch extends Match {
             player.setNoDamageTicks(3);
         }
 
-        if (getKit().getGameRules().isStickspawn()) {
+        if (getKit().getGameRules().isStickSpawn()) {
             PlayerUtil.denyMovement(player);
         }
 
-        if (getKit().getGameRules().isInfinitespeed()) {
+        if (getKit().getGameRules().isInfiniteSpeed()) {
             player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 2));
         }
-        if (getKit().getGameRules().isInfinitestrength()) {
+        if (getKit().getGameRules().isInfiniteStrength()) {
             player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 2));
         }
 
-        if (!getKit().getGameRules().isNoitems()) {
+        if (!getKit().getGameRules().isNoItems()) {
             Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
         }
 
@@ -131,11 +130,11 @@ public class FFAMatch extends Match {
     public void onStart() {
         int i = 0;
         for ( Player player : getPlayers() ) {
-            Location midSpawn = this.getMidSpawn();
-            List<Location> circleLocations = Circle.getCircle(midSpawn, 7, this.getPlayers().size());
-            Location center = midSpawn.clone();
-            Location loc = circleLocations.get(i);
-            Location target = loc.setDirection(center.subtract(loc).toVector());
+            Location midSpawn=this.getMidSpawn();
+            List<Location> circleLocations=Circle.getCircle(midSpawn, 7, this.getPlayers().size());
+            Location center=midSpawn.clone();
+            Location loc=circleLocations.get(i);
+            Location target=loc.setDirection(center.subtract(loc).toVector());
             player.teleport(target.add(0, 0.5, 0));
             circleLocations.remove(i);
             i++;
@@ -144,18 +143,18 @@ public class FFAMatch extends Match {
 
     @Override
     public boolean onEnd() {
-        for (TeamPlayer teamPlayer : team.getTeamPlayers()) {
-            if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
-                Player player = teamPlayer.getPlayer();
+            for ( TeamPlayer teamPlayer : team.getTeamPlayers() ) {
+                if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
+                    Player player=teamPlayer.getPlayer();
 
-                if (player != null) {
-                    Profile profile = Profile.getByUuid(player.getUniqueId());
-                    profile.handleVisibility();
+                    if (player != null) {
+                        Profile profile=Profile.getByUuid(player.getUniqueId());
+                        profile.handleVisibility();
 
-                    getSnapshots().add(new MatchSnapshot(teamPlayer));
+                        getSnapshots().add(new MatchSnapshot(teamPlayer));
+                    }
                 }
             }
-        }
 
         new BukkitRunnable() {
             @Override
@@ -187,7 +186,7 @@ public class FFAMatch extends Match {
                     }
                 }
             }
-        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
+        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
 
         Player winningTeam = getWinningPlayer();
 

@@ -1,5 +1,6 @@
 package me.drizzy.practice.match.team;
 
+import lombok.Data;
 import me.drizzy.practice.util.PlayerUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,20 +13,22 @@ import org.bukkit.inventory.ItemStack;
 import java.util.UUID;
 
 @Getter
+@Setter
 public class TeamPlayer {
 
     private final UUID uuid;
     private final String username;
-    @Setter Location playerSpawn;
-    @Setter private boolean alive = true;
-    @Setter private boolean disconnected;
-    @Setter private int elo;
-    @Setter private int potionsThrown;
-    @Setter private int potionsMissed;
-    @Setter private int potions;
-    @Setter private int hits;
-    @Setter private int combo;
-    @Setter private int longestCombo;
+    Location playerSpawn;
+    Location parkourCheckpoint;
+    private boolean alive = true;
+    private boolean disconnected;
+    private int elo;
+    private int potionsThrown;
+    private int potionsMissed;
+    private int potions;
+    private int hits;
+    private int combo;
+    private int longestCombo;
 
     public TeamPlayer(Player player) {
         this.uuid = player.getUniqueId();

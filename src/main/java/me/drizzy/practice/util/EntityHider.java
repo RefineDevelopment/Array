@@ -5,7 +5,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BlockPosition;
-import me.drizzy.practice.Array;
+import net.minecraft.server.v1_8_R3.WorldServer;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Bukkit;
@@ -59,16 +59,16 @@ public class EntityHider extends PacketAdapter implements Listener{
         String b = Bukkit.getServer().getClass().getPackage().getName();
         VERSION = b.substring(b.lastIndexOf('.') + 1);
 
-        Class<?> craftItemstackClazz = Class.forName("org.bukkit.craftbukkit." +  VERSION + ".inventory.CraftItemStack");
-        Class<?> craftEntityClazz = Class.forName("org.bukkit.craftbukkit." +  VERSION + ".entity.CraftEntity");
-        Class<?> craftWorldClazz = Class.forName("org.bukkit.craftbukkit." +  VERSION + ".CraftWorld");
+        Class<?> craftItemstackClazz = org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack.class;
+        Class<?> craftEntityClazz = org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity.class;
+        Class<?> craftWorldClazz = org.bukkit.craftbukkit.v1_8_R3.CraftWorld.class;
 
-        Class<?> minecraftEntityItemClazz = Class.forName("net.minecraft.server." +  VERSION + ".EntityItem");
-        Class<?> minecraftEntityClazz = Class.forName("net.minecraft.server." +  VERSION + ".Entity");
-        Class<?> minecraftWorldClazz = Class.forName("net.minecraft.server." +  VERSION + ".World");
-        Class<?> minecraftWorldServerClazz = Class.forName("net.minecraft.server." +  VERSION + ".WorldServer");
+        Class<?> minecraftEntityItemClazz = net.minecraft.server.v1_8_R3.EntityItem.class;
+        Class<?> minecraftEntityClazz = net.minecraft.server.v1_8_R3.Entity.class;
+        Class<?> minecraftWorldClazz = net.minecraft.server.v1_8_R3.World.class;
+        Class<?> minecraftWorldServerClazz = WorldServer.class;
 
-        Class<?> minecraftItemStackClazz = Class.forName("net.minecraft.server." +  VERSION + ".ItemStack");
+        Class<?> minecraftItemStackClazz = net.minecraft.server.v1_8_R3.ItemStack.class;
 
         PRE18 = VERSION.startsWith("v1_7");
 
@@ -83,6 +83,7 @@ public class EntityHider extends PacketAdapter implements Listener{
         }else {
             METHOD_WORLD_GET_ENTITY_BY_ID = minecraftWorldClazz.getDeclaredMethod("a", int.class);
         }
+
         FIELD_ENTITYITEM_THROWER = minecraftEntityItemClazz.getDeclaredField("f");
         FIELD_ENTITYITEM_THROWER.setAccessible(true);
 
@@ -217,7 +218,7 @@ public class EntityHider extends PacketAdapter implements Listener{
                 if(!reciever.canSee(player)) {
                     event.setCancelled(true);
                 }
-            }else  if(entity instanceof Projectile) {
+            } else if(entity instanceof Projectile) {
                 Projectile projectile = ((Projectile)entity);
                 if(projectile.getShooter() instanceof Player ) {
                     Player shooter = (Player) projectile.getShooter();
@@ -225,7 +226,7 @@ public class EntityHider extends PacketAdapter implements Listener{
                         event.setCancelled(true);
                     }
                 }
-            }else  if(entity instanceof Item) {
+            } else  if(entity instanceof Item) {
                 Item item = ((Item)entity);
                 Player dropper = getPlayerWhoDropped(item);
                 if(dropper != null) {
@@ -323,8 +324,8 @@ public class EntityHider extends PacketAdapter implements Listener{
                 return null;
             }
             return Bukkit.getPlayer(name);
-        } catch (ReflectiveOperationException e) {
-            Array.logger("Entity Hider failed a task, You can simple ignore this warning but if its prominent then please contact Drizzy#0278.");
+        } catch (Exception e) {
+            //
         }
         return null;
     }
@@ -355,8 +356,8 @@ public class EntityHider extends PacketAdapter implements Listener{
             if(result != null) {
                 return (Entity) METHOD_ENTITY_GET_BUKKIT_ENTITY.invoke(result);
             }
-        }catch (ReflectiveOperationException e) {
-            e.printStackTrace();
+        }catch (Exception e) {
+            //
         }
 
         for(Entity entity : world.getEntities()) {

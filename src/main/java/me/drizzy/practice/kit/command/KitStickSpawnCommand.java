@@ -6,20 +6,20 @@ import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label={"kit stickspawn"}, permission = "array.dev")
+@CommandMeta(label={"kit stickSpawn"}, permission = "array.dev")
 public class KitStickSpawnCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {
             player.sendMessage(CC.translate("&8[&b&lArray&8] &7That kit does not exist."));
         } else {
-            if (kit.getGameRules().isStickspawn()
+            if (kit.getGameRules().isStickSpawn()
             ) {
-                kit.getGameRules().setStickspawn(false);
-            } else if (!kit.getGameRules().isStickspawn()) {
-                kit.getGameRules().setStickspawn(true);
+                kit.getGameRules().setStickSpawn(false);
+            } else if (!kit.getGameRules().isStickSpawn()) {
+                kit.getGameRules().setStickSpawn(true);
             }
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated stick spawn mode for &b" + kit.getName() +  " &7to &b" + (kit.getGameRules().isStickspawn() ? "true!" : "false!")));
+            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated stick spawn mode for &b" + kit.getName() +  " &7to &b" + (kit.getGameRules().isStickSpawn() ? "true!" : "false!")));
         }
     }
 }

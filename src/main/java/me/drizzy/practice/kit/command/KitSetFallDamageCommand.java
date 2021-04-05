@@ -12,13 +12,13 @@ public class KitSetFallDamageCommand {
         if (kit == null) {
             player.sendMessage(CC.translate("&8[&b&lArray&8] &7That kit does not exist."));
         } else {
-            if (kit.getGameRules().isDisablefalldamage()) {
-                kit.getGameRules().setDisablefalldamage(false);
-            } else if (!kit.getGameRules().isDisablefalldamage()) {
-                kit.getGameRules().setDisablefalldamage(true);
+            if (kit.getGameRules().isDisableFallDamage()) {
+                kit.getGameRules().setDisableFallDamage(false);
+            } else if (!kit.getGameRules().isDisableFallDamage()) {
+                kit.getGameRules().setDisableFallDamage(true);
             }
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated fall-damage for &b" + kit.getName() + " &7to &b" + (kit.getGameRules().isDisablefalldamage() ? "true!" : "false!")));
+            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated fall-damage for &b" + kit.getName() + " &7to &b" + (kit.getGameRules().isDisableFallDamage() ? "true!" : "false!")));
         }
     }
 }

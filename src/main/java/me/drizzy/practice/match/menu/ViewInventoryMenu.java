@@ -65,11 +65,6 @@ public class ViewInventoryMenu extends Menu {
         return buttons;
     }
 
-    @Override
-    public boolean isAutoUpdate() {
-        return true;
-    }
-
     @AllArgsConstructor
     private static class HealthButton extends Button {
 

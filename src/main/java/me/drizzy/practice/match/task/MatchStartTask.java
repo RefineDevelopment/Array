@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import me.drizzy.practice.util.PlayerUtil;
 
+import java.beans.ConstructorProperties;
+
 public class MatchStartTask extends BukkitRunnable {
 
     private final Match match;
@@ -82,7 +84,6 @@ public class MatchStartTask extends BukkitRunnable {
                         }
                     }
                     match.broadcastSound(Sound.LEVEL_UP);
-                    match.getPlayers().forEach(PlayerUtil::allowMovement);
                     match.getPlayers().forEach(player -> {
                         player.getInventory().remove(Material.INK_SACK);
                         player.updateInventory();
@@ -95,7 +96,6 @@ public class MatchStartTask extends BukkitRunnable {
                 match.broadcastSound(Sound.NOTE_PLING);
             }
         }
-
         ticks++;
     }
 

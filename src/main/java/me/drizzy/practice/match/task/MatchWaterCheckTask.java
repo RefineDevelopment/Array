@@ -9,6 +9,7 @@ import org.bukkit.entity.*;
 import org.bukkit.scheduler.*;
 
 public class MatchWaterCheckTask extends BukkitRunnable {
+
     private final Match match;
 
     public MatchWaterCheckTask(Match match) {
@@ -29,7 +30,12 @@ public class MatchWaterCheckTask extends BukkitRunnable {
             Block body = player.getLocation().getBlock();
             Block head = body.getRelative(BlockFace.UP);
             if (body.getType() == Material.WATER || body.getType() == Material.STATIONARY_WATER || head.getType() == Material.WATER || head.getType() == Material.STATIONARY_WATER) {
-                match.handleDeath(player, null, false);
+                if(match.getKit().getGameRules().isWaterKill() || match.getKit().getGameRules().isSumo()) {
+                    match.handleDeath(player, null, false);
+                }
+                if(match.getKit().getGameRules().isParkour()) {
+                    player.teleport(match.getTeamPlayer(player).getParkourCheckpoint());
+                }
             }
         }
     }

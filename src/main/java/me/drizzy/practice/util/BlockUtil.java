@@ -192,12 +192,12 @@ public class BlockUtil {
     }
 
     static {
-        BlockUtil.blockSolidPassSet = new HashSet<Byte>();
-        BlockUtil.blockStairsSet = new HashSet<Byte>();
-        BlockUtil.blockLiquidsSet = new HashSet<Byte>();
-        BlockUtil.blockWebsSet = new HashSet<Byte>();
-        BlockUtil.blockIceSet = new HashSet<Byte>();
-        BlockUtil.blockCarpetSet = new HashSet<Byte>();
+        BlockUtil.blockSolidPassSet = new HashSet<>();
+        BlockUtil.blockStairsSet = new HashSet<>();
+        BlockUtil.blockLiquidsSet = new HashSet<>();
+        BlockUtil.blockWebsSet = new HashSet<>();
+        BlockUtil.blockIceSet = new HashSet<>();
+        BlockUtil.blockCarpetSet = new HashSet<>();
         BlockUtil.blockSolidPassSet.add((byte)0);
         BlockUtil.blockSolidPassSet.add((byte)6);
         BlockUtil.blockSolidPassSet.add((byte)8);
@@ -274,8 +274,8 @@ public class BlockUtil {
     public static Entity[] getNearbyEntities(final Location l, final int radius) {
         final int chunkRadius = (radius < 16) ? 1 : ((radius - radius % 16) / 16);
         final HashSet<Entity> radiusEntities = new HashSet<>();
-        for (int chX = 0 - chunkRadius; chX <= chunkRadius; ++chX) {
-            for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; ++chZ) {
+        for ( int chX=-chunkRadius; chX <= chunkRadius; ++chX) {
+            for ( int chZ=-chunkRadius; chZ <= chunkRadius; ++chZ) {
                 final int x = (int)l.getX();
                 final int y = (int)l.getY();
                 final int z = (int)l.getZ();

@@ -1,6 +1,7 @@
 package me.drizzy.practice.array.commands;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.command.command.CPL;
@@ -16,6 +17,9 @@ public class ArrayResetStatsCommand {
         }
         try {
             Array.getInstance().getMongoDatabase().getCollection("profiles").deleteOne(new Document("name", name));
+            for ( Profile profile : Profile.getProfiles().values() ) {
+                profile.load();
+            }
             PlayerUtil.getPlayer(name).kickPlayer("Your Profile was reset by an Admin, Please Rejoin!");
         } catch (Exception e) {
             e.printStackTrace();

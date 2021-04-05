@@ -129,9 +129,9 @@ public class QueueThread extends Thread {
                             if (queue.getKit().getGameRules().isSumo()) {
                                 match = new SumoMatch(queue, firstMatchPlayer, secondMatchPlayer,
                                         queue.getKit(), arena, queue.getQueueType());
-                            /*} else if (queue.getKit().getGameRules().isBuild() && queue.getKit().getGameRules().isBridge()) {
+                            } else if (queue.getKit().getGameRules().isBuild() && queue.getKit().getGameRules().isBridge()) {
                                 match = new TheBridgeMatch(queue, firstMatchPlayer, secondMatchPlayer,
-                                        queue.getKit(), arena, queue.getQueueType());*/
+                                        queue.getKit(), arena, queue.getQueueType());
                             } else {
                                 match = new SoloMatch(queue, firstMatchPlayer, secondMatchPlayer,
                                         queue.getKit(), arena, queue.getQueueType(), 0, 0);

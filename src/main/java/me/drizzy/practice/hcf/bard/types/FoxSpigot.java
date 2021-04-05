@@ -18,8 +18,7 @@ public class FoxSpigot implements Listener {
         LivingEntity livingEntity = event.getEntity();
         if ((livingEntity instanceof Player) && EffectRestorer.restores.containsRow(livingEntity.getUniqueId())) {
             final Player player = (Player) livingEntity;
-            final PotionEffect previous = EffectRestorer.restores.get(player.getUniqueId(),
-                    event.getEffect().getType());
+            final PotionEffect previous = EffectRestorer.restores.get(player.getUniqueId(), event.getEffect().getType());
             if (previous != null) {
                 new BukkitRunnable() {
                     public void run() {

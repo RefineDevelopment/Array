@@ -14,6 +14,7 @@ import me.drizzy.practice.util.InventoryUtil;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
 import me.drizzy.practice.util.external.ItemBuilder;
 import org.bson.Document;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -89,29 +90,31 @@ public class Kit {
             }
 
             kit.getGameRules().setRanked(config.getBoolean(path + ".game-rules.ranked"));
-            kit.getGameRules().setPartyffa(config.getBoolean(path + ".game-rules.partyffa"));
-            kit.getGameRules().setPartysplit(config.getBoolean(path + ".game-rules.partysplit"));
+            kit.getGameRules().setDisablePartyFFA(config.getBoolean(path + ".game-rules.disablePartyFFA"));
+            kit.getGameRules().setDisablePartySplit(config.getBoolean(path + ".game-rules.disablePartySplit"));
             kit.getGameRules().setEditable(config.getBoolean(path + ".game-rules.editable"));
-            kit.getGameRules().setAntifoodloss(config.getBoolean(path + ".game-rules.antifoodloss"));
-            kit.getGameRules().setNoitems(config.getBoolean(path + ".game-rules.noitems"));
+            kit.getGameRules().setAntiFoodLoss(config.getBoolean(path + ".game-rules.antiFoodLoss"));
+            kit.getGameRules().setNoItems(config.getBoolean(path + ".game-rules.noItems"));
             kit.getGameRules().setBuild(config.getBoolean(path + ".game-rules.build"));
-            //kit.getGameRules().setBridge(config.getBoolean(path + ".game-rules.bridge"));
+            kit.getGameRules().setBridge(config.getBoolean(path + ".game-rules.bridge"));
             kit.getGameRules().setSpleef(config.getBoolean(path + ".game-rules.spleef"));
             kit.getGameRules().setParkour(config.getBoolean(path + ".game-rules.parkour"));
             kit.getGameRules().setCombo(config.getBoolean(path + ".game-rules.combo"));
-            kit.getGameRules().setStickspawn(config.getBoolean(path + ".game-rules.stickspawn"));
-            kit.getGameRules().setVoidspawn(config.getBoolean(path + ".game-rules.voidspawn"));
-            kit.getGameRules().setDisablefalldamage(config.getBoolean(path + ".game-rules.disable-fall-damage"));
+            kit.getGameRules().setStickSpawn(config.getBoolean(path + ".game-rules.stickSpawn"));
+            kit.getGameRules().setVoidSpawn(config.getBoolean(path + ".game-rules.voidSpawn"));
+            kit.getGameRules().setDisableFallDamage(config.getBoolean(path + ".game-rules.disable-fall-damage"));
             kit.getGameRules().setSumo(config.getBoolean(path + ".game-rules.sumo"));
-            kit.getGameRules().setBoxuhc(config.getBoolean(path + ".game-rules.boxuhc"));
+            kit.getGameRules().setBedwars(config.getBoolean(path + ".game-rules.bedwars"));
+            kit.getGameRules().setMlgRush(config.getBoolean(path + ".game-rules.mlgRush"));
+            kit.getGameRules().setBoxUHC(config.getBoolean(path + ".game-rules.boxUHC"));
             kit.getGameRules().setTimed(config.getBoolean(path + ".game-rules.timed"));
-            kit.getGameRules().setWaterkill(config.getBoolean(path + ".game-rules.water-kill"));
-            kit.getGameRules().setLavakill(config.getBoolean(path + ".game-rules.lava-kill"));
+            kit.getGameRules().setWaterKill(config.getBoolean(path + ".game-rules.water-kill"));
+            kit.getGameRules().setLavaKill(config.getBoolean(path + ".game-rules.lava-kill"));
             kit.getGameRules().setHealthRegeneration(config.getBoolean(path + ".game-rules.health-regeneration"));
-            kit.getGameRules().setInfinitespeed(config.getBoolean(path + ".game-rules.infinite-speed"));
-            kit.getGameRules().setInfinitestrength(config.getBoolean(path + ".game-rules.infinite-strength"));
+            kit.getGameRules().setInfiniteSpeed(config.getBoolean(path + ".game-rules.infinite-speed"));
+            kit.getGameRules().setInfiniteStrength(config.getBoolean(path + ".game-rules.infinite-strength"));
             kit.getGameRules().setShowHealth(config.getBoolean(path + ".game-rules.show-health"));
-            kit.getGameRules().setBowhp(config.getBoolean(path + ".game-rules.bow-hp"));
+            kit.getGameRules().setBowHP(config.getBoolean(path + ".game-rules.bow-hp"));
             kit.getGameRules().setHitDelay(config.getInt(path + ".game-rules.hit-delay"));
             kit.getEditRules().setAllowPotionFill(config.getBoolean(".edit-rules.allow-potion-fill"));
             if (config.getConfigurationSection(path + ".edit-rules.items") != null) {
@@ -136,7 +139,17 @@ public class Kit {
             }
         });
 
-        Kit.getKits().forEach(Kit::updateKitLeaderboards);
+        try {
+            Kit.getKits().forEach(Kit::updateKitLeaderboards);
+        } catch (Exception e) {
+            Array.logger(CC.CHAT_BAR);
+            Array.logger("            &4&lMongo Internal Error");
+            Array.logger("      &cKit Leaderboards could not be loaded!");
+            Array.logger("       &cPlease check your mongo and try again.");
+            Array.logger("             &4&lDisabling Array");
+            Array.logger(CC.CHAT_BAR);
+            Bukkit.getPluginManager().disablePlugin(Array.getInstance());
+        }
     }
 
     public static Kit getByName(String name) {
@@ -166,30 +179,32 @@ public class Kit {
         configFile.getConfiguration().set(path + ".loadout.contents", InventoryUtil.serializeInventory(kitInventory.getContents()));
         configFile.getConfiguration().set(path + ".loadout.effects", InventoryUtil.serializeEffects(kitInventory.getEffects()));
         configFile.getConfiguration().set(path + ".game-rules.ranked", gameRules.isRanked());
-        configFile.getConfiguration().set(path + ".game-rules.partyffa", gameRules.isPartyffa());
-        configFile.getConfiguration().set(path + ".game-rules.partysplit", gameRules.isPartysplit());
+        configFile.getConfiguration().set(path + ".game-rules.disablePartyFFA", gameRules.isDisablePartyFFA());
+        configFile.getConfiguration().set(path + ".game-rules.disablePartySplit", gameRules.isDisablePartySplit());
         configFile.getConfiguration().set(path + ".game-rules.editable", gameRules.isEditable());
-        configFile.getConfiguration().set(path + ".game-rules.antifoodloss", gameRules.isAntifoodloss());
-        configFile.getConfiguration().set(path + ".game-rules.noitems", gameRules.isNoitems());
+        configFile.getConfiguration().set(path + ".game-rules.antiFoodLoss", gameRules.isAntiFoodLoss());
+        configFile.getConfiguration().set(path + ".game-rules.noItems", gameRules.isNoItems());
         configFile.getConfiguration().set(path + ".game-rules.build", gameRules.isBuild());
-        //configFile.getConfiguration().set(path + ".game-rules.bridge", gameRules.isBridge());
+        configFile.getConfiguration().set(path + ".game-rules.bridge", gameRules.isBridge());
         configFile.getConfiguration().set(path + ".game-rules.spleef", gameRules.isSpleef());
         configFile.getConfiguration().set(path + ".game-rules.parkour", gameRules.isParkour());
-        configFile.getConfiguration().set(path + ".game-rules.disable-fall-damage", gameRules.isDisablefalldamage());
-        configFile.getConfiguration().set(path + ".game-rules.stickspawn", gameRules.isStickspawn());
-        configFile.getConfiguration().set(path + ".game-rules.voidspawn", gameRules.isVoidspawn());
+        configFile.getConfiguration().set(path + ".game-rules.disable-fall-damage", gameRules.isDisableFallDamage());
+        configFile.getConfiguration().set(path + ".game-rules.stickSpawn", gameRules.isStickSpawn());
+        configFile.getConfiguration().set(path + ".game-rules.voidSpawn", gameRules.isVoidSpawn());
+        configFile.getConfiguration().set(path + ".game-rules.bedwars", gameRules.isBedwars());
+        configFile.getConfiguration().set(path + ".game-rules.mlgrush", gameRules.isMlgRush());
         configFile.getConfiguration().set(path + ".game-rules.combo", gameRules.isCombo());
         configFile.getConfiguration().set(path + ".game-rules.sumo", gameRules.isSumo());
-        configFile.getConfiguration().set(path + ".game-rules.boxuhc", gameRules.isBoxuhc());
+        configFile.getConfiguration().set(path + ".game-rules.boxUHC", gameRules.isBoxUHC());
         configFile.getConfiguration().set(path + ".game-rules.timed", gameRules.isTimed());
-        configFile.getConfiguration().set(path + ".game-rules.water-kill", gameRules.isWaterkill());
-        configFile.getConfiguration().set(path + ".game-rules.lava-kill", gameRules.isLavakill());
+        configFile.getConfiguration().set(path + ".game-rules.water-kill", gameRules.isWaterKill());
+        configFile.getConfiguration().set(path + ".game-rules.lava-kill", gameRules.isLavaKill());
         configFile.getConfiguration().set(path + ".game-rules.health-regeneration", gameRules.isHealthRegeneration());
-        configFile.getConfiguration().set(path + ".game-rules.infinite-speed", gameRules.isInfinitespeed());
-        configFile.getConfiguration().set(path + ".game-rules.infinite-strength", gameRules.isInfinitestrength());
+        configFile.getConfiguration().set(path + ".game-rules.infinite-speed", gameRules.isInfiniteSpeed());
+        configFile.getConfiguration().set(path + ".game-rules.infinite-strength", gameRules.isInfiniteStrength());
         configFile.getConfiguration().set(path + ".game-rules.show-health", gameRules.isShowHealth());
         configFile.getConfiguration().set(path + ".game-rules.hit-delay", gameRules.getHitDelay());
-        configFile.getConfiguration().set(path + ".game-rules.bow-hp", gameRules.isBowhp());
+        configFile.getConfiguration().set(path + ".game-rules.bow-hp", gameRules.isBowHP());
         configFile.getConfiguration().set(path + ".edit-rules.allow-potion-fill", editRules.isAllowPotionFill());
 
         try {
@@ -201,27 +216,29 @@ public class Kit {
 
     public void updateKitLeaderboards() {
         if (!this.getRankedEloLeaderboards().isEmpty()) this.getRankedEloLeaderboards().clear();
-        for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("kitStatistics." + getName() + ".elo")).limit(10).into(new ArrayList<>())) {
-            Document kitStatistics = (Document) document.get("kitStatistics");
-            if (kitStatistics.containsKey(getName())) {
-                Document kitDocument = (Document) kitStatistics.get(getName());
-                LeaderboardsAdapter leaderboardsAdapter= new LeaderboardsAdapter();
-                leaderboardsAdapter.setName((String) document.get("name"));
-                leaderboardsAdapter.setElo((Integer) kitDocument.get("elo"));
-                this.getRankedEloLeaderboards().add(leaderboardsAdapter);
+        Array.getInstance().getMongoThread().execute(() -> {
+            for ( Document document : Profile.getCollection().find().sort(Sorts.descending("kitStatistics." + getName() + ".elo")).limit(10).into(new ArrayList<>()) ) {
+                Document kitStatistics=(Document) document.get("kitStatistics");
+                if (kitStatistics.containsKey(getName())) {
+                    Document kitDocument=(Document) kitStatistics.get(getName());
+                    LeaderboardsAdapter leaderboardsAdapter=new LeaderboardsAdapter();
+                    leaderboardsAdapter.setName((String) document.get("name"));
+                    leaderboardsAdapter.setElo((Integer) kitDocument.get("elo"));
+                    this.getRankedEloLeaderboards().add(leaderboardsAdapter);
+                }
             }
-        }
-        if (!this.getWinLeaderboards().isEmpty()) this.getWinLeaderboards().clear();
-        for (Document document : Profile.getAllProfiles().find().sort(Sorts.descending("kitStatistics." + getName() + ".unrankedWon")).limit(10).into(new ArrayList<>())) {
-            Document kitStatistics = (Document) document.get("kitStatistics");
-            if (kitStatistics.containsKey(getName())) {
-                Document kitDocument = (Document) kitStatistics.get(getName());
-                LeaderboardsAdapter leaderboardsAdapter= new LeaderboardsAdapter();
-                leaderboardsAdapter.setName((String) document.get("name"));
-                leaderboardsAdapter.setElo((Integer) kitDocument.get("won"));
-                this.getWinLeaderboards().add(leaderboardsAdapter);
+            if (!this.getWinLeaderboards().isEmpty()) this.getWinLeaderboards().clear();
+            for ( Document document : Profile.getCollection().find().sort(Sorts.descending("kitStatistics." + getName() + ".unrankedWon")).limit(10).into(new ArrayList<>()) ) {
+                Document kitStatistics=(Document) document.get("kitStatistics");
+                if (kitStatistics.containsKey(getName())) {
+                    Document kitDocument=(Document) kitStatistics.get(getName());
+                    LeaderboardsAdapter leaderboardsAdapter=new LeaderboardsAdapter();
+                    leaderboardsAdapter.setName((String) document.get("name"));
+                    leaderboardsAdapter.setElo((Integer) kitDocument.get("won"));
+                    this.getWinLeaderboards().add(leaderboardsAdapter);
+                }
             }
-        }
+        });
     }
 
 }

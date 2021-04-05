@@ -14,7 +14,6 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.nametag.NameTags;
@@ -93,7 +92,7 @@ public class TeamMatch extends Match {
 
         PlayerUtil.reset(player);
 
-        if (getKit().getGameRules().isStickspawn()) {
+        if (getKit().getGameRules().isStickSpawn()) {
             PlayerUtil.denyMovement(player);
         }
 
@@ -106,14 +105,14 @@ public class TeamMatch extends Match {
             player.setNoDamageTicks(3);
         }
 
-        if (getKit().getGameRules().isInfinitespeed()) {
+        if (getKit().getGameRules().isInfiniteSpeed()) {
             player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 2));
         }
-        if (getKit().getGameRules().isInfinitestrength()) {
+        if (getKit().getGameRules().isInfiniteStrength()) {
             player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 2));
         }
 
-        if (!getKit().getGameRules().isNoitems()) {
+        if (!getKit().getGameRules().isNoItems()) {
             Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
         }
 
@@ -167,18 +166,18 @@ public class TeamMatch extends Match {
 
     @Override
     public boolean onEnd() {
-        for (TeamPlayer teamPlayer : getTeamPlayers()) {
-            if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
-                Player player = teamPlayer.getPlayer();
+            for ( TeamPlayer teamPlayer : getTeamPlayers() ) {
+                if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
+                    Player player=teamPlayer.getPlayer();
 
-                if (player != null) {
-                    Profile profile = Profile.getByUuid(player.getUniqueId());
-                    profile.handleVisibility();
+                    if (player != null) {
+                        Profile profile=Profile.getByUuid(player.getUniqueId());
+                        profile.handleVisibility();
 
-                    getSnapshots().add(new MatchSnapshot(teamPlayer));
+                        getSnapshots().add(new MatchSnapshot(teamPlayer));
+                    }
                 }
             }
-        }
 
         new BukkitRunnable() {
             @Override
@@ -229,7 +228,7 @@ public class TeamMatch extends Match {
                     }
                 }
             }
-        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isLavakill() || getKit().getGameRules().isParkour()) ? 0L : 70L);
+        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : 70L);
 
         Team winningTeam = getWinningTeam();
         Team losingTeam = getOpponentTeam(winningTeam);

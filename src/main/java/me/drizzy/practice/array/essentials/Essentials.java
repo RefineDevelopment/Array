@@ -32,7 +32,6 @@ public class Essentials {
 
     public static void teleportToSpawn(Player player) {
         Location location = spawn;
-        AsyncCatcher.enabled=false;
         SpawnTeleportEvent event = new SpawnTeleportEvent(player, location);
         event.call();
 

@@ -13,6 +13,7 @@ import me.drizzy.practice.hcf.classes.Bard;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.match.types.TheBridgeMatch;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.queue.Queue;
@@ -107,20 +108,22 @@ public class Scoreboard implements BoardAdapter {
                     lines.add("&f Your Ping: &b" + self.getPing() + "ms");
                     lines.add("&f Their Ping: &b" + opponent.getPing() + "ms");
                 } else if (match.isTheBridgeMatch()) {
-                    TeamPlayer self=match.getTeamPlayer(player);
+                    TheBridgeMatch bridgeMatch = (TheBridgeMatch) match;
                     TeamPlayer opponent=match.getOpponentTeamPlayer(player);
-
-                    Profile targetProfile=Profile.getByUuid(opponent.getUuid());
-
-                    int selfPoints=profile.getBridgeRounds();
-                    int opPoints=targetProfile.getBridgeRounds();
 
                     lines.add("&b&lFight");
                     lines.add("&f Rival: &b" + opponent.getUsername());
-                    lines.add("&f Points: &b" + selfPoints + " &7┃ &b" + opPoints + "");
+                    lines.add("&f Duration: &b" + match.getDuration());
                     lines.add("");
-                    lines.add("&f Your Ping: &b" + self.getPing() + "ms");
-                    lines.add("&f Their Ping: &b" + opponent.getPing() + "ms");
+                    lines.add("&b&lRound #" + bridgeMatch.getRound());
+                    lines.add("&c Red: &r" + this.getFormattedPoints(match.getTeamPlayerA().getPlayer()) + (match.getTeamPlayerA().getPlayer() == player ? " &7(You)" : ""));
+                    lines.add("&9 Blue: &r" + this.getFormattedPoints(match.getTeamPlayerB().getPlayer()) + (match.getTeamPlayerB().getPlayer() == player ? " &7(You)" : ""));
+                    if (!profile.getBowCooldown().hasExpired()) {
+                        lines.add("");
+                        lines.add("&b&lBow Cooldown");
+                        lines.add(" &f" + profile.getBowCooldown().getTimeLeft());
+                    }
+
                 } else if (match.isSumoTeamMatch()) {
                     Team team=match.getTeam(player);
                     Team opponentTeam=match.getOpponentTeam(player);
@@ -433,9 +436,9 @@ public class Scoreboard implements BoardAdapter {
                 lines.add("&fPlayers: &b" + brackets2.getRemainingPlayers().size() + "/" + Brackets.getMaxPlayers());
                 lines.add("&fDuration: &b" + brackets2.getRoundDuration());
                 lines.add("");
-                lines.add("&a" + brackets2.getRoundPlayerA().getUsername() + " &8(" + playera + "&8)");
+                lines.add("&a" + brackets2.getRoundPlayerA().getUsername() + " &8(&b" + playera + "&8)");
                 lines.add("&7vs");
-                lines.add("&c" + brackets2.getRoundPlayerB().getUsername() + " &8(" + playerb + "&8)");
+                lines.add("&c" + brackets2.getRoundPlayerB().getUsername() + " &8(&b" + playerb + "&8)");
             }
         } else if (profile.isInLMS()) {
             final LMS ffa2=profile.getLms();
@@ -511,13 +514,33 @@ public class Scoreboard implements BoardAdapter {
             lines.add("&7");
             lines.add(" &fFollowing: &4" + profile.getFollowing().getName());
         }
-        if (profile.isSilent()) {
-            lines.add("&7");
-            lines.add(" &7&lSilent Mode");
-        }
         lines.add("");
         lines.add(CC.translate("&7&opurgecommunity.com"));
         lines.add(CC.SB_BAR);
         return lines;
     }
+
+
+    @SuppressWarnings(value = "all")
+    public String getFormattedPoints(Player player) {
+        if( Profile.getByUuid(player) != null) {
+            Profile profile=Profile.getByUuid(player);
+            int points=profile.getBridgeRounds();
+
+            if (points == 3) {
+                return CC.translate("&a■&a■&a■");
+            }
+
+            if (points == 2) {
+                return CC.translate("&a■&a■&7■");
+            }
+
+            if (points == 1) {
+                return CC.translate("&a■&7■■");
+            }
+        }
+        return CC.translate("&7■■■");
+    }
+
+
 }

@@ -107,17 +107,7 @@ public class GulagListener implements Listener {
 		if (profile.isInGulag()) {
 			if (!profile.getGulag().isFighting(event.getPlayer().getUniqueId())) {
 				event.setCancelled(true);
-				return;
 			}
-		}
-
-		if (profile.isInGulag() && profile.getGulag().isFighting()) {
-			if (event.getItemDrop().getItemStack().getType() == Material.GLASS_BOTTLE) {
-				event.getItemDrop().remove();
-				return;
-			}
-
-			profile.getGulag().getEntities().add(event.getItemDrop());
 		}
 	}
 

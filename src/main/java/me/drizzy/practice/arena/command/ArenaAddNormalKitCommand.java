@@ -21,7 +21,7 @@ public class ArenaAddNormalKitCommand {
                 player.sendMessage(CC.translate("&8[&b&lArray&8] &7There are no kits."));
                 return;
             }
-        if (kit.getGameRules().isBuild() || kit.getGameRules().isBoxuhc() || kit.getGameRules().isSpleef() || kit.getGameRules().isSumo() || kit.getGameRules().isParkour() || kit.getGameRules().isNoitems() || kit.getGameRules().isWaterkill()) {
+        if (kit.getGameRules().isBuild() || kit.getGameRules().isBoxUHC() || kit.getGameRules().isSpleef() || kit.getGameRules().isSumo() || kit.getGameRules().isParkour() || kit.getGameRules().isNoItems() || kit.getGameRules().isWaterKill()) {
             return;
         }
 

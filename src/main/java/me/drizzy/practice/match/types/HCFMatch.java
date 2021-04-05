@@ -124,24 +124,23 @@ public class HCFMatch extends Match {
 
     @Override
     public void onStart() {
-        TaskUtil.runAsync(() -> getPlayers().forEach(player1 -> Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player1, Kit.getByName("NoDebuff"))));
+        getPlayers().forEach(player1 -> Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player1, Kit.getByName("NoDebuff")));
     }
 
     @Override
     public boolean onEnd() {
         for (TeamPlayer teamPlayer : getTeamPlayers()) {
             if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
-                Player player = teamPlayer.getPlayer();
+                Player player=teamPlayer.getPlayer();
 
                 if (player != null) {
-                    Profile profile = Profile.getByUuid(player.getUniqueId());
+                    Profile profile=Profile.getByUuid(player.getUniqueId());
                     profile.handleVisibility();
 
                     getSnapshots().add(new MatchSnapshot(teamPlayer));
                 }
             }
         }
-
         new BukkitRunnable() {
             @Override
             public void run() {

@@ -45,10 +45,12 @@ public class LeaderboardsMenu extends Menu {
         //Place our Kit Leaderboard Buttons
         for (Kit kit : Kit.getKits()) {
             if (!kit.getGameRules().isRanked() && !kit.isEnabled()) continue;
-            buttons.put(getSlot(x++, y), new KitLeaderboardsButton(kit));
-            if (x == 8) {
-                y++;
-                x = 1;
+            if (!kit.getName().equalsIgnoreCase("HCFTeamFight")) {
+                buttons.put(getSlot(x++, y), new KitLeaderboardsButton(kit));
+                if (x == 8) {
+                    y++;
+                    x=1;
+                }
             }
         }
         //Place our Glass Panes
@@ -57,9 +59,10 @@ public class LeaderboardsMenu extends Menu {
         }
         return buttons;
     }
-    
-    private static class KitLeaderboardsButton extends Button
-    {
+
+    @AllArgsConstructor
+    private static class KitLeaderboardsButton extends Button {
+
         private final Kit kit;
         
         @Override
@@ -79,15 +82,10 @@ public class LeaderboardsMenu extends Menu {
             lore.add(CC.MENU_BAR);
             return new ItemBuilder(this.kit.getDisplayIcon()).name("&b" + this.kit.getName() + " &7&l| &fTop 10").lore(lore).build();
         }
-        
-        @ConstructorProperties({ "kit" })
-        public KitLeaderboardsButton(final Kit kit) {
-            this.kit = kit;
-        }
     }
     
-    private static class GlobalLeaderboardsButton extends Button
-    {
+    private static class GlobalLeaderboardsButton extends Button {
+
         @Override
         public ItemStack getButtonItem(final Player player) {
             final List<String> lore =new ArrayList<>();
@@ -107,7 +105,6 @@ public class LeaderboardsMenu extends Menu {
         }
     }
 
-    @AllArgsConstructor
     private static class StatsButton extends Button {
 
         @Override
@@ -125,6 +122,7 @@ public class LeaderboardsMenu extends Menu {
             lore.add("&aGlobal ELO: &f" + profile.getGlobalElo());
             lore.add("&aGlobal League: &f" + profile.getEloLeague());
             lore.add(CC.MENU_BAR);
+
             return new ItemBuilder(SkullCreator.itemFromUuid(player.getUniqueId()))
                     .name("&b&l" + player.getName() + " | Statistics")
                     .lore(lore)

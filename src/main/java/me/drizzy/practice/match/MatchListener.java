@@ -8,17 +8,18 @@ import me.drizzy.practice.hcf.HCFManager;
 import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.kit.KitInventory;
+import me.drizzy.practice.match.task.BedwarsPlayerTask;
+import me.drizzy.practice.match.task.BridgePlayerTask;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
-import me.drizzy.practice.match.types.SumoMatch;
 import me.drizzy.practice.match.types.TheBridgeMatch;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.util.BlockUtil;
 import me.drizzy.practice.util.LocationUtils;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.Cooldown;
+import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.TimeUtil;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.bukkit.Bukkit;
@@ -39,8 +40,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.Objects;
@@ -68,10 +67,12 @@ public class MatchListener implements Listener {
                     if (arena instanceof TheBridgeArena) {
                         TheBridgeArena standaloneArena = (TheBridgeArena) arena;
                         if (standaloneArena.getBlueCuboid() != null && standaloneArena.getBlueCuboid().contains(event.getBlockPlaced())) {
+                            event.getPlayer().sendMessage(CC.translate("&cYou can't place blocks here!"));
                             event.setCancelled(true);
                             return;
                         }
                         if (standaloneArena.getRedCuboid() != null && standaloneArena.getRedCuboid().contains(event.getBlockPlaced())) {
+                            event.getPlayer().sendMessage(CC.translate("&cYou can't place blocks here!"));
                             event.setCancelled(true);
                             return;
                         }
@@ -86,7 +87,7 @@ public class MatchListener implements Listener {
         }
     }
 
-  /*  @EventHandler
+    @EventHandler
     public void onPortal(EntityPortalEnterEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
@@ -104,10 +105,11 @@ public class MatchListener implements Listener {
                             player.sendMessage(CC.translate("&cYou Jumped in the wrong portal."));
                             return;
                         }
+                        if (match.getCaughtPlayers().contains(player)) return;
                         if (match.getState() == MatchState.ENDING) return;
                         for ( TeamPlayer teamPlayer : match.getTeamPlayers() ) {
                             Player other=teamPlayer.getPlayer();
-                            other.sendMessage(match.getRelationColor(other, player) + player.getDisplayName() + " has scored a Point!");
+                            other.sendMessage(CC.translate(match.getRelationColor(other, player) + player.getDisplayName() + "&f has scored a Point!"));
                             teamPlayer.getPlayer().teleport(teamPlayer.getPlayerSpawn());
                         }
                         match.handleDeath(match.getOpponentPlayer(player), null, false);
@@ -115,7 +117,7 @@ public class MatchListener implements Listener {
                 }
             }
         }
-    }*/
+    }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockBreakEvent(BlockBreakEvent event) {
@@ -135,7 +137,7 @@ public class MatchListener implements Listener {
                         } else {
                             event.setCancelled(true);
                         }
-                    } else if (match.getKit().getGameRules().isBoxuhc()) {
+                    } else if (match.getKit().getGameRules().isBoxUHC()) {
                         if (event.getBlock().getType() == Material.WOOD) {
                             match.getBrokenBlocks().add(event.getBlock().getLocation());
                             event.getBlock().setType(Material.AIR);
@@ -144,11 +146,20 @@ public class MatchListener implements Listener {
                         } else {
                             event.setCancelled(true);
                         }
-                    } else if (match.getPlacedBlocks().remove(event.getBlock().getLocation()) && !match.getKit().getGameRules().isBoxuhc()) {
-                        event.getPlayer().getInventory().addItem(new ItemStack(event.getBlock().getType(), 1));
+                    } else if(match.getKit().getGameRules().isBedwars()) {
+                        if(event.getBlock() != null && event.getBlock().getType() == Material.BED_BLOCK) {
+                            Location own = match.getTeamPlayer(event.getPlayer()).getPlayerSpawn();
+                            Location bed = event.getBlock().getLocation();
+                            Location opponent = match.getTeamPlayer(profile.getMatch().getOpponentPlayer(profile.getPlayer())).getPlayerSpawn();
+                            if(bed.distanceSquared(own) > bed.distanceSquared(opponent)) {
+                               match.handleDeath(match.getOpponentPlayer(event.getPlayer()), null, false);
+                            }
+                        }
+                    } else if (match.getPlacedBlocks().remove(event.getBlock().getLocation()) && !match.getKit().getGameRules().isBoxUHC()) {
+                        event.getPlayer().getInventory().addItem(new ItemBuilder(event.getBlock().getType()).durability(event.getBlock().getData()).build());
                         event.getPlayer().updateInventory();
                         event.getBlock().setType(Material.AIR);
-                    } else if (!match.getKit().getGameRules().isBoxuhc()){
+                    } else if (!match.getKit().getGameRules().isBoxUHC()){
                         event.setCancelled(true);
                     }
                 } else {
@@ -209,7 +220,6 @@ public class MatchListener implements Listener {
         }
     }
 
-    //TODO: Finish up the new Armor Class selector so that you wont have to use these checks
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerDropItemEvent(final PlayerDropItemEvent event) {
         final Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
@@ -251,7 +261,6 @@ public class MatchListener implements Listener {
         }
     }
 
-    //TODO: Finish up the new Armor Class selector so that you wont have to use these checks
     @EventHandler
     public void onPlayerDeathEvent(final ItemSpawnEvent event) {
         if (event.getEntity().getItemStack().isSimilar(Hotbar.getItems().get(HotbarType.DIAMOND_KIT))) {
@@ -274,17 +283,35 @@ public class MatchListener implements Listener {
         event.setDeathMessage(null);
         Player player = event.getEntity().getPlayer();
         Profile profile = Profile.getByUuid(event.getEntity().getUniqueId());
-        player.teleport(player.getLocation().add(0.0, 2.0, 0.0));
         if (profile.isInFight()) {
             if (profile.getMatch().isTheBridgeMatch()) {
                 event.getDrops().clear();
                 PlayerUtil.reset(player);
                 TheBridgeMatch bridgeMatch = (TheBridgeMatch) profile.getMatch();
-                player.teleport(bridgeMatch.getTeamPlayer(player).getPlayerSpawn());
-                bridgeMatch.setupPlayer(player);
+                for ( Player player2 : bridgeMatch.getPlayers() ) {
+                    if (event.getEntity().getKiller() == null) {
+                        player2.sendMessage(bridgeMatch.getRelationColor(player2, player) + player.getName() + CC.GRAY + " has died.");
+                    } else {
+                        player2.sendMessage(bridgeMatch.getRelationColor(player2, player) + player.getName() + CC.GRAY + " was killed by " + bridgeMatch.getRelationColor(player2, event.getEntity().getKiller()) + event.getEntity().getKiller().getName() + CC.GRAY + ".");
+                    }
+                }
+                Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BridgePlayerTask(bridgeMatch, player), 2L);
                 return;
+            } else if (profile.getMatch().getKit().getGameRules().isBedwars()) {
+                event.getDrops().clear();
+                PlayerUtil.reset(player);
+                Match match = profile.getMatch();
+                for ( Player player2 : match.getPlayers() ) {
+                    if (event.getEntity().getKiller() == null) {
+                        player2.sendMessage(match.getRelationColor(player2, player) + player.getName() + CC.GRAY + " has died.");
+                    } else {
+                        player2.sendMessage(match.getRelationColor(player2, player) + player.getName() + CC.GRAY + " was killed by " + match.getRelationColor(player2, event.getEntity().getKiller()) + event.getEntity().getKiller().getName() + CC.GRAY + ".");
+                    }
+                }
+                Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BedwarsPlayerTask(match, player), 2L);
             }
         }
+        player.teleport(player.getLocation().add(0.0, 2.0, 0.0));
         Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
         event.getEntity().getPlayer().setNoDamageTicks(20);
         if (profile.isInFight()) {
@@ -298,7 +325,6 @@ public class MatchListener implements Listener {
         }
     }
 
-    //TODO: Laggy players just bypass this lmfao
     @EventHandler
     public void onPlayerRespawn(final PlayerRespawnEvent event) {
         event.setRespawnLocation(event.getPlayer().getLocation());
@@ -355,29 +381,6 @@ public class MatchListener implements Listener {
         }
     }
 
-
-    /*@EventHandler
-    public void onMove(PlayerMoveEvent event) {
-        final Player player = event.getPlayer();
-        final Profile profile = Profile.getByUuid(player.getUniqueId());
-        if (profile.getMatch() != null) {
-            Match match=profile.getMatch();
-            if (profile.getMatch().getKit() != null) {
-                if (profile.getMatch().isSumoMatch() || profile.getMatch().isSumoTeamMatch() || profile.getMatch().getKit().getGameRules().isStickspawn()
-                    || profile.getMatch().getKit().getGameRules().isSumo() || profile.getMatch().isTheBridgeMatch()) {
-                    if (match.getState() == MatchState.STARTING) {
-                        Location from=event.getFrom();
-                        Location to=event.getTo();
-                        if (to.getX() != from.getX() || to.getZ() != from.getZ()) {
-                            player.teleport(from);
-                            ((CraftPlayer) player).getHandle().playerConnection.checkMovement=false;
-                        }
-                    }
-                }
-            }
-        }
-    }*/
-
     @EventHandler(ignoreCancelled = true)
     public void onEntityDamage(final EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
@@ -386,29 +389,39 @@ public class MatchListener implements Listener {
             if (profile.isInFight()) {
                 final Match match = profile.getMatch();
                 if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                    if (profile.getMatch().getKit().getGameRules().isVoidspawn() || profile.getMatch().isTheBridgeMatch()) {
-                        event.setDamage(0.0);
-                        player.setFallDistance(0);
-                        player.setHealth(20.0);
-                        player.teleport(match.getTeamPlayer(player).getPlayerSpawn());
+                    if (profile.getMatch().getKit().getGameRules().isVoidSpawn() || profile.getMatch().isTheBridgeMatch()) {
+                            event.setDamage(0.0);
+                            player.setFallDistance(0);
+                            player.setHealth(20.0);
                         if (profile.getMatch().isTheBridgeMatch()) {
-                            TheBridgeMatch bridgeMatch = (TheBridgeMatch) match;
-                            PlayerUtil.reset(player);
-                            bridgeMatch.setupPlayer(player);
+                            TheBridgeMatch bridgeMatch=(TheBridgeMatch) match;
+                                PlayerUtil.reset(player);
+                                for ( Player player2 : bridgeMatch.getPlayers() ) {
+                                    player2.sendMessage(CC.translate(bridgeMatch.getRelationColor(player2, player) + player.getName() + " &7has died"));
+                                }
+                            Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BridgePlayerTask(bridgeMatch, player), 7L);
+                            return;
                         }
+                        if (profile.getMatch().getKit().getGameRules().isBedwars()) {
+                                PlayerUtil.reset(player);
+                                for ( Player player2 : match.getPlayers() ) {
+                                    player2.sendMessage(CC.translate(match.getRelationColor(player2, player) + player.getName() + " &7has died"));
+                                }
+                            Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BedwarsPlayerTask(match, player), 7L);
+                            return;
+                        }
+                        player.teleport(match.getTeamPlayer(player).getPlayerSpawn());
                         return;
                     }
                     profile.getMatch().handleDeath(player, null, false);
                     return;
                 }
                 if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
-                    if (match != null) {
-                        if (profile.getMatch().isTheBridgeMatch() || profile.getMatch().getKit().getGameRules().isDisablefalldamage()) {
-                            event.setCancelled(true);
-                        }
+                       if (profile.getMatch().isTheBridgeMatch() || profile.getMatch().getKit().getGameRules().isDisableFallDamage()) {
+                       event.setCancelled(true);
                     }
                 }
-                if (event.getCause() == EntityDamageEvent.DamageCause.LAVA && !profile.getMatch().isHCFMatch()  && profile.getMatch().getKit().getGameRules().isLavakill()) {
+                if (event.getCause() == EntityDamageEvent.DamageCause.LAVA && !profile.getMatch().isHCFMatch()  && profile.getMatch().getKit().getGameRules().isLavaKill()) {
                     profile.getMatch().handleDeath(player, null, false);
                     return;
                 }
@@ -441,11 +454,14 @@ public class MatchListener implements Listener {
         Profile profile = Profile.getByUuid(player);
         Match match = profile.getMatch();
         if (profile.isInFight()) {
-          if (match.isTheBridgeMatch()) {
+          if (match.isTheBridgeMatch() || match.getKit().getGameRules().isBedwars()) {
             if (player.getLocation().getBlockY() <= 30) {
                 player.setFallDistance(0);
                 player.setHealth(20.0);
                 player.teleport(match.getTeamPlayer(player).getPlayerSpawn());
+                for ( Player player2 : match.getPlayers() ) {
+                    player2.sendMessage(CC.translate(match.getRelationColor(player2, player) + player.getName() + " &7has died"));
+                }
             }
           }
         }
@@ -497,7 +513,7 @@ public class MatchListener implements Listener {
                     damagedProfile.getMatch().getTeamPlayer(damaged).resetCombo();
                     if (event.getDamager() instanceof Arrow) {
                         final double health = Math.ceil(damaged.getHealth() - event.getFinalDamage()) / 2.0;
-                        if (match.getKit().getGameRules().isBowhp()) {
+                        if (match.getKit().getGameRules().isBowHP()) {
                             if (!attacker.getName().equalsIgnoreCase(damaged.getName())) {
                                 attacker.sendMessage(CC.translate("&b" + damaged.getName() + " &7is now at &c" + health + " &4" + StringEscapeUtils.unescapeJava("\u2764")));
                             }
@@ -517,7 +533,7 @@ public class MatchListener implements Listener {
                         damagedProfile.getMatch().getTeamPlayer(damaged).resetCombo();
                         if (event.getDamager() instanceof Arrow) {
                             final double health2 = Math.ceil(damaged.getHealth() - event.getFinalDamage()) / 2.0;
-                            if (match.getKit() == null || match.getKit().getGameRules().isBowhp()) {
+                            if (match.getKit() == null || match.getKit().getGameRules().isBowHP()) {
                                 if (!attacker.getName().equalsIgnoreCase(damaged.getName())) {
                                     attacker.sendMessage(CC.translate("&b" + damaged.getName() + " &7is now at &c" + health2 + " &4" + StringEscapeUtils.unescapeJava("\u2764")));
                                 }
@@ -533,12 +549,6 @@ public class MatchListener implements Listener {
         if (event.getItem().getType().equals(Material.POTION)) {
             Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Array.getInstance(), () -> event.getPlayer().setItemInHand(new ItemStack(Material.AIR)), 1L);
         }
-        if (event.getItem().getType() == Material.GOLDEN_APPLE && event.getItem().hasItemMeta() && event.getItem().getItemMeta().getDisplayName().equalsIgnoreCase("Golden Head")) {
-            final Player player = event.getPlayer();
-            player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 200, 1));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 2400, 0));
-            player.setFoodLevel(Math.min(player.getFoodLevel() + 6, 20));
-        }
     }
 
     @EventHandler
@@ -548,7 +558,7 @@ public class MatchListener implements Listener {
             final Profile profile = Profile.getByUuid(player.getUniqueId());
             if (profile.isInSomeSortOfFight()) {
                 if (profile.getMatch() != null) {
-                    if (profile.getMatch().getKit().getGameRules().isAntifoodloss()) {
+                    if (profile.getMatch().getKit().getGameRules().isAntiFoodLoss()) {
                         if (event.getFoodLevel() >= 20) {
                             event.setFoodLevel(20);
                             player.setSaturation(20.0f);
@@ -614,6 +624,23 @@ public class MatchListener implements Listener {
                     }
                 }
             }
+        } else if (projectile instanceof Arrow) {
+            final Arrow enderPearl = (Arrow) projectile;
+            final ProjectileSource source = enderPearl.getShooter();
+            if (source instanceof Player) {
+                final Player shooter = (Player) source;
+                final Profile profile = Profile.getByUuid(shooter.getUniqueId());
+                if (profile.isInFight()) {
+                    if (!profile.getBowCooldown().hasExpired()) {
+                        final String time = TimeUtil.millisToSeconds(profile.getBowCooldown().getRemaining());
+                        final String context = "second" + (time.equalsIgnoreCase("1.0") ? "" : "s");
+                        shooter.sendMessage(CC.RED + "You are on bow cooldown for " + time + " " + context);
+                        event.setCancelled(true);
+                    } else {
+                        profile.setBowCooldown(new Cooldown(10000L));
+                    }
+                }
+            }
         }
     }
 
@@ -626,135 +653,150 @@ public class MatchListener implements Listener {
     }
 
 
-    //TODO: Finish up the new Armor Class selector so that you wont have to use this at all
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerInteractEvent(final PlayerInteractEvent event) {
         final Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
         if (profile.isSpectating()) {
             event.setCancelled(true);
         }
-        if (event.getItem() != null && event.getAction().name().contains("RIGHT") && profile.isInFight()) {
-            if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
-                if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DEFAULT_KIT))) {
-                    final KitInventory kitInventory= profile.getMatch().getKit().getKitInventory();
-                    event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
-                    event.getPlayer().getInventory().setContents(kitInventory.getContents());
-                    event.getPlayer().getActivePotionEffects().clear();
-                    if (profile.getMatch().getKit().getKitInventory().getEffects() != null) {
-                        event.getPlayer().addPotionEffects(profile.getMatch().getKit().getKitInventory().getEffects());
-                    }
-                    event.getPlayer().updateInventory();
-                    event.setCancelled(true);
-                    return;
-                }
-                if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DIAMOND_KIT))) {
-                    final KitInventory kitInventory= Objects.requireNonNull(Kit.getByName("HCFDIAMOND")).getKitInventory();
-                    event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
-                    event.getPlayer().getInventory().setContents(kitInventory.getContents());
-                    event.getPlayer().getActivePotionEffects().clear();
-                    if (kitInventory.getEffects() != null) {
-                        event.getPlayer().addPotionEffects(kitInventory.getEffects());
-                    }
-                    event.getPlayer().updateInventory();
-                    Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
-                    event.setCancelled(true);
-                    return;
-                }
-                if (event.getItem().equals(Hotbar.getItems().get(HotbarType.BARD_KIT))) {
-                    final KitInventory kitInventory= Objects.requireNonNull(Kit.getByName("HCFBARD")).getKitInventory();
-                    event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
-                    event.getPlayer().getInventory().setContents(kitInventory.getContents());
-                    event.getPlayer().getActivePotionEffects().clear();
-                    if (kitInventory.getEffects() != null) {
-                        event.getPlayer().addPotionEffects(kitInventory.getEffects());
-                    }
-                    event.getPlayer().updateInventory();
-                    Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
-                    event.setCancelled(true);
-                    return;
-                }
-                if (event.getItem().equals(Hotbar.getItems().get(HotbarType.ARCHER_KIT))) {
-                    final KitInventory kitInventory= Objects.requireNonNull(Kit.getByName("HCFARCHER")).getKitInventory();
-                    event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
-                    event.getPlayer().getInventory().setContents(kitInventory.getContents());
-                    event.getPlayer().getActivePotionEffects().clear();
-                    if (kitInventory.getEffects() != null) {
-                        event.getPlayer().addPotionEffects(kitInventory.getEffects());
-                    }
-                    event.getPlayer().updateInventory();
-                    Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
-                    event.setCancelled(true);
-                    return;
-                }
-                if (event.getItem().equals(Hotbar.getItems().get(HotbarType.ROGUE_KIT))) {
-                    final KitInventory kitInventory= Objects.requireNonNull(Kit.getByName("HCFROGUE")).getKitInventory();
-                    event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
-                    event.getPlayer().getInventory().setContents(kitInventory.getContents());
-                    event.getPlayer().getActivePotionEffects().clear();
-                    if (kitInventory.getEffects() != null) {
-                        event.getPlayer().addPotionEffects(kitInventory.getEffects());
-                    }
-                    event.getPlayer().updateInventory();
-                    Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
-                    event.setCancelled(true);
-                    return;
-                }
-            }
-            if (!profile.getMatch().isHCFMatch() && event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName() && event.getItem().getItemMeta().hasLore()) {
-                final String displayName = ChatColor.stripColor(event.getItem().getItemMeta().getDisplayName());
-                if (displayName.endsWith(" (Right-Click)")) {
-                    final String kitName = displayName.replace(" (Right-Click)", "");
-                    for (final KitInventory kitInventory2 : profile.getStatisticsData().get(profile.getMatch().getKit()).getLoadouts()) {
-                        if (kitInventory2 != null && ChatColor.stripColor(kitInventory2.getCustomName()).equals(kitName)) {
-                            event.getPlayer().getInventory().setArmorContents(kitInventory2.getArmor());
-                            event.getPlayer().getInventory().setContents(kitInventory2.getContents());
-                            event.getPlayer().getActivePotionEffects().clear();
+            if (event.getItem() != null && event.getAction().name().contains("RIGHT") && profile.isInFight()) {
+                if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
+                    if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DEFAULT_KIT))) {
+                        final KitInventory kitInventory=profile.getMatch().getKit().getKitInventory();
+                        event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                        event.getPlayer().getInventory().setContents(kitInventory.getContents());
+                        event.getPlayer().getActivePotionEffects().clear();
+                        if (profile.getMatch().getKit().getKitInventory().getEffects() != null) {
                             event.getPlayer().addPotionEffects(profile.getMatch().getKit().getKitInventory().getEffects());
-                            event.getPlayer().updateInventory();
-                            event.setCancelled(true);
-                            return;
+                        }
+                        event.getPlayer().updateInventory();
+                        event.setCancelled(true);
+                        return;
+                    }
+                    if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DIAMOND_KIT))) {
+                        final KitInventory kitInventory=Objects.requireNonNull(Kit.getByName("HCFDIAMOND")).getKitInventory();
+                        event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                        event.getPlayer().getInventory().setContents(kitInventory.getContents());
+                        event.getPlayer().getActivePotionEffects().clear();
+                        if (kitInventory.getEffects() != null) {
+                            event.getPlayer().addPotionEffects(kitInventory.getEffects());
+                        }
+                        event.getPlayer().updateInventory();
+                        Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
+                        event.setCancelled(true);
+                        return;
+                    }
+                    if (event.getItem().equals(Hotbar.getItems().get(HotbarType.BARD_KIT))) {
+                        final KitInventory kitInventory=Objects.requireNonNull(Kit.getByName("HCFBARD")).getKitInventory();
+                        event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                        event.getPlayer().getInventory().setContents(kitInventory.getContents());
+                        event.getPlayer().getActivePotionEffects().clear();
+                        if (kitInventory.getEffects() != null) {
+                            event.getPlayer().addPotionEffects(kitInventory.getEffects());
+                        }
+                        event.getPlayer().updateInventory();
+                        Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
+                        event.setCancelled(true);
+                        return;
+                    }
+                    if (event.getItem().equals(Hotbar.getItems().get(HotbarType.ARCHER_KIT))) {
+                        final KitInventory kitInventory=Objects.requireNonNull(Kit.getByName("HCFARCHER")).getKitInventory();
+                        event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                        event.getPlayer().getInventory().setContents(kitInventory.getContents());
+                        event.getPlayer().getActivePotionEffects().clear();
+                        if (kitInventory.getEffects() != null) {
+                            event.getPlayer().addPotionEffects(kitInventory.getEffects());
+                        }
+                        event.getPlayer().updateInventory();
+                        Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
+                        event.setCancelled(true);
+                        return;
+                    }
+                    if (event.getItem().equals(Hotbar.getItems().get(HotbarType.ROGUE_KIT))) {
+                        final KitInventory kitInventory=Objects.requireNonNull(Kit.getByName("HCFROGUE")).getKitInventory();
+                        event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
+                        event.getPlayer().getInventory().setContents(kitInventory.getContents());
+                        event.getPlayer().getActivePotionEffects().clear();
+                        if (kitInventory.getEffects() != null) {
+                            event.getPlayer().addPotionEffects(kitInventory.getEffects());
+                        }
+                        event.getPlayer().updateInventory();
+                        Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
+                        event.setCancelled(true);
+                        return;
+                    }
+                }
+                if (!profile.getMatch().isHCFMatch() && event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName() && event.getItem().getItemMeta().hasLore()) {
+                    final String displayName=ChatColor.stripColor(event.getItem().getItemMeta().getDisplayName());
+                    if (displayName.endsWith(" (Right-Click)")) {
+                        final String kitName=displayName.replace(" (Right-Click)", "");
+                        for ( final KitInventory kitInventory2 : profile.getStatisticsData().get(profile.getMatch().getKit()).getLoadouts() ) {
+                            if (kitInventory2 != null && ChatColor.stripColor(kitInventory2.getCustomName()).equals(kitName)) {
+                                event.getPlayer().getInventory().setArmorContents(kitInventory2.getArmor());
+                                event.getPlayer().getInventory().setContents(kitInventory2.getContents());
+                                event.getPlayer().getActivePotionEffects().clear();
+                                event.getPlayer().addPotionEffects(profile.getMatch().getKit().getKitInventory().getEffects());
+                                event.getPlayer().updateInventory();
+                                event.setCancelled(true);
+                                return;
+                            }
                         }
                     }
                 }
-            }
 
-            final Player player = event.getPlayer();
-            if ((event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) && player.getItemInHand().getType() == Material.MUSHROOM_SOUP) {
-                final int health = (int) player.getHealth();
-                if (health == 20) {
-                    player.getItemInHand().setType(Material.MUSHROOM_SOUP);
-                } else if (health >= 13) {
-                    player.setHealth(20.0);
-                    player.getItemInHand().setType(Material.BOWL);
-                } else {
-                    player.setHealth(health + 7);
-                    player.getItemInHand().setType(Material.BOWL);
+                final Player player=event.getPlayer();
+                if ((event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) && player.getItemInHand().getType() == Material.MUSHROOM_SOUP) {
+                    final int health=(int) player.getHealth();
+                    if (health == 20) {
+                        player.getItemInHand().setType(Material.MUSHROOM_SOUP);
+                    } else if (health >= 13) {
+                        player.setHealth(20.0);
+                        player.getItemInHand().setType(Material.BOWL);
+                    } else {
+                        player.setHealth(health + 7);
+                        player.getItemInHand().setType(Material.BOWL);
+                    }
                 }
-            }
-            if ((event.getItem().getType() == Material.ENDER_PEARL || (event.getItem().getType() == Material.POTION && event.getItem().getDurability() >= 16000)) && profile.isInFight() && profile.getMatch().isStarting()) {
-                event.setCancelled(true);
-                player.updateInventory();
-                return;
-            }
-            if (event.getItem().getType() == Material.ENDER_PEARL && event.getClickedBlock() == null) {
-                if (!profile.isInFight() || (profile.isInFight() && !profile.getMatch().isFighting())) {
+                if ((event.getItem().getType() == Material.ENDER_PEARL || (event.getItem().getType() == Material.POTION && event.getItem().getDurability() >= 16000)) && profile.isInFight() && profile.getMatch().isStarting()) {
                     event.setCancelled(true);
+                    player.updateInventory();
                     return;
                 }
-                if (profile.getMatch().isStarting()) {
-                    event.setCancelled(true);
+                if (event.getItem().getType() == Material.ENDER_PEARL && event.getClickedBlock() == null) {
+                    if (!profile.isInFight() || (profile.isInFight() && !profile.getMatch().isFighting())) {
+                        event.setCancelled(true);
+                        return;
+                    }
+                    if (profile.getMatch().isStarting()) {
+                        event.setCancelled(true);
+                    }
                 }
             }
-        }
-
     }
 
     @EventHandler
-    public void onPressurePlate(final PlayerInteractEvent e) {
-        if (e.getAction().equals(Action.PHYSICAL) && e.getClickedBlock().getType() == Material.GOLD_PLATE) {
-            final Profile profile = Profile.getByUuid(e.getPlayer().getUniqueId());
-            if (profile.isInFight() && !profile.getMatch().isHCFMatch()  && profile.getMatch().getKit().getGameRules().isParkour()) {
-                profile.getMatch().handleDeath(e.getPlayer(), null, false);
+    public void onPressurePlate(final PlayerInteractEvent event) {
+        final Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+        Match match = profile.getMatch();
+        if (profile.isInFight() && match.getKit().getGameRules().isParkour()) {
+            if (event.getClickedBlock().getLocation() != null && profile.getPlates() != null) {
+                if (profile.getPlates().contains(event.getClickedBlock().getLocation())) {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+            if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock().getType() == Material.GOLD_PLATE) {
+                if (profile.isInFight() && !profile.getMatch().isHCFMatch() && profile.getMatch().getKit().getGameRules().isParkour()) {
+                    profile.getPlates().add(event.getClickedBlock().getLocation());
+                    profile.getMatch().handleDeath(event.getPlayer(), null, false);
+                }
+            }
+            if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock().getType() == Material.IRON_PLATE) {
+                if (profile.isInFight() && !match.isHCFMatch() && match.getKit().getGameRules().isParkour()) {
+                    match.getTeamPlayer(event.getPlayer()).setParkourCheckpoint(event.getPlayer().getLocation());
+                    event.getPlayer().sendMessage(CC.translate("&8[&b&lParkour&8] &aCheckpoint Acquired!"));
+                    profile.getPlates().add(event.getClickedBlock().getLocation());
+                }
             }
         }
     }
@@ -817,11 +859,9 @@ public class MatchListener implements Listener {
                 final Profile profile=Profile.getByUuid(shooter.getUniqueId());
                 if (profile.getMatch() != null && profile.getMatch().getArena() != null) {
                     if (profile.getMatch().getArena().isDisablePearls()) {
-                        if (!profile.getEnderpearlCooldown().hasExpired()) {
-                            shooter.sendMessage(CC.RED + "You can't pearl in this arena!");
-                            shooter.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 1));
-                            event.setCancelled(true);
-                        }
+                        shooter.sendMessage(CC.RED + "You can't pearl in this arena!");
+                        shooter.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 1));
+                        event.setCancelled(true);
                     }
                 }
             }

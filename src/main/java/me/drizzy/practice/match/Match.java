@@ -3,36 +3,33 @@ package me.drizzy.practice.match;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
+import lombok.Getter;
+import lombok.Setter;
+import me.drizzy.practice.Array;
+import me.drizzy.practice.arena.Arena;
+import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.events.MatchEndEvent;
 import me.drizzy.practice.match.events.MatchStartEvent;
 import me.drizzy.practice.match.task.*;
-import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.queue.Queue;
-import me.drizzy.practice.queue.QueueType;
-import me.drizzy.practice.Array;
-import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.statistics.StatisticsData;
+import me.drizzy.practice.profile.ProfileState;
+import me.drizzy.practice.queue.Queue;
+import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.external.TimeUtil;
 import me.drizzy.practice.util.nametag.NameTags;
-import lombok.Getter;
-import lombok.Setter;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.*;
 import org.bukkit.block.BlockState;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -42,27 +39,29 @@ import org.bukkit.util.Vector;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Getter
 public abstract class Match {
 
+    @Setter private long startTimestamp;
+    @Setter public MatchState state = MatchState.STARTING;
     @Getter protected static List<Match> matches = new ArrayList<>();
     private final UUID matchId = UUID.randomUUID();
     private final Queue queue;
+    private BukkitTask matchWaterCheck;
     private final Kit kit;
+    public BukkitTask task;
     private final Arena arena;
     private final QueueType queueType;
     public Map<UUID, EnderPearl> pearlMap = new HashMap<>();
-    @Setter public MatchState state = MatchState.STARTING;
     private final List<MatchSnapshot> snapshots = new ArrayList<>();
     public final List<UUID> spectators = new ArrayList<>();
     private final List<Entity> entities = new ArrayList<>();
     private final List<Location> placedBlocks = new ArrayList<>();
     private final List<BlockState> changedBlocks = new ArrayList<>();
     private final List<Location> brokenBlocks = new ArrayList<>();
-    @Getter public BukkitTask task;
-    @Setter private long startTimestamp;
-    @Getter @Setter private BukkitTask matchWaterCheck;
+
 
     public Match(Queue queue, Kit kit, Arena arena, QueueType queueType) {
         this.queue = queue;
@@ -94,7 +93,7 @@ public abstract class Match {
             if (!Array.getInstance().isDisabling()) {
                 Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), new MatchBoxUHCTask(match), 5L);
             } else {
-                if (match.getKit().getGameRules().isBoxuhc() && match.getBrokenBlocks().size() > 0) {
+                if (match.getKit().getGameRules().isBoxUHC() && match.getBrokenBlocks().size() > 0) {
                     match.getBrokenBlocks().forEach(location -> location.getBlock().setType(Material.WOOD));
                     match.getBrokenBlocks().clear();
                 }
@@ -174,7 +173,7 @@ public abstract class Match {
         }
 
         if (getKit() != null) {
-            if (getKit().getGameRules().isWaterkill() || getKit().getGameRules().isParkour() || getKit().getGameRules().isSumo()) {
+            if (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isParkour() || getKit().getGameRules().isSumo()) {
                 matchWaterCheck = new MatchWaterCheckTask(this).runTaskTimer(Array.getInstance(), 60L, 20L);
             }
         }
@@ -224,6 +223,8 @@ public abstract class Match {
                 });
         getPlayers().forEach(this::removePearl);
 
+        getPlayers().stream().map(Profile::getByUuid).collect(Collectors.toList()).stream().map(Profile::getPlates).forEach(List::clear);
+
         getSpectators().forEach(this::removeSpectator);
         entities.forEach(Entity::remove);
 
@@ -236,8 +237,8 @@ public abstract class Match {
         final MatchEndEvent event = new MatchEndEvent(this);
         Bukkit.getPluginManager().callEvent(event);
 
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), () -> getPlayers().forEach(player -> ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) 0)), 10L);
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), () -> getPlayers().forEach(player -> ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) 0)), 20L);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), () -> getPlayers().forEach(player -> ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) 0)), 2L);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), () -> getPlayers().forEach(player -> ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) 0)), 2L);
     }
 
     public void handleRespawn(Player player) {
@@ -267,51 +268,56 @@ public abstract class Match {
     }
 
     public void handleDeath(Player deadPlayer, Player killerPlayer, boolean disconnected) {
-        TeamPlayer teamPlayer = this.getTeamPlayer(deadPlayer);
+            TeamPlayer teamPlayer=this.getTeamPlayer(deadPlayer);
 
-        if (teamPlayer == null) return;
+            if (teamPlayer == null) return;
 
-        teamPlayer.setDisconnected(disconnected);
+            teamPlayer.setDisconnected(disconnected);
 
-        if (!teamPlayer.isAlive()) {
-            return;
-        }
-
-        teamPlayer.setAlive(false);
-
-        List<Player> playersAndSpectators = getPlayersAndSpectators();
-
-
-        for (Player player : playersAndSpectators) {
-            if (teamPlayer.isDisconnected()) {
-                player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.GRAY + " has disconnected.");
-                continue;
+            if (!teamPlayer.isAlive()) {
+                return;
             }
-            if ((!isHCFMatch()) && getKit().getGameRules().isParkour()) {
-                player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.GREEN + " has won.");
-            } else if (killerPlayer == null) {
-                player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() +	CC.GRAY + " has died.");
-            } else {
-                player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.GRAY + " was killed by " + getRelationColor(player, killerPlayer) + killerPlayer.getName() + CC.GRAY + ".");
-            }
-        }
 
-        onDeath(deadPlayer, killerPlayer);
+            teamPlayer.setAlive(false);
 
-        final Profile deadProfile = Profile.getByUuid(deadPlayer.getUniqueId());
-        if (deadProfile.getSettings().isLightning()) {
-            final PacketContainer lightningPacket = this.createLightningPacket(deadPlayer.getLocation());
-            float thunderSoundPitch = 0.8f + ThreadLocalRandom.current().nextFloat() * 0.2f;
-            float explodeSoundPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
-            for (final Player onlinePlayer : this.getPlayers()) {
-                onlinePlayer.playSound(deadPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
-                if (killerPlayer != null) {
-                    onlinePlayer.playSound(killerPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
-                    onlinePlayer.playSound(killerPlayer.getLocation(), Sound.EXPLODE, 2.0f, explodeSoundPitch);
+            List<Player> playersAndSpectators=getPlayersAndSpectators();
+
+
+            for ( Player player : playersAndSpectators ) {
+                if (teamPlayer.isDisconnected()) {
+                    player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.GRAY + " has disconnected.");
+                    continue;
                 }
-                this.sendLightningPacket(onlinePlayer, lightningPacket);
+                if (!isTheBridgeMatch()) {
+                    if ((!isHCFMatch()) && getKit().getGameRules().isParkour()) {
+                        player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.GREEN + " has won.");
+                    } else if (killerPlayer == null) {
+                        player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.GRAY + " has died.");
+                    } else {
+                        player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.GRAY + " was killed by " + getRelationColor(player, killerPlayer) + killerPlayer.getName() + CC.GRAY + ".");
+                    }
+                }
             }
-        }
+
+            onDeath(deadPlayer, killerPlayer);
+
+            final Profile deadProfile=Profile.getByUuid(deadPlayer.getUniqueId());
+            if (!isTheBridgeMatch()) {
+                if (deadProfile.getSettings().isLightning()) {
+                    final PacketContainer lightningPacket=this.createLightningPacket(deadPlayer.getLocation());
+                    float thunderSoundPitch=0.8f + ThreadLocalRandom.current().nextFloat() * 0.2f;
+                    float explodeSoundPitch=0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
+                    for ( final Player onlinePlayer : this.getPlayers() ) {
+                        onlinePlayer.playSound(deadPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
+                        if (killerPlayer != null) {
+                            onlinePlayer.playSound(killerPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
+                            onlinePlayer.playSound(killerPlayer.getLocation(), Sound.EXPLODE, 2.0f, explodeSoundPitch);
+                        }
+                        this.sendLightningPacket(onlinePlayer, lightningPacket);
+                    }
+                }
+            }
+
 
         if ((isSumoMatch()) && disconnected || (isTheBridgeMatch()) && disconnected) {
             end();
@@ -400,7 +406,7 @@ public abstract class Match {
         player.teleport(target.getLocation().clone().add(0, 2, 0));
         player.spigot().setCollidesWithEntities(false);
 
-        if (!profile.isSilent()) {
+        if (!profile.getPlayer().hasPermission("array.staff")) {
             for (Player otherPlayer : getPlayers()) {
                 otherPlayer.sendMessage(CC.AQUA + player.getName() + CC.YELLOW + " is now spectating your match.");
             }
@@ -473,7 +479,7 @@ public abstract class Match {
 
         if (state != MatchState.ENDING) {
             for (Player otherPlayer : getPlayers()) {
-                if (!profile.isSilent()) {
+                if (!profile.getPlayer().hasPermission("array.staff")) {
                     otherPlayer.sendMessage(CC.RED + player.getName() + CC.YELLOW + " is no longer spectating your match.");
                 }
             }

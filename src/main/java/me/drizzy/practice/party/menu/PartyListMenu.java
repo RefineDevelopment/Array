@@ -1,5 +1,6 @@
 package me.drizzy.practice.party.menu;
 
+import lombok.AllArgsConstructor;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.SkullCreator;
@@ -16,8 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PartyListMenu extends Menu
-{
+public class PartyListMenu extends Menu {
     @Override
     public String getTitle(final Player player) {
         return "&bClick to Manage a Member";
@@ -30,9 +30,10 @@ public class PartyListMenu extends Menu
         profile.getParty().getPlayers().forEach(pplayer -> buttons.put(buttons.size(), new PartyDisplayButton(pplayer)));
         return buttons;
     }
-    
-    public static class PartyDisplayButton extends Button
-    {
+
+    @AllArgsConstructor
+    public static class PartyDisplayButton extends Button {
+
         private final Player pplayer;
         
         @Override
@@ -63,11 +64,6 @@ public class PartyListMenu extends Menu
                 return;
             }
             new ManagePartyMember(this.pplayer).openMenu(player);
-        }
-        
-        @ConstructorProperties({ "pplayer" })
-        public PartyDisplayButton(final Player pplayer) {
-            this.pplayer = pplayer;
         }
     }
 }

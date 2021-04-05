@@ -12,7 +12,7 @@ public class MatchBoxUHCTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (match.getKit().getGameRules().isBoxuhc() && match.getBrokenBlocks().size() > 0) {
+        if (match.getKit().getGameRules().isBoxUHC() && match.getBrokenBlocks().size() > 0) {
             match.getBrokenBlocks().forEach(location -> location.getBlock().setType(Material.WOOD));
             match.getBrokenBlocks().clear();
         }

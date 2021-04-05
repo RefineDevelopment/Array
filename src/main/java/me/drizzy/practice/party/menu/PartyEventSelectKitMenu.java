@@ -1,26 +1,25 @@
 package me.drizzy.practice.party.menu;
 
 import lombok.AllArgsConstructor;
-import me.drizzy.practice.enums.PartyEventType;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemStack;
 import me.drizzy.practice.arena.Arena;
+import me.drizzy.practice.enums.PartyEventType;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
+import me.drizzy.practice.match.team.Team;
+import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.match.types.FFAMatch;
 import me.drizzy.practice.match.types.SumoTeamMatch;
 import me.drizzy.practice.match.types.TeamMatch;
-import me.drizzy.practice.match.team.Team;
-import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.menu.Button;
 import me.drizzy.practice.util.external.menu.Menu;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
 
-import java.beans.ConstructorProperties;
 import java.util.*;
 
 @AllArgsConstructor
@@ -37,8 +36,8 @@ public class PartyEventSelectKitMenu extends Menu {
     public Map<Integer, Button> getButtons(final Player player) {
         final Map<Integer, Button> buttons =new HashMap<>();
         for (final Kit kit : Kit.getKits()) {
-            if (kit.isEnabled() && (kit.getGameRules().isPartyffa() || kit.getGameRules().isPartysplit()) ) {
-                if (this.partyEventType != PartyEventType.FFA && !kit.getGameRules().isSumo()) {
+            if (kit.isEnabled() && (!kit.getGameRules().isDisablePartyFFA() || !kit.getGameRules().isDisablePartySplit()) && !kit.getGameRules().isBridge()) {
+                if (this.getCheck(partyEventType, kit)) {
                     buttons.put(buttons.size(), new SelectKitButton(this.partyEventType, kit));
                 }
             }
@@ -115,5 +114,12 @@ public class PartyEventSelectKitMenu extends Menu {
             }
             match.start();
         }
+    }
+
+    public boolean getCheck(PartyEventType type, Kit kit) {
+        if (type == PartyEventType.FFA && kit.getGameRules().isSumo()) {
+            return false;
+        }
+        return true;
     }
 }

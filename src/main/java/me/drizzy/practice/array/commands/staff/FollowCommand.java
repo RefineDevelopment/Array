@@ -17,7 +17,6 @@ public class FollowCommand {
             return;
         }
         profile.setFollowMode(true);
-        profile.setSilent(true);
         profile.setFollowing(target);
         Profile.getByUuid(target.getUniqueId()).getFollower().add(player);
         player.sendMessage(CC.translate("&8[&b&lArray&8] &7You have &bstarted &7following &b" + target.getName() + "&7."));
