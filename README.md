@@ -39,7 +39,7 @@ You Need Intelli J to compile, This does NOT support Eclipse
 - Duel Arena Selector: array.donator
 - Event: array.host.<event>
 - Admin Commands: array.dev
-- Staff Commands Like Tournament cancel, Silent mode: array.staff
+- Staff Commands: array.staff
 - Ping Factor Setting: array.donator+
 - Toggle Lightning: array.donator
 - Event Cooldown Reset: array.staff
