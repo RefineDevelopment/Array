@@ -8,11 +8,12 @@ import org.bukkit.entity.Player;
 
 @CommandMeta(label = "cancelmatch", permission = "array.staff")
 public class CancelMatchCommand {
-    public void execute(Player player, @CPL("Profile")Profile profile) {
-        if(profile == null) {
+    public void execute(Player player, @CPL("target") Player target) {
+        if (target == null) {
             player.sendMessage(CC.translate("&7That player doesn't exist!"));
             return;
         }
+        Profile profile = Profile.getByUuid(target);
         if (!profile.isInFight()) {
             player.sendMessage(CC.translate("&7That player is not in a fight!"));
             return;

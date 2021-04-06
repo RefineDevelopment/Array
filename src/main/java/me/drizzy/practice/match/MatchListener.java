@@ -816,12 +816,14 @@ public class MatchListener implements Listener {
         if (profile.isInFight() && match.isSoloMatch() && match.getKit().getGameRules().isParkour()) {
             if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock().getType() == Material.GOLD_PLATE && profile.getPlates() != null) {
                 if (profile.isInFight() && !profile.getMatch().isHCFMatch() && profile.getMatch().getKit().getGameRules().isParkour()) {
+                    if (profile.getPlates().contains(event.getClickedBlock().getLocation())) return;
                     profile.getPlates().add(event.getClickedBlock().getLocation());
                     profile.getMatch().handleDeath(event.getPlayer(), null, false);
                 }
             }
             if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock().getType() == Material.IRON_PLATE && profile.getPlates() != null) {
                 if (profile.isInFight() && !match.isHCFMatch() && match.getKit().getGameRules().isParkour()) {
+                    if (profile.getPlates().contains(event.getClickedBlock().getLocation())) return;
                     match.getTeamPlayer(event.getPlayer()).setParkourCheckpoint(event.getPlayer().getLocation());
                     event.getPlayer().sendMessage(CC.translate("&8[&b&lParkour&8] &aCheckpoint Acquired!"));
                     profile.getPlates().add(event.getClickedBlock().getLocation());
