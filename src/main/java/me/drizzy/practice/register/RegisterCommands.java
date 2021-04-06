@@ -20,10 +20,7 @@ import me.drizzy.practice.events.types.parkour.command.*;
 import me.drizzy.practice.events.types.spleef.command.*;
 import me.drizzy.practice.events.types.sumo.command.*;
 import me.drizzy.practice.kit.command.*;
-import me.drizzy.practice.match.command.MatchStatusCommand;
-import me.drizzy.practice.match.command.SpectateCommand;
-import me.drizzy.practice.match.command.StopSpectatingCommand;
-import me.drizzy.practice.match.command.ViewInventoryCommand;
+import me.drizzy.practice.match.command.*;
 import me.drizzy.practice.party.command.*;
 import me.drizzy.practice.statistics.command.LeaderboardsCommand;
 import me.drizzy.practice.statistics.command.StatsCommand;
@@ -40,6 +37,7 @@ public class RegisterCommands {
                 //Staff commands
                 new FollowCommand(),
                 new UnFollowCommand(),
+                new CancelMatchCommand(),
 
                 //Array Commands
                 new ArrayCommand(),

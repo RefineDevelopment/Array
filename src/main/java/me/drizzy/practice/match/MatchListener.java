@@ -155,6 +155,7 @@ public class MatchListener implements Listener {
                             if(bed.distanceSquared(own) > bed.distanceSquared(opponent)) {
                                match.handleDeath(match.getOpponentPlayer(event.getPlayer()), null, false);
                             }
+                            event.setCancelled(true);
                         }
                     } else if (match.getPlacedBlocks().remove(event.getBlock().getLocation()) && !match.getKit().getGameRules().isBoxUHC()) {
                         event.getPlayer().getInventory().addItem(new ItemBuilder(event.getBlock().getType()).durability(event.getBlock().getData()).build());
@@ -298,7 +299,7 @@ public class MatchListener implements Listener {
                 }
                 Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BridgePlayerTask(bridgeMatch, player), 2L);
                 return;
-            } else if (profile.getMatch().getKit().getGameRules().isBedwars()) {
+            } else if (profile.getMatch().getKit() !=null && profile.getMatch().getKit().getGameRules().isBedwars()) {
                 event.getDrops().clear();
                 PlayerUtil.reset(player);
                 Match match = profile.getMatch();
@@ -310,6 +311,7 @@ public class MatchListener implements Listener {
                     }
                 }
                 Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BedwarsPlayerTask(match, player), 2L);
+                return;
             }
         }
         player.teleport(player.getLocation().add(0.0, 2.0, 0.0));
@@ -390,7 +392,7 @@ public class MatchListener implements Listener {
             if (profile.isInFight()) {
                 final Match match = profile.getMatch();
                 if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                    if (profile.getMatch().getKit().getGameRules().isVoidSpawn() || profile.getMatch().isTheBridgeMatch()) {
+                    if (profile.getMatch().getKit().getGameRules().isVoidSpawn() || profile.getMatch().isTheBridgeMatch() || profile.getMatch().getKit().getGameRules().isBedwars()) {
                             event.setDamage(0.0);
                             player.setFallDistance(0);
                             player.setHealth(20.0);
@@ -418,8 +420,10 @@ public class MatchListener implements Listener {
                     return;
                 }
                 if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
-                       if (profile.getMatch().isTheBridgeMatch() || profile.getMatch().getKit().getGameRules().isDisableFallDamage()) {
-                       event.setCancelled(true);
+                    if (profile.getMatch() != null) {
+                        if (profile.getMatch().isTheBridgeMatch() || profile.getMatch().getKit() != null && profile.getMatch().getKit().getGameRules().isDisableFallDamage()) {
+                            event.setCancelled(true);
+                        }
                     }
                 }
                 if (event.getCause() == EntityDamageEvent.DamageCause.LAVA && !profile.getMatch().isHCFMatch()  && profile.getMatch().getKit().getGameRules().isLavaKill()) {
@@ -455,7 +459,7 @@ public class MatchListener implements Listener {
         Profile profile = Profile.getByUuid(player);
         Match match = profile.getMatch();
         if (profile.isInFight()) {
-            if (player.getLocation().getBlockY() <= 30) {
+            if (player.getLocation().getBlockY() <= 45) {
                 if (profile.getMatch().isTheBridgeMatch()) {
                     TheBridgeMatch bridgeMatch=(TheBridgeMatch) match;
                     PlayerUtil.reset(player);

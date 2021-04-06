@@ -1,5 +1,6 @@
 package me.drizzy.practice.queue.menu;
 
+import lombok.AllArgsConstructor;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.Array;
@@ -19,8 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class QueueSelectKitMenu extends Menu
-{
+@AllArgsConstructor
+public class QueueSelectKitMenu extends Menu {
+
     private final QueueType queueType;
 
     @Override
@@ -40,13 +42,9 @@ public class QueueSelectKitMenu extends Menu
         return buttons;
     }
 
-    @ConstructorProperties({ "queueType" })
-    public QueueSelectKitMenu(final QueueType queueType) {
-        this.queueType = queueType;
-    }
+    @AllArgsConstructor
+    private class SelectKitButton extends Button {
 
-    private class SelectKitButton extends Button
-    {
         private final Queue queue;
 
         @Override
@@ -78,10 +76,6 @@ public class QueueSelectKitMenu extends Menu
             input = input.replace("{in_queue}", String.valueOf(this.queue.getPlayers().size()))
                          .replace("{in_fight}", String.valueOf(Match.getInFights(this.queue)));
             return input;
-        }
-        @ConstructorProperties({ "queue" })
-        public SelectKitButton(final Queue queue) {
-            this.queue = queue;
         }
     }
 }
