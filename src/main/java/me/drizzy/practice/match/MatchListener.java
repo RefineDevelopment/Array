@@ -21,6 +21,7 @@ import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.Cooldown;
 import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.TimeUtil;
+import me.drizzy.practice.util.nametag.NameTags;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -399,7 +400,7 @@ public class MatchListener implements Listener {
                                 for ( Player player2 : bridgeMatch.getPlayers() ) {
                                     player2.sendMessage(CC.translate(bridgeMatch.getRelationColor(player2, player) + player.getName() + " &7has died"));
                                 }
-                            Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BridgePlayerTask(bridgeMatch, player), 7L);
+                            Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BridgePlayerTask(bridgeMatch, player), 2L);
                             return;
                         }
                         if (profile.getMatch().getKit().getGameRules().isBedwars()) {
@@ -407,7 +408,7 @@ public class MatchListener implements Listener {
                                 for ( Player player2 : match.getPlayers() ) {
                                     player2.sendMessage(CC.translate(match.getRelationColor(player2, player) + player.getName() + " &7has died"));
                                 }
-                            Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BedwarsPlayerTask(match, player), 7L);
+                            Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BedwarsPlayerTask(match, player), 2L);
                             return;
                         }
                         player.teleport(match.getTeamPlayer(player).getPlayerSpawn());
@@ -454,16 +455,24 @@ public class MatchListener implements Listener {
         Profile profile = Profile.getByUuid(player);
         Match match = profile.getMatch();
         if (profile.isInFight()) {
-          if (match.isTheBridgeMatch() || match.getKit().getGameRules().isBedwars()) {
             if (player.getLocation().getBlockY() <= 30) {
-                player.setFallDistance(0);
-                player.setHealth(20.0);
-                player.teleport(match.getTeamPlayer(player).getPlayerSpawn());
-                for ( Player player2 : match.getPlayers() ) {
-                    player2.sendMessage(CC.translate(match.getRelationColor(player2, player) + player.getName() + " &7has died"));
+                if (profile.getMatch().isTheBridgeMatch()) {
+                    TheBridgeMatch bridgeMatch=(TheBridgeMatch) match;
+                    PlayerUtil.reset(player);
+                    for ( Player player2 : bridgeMatch.getPlayers() ) {
+                        player2.sendMessage(CC.translate(bridgeMatch.getRelationColor(player2, player) + player.getName() + " &7has died"));
+                    }
+                    Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BridgePlayerTask(bridgeMatch, player), 2L);
+                    return;
+                }
+                if (profile.getMatch().getKit().getGameRules().isBedwars()) {
+                    PlayerUtil.reset(player);
+                    for ( Player player2 : match.getPlayers() ) {
+                        player2.sendMessage(CC.translate(match.getRelationColor(player2, player) + player.getName() + " &7has died"));
+                    }
+                    Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BedwarsPlayerTask(match, player), 2L);
                 }
             }
-          }
         }
     }
 
@@ -630,7 +639,7 @@ public class MatchListener implements Listener {
             if (source instanceof Player) {
                 final Player shooter = (Player) source;
                 final Profile profile = Profile.getByUuid(shooter.getUniqueId());
-                if (profile.isInFight()) {
+                if (profile.isInFight() && profile.getMatch().isTheBridgeMatch()) {
                     if (!profile.getBowCooldown().hasExpired()) {
                         final String time = TimeUtil.millisToSeconds(profile.getBowCooldown().getRemaining());
                         final String context = "second" + (time.equalsIgnoreCase("1.0") ? "" : "s");
@@ -669,6 +678,7 @@ public class MatchListener implements Listener {
                         if (profile.getMatch().getKit().getKitInventory().getEffects() != null) {
                             event.getPlayer().addPotionEffects(profile.getMatch().getKit().getKitInventory().getEffects());
                         }
+
                         event.getPlayer().updateInventory();
                         event.setCancelled(true);
                         return;
@@ -694,6 +704,13 @@ public class MatchListener implements Listener {
                         if (kitInventory.getEffects() != null) {
                             event.getPlayer().addPotionEffects(kitInventory.getEffects());
                         }
+                        for (Player friendly : profile.getMatch().getTeam(event.getPlayer()).getPlayers()) {
+                            NameTags.color(event.getPlayer(), friendly, ChatColor.YELLOW, false);
+                        }
+
+                        for (Player enemy : profile.getMatch().getOpponentTeam(event.getPlayer()).getPlayers()) {
+                            NameTags.color(event.getPlayer(), enemy, ChatColor.RED, false);
+                        }
                         event.getPlayer().updateInventory();
                         Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
                         event.setCancelled(true);
@@ -707,6 +724,13 @@ public class MatchListener implements Listener {
                         if (kitInventory.getEffects() != null) {
                             event.getPlayer().addPotionEffects(kitInventory.getEffects());
                         }
+                        for (Player friendly : profile.getMatch().getTeam(event.getPlayer()).getPlayers()) {
+                            NameTags.color(event.getPlayer(), friendly, ChatColor.LIGHT_PURPLE, false);
+                        }
+
+                        for (Player enemy : profile.getMatch().getOpponentTeam(event.getPlayer()).getPlayers()) {
+                            NameTags.color(event.getPlayer(), enemy, ChatColor.RED, false);
+                        }
                         event.getPlayer().updateInventory();
                         Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
                         event.setCancelled(true);
@@ -719,6 +743,13 @@ public class MatchListener implements Listener {
                         event.getPlayer().getActivePotionEffects().clear();
                         if (kitInventory.getEffects() != null) {
                             event.getPlayer().addPotionEffects(kitInventory.getEffects());
+                        }
+                        for (Player friendly : profile.getMatch().getTeam(event.getPlayer()).getPlayers()) {
+                            NameTags.color(event.getPlayer(), friendly, ChatColor.AQUA, false);
+                        }
+
+                        for (Player enemy : profile.getMatch().getOpponentTeam(event.getPlayer()).getPlayers()) {
+                            NameTags.color(event.getPlayer(), enemy, ChatColor.RED, false);
                         }
                         event.getPlayer().updateInventory();
                         Array.getInstance().getHCFManager().attemptEquip(event.getPlayer());
@@ -778,26 +809,21 @@ public class MatchListener implements Listener {
     public void onPressurePlate(final PlayerInteractEvent event) {
         final Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
         Match match = profile.getMatch();
-        if (profile.isInFight() && match.getKit().getGameRules().isParkour()) {
-            if (event.getClickedBlock().getLocation() != null && profile.getPlates() != null) {
-                if (profile.getPlates().contains(event.getClickedBlock().getLocation())) {
-                    event.setCancelled(true);
-                    return;
-                }
-            }
-            if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock().getType() == Material.GOLD_PLATE) {
+        if (profile.isInFight() && match.isSoloMatch() && match.getKit().getGameRules().isParkour()) {
+            if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock().getType() == Material.GOLD_PLATE && profile.getPlates() != null) {
                 if (profile.isInFight() && !profile.getMatch().isHCFMatch() && profile.getMatch().getKit().getGameRules().isParkour()) {
                     profile.getPlates().add(event.getClickedBlock().getLocation());
                     profile.getMatch().handleDeath(event.getPlayer(), null, false);
                 }
             }
-            if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock().getType() == Material.IRON_PLATE) {
+            if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock().getType() == Material.IRON_PLATE && profile.getPlates() != null) {
                 if (profile.isInFight() && !match.isHCFMatch() && match.getKit().getGameRules().isParkour()) {
                     match.getTeamPlayer(event.getPlayer()).setParkourCheckpoint(event.getPlayer().getLocation());
                     event.getPlayer().sendMessage(CC.translate("&8[&b&lParkour&8] &aCheckpoint Acquired!"));
                     profile.getPlates().add(event.getClickedBlock().getLocation());
                 }
             }
+            event.setCancelled(true);
         }
     }
 

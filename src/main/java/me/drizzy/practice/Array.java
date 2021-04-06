@@ -179,6 +179,8 @@ public class Array extends JavaPlugin {
             registerAll();
             RegisterCommands.register();
 
+            this.divisionsManager = new Divisions();
+
             sumoManager = new SumoManager();
             bracketsManager = new BracketsManager();
             LMSManager = new LMSManager();
@@ -282,7 +284,6 @@ public class Array extends JavaPlugin {
             return;
         }
         new Hotbar();
-        this.divisionsManager = new Divisions();
         Match.preload();
         Party.preload();
         TaskUtil.runAsync(() -> knockbackManager = new KnockbackManager());

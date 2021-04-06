@@ -19,6 +19,7 @@ import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.external.ChatComponentBuilder;
 import me.drizzy.practice.util.external.TimeUtil;
@@ -61,6 +62,7 @@ public abstract class Match {
     private final List<Location> placedBlocks = new ArrayList<>();
     private final List<BlockState> changedBlocks = new ArrayList<>();
     private final List<Location> brokenBlocks = new ArrayList<>();
+    private final List<Player> catcher = new ArrayList<>();
 
 
     public Match(Queue queue, Kit kit, Arena arena, QueueType queueType) {
@@ -299,6 +301,8 @@ public abstract class Match {
                 }
             }
 
+        catcher.remove(deadPlayer);
+
             onDeath(deadPlayer, killerPlayer);
 
             final Profile deadProfile=Profile.getByUuid(deadPlayer.getUniqueId());
@@ -401,7 +405,7 @@ public abstract class Match {
         profile.setMatch(this);
         profile.setState(ProfileState.SPECTATE_MATCH);
         profile.refreshHotbar();
-        profile.handleVisibility();
+        TaskUtil.runLater(profile::handleVisibility, 2L);
         player.teleport(spawn);
         player.teleport(target.getLocation().clone().add(0, 2, 0));
         player.spigot().setCollidesWithEntities(false);

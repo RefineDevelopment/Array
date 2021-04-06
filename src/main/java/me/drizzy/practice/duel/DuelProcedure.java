@@ -1,5 +1,6 @@
 package me.drizzy.practice.duel;
 
+import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.kit.Kit;
@@ -45,8 +46,8 @@ public class DuelProcedure {
         senderProfile.setDuelProcedure(null);
         senderProfile.getSentDuelRequests().put(target.getUniqueId(), request);
 
-        this.sender.sendMessage(CC.translate("&8[&b&lDuel&8] &fYou sent a duel request to &b" + this.target.getName() + "&f with kit &b" + (this.kit.getName()) + " &fon the arena &b" + arena.getDisplayName()));
-        this.target.sendMessage(CC.translate("&8[&b&lDuel&8] &b" + this.sender.getName() + " &fhas sent you a duel request with kit &b" + (this.kit.getName()) + " &fon the arena &b" + arena.getDisplayName()));
+        this.sender.sendMessage(CC.translate("&8[&b&lDuel&8] &fYou sent a duel request to &b" + this.target.getName() + " &7(" + PlayerUtil.getPing(target) + ")" + " &f with kit &b" + (this.kit.getName()) + " &fon the arena &b" + arena.getDisplayName()));
+        this.target.sendMessage(CC.translate("&8[&b&lDuel&8] &b" + this.sender.getName() + "&7(" + PlayerUtil.getPing(sender) + ")" + " &fhas sent you a duel request with kit &b" + (this.kit.getName()) + " &fon the arena &b" + arena.getDisplayName()));
         target.spigot().sendMessage(new ChatComponentBuilder("")
                 .parse("&a(Click to accept)")
                 .attachToEachPart(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/duel accept " + sender.getName()))
