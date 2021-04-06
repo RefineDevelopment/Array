@@ -137,9 +137,9 @@ public class Party extends Team {
                 teamProfile.handleVisibility(otherPlayer, player);
             }
         }
-        //If they are in a match then kill everyone and end the match.
-        if (Profile.getByUuid(this.getTeamPlayers().get(1).getPlayer()).isInMatch()) {
-            Profile.getByUuid(this.getTeamPlayers().get(1).getPlayer()).getMatch().addSpectator(player, this.getTeamPlayers().get(1).getPlayer());
+        //If they are in a match then add him as a spectator.
+        if (Profile.getByUuid(this.getTeamPlayers().get(0).getPlayer()).isInMatch()) {
+            Profile.getByUuid(this.getTeamPlayers().get(0).getPlayer()).getMatch().addSpectator(player, this.getTeamPlayers().get(0).getPlayer());
         }
     }
 
@@ -148,6 +148,7 @@ public class Party extends Team {
         this.getTeamPlayers().removeIf(member -> member.getUuid().equals(player.getUniqueId()));
         final Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setParty(null);
+        this.getPlayers().removeIf(member -> member.getUniqueId().equals(player.getUniqueId()));
         if (profile.isInLobby() || profile.isInQueue()) {
             profile.handleVisibility();
             PlayerUtil.reset(player, false);

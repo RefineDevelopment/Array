@@ -10,14 +10,11 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
+@Setter
 public class Team {
 
-    @Getter
-    @Setter
     private TeamPlayer leader;
     private final List<TeamPlayer> teamPlayers;
-    @Getter @Setter  private int kothPoints;
-    @Getter @Setter
     private int sumoRounds = 0;
 
     public Team(TeamPlayer leader) {

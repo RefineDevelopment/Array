@@ -35,6 +35,12 @@ public class PartyListener implements Listener {
     public void onPlayerQuit(final PlayerQuitEvent event) {
         final Profile profile = Profile.getProfiles().get(event.getPlayer().getUniqueId());
         if (profile != null && profile.getParty() != null) {
+            if (profile.getParty().isLeader(event.getPlayer().getUniqueId())) {
+                profile.getParty().leader(event.getPlayer(), profile.getParty().getPlayers().get(0));
+                profile.getParty().leave(event.getPlayer(), false);
+            } else {
+                profile.getParty().leave(event.getPlayer(), false);
+            }
             if (Profile.getByUuid(profile.getParty().getPlayers().get(1)).isInMatch()) {
                 Match match = Profile.getByUuid(profile.getParty().getPlayers().get(1)).getMatch();
                 if (match.isSoloMatch() || match.isSumoMatch() || match.isTheBridgeMatch()) {
@@ -46,13 +52,7 @@ public class PartyListener implements Listener {
             if (profile.getParty() !=null && Tournament.CURRENT_TOURNAMENT !=null && Tournament.CURRENT_TOURNAMENT.isParticipating(event.getPlayer())) {
                 Tournament.CURRENT_TOURNAMENT.leave(profile.getParty());
             }
-            assert profile.getParty() != null;
-            if (profile.getParty().isLeader(event.getPlayer().getUniqueId())) {
-                profile.getParty().leader(event.getPlayer(), profile.getParty().getPlayers().get(1));
-            }
-            else {
-                profile.getParty().leave(event.getPlayer(), false);
-            }
+
         }
     }
 }

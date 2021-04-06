@@ -54,7 +54,7 @@ public class OtherPartiesMenu extends Menu {
                 lore.add(CC.GRAY + " and " + (this.party.getTeamPlayers().size() - added) + " others...");
             }
             return new ItemBuilder(Material.SKULL_ITEM)
-                    .name("&bParty of &r" + party.getLeader().getPlayer().getName())
+                    .name("&bParty of &r" + party.getLeader().getDisplayName())
                     .amount(this.party.getPlayers().size())
                     .durability(3)
                     .lore(lore)
