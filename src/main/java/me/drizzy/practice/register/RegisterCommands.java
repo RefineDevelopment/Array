@@ -47,6 +47,7 @@ public class RegisterCommands {
                 new ArraySetEloCommand(),
                 new ArrayGoldenHeadCommand(),
                 new ArrayReloadCommand(),
+                new ArrayReloadDivisionsCommand(),
                 new ArrayRenameCommand(),
                 new ArrayRefillCommand(),
                 new ArrayResetStatsCommand(),
