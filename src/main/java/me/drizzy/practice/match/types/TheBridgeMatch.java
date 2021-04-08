@@ -519,6 +519,19 @@ public class TheBridgeMatch extends Match {
                         new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
                 }
             }
+        } else {
+            TeamPlayer roundWinner=getTeamPlayer(getWinningPlayer());
+            TeamPlayer roundLoser=getOpponentTeamPlayer(getWinningPlayer());
+            getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
+
+            PlayerUtil.reset(deadPlayer);
+
+            for ( Player otherPlayer : getPlayersAndSpectators() ) {
+                Profile profile=Profile.getByUuid(otherPlayer.getUniqueId());
+                profile.handleVisibility(otherPlayer, deadPlayer);
+            }
+
+            end();
         }
     }
 

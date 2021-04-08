@@ -1,15 +1,12 @@
 package me.drizzy.practice.profile;
 
 import me.drizzy.practice.Array;
-import me.drizzy.practice.ArrayCache;
 import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.array.essentials.event.SpawnTeleportEvent;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.events.MatchEvent;
 import me.drizzy.practice.match.events.MatchStartEvent;
-import me.drizzy.practice.tournament.Tournament;
 import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.nametag.NameTags;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -249,76 +246,15 @@ public class ProfileListener implements Listener {
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         event.setJoinMessage(null);
         Player player = event.getPlayer();
-        Profile.getPlayerList().add(player);
         Profile profile = new Profile(player.getUniqueId());
-
-        for ( Profile other : Profile.getProfiles().values() ) {
-            other.handleVisibility();
-        }
-
-        Array.getInstance().getTaskThread().execute(() -> {
-            if (!ArrayCache.getPlayerCache().containsKey(player.getName())) {
-                ArrayCache.getPlayerCache().put(player.getName(), player.getUniqueId());
-            }
-            try {
-                profile.load();
-            } catch (Exception e) {
-                e.printStackTrace();
-                event.getPlayer().kickPlayer(CC.AQUA + "Failed to load your profile, Please contact an Administrator!");
-                return;
-            }
-            Profile.getProfiles().put(player.getUniqueId(), profile);
-            profile.setName(player.getName());
-            profile.refreshHotbar();
-        });
-
-        Essentials.teleportToSpawn(player);
-
-        //Visibility Bug Fix :)
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                profile.handleVisibility();
-            }
-        }.runTaskLater(Array.getInstance(), 5L);
-
-        //TODO: Remove this with a NameTagHandler Thread
-        for ( Player ps : Bukkit.getOnlinePlayers() ) {
-            NameTags.color(player, ps, ChatColor.GREEN, false);
-            if (!Profile.getByUuid(ps).isBusy(ps) && !Profile.getByUuid(ps).isInSomeSortOfFight()) {
-                if (Profile.getByUuid(ps).getState() == ProfileState.IN_LOBBY || Profile.getByUuid(ps).getState() == ProfileState.IN_QUEUE)
-                    NameTags.color(ps, player, ChatColor.GREEN, false);
-            }
-        }
+        profile.handleJoin();
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         event.setQuitMessage(null);
-        Profile profile=Profile.getProfiles().get(event.getPlayer().getUniqueId());
-        Array.getInstance().getTaskThread().execute(() -> {
-                Profile.getPlayerList().remove(event.getPlayer());
-                if (profile.getMatch() != null) {
-                    if (profile.getMatch().isSoloMatch() || profile.getMatch().isSumoMatch() || profile.getMatch().isTheBridgeMatch()) {
-                        profile.getMatch().handleDeath(event.getPlayer(), profile.getMatch().getOpponentPlayer(event.getPlayer()), true);
-                    } else {
-                        profile.getMatch().handleDeath(event.getPlayer(), profile.getMatch().getOpponentTeam(event.getPlayer()).getLeader().getPlayer(), true);
-                    }
-                }
-                if (profile.isInQueue()) {
-                    profile.getQueue().removePlayer(profile.getQueueProfile());
-                }
-                profile.save();
-                if (profile.getRematchData() != null) {
-                    Player target = Array.getInstance().getServer().getPlayer(profile.getRematchData().getTarget());
-                    if (target != null && target.isOnline()) {
-                        Profile.getByUuid(target.getUniqueId()).checkForHotbarUpdate();
-                    }
-                }
-                if (profile.getParty() !=null && Tournament.CURRENT_TOURNAMENT !=null && Tournament.CURRENT_TOURNAMENT.isParticipating(event.getPlayer())) {
-                    Tournament.CURRENT_TOURNAMENT.leave(profile.getParty());
-                }
-        });
+        Profile profile = Profile.getProfiles().get(event.getPlayer().getUniqueId());
+        profile.handleLeave();
     }
 
     @EventHandler
@@ -326,8 +262,11 @@ public class ProfileListener implements Listener {
         if (event.getReason() != null) {
             if (event.getReason().contains("Flying is not enabled")) {
                 event.setCancelled(true);
+                return;
             }
         }
+        Profile profile=Profile.getProfiles().get(event.getPlayer().getUniqueId());
+        profile.handleLeave();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

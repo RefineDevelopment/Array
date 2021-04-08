@@ -274,8 +274,7 @@ public class SumoMatch extends Match {
 
     @Override
     public boolean canEnd() {
-        if (getRoundsNeeded(playerA) == 0 || getRoundsNeeded(playerB) == 0)
-            return true;
+        if (getRoundsNeeded(playerA) == 0 || getRoundsNeeded(playerB) == 0) return true;
         return playerA.isDisconnected() || playerB.isDisconnected();
     }
 
@@ -490,6 +489,7 @@ public class SumoMatch extends Match {
                         playerA.getPlayer().sendMessage(CC.translate(string.replace("{rounds}", String.valueOf(getRoundsNeeded(playerA)).replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName()))));
                         playerB.getPlayer().sendMessage(CC.translate(string.replace("{rounds}", String.valueOf(getRoundsNeeded(playerB)).replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName()))));
                     }
+                        catcher.clear();
                         setupPlayer(playerA.getPlayer());
                         setupPlayer(playerB.getPlayer());
                         playerA.getPlayer().showPlayer(playerB.getPlayer());
@@ -501,6 +501,19 @@ public class SumoMatch extends Match {
 
                 }
             }
+        } else if (!deadPlayer.isOnline() || !killerPlayer.isOnline()){
+            TeamPlayer roundWinner=getTeamPlayer(getWinningPlayer());
+            TeamPlayer roundLoser=getOpponentTeamPlayer(getWinningPlayer());
+            getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
+
+            PlayerUtil.reset(deadPlayer);
+
+            for ( Player otherPlayer : getPlayersAndSpectators() ) {
+                Profile profile=Profile.getByUuid(otherPlayer.getUniqueId());
+                profile.handleVisibility(otherPlayer, deadPlayer);
+            }
+
+            end();
         }
     }
 

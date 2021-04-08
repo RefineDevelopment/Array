@@ -13,6 +13,8 @@ import com.mongodb.client.model.Sorts;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.ArrayCache;
+import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.duel.DuelProcedure;
 import me.drizzy.practice.duel.DuelRequest;
 import me.drizzy.practice.enums.HotbarType;
@@ -410,6 +412,73 @@ public class Profile {
         } else {
             return true;
         }
+    }
+
+    public void handleJoin() {
+        Profile.getPlayerList().add(this.getPlayer());
+        for ( Profile other : Profile.getProfiles().values() ) {
+            other.handleVisibility();
+        }
+
+        Array.getInstance().getTaskThread().execute(() -> {
+            if (!ArrayCache.getPlayerCache().containsKey(this.getPlayer().getName())) {
+                ArrayCache.getPlayerCache().put(this.getPlayer().getName(), this.getUuid());
+            }
+            try {
+                this.load();
+            } catch (Exception e) {
+                e.printStackTrace();
+                this.getPlayer().kickPlayer(CC.AQUA + "Failed to load your profile, Please contact an Administrator!");
+                return;
+            }
+            Profile.getProfiles().put(this.getPlayer().getUniqueId(), this);
+            this.setName(this.getPlayer().getName());
+            this.refreshHotbar();
+        });
+
+        Essentials.teleportToSpawn(this.getPlayer());
+
+        //Visibility Bug Fix :)
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Profile.this.handleVisibility();
+            }
+        }.runTaskLater(Array.getInstance(), 5L);
+
+        for ( Player ps : Bukkit.getOnlinePlayers() ) {
+            NameTags.color(this.getPlayer(), ps, ChatColor.GREEN, false);
+            if (!Profile.getByUuid(ps).isBusy(ps) && !Profile.getByUuid(ps).isInSomeSortOfFight()) {
+                if (Profile.getByUuid(ps).getState() == ProfileState.IN_LOBBY || Profile.getByUuid(ps).getState() == ProfileState.IN_QUEUE)
+                    NameTags.color(ps, getPlayer(), ChatColor.GREEN, false);
+            }
+        }
+    }
+
+    public void handleLeave() {
+        Array.getInstance().getTaskThread().execute(() -> {
+            Profile.getPlayerList().remove(this.getPlayer());
+            if (this.getMatch() != null) {
+                if (this.getMatch().isSoloMatch() || this.getMatch().isSumoMatch() || this.getMatch().isTheBridgeMatch()) {
+                    this.getMatch().handleDeath(this.getPlayer(), null, true);
+                } else {
+                    this.getMatch().handleDeath(this.getPlayer(), null, true);
+                }
+            }
+            if (this.isInQueue()) {
+                this.getQueue().removePlayer(this.getQueueProfile());
+            }
+            this.save();
+            if (this.getRematchData() != null) {
+                Player target = Array.getInstance().getServer().getPlayer(this.getRematchData().getTarget());
+                if (target != null && target.isOnline()) {
+                    Profile.getByUuid(target.getUniqueId()).checkForHotbarUpdate();
+                }
+            }
+            if (this.getParty() !=null && Tournament.CURRENT_TOURNAMENT !=null && Tournament.CURRENT_TOURNAMENT.isParticipating(this.getPlayer())) {
+                Tournament.CURRENT_TOURNAMENT.leave(this.getParty());
+            }
+        });
     }
 
     public boolean isInLobby() {

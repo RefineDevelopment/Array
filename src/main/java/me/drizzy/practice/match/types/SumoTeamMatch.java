@@ -508,6 +508,7 @@ public class SumoTeamMatch extends Match {
                             otherPlayer.showPlayer(p);
                         }
                     }));
+                    catcher.clear();
 
                     //Just in case.
                     onStart();

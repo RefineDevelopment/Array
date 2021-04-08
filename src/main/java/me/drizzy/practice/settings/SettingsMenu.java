@@ -1,5 +1,6 @@
 package me.drizzy.practice.settings;
 
+import lombok.AllArgsConstructor;
 import me.drizzy.practice.enums.SettingsType;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
@@ -15,8 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SettingsMenu extends Menu
-{
+public class SettingsMenu extends Menu {
+
     @Override
     public String getTitle(final Player player) {
         return "&7Settings";
@@ -37,8 +38,9 @@ public class SettingsMenu extends Menu
         return buttons;
     }
 
-    private static class SettingsButton extends Button
-    {
+    @AllArgsConstructor
+    private static class SettingsButton extends Button {
+
         private final SettingsType type;
 
         @Override
@@ -193,10 +195,6 @@ public class SettingsMenu extends Menu
         @Override
         public boolean shouldUpdate(final Player player, final ClickType clickType) {
             return true;
-        }
-
-        public SettingsButton(final SettingsType type) {
-            this.type = type;
         }
     }
 }

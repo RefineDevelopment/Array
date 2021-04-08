@@ -62,7 +62,7 @@ public abstract class Match {
     private final List<Location> placedBlocks = new ArrayList<>();
     private final List<BlockState> changedBlocks = new ArrayList<>();
     private final List<Location> brokenBlocks = new ArrayList<>();
-    private final List<Player> catcher = new ArrayList<>();
+    public final List<Player> catcher = new ArrayList<>();
 
 
     public Match(Queue queue, Kit kit, Arena arena, QueueType queueType) {
@@ -301,8 +301,6 @@ public abstract class Match {
                 }
             }
 
-        catcher.remove(deadPlayer);
-
             onDeath(deadPlayer, killerPlayer);
 
             final Profile deadProfile=Profile.getByUuid(deadPlayer.getUniqueId());
@@ -323,7 +321,8 @@ public abstract class Match {
             }
 
 
-        if ((isSumoMatch()) && disconnected || (isTheBridgeMatch()) && disconnected) {
+        if (isSumoMatch() && disconnected || isTheBridgeMatch() && disconnected) {
+            onEnd();
             end();
             return;
         }
