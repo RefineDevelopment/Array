@@ -450,7 +450,7 @@ public class SumoMatch extends Match {
 
     @Override
     public int getRoundsNeeded(Team team) {
-        throw new UnsupportedOperationException("Cannot getInstance team round wins from SoloMatch");
+        throw new UnsupportedOperationException("Cannot getInstance team round wins from SumoMatch");
     }
 
     @Override
@@ -501,7 +501,7 @@ public class SumoMatch extends Match {
 
                 }
             }
-        } else if (!deadPlayer.isOnline() || !killerPlayer.isOnline()){
+        }  else {
             TeamPlayer roundWinner=getTeamPlayer(getWinningPlayer());
             TeamPlayer roundLoser=getOpponentTeamPlayer(getWinningPlayer());
             getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
@@ -512,7 +512,6 @@ public class SumoMatch extends Match {
                 Profile profile=Profile.getByUuid(otherPlayer.getUniqueId());
                 profile.handleVisibility(otherPlayer, deadPlayer);
             }
-
             end();
         }
     }

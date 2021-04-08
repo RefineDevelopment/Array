@@ -15,6 +15,7 @@ import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.match.types.TheBridgeMatch;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
+import me.drizzy.practice.util.BlockUtil;
 import me.drizzy.practice.util.LocationUtils;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
@@ -35,6 +36,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -43,7 +45,10 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class MatchListener implements Listener {
 
@@ -116,6 +121,32 @@ public class MatchListener implements Listener {
                         match.handleDeath(match.getOpponentPlayer(player), null, false);
                     }
                 }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onBlockMove(final BlockFromToEvent event) {
+        final int id = event.getBlock().getTypeId();
+        if (id >= 8 && id <= 11) {
+            final Block b = event.getToBlock();
+            final int toid = b.getTypeId();
+            if (toid == 0 && BlockUtil.generatesCobble(id, b)) {
+                event.setCancelled(true);
+            }
+        }
+        final Location l = event.getToBlock().getLocation();
+        final List<UUID> playersinarena = new ArrayList<>();
+        for (final Entity entity : BlockUtil.getNearbyEntities(l, 50)) {
+            if (entity instanceof Player) {
+                playersinarena.add(((Player) entity).getPlayer().getUniqueId());
+            }
+        }
+        if (playersinarena.size() > 0) {
+            final Profile profile = Profile.getByUuid(playersinarena.get(0));
+            if (profile.isInFight()) {
+                final Match match = profile.getMatch();
+                match.getPlacedBlocks().add(event.getToBlock().getLocation());
             }
         }
     }
@@ -460,6 +491,8 @@ public class MatchListener implements Listener {
         Match match = profile.getMatch();
         if (profile.isInFight()) {
             if (player.getLocation().getBlockY() <= 45) {
+                if (match.getCatcher().contains(player)) return;
+                match.getCatcher().add(player);
                 if (profile.getMatch().isTheBridgeMatch()) {
                     TheBridgeMatch bridgeMatch=(TheBridgeMatch) match;
                     PlayerUtil.reset(player);

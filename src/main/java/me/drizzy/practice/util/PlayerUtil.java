@@ -86,8 +86,6 @@ public class PlayerUtil {
         reset(player);
 
         player.setGameMode(GameMode.CREATIVE);
-        player.setAllowFlight(true);
-        player.setFlying(true);
         player.setFlySpeed(0.2F);
         player.updateInventory();
         player.getInventory().setItem(8, Hotbar.getItems().get(HotbarType.SPEC_LEAVE));

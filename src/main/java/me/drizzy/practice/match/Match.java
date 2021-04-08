@@ -176,7 +176,7 @@ public abstract class Match {
 
         if (getKit() != null) {
             if (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isParkour() || getKit().getGameRules().isSumo()) {
-                matchWaterCheck = new MatchWaterCheckTask(this).runTaskTimer(Array.getInstance(), 60L, 20L);
+                matchWaterCheck = new MatchWaterCheckTask(this).runTaskTimer(Array.getInstance(), 30L, 20L);
             }
         }
 
@@ -229,6 +229,8 @@ public abstract class Match {
 
         getSpectators().forEach(this::removeSpectator);
         entities.forEach(Entity::remove);
+
+        matchWaterCheck.cancel();
 
         new MatchResetTask(this).runTask(Array.getInstance());
 
@@ -399,7 +401,6 @@ public abstract class Match {
     public void addSpectator(Player player, Player target) {
         Location spawn = Profile.getByUuid(target).getMatch().getArena().getSpawn1();
         spectators.add(player.getUniqueId());
-        PlayerUtil.spectator(player);
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setMatch(this);
         profile.setState(ProfileState.SPECTATE_MATCH);
@@ -408,6 +409,8 @@ public abstract class Match {
         player.teleport(spawn);
         player.teleport(target.getLocation().clone().add(0, 2, 0));
         player.spigot().setCollidesWithEntities(false);
+        PlayerUtil.spectator(player);
+
 
         if (!profile.getPlayer().hasPermission("array.staff")) {
             for (Player otherPlayer : getPlayers()) {

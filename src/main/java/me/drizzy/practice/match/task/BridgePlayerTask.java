@@ -15,6 +15,7 @@ public class BridgePlayerTask implements Runnable{
     public void run() {
         player.teleport(bridgeMatch.getTeamPlayer(player).getPlayerSpawn());
         bridgeMatch.setupPlayer(player);
+        bridgeMatch.getCatcher().remove(player);
         PlayerUtil.allowMovement(player);
     }
 }

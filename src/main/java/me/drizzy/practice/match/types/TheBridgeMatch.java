@@ -530,7 +530,6 @@ public class TheBridgeMatch extends Match {
                 Profile profile=Profile.getByUuid(otherPlayer.getUniqueId());
                 profile.handleVisibility(otherPlayer, deadPlayer);
             }
-
             end();
         }
     }
@@ -543,9 +542,9 @@ public class TheBridgeMatch extends Match {
     @Override
     public org.bukkit.ChatColor getRelationColor(Player viewer, Player target) {
         if (viewer == playerA.getPlayer() && target == playerB.getPlayer()) {
-            return org.bukkit.ChatColor.RED;
-        } else {
             return org.bukkit.ChatColor.BLUE;
+        } else {
+            return org.bukkit.ChatColor.RED;
         }
     }
 

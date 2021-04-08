@@ -4,10 +4,12 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.array.essentials.event.SpawnTeleportEvent;
 import me.drizzy.practice.match.Match;
+import me.drizzy.practice.match.MatchState;
 import me.drizzy.practice.match.events.MatchEvent;
 import me.drizzy.practice.match.events.MatchStartEvent;
 import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.nametag.NameTags;
+import net.minecraft.server.v1_8_R3.FoodMetaData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -237,6 +239,23 @@ public class ProfileListener implements Listener {
                 event.setCancelled(true);
             }
             if(profile.isInSumo() || profile.isInGulag()) {
+                event.setCancelled(true);
+            }
+            if (profile.isInSomeSortOfFight()) {
+                if (profile.getMatch() != null && profile.getMatch().getState() == MatchState.STARTING) {
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEat(PlayerItemConsumeEvent event) {
+        Profile profile = Profile.getByUuid(event.getPlayer());
+        if (profile.isInSomeSortOfFight()) {
+            if (profile.getMatch() != null && profile.getMatch().getState() == MatchState.STARTING) {
+                profile.getPlayer().getInventory().addItem(event.getItem());
+                profile.getPlayer().updateInventory();
                 event.setCancelled(true);
             }
         }
