@@ -305,9 +305,12 @@ public abstract class Match {
 
             onDeath(deadPlayer, killerPlayer);
 
-            final Profile deadProfile=Profile.getByUuid(deadPlayer.getUniqueId());
+        if (isSumoMatch() && disconnected || isTheBridgeMatch() && disconnected) {
+            end();
+            return;
+        }
+
             if (!isTheBridgeMatch()) {
-                if (deadProfile.getSettings().isLightning()) {
                     final PacketContainer lightningPacket=this.createLightningPacket(deadPlayer.getLocation());
                     float thunderSoundPitch=0.8f + ThreadLocalRandom.current().nextFloat() * 0.2f;
                     float explodeSoundPitch=0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
@@ -317,17 +320,12 @@ public abstract class Match {
                             onlinePlayer.playSound(killerPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
                             onlinePlayer.playSound(killerPlayer.getLocation(), Sound.EXPLODE, 2.0f, explodeSoundPitch);
                         }
-                        this.sendLightningPacket(onlinePlayer, lightningPacket);
+                        Profile profile = Profile.getByUuid(onlinePlayer);
+                        if (profile.getSettings().isLightning()) {
+                            this.sendLightningPacket(onlinePlayer, lightningPacket);
+                        }
                     }
-                }
             }
-
-
-        if (isSumoMatch() && disconnected || isTheBridgeMatch() && disconnected) {
-            onEnd();
-            end();
-            return;
-        }
 
         if (!isSumoMatch() && !isSumoTeamMatch() && !isTheBridgeMatch()) {
             if (canEnd()) {
@@ -372,7 +370,7 @@ public abstract class Match {
 
     public String getDuration() {
         if (isStarting()) {
-            return "00:00";
+            return "Starting";
         } else if (isEnding()) {
             return "Ending";
         } else {
@@ -409,8 +407,6 @@ public abstract class Match {
         player.teleport(spawn);
         player.teleport(target.getLocation().clone().add(0, 2, 0));
         player.spigot().setCollidesWithEntities(false);
-        PlayerUtil.spectator(player);
-
 
         if (!profile.getPlayer().hasPermission("array.staff")) {
             for (Player otherPlayer : getPlayers()) {

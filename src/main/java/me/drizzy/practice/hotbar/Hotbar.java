@@ -29,7 +29,6 @@ public class Hotbar
         Hotbar.items.put(HotbarType.PARTY_EVENTS, new ItemBuilder(Material.DIAMOND_AXE).name(CC.AQUA + "Party Events" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.PARTY_CREATE, new ItemBuilder(Material.NAME_TAG).name(CC.AQUA + "Create Party" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.PARTY_DISBAND, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Disband Party" + CC.GRAY + " (Right-Click)").build());
-        Hotbar.items.put(HotbarType.SPEC_LEAVE, new ItemBuilder(Material.RED_ROSE).name(CC.RED + "Leave Spectator Mode" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.PARTY_SETTINGS, new ItemBuilder(Material.ANVIL).name(CC.AQUA + "Party Settings" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.PARTY_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Party" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.PARTY_INFO, new ItemBuilder(Material.PAPER).name(CC.AQUA + "Party Information" + CC.GRAY + " (Right-Click)").build());

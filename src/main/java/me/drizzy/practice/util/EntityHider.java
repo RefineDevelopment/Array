@@ -192,12 +192,10 @@ public class EntityHider extends PacketAdapter implements Listener{
                             if(entity instanceof Arrow) {
                                 pass = true;
                             }
-                        }else if(sound.equals("random.pop")) {
+                        }else {
                             if(entity instanceof Player) {
                                 pass = true;
                             }
-                        }else {
-                            pass = true;
                         }
                         if(pass) {
                             hasAtleastOneMatch = true;
@@ -211,7 +209,7 @@ public class EntityHider extends PacketAdapter implements Listener{
                     event.setCancelled(true);
                 }
             }
-        }else {
+        } else {
             Entity entity = getFromID(reciever.getWorld() , event.getPacket().getIntegers().read(0));
             if(entity instanceof Player) {
                 Player player = ((Player)entity);

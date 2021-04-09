@@ -632,7 +632,7 @@ public class Profile {
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.QUEUE, this));
             } else if (isSpectating()) {
                 PlayerUtil.spectator(player);
-                player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this));
+                TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this)), 2L);
             } else if (isInSumo()) {
                 if (getSumo().getEventPlayer(player).getState().equals(SumoPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);

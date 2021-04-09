@@ -29,6 +29,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
@@ -38,6 +39,7 @@ public class SumoMatch extends Match {
     @Setter private TeamPlayer playerA;
     @Setter private TeamPlayer playerB;
     List<Player> catchlist = new ArrayList<>();
+    @Getter @Setter private BukkitTask startTask;
 
     public SumoMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
         super(queue, kit, arena, queueType);
@@ -497,20 +499,12 @@ public class SumoMatch extends Match {
                         onStart();
                         setState(MatchState.STARTING);
                         setStartTimestamp(-1);
-                        new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
-
+                    startTask = new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
                 }
             }
-        }  else {
-            TeamPlayer roundWinner=getTeamPlayer(getWinningPlayer());
-            TeamPlayer roundLoser=getOpponentTeamPlayer(getWinningPlayer());
-            getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
-
-            PlayerUtil.reset(deadPlayer);
-
-            for ( Player otherPlayer : getPlayersAndSpectators() ) {
-                Profile profile=Profile.getByUuid(otherPlayer.getUniqueId());
-                profile.handleVisibility(otherPlayer, deadPlayer);
+        } else {
+            if (startTask != null) {
+                startTask.cancel();
             }
             end();
         }

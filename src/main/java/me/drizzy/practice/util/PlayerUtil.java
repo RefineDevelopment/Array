@@ -83,12 +83,21 @@ public class PlayerUtil {
     }
 
     public static void spectator(Player player) {
-        reset(player);
-
+        AsyncCatcher.enabled = false;
+        player.getActivePotionEffects().clear();
+        player.setHealth(20.0D);
+        player.setFoodLevel(20);
+        player.setLevel(0);
+        player.setExp(0f);
+        player.setFireTicks(0);
+        player.setMaximumNoDamageTicks(20);
+        player.setSaturation(20);
+        player.getInventory().setArmorContents(new ItemStack[4]);
+        player.getInventory().setContents(new ItemStack[36]);
+        player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
         player.setGameMode(GameMode.CREATIVE);
         player.setFlySpeed(0.2F);
         player.updateInventory();
-        player.getInventory().setItem(8, Hotbar.getItems().get(HotbarType.SPEC_LEAVE));
     }
 
     public static void denyMovement(Player player) {

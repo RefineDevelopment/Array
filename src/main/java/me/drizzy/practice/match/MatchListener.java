@@ -313,6 +313,7 @@ public class MatchListener implements Listener {
 
     @EventHandler
     public void onPlayerDeathEvent(final PlayerDeathEvent event) {
+        event.getEntity().spigot().respawn();
         event.setDeathMessage(null);
         Player player = event.getEntity().getPlayer();
         Profile profile = Profile.getByUuid(event.getEntity().getUniqueId());

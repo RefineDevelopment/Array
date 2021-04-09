@@ -31,6 +31,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +45,7 @@ public class TheBridgeMatch extends Match {
     @Setter private TeamPlayer playerB;
     @Getter private final List<Player> caughtPlayers = new ArrayList<>();
     @Setter private int round = 0;
+    @Getter @Setter private BukkitTask startTask;
 
     public TheBridgeMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
         super(queue, kit, arena, queueType);
@@ -508,27 +510,26 @@ public class TheBridgeMatch extends Match {
                         onStart();
                     for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Round-Message.TheBridge") ) {
                         //Send Round Message
-                        broadcastMessage(CC.translate(string.replace("{round_number}", String.valueOf(this.getRound()))
+                        playerA.getPlayer().sendMessage(CC.translate(string.replace("{round_number}", String.valueOf(this.getRound()))
                                 .replace("{playerA_points}", String.valueOf(Profile.getByUuid(playerA.getPlayer()).getBridgeRounds()))
                                 .replace("{playerB_points}", String.valueOf(Profile.getByUuid(playerB.getPlayer()).getBridgeRounds())))
-                                .replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName()));
+                                .replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName())
+                                .replace("{ping}", String.valueOf(playerB.getPing())));
+                        playerB.getPlayer().sendMessage(CC.translate(string.replace("{round_number}", String.valueOf(this.getRound()))
+                                .replace("{playerA_points}", String.valueOf(Profile.getByUuid(playerA.getPlayer()).getBridgeRounds()))
+                                .replace("{playerB_points}", String.valueOf(Profile.getByUuid(playerB.getPlayer()).getBridgeRounds())))
+                                .replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName())
+                                .replace("{ping}", String.valueOf(playerA.getPing())));
                     }
                         //Continue the Match
                         setState(MatchState.STARTING);
                         setStartTimestamp(-1);
-                        new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
+                    startTask = new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
                 }
             }
         } else {
-            TeamPlayer roundWinner=getTeamPlayer(getWinningPlayer());
-            TeamPlayer roundLoser=getOpponentTeamPlayer(getWinningPlayer());
-            getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
-
-            PlayerUtil.reset(deadPlayer);
-
-            for ( Player otherPlayer : getPlayersAndSpectators() ) {
-                Profile profile=Profile.getByUuid(otherPlayer.getUniqueId());
-                profile.handleVisibility(otherPlayer, deadPlayer);
+            if (startTask != null) {
+                startTask.cancel();
             }
             end();
         }
