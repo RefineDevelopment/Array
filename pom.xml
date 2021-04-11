@@ -6,7 +6,8 @@
 
     <groupId>me.drizzy.practice</groupId>
     <artifactId>Array</artifactId>
-    <version>BETA-4.2</version>
+    <version>BETA-4.3</version>
+    <packaging>pom</packaging>
 
     <!--Repositories-->
 
@@ -83,11 +84,11 @@
             <scope>compile</scope>
         </dependency>
 
-        <!--Spigots-->
+        <!--Spigot-->
         <dependency>
             <groupId>pt.foxspigot.jar</groupId>
             <artifactId>FoxSpigot</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigots/FoxSpigot.jar</systemPath>
         </dependency>
@@ -151,15 +152,7 @@
             <artifactId>LunarClient-API</artifactId>
             <version>LATEST</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/api/LunarAPI-GIT.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>net.mineaus</groupId>
-            <artifactId>LunarClient-API</artifactId>
-            <version>LATEST</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/api/LunarAPI-MCM.jar</systemPath>
+            <systemPath>${project.basedir}/lib/api/LunarAPI.jar</systemPath>
         </dependency>
 
         <!--APIs-->

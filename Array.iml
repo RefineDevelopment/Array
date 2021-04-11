@@ -33,7 +33,7 @@
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.3.2" level="project" />
     <orderEntry type="module-library">
-      <library name="Maven: pt.foxspigot.jar:FoxSpigot:0.5-SNAPSHOT">
+      <library name="Maven: pt.foxspigot.jar:FoxSpigot:1.0-SNAPSHOT">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/spigots/FoxSpigot.jar!/" />
         </CLASSES>
@@ -99,16 +99,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.moonsworth:LunarClient-API:LATEST">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/api/LunarAPI-GIT.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: net.mineaus:LunarClient-API:LATEST">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/api/LunarAPI-MCM.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/api/LunarAPI.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -1,5 +1,6 @@
 package me.drizzy.practice.array.commands.staff;
 
+import com.lunarclient.bukkitapi.LunarClientAPI;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
@@ -20,5 +21,8 @@ public class UnFollowCommand
         profile.setFollowing(null);
 
         player.sendMessage(CC.translate("&7You have &cexited &7follow mode."));
+        if (LunarClientAPI.getInstance().isRunningLunarClient(player)) {
+            LunarClientAPI.getInstance().giveAllStaffModules(player);
+        }
     }
 }

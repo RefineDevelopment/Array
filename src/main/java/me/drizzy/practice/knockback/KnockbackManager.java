@@ -18,16 +18,12 @@ public class KnockbackManager {
             this.knockbackType = new FoxSpigot();
             Bukkit.getPluginManager().registerEvents(new me.drizzy.practice.hcf.bard.types.FoxSpigot(), Array.getInstance());
         } else if (check("com.minexd.spigot.SpigotX")) {
-            this.knockbackType = new SpigotX();
             Bukkit.getPluginManager().registerEvents(new me.drizzy.practice.hcf.bard.types.SpigotX(), Array.getInstance());
         } else if(check("com.ngxdev.knockback.KnockbackProfile")) {
-            this.knockbackType = new nSpigot();
             Bukkit.getPluginManager().registerEvents(new me.drizzy.practice.hcf.bard.types.nSpigot(), Array.getInstance());
         } else if (check("spg.lgdev.iSpigot")) {
-            this.knockbackType=new iSpigot();
             Bukkit.getPluginManager().registerEvents(new me.drizzy.practice.hcf.bard.types.iSpigot(), Array.getInstance());
         } else if (check("me.drizzy.ravespigot.RaveSpigot")) {
-            this.knockbackType = new RaveSpigot();
             Bukkit.getPluginManager().registerEvents(new me.drizzy.practice.hcf.bard.types.RaveSpigot(), Array.getInstance());
         } else {
             this.knockbackType = new Default();

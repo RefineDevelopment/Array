@@ -8,6 +8,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
 
 public class MenuListener extends BootstrappedListener {
 
@@ -86,6 +90,28 @@ public class MenuListener extends BootstrappedListener {
             openMenu.onClose(player);
 
             Menu.currentlyOpenedMenus.remove(player.getName());
+        }
+        player.setMetadata("editorglitch", new FixedMetadataValue(Array, true));
+    }
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+
+        if (player.hasMetadata("editorglitch")) {
+            player.removeMetadata("editorglitch", Array);
+
+            for ( ItemStack it : player.getInventory().getContents()) {
+                if (it != null) {
+                    ItemMeta meta = it.getItemMeta();
+                    if (meta != null && meta.hasDisplayName()) {
+
+                        if (meta.getDisplayName().contains("§b§c§d§e")) {
+                            player.getInventory().remove(it);
+                        }
+                    }
+                }
+            }
         }
     }
 

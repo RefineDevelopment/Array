@@ -5,7 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.lunarclient.bukkitapi.LunarClientAPI;
-import com.lunarclient.bukkitapi.object.LCCooldown;
+import com.lunarclient.bukkitapi.cooldown.LCCooldown;
+import com.lunarclient.bukkitapi.cooldown.LunarClientAPICooldown;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
@@ -819,10 +820,11 @@ public class Profile {
         try {
             final Player player = this.getPlayer();
             if (player != null) {
-                LunarClientAPI.getInstance().sendCooldown(player, new LCCooldown("EnderPearl", cooldown.getDuration(), TimeUnit.MILLISECONDS, Material.ENDER_PEARL));
+                LunarClientAPICooldown.registerCooldown(new LCCooldown("EnderPearl", Integer.parseInt(cooldown.getTimeLeft()), TimeUnit.MILLISECONDS, Material.ENDER_PEARL));
+                LunarClientAPICooldown.sendCooldown(player, "Enderpearl");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Array.logger("Could not send LC-Cooldown!");
         }
     }
 
@@ -832,10 +834,11 @@ public class Profile {
         try {
             final Player player = this.getPlayer();
             if (player != null) {
-                LunarClientAPI.getInstance().sendCooldown(player, new LCCooldown("Bow", cooldown.getDuration(), TimeUnit.MILLISECONDS, Material.BOW));
+                LunarClientAPICooldown.registerCooldown(new LCCooldown("Bow", Integer.parseInt(cooldown.getTimeLeft()), TimeUnit.MILLISECONDS, Material.BOW));
+                LunarClientAPICooldown.sendCooldown(player, "Bow");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Array.logger("Could not send LC-Cooldown!");
         }
 
 

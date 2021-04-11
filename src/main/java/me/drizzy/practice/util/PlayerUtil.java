@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 public class PlayerUtil {
 
     public static void reset(Player player) {
-        reset(player, true);
+        reset(player, false);
     }
 
     public static void reset(Player player, boolean resetHeldSlot) {
@@ -51,30 +51,6 @@ public class PlayerUtil {
         player.getInventory().setArmorContents(new ItemStack[4]);
         player.getInventory().setContents(new ItemStack[36]);
         player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-
-        if (resetHeldSlot) {
-            player.getInventory().setHeldItemSlot(0);
-        }
-
-        player.updateInventory();
-    }
-
-    public static void resetHotbar(Player player, boolean resetHeldSlot) {
-        AsyncCatcher.enabled = false;
-        player.setFoodLevel(20);
-        player.setFireTicks(0);
-        player.setMaximumNoDamageTicks(20);
-        player.setAllowFlight(false);
-        player.setFlying(false);
-        player.setGameMode(GameMode.SURVIVAL);
-        player.getInventory().setArmorContents(new ItemStack[4]);
-        player.getInventory().setContents(new ItemStack[36]);
-        player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-
-        if (resetHeldSlot) {
-            player.getInventory().setHeldItemSlot(0);
-        }
-
         player.updateInventory();
     }
 
@@ -95,6 +71,8 @@ public class PlayerUtil {
         player.getInventory().setArmorContents(new ItemStack[4]);
         player.getInventory().setContents(new ItemStack[36]);
         player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
+        player.setAllowFlight(true);
+        player.setFlying(true);
         player.setGameMode(GameMode.CREATIVE);
         player.setFlySpeed(0.2F);
         player.updateInventory();

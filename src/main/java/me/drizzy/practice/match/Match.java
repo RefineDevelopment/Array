@@ -230,7 +230,9 @@ public abstract class Match {
         getSpectators().forEach(this::removeSpectator);
         entities.forEach(Entity::remove);
 
-        matchWaterCheck.cancel();
+        if (matchWaterCheck != null) {
+            matchWaterCheck.cancel();
+        }
 
         new MatchResetTask(this).runTask(Array.getInstance());
 

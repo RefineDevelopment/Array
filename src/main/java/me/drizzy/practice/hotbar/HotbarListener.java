@@ -46,6 +46,10 @@ public class HotbarListener implements Listener
                 return;
             }
             event.setCancelled(true);
+            if (profile.isFollowMode()) {
+                player.sendMessage(CC.translate("&cYou are currently in follow mode, please execute /unfollow to stop following first!"));
+                return;
+            }
             switch (hotbarType) {
                 case QUEUE_JOIN_RANKED: {
                     if (!player.hasPermission("array.donator")) {
@@ -81,13 +85,6 @@ public class HotbarListener implements Listener
                         break;
                     }
                     break;
-                }
-                case SPEC_LEAVE: {
-                    if (profile.isSpectating()) {
-                        if (profile.getMatch() !=null) {
-                            profile.getMatch().removeSpectator(player);
-                        }
-                    }
                 }
                 case PARTY_EVENTS: {
                     new PartyEventSelectEventMenu().openMenu(player);

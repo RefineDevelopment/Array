@@ -1,5 +1,6 @@
 package me.drizzy.practice.array.commands.staff;
 
+import com.lunarclient.bukkitapi.LunarClientAPI;
 import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.Array;
@@ -26,6 +27,9 @@ public class FollowCommand {
             if (targetProfile.isInMatch()) {
                 Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), () -> player.chat("/spec " + target.getName()), 20L);
             }
+        }
+        if (LunarClientAPI.getInstance().isRunningLunarClient(player)) {
+            LunarClientAPI.getInstance().giveAllStaffModules(player);
         }
     }
 }
