@@ -6,8 +6,7 @@
 
     <groupId>me.drizzy.practice</groupId>
     <artifactId>Array</artifactId>
-    <version>BETA-4.3</version>
-    <packaging>pom</packaging>
+    <version>BETA-4.2</version>
 
     <!--Repositories-->
 
@@ -84,11 +83,11 @@
             <scope>compile</scope>
         </dependency>
 
-        <!--Spigot-->
+        <!--Spigots-->
         <dependency>
             <groupId>pt.foxspigot.jar</groupId>
             <artifactId>FoxSpigot</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>0.5-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot.jar</systemPath>
         </dependency>
@@ -96,7 +95,7 @@
         <dependency>
             <groupId>me.drizzy.nms</groupId>
             <artifactId>SpigotSupport</artifactId>
-            <version>1.0</version>
+            <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/SpigotSupport.jar</systemPath>
         </dependency>
