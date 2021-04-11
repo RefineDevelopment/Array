@@ -8,12 +8,11 @@ import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.match.types.SoloMatch;
-import me.drizzy.practice.match.types.SumoMatch;
 import me.drizzy.practice.match.types.TheBridgeMatch;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.rank.RankType;
-import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -126,10 +125,11 @@ public class QueueThread extends Thread {
 
                             // Create match
                             Match match;
-                            if (queue.getKit().getGameRules().isSumo()) {
+                            /*if (queue.getKit().getGameRules().isSumo()) {
                                 match = new SumoMatch(queue, firstMatchPlayer, secondMatchPlayer,
                                         queue.getKit(), arena, queue.getQueueType());
-                            } else if (queue.getKit().getGameRules().isBuild() && queue.getKit().getGameRules().isBridge()) {
+                            } else*/
+                            if (queue.getKit().getGameRules().isBuild() && queue.getKit().getGameRules().isBridge()) {
                                 match = new TheBridgeMatch(queue, firstMatchPlayer, secondMatchPlayer,
                                         queue.getKit(), arena, queue.getQueueType());
                             } else {

@@ -476,8 +476,7 @@ public class TheBridgeMatch extends Match {
                     bProfile.setBridgeRounds(bProfile.getBridgeRounds() + 1);
                 }
 
-                getWinningPlayer().getPlayer().sendMessage(CC.translate("&aYou have won this round!"));
-                getOpponentPlayer(getWinningPlayer()).getPlayer().sendMessage(CC.translate("&cYou have lost this round!"));
+                this.broadcastMessage(CC.AQUA + getWinningPlayer().getName() + " &7has won this round!");
 
                 if (aProfile.getBridgeRounds() >= 3 || bProfile.getBridgeRounds() >= 3) {
                     TeamPlayer roundWinner=getTeamPlayer(getWinningPlayer());
@@ -491,11 +490,16 @@ public class TheBridgeMatch extends Match {
                         Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
                         profile.handleVisibility(otherPlayer, deadPlayer);
                     }
-                    caughtPlayers.clear();
+                    if (caughtPlayers != null) {
+                        caughtPlayers.clear();
+                    }
                     end();
                 } else {
                         //Cleanup the blocks and the multiple goal catcher
+                    if (caughtPlayers != null) {
                         caughtPlayers.clear();
+                    }
+
                         cleanup();
 
                         //Setup Both Players
@@ -527,7 +531,7 @@ public class TheBridgeMatch extends Match {
                     startTask = new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
                 }
             }
-        } else {
+        } else if (!deadPlayer.isOnline() || !killerPlayer.isOnline()){
             if (startTask != null) {
                 startTask.cancel();
             }

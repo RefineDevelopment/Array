@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 @CommandMeta(label = "arena create", permission = "array.dev")
 public class ArenaCreateCommand {
 
-    public void execute(Player player, @CPL("name") String name, @CPL("[shared|standalone]") String type) {
+    public void execute(Player player, @CPL("name") String name, @CPL("[shared|standalone|bridge]") String type) {
         if (!type.equalsIgnoreCase("standalone") && !type.equalsIgnoreCase("shared") && !type.equalsIgnoreCase("bridge")) {
             player.sendMessage(CC.translate("&8[&b&lArray&8] &7Invalid Type."));
             return;
@@ -33,9 +33,8 @@ public class ArenaCreateCommand {
             }
             arena = new Arena(name);
 
-            Location loc1 =
-            new Location(player.getLocation().getWorld(), player.getLocation().getX(), player.getLocation().getY(),
-                         player.getLocation().getZ(), player.getLocation().getYaw(), player.getLocation().getPitch());
+            Location loc1 = new Location(player.getLocation().getWorld(), player.getLocation().getX(), player.getLocation().getY(),
+                            player.getLocation().getZ(), player.getLocation().getYaw(), player.getLocation().getPitch());
             arena.setSpawn1(loc1);
             arena.setSpawn2(loc1);
             StandaloneArena sarena = (StandaloneArena) Arena.getByName(name);
@@ -45,9 +44,9 @@ public class ArenaCreateCommand {
         } else {
             if (type.equalsIgnoreCase("shared")){
                 arena = new SharedArena(name);
-           //} else if (type.equalsIgnoreCase("bridge")) {
-           //     arena = new TheBridgeArena(name);
-            //    player.sendMessage(CC.translate("&8[&bTIP&8] &7Please note that 'Red' is set to Spawn 1 and 'Blue' is set to Spawn 2."));
+           } else if (type.equalsIgnoreCase("bridge")) {
+               arena = new TheBridgeArena(name);
+                player.sendMessage(CC.translate("&8[&bTIP&8] &7Please note that 'Red' is set to Spawn 1 and 'Blue' is set to Spawn 2."));
             } else if (type.equalsIgnoreCase("standalone")){
                arena = new StandaloneArena(name);
             } else {

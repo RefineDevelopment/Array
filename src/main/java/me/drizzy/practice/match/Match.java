@@ -317,13 +317,13 @@ public abstract class Match {
                     float thunderSoundPitch=0.8f + ThreadLocalRandom.current().nextFloat() * 0.2f;
                     float explodeSoundPitch=0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
                     for ( final Player onlinePlayer : this.getPlayers() ) {
+                        Profile profile = Profile.getByUuid(onlinePlayer);
+                        if (profile.getSettings().isLightning()) {
                         onlinePlayer.playSound(deadPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
                         if (killerPlayer != null) {
                             onlinePlayer.playSound(killerPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
                             onlinePlayer.playSound(killerPlayer.getLocation(), Sound.EXPLODE, 2.0f, explodeSoundPitch);
                         }
-                        Profile profile = Profile.getByUuid(onlinePlayer);
-                        if (profile.getSettings().isLightning()) {
                             this.sendLightningPacket(onlinePlayer, lightningPacket);
                         }
                     }

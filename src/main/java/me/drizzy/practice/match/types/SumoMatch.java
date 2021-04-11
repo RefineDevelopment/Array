@@ -470,9 +470,7 @@ public class SumoMatch extends Match {
                     bProfile.setSumoRounds(bProfile.getSumoRounds() + 1);
                 }
 
-                getWinningPlayer().getPlayer().sendMessage(CC.translate("&aYou have won this round!"));
-                getOpponentPlayer(getWinningPlayer()).getPlayer().sendMessage(CC.translate("&cYou have lost this round!"));
-
+                this.broadcastMessage(CC.AQUA + getWinningPlayer().getName() + " &7has won this round!");
                 if (aProfile.getSumoRounds() >= 3 || bProfile.getSumoRounds() >= 3) {
                     TeamPlayer roundWinner=getTeamPlayer(getWinningPlayer());
                     TeamPlayer roundLoser=getOpponentTeamPlayer(getWinningPlayer());
@@ -501,10 +499,10 @@ public class SumoMatch extends Match {
                         onStart();
                         setState(MatchState.STARTING);
                         setStartTimestamp(-1);
-                    startTask = new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
+                        startTask = new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
                 }
             }
-        } else {
+        } else if (!deadPlayer.isOnline() || !killerPlayer.isOnline()){
             if (startTask != null) {
                 startTask.cancel();
             }
@@ -530,3 +528,4 @@ public class SumoMatch extends Match {
         }
     }
 }
+

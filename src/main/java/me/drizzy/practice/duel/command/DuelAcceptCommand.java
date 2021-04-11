@@ -156,12 +156,8 @@ public class DuelAcceptCommand {
 
             }
         } else {
-            if (request.getKit().getGameRules().isSumo()) {
-                match=new SumoMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena, QueueType.UNRANKED);
-            } else {
-                match=new SoloMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,
-                        QueueType.UNRANKED, 0, 0);
-            }
+             match=new SoloMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,
+                   QueueType.UNRANKED, 0, 0);
         }
         if (!request.isParty()) {
             for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Start-Message.Solo") ) {
