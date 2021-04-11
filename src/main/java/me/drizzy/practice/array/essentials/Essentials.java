@@ -2,10 +2,10 @@ package me.drizzy.practice.array.essentials;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.array.essentials.event.SpawnTeleportEvent;
+import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.external.LocationUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.spigotmc.AsyncCatcher;
 
 import java.io.IOException;
 
@@ -34,6 +34,10 @@ public class Essentials {
         Location location = spawn;
         SpawnTeleportEvent event = new SpawnTeleportEvent(player, location);
         event.call();
+
+        if (Profile.getByUuid(player) != null) {
+            Profile.getByUuid(player).handleVisibility();
+        }
 
         if (!event.isCancelled() && event.getLocation() != null) {
             player.teleport(event.getLocation());

@@ -96,6 +96,8 @@ public class SumoMatch extends Match {
 
         PlayerUtil.denyMovement(player);
 
+        player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
+
         if (getKit().getGameRules().isInfiniteSpeed()) {
             player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 2));
         }

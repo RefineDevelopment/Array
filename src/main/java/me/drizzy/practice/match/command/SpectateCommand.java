@@ -1,5 +1,7 @@
 package me.drizzy.practice.match.command;
 
+import me.drizzy.practice.Array;
+import me.drizzy.practice.util.PlayerUtil;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
@@ -54,14 +56,24 @@ public class SpectateCommand {
             targetProfile.getMatch().addSpectator(player, target);
         } else if (targetProfile.isInSumo()) {
             targetProfile.getSumo().addSpectator(player);
+            PlayerUtil.spectator(player);
+            player.teleport(Array.getInstance().getSumoManager().getSumoSpectator());
         } else if (targetProfile.isInBrackets()) {
             targetProfile.getBrackets().addSpectator(player);
+            PlayerUtil.spectator(player);
+            player.teleport(Array.getInstance().getBracketsManager().getBracketsSpectator());
         } else if (targetProfile.isInLMS()) {
             targetProfile.getLms().addSpectator(player);
+            PlayerUtil.spectator(player);
+            player.teleport(Array.getInstance().getLMSManager().getLmsSpectator());
         } else if (targetProfile.isInParkour()) {
             targetProfile.getParkour().addSpectator(player);
+            PlayerUtil.spectator(player);
+            player.teleport(Array.getInstance().getParkourManager().getParkourSpawn());
         } else if (targetProfile.isInSpleef()) {
             targetProfile.getSpleef().addSpectator(player);
+            PlayerUtil.spectator(player);
+            player.teleport(Array.getInstance().getSpleefManager().getSpleefSpawn());
         } else {
             player.sendMessage(CC.RED + "That player is not in a match or running events.");
         }

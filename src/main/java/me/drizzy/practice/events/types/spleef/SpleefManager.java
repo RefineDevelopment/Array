@@ -15,7 +15,7 @@ public class SpleefManager {
 
 	@Getter private Spleef activeSpleef;
 	@Getter @Setter private Cooldown cooldown = new Cooldown(0);
-	@Getter @Setter private Location spleefSpectator;
+	@Getter @Setter private Location spleefSpawn;
 	@Getter @Setter private String spleefKnockbackProfile;
 
 	public SpleefManager() {
@@ -40,7 +40,7 @@ public class SpleefManager {
 		FileConfiguration configuration = Array.getInstance().getEventsConfig().getConfiguration();
 
 		if (configuration.contains("events.spleef.spectator")) {
-			spleefSpectator = LocationUtil.deserialize(configuration.getString("events.spleef.spectator"));
+			spleefSpawn= LocationUtil.deserialize(configuration.getString("events.spleef.spectator"));
 		}
 
 		if (configuration.contains("events.spleef.nms-profile")) {
@@ -51,8 +51,8 @@ public class SpleefManager {
 	public void save() {
 		FileConfiguration configuration = Array.getInstance().getEventsConfig().getConfiguration();
 
-		if (spleefSpectator != null) {
-			configuration.set("events.spleef.spectator", LocationUtil.serialize(spleefSpectator));
+		if (spleefSpawn != null) {
+			configuration.set("events.spleef.spectator", LocationUtil.serialize(spleefSpawn));
 		}
 
 		if (spleefKnockbackProfile != null) {

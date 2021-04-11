@@ -330,20 +330,23 @@ public class Parkour {
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setParkour(this);
+		PlayerUtil.spectator(player);
 		profile.setState(ProfileState.SPECTATE_MATCH);
+		player.setFlying(true);
 		profile.refreshHotbar();
 		profile.handleVisibility();
-		player.setFlying(true);
 
 		player.teleport(Array.getInstance().getParkourManager().getParkourSpawn());
 	}
 
 	public void removeSpectator(Player player) {
 		spectators.remove(player.getUniqueId());
+        eventPlayers.remove(player.getUniqueId());
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setParkour(null);
 		profile.setState(ProfileState.IN_LOBBY);
+		player.setFlying(false);
 		profile.refreshHotbar();
 		profile.handleVisibility();
 

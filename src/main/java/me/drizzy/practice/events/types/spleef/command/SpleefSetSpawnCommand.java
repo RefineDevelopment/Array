@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public class SpleefSetSpawnCommand {
 
 	public void execute(Player player) {
-		Array.getInstance().getSpleefManager().setSpleefSpectator(player.getLocation());
+		Array.getInstance().getSpleefManager().setSpleefSpawn(player.getLocation());
 
 		player.sendMessage(CC.GREEN + "Set spleef's spawn location.");
 

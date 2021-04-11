@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.hotbar.Hotbar;
+import me.drizzy.practice.hotbar.HotbarLayout;
+import me.drizzy.practice.profile.Profile;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -44,6 +46,7 @@ public class PlayerUtil {
         player.setExp(0f);
         player.setFireTicks(0);
         player.setMaximumNoDamageTicks(20);
+        player.setNoDamageTicks(20);
         player.setSaturation(20);
         player.setAllowFlight(false);
         player.setFlying(false);
@@ -75,6 +78,7 @@ public class PlayerUtil {
         player.setFlying(true);
         player.setGameMode(GameMode.CREATIVE);
         player.setFlySpeed(0.2F);
+        TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, Profile.getByUuid(player))), 2L);
         player.updateInventory();
     }
 

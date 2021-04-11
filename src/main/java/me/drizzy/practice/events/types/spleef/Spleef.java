@@ -165,7 +165,7 @@ public class Spleef {
 		profile.setState(ProfileState.IN_EVENT);
 		profile.refreshHotbar();
 
-		player.teleport(Array.getInstance().getSpleefManager().getSpleefSpectator());
+		player.teleport(Array.getInstance().getSpleefManager().getSpleefSpawn());
 
 		new BukkitRunnable() {
 			@Override
@@ -325,7 +325,7 @@ public class Spleef {
 		int i = 0;
 		for (Player player : this.getRemainingPlayers()) {
 			if (player != null) {
-				Location midSpawn = Array.getInstance().getSpleefManager().getSpleefSpectator();
+				Location midSpawn = Array.getInstance().getSpleefManager().getSpleefSpawn();
 				List<Location> circleLocations = Circle.getCircle(midSpawn, 7, this.getPlayers().size());
 				Location center = midSpawn.clone();
 				Location loc = circleLocations.get(i);
@@ -388,17 +388,19 @@ public class Spleef {
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setSpleef(this);
+		PlayerUtil.spectator(player);
 		profile.setState(ProfileState.SPECTATE_MATCH);
 		profile.refreshHotbar();
 		profile.handleVisibility();
 		player.setFlying(true);
 
 
-		player.teleport(Array.getInstance().getSpleefManager().getSpleefSpectator());
+		player.teleport(Array.getInstance().getSpleefManager().getSpleefSpawn());
 	}
 
 	public void removeSpectator(Player player) {
 		spectators.remove(player.getUniqueId());
+		eventPlayers.remove(player.getUniqueId());
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setSpleef(null);

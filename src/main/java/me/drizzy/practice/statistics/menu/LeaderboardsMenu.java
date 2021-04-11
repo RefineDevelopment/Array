@@ -25,6 +25,10 @@ import java.util.Map;
 
 public class LeaderboardsMenu extends Menu {
 
+    public LeaderboardsMenu() {
+        setAutoUpdate(true);
+    }
+
     private static final Button BLACK_PANE = Button.placeholder(Material.STAINED_GLASS_PANE,DyeColor.BLACK.getData(),CC.translate("&7"));
 
     @Override

@@ -636,36 +636,43 @@ public class Profile {
             } else if (isInSumo()) {
                 if (getSumo().getEventPlayer(player).getState().equals(SumoPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this)), 2L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SUMO_SPECTATE, this));
             } else if (isInBrackets()) {
                 if (getBrackets().getEventPlayer(player).getState().equals(BracketsPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this)), 2L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.BRACKETS_SPECTATE, this));
             } else if (isInLMS()) {
                 if (getLms().getEventPlayer(player).getState().equals(LMSPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this)), 2L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.LMS_SPECTATE, this));
             } else if (isInParkour()) {
                 if (getParkour().getEventPlayer(player).getState().equals(ParkourPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this)), 2L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.PARKOUR_SPECTATE, this));
             } else if (isInSpleef()) {
                 if (getSpleef().getEventPlayer(player).getState().equals(SpleefPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this)), 2L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SPLEEF_SPECTATE, this));
             } else if (isInOITC()) {
                 if (getOITC().getEventPlayer(player).getState().equals(OITCPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this)), 2L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.OITC_SPECTATE, this));
             } else if(isInGulag()) {
                 if (getGulag().getEventPlayer(player).getState().equals(GulagPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this)), 2L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.GULAG_SPECTATE, this));
             } else if (isInFight()) {

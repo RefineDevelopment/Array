@@ -420,21 +420,25 @@ public class Brackets {
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setBrackets(this);
+		PlayerUtil.spectator(player);
 		profile.setState(ProfileState.SPECTATE_MATCH);
+		player.setFlying(true);
 		profile.refreshHotbar();
 		profile.handleVisibility();
 		PlayerUtil.spectator(player);
-		player.setFlying(true);
 
 		player.teleport(Array.getInstance().getBracketsManager().getBracketsSpectator());
 	}
 
 	public void removeSpectator(Player player) {
 		spectators.remove(player.getUniqueId());
-        PlayerUtil.reset(player);
+		eventPlayers.remove(player.getUniqueId());
+
+		PlayerUtil.reset(player);
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setBrackets(null);
 		profile.setState(ProfileState.IN_LOBBY);
+		player.setFlying(false);
 		profile.refreshHotbar();
 		profile.handleVisibility();
 

@@ -205,7 +205,7 @@ public class Party extends Team {
                 targetprofile.getParty().setLeader(teamPlayer);
             }
         }
-        this.broadcast(CC.translate(CC.AQUA  + target + " &ahas been promoted to leader in your party."));
+        this.broadcast(CC.translate(CC.AQUA  + target.getName() + " &ahas been promoted to leader in your party."));
         if (profile.isInLobby()) {
         PlayerUtil.reset(player, false);
         profile.refreshHotbar();

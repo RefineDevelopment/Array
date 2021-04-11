@@ -421,21 +421,25 @@ public class Gulag {
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setGulag(this);
+		PlayerUtil.spectator(player);
 		profile.setState(ProfileState.SPECTATE_MATCH);
+		player.setFlying(true);
 		profile.refreshHotbar();
 		profile.handleVisibility();
 		PlayerUtil.spectator(player);
-		player.setFlying(true);
 
 		player.teleport(Array.getInstance().getGulagManager().getGulagSpawn1());
 	}
 
 	public void removeSpectator(Player player) {
 		spectators.remove(player.getUniqueId());
+		eventPlayers.remove(player.getUniqueId());
+
         PlayerUtil.reset(player);
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setGulag(null);
 		profile.setState(ProfileState.IN_LOBBY);
+		player.setFlying(false);
 		profile.refreshHotbar();
 		profile.handleVisibility();
 

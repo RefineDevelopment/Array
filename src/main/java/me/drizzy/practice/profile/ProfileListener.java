@@ -253,10 +253,10 @@ public class ProfileListener implements Listener {
     public void onEat(PlayerItemConsumeEvent event) {
         Profile profile = Profile.getByUuid(event.getPlayer());
         if (profile.isInSomeSortOfFight()) {
-            if (profile.getMatch() != null && profile.getMatch().getState() == MatchState.STARTING) {
+            if (profile.getMatch() != null && profile.getMatch().getState() == MatchState.STARTING && profile.getMatch().isTheBridgeMatch()) {
+                event.setCancelled(true);
                 profile.getPlayer().getInventory().addItem(event.getItem());
                 profile.getPlayer().updateInventory();
-                event.setCancelled(true);
             }
         }
     }
@@ -292,18 +292,6 @@ public class ProfileListener implements Listener {
     public void onPressurePlate(PlayerInteractEvent event) {
         if (event.getAction().equals(Action.PHYSICAL)) {
             event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerChatTabComplete(PlayerChatTabCompleteEvent event) {
-        List<String> completions = (List<String>) event.getTabCompletions();
-        completions.clear();
-        String token = event.getLastToken();
-        for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-            if (StringUtil.startsWithIgnoreCase(p.getName(), token)) {
-                completions.add(p.getName());
-            }
         }
     }
 

@@ -359,6 +359,7 @@ public class Sumo {
 		winner.incrementRoundWins();
 		winner.getPlayer().teleport(Array.getInstance().getSumoManager().getSumoSpectator());
 
+
 		broadcastMessage("&b" + player.getName() + "&7 was eliminated by &b" + winner.getUsername() + "&7!");
 
 		setState(SumoState.ROUND_ENDING);
@@ -412,16 +413,18 @@ public class Sumo {
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setSumo(this);
+		PlayerUtil.spectator(player);
 		player.setFlying(true);
 		profile.setState(ProfileState.SPECTATE_MATCH);
 		profile.refreshHotbar();
 		profile.handleVisibility();
 
-		player.teleport(Array.getInstance().getSumoManager().getSumoSpawn1());
+		player.teleport(Array.getInstance().getSumoManager().getSumoSpectator());
 	}
 
 	public void removeSpectator(Player player) {
 		spectators.remove(player.getUniqueId());
+		eventPlayers.remove(player.getUniqueId());
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setSumo(null);

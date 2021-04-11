@@ -386,8 +386,9 @@ public class LMS {
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setLms(this);
-        player.setFlying(true);
+        PlayerUtil.spectator(player);
         profile.setState(ProfileState.SPECTATE_MATCH);
+        player.setFlying(true);
         profile.refreshHotbar();
         profile.handleVisibility();
 
@@ -396,11 +397,12 @@ public class LMS {
 
     public void removeSpectator(Player player) {
         spectators.remove(player.getUniqueId());
+        eventPlayers.remove(player.getUniqueId());
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setLms(null);
-        player.setFlying(false);
         profile.setState(ProfileState.IN_LOBBY);
+        player.setFlying(false);
         profile.refreshHotbar();
         profile.handleVisibility();
 

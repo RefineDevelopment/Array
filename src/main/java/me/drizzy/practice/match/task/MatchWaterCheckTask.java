@@ -31,9 +31,7 @@ public class MatchWaterCheckTask extends BukkitRunnable {
             Block head = body.getRelative(BlockFace.UP);
             if (body.getType() == Material.WATER || body.getType() == Material.STATIONARY_WATER || head.getType() == Material.WATER || head.getType() == Material.STATIONARY_WATER) {
                 if(match.getKit().getGameRules().isWaterKill() || match.getKit().getGameRules().isSumo()) {
-                    if (match.getCatcher().contains(player)) return;
                     match.handleDeath(player, null, false);
-                    match.getCatcher().add(player);
                 }
                 if(match.getKit().getGameRules().isParkour()) {
                     player.teleport(match.getTeamPlayer(player).getParkourCheckpoint());
