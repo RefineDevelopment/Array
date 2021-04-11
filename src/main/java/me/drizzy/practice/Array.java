@@ -25,7 +25,7 @@ import me.drizzy.practice.hologram.HologramPlaceholders;
 import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.kit.KitTypeAdapter;
-import me.drizzy.practice.knockback.KnockbackManager;
+import me.drizzy.practice.nms.NMSManager;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.Profile;
@@ -119,7 +119,7 @@ public class Array extends JavaPlugin {
     /**
      * Miscellaneous Managers
      */
-    private KnockbackManager knockbackManager;
+    private NMSManager NMSManager;
     private HCFManager HCFManager;
     private EffectRestorer effectRestorer;
 
@@ -286,7 +286,7 @@ public class Array extends JavaPlugin {
         new Hotbar();
         Match.preload();
         Party.preload();
-        TaskUtil.runAsync(() -> knockbackManager = new KnockbackManager());
+        TaskUtil.runAsync(() -> NMSManager= new NMSManager());
         essentials = new Essentials();
 
         honcho.registerTypeAdapter(Arena.class, new ArenaTypeAdapter());

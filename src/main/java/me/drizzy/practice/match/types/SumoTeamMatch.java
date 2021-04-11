@@ -102,7 +102,7 @@ public class SumoTeamMatch extends Match {
             Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
         }
 
-        Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
+        Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(player, getKit());
 
         Team team = getTeam(player);
 
@@ -184,7 +184,7 @@ public class SumoTeamMatch extends Match {
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
                             profile.handleVisibility();
-                            Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
+                            Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
                             teleportToSpawn(player);
                             PlayerUtil.reset(player, false);
                             profile.refreshHotbar();

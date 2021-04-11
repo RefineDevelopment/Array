@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.lunarclient.bukkitapi.LunarClientAPI;
 import com.lunarclient.bukkitapi.cooldown.LCCooldown;
 import com.lunarclient.bukkitapi.cooldown.LunarClientAPICooldown;
 import com.mongodb.client.MongoCollection;
@@ -811,7 +810,7 @@ public class Profile {
     }
 
     public static void setKb(Player player, String kb) {
-       TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyKnockback(player, kb));
+       TaskUtil.runAsync(() -> Array.getInstance().getNMSManager().getKnockbackType().applyKnockback(player, kb));
     }
 
     public void setEnderpearlCooldown(Cooldown cooldown) {

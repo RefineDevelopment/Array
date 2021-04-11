@@ -308,7 +308,7 @@ public class OITC {
         Profile.setKb(player, Array.getInstance().getOITCManager().getOITCKnockbackProfile());
     }
     public void onLeave(Player player) {
-        Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
+        Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
     }
 
     public void onRound() {

@@ -90,35 +90,15 @@
             <artifactId>FoxSpigot</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/spigots/FoxSpigot.jar</systemPath>
+            <systemPath>${project.basedir}/lib/spigot.jar</systemPath>
         </dependency>
+
         <dependency>
-            <groupId>com.minexd.spigot</groupId>
-            <artifactId>SpigotX</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>me.drizzy.nms</groupId>
+            <artifactId>SpigotSupport</artifactId>
+            <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/spigots/SpigotX.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.ngxdev.spigot</groupId>
-            <artifactId>nSpigot</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/spigots/nSpigot.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>spg.Igdev.spigot</groupId>
-            <artifactId>iSpigot</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/spigots/iSpigot.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>me.drizzy.ravespigot</groupId>
-            <artifactId>RaveSpigot</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/spigots/RaveSpigot.jar</systemPath>
+            <systemPath>${project.basedir}/lib/SpigotSupport.jar</systemPath>
         </dependency>
 
         <!-- Mongo Driver -->

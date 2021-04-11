@@ -313,10 +313,10 @@ public class Spleef {
 	}
 
 	public void onJoin(Player player) {
-		TaskUtil.runAsync(() -> Array.getInstance().getKnockbackManager().getKnockbackType().applyKnockback(player, Array.getInstance().getBracketsManager().getBracketsKnockbackProfile()));
+		TaskUtil.runAsync(() -> Array.getInstance().getNMSManager().getKnockbackType().applyKnockback(player, Array.getInstance().getBracketsManager().getBracketsKnockbackProfile()));
 	}
 	public void onLeave(Player player) {
-		Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
+		Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
 	}
 
 	public void onRound() {

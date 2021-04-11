@@ -106,7 +106,7 @@ public class FFAMatch extends Match {
             Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
         }
 
-        Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
+        Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(player, getKit());
 
         Team team = getTeam(player);
         for (Player enemy : team.getPlayers()) {
@@ -180,7 +180,7 @@ public class FFAMatch extends Match {
                             PlayerUtil.reset(player, false);
                             profile.refreshHotbar();
                             //Reset their Knockback Profile and Teleport them to Spawn
-                            Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
+                            Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(player, getKit());
                             Essentials.teleportToSpawn(player);
                         }
                     }

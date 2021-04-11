@@ -31,7 +31,7 @@ public class SumoStartTask extends SumoTask {
 				this.getSumo().setCooldown(new Cooldown(11_000));
 				this.getSumo().broadcastMessage("&7The sumo events will start in &b10 seconds&7...");
 				for ( Player player : getSumo().getPlayers() ) {
-					Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, Kit.getByName("Sumo"));
+					Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(player, Kit.getByName("Sumo"));
 				}
 			} else {
 				if (this.getSumo().getCooldown().hasExpired()) {

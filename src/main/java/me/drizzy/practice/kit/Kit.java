@@ -71,7 +71,7 @@ public class Kit {
             if (config.contains(path + ".display-name")) {
                 kit.setDisplayName(CC.translate(config.getString(path + ".display-name")));
             }
-            kit.setKnockbackProfile(config.getString(path + ".knockback-profile"));
+            kit.setKnockbackProfile(config.getString(path + ".nms-profile"));
 
             kit.setDisplayIcon(new ItemBuilder(Material.valueOf(config.getString(path + ".icon.material")))
                     .durability(config.getInt(path + ".icon.durability"))
@@ -172,7 +172,7 @@ public class Kit {
         BasicConfigurationFile configFile = Array.getInstance().getKitsConfig();
         configFile.getConfiguration().set(path + ".enabled", enabled);
         configFile.getConfiguration().set(path + ".display-name", displayName);
-        configFile.getConfiguration().set(path + ".knockback-profile", knockbackProfile);
+        configFile.getConfiguration().set(path + ".nms-profile", knockbackProfile);
         configFile.getConfiguration().set(path + ".icon.material", displayIcon.getType().name());
         configFile.getConfiguration().set(path + ".icon.durability", displayIcon.getDurability());
         configFile.getConfiguration().set(path + ".loadout.armor", InventoryUtil.serializeInventory(kitInventory.getArmor()));

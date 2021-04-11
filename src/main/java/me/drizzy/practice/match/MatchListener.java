@@ -347,7 +347,7 @@ public class MatchListener implements Listener {
             }
         }
         player.teleport(player.getLocation().add(0.0, 2.0, 0.0));
-        Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
+        Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
         event.getEntity().getPlayer().setNoDamageTicks(20);
         if (profile.isInFight()) {
             event.getDrops().clear();

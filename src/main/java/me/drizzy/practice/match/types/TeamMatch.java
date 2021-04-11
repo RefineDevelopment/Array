@@ -116,7 +116,7 @@ public class TeamMatch extends Match {
             Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
         }
 
-        Array.getInstance().getKnockbackManager().getKnockbackType().appleKitKnockback(player, getKit());
+        Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(player, getKit());
 
         Team team = getTeam(player);
 
@@ -220,7 +220,7 @@ public class TeamMatch extends Match {
                             PlayerUtil.reset(player, false);
                             profile.refreshHotbar();
                             profile.handleVisibility();
-                            Array.getInstance().getKnockbackManager().getKnockbackType().applyDefaultKnockback(player);
+                            Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
                             Essentials.teleportToSpawn(player);
                             PlayerUtil.reset(player, false);
                             profile.refreshHotbar();

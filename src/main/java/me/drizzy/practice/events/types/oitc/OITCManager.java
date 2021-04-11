@@ -43,8 +43,8 @@ public class OITCManager {
             OITCSpectator = LocationUtil.deserialize(configuration.getString("events.oitc.spectator"));
         }
 
-        if (configuration.contains("events.oitc.knockback-profile")) {
-            OITCKnockbackProfile = configuration.getString("events.oitc.knockback-profile");
+        if (configuration.contains("events.oitc.nms-profile")) {
+            OITCKnockbackProfile = configuration.getString("events.oitc.nms-profile");
         }
     }
 
@@ -56,7 +56,7 @@ public class OITCManager {
         }
 
         if (OITCKnockbackProfile != null) {
-            configuration.set("events.oitc.knockback-profile", OITCKnockbackProfile);
+            configuration.set("events.oitc.nms-profile", OITCKnockbackProfile);
         }
 
         try {

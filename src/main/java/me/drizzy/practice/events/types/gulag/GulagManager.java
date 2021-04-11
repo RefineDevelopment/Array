@@ -54,8 +54,8 @@ public class GulagManager {
 			gulagSpawn2= LocationUtil.deserialize(configuration.getString("events.gulag.spawn2"));
 		}
 
-		if (configuration.contains("events.gulag.knockback-profile")) {
-			gulagKnockbackProfile= configuration.getString("events.gulag.knockback-profile");
+		if (configuration.contains("events.gulag.nms-profile")) {
+			gulagKnockbackProfile= configuration.getString("events.gulag.nms-profile");
 		}
 	}
 
@@ -75,7 +75,7 @@ public class GulagManager {
 		}
 
 		if (gulagKnockbackProfile != null) {
-			configuration.set("events.gulag.knockback-profile", gulagKnockbackProfile);
+			configuration.set("events.gulag.nms-profile", gulagKnockbackProfile);
 		}
 
 		try {

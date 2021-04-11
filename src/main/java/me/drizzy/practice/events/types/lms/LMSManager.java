@@ -50,8 +50,8 @@ public class LMSManager {
             lmsSpectator = LocationUtil.deserialize(configuration.getString("events.ffa.spectator"));
         }
 
-        if (configuration.contains("events.ffa.knockback-profile")) {
-            lmsKnockbackProfile = configuration.getString("events.ffa.knockback-profile");
+        if (configuration.contains("events.ffa.nms-profile")) {
+            lmsKnockbackProfile = configuration.getString("events.ffa.nms-profile");
         }
     }
 
@@ -63,7 +63,7 @@ public class LMSManager {
         }
 
         if (lmsKnockbackProfile != null) {
-            configuration.set("events.ffa.knockback-profile", lmsKnockbackProfile);
+            configuration.set("events.ffa.nms-profile", lmsKnockbackProfile);
         }
 
         try {

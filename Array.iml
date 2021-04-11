@@ -35,43 +35,16 @@
     <orderEntry type="module-library">
       <library name="Maven: pt.foxspigot.jar:FoxSpigot:1.0-SNAPSHOT">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/spigots/FoxSpigot.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/spigot.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: com.minexd.spigot:SpigotX:1.0-SNAPSHOT">
+      <library name="Maven: me.drizzy.nms:SpigotSupport:1.0">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/spigots/SpigotX.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: com.ngxdev.spigot:nSpigot:1.0-SNAPSHOT">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/spigots/nSpigot.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: spg.Igdev.spigot:iSpigot:1.0-SNAPSHOT">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/spigots/iSpigot.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: me.drizzy.ravespigot:RaveSpigot:1.0-SNAPSHOT">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/spigots/RaveSpigot.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/SpigotSupport.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
