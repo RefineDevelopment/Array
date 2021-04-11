@@ -491,7 +491,7 @@ public class MatchListener implements Listener {
         Profile profile = Profile.getByUuid(player);
         Match match = profile.getMatch();
         if (profile.isInFight()) {
-            if (player.getLocation().getBlockY() <= 45) {
+            if (player.getLocation().getBlockY() <= Array.getInstance().getMainConfig().getInteger("Array.VoidSpawn-YLevel")) {
                 if (match.getCatcher().contains(player)) return;
                 match.getCatcher().add(player);
                 if (profile.getMatch().isTheBridgeMatch()) {

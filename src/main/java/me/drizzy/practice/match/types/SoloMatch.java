@@ -96,11 +96,11 @@ public class SoloMatch extends Match {
 
         PlayerUtil.reset(player);
 
-        if (getKit().getGameRules().isStickSpawn()) {
+        if (getKit().getGameRules().isStickSpawn() || getKit().getGameRules().isSumo()) {
             PlayerUtil.denyMovement(player);
         }
 
-        if (!getKit().getGameRules().isNoItems()) {
+        if (!getKit().getGameRules().isNoItems() || !getKit().getGameRules().isSumo()) {
             TaskUtil.runLater(() -> Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
         }
         if (!getKit().getGameRules().isCombo()) {
@@ -498,6 +498,9 @@ public class SoloMatch extends Match {
             for (Player otherPlayer : getPlayersAndSpectators()) {
                 Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
                 profile.handleVisibility(otherPlayer, deadPlayer);
+            }
+            if(getKit().getGameRules().isSumo()) {
+                end();
             }
     }
 

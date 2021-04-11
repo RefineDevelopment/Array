@@ -1,5 +1,6 @@
-package me.drizzy.practice;
+package me.drizzy.practice.api;
 
+import me.drizzy.practice.Array;
 import me.drizzy.practice.profile.Profile;
 import org.bukkit.entity.Player;
 

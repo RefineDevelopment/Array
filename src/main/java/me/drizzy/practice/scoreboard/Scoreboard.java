@@ -1,7 +1,7 @@
 package me.drizzy.practice.scoreboard;
 
 import me.drizzy.practice.Array;
-import me.drizzy.practice.ArrayCache;
+import me.drizzy.practice.api.ArrayCache;
 import me.drizzy.practice.events.types.brackets.Brackets;
 import me.drizzy.practice.events.types.gulag.Gulag;
 import me.drizzy.practice.events.types.lms.LMS;

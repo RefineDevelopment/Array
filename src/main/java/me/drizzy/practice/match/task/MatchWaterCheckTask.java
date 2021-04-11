@@ -1,5 +1,6 @@
 package me.drizzy.practice.match.task;
 
+import me.drizzy.practice.match.MatchState;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.profile.Profile;
@@ -30,7 +31,7 @@ public class MatchWaterCheckTask extends BukkitRunnable {
             Block body = player.getLocation().getBlock();
             Block head = body.getRelative(BlockFace.UP);
             if (body.getType() == Material.WATER || body.getType() == Material.STATIONARY_WATER || head.getType() == Material.WATER || head.getType() == Material.STATIONARY_WATER) {
-                if(match.getKit().getGameRules().isWaterKill() || match.getKit().getGameRules().isSumo()) {
+                if(match.getKit().getGameRules().isWaterKill() || match.getKit().getGameRules().isSumo() && match.getState() != MatchState.ENDING) {
                     match.handleDeath(player, null, false);
                 }
                 if(match.getKit().getGameRules().isParkour()) {

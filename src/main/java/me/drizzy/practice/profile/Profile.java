@@ -13,7 +13,7 @@ import com.mongodb.client.model.Sorts;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
-import me.drizzy.practice.ArrayCache;
+import me.drizzy.practice.api.ArrayCache;
 import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.duel.DuelProcedure;
 import me.drizzy.practice.duel.DuelRequest;

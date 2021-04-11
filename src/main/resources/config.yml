@@ -6,6 +6,8 @@ Array:
   Performance-mode: true
   Core-Hook: true
   HCF-Enabled: true
+  #If the player hits this Y Level, they'll be teleported to spawn (Applies to void spawn kits and the bridge kits)
+  VoidSpawn-YLevel: 45
 Tab:
   Enabled: true
   Color:

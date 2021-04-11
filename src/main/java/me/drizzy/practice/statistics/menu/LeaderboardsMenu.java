@@ -2,7 +2,7 @@ package me.drizzy.practice.statistics.menu;
 
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
-import me.drizzy.practice.ArrayCache;
+import me.drizzy.practice.api.ArrayCache;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.SkullCreator;
 import org.bukkit.ChatColor;
@@ -17,7 +17,6 @@ import me.drizzy.practice.util.external.ItemBuilder;
 import me.drizzy.practice.util.external.menu.Button;
 import me.drizzy.practice.util.external.menu.Menu;
 
-import java.beans.ConstructorProperties;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

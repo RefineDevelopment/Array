@@ -1,7 +1,7 @@
 package me.drizzy.practice.hologram;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.drizzy.practice.ArrayCache;
+import me.drizzy.practice.api.ArrayCache;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.statistics.LeaderboardsAdapter;
 import org.bukkit.entity.Player;

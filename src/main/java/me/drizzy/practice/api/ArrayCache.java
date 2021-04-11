@@ -1,4 +1,4 @@
-package me.drizzy.practice;
+package me.drizzy.practice.api;
 
 import lombok.Getter;
 import me.drizzy.practice.profile.Profile;
