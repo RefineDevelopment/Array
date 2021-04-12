@@ -53,8 +53,8 @@ public class BracketsManager {
 			bracketsSpawn2 = LocationUtil.deserialize(configuration.getString("events.brackets.spawn2"));
 		}
 
-		if (configuration.contains("events.brackets.nms-profile")) {
-			bracketsKnockbackProfile = configuration.getString("events.brackets.nms-profile");
+		if (configuration.contains("events.brackets.knockback-profile")) {
+			bracketsKnockbackProfile = configuration.getString("events.brackets.knockback-profile");
 		}
 	}
 
@@ -74,7 +74,7 @@ public class BracketsManager {
 		}
 
 		if (bracketsKnockbackProfile != null) {
-			configuration.set("events.brackets.nms-profile", bracketsKnockbackProfile);
+			configuration.set("events.brackets.knockback-profile", bracketsKnockbackProfile);
 		}
 
 		try {

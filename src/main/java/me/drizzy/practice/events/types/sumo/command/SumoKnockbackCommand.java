@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 @CommandMeta(label = "sumo setknockbackprofile", permission = "array.dev")
 public class SumoKnockbackCommand {
 
-    public void execute(Player player, @CPL("nms-profile") String kb) {
+    public void execute(Player player, @CPL("knockback-profile") String kb) {
           if (kb == null) {
               player.sendMessage(CC.RED + "Please Specify a Knockback Profile.");
           }

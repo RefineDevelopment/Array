@@ -286,7 +286,7 @@ public class Tab implements ZigguratAdapter {
         else if (profile.isSpectating()) {
             final Match match2=profile.getMatch();
             if (match2 != null) {
-                if (match2.isSoloMatch()) {
+                if (match2.isSoloMatch() || match2.isTheBridgeMatch()) {
                     elements.add(new BufferedTabObject().text("&aTeam A").slot( 4));
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "Match Info").slot( 23));
                     elements.add(new BufferedTabObject().text("&aTeam B").slot( 44));
@@ -308,6 +308,21 @@ public class Tab implements ZigguratAdapter {
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Players: " + Array.getInstance().getMainConfig().getString("Tab.Color.Main") + team).slot( 25));
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Elements") + "Duration:").slot( 27));
                     elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + match2.getDuration()).slot( 28));
+                }
+            }
+            final Spleef spleef = profile.getSpleef();
+            if(spleef != null) {
+                elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + CC.BOLD + "Spectating Spleef").slot(23));
+                int pl=0;
+                for ( int added4=4; added4 < 60; ++added4 ) {
+                    if (!tabSlots.contains(added4)) {
+                        if (spleef.getRemainingPlayers().size() <= pl) {
+                            break;
+                        }
+                        final Player spleefPlayer=spleef.getRemainingPlayers().get(pl).getPlayer();
+                        ++pl;
+                        elements.add(new BufferedTabObject().text(Array.getInstance().getMainConfig().getString("Tab.Color.Main") + spleefPlayer.getName()).slot(added4));
+                    }
                 }
             }
         }

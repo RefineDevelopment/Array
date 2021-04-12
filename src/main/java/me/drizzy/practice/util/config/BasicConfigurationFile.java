@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.List;
 
 public class BasicConfigurationFile extends AbstractConfigurationFile {
+
     private final File file;
     private final YamlConfiguration configuration;
 

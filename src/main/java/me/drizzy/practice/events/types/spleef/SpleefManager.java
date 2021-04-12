@@ -43,8 +43,8 @@ public class SpleefManager {
 			spleefSpawn= LocationUtil.deserialize(configuration.getString("events.spleef.spectator"));
 		}
 
-		if (configuration.contains("events.spleef.nms-profile")) {
-			spleefKnockbackProfile = configuration.getString("events.spleef.nms-profile");
+		if (configuration.contains("events.spleef.knockback-profile")) {
+			spleefKnockbackProfile = configuration.getString("events.spleef.knockback-profile");
 		}
 	}
 
@@ -56,7 +56,7 @@ public class SpleefManager {
 		}
 
 		if (spleefKnockbackProfile != null) {
-			configuration.set("events.spleef.nms-profile", spleefKnockbackProfile);
+			configuration.set("events.spleef.knockback-profile", spleefKnockbackProfile);
 		}
 
 		try {

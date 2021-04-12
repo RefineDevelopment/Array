@@ -53,8 +53,8 @@ public class SumoManager {
 			sumoSpawn2 = LocationUtil.deserialize(configuration.getString("events.sumo.spawn2"));
 		}
 
-		if (configuration.contains("events.sumo.nms-profile")) {
-			sumoKnockbackProfile = configuration.getString("events.sumo.nms-profile");
+		if (configuration.contains("events.sumo.knockback-profile")) {
+			sumoKnockbackProfile = configuration.getString("events.sumo.knockback-profile");
 		}
 	}
 
@@ -74,7 +74,7 @@ public class SumoManager {
 		}
 
 		if (sumoKnockbackProfile != null) {
-			configuration.set("events.sumo.nms-profile", sumoKnockbackProfile);
+			configuration.set("events.sumo.knockback-profile", sumoKnockbackProfile);
 		}
 
 		try {

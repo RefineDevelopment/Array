@@ -65,7 +65,7 @@ public class Array extends JavaPlugin {
 
     @Getter private static Array instance;
 
-    /**
+    /*
      * All ours Configs
      */
     private BasicConfigurationFile mainConfig;
@@ -75,32 +75,32 @@ public class Array extends JavaPlugin {
     private BasicConfigurationFile messagesConfig;
     private BasicConfigurationFile divisionsConfig;
 
-    /**
+    /*
      * All ours Async Threads
      */
     public Executor mainThread;
     public Executor taskThread;
     public Executor mongoThread;
 
-    /**
+    /*
      * Manager for ranks from APIs
      */
     @Setter private RankType rankManager;
 
     private Kit hcfKit;
 
-    /**
+    /*
      * Mongo Database
      */
     private MongoDatabase mongoDatabase;
 
-    /**
+    /*
      * Tab and Scoreboard Adapters
      */
     private Aether scoreboard;
     private Ziggurat tab;
 
-    /**
+    /*
      * All Event Managers
      */
     private SumoManager sumoManager;
@@ -111,19 +111,19 @@ public class Array extends JavaPlugin {
     private OITCManager OITCManager;
     private GulagManager gulagManager;
 
-    /**
+    /*
      * Custom Divisions Handler
      */
     private Divisions divisionsManager;
 
-    /**
+    /*
      * Miscellaneous Managers
      */
     private NMSManager NMSManager;
     private HCFManager HCFManager;
     private EffectRestorer effectRestorer;
 
-    /**
+    /*
      * Essential Utilities
      */
     private Essentials essentials;
