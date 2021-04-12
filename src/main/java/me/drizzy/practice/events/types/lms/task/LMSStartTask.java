@@ -3,7 +3,7 @@ package me.drizzy.practice.events.types.lms.task;
 import me.drizzy.practice.events.types.lms.LMS;
 import me.drizzy.practice.events.types.lms.LMSState;
 import me.drizzy.practice.events.types.lms.LMSTask;
-import me.drizzy.practice.util.external.Cooldown;
+import me.drizzy.practice.util.other.Cooldown;
 
 public class LMSStartTask extends LMSTask {
 

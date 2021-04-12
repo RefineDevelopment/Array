@@ -116,13 +116,21 @@
             <systemPath>${project.basedir}/lib/ProtocolLib.jar</systemPath>
         </dependency>
 
-        <!--Tablist Handler-->
+        <!--Tablist Handler
         <dependency>
             <groupId>me.allen.ziggurat</groupId>
             <artifactId>Ziggurat</artifactId>
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/ziggurat.jar</systemPath>
+        </dependency>-->
+
+        <dependency>
+            <groupId>us.myles</groupId>
+            <artifactId>viaversion</artifactId>
+            <version>2.2.3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/api/ViaAPI.jar</systemPath>
         </dependency>
 
         <!--LunarAPI Support-->

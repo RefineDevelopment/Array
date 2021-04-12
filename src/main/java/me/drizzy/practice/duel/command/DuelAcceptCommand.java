@@ -3,6 +3,7 @@ package me.drizzy.practice.duel.command;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.arena.impl.StandaloneArena;
+import me.drizzy.practice.arena.impl.TheBridgeArena;
 import me.drizzy.practice.duel.DuelRequest;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.Team;
@@ -99,7 +100,23 @@ public class DuelAcceptCommand {
                         }
                     }
                     if (!foundarena) {
-                        player.sendMessage(CC.RED + "The arena you were dueled was a build match and there were no arenas found.");
+                        player.sendMessage(CC.RED + "The arena you were dueled was a build arena and there were no arenas found.");
+                        return;
+                    }
+                }
+            } else if (arena.getType().equals(ArenaType.THEBRIDGE)) {
+                TheBridgeArena sarena=(TheBridgeArena) arena;
+                if (sarena.getDuplicates() != null) {
+                    boolean foundarena=false;
+                    for ( Arena darena : sarena.getDuplicates() ) {
+                        if (!darena.isActive()) {
+                            arena=darena;
+                            foundarena=true;
+                            break;
+                        }
+                    }
+                    if (!foundarena) {
+                        player.sendMessage(CC.RED + "The arena you were dueled was a bridge arena and there were no arenas found.");
                         return;
                     }
                 }
@@ -155,9 +172,13 @@ public class DuelAcceptCommand {
                 }
 
             }
+
+        } else if(request.getKit().getGameRules().isBridge()) {
+            match=new TheBridgeMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,
+                    QueueType.UNRANKED);
         } else {
-             match=new SoloMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,
-                   QueueType.UNRANKED, 0, 0);
+            match=new SoloMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,
+                    QueueType.UNRANKED, 0, 0);
         }
         if (!request.isParty()) {
             for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Start-Message.Solo") ) {

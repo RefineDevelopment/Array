@@ -1,22 +1,21 @@
 package me.drizzy.practice.party.menu;
 
 import lombok.AllArgsConstructor;
-import me.drizzy.practice.Array;
 import me.drizzy.practice.enums.PartyManageType;
 import me.drizzy.practice.enums.PartyPrivacyType;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.external.ItemBuilder;
+import me.drizzy.practice.util.inventory.ItemBuilder;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
-import me.drizzy.practice.util.external.menu.Button;
+import me.drizzy.practice.util.menu.Button;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.entity.Player;
-import me.drizzy.practice.util.external.menu.Menu;
+import me.drizzy.practice.util.menu.Menu;
 
 public class ManagePartySettings extends Menu
 {

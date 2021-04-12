@@ -13,13 +13,13 @@ import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.TaskUtil;
+import me.drizzy.practice.util.other.TaskUtil;
 import me.drizzy.practice.array.essentials.Essentials;
 import org.bukkit.potion.PotionEffectType;
 import me.drizzy.practice.kit.Kit;
-import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.elo.EloUtil;
-import me.drizzy.practice.util.external.ChatComponentBuilder;
+import me.drizzy.practice.util.chat.ChatComponentBuilder;
 import me.drizzy.practice.util.nametag.NameTags;
 import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
@@ -498,9 +498,6 @@ public class SoloMatch extends Match {
             for (Player otherPlayer : getPlayersAndSpectators()) {
                 Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
                 profile.handleVisibility(otherPlayer, deadPlayer);
-            }
-            if(getKit().getGameRules().isSumo()) {
-                end();
             }
     }
 

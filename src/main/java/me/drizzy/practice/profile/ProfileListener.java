@@ -7,9 +7,8 @@ import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchState;
 import me.drizzy.practice.match.events.MatchEvent;
 import me.drizzy.practice.match.events.MatchStartEvent;
-import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.nametag.NameTags;
-import net.minecraft.server.v1_8_R3.FoodMetaData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -29,7 +28,6 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.StringUtil;
 
 import java.util.List;
 

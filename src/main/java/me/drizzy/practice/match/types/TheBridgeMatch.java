@@ -17,12 +17,12 @@ import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueType;
-import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.TaskUtil;
+import me.drizzy.practice.util.other.PlayerUtil;
+import me.drizzy.practice.util.other.TaskUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.elo.EloUtil;
-import me.drizzy.practice.util.external.ChatComponentBuilder;
-import me.drizzy.practice.util.external.ItemBuilder;
+import me.drizzy.practice.util.chat.ChatComponentBuilder;
+import me.drizzy.practice.util.inventory.ItemBuilder;
 import me.drizzy.practice.util.nametag.NameTags;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -476,7 +476,9 @@ public class TheBridgeMatch extends Match {
                     bProfile.setBridgeRounds(bProfile.getBridgeRounds() + 1);
                 }
 
-                this.broadcastMessage(CC.AQUA + getWinningPlayer().getName() + " &7has won this round!");
+                this.broadcastMessage("");
+                this.broadcastMessage(CC.translate(CC.AQUA + getWinningPlayer().getName() + " &7has won this round!"));
+                this.broadcastMessage("");
 
                 if (aProfile.getBridgeRounds() >= 3 || bProfile.getBridgeRounds() >= 3) {
                     TeamPlayer roundWinner=getTeamPlayer(getWinningPlayer());
@@ -561,13 +563,13 @@ public class TheBridgeMatch extends Match {
         if(teamMatch.getTeamPlayerA().getPlayer() == player){
             player.getInventory().setArmorContents(armorRed);
             player.getInventory().all(Material.STAINED_CLAY).forEach((key, value) -> {
-                player.getInventory().setItem(key, new me.drizzy.practice.util.external.ItemBuilder(Material.STAINED_CLAY).durability(14).amount(64).build());
-                player.getInventory().setItem(key, new me.drizzy.practice.util.external.ItemBuilder(Material.STAINED_CLAY).durability(14).amount(64).build());
+                player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(14).amount(64).build());
+                player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(14).amount(64).build());
             });
         }else{
             player.getInventory().setArmorContents(armorBlue);
             player.getInventory().all(Material.STAINED_CLAY).forEach((key, value) -> {
-                player.getInventory().setItem(key, new me.drizzy.practice.util.external.ItemBuilder(Material.STAINED_CLAY).durability(11).amount(64).build());
+                player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(11).amount(64).build());
                 player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(11).amount(64).build());
             });
         }

@@ -6,15 +6,23 @@ import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label="kit hitdelay", permission = "array.dev")
+@CommandMeta(label="kit sethitdelay", permission = "array.dev")
 public class KitSetHitDelayCommand {
-    public void execute(Player player, @CPL("kit") Kit kit, @CPL("delay") int delay) {
+
+    public void execute(Player player, @CPL("kit") Kit kit, @CPL("delay") String delay) {
         if (kit == null) {
             player.sendMessage(CC.translate("&8[&b&lArray&8] &7That kit does not exist."));
         } else {
-            kit.getGameRules().setHitDelay(delay);
+            int test;
+            try {
+                test = Integer.parseInt(delay);
+            } catch (NumberFormatException e) {
+                player.sendMessage(CC.translate("Invalid Value!"));
+                return;
+            }
+            kit.getGameRules().setHitDelay(test);
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated &b" + kit.getName() + " &7hitdelay set to &b" + delay));
+            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated &b" + kit.getName() + " &7hitdelay set to &b" + test));
         }
     }
 }

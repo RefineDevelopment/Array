@@ -3,7 +3,7 @@ package me.drizzy.practice.events.types.gulag.task;
 import me.drizzy.practice.events.types.gulag.Gulag;
 import me.drizzy.practice.events.types.gulag.GulagState;
 import me.drizzy.practice.events.types.gulag.GulagTask;
-import me.drizzy.practice.util.external.Cooldown;
+import me.drizzy.practice.util.other.Cooldown;
 
 public class GulagStartTask extends GulagTask {
 

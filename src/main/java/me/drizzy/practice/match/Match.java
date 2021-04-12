@@ -18,12 +18,12 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueType;
-import me.drizzy.practice.util.PlayerUtil;
-import me.drizzy.practice.util.TaskUtil;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.external.ChatComponentBuilder;
-import me.drizzy.practice.util.external.TimeUtil;
+import me.drizzy.practice.util.chat.ChatComponentBuilder;
 import me.drizzy.practice.util.nametag.NameTags;
+import me.drizzy.practice.util.other.PlayerUtil;
+import me.drizzy.practice.util.other.TaskUtil;
+import me.drizzy.practice.util.other.TimeUtil;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.*;
@@ -304,6 +304,8 @@ public abstract class Match {
                     }
                 }
             }
+
+        catcher.remove(deadPlayer);
 
             onDeath(deadPlayer, killerPlayer);
 

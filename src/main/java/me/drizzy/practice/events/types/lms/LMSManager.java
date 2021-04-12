@@ -2,8 +2,8 @@ package me.drizzy.practice.events.types.lms;
 
 import me.drizzy.practice.events.types.lms.task.LMSStartTask;
 import me.drizzy.practice.Array;
-import me.drizzy.practice.util.external.Cooldown;
-import me.drizzy.practice.util.external.LocationUtil;
+import me.drizzy.practice.util.other.Cooldown;
+import me.drizzy.practice.util.location.LocationUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;

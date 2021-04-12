@@ -11,7 +11,7 @@ import me.drizzy.practice.match.types.SoloMatch;
 import me.drizzy.practice.match.types.TheBridgeMatch;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.rank.RankType;
-import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

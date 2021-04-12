@@ -1,7 +1,7 @@
 package me.drizzy.practice.match.command;
 
 import me.drizzy.practice.Array;
-import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;

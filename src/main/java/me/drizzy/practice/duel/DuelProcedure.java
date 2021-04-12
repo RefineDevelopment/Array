@@ -1,11 +1,11 @@
 package me.drizzy.practice.duel;
 
-import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.external.ChatComponentBuilder;
+import me.drizzy.practice.util.chat.ChatComponentBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.chat.ClickEvent;

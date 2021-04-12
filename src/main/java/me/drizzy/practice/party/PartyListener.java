@@ -2,7 +2,6 @@ package me.drizzy.practice.party;
 
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.tournament.Tournament;
-import me.drizzy.practice.util.PlayerUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.EventPriority;

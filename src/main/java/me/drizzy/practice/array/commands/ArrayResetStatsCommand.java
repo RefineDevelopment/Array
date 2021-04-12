@@ -4,7 +4,7 @@ import com.mongodb.client.model.Filters;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.api.ArrayCache;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;

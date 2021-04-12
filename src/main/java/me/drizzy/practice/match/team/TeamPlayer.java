@@ -1,7 +1,6 @@
 package me.drizzy.practice.match.team;
 
-import lombok.Data;
-import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.other.PlayerUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;

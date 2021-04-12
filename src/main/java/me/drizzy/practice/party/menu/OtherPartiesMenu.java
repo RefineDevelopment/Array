@@ -5,15 +5,15 @@ import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.external.ItemBuilder;
-import me.drizzy.practice.util.external.menu.Menu;
+import me.drizzy.practice.util.inventory.ItemBuilder;
+import me.drizzy.practice.util.menu.Menu;
 import org.bukkit.event.inventory.ClickType;
 import java.util.List;
 import org.bukkit.Material;
 import java.util.ArrayList;
 import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
-import me.drizzy.practice.util.external.menu.Button;
+import me.drizzy.practice.util.menu.Button;
 import java.util.Map;
 import org.bukkit.entity.Player;
 

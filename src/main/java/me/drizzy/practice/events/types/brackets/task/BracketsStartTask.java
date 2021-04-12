@@ -3,7 +3,7 @@ package me.drizzy.practice.events.types.brackets.task;
 import me.drizzy.practice.events.types.brackets.Brackets;
 import me.drizzy.practice.events.types.brackets.BracketsState;
 import me.drizzy.practice.events.types.brackets.BracketsTask;
-import me.drizzy.practice.util.external.Cooldown;
+import me.drizzy.practice.util.other.Cooldown;
 
 public class BracketsStartTask extends BracketsTask {
 

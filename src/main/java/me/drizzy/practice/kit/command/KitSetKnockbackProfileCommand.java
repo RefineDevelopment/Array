@@ -18,7 +18,7 @@ public class KitSetKnockbackProfileCommand {
         kit.setKnockbackProfile(knockbackProfile);
         kit.save();
 
-        player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated nms profile for &b" + kit.getName() +  " &7to &b" + knockbackProfile));
+        player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated knockback profile for &b" + kit.getName() +  " &7to &b" + knockbackProfile));
     }
 
 }

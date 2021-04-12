@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.events.types.gulag.task.GulagStartTask;
-import me.drizzy.practice.util.external.Cooldown;
-import me.drizzy.practice.util.external.LocationUtil;
+import me.drizzy.practice.util.other.Cooldown;
+import me.drizzy.practice.util.location.LocationUtil;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 

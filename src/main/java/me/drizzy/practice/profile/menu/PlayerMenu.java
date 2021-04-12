@@ -10,9 +10,9 @@ import me.drizzy.practice.kiteditor.menu.KitEditorSelectKitMenu;
 import me.drizzy.practice.settings.SettingsMenu;
 import me.drizzy.practice.statistics.menu.LeaderboardsMenu;
 import me.drizzy.practice.statistics.menu.StatsMenu;
-import me.drizzy.practice.util.external.ItemBuilder;
-import me.drizzy.practice.util.external.menu.Button;
-import me.drizzy.practice.util.external.menu.Menu;
+import me.drizzy.practice.util.inventory.ItemBuilder;
+import me.drizzy.practice.util.menu.Button;
+import me.drizzy.practice.util.menu.Menu;
 
 import java.util.ArrayList;
 import java.util.HashMap;

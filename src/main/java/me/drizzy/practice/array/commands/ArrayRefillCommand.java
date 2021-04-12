@@ -2,7 +2,7 @@ package me.drizzy.practice.array.commands;
 
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.command.command.CommandMeta;
-import me.drizzy.practice.util.external.ItemBuilder;
+import me.drizzy.practice.util.inventory.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NonNull;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.cuboid.Cuboid;
-import me.drizzy.practice.util.external.ItemBuilder;
+import me.drizzy.practice.util.inventory.ItemBuilder;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

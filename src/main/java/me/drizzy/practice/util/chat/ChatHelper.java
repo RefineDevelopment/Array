@@ -1,6 +1,5 @@
 package me.drizzy.practice.util.chat;
 
-import me.drizzy.practice.util.external.ChatComponentBuilder;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 

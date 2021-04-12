@@ -3,7 +3,7 @@ package me.drizzy.practice.events.types.spleef.task;
 import me.drizzy.practice.events.types.spleef.Spleef;
 import me.drizzy.practice.events.types.spleef.SpleefState;
 import me.drizzy.practice.events.types.spleef.SpleefTask;
-import me.drizzy.practice.util.external.Cooldown;
+import me.drizzy.practice.util.other.Cooldown;
 
 public class SpleefStartTask extends SpleefTask {
 

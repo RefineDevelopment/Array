@@ -18,7 +18,7 @@ import me.drizzy.practice.profile.ProfileListener;
 import me.drizzy.practice.hotbar.HotbarListener;
 import me.drizzy.practice.queue.QueueListener;
 import me.drizzy.practice.util.events.WorldListener;
-import me.drizzy.practice.util.external.menu.MenuListener;
+import me.drizzy.practice.util.menu.MenuListener;
 import org.bukkit.event.Listener;
 
 import java.util.Arrays;

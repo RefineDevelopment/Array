@@ -4,7 +4,7 @@ import me.drizzy.practice.events.types.gulag.Gulag;
 import me.drizzy.practice.events.types.gulag.GulagState;
 import me.drizzy.practice.events.types.gulag.GulagTask;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.other.PlayerUtil;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 

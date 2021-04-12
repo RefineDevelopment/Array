@@ -19,19 +19,17 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.tournament.Tournament;
-import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.external.TimeUtil;
-import me.drizzy.practice.util.scoreboard.scoreboard.Board;
-import me.drizzy.practice.util.scoreboard.scoreboard.BoardAdapter;
-import me.drizzy.practice.util.scoreboard.scoreboard.cooldown.BoardCooldown;
+import me.drizzy.practice.util.other.TimeUtil;
+import me.drizzy.practice.util.scoreboard.AssembleAdapter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class Scoreboard implements BoardAdapter {
+public class Scoreboard implements AssembleAdapter {
 
     @Override
     public String getTitle(Player player) {
@@ -39,7 +37,7 @@ public class Scoreboard implements BoardAdapter {
     }
 
     @Override
-    public List<String> getScoreboard(Player player, Board board, Set<BoardCooldown> cooldowns) {
+    public List<String> getLines(Player player) {
         Profile profile=Profile.getByUuid(player.getUniqueId());
 
         if (!profile.getSettings().isShowScoreboard()) {
@@ -49,7 +47,7 @@ public class Scoreboard implements BoardAdapter {
         final List<String> lines=new ArrayList<>();
         lines.add(CC.SB_BAR);
         if (profile.isInLobby() || profile.isInQueue()) {
-            lines.add("&b&lPractice");
+            lines.add("&b&lLobby");
             lines.add("&f Online: &b" + ArrayCache.getOnline());
             lines.add("&f Fighting: &b" + ArrayCache.getInFights());
             lines.add("");
@@ -63,8 +61,9 @@ public class Scoreboard implements BoardAdapter {
             }
             if (profile.isInQueue()) {
                 final Queue queue = profile.getQueue();
-                lines.add(CC.SB_BAR);
-                lines.add("&b" + queue.getQueueName());
+                lines.add("");
+                lines.add("&b&lQueue");
+                lines.add("&f Kit: &b" + queue.getKit().getDisplayName());
                 lines.add("&f Time: &b" + queue.getDuration(player));
                 if (queue.getQueueType().equals(QueueType.RANKED)) {
                     lines.add("&f Range: &b" + profile.getQueueProfile().getMinRange() + " -> " + profile.getQueueProfile().getMaxRange());
@@ -88,9 +87,10 @@ public class Scoreboard implements BoardAdapter {
                     lines.add("&f Rival: &b" + opponent.getUsername());
                     lines.add("&f Duration: &b" + match.getDuration());
                     if (profile.getSettings().isPingScoreboard()) {
-                        lines.add("");
-                        lines.add("&f Your Ping: &b" + self.getPing() + "ms");
-                        lines.add("&f Their Ping: &b" + opponent.getPing() + "ms");
+                        lines.add("&f Ping: &a" + self.getPing() + "ms" + " &7┃ " + "&c" + opponent.getPing() + "ms");
+                    }
+                    if (match.getKit() != null && match.getKit().getGameRules().isCombo())  {
+                        lines.add("&f Longest Combo: &b" + self.getLongestCombo());
                     }
                 } else if (match.isSumoMatch()) {
                     TeamPlayer self=match.getTeamPlayer(player);
@@ -104,9 +104,9 @@ public class Scoreboard implements BoardAdapter {
                     lines.add("&b&lFight");
                     lines.add("&f Rival: &b" + opponent.getUsername());
                     lines.add("&f Points: &b" + selfPoints + " &7┃ &b" + opPoints + "");
-                    lines.add("");
-                    lines.add("&f Your Ping: &b" + self.getPing() + "ms");
-                    lines.add("&f Their Ping: &b" + opponent.getPing() + "ms");
+                    if (profile.getSettings().isPingScoreboard()) {
+                        lines.add("&f Ping: &a" + self.getPing() + "ms" + " &7┃ " + "&c" + opponent.getPing() + "ms");
+                    }
                 } else if (match.isTheBridgeMatch()) {
                     TheBridgeMatch bridgeMatch = (TheBridgeMatch) match;
                     TeamPlayer opponent=match.getOpponentTeamPlayer(player);
@@ -120,8 +120,8 @@ public class Scoreboard implements BoardAdapter {
                     lines.add("&9 Blue: &r" + this.getFormattedPoints(match.getTeamPlayerB().getPlayer()) + (match.getTeamPlayerB().getPlayer() == player ? " &7(You)" : ""));
                     if (!profile.getBowCooldown().hasExpired()) {
                         lines.add("");
-                        lines.add("&b&lBow Cooldown");
-                        lines.add(" &f" + profile.getBowCooldown().getTimeLeft());
+                        lines.add("&b&lCooldowns");
+                        lines.add(" &fBow: &b" + profile.getBowCooldown().getTimeLeft() + "s");
                     }
 
                 } else if (match.isSumoTeamMatch()) {
@@ -137,9 +137,9 @@ public class Scoreboard implements BoardAdapter {
 
                         lines.add("&f Rival: &b" + opponent.getLeader().getUsername() + "'s Party");
                         lines.add("&f Points: &b" + selfPoints + " &7┃ &b" + opPoints + "");
-                        lines.add("");
-                        lines.add("&f Your Ping: &b" + PlayerUtil.getPing(player) + "ms");
-                        lines.add("&f Their Ping: &b" + opponent.getTeamPlayers().get(0).getPing() + "ms");
+                        if (profile.getSettings().isPingScoreboard()) {
+                            lines.add("&f Ping: &a" + PlayerUtil.getPing(player) + "ms" + " &7┃ " + "&c" + opponent.getTeamPlayers().get(0).getPing() + "ms");
+                        }
                     } else {
                         int selfPoints=team.getSumoRounds();
                         int opPoints=opponentTeam.getSumoRounds();

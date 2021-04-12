@@ -6,7 +6,7 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.enums.ArenaType;
 import me.drizzy.practice.arena.cuboid.Cuboid;
-import me.drizzy.practice.util.external.LocationUtil;
+import me.drizzy.practice.util.location.LocationUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.IOException;

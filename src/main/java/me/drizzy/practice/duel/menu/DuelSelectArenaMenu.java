@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.enums.ArenaType;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.external.ItemBuilder;
-import me.drizzy.practice.util.external.menu.Button;
-import me.drizzy.practice.util.external.menu.Menu;
-import me.drizzy.practice.util.external.menu.pagination.PaginatedMenu;
+import me.drizzy.practice.util.inventory.ItemBuilder;
+import me.drizzy.practice.util.menu.Button;
+import me.drizzy.practice.util.menu.Menu;
+import me.drizzy.practice.util.menu.pagination.PaginatedMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -15,13 +15,10 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 import java.util.Map;
 
+@AllArgsConstructor
 public class DuelSelectArenaMenu extends PaginatedMenu {
 
     String type;
-
-    public DuelSelectArenaMenu(String type) {
-        this.type = type;
-    }
 
     @Override
     public String getPrePaginatedTitle(Player player) {
@@ -48,6 +45,10 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
                     continue;
                 }
 
+                if (profile.getDuelProcedure().getKit().getGameRules().isBridge() && arena.getType() == ArenaType.SHARED || profile.getDuelProcedure().getKit().getGameRules().isBridge() && arena.getType() == ArenaType.STANDALONE) {
+                    continue;
+                }
+
                 if (arena.getType() == ArenaType.DUPLICATE) {
                     continue;
                 }
@@ -59,6 +60,11 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
                 if (profile.getRematchData().getKit().getGameRules().isBuild() && arena.getType() == ArenaType.SHARED) {
                     continue;
                 }
+
+                if (profile.getRematchData().getKit().getGameRules().isBridge() && arena.getType() == ArenaType.SHARED || profile.getRematchData().getKit().getGameRules().isBridge() && arena.getType() == ArenaType.STANDALONE) {
+                    continue;
+                }
+
 
                 if (arena.getType() == ArenaType.DUPLICATE) {
                     continue;

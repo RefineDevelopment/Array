@@ -1,13 +1,13 @@
 package me.drizzy.practice.match.menu;
 
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.InventoryUtil;
-import me.drizzy.practice.util.external.ItemBuilder;
-import me.drizzy.practice.util.external.PotionUtil;
-import me.drizzy.practice.util.external.TimeUtil;
-import me.drizzy.practice.util.external.menu.Button;
-import me.drizzy.practice.util.external.menu.Menu;
-import me.drizzy.practice.util.external.menu.button.DisplayButton;
+import me.drizzy.practice.util.inventory.InventoryUtil;
+import me.drizzy.practice.util.inventory.ItemBuilder;
+import me.drizzy.practice.util.other.PotionUtil;
+import me.drizzy.practice.util.other.TimeUtil;
+import me.drizzy.practice.util.menu.Button;
+import me.drizzy.practice.util.menu.Menu;
+import me.drizzy.practice.util.menu.button.DisplayButton;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.bukkit.Material;

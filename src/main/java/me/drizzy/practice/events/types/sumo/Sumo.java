@@ -6,12 +6,12 @@ import me.drizzy.practice.events.types.sumo.task.SumoRoundStartTask;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.PlayerSnapshot;
-import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.other.PlayerSnapshot;
+import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.util.chat.Clickable;
-import me.drizzy.practice.util.external.Cooldown;
-import me.drizzy.practice.util.external.TimeUtil;
+import me.drizzy.practice.util.other.Cooldown;
+import me.drizzy.practice.util.other.TimeUtil;
 import me.drizzy.practice.events.types.sumo.player.SumoPlayer;
 import me.drizzy.practice.events.types.sumo.player.SumoPlayerState;
 

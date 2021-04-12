@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import me.drizzy.practice.enums.SettingsType;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.external.ItemBuilder;
-import me.drizzy.practice.util.external.menu.Button;
-import me.drizzy.practice.util.external.menu.Menu;
+import me.drizzy.practice.util.inventory.ItemBuilder;
+import me.drizzy.practice.util.menu.Button;
+import me.drizzy.practice.util.menu.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -183,6 +183,7 @@ public class SettingsMenu extends Menu {
                 case TOGGLEVANILLATAB:
                     Button.playSuccess(player);
                     profile.getSettings().setVanillaTab(!profile.getSettings().isVanillaTab());
+                    profile.save();
                     break;
                 case TOGGLESHOWPLAYERS:
                     Button.playSuccess(player);

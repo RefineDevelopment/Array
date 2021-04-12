@@ -2,9 +2,9 @@ package me.drizzy.practice.kiteditor.menu;
 
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.external.ItemBuilder;
-import me.drizzy.practice.util.external.menu.Button;
-import me.drizzy.practice.util.external.menu.Menu;
+import me.drizzy.practice.util.inventory.ItemBuilder;
+import me.drizzy.practice.util.menu.Button;
+import me.drizzy.practice.util.menu.Menu;
 import lombok.AllArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;

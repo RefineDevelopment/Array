@@ -3,7 +3,7 @@ package me.drizzy.practice.arena.impl;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.enums.ArenaType;
-import me.drizzy.practice.util.external.LocationUtil;
+import me.drizzy.practice.util.location.LocationUtil;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 

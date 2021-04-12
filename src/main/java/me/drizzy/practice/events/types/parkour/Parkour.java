@@ -15,11 +15,11 @@ import me.drizzy.practice.events.types.parkour.task.ParkourRoundEndTask;
 import me.drizzy.practice.events.types.parkour.task.ParkourRoundStartTask;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.util.PlayerSnapshot;
-import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.other.PlayerSnapshot;
+import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.external.Cooldown;
-import me.drizzy.practice.util.external.TimeUtil;
+import me.drizzy.practice.util.other.Cooldown;
+import me.drizzy.practice.util.other.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

@@ -3,7 +3,7 @@ package me.drizzy.practice.array.essentials;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.array.essentials.event.SpawnTeleportEvent;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.external.LocationUtil;
+import me.drizzy.practice.util.location.LocationUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 

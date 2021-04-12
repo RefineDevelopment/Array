@@ -15,13 +15,13 @@ import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.match.types.TheBridgeMatch;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.util.BlockUtil;
-import me.drizzy.practice.util.LocationUtils;
-import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.location.BlockUtil;
+import me.drizzy.practice.util.location.LocationUtils;
+import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.external.Cooldown;
-import me.drizzy.practice.util.external.ItemBuilder;
-import me.drizzy.practice.util.external.TimeUtil;
+import me.drizzy.practice.util.other.Cooldown;
+import me.drizzy.practice.util.inventory.ItemBuilder;
+import me.drizzy.practice.util.other.TimeUtil;
 import me.drizzy.practice.util.nametag.NameTags;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.bukkit.Bukkit;
@@ -104,10 +104,7 @@ public class MatchListener implements Listener {
                         player.getLocation().getBlock().getType() == Material.ENDER_PORTAL_FRAME) {
                         TheBridgeMatch match=(TheBridgeMatch) profile.getMatch();
                         if (LocationUtils.isTeamPortal(player)) {
-                            player.setHealth(20.0);
-                            player.teleport(match.getTeamPlayer(player).getPlayerSpawn());
-                            PlayerUtil.reset(player);
-                            match.setupPlayer(player);
+                            new BridgePlayerTask(match, player).run();
                             player.sendMessage(CC.translate("&cYou Jumped in the wrong portal."));
                             return;
                         }
@@ -283,6 +280,11 @@ public class MatchListener implements Listener {
             event.setCancelled(true);
             return;
         }
+        if (event.getPlayer().getInventory().getHeldItemSlot() == 0 && event.getItemDrop().getItemStack().getType() == Material.DIAMOND_SWORD) {
+            event.getPlayer().sendMessage(CC.translate("&cYou can't drop your sword on 1st slot!"));
+            event.setCancelled(true);
+            return;
+        }
         if (profile.isInSomeSortOfFight()) {
             if (event.getItemDrop().getItemStack().getType() == Material.GLASS_BOTTLE) {
                 event.getItemDrop().setTicksLived(5940);
@@ -313,7 +315,7 @@ public class MatchListener implements Listener {
 
     @EventHandler
     public void onPlayerDeathEvent(final PlayerDeathEvent event) {
-        event.getEntity().spigot().respawn();
+        //event.getEntity().spigot().respawn();
         event.setDeathMessage(null);
         Player player = event.getEntity().getPlayer();
         Profile profile = Profile.getByUuid(event.getEntity().getUniqueId());

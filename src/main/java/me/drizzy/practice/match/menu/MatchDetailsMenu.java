@@ -3,13 +3,13 @@ package me.drizzy.practice.match.menu;
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.InventoryUtil;
-import me.drizzy.practice.util.external.ItemBuilder;
-import me.drizzy.practice.util.external.PotionUtil;
-import me.drizzy.practice.util.external.TimeUtil;
-import me.drizzy.practice.util.external.menu.Button;
-import me.drizzy.practice.util.external.menu.Menu;
-import me.drizzy.practice.util.external.menu.button.DisplayButton;
+import me.drizzy.practice.util.inventory.InventoryUtil;
+import me.drizzy.practice.util.inventory.ItemBuilder;
+import me.drizzy.practice.util.other.PotionUtil;
+import me.drizzy.practice.util.other.TimeUtil;
+import me.drizzy.practice.util.menu.Button;
+import me.drizzy.practice.util.menu.Menu;
+import me.drizzy.practice.util.menu.button.DisplayButton;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.bukkit.Material;
@@ -65,7 +65,7 @@ public class MatchDetailsMenu extends Menu {
         buttons.put(pos, new StatisticsButton(snapshot.getTeamPlayer()));
 
         if (this.snapshot.getSwitchTo() != null || this.opponent != null) {
-            buttons.put(44, new SwitchInventoryButton(this.snapshot.getSwitchTo()));
+            buttons.put(45, new SwitchInventoryButton(this.snapshot.getSwitchTo()));
             buttons.put(53, new SwitchInventoryButton(this.snapshot.getSwitchTo()));
         }
 

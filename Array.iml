@@ -61,9 +61,9 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: me.allen.ziggurat:Ziggurat:1.0">
+      <library name="Maven: us.myles:viaversion:2.2.3">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/ziggurat.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/api/ViaAPI.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

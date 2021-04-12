@@ -4,9 +4,9 @@ import lombok.Getter;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.external.TimeUtil;
+import me.drizzy.practice.util.other.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

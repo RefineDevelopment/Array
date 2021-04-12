@@ -3,7 +3,7 @@ package me.drizzy.practice.events.types.parkour;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.events.types.parkour.player.ParkourPlayerState;
-import me.drizzy.practice.util.BlockUtil;
+import me.drizzy.practice.util.location.BlockUtil;
 import me.drizzy.practice.util.chat.CC;
 import org.bukkit.Location;
 import org.bukkit.Material;

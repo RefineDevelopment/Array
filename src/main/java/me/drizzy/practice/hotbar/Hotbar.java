@@ -6,7 +6,7 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.external.ItemBuilder;
+import me.drizzy.practice.util.inventory.ItemBuilder;
 
 import java.util.Arrays;
 

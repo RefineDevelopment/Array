@@ -12,7 +12,7 @@ import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.external.ItemBuilder;
+import me.drizzy.practice.util.inventory.ItemBuilder;
 
 import java.util.List;
 import java.util.Collections;
@@ -22,10 +22,10 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
-import me.drizzy.practice.util.external.menu.Button;
+import me.drizzy.practice.util.menu.Button;
 import java.util.Map;
 import org.bukkit.entity.Player;
-import me.drizzy.practice.util.external.menu.Menu;
+import me.drizzy.practice.util.menu.Menu;
 
 public class PartyEventSelectEventMenu extends Menu {
 
@@ -58,22 +58,19 @@ public class PartyEventSelectEventMenu extends Menu {
             List<String> lore = new ArrayList<>();
             lore.add(CC.GRAY + CC.STRIKE_THROUGH + "------------------------");
             if (this.partyEventType == PartyEventType.FFA) {
-                lore.add(CC.translate("&7Unleash your party in"));
-                lore.add(CC.translate("&7an &b&lFFA Match&7, Let them"));
-                lore.add(CC.translate("&7fight for themselves"));
-                lore.add(CC.translate("&7Last player standing wins!"));
+                lore.add(CC.translate("&7&oUnleash your party in"));
+                lore.add(CC.translate("&7&oa Free For All Match"));
+                lore.add(CC.translate("&7&oLast player standing wins!"));
             }
             if (this.partyEventType == PartyEventType.SPLIT) {
-                lore.add(CC.translate("&7Split your party into"));
-                lore.add(CC.translate("&b&lTwo Teams &7and let them"));
-                lore.add(CC.translate("&7duel as Team vs Team,"));
-                lore.add(CC.translate("&7Last Team standing wins!"));
+                lore.add(CC.translate("&7&oSplit your party into"));
+                lore.add(CC.translate("&7&oTwo Teams and the Last"));
+                lore.add(CC.translate("&7&oTeam remaining wins!"));
             }
             if (this.partyEventType == PartyEventType.HCF) {
-                lore.add(CC.translate("&7Split your party into"));
-                lore.add(CC.translate("&7team teams and let them duel"));
-                lore.add(CC.translate("&7with the usual &b&lHCF Kits"));
-                lore.add(CC.translate("&7Last Team standing wins!"));
+                lore.add(CC.translate("&7&oSplit your party into"));
+                lore.add(CC.translate("&7&oTwo Teams with HCF Kits,"));
+                lore.add(CC.translate("&7&oLast Team standing wins!"));
             }
             lore.add(CC.GRAY + CC.STRIKE_THROUGH + "------------------------");
             return new ItemBuilder(this.partyEventType.getMaterial()).name("&b&l" + this.partyEventType.getName()).lore(lore).build();

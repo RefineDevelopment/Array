@@ -1,6 +1,6 @@
 package me.drizzy.practice.array.essentials.event;
 
-import me.drizzy.practice.util.external.BaseEvent;
+import me.drizzy.practice.util.events.BaseEvent;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;

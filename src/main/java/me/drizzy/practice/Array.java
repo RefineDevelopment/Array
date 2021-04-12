@@ -5,7 +5,6 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import lombok.Setter;
-import me.allen.ziggurat.Ziggurat;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.arena.ArenaTypeAdapter;
 import me.drizzy.practice.arena.ArenaTypeTypeAdapter;
@@ -37,17 +36,18 @@ import me.drizzy.practice.register.RegisterCommands;
 import me.drizzy.practice.register.RegisterListeners;
 import me.drizzy.practice.scoreboard.Scoreboard;
 import me.drizzy.practice.tablist.Tab;
-import me.drizzy.practice.util.Description;
-import me.drizzy.practice.util.EntityHider;
-import me.drizzy.practice.util.InventoryUtil;
-import me.drizzy.practice.util.TaskUtil;
+import me.drizzy.practice.util.other.Description;
+import me.drizzy.practice.util.other.EntityHider;
+import me.drizzy.practice.util.inventory.InventoryUtil;
+import me.drizzy.practice.util.other.TaskUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.Honcho;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
-import me.drizzy.practice.util.external.ItemBuilder;
-import me.drizzy.practice.util.external.duration.Duration;
-import me.drizzy.practice.util.external.duration.DurationTypeAdapter;
-import me.drizzy.practice.util.scoreboard.Aether;
+import me.drizzy.practice.util.inventory.ItemBuilder;
+import me.drizzy.practice.util.duration.Duration;
+import me.drizzy.practice.util.duration.DurationTypeAdapter;
+import me.drizzy.practice.util.scoreboard.Assemble;
+import me.drizzy.practice.util.tab.Ziggurat;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.Material;
@@ -97,7 +97,7 @@ public class Array extends JavaPlugin {
     /*
      * Tab and Scoreboard Adapters
      */
-    private Aether scoreboard;
+    private Assemble scoreboard;
     private Ziggurat tab;
 
     /*
@@ -296,14 +296,18 @@ public class Array extends JavaPlugin {
     }
 
     private void registerEssentials() {
-        //Setup Scoreboard & Tab (Spent 2 Days figuring out why scoreboard was not working,
-        // turns out you gotta register it before tab)
-        this.scoreboard = new Aether(this, new Scoreboard());
-        this.scoreboard.getOptions().hook(true);
         //Setup Tab
         if (mainConfig.getBoolean("Tab.Enabled")) {
             this.tab = new Ziggurat(this, new Tab());
+            this.tab.setHook(true);
+            this.tab.setTicks(20);
         }
+        // Setup Scoreboard & Tab (Spent 2 Days figuring out why scoreboard was not working,
+        // turns out you gotta register it before tab)
+        this.scoreboard = new Assemble(this, new Scoreboard());
+        this.scoreboard.setHook(true);
+        this.scoreboard.setTicks(20);
+
         //Start the Queue Thread
         new QueueThread().start();
 

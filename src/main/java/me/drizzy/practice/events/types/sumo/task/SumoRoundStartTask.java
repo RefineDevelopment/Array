@@ -4,7 +4,7 @@ import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.events.types.sumo.Sumo;
 import me.drizzy.practice.events.types.sumo.SumoState;
 import me.drizzy.practice.events.types.sumo.SumoTask;
-import me.drizzy.practice.util.PlayerUtil;
+import me.drizzy.practice.util.other.PlayerUtil;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 

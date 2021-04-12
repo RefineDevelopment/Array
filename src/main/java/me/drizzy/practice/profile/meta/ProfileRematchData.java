@@ -10,7 +10,7 @@ import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.external.ChatComponentBuilder;
+import me.drizzy.practice.util.chat.ChatComponentBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.chat.ClickEvent;

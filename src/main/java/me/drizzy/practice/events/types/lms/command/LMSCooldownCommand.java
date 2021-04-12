@@ -3,7 +3,7 @@ package me.drizzy.practice.events.types.lms.command;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
-import me.drizzy.practice.util.external.Cooldown;
+import me.drizzy.practice.util.other.Cooldown;
 import org.bukkit.command.CommandSender;
 
 @CommandMeta(label = "lms cooldown", permission = "array.staff")

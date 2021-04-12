@@ -5,7 +5,7 @@ import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.events.types.sumo.Sumo;
 import me.drizzy.practice.events.types.sumo.SumoState;
 import me.drizzy.practice.events.types.sumo.SumoTask;
-import me.drizzy.practice.util.external.Cooldown;
+import me.drizzy.practice.util.other.Cooldown;
 import org.bukkit.entity.Player;
 
 public class SumoStartTask extends SumoTask {

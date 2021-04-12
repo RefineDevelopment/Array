@@ -2,8 +2,8 @@ package me.drizzy.practice.events.types.sumo;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.events.types.sumo.task.SumoStartTask;
-import me.drizzy.practice.util.external.Cooldown;
-import me.drizzy.practice.util.external.LocationUtil;
+import me.drizzy.practice.util.other.Cooldown;
+import me.drizzy.practice.util.location.LocationUtil;
 
 import java.io.IOException;
 import lombok.Getter;
