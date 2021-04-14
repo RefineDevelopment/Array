@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,7 +22,7 @@ public class GoldenHeads implements Listener {
 		Player player = event.getPlayer();
 		if (event.getItem() == null || !event.getItem().hasItemMeta() || !event.getItem().getItemMeta().hasDisplayName()) return;
 		if(event.getItem().getItemMeta().getDisplayName().toLowerCase().replace(" ", "").contains("goldenhead")) {
-			if (event.getItem().getType() == Material.SKULL_ITEM || event.getItem().getType() == Material.GOLDEN_APPLE){
+			if (event.getItem().getType() == Material.GOLDEN_APPLE){
 				player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20*90, 0), true);
 				player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*9, 1), true);
 			}
@@ -38,6 +39,21 @@ public class GoldenHeads implements Listener {
 			}
 		}
 
+	}
+
+	@EventHandler
+	public void onClick(PlayerInteractEvent event) {
+		Player player = event.getPlayer();
+		if (event.getItem() == null || !event.getItem().hasItemMeta() || !event.getItem().getItemMeta().hasDisplayName()) return;
+		if(event.getItem().getItemMeta().getDisplayName().toLowerCase().replace(" ", "").contains("goldenhead")) {
+			if (event.getItem().getType() == Material.SKULL_ITEM){
+				player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20*90, 0), true);
+				player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*9, 1), true);
+			}
+			if (event.getItem().getType() == Material.SKULL_ITEM) {
+				player.getInventory().remove(Material.SKULL_ITEM);
+			}
+		}
 	}
 	
 	public static ItemStack goldenHeadItem() {

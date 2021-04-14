@@ -247,18 +247,6 @@ public class ProfileListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onEat(PlayerItemConsumeEvent event) {
-        Profile profile = Profile.getByUuid(event.getPlayer());
-        if (profile.isInSomeSortOfFight()) {
-            if (profile.getMatch() != null && profile.getMatch().getState() == MatchState.STARTING && profile.getMatch().isTheBridgeMatch()) {
-                event.setCancelled(true);
-                profile.getPlayer().getInventory().addItem(event.getItem());
-                profile.getPlayer().updateInventory();
-            }
-        }
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         event.setJoinMessage(null);

@@ -28,7 +28,7 @@ public enum Locale {
     PARTY_PUBLIC("PARTY.PUBLIC", "&8[&b&lPublic&8] &b<host> &ais hosting a public party"),
     PARTY_PRIVACY("PARTY.PRIVACY", "&8[&b&lPublic&8] &7Your party privacy has been changed to &b<privacy>"),
     PARTY_PROMOTED("PARTY.PROMOTED", "&8[&b&lPublic&8] &b<promoted> &ahas been promoted to Leader in your party."),
-    MATCH_HCF_START_MESSAGE("MATCH.HCF_START_MESSAGE", Arrays.asList("&b&l", "")),
+    MATCH_HCF_START_MESSAGE("MATCH.HCF_START_MESSAGE", Arrays.asList("", "&b&lHCF Match&7!", "", "&7Pick between &bBard&7, &bArcher&7, &bRogue&7 and &bDiamond", "&7Kits and Fight to the death to &bWin!", "")),
     END("", "");
 
     @Getter private final String path;

@@ -338,9 +338,11 @@ public class Array extends JavaPlugin {
     }
 
     public void loadMessages() {
+
         if (this.messagesConfig == null) {
             return;
         }
+
         Arrays.stream(Locale.values()).forEach(language -> {
             if (this.messagesConfig.getConfiguration().getString(language.getPath()) == null) {
                 if (language.getListValue() != null && this.messagesConfig.getConfiguration().getStringList(language.getPath()) == null) {
@@ -352,6 +354,7 @@ public class Array extends JavaPlugin {
                 }
             }
         });
+
         try {
             this.messagesConfig.getConfiguration().save(messagesConfig.getFile());
         } catch (Exception e) {
