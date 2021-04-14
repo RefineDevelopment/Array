@@ -25,9 +25,13 @@ public enum Locale {
     PARTY_PLAYER_KICKED("PARTY.PLAYER_KICK", "&8[&b&lParty&8] &c<leaver> &7has been kicked from your party."),
     PARTY_CREATED("PARTY.CREATED", "&8[&b&lParty&8] &aYou created a party."),
     PARTY_DISABANDED("PARTY.DISBANDED", "&8[&b&lParty&8] &cYour party has been disbanded."),
-    PARTY_PUBLIC("PARTY.PUBLIC", "&8[&b&lPublic&8] &b<host> &ais hosting a public party"),
-    PARTY_PRIVACY("PARTY.PRIVACY", "&8[&b&lPublic&8] &7Your party privacy has been changed to &b<privacy>"),
-    PARTY_PROMOTED("PARTY.PROMOTED", "&8[&b&lPublic&8] &b<promoted> &ahas been promoted to Leader in your party."),
+    PARTY_PUBLIC("PARTY.PUBLIC", "&8[&b&lParty&8] &b<host> &ais hosting a public party"),
+    PARTY_PRIVACY("PARTY.PRIVACY", "&8[&b&lParty&8] &7Your party privacy has been changed to &b<privacy>"),
+    PARTY_PROMOTED("PARTY.PROMOTED", "&8[&b&lParty&8] &b<promoted> &ahas been promoted to Leader in your party."),
+    PARTY_ALREADYHAVE("PARTY.ALREAD_HAVE", "&8[&b&lParty&8] &7You already have a party!"),
+    PARTY_NOTLEADER("PARTY.NOTLEADER", "&8[&b&lParty&8] &7You are not the leader of this party!"),
+    PARTY_DONOTHAVE("PARTY.DO_NOT_HAVE", "&8[&b&lParty&8] &7You don't have a party!"),
+    PARTY_NOTLOBBY("PARTY.NOT_IN_LOBBY", "&8[&b&lParty&8] &7You are not in lobby, please finish your current task!"),
     MATCH_HCF_START_MESSAGE("MATCH.HCF_START_MESSAGE", Arrays.asList("", "&b&lHCF Match&7!", "", "&7Pick between &bBard&7, &bArcher&7, &bRogue&7 and &bDiamond", "&7Kits and Fight to the death to &bWin!", "")),
     END("", "");
 

@@ -23,18 +23,13 @@ import me.drizzy.practice.settings.SettingsMenu;
 import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.queue.menu.QueueSelectKitMenu;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.config.BasicConfigurationFile;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-import me.drizzy.practice.util.other.PlayerUtil;
 
-public class HotbarListener implements Listener
-{
-
-    BasicConfigurationFile config = Array.getInstance().getMessagesConfig();
+public class HotbarListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerInteract(final PlayerInteractEvent event) {
@@ -119,11 +114,11 @@ public class HotbarListener implements Listener
                 }
                 case PARTY_CREATE: {
                     if (profile.getParty() != null) {
-                        player.sendMessage(CC.translate(config.getString("Party.Already-Have-Party")));
+                        player.sendMessage(Locale.PARTY_ALREADYHAVE.toString());
                         return;
                     }
                     if (!profile.isInLobby()) {
-                        player.sendMessage(CC.translate(config.getString("Party.Not-In-Lobby")));
+                        player.sendMessage(Locale.PARTY_NOTLOBBY.toString());
                         return;
                     }
                     profile.setParty(new Party(player));
@@ -133,11 +128,11 @@ public class HotbarListener implements Listener
                 }
                 case PARTY_DISBAND: {
                     if (profile.getParty() == null) {
-                        player.sendMessage(CC.translate(config.getString("Party.Dont-Have-Party")));
+                        player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
                         return;
                     }
                     if (!profile.getParty().isLeader(player.getUniqueId())) {
-                        player.sendMessage(CC.translate(config.getString("Party.Not-Leader")));
+                        player.sendMessage(Locale.PARTY_NOTLEADER.toString());
                         return;
                     }
                     profile.getParty().disband();
@@ -145,7 +140,7 @@ public class HotbarListener implements Listener
                 }
                 case PARTY_INFORMATION: {
                     if (profile.getParty() == null) {
-                        player.sendMessage(CC.translate(config.getString("Party.Dont-Have-Party")));
+                        player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
                         return;
                     }
                     profile.getParty().sendInformation(player);
@@ -153,7 +148,7 @@ public class HotbarListener implements Listener
                 }
                 case PARTY_LEAVE: {
                     if (profile.getParty() == null) {
-                        player.sendMessage(CC.translate(config.getString("Party.Dont-Have-Party")));
+                        player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
                         return;
                     }
                     if (profile.getParty().getLeader().getUuid().equals(player.getUniqueId())) {
@@ -196,11 +191,11 @@ public class HotbarListener implements Listener
                 case LMS_LEAVE: {
                     final LMS activeLMS = Array.getInstance().getLMSManager().getActiveLMS();
                     if (activeLMS == null) {
-                        player.sendMessage(CC.RED + "There is no active KoTH.");
+                        player.sendMessage(CC.RED + "There is no active Lms.");
                         return;
                     }
                     if (!profile.isInLMS() || !activeLMS.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(CC.RED + "You are not apart of the active KoTH.");
+                        player.sendMessage(CC.RED + "You are not apart of the active Lms.");
                         return;
                     }
                     Array.getInstance().getLMSManager().getActiveLMS().handleLeave(player);
