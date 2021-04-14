@@ -11,6 +11,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -100,6 +101,18 @@ public class GulagListener implements Listener {
 		}
 	}
 
+	@EventHandler
+	public void onBreak(BlockBreakEvent event) {
+		Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
+		if (profile.isInGulag()) {
+			if (!profile.getGulag().isFighting(event.getPlayer().getUniqueId())) {
+				event.setCancelled(true);
+			}
+		} else if (profile.getGulag() != null && profile.getGulag().getSpectators().contains(event.getPlayer().getUniqueId())) {
+			event.setCancelled(true);
+		}
+	}
+
 	@EventHandler(priority=EventPriority.LOW, ignoreCancelled=true)
 	public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
 		Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
@@ -108,6 +121,8 @@ public class GulagListener implements Listener {
 			if (!profile.getGulag().isFighting(event.getPlayer().getUniqueId())) {
 				event.setCancelled(true);
 			}
+		} else if (profile.getGulag() != null && profile.getGulag().getSpectators().contains(event.getPlayer().getUniqueId())) {
+			event.setCancelled(true);
 		}
 	}
 
@@ -118,6 +133,8 @@ public class GulagListener implements Listener {
 			if (!profile.getGulag().isFighting(event.getPlayer().getUniqueId())) {
 				event.setCancelled(true);
 			}
+		} else if (profile.getGulag() != null && profile.getGulag().getSpectators().contains(event.getPlayer().getUniqueId())) {
+			event.setCancelled(true);
 		}
 	}
 
@@ -129,6 +146,8 @@ public class GulagListener implements Listener {
 				if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
 					event.setCancelled(true);
 				}
+			} else if (profile.getGulag() != null && profile.getGulag().getSpectators().contains(((Player) event.getEntity()).getPlayer().getUniqueId())) {
+				event.setCancelled(true);
 			}
 		}
 	}
@@ -150,6 +169,7 @@ public class GulagListener implements Listener {
 				return;
 			}
 			final Snowball snowball=player.launchProjectile(Snowball.class);
+			player.playSound(player.getLocation(), Sound.EXPLODE, 10F, 10F);
 			snowball.setVelocity(snowball.getVelocity().multiply(2));
 		}
 	}

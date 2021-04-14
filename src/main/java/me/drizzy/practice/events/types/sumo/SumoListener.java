@@ -3,6 +3,8 @@ package me.drizzy.practice.events.types.sumo;
 import me.drizzy.practice.Array;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.location.BlockUtil;
@@ -22,8 +24,41 @@ public class SumoListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
 		Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+		Player player = event.getPlayer();
 		if (profile.isInSumo()) {
-			if (!profile.getSumo().isFighting(event.getPlayer().getUniqueId())) {
+			if (!profile.getSumo().isFighting(player.getUniqueId())) {
+				event.setCancelled(true);
+			}
+		} else if (profile.getSumo() != null && profile.getSumo().getSpectators().contains(player.getUniqueId())) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled=true)
+	public void onBreak(BlockBreakEvent event) {
+		Player player = event.getPlayer();
+		Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+		if (profile.isInSumo() || (profile.getSumo() != null && profile.getSumo().getSpectators().contains(event.getPlayer().getUniqueId()))) {
+			if (profile.isInSumo()) {
+				if (!profile.getSumo().isFighting(player.getUniqueId())) {
+					event.setCancelled(true);
+				}
+			} else if (profile.getSumo() != null && profile.getSumo().getSpectators().contains(player.getUniqueId())) {
+				event.setCancelled(true);
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled=true)
+	public void onHit(EntityDamageEvent event) {
+		if (event.getEntity() instanceof Player && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+			Player player = ((Player) event.getEntity()).getPlayer();
+			Profile profile = Profile.getByUuid(player.getUniqueId());
+			if (profile.isInSumo()) {
+				if (!profile.getSumo().isFighting(player.getUniqueId())) {
+					event.setCancelled(true);
+				}
+			} else if (profile.getSumo() != null && profile.getSumo().getSpectators().contains(player.getUniqueId())) {
 				event.setCancelled(true);
 			}
 		}
@@ -42,6 +77,9 @@ public class SumoListener implements Listener {
 					if (!profile.getSumo().isFighting() || !profile.getSumo().isFighting(player.getUniqueId())) {
 						player.teleport(Array.getInstance().getSumoManager().getSumoSpectator());
 						return;
+					}  else if (profile.getSumo() != null && profile.getSumo().getSpectators().contains(player.getUniqueId())) {
+						event.setCancelled(true);
+						return;
 					}
 					PlayerUtil.spectator(player);
 					player.teleport(Array.getInstance().getSumoManager().getSumoSpectator());
@@ -53,6 +91,8 @@ public class SumoListener implements Listener {
 					if (!profile.getSumo().isFighting() || !profile.getSumo().isFighting(player.getUniqueId())) {
 						event.setCancelled(true);
 						return;
+					} else if (profile.getSumo() != null && profile.getSumo().getSpectators().contains(player.getUniqueId())) {
+						event.setCancelled(true);
 					}
 
 					event.setDamage(0);
@@ -122,6 +162,7 @@ public class SumoListener implements Listener {
 			if (sumo.getState() == SumoState.ROUND_FIGHTING) {
 				if (BlockUtil.isOnLiquid(to, 0) || BlockUtil.isOnLiquid(to, 1)) {
 					sumo.handleDeath(player);
+					((CraftPlayer) player).getHandle().playerConnection.checkMovement = false;
 				}
 			}
 		}

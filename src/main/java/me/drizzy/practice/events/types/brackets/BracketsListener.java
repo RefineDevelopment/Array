@@ -18,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -33,17 +34,12 @@ public class BracketsListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
 	public void onDeath(EntityDeathEvent event) {
-			if (event.getEntity() instanceof Player) {
-
-				Player player = (Player) event.getEntity();
-
-				Profile profile = Profile.getProfiles().get(event.getEntity().getUniqueId());
-				if (profile.isInBrackets()) {
-				profile.getBrackets().handleDeath(player);
-				player.teleport(Array.getInstance().getBracketsManager().getBracketsSpectator());
+		if (event.getEntity() instanceof Player) {
+			Player player = (Player) event.getEntity();
+			Profile profile = Profile.getProfiles().get(event.getEntity().getUniqueId());
+			if (profile.isInBrackets()) {
 				event.getDrops().clear();
-				event.getEntity().setFireTicks(0);
-				PlayerUtil.reset(player);
+				profile.getBrackets().handleDeath(player);
 			}
 		}
 	}
@@ -147,7 +143,7 @@ public class BracketsListener implements Listener {
 	public void onPlayerFallDamage(EntityDamageEvent event) {
 		if (event.getEntity() instanceof Player) {
 			Profile profile = Profile.getByUuid(event.getEntity().getUniqueId());
-			if (profile.isInBrackets()) {
+			if (profile.isInBrackets() && !profile.getBrackets().isFighting(event.getEntity().getUniqueId())) {
 				if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
 					event.setCancelled(true);
 				}
@@ -223,4 +219,21 @@ public class BracketsListener implements Listener {
 			}
 		}
 	}
+
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled=true)
+	public void onBreak(BlockBreakEvent event) {
+		Player player = event.getPlayer();
+		Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+		if (profile.isInBrackets() || (profile.getBrackets() != null && profile.getBrackets().getSpectators().contains(event.getPlayer().getUniqueId()))) {
+			if (profile.isInBrackets()) {
+				if (!profile.getBrackets().isFighting(player.getUniqueId())) {
+					event.setCancelled(true);
+				}
+			} else if (profile.getBrackets() != null && profile.getBrackets().getSpectators().contains(player.getUniqueId())) {
+				event.setCancelled(true);
+			}
+		}
+	}
+
+
 }

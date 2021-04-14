@@ -18,7 +18,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -44,6 +46,7 @@ public class LMSListener implements Listener {
                 } else {
                     profile.getLms().handleDeath(player, null);
                 }
+                event.getDrops().clear();
             }
         }
     }
@@ -157,6 +160,31 @@ public class LMSListener implements Listener {
             if (!profile.getLms().isFighting(profile.getPlayer())) {
                 event.setCancelled(true);
             }
+        }  else if (profile.getLms() != null && profile.getLms().getSpectators().contains(event.getPlayer().getUniqueId())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player) {
+            Player player = ((Player) event.getEntity()).getPlayer();
+            Profile profile=Profile.getByUuid(player);
+            if (profile.isInLMS() && profile.getLms().isWaiting()) {
+                event.setCancelled(true);
+            } else if (profile.getLms() != null && profile.getLms().getSpectators().contains(player.getUniqueId())) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBreak(BlockBreakEvent event) {
+        Profile profile = Profile.getByUuid(event.getPlayer());
+        if (profile.isInLMS() && profile.getLms().isWaiting()) {
+            event.setCancelled(true);
+        }  else if (profile.getLms() != null && profile.getLms().getSpectators().contains(event.getPlayer().getUniqueId())) {
+            event.setCancelled(true);
         }
     }
 

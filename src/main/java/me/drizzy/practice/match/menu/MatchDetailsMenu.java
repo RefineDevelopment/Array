@@ -52,7 +52,7 @@ public class MatchDetailsMenu extends Menu {
             }
         }
 
-        int pos=45;
+        int pos=46;
 
         buttons.put(pos++, new HealthButton(snapshot.getHealth()));
         buttons.put(pos++, new HungerButton(snapshot.getHunger()));
@@ -81,13 +81,13 @@ public class MatchDetailsMenu extends Menu {
         public ItemStack getButtonItem(Player player) {
             if (opponent != null) {
                 return new ItemBuilder(Material.LEVER)
-                        .name("&b&lOther Inventory")
+                        .name("&b&lNext Inventory")
                         .lore("&7Switch to &b" + opponent.getTeamPlayer().getUsername() + "&7's inventory")
                         .build();
             }
 
             return new ItemBuilder(Material.LEVER)
-                    .name("&b&lOther Inventory")
+                    .name("&b&lNext Inventory")
                     .lore("&7Switch to &b" + switchTo.getUsername() + "&7's inventory")
                     .build();
         }

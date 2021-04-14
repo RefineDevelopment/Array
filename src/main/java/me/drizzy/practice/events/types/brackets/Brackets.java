@@ -368,6 +368,7 @@ public class Brackets {
 
 		broadcastMessage("&b" + player.getName() + "&7 was eliminated by &b" + winner.getUsername() + "&7!");
 		player.setFireTicks(0);
+		addSpectator(player);
 		winner.getPlayer().hidePlayer(player);
 		setState(BracketsState.ROUND_ENDING);
 		setEventTask(new BracketsRoundEndTask(this));

@@ -90,7 +90,7 @@ public class TeamPlayer {
             return 50.0;
         }
 
-        return Math.round(100.0D - ((double)potionsMissed / (double)potionsThrown) * 100.0D);
+        return Math.round(100.0D - (((double) this.potionsMissed / (double) this.potionsThrown) * 100.0D));
     }
 
     public void incrementPotionsThrown() {

@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
@@ -78,6 +79,15 @@ public class ParkourListener implements Listener {
 			}
 		}
 	}
+
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled=true)
+	public void onBreak(BlockBreakEvent event) {
+		Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+		if (profile.isInParkour()) {
+			event.setCancelled(true);
+		}
+	}
+
 
 	@EventHandler
 	public void onItemPickup(PlayerPickupItemEvent event) {
