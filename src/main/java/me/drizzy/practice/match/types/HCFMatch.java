@@ -92,7 +92,7 @@ public class HCFMatch extends Match {
 
         PlayerUtil.reset(player);
 
-        player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
+        player.setMaximumNoDamageTicks(20);
 
         Team team = getTeam(player);
 

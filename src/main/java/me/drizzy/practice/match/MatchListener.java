@@ -854,7 +854,11 @@ public class MatchListener implements Listener {
                 if (profile.isInFight() && !profile.getMatch().isHCFMatch() && profile.getMatch().getKit().getGameRules().isParkour()) {
                     if (profile.getPlates().contains(event.getClickedBlock().getLocation())) return;
                     profile.getPlates().add(event.getClickedBlock().getLocation());
-                    profile.getMatch().handleDeath(event.getPlayer(), null, false);
+                    if (match.getOpponentPlayer(event.getPlayer()) != null) {
+                        profile.getMatch().handleDeath(match.getOpponentPlayer(event.getPlayer()), event.getPlayer(), false);
+                    } else {
+                        match.end();
+                    }
                 }
             }
             if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock().getType() == Material.IRON_PLATE && profile.getPlates() != null) {

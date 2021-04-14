@@ -8,7 +8,7 @@ import me.drizzy.practice.kiteditor.KitEditRules;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueType;
-import me.drizzy.practice.statistics.LeaderboardsAdapter;
+import me.drizzy.practice.leaderboards.LeaderboardsAdapter;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.inventory.InventoryUtil;
 import me.drizzy.practice.util.config.BasicConfigurationFile;

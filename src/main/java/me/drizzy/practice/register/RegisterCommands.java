@@ -22,7 +22,7 @@ import me.drizzy.practice.events.types.sumo.command.*;
 import me.drizzy.practice.kit.command.*;
 import me.drizzy.practice.match.command.*;
 import me.drizzy.practice.party.command.*;
-import me.drizzy.practice.statistics.command.LeaderboardsCommand;
+import me.drizzy.practice.leaderboards.command.LeaderboardsCommand;
 import me.drizzy.practice.statistics.command.StatsCommand;
 import me.drizzy.practice.tournament.command.*;
 import org.bukkit.Bukkit;

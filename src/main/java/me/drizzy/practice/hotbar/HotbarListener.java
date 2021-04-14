@@ -1,5 +1,6 @@
 package me.drizzy.practice.hotbar;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.events.menu.ActiveEventSelectEventMenu;
 import me.drizzy.practice.events.types.lms.LMS;
@@ -12,7 +13,6 @@ import me.drizzy.practice.events.types.spleef.Spleef;
 import me.drizzy.practice.events.types.sumo.Sumo;
 import me.drizzy.practice.kiteditor.menu.KitEditorSelectKitMenu;
 import me.drizzy.practice.party.Party;
-import me.drizzy.practice.enums.PartyMessageType;
 import me.drizzy.practice.party.menu.ManagePartySettings;
 import me.drizzy.practice.party.menu.OtherPartiesMenu;
 import me.drizzy.practice.party.menu.PartyEventSelectEventMenu;
@@ -127,9 +127,8 @@ public class HotbarListener implements Listener
                         return;
                     }
                     profile.setParty(new Party(player));
-                    PlayerUtil.reset(player, false);
                     profile.refreshHotbar();
-                    player.sendMessage(PartyMessageType.CREATED.format());
+                    player.sendMessage(Locale.PARTY_CREATED.toString());
                     break;
                 }
                 case PARTY_DISBAND: {

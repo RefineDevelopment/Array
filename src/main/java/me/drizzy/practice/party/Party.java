@@ -1,92 +1,102 @@
 package me.drizzy.practice.party;
 
-import me.drizzy.practice.Array;
+import lombok.Getter;
+import lombok.Setter;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.duel.DuelRequest;
-import me.drizzy.practice.enums.PartyMessageType;
 import me.drizzy.practice.enums.PartyPrivacyType;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.chat.ChatHelper;
-import me.drizzy.practice.util.other.PlayerUtil;
-import me.drizzy.practice.util.chat.ChatComponentBuilder;
+import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.util.nametag.NameTags;
+import me.drizzy.practice.util.other.TaskUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Represents a collection of players which can perform
- * various actions (ex queue, have elo, etc) together.
- * <p>
- * All members, the leader, and all {@link PartyInvite}
- * targets (although not senders) are guaranteed to be online.
- */
+@Getter
+@Setter
 public class Party extends Team {
 
-    /**
-     * We create a List to manage our parties
-     * This List can be used in various different tasks
-     * Currently it is being used in Tournaments
-     */
-    private static List<Party> parties;
+    @Getter
+    private static List<Party> parties = new ArrayList<>();
 
-    // the maximum party size for non-op leaders
-    private int Limit;
+    private final List<PartyInvite> invites;
+    private final List<Player> banned;
 
-    //private boolean to check for small instances
-    private boolean isPublic;
-    /**
-     * Current access restriction in place for joining this party
-     *
-     * @see PartyPrivacyType
-     */
     private PartyPrivacyType privacy;
 
+    private int limit;
 
-
-    /**
-     * All active (non-expired) {@link PartyInvite}s. Players can have
-     * active invitations from more than one party at a time. All targets
-     * (but not senders) are guaranteed to be online.
-     */
-    private final List<PartyInvite> invites;
-
-    /**
-     * All banned {@link Player}s are added in this List
-     * These players can not join the party even if invited
-     * They can be unbanned using a command.
-     */
-    private final List<Player> banned;
-    //Simple boolean to execute the disband method
+    private boolean isPublic;
     private boolean disbanded;
 
-    //Constructor for Party
-    public Party(final Player player) {
+    /**
+     * Create a new Party for the Player
+     * and assign him as the leader
+     *
+     * @param player The Leader of the party
+     */
+    public Party(Player player) {
+
         super(new TeamPlayer(player.getUniqueId(), player.getName()));
-        this.Limit = 10;
+        this.limit= 10;
         this.isPublic = false;
         this.privacy = PartyPrivacyType.CLOSED;
         this.invites = new ArrayList<>();
         this.banned = new ArrayList<>();
-        Party.parties.add(this);
+
+        parties.add(this);
     }
 
-    //Set Privacy
-    public void setPrivacy(final PartyPrivacyType privacy) {
+    /**
+     * Start the essential party tasks
+     */
+    public static void preload() {
+        TaskUtil.runTimerAsync(() -> parties.forEach(party -> party.getInvites().removeIf(PartyInvite::hasExpired)), 100L, 100L);
+        TaskUtil.runTimerAsync(() -> {
+            for (final Party party : Party.getParties()) {
+                if (party == null || party.isDisbanded() || party.getPlayers().isEmpty() || party.getLeader() == null ) {
+                    return;
+                }
+                if (party.isPublic()) {
+                    Bukkit.getServer().getOnlinePlayers().forEach(player -> {
+                        List<String> toSend = new ArrayList<>();
+                        toSend.add(Locale.PARTY_PUBLIC.toString().replace("<leader>", party.getLeader().getUsername()));
+                        toSend.add(Locale.PARTY_CLICK_TO_JOIN.toString());
+                        for ( String string : toSend ) {
+                            new Clickable(string, Locale.PARTY_INVITE_HOVER.toString(), "/party join " + party.getLeader().getUsername()).sendToPlayer(player);
+                        }
+                    });
+                }
+            }
+        }, 1000L, 1000L);
+    }
+
+    /**
+     * Update the party's privacy type
+     *
+     * @param privacy The new PrivacyType
+     */
+    public void setPrivacy(PartyPrivacyType privacy) {
         this.privacy = privacy;
-        this.broadcast(PartyMessageType.PRIVACY_CHANGED.format(privacy.toString()));
+        this.broadcast(Locale.PARTY_PRIVACY.toString().replace("<privacy>", privacy.toString()));
     }
 
-    //Get Invite from our list
+    /**
+     * Get a Party Invite from a player's UUID
+     *
+     * @param uuid The Player's UUID
+     * @return {@link PartyInvite}
+     */
     public PartyInvite getInvite(final UUID uuid) {
         for ( PartyInvite invite : this.invites )
             if (invite.getUuid().equals(uuid)) {
@@ -98,36 +108,74 @@ public class Party extends Team {
         return null;
     }
 
-    //Invite someone
-    public void invite(final Player target) {
+    /**
+     * Invite a specific player to the party
+     *
+     * @param target The player being in ivited
+     */
+    public void invite(Player target) {
 
-        this.invites.add(new PartyInvite(target.getUniqueId()));
+        invites.add(new PartyInvite(target.getUniqueId()));
 
-        target.sendMessage(PartyMessageType.YOU_HAVE_BEEN_INVITED.format(this.getLeader().getUsername()));
-        target.spigot().sendMessage(new ChatComponentBuilder("").parse(PartyMessageType.CLICK_TO_JOIN.format()).attachToEachPart(ChatHelper.click("/party join " + this.getLeader().getUsername())).attachToEachPart(ChatHelper.hover(CC.GREEN + "Click to to accept this party invite")).create());
+        List<String> strings = new ArrayList<>();
+        strings.add(Locale.PARTY_INVITED.toString().replace("<leader>", getLeader().getUsername()));
+        strings.add(Locale.PARTY_CLICK_TO_JOIN.toString());
+        strings.forEach(string -> new Clickable(string, Locale.PARTY_INVITE_HOVER.toString(), "/party join " + getLeader().getUsername()).sendToPlayer(target));
 
-        this.broadcast(PartyMessageType.PLAYER_INVITED.format(target.getName()));
+        this.broadcast(Locale.PARTY_PLAYER_INVITED.toString().replace("<invited>", target.getName()));
     }
 
+    /**
+     * Ban the targetted player from the party
+     *
+     * @param target The player being banned
+     */
     public void ban(final Player target) {
         this.banned.add(target);
     }
-    
+
+    /**
+     * Unban the targetted player form the party
+     *
+     * @param target The player being unbanned
+     */
     public void unban(final Player target) {
         this.banned.remove(target);
     }
-    
+
+    /**
+     * Execute party join for the player
+     *
+     * @param player The player joining the party
+     */
     public void join(final Player player) {
-        this.invites.removeIf(invite -> invite.getUuid().equals(player.getUniqueId()));
-        this.getTeamPlayers().add(new TeamPlayer(player));
-        this.broadcast(PartyMessageType.PLAYER_JOINED.format(player.getName()));
-        final Profile profile = Profile.getByUuid(player.getUniqueId());
+        /*
+         * Update their Party
+         */
+        Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setParty(this);
+
+        /*
+         * Clear Their Invite
+         */
+        this.invites.removeIf(invite -> invite.getUuid().equals(player.getUniqueId()));
+
+        /*
+         * Add to List
+         */
+        this.getTeamPlayers().add(new TeamPlayer(player));
+
+        /*
+         * Broadcast join message to the party
+         */
+        this.broadcast(Locale.PARTY_PLAYER_JOINED.toString().replace("<joiner>", player.getName()));
+
         if (profile.isInLobby() || profile.isInQueue()) {
-            PlayerUtil.reset(player, false);
             profile.refreshHotbar();
             profile.handleVisibility();
         }
+
+        //TODO: Replace with NameTag Thread
         for (final TeamPlayer teamPlayer : this.getTeamPlayers()) {
             final Player otherPlayer = teamPlayer.getPlayer();
             NameTags.color(player, teamPlayer.getPlayer(), ChatColor.BLUE, false);
@@ -137,28 +185,49 @@ public class Party extends Team {
                 teamProfile.handleVisibility(otherPlayer, player);
             }
         }
-        //If they are in a match then add him as a spectator.
-        if (Profile.getByUuid(this.getTeamPlayers().get(0).getPlayer()).isInMatch()) {
-            Profile.getByUuid(this.getTeamPlayers().get(0).getPlayer()).getMatch().addSpectator(player, this.getTeamPlayers().get(0).getPlayer());
+
+        Player random = getTeamPlayers().get(0).getPlayer();
+        Profile profile1 = Profile.getByUuid(random);
+        if (profile1.isInMatch()) {
+            profile1.getMatch().addSpectator(player, random);
         }
     }
 
-    public void leave(final Player player, final boolean kick) {
-        this.broadcast(PartyMessageType.PLAYER_LEFT.format(player.getName(), kick ? "been kicked from" : "left"));
-        this.getTeamPlayers().removeIf(member -> member.getUuid().equals(player.getUniqueId()));
-        final Profile profile = Profile.getByUuid(player.getUniqueId());
+    /**
+     * Execute party leave tasks for the player leaving
+     *
+     * @param player The player leaving
+     * @param kick If the leave is a forced kick or not
+     */
+    public void leave(Player player, boolean kick) {
+
+        Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setParty(null);
+        this.getTeamPlayers().removeIf(member -> member.getUuid().equals(player.getUniqueId()));
         this.getPlayers().removeIf(member -> member.getUniqueId().equals(player.getUniqueId()));
+
+        if (kick) {
+            this.broadcast(Locale.PARTY_PLAYER_KICKED.toString().replace("<leaver>", player.getName()));
+        } else {
+            this.broadcast(Locale.PARTY_PLAYER_LEFT.toString().replace("<leaver>", player.getName()));
+        }
+
         if (profile.isInLobby() || profile.isInQueue()) {
             profile.handleVisibility();
-            PlayerUtil.reset(player, false);
             profile.refreshHotbar();
-           for ( Player other : Bukkit.getOnlinePlayers() ) {
-               NameTags.color(player, other, ChatColor.GREEN, false);
-              }
-           }
+
+            //TODO: Replace with NameTag Thread
+            for ( Player other : Bukkit.getOnlinePlayers() ) {
+                NameTags.color(player, other, ChatColor.GREEN, false);
+            }
+        }
+
+        /*
+         * If the player is in Fight then reset and teleport them to spawn
+         */
         if (profile.isInFight()) {
             profile.getMatch().handleDeath(player, null, true);
+
             if (profile.getMatch().isTeamMatch() || profile.getMatch().isHCFMatch()) {
                 for (final TeamPlayer secondTeamPlayer : this.getTeamPlayers()) {
                     if (secondTeamPlayer.isDisconnected()) {
@@ -174,18 +243,18 @@ public class Party extends Team {
                     NameTags.reset(player, secondPlayer);
                 }
             }
+
             if (profile.isSpectating()) {
                 profile.getMatch().removeSpectator(player);
             }
-            player.setFireTicks(0);
-            player.updateInventory();
             profile.setState(ProfileState.IN_LOBBY);
             profile.setMatch(null);
-            PlayerUtil.reset(player, false);
             profile.refreshHotbar();
             profile.handleVisibility();
             Essentials.teleportToSpawn(player);
         }
+
+        //TODO: Replace with NameTag Thread
         for (final TeamPlayer teamPlayer : this.getTeamPlayers()) {
             final Player otherPlayer = teamPlayer.getPlayer();
             if (otherPlayer != null) {
@@ -196,64 +265,84 @@ public class Party extends Team {
             }
         }
     }
-    
-    public void leader(final Player player, final Player target) {
-        final Profile profile = Profile.getByUuid(player.getUniqueId());
-        final Profile targetprofile = Profile.getByUuid(target.getUniqueId());
-        for (final TeamPlayer teamPlayer : this.getTeamPlayers()) {
+
+    /**
+     * Make the targetted player, the leader of the party
+     *
+     * @param player The Original Leader of the Party
+     * @param target The New Leader of the Party
+     */
+    public void leader(Player player, Player target) {
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile targetprofile = Profile.getByUuid(target.getUniqueId());
+
+        for (TeamPlayer teamPlayer : this.getTeamPlayers()) {
             if (teamPlayer.getPlayer().equals(targetprofile.getPlayer())) {
                 targetprofile.getParty().setLeader(teamPlayer);
             }
         }
-        this.broadcast(CC.translate(CC.AQUA  + target.getName() + " &ahas been promoted to leader in your party."));
+
+        this.broadcast(Locale.PARTY_PROMOTED.toString().replace("<promoted>", target.getName()));
+
         if (profile.isInLobby()) {
-        PlayerUtil.reset(player, false);
-        profile.refreshHotbar();
+            profile.refreshHotbar();
         }
         if (targetprofile.isInLobby()) {
             targetprofile.refreshHotbar();
         }
     }
 
+    /**
+     * Execute tasks for disbaning the party
+     */
     public void disband() {
-        this.broadcast(PartyMessageType.DISBANDED.format());
-        final Profile leaderProfile = Profile.getByUuid(this.getLeader().getUuid());
+        this.broadcast(Locale.PARTY_DISABANDED.toString());
+
+        Profile leaderProfile = Profile.getByUuid(this.getLeader().getUuid());
         leaderProfile.getSentDuelRequests().values().removeIf(DuelRequest::isParty);
+
         this.getPlayers().forEach(player -> {
-            if(Profile.getByUuid(player.getUniqueId()).isInFight()) {
-                Profile.getByUuid(player.getUniqueId()).getMatch().handleDeath(player, this.getLeader().getPlayer(), true);
+            Profile profile = Profile.getByUuid(player.getUniqueId());
+            if(profile.isInFight()) {
+                profile.getMatch().handleDeath(player, this.getLeader().getPlayer(), true);
             }
-            Profile.getByUuid(player.getUniqueId());
-            Profile.getByUuid(player.getUniqueId()).setParty(null);
-            if (Profile.getByUuid(player.getUniqueId()).isInLobby() || Profile.getByUuid(player.getUniqueId()).isInQueue()) {
-                Profile.getByUuid(player.getUniqueId()).refreshHotbar();
-                Profile.getByUuid(player.getUniqueId()).handleVisibility();
+            profile.setParty(null);
+            if (profile.isInLobby() || profile.isInQueue()) {
+                profile.refreshHotbar();
+                profile.handleVisibility();
                 NameTags.reset(player, this.getLeader().getPlayer());
                 NameTags.color(player, this.getLeader().getPlayer(), ChatColor.GREEN, false);
             }
         });
-        Party.parties.remove(this);
+
+        parties.remove(this);
         this.disbanded = true;
-        for(Player partyps : this.getPlayers()) {
+
+        for (Player partyps : this.getPlayers()) {
             for ( Player player : Bukkit.getOnlinePlayers() ) {
                 NameTags.color(partyps, player, ChatColor.GREEN, false);
             }
         }
     }
-    
-    public void sendInformation(final Player player) {
-        final StringBuilder builder = new StringBuilder();
-        for (final Player member : this.getPlayers()) {
+
+    /**
+     * Send Party information message to the specified player
+     *
+     * @param player The player receiving the information
+     */
+    public void sendInformation(Player player) {
+        StringBuilder builder = new StringBuilder();
+        for (Player member : this.getPlayers()) {
             if (this.getPlayers().size() == 1) {
                 builder.append(CC.RESET).append("None").append(CC.GRAY).append(", ");
-            }
-            else {
+            } else {
                 if (member.equals(this.getLeader().getPlayer())) {
                     continue;
                 }
                 builder.append(CC.RESET).append(member.getName()).append(CC.GRAY).append(", ");
             }
         }
+
         final List<String> lines = new ArrayList<>();
         lines.add(CC.CHAT_BAR);
         lines.add(CC.AQUA + "Party Information");
@@ -265,66 +354,5 @@ public class Party extends Team {
         for ( String line : lines ) {
             player.sendMessage(line);
         }
-    }
-    
-    public boolean isDisbanded() {
-        return this.disbanded;
-    }
-    
-    public static void preload() {
-        new BukkitRunnable() {
-            public void run() {
-                Party.getParties().forEach(party -> party.getInvites().removeIf(PartyInvite::hasExpired));
-            }
-        }.runTaskTimerAsynchronously(Array.getInstance(), 100L, 100L);
-        new BukkitRunnable() {
-            public void run() {
-                for (final Party party : Party.getParties()) {
-                    if (party == null || party.isDisbanded() || party.getPlayers().isEmpty() || party.getLeader() == null ) {
-                        return;
-                    }
-                    if (party.isPublic()) {
-                        Bukkit.getServer().getOnlinePlayers().forEach(player -> player.sendMessage(PartyMessageType.PUBLIC.format(party.getLeader().getUsername())));
-                        Bukkit.getServer().getOnlinePlayers().forEach(player -> player.spigot().sendMessage(new ChatComponentBuilder("").parse(PartyMessageType.CLICK_TO_JOIN.format()).attachToEachPart(ChatHelper.click("/party join " + party.getLeader().getUsername())).attachToEachPart(ChatHelper.hover(PartyMessageType.CLICK_TO_JOIN.format())).create()));
-                    }
-                }
-            }
-        }.runTaskTimerAsynchronously(Array.getInstance(), 1200L, 1200L);
-    }
-    
-    public PartyPrivacyType getPrivacy() {
-        return this.privacy;
-    }
-    
-    public List<PartyInvite> getInvites() {
-        return this.invites;
-    }
-    
-    public static List<Party> getParties() {
-        return Party.parties;
-    }
-    
-    public int getLimit() {
-        return this.Limit;
-    }
-    
-    public void setLimit(final int Limit) {
-        this.Limit = Limit;
-    }
-    
-    public boolean isPublic() {
-        return this.isPublic;
-    }
-    
-    public void setPublic(final boolean isPublic) {
-        this.isPublic = isPublic;
-    }
-    
-    public List<Player> getBanned() {
-        return this.banned;
-    }
-
-    static {
-        Party.parties = new ArrayList<>();
     }
 }

@@ -1,5 +1,6 @@
 package me.drizzy.practice.array.listener;
 
+import me.drizzy.practice.util.other.SkullCreator;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,6 +12,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.UUID;
+
 public class GoldenHeads implements Listener {
 
 	@EventHandler
@@ -18,7 +21,7 @@ public class GoldenHeads implements Listener {
 		Player player = event.getPlayer();
 		if (event.getItem() == null || !event.getItem().hasItemMeta() || !event.getItem().getItemMeta().hasDisplayName()) return;
 		if(event.getItem().getItemMeta().getDisplayName().toLowerCase().replace(" ", "").contains("goldenhead")) {
-			if (event.getItem().getType() == Material.GOLDEN_APPLE){
+			if (event.getItem().getType() == Material.SKULL_ITEM || event.getItem().getType() == Material.GOLDEN_APPLE){
 				player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20*90, 0), true);
 				player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*9, 1), true);
 			}
@@ -38,7 +41,7 @@ public class GoldenHeads implements Listener {
 	}
 	
 	public static ItemStack goldenHeadItem() {
-			ItemStack is = new ItemStack(Material.GOLDEN_APPLE);
+			ItemStack is = SkullCreator.itemFromUuid(UUID.fromString("57a8704d-b3f4-4c8f-bea0-64675011fe7b"));
 			ItemMeta itemMeta = is.getItemMeta();
 			itemMeta.setDisplayName(ChatColor.GOLD + "Golden Head");
 			is.setItemMeta(itemMeta);

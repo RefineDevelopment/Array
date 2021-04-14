@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import me.drizzy.practice.kiteditor.menu.KitEditorSelectKitMenu;
 import me.drizzy.practice.settings.SettingsMenu;
-import me.drizzy.practice.statistics.menu.LeaderboardsMenu;
+import me.drizzy.practice.leaderboards.menu.LeaderboardsMenu;
 import me.drizzy.practice.statistics.menu.StatsMenu;
 import me.drizzy.practice.util.inventory.ItemBuilder;
 import me.drizzy.practice.util.menu.Button;

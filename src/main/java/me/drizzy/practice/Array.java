@@ -5,6 +5,7 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import lombok.Setter;
+import me.allen.ziggurat.Ziggurat;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.arena.ArenaTypeAdapter;
 import me.drizzy.practice.arena.ArenaTypeTypeAdapter;
@@ -20,7 +21,7 @@ import me.drizzy.practice.events.types.spleef.SpleefManager;
 import me.drizzy.practice.events.types.sumo.SumoManager;
 import me.drizzy.practice.hcf.HCFManager;
 import me.drizzy.practice.hcf.bard.EffectRestorer;
-import me.drizzy.practice.hologram.HologramPlaceholders;
+import me.drizzy.practice.leaderboards.external.LeaderboardPlaceholders;
 import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.kit.KitTypeAdapter;
@@ -46,8 +47,7 @@ import me.drizzy.practice.util.config.BasicConfigurationFile;
 import me.drizzy.practice.util.inventory.ItemBuilder;
 import me.drizzy.practice.util.duration.Duration;
 import me.drizzy.practice.util.duration.DurationTypeAdapter;
-import me.drizzy.practice.util.scoreboard.Assemble;
-import me.drizzy.practice.util.tab.Ziggurat;
+import me.drizzy.practice.util.scoreboard.Aether;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.Material;
@@ -97,7 +97,7 @@ public class Array extends JavaPlugin {
     /*
      * Tab and Scoreboard Adapters
      */
-    private Assemble scoreboard;
+    private Aether scoreboard;
     private Ziggurat tab;
 
     /*
@@ -139,18 +139,25 @@ public class Array extends JavaPlugin {
         random = new Random();
         honcho = new Honcho(this);
 
-        //Setup our threads
+        /*
+         * Async Executor Threads
+         */
         this.mainThread = Executors.newFixedThreadPool(1);
         this.mongoThread = Executors.newFixedThreadPool(1);
         this.taskThread = Executors.newFixedThreadPool(1);
 
-        //Setup All the Configs
+
+        /*
+         * Main Configs
+         */
         mainConfig = new BasicConfigurationFile(this, "config");
         arenasConfig = new BasicConfigurationFile(this, "arenas");
         kitsConfig = new BasicConfigurationFile(this, "kits");
         eventsConfig = new BasicConfigurationFile(this, "events");
         messagesConfig = new BasicConfigurationFile(this, "messages");
         divisionsConfig = new BasicConfigurationFile(this, "divisions");
+
+        this.loadMessages();
 
         //To Prevent Stealing and Renaming (Skidding)
         if (!Description.getAuthor().contains("Drizzy")) {
@@ -175,7 +182,6 @@ public class Array extends JavaPlugin {
         }
 
         this.mainThread.execute(() -> {
-            //Register Main Aspects and Commands
             registerAll();
             RegisterCommands.register();
 
@@ -190,7 +196,6 @@ public class Array extends JavaPlugin {
             OITCManager = new OITCManager();
 
             if (mainConfig.getBoolean("Array.Core-Hook")) {
-                //Core API Support
                 new Rank();
             } else {
                 setRankManager(new DefaultProvider());
@@ -296,30 +301,23 @@ public class Array extends JavaPlugin {
     }
 
     private void registerEssentials() {
-        //Setup Tab
+
+        this.scoreboard = new Aether(this, new Scoreboard());
+        this.scoreboard.getOptions().hook(true);
+
         if (mainConfig.getBoolean("Tab.Enabled")) {
             this.tab = new Ziggurat(this, new Tab());
-            this.tab.setHook(true);
-            this.tab.setTicks(20);
         }
-        // Setup Scoreboard & Tab (Spent 2 Days figuring out why scoreboard was not working,
-        // turns out you gotta register it before tab)
-        this.scoreboard = new Assemble(this, new Scoreboard());
-        this.scoreboard.setHook(true);
-        this.scoreboard.setTicks(20);
 
-        //Start the Queue Thread
         new QueueThread().start();
 
-        //PlaceholderAPI Hook
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new HologramPlaceholders().register();
+            new LeaderboardPlaceholders().register();
             logger("&bFound PlaceholderAPI, Registering Expansions....");
         } else {
             logger("&cPlaceholderAPI was NOT found, Holograms will NOT work!");
         }
 
-        //Load the Global Leaderboards (Also a bug fix for leaderboards being blank on start)
         Profile.loadGlobalLeaderboards();
     }
 
@@ -337,5 +335,27 @@ public class Array extends JavaPlugin {
         this.onDisable();
         logger("Shutting down Array!");
         Bukkit.getPluginManager().disablePlugin(this);
+    }
+
+    public void loadMessages() {
+        if (this.messagesConfig == null) {
+            return;
+        }
+        Arrays.stream(Locale.values()).forEach(language -> {
+            if (this.messagesConfig.getConfiguration().getString(language.getPath()) == null) {
+                if (language.getListValue() != null && this.messagesConfig.getConfiguration().getStringList(language.getPath()) == null) {
+                    this.messagesConfig.getConfiguration().set(language.getPath(), language.getListValue());
+                    return;
+                }
+                if (language.getValue() != null) {
+                    this.messagesConfig.getConfiguration().set(language.getPath(), language.getValue());
+                }
+            }
+        });
+        try {
+            this.messagesConfig.getConfiguration().save(messagesConfig.getFile());
+        } catch (Exception e) {
+            //
+        }
     }
 }

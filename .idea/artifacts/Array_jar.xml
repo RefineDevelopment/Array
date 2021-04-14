@@ -8,8 +8,8 @@
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/mongodb/mongo-java-driver/3.9.1/mongo-java-driver-3.9.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-text/1.8/commons-text-1.8.jar" path-in-jar="/" />
       <element id="module-output" name="Array" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/ziggurat.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/SpigotSupport.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/ziggurat.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

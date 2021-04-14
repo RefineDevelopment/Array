@@ -286,6 +286,8 @@ public abstract class Match {
 
             teamPlayer.setAlive(false);
 
+            teamPlayer.setParkourCheckpoint(null);
+
             List<Player> playersAndSpectators=getPlayersAndSpectators();
 
 
@@ -296,7 +298,7 @@ public abstract class Match {
                 }
                 if (!isTheBridgeMatch()) {
                     if ((!isHCFMatch()) && getKit().getGameRules().isParkour()) {
-                        player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.GREEN + " has won.");
+                        player.sendMessage(getRelationColor(player, killerPlayer) + killerPlayer.getName() + CC.GREEN + " has won.");
                     } else if (killerPlayer == null) {
                         player.sendMessage(getRelationColor(player, deadPlayer) + deadPlayer.getName() + CC.GRAY + " has died.");
                     } else {
@@ -401,15 +403,13 @@ public abstract class Match {
     }
 
     public void addSpectator(Player player, Player target) {
-        Location spawn = Profile.getByUuid(target).getMatch().getArena().getSpawn1();
         spectators.add(player.getUniqueId());
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setMatch(this);
         profile.setState(ProfileState.SPECTATE_MATCH);
         profile.refreshHotbar();
         TaskUtil.runLater(profile::handleVisibility, 2L);
-        player.teleport(spawn);
-        player.teleport(target.getLocation().clone().add(0, 2, 0));
+        player.teleport(Profile.getByUuid(target).getMatch().getMidSpawn());
         player.spigot().setCollidesWithEntities(false);
 
         if (!profile.getPlayer().hasPermission("array.staff")) {
@@ -477,7 +477,6 @@ public abstract class Match {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setState(ProfileState.IN_LOBBY);
         profile.setMatch(null);
-        PlayerUtil.reset(player);
         profile.refreshHotbar();
         profile.handleVisibility();
         Essentials.teleportToSpawn(player);

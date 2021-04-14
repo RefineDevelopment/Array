@@ -1,25 +1,15 @@
-Party:
-  YOU_HAVE_BEEN_INVITED: "&8[&b&lParty&8] &7You have been invited to join &b{0}''s &7party."
-  CLICK_TO_JOIN: "&b(Click to accept)"
-  PLAYER_INVITED: "&8[&b&lParty&8] &b{0} &7has been invited to your party."
-  PLAYER_JOINED: "&8[&b&lParty&8] &b{0} &7joined your party."
-  PLAYER_LEFT: "&8[&b&lParty&8] &c{0} &7has left your party."
-  CREATED: "&8[&b&lParty&8] &aYou created a party."
-  DISBANDED: "&8[&b&lParty&8] &cYour party has been disbanded."
-  PUBLIC: "&8[&b&lPublic&8] &b{0}&a is hosting a public party"
-  PRIVACY_CHANGED: "&7Your party privacy has been changed to: &b{0}"
 Match:
   #Placeholders are {arena}, {kit}, for solo {player1} & {player2} (it auto detects if the match is ranked and adds ELO in Gray to it) (gonna add more later!)
   Start-Message:
     HCF:
-      - "&8&m------------------------------------"
+      - "&7&m------------------------------------"
       - "        &b&lHCF Match Started!"
       - ""
       - "&7In this events, each player gets 4 set"
       - "&7of kits and each kit has its own"
       - "&7unique ability and perks. This events"
       - "&7is a mini-hcf tournament, Good Luck!"
-      - "&8&m-------------------------------------"
+      - "&7&m-------------------------------------"
     Team:
       - "&b&lMatch Found!"
       - ""

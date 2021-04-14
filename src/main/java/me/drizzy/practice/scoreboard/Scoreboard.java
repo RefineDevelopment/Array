@@ -22,14 +22,17 @@ import me.drizzy.practice.tournament.Tournament;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.other.TimeUtil;
-import me.drizzy.practice.util.scoreboard.AssembleAdapter;
+import me.drizzy.practice.util.scoreboard.scoreboard.Board;
+import me.drizzy.practice.util.scoreboard.scoreboard.BoardAdapter;
+import me.drizzy.practice.util.scoreboard.scoreboard.cooldown.BoardCooldown;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class Scoreboard implements AssembleAdapter {
+
+public class Scoreboard implements BoardAdapter {
 
     @Override
     public String getTitle(Player player) {
@@ -37,7 +40,7 @@ public class Scoreboard implements AssembleAdapter {
     }
 
     @Override
-    public List<String> getLines(Player player) {
+    public List<String> getScoreboard(Player player, Board board, Set<BoardCooldown> cooldowns) {
         Profile profile=Profile.getByUuid(player.getUniqueId());
 
         if (!profile.getSettings().isShowScoreboard()) {

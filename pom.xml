@@ -6,7 +6,7 @@
 
     <groupId>me.drizzy.practice</groupId>
     <artifactId>Array</artifactId>
-    <version>BETA-4.2</version>
+    <version>BETA-4.3</version>
 
     <!--Repositories-->
 
@@ -116,14 +116,14 @@
             <systemPath>${project.basedir}/lib/ProtocolLib.jar</systemPath>
         </dependency>
 
-        <!--Tablist Handler
+        <!--Tablist Handler-->
         <dependency>
             <groupId>me.allen.ziggurat</groupId>
             <artifactId>Ziggurat</artifactId>
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/ziggurat.jar</systemPath>
-        </dependency>-->
+        </dependency>
 
         <dependency>
             <groupId>us.myles</groupId>
@@ -175,7 +175,7 @@
             <systemPath>${project.basedir}/lib/api/MizuAPI.jar</systemPath>
         </dependency>
 
-        <!--Hologram Leaderboards Handler-->
+        <!--Placeholder Hooks-->
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>

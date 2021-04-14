@@ -16,6 +16,10 @@ public class TaskUtil {
         Array.getInstance().getServer().getScheduler().runTaskTimer(Array.getInstance(), runnable, delay, timer);
     }
 
+    public static void runTimerAsync(Runnable runnable, long delay, long timer) {
+        Array.getInstance().getServer().getScheduler().runTaskTimerAsynchronously(Array.getInstance(), runnable, delay, timer);
+    }
+
     public static void runTimer(BukkitRunnable runnable, long delay, long timer) {
         runnable.runTaskTimer(Array.getInstance(), delay, timer);
     }
