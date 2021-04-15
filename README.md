@@ -1,6 +1,6 @@
 # Array
 
-RaveSpigot Full Source
+Array Full Source
 
 ## Terms of Service
 
