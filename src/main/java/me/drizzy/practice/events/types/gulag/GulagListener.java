@@ -105,10 +105,6 @@ public class GulagListener implements Listener {
 	public void onBreak(BlockBreakEvent event) {
 		Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
 		if (profile.isInGulag()) {
-			if (!profile.getGulag().isFighting(event.getPlayer().getUniqueId())) {
-				event.setCancelled(true);
-			}
-		} else if (profile.getGulag() != null && profile.getGulag().getSpectators().contains(event.getPlayer().getUniqueId())) {
 			event.setCancelled(true);
 		}
 	}
@@ -116,12 +112,7 @@ public class GulagListener implements Listener {
 	@EventHandler(priority=EventPriority.LOW, ignoreCancelled=true)
 	public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
 		Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
-
 		if (profile.isInGulag()) {
-			if (!profile.getGulag().isFighting(event.getPlayer().getUniqueId())) {
-				event.setCancelled(true);
-			}
-		} else if (profile.getGulag() != null && profile.getGulag().getSpectators().contains(event.getPlayer().getUniqueId())) {
 			event.setCancelled(true);
 		}
 	}
@@ -130,10 +121,6 @@ public class GulagListener implements Listener {
 	public void onItemPickup(PlayerPickupItemEvent event) {
 		Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
 		if (profile.isInGulag()) {
-			if (!profile.getGulag().isFighting(event.getPlayer().getUniqueId())) {
-				event.setCancelled(true);
-			}
-		} else if (profile.getGulag() != null && profile.getGulag().getSpectators().contains(event.getPlayer().getUniqueId())) {
 			event.setCancelled(true);
 		}
 	}

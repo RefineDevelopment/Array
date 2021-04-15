@@ -241,4 +241,8 @@ public class Kit {
         });
     }
 
+    public boolean isParty() {
+        return !gameRules.isDisablePartyFFA() && gameRules.isParkour() && !gameRules.isBridge() && !gameRules.isDisablePartySplit() && isEnabled();
+    }
+
 }

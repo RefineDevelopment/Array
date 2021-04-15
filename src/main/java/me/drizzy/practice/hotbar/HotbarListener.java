@@ -23,6 +23,7 @@ import me.drizzy.practice.settings.SettingsMenu;
 import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.queue.menu.QueueSelectKitMenu;
 import me.drizzy.practice.util.chat.CC;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

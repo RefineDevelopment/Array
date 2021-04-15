@@ -63,5 +63,4 @@ public enum Locale {
         }
         return toReturn;
     }
-
 }

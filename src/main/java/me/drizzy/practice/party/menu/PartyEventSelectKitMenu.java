@@ -34,9 +34,9 @@ public class PartyEventSelectKitMenu extends Menu {
 
     @Override
     public Map<Integer, Button> getButtons(final Player player) {
-        final Map<Integer, Button> buttons =new HashMap<>();
+        final Map<Integer, Button> buttons = new HashMap<>();
         for (final Kit kit : Kit.getKits()) {
-            if (kit.isEnabled() && (!kit.getGameRules().isDisablePartyFFA() || !kit.getGameRules().isDisablePartySplit()) && !kit.getGameRules().isBridge()) {
+            if (kit.isEnabled() && kit.isParty()) {
                 if (this.getCheck(partyEventType, kit)) {
                     buttons.put(buttons.size(), new SelectKitButton(this.partyEventType, kit));
                 }
