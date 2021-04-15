@@ -855,7 +855,7 @@ public class MatchListener implements Listener {
                     if (profile.getPlates().contains(event.getClickedBlock().getLocation())) return;
                     profile.getPlates().add(event.getClickedBlock().getLocation());
                     if (match.getOpponentPlayer(event.getPlayer()) != null) {
-                        profile.getMatch().handleDeath(match.getOpponentPlayer(event.getPlayer()), event.getPlayer(), false);
+                        match.handleDeath(event.getPlayer(), null, false);
                     } else {
                         match.end();
                     }
