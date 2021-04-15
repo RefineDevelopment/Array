@@ -2,22 +2,16 @@
 
 Array Full Source
 
-## Terms of Service
+## Terms of Use
 
 You are NOT allowed to:
 
-- Redestribute this Core
-- Invite anyone to this repo
-- Commit without permission
-- Change any settings
-- Attempt to sell the Core
-- Rename the Core
+- Redestribute this plugin
+- Claim this plugin as yours
+- Attempt to sell the plugin
+- Rename the plugin
 
- By using this spigot, you automatically accept all these terms!
-
-## Credits
-
-Drizzy, Tinuy, Purge-Developement
+ By using this Plugin, you automatically accept all these terms!
 
 ## How to Use
 
@@ -38,6 +32,20 @@ Drizzy, Tinuy, Purge-Developement
 Note : To fix any errors, just install the Lombok Plugin
 
 You Need Intelli J to compile, This does NOT support Eclipse
+
+## Permissions
+
+- Party Settings: array.donator
+- Duel Arena Selector: array.donator
+- Event: array.host.[event]
+- Admin Commands: array.dev
+- Staff Commands: array.staff
+- Ping Factor Setting: array.donator+
+- Toggle Lightning: array.donator
+- Event Cooldown Reset: array.staff
+- Event Cancel Command: array.staff
+- Event ForceStart Command: array.staff
+- Build Permission: array.build (also the player has to be in gamemode creative)
 
 ## Credits
 
