@@ -6,7 +6,7 @@ Array Full Source
 
 You are NOT allowed to:
 
-- Redestribute this spigot
+- Redestribute this Core
 - Invite anyone to this repo
 - Commit without permission
 - Change any settings
