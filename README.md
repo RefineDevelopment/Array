@@ -49,4 +49,8 @@ You Need Intelli J to compile, This does NOT support Eclipse
 
 ## Credits
 
+<<<<<<< Updated upstream
 Drizzy, Tinuy, Nick, Joeloeli, Veltus
+=======
+Drizzy, Tinuy, Nick, Joeloeli, Veltus
+>>>>>>> Stashed changes
