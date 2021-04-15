@@ -70,7 +70,7 @@ public class Party extends Team {
                 if (party.isPublic()) {
                     Bukkit.getServer().getOnlinePlayers().forEach(player -> {
                         List<String> toSend = new ArrayList<>();
-                        toSend.add(Locale.PARTY_PUBLIC.toString().replace("<leader>", party.getLeader().getUsername()));
+                        toSend.add(Locale.PARTY_PUBLIC.toString().replace("<host>", party.getLeader().getUsername()));
                         toSend.add(Locale.PARTY_CLICK_TO_JOIN.toString());
                         for ( String string : toSend ) {
                             new Clickable(string, Locale.PARTY_INVITE_HOVER.toString(), "/party join " + party.getLeader().getUsername()).sendToPlayer(player);
