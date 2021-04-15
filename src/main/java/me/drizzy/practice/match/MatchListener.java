@@ -333,19 +333,6 @@ public class MatchListener implements Listener {
                 }
                 Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BridgePlayerTask(bridgeMatch, player), 2L);
                 return;
-            } else if (profile.getMatch().getKit() !=null && profile.getMatch().getKit().getGameRules().isBedwars()) {
-                event.getDrops().clear();
-                PlayerUtil.reset(player);
-                Match match = profile.getMatch();
-                for ( Player player2 : match.getPlayers() ) {
-                    if (event.getEntity().getKiller() == null) {
-                        player2.sendMessage(match.getRelationColor(player2, player) + player.getName() + CC.GRAY + " has died.");
-                    } else {
-                        player2.sendMessage(match.getRelationColor(player2, player) + player.getName() + CC.GRAY + " was killed by " + match.getRelationColor(player2, event.getEntity().getKiller()) + event.getEntity().getKiller().getName() + CC.GRAY + ".");
-                    }
-                }
-                Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BedwarsPlayerTask(match, player), 2L);
-                return;
             }
         }
         player.teleport(player.getLocation().add(0.0, 2.0, 0.0));
@@ -439,14 +426,6 @@ public class MatchListener implements Listener {
                             Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BridgePlayerTask(bridgeMatch, player), 2L);
                             return;
                         }
-                        if (profile.getMatch().getKit().getGameRules().isBedwars()) {
-                                PlayerUtil.reset(player);
-                                for ( Player player2 : match.getPlayers() ) {
-                                    player2.sendMessage(CC.translate(match.getRelationColor(player2, player) + player.getName() + " &7has died"));
-                                }
-                            Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BedwarsPlayerTask(match, player), 2L);
-                            return;
-                        }
                         player.teleport(match.getTeamPlayer(player).getPlayerSpawn());
                         return;
                     }
@@ -503,14 +482,6 @@ public class MatchListener implements Listener {
                         player2.sendMessage(CC.translate(bridgeMatch.getRelationColor(player2, player) + player.getName() + " &7has died"));
                     }
                     Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BridgePlayerTask(bridgeMatch, player), 2L);
-                    return;
-                }
-                if (profile.getMatch().getKit().getGameRules().isBedwars()) {
-                    PlayerUtil.reset(player);
-                    for ( Player player2 : match.getPlayers() ) {
-                        player2.sendMessage(CC.translate(match.getRelationColor(player2, player) + player.getName() + " &7has died"));
-                    }
-                    Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BedwarsPlayerTask(match, player), 2L);
                 }
             }
         }
