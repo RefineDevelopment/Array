@@ -577,7 +577,7 @@ public class MatchListener implements Listener {
             final Player player = (Player) event.getEntity();
             final Profile profile = Profile.getByUuid(player.getUniqueId());
             if (profile.isInSomeSortOfFight()) {
-                if (profile.getMatch() != null) {
+                if (profile.getMatch() != null && profile.getMatch().getKit() != null && !profile.getMatch().isHCFMatch()) {
                     if (profile.getMatch().getKit().getGameRules().isAntiFoodLoss()) {
                         if (event.getFoodLevel() >= 20) {
                             event.setFoodLevel(20);
