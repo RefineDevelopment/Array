@@ -55,7 +55,4 @@ You Need Intelli J to compile, This does NOT support Eclipse
 
 ## Credits
 
-Drizzy, Nick, Joeloeli, Veltus
-
-
-#A Project by Purge Community
+Drizzy, Tinuy, Nick, Joeloeli
