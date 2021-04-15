@@ -1,17 +1,23 @@
 # Array
 
-Commerical Praxi Fork
+RaveSpigot Full Source
 
-## Terms of Use
+## Terms of Service
 
 You are NOT allowed to:
 
-- Redestribute this plugin
-- Claim this plugin as yours
-- Attempt to sell the plugin
-- Rename the plugin
+- Redestribute this spigot
+- Invite anyone to this repo
+- Commit without permission
+- Change any settings
+- Attempt to sell the spigot
+- Rename the spigot
 
- By using this Plugin, you automatically accept all these terms!
+ By using this spigot, you automatically accept all these terms!
+
+## Credits
+
+Drizzy, Tinuy, Purge-Developement
 
 ## How to Use
 
