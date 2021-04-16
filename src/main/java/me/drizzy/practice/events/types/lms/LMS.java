@@ -20,6 +20,7 @@ import me.drizzy.practice.util.other.Cooldown;
 import me.drizzy.practice.util.other.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -29,20 +30,22 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
+@Setter
 public class LMS {
 
     protected static String EVENT_PREFIX =CC.translate("&8[&bLMS&8] &r");
-    @Getter @Setter private Kit kit;
+    private Kit kit;
     private final String name;
-    @Setter private LMSState state = LMSState.WAITING;
+    private LMSState state = LMSState.WAITING;
     private LMSTask eventTask;
     private final PlayerSnapshot host;
     private final LinkedHashMap<UUID, LMSPlayer> eventPlayers = new LinkedHashMap<>();
     @Getter private final List<UUID> spectators = new ArrayList<>();
+    private final List<Location> placedBlocks = new ArrayList<>();
     @Getter @Setter public static int maxPlayers;
-    @Getter @Setter private int totalPlayers;
-    @Setter private Cooldown cooldown;
-    @Setter private long roundStart;
+    private int totalPlayers;
+    private Cooldown cooldown;
+    private long roundStart;
     @Getter @Setter private static boolean enabled = true;
 
 
@@ -216,6 +219,11 @@ public class LMS {
         onDeath(player, killer);
     }
 
+    public int getMaxBuildHeight() {
+        int highest = (int) Array.getInstance().getLMSManager().getLmsSpectator().getY();
+        return highest + 5;
+    }
+
     public void end() {
         Array.getInstance().getLMSManager().setActiveLMS(null);
         Array.getInstance().getLMSManager().setCooldown(new Cooldown(60_000L * 10));
@@ -233,7 +241,7 @@ public class LMS {
             Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "LMS Event" + CC.GRAY + "!");
             Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "LMS Event" + CC.GRAY + "!");
         }
-
+        placedBlocks.forEach(location -> location.getBlock().setType(Material.AIR));
         for (LMSPlayer LMSPlayer : eventPlayers.values()) {
             Player player = LMSPlayer.getPlayer();
 
@@ -241,9 +249,7 @@ public class LMS {
                 Profile profile = Profile.getByUuid(player.getUniqueId());
                 profile.setState(ProfileState.IN_LOBBY);
                 profile.setLms(null);
-            PlayerUtil.reset(player, false);
-        profile.refreshHotbar();
-
+                profile.refreshHotbar();
                 Essentials.teleportToSpawn(player);
             }
         }

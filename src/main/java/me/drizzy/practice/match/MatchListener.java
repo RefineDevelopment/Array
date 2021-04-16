@@ -8,21 +8,20 @@ import me.drizzy.practice.hcf.HCFManager;
 import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.kit.KitInventory;
-import me.drizzy.practice.match.task.BedwarsPlayerTask;
 import me.drizzy.practice.match.task.BridgePlayerTask;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.match.types.TheBridgeMatch;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
+import me.drizzy.practice.util.chat.CC;
+import me.drizzy.practice.util.inventory.ItemBuilder;
 import me.drizzy.practice.util.location.BlockUtil;
 import me.drizzy.practice.util.location.LocationUtils;
-import me.drizzy.practice.util.other.PlayerUtil;
-import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.other.Cooldown;
-import me.drizzy.practice.util.inventory.ItemBuilder;
-import me.drizzy.practice.util.other.TimeUtil;
 import me.drizzy.practice.util.nametag.NameTags;
+import me.drizzy.practice.util.other.Cooldown;
+import me.drizzy.practice.util.other.PlayerUtil;
+import me.drizzy.practice.util.other.TimeUtil;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -53,7 +52,7 @@ import java.util.UUID;
 public class MatchListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onBlockPlaceEvent(final BlockPlaceEvent event) {
+    public void onBlockPlaceEvent(BlockPlaceEvent event) {
         final Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
         if (profile.isInFight()) {
             final Match match = profile.getMatch();
@@ -168,28 +167,18 @@ public class MatchListener implements Listener {
                         }
                     } else if (match.getKit().getGameRules().isBoxUHC()) {
                         if (event.getBlock().getType() == Material.WOOD) {
-                            match.getBrokenBlocks().add(event.getBlock().getLocation());
+                            match.getChangedBlocks().add(event.getBlock().getState());
                             event.getBlock().setType(Material.AIR);
                             event.getPlayer().getInventory().addItem(new ItemStack(Material.WOOD, 1));
                             event.getPlayer().updateInventory();
                         } else {
                             event.setCancelled(true);
                         }
-                    } else if(match.getKit().getGameRules().isBedwars()) {
-                        if(event.getBlock() != null && event.getBlock().getType() == Material.BED_BLOCK) {
-                            Location own = match.getTeamPlayer(event.getPlayer()).getPlayerSpawn();
-                            Location bed = event.getBlock().getLocation();
-                            Location opponent = match.getTeamPlayer(profile.getMatch().getOpponentPlayer(profile.getPlayer())).getPlayerSpawn();
-                            if(bed.distanceSquared(own) > bed.distanceSquared(opponent)) {
-                               match.handleDeath(match.getOpponentPlayer(event.getPlayer()), null, false);
-                            }
-                            event.setCancelled(true);
-                        }
-                    } else if (match.getPlacedBlocks().remove(event.getBlock().getLocation()) && !match.getKit().getGameRules().isBoxUHC()) {
+                    } else if (match.getPlacedBlocks().remove(event.getBlock().getLocation())) {
                         event.getPlayer().getInventory().addItem(new ItemBuilder(event.getBlock().getType()).durability(event.getBlock().getData()).build());
                         event.getPlayer().updateInventory();
                         event.getBlock().setType(Material.AIR);
-                    } else if (!match.getKit().getGameRules().isBoxUHC()){
+                    } else {
                         event.setCancelled(true);
                     }
                 } else {

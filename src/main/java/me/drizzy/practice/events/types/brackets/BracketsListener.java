@@ -1,10 +1,14 @@
 package me.drizzy.practice.events.types.brackets;
 
+import me.drizzy.practice.arena.Arena;
+import me.drizzy.practice.arena.impl.TheBridgeArena;
 import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.kit.KitInventory;
+import me.drizzy.practice.match.Match;
 import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.util.inventory.ItemBuilder;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.other.Cooldown;
@@ -19,6 +23,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -220,16 +225,47 @@ public class BracketsListener implements Listener {
 		}
 	}
 
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+	public void onBlockPlaceEvent(BlockPlaceEvent event) {
+		final Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+		if (profile.isInBrackets()) {
+			Brackets brackets = profile.getBrackets();
+				if (brackets.getKit().getGameRules().isBuild() && profile.getBrackets().isFighting(event.getPlayer().getUniqueId())) {
+					if (brackets.getKit().getGameRules().isSpleef()) {
+						event.setCancelled(true);
+						return;
+					}
+					int y = (int) event.getBlockPlaced().getLocation().getY();
+					if (y > brackets.getMaxBuildHeight()) {
+						event.getPlayer().sendMessage(CC.RED + "You have reached the maximum build height.");
+						event.setCancelled(true);
+						return;
+					}
+					brackets.getPlacedBlocks().add(event.getBlock().getLocation());
+			} else {
+				event.setCancelled(true);
+			}
+		}
+	}
+
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled=true)
 	public void onBreak(BlockBreakEvent event) {
-		Player player = event.getPlayer();
 		Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
-		if (profile.isInBrackets() || (profile.getBrackets() != null && profile.getBrackets().getSpectators().contains(event.getPlayer().getUniqueId()))) {
-			if (profile.isInBrackets()) {
-				if (!profile.getBrackets().isFighting(player.getUniqueId())) {
+		if (profile.isInBrackets()) {
+			Brackets brackets=profile.getBrackets();
+			if (brackets.getKit().getGameRules().isBuild() && profile.getBrackets().isFighting(event.getPlayer().getUniqueId())) {
+				if (brackets.getKit().getGameRules().isSpleef()) {
+					if (brackets.getPlacedBlocks().remove(event.getBlock().getLocation())) {
+						event.getPlayer().getInventory().addItem(new ItemBuilder(event.getBlock().getType()).durability(event.getBlock().getData()).build());
+						event.getPlayer().updateInventory();
+						event.getBlock().setType(Material.AIR);
+					} else {
+						event.setCancelled(true);
+					}
+				} else {
 					event.setCancelled(true);
 				}
-			} else if (profile.getBrackets() != null && profile.getBrackets().getSpectators().contains(player.getUniqueId())) {
+			} else {
 				event.setCancelled(true);
 			}
 		}

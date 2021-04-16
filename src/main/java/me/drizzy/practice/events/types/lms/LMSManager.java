@@ -11,18 +11,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.IOException;
 
+@Getter
+@Setter
 public class LMSManager {
 
-    @Getter
     private LMS activeLMS;
-    @Getter
-    @Setter
     private Cooldown cooldown = new Cooldown(0);
-    @Getter
-    @Setter
     private Location lmsSpectator;
-    @Getter
-    @Setter
     private String lmsKnockbackProfile;
 
     public LMSManager() {
@@ -46,12 +41,12 @@ public class LMSManager {
     public void load() {
         FileConfiguration configuration = Array.getInstance().getEventsConfig().getConfiguration();
 
-        if (configuration.contains("events.ffa.spectator")) {
-            lmsSpectator = LocationUtil.deserialize(configuration.getString("events.ffa.spectator"));
+        if (configuration.contains("events.lms.spectator")) {
+            lmsSpectator = LocationUtil.deserialize(configuration.getString("events.lms.spectator"));
         }
 
-        if (configuration.contains("events.ffa.knockback-profile")) {
-            lmsKnockbackProfile = configuration.getString("events.ffa.knockback-profile");
+        if (configuration.contains("events.lms.knockback-profile")) {
+            lmsKnockbackProfile = configuration.getString("events.lms.knockback-profile");
         }
     }
 
@@ -59,11 +54,11 @@ public class LMSManager {
         FileConfiguration configuration = Array.getInstance().getEventsConfig().getConfiguration();
 
         if (lmsSpectator != null) {
-            configuration.set("events.ffa.spectator", LocationUtil.serialize(lmsSpectator));
+            configuration.set("events.lms.spectator", LocationUtil.serialize(lmsSpectator));
         }
 
         if (lmsKnockbackProfile != null) {
-            configuration.set("events.ffa.knockback-profile", lmsKnockbackProfile);
+            configuration.set("events.lms.knockback-profile", lmsKnockbackProfile);
         }
 
         try {

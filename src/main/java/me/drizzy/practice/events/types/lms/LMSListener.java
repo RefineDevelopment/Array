@@ -1,10 +1,12 @@
 package me.drizzy.practice.events.types.lms;
 
+import me.drizzy.practice.events.types.brackets.Brackets;
 import me.drizzy.practice.events.types.lms.player.LMSPlayerState;
 import me.drizzy.practice.kit.KitInventory;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.enums.HotbarType;
+import me.drizzy.practice.util.inventory.ItemBuilder;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.other.Cooldown;
@@ -19,6 +21,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -178,16 +181,6 @@ public class LMSListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onBreak(BlockBreakEvent event) {
-        Profile profile = Profile.getByUuid(event.getPlayer());
-        if (profile.isInLMS() && profile.getLms().isWaiting()) {
-            event.setCancelled(true);
-        }  else if (profile.getLms() != null && profile.getLms().getSpectators().contains(event.getPlayer().getUniqueId())) {
-            event.setCancelled(true);
-        }
-    }
-
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         if (event.getItem() != null && event.getAction().name().contains("RIGHT")) {
@@ -245,6 +238,52 @@ public class LMSListener implements Listener {
                         player.getItemInHand().setType(Material.BOWL);
                     }
                 }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onBlockPlaceEvent(BlockPlaceEvent event) {
+        final Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+        if (profile.isInLMS()) {
+            LMS lms = profile.getLms();
+            if (lms.getKit().getGameRules().isBuild() && profile.getLms().isFighting(event.getPlayer())) {
+                if (lms.getKit().getGameRules().isSpleef()) {
+                    event.setCancelled(true);
+                    return;
+                }
+                int y = (int) event.getBlockPlaced().getLocation().getY();
+                if (y > lms.getMaxBuildHeight()) {
+                    event.getPlayer().sendMessage(CC.RED + "You have reached the maximum build height.");
+                    event.setCancelled(true);
+                    return;
+                }
+                lms.getPlacedBlocks().add(event.getBlock().getLocation());
+            } else {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled=true)
+    public void onBreak(BlockBreakEvent event) {
+        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+        if (profile.isInLMS()) {
+            LMS lms = profile.getLms();
+            if (lms.getKit().getGameRules().isBuild() && profile.getLms().isFighting(event.getPlayer())) {
+                if (lms.getKit().getGameRules().isSpleef()) {
+                    if (lms.getPlacedBlocks().remove(event.getBlock().getLocation())) {
+                        event.getPlayer().getInventory().addItem(new ItemBuilder(event.getBlock().getType()).durability(event.getBlock().getData()).build());
+                        event.getPlayer().updateInventory();
+                        event.getBlock().setType(Material.AIR);
+                    } else {
+                        event.setCancelled(true);
+                    }
+                } else {
+                    event.setCancelled(true);
+                }
+            } else {
+                event.setCancelled(true);
             }
         }
     }

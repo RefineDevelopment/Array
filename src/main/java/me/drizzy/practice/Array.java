@@ -237,6 +237,12 @@ public class Array extends JavaPlugin {
             Kit.getKits().forEach(Kit::save);
             Arena.getArenas().forEach(Arena::save);
             Profile.getProfiles().values().forEach(Profile::save);
+            //Save our Event Setup
+            getBracketsManager().save();
+            getLMSManager().save();
+            getSumoManager().save();
+            getParkourManager().save();
+            getGulagManager().save();
             //Clear out the PlayerList for Vanilla Tab
             Profile.getPlayerList().clear();
         });

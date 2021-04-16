@@ -19,6 +19,7 @@ import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.util.other.Cooldown;
 import me.drizzy.practice.util.other.TimeUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -26,24 +27,26 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 
 @Getter
+@Setter
 public class Brackets {
 
+	@Getter @Setter private static boolean enabled = true;
 	protected static String EVENT_PREFIX=CC.translate("&8[&bBrackets&8] &r");
 	private final String name;
-	@Setter	private BracketsState state=BracketsState.WAITING;
-	@Getter	@Setter	private Kit kit;
+	private BracketsState state=BracketsState.WAITING;
+	private Kit kit;
 	private BracketsTask eventTask;
 	private final PlayerSnapshot host;
 	private final LinkedHashMap<UUID, BracketsPlayer> eventPlayers=new LinkedHashMap<>();
-	@Getter	private final List<UUID> spectators=new ArrayList<>();
-	@Getter	@Setter	public static int maxPlayers;
-	@Getter	@Setter	private int totalPlayers;
-	@Setter private Cooldown cooldown;
+	private final List<UUID> spectators=new ArrayList<>();
+	private final List<Location> placedBlocks = new ArrayList<>();
+	@Getter public static int maxPlayers;
+	private int totalPlayers;
+	private Cooldown cooldown;
 	private final List<Entity> entities=new ArrayList<>();
 	private BracketsPlayer roundPlayerA;
 	private BracketsPlayer roundPlayerB;
-	@Setter private long roundStart;
-	@Getter @Setter private static boolean enabled = true;
+	private long roundStart;
 
 
 	public Brackets(Player player, Kit kit) {
@@ -386,6 +389,11 @@ public class Brackets {
 
 	public boolean isFighting(UUID uuid) {
 		return (roundPlayerA != null && roundPlayerA.getUuid().equals(uuid)) || (roundPlayerB != null && roundPlayerB.getUuid().equals(uuid));
+	}
+
+	public int getMaxBuildHeight() {
+		int highest = (int) (Math.max(Array.getInstance().getBracketsManager().getBracketsSpawn1().getY(), Array.getInstance().getBracketsManager().getBracketsSpawn2().getY()));
+		return highest + 5;
 	}
 
 	private BracketsPlayer findRoundPlayer() {
