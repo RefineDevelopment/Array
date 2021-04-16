@@ -75,7 +75,7 @@ public class SettingsMenu extends Menu {
                         lines.add("&7players of similar ping as you.");
                         lines.add("");
                         lines.add("&7You do not have permission to use this.");
-                        lines.add("&7&oPlease upgrading your Rank at &b&ostore.purgemc.club &7");
+                        lines.add("&7&oUpgrade your Rank at &b&ostore.purgecommunity.com&7");
                     }
                     break;
                 case TOGGLESPECTATORS:
@@ -97,7 +97,7 @@ public class SettingsMenu extends Menu {
                         lines.add("&7Death effect for your Profile.");
                         lines.add("");
                         lines.add("&7You do not have permission to use this.");
-                        lines.add("&7&oPlease upgrading your Rank at &b&ostore.purgemc.club &7");
+                        lines.add("&7&oUpgrade your Rank at &b&ostore.purgecommunity.com&7");
                     }
                     break;
                 case TOGGLEPINGONSCOREBOARD:
