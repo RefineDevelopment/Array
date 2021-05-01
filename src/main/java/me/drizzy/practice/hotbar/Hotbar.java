@@ -35,7 +35,7 @@ public class Hotbar {
         Hotbar.items.put(HotbarType.PARTY_DISBAND, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Disband Party" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.PARTY_SETTINGS, new ItemBuilder(Material.ANVIL).name(CC.RED + "Party Settings" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.PARTY_LEAVE, new ItemBuilder(Material.INK_SACK).durability(1).name(CC.RED + "Leave Party" + CC.GRAY + " (Right-Click)").build());
-        Hotbar.items.put(HotbarType.PARTY_INFO, new ItemBuilder(Material.PAPER).durability(1).name(CC.RED + "Party Information" + CC.GRAY + " (Right-Click)").build());
+        Hotbar.items.put(HotbarType.PARTY_INFO, new ItemBuilder(Material.PAPER).name(CC.RED + "Party Information" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.OTHER_PARTIES, new ItemBuilder(Material.REDSTONE_TORCH_ON).name(CC.RED + "Duel Other Parties" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.MAIN_MENU, new ItemBuilder(Material.EMERALD).name(CC.RED + "Main Menu" + CC.GRAY + " (Right-Click)").build());
         Hotbar.items.put(HotbarType.KIT_EDITOR, new ItemBuilder(Material.BOOK).name(CC.RED + "Kit Editor" + CC.GRAY + " (Right-Click)").build());

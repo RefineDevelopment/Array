@@ -33,9 +33,7 @@ public class KitEditorListener implements Listener {
             String customName = CC.translate(event.getMessage());
 
             profile.getKitEditor().getSelectedKitInventory().setCustomName(customName);
-            profile.getKitEditor().setActive(false);
             profile.getKitEditor().setRename(false);
-            profile.getKitEditor().setSelectedKit(null);
 
             if (!profile.isInFight()) {
                 new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(event.getPlayer());
