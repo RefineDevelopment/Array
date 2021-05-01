@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class KitBedwarsCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {
-            player.sendMessage((CC.translate("&8[&b&lArray&8] &c")) + "Kit does not exist");
+            player.sendMessage((CC.translate("&8[&c&lArray&8] &c")) + "Kit does not exist");
         } else {
             if (kit.getGameRules().isBedwars()) {
                 kit.getGameRules().setBedwars(false);
@@ -18,8 +18,8 @@ public class KitBedwarsCommand {
                 kit.getGameRules().setBedwars(true);
             }
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated Bedwars mode for &b" + kit.getName() +  " &7to &b" + (kit.getGameRules().isBedwars() ? "true!" : "false!")));
-            player.sendMessage(CC.translate("&8[&bTIP&8] &7Please put Beds near the player spawns!"));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Updated Bedwars mode for &c" + kit.getName() +  " &7to &c" + (kit.getGameRules().isBedwars() ? "true!" : "false!")));
+            player.sendMessage(CC.translate("&8[&cTIP&8] &7Please put Beds near the player spawns!"));
         }
     }
 }

@@ -12,13 +12,13 @@ public class KitSetIconCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         ItemStack item=player.getItemInHand();
         if (item == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Please hold a valid item in your hand!"));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Please hold a valid item in your hand!"));
         } else if (kit == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7That kit does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That kit does not exist."));
         } else {
             kit.setDisplayIcon(item);
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &aKit Icon set!"));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &aKit Icon set!"));
         }
     }
 }

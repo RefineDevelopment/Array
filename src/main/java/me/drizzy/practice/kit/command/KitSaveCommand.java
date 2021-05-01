@@ -12,6 +12,6 @@ public class KitSaveCommand {
         for ( Kit kit : Kit.getKits() ) {
             kit.save();
         }
-        sender.sendMessage(CC.translate("&8[&b&lArray&8] &7You saved &b" + Kit.getKits().size() +  " the kits!"));
+        sender.sendMessage(CC.translate("&8[&c&lArray&8] &7You saved &c" + Kit.getKits().size() +  " the kits!"));
     }
 }

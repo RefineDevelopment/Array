@@ -6,12 +6,13 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.hotbar.HotbarLayout;
 import me.drizzy.practice.profile.Profile;
-import net.minecraft.server.v1_8_R3.EntityLiving;
+import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -22,15 +23,17 @@ import org.spigotmc.AsyncCatcher;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PlayerUtil {
+
+    private static Field STATUS_PACKET_ID_FIELD;
+    private static Field STATUS_PACKET_STATUS_FIELD;
+    private static Field SPAWN_PACKET_ID_FIELD;
 
     public static void reset(Player player) {
         reset(player, false);
@@ -77,7 +80,7 @@ public class PlayerUtil {
         player.setFlying(true);
         player.setGameMode(GameMode.CREATIVE);
         player.setFlySpeed(0.2F);
-        TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, Profile.getByUuid(player))), 2L);
+        TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, Profile.getByPlayer(player))), 2L);
         player.updateInventory();
     }
 
@@ -91,11 +94,57 @@ public class PlayerUtil {
 
     public static void allowMovement(Player player) {
         player.setWalkSpeed(0.2F);
-        player.setFlySpeed(0.0001F);
+        player.setFlySpeed(0.2F);
         player.setFoodLevel(20);
         player.setSprinting(true);
         player.removePotionEffect(PotionEffectType.JUMP);
     }
+
+    public static void animateDeath(Player player) {
+
+        final int entityId = EntityUtils.getFakeEntityId();
+        final PacketPlayOutNamedEntitySpawn spawnPacket = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
+        final PacketPlayOutEntityStatus statusPacket = new PacketPlayOutEntityStatus();
+
+        try {
+            SPAWN_PACKET_ID_FIELD.set(spawnPacket, entityId);
+            STATUS_PACKET_ID_FIELD.set(statusPacket, entityId);
+            STATUS_PACKET_STATUS_FIELD.set(statusPacket, (byte)3);
+
+            final int radius = MinecraftServer.getServer().getPlayerList().d();
+            final Set<Player> sentTo = new HashSet<>();
+
+            for ( Entity entity : player.getNearbyEntities(radius,radius,radius)) {
+
+                if (!(entity instanceof Player)) {
+                    continue;
+                }
+
+                final Player watcher = (Player)entity;
+
+                if (watcher.getUniqueId().equals(player.getUniqueId())) {
+                    continue;
+                }
+
+                ((CraftPlayer)watcher).getHandle().playerConnection.sendPacket(spawnPacket);
+                ((CraftPlayer)watcher).getHandle().playerConnection.sendPacket(statusPacket);
+
+                sentTo.add(watcher);
+            }
+
+            Array.getInstance().getServer().getScheduler().runTaskLater(Array.getInstance(), () -> {
+
+                for (Player watcher : sentTo) {
+                    ((CraftPlayer)watcher).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(entityId));
+                }
+
+            }, 40L);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
 
     public static List<Player> convertUUIDListToPlayerList(List<UUID> list) {
         return list.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).collect(Collectors.toList());
@@ -181,5 +230,19 @@ public class PlayerUtil {
         return Bukkit.getUnsafe().modifyItemStack(skull,
                 "{SkullOwner:{Id:\"" + hashAsId + "\",Properties:{textures:[{Value:\"" + value + "\"}]}}}"
         );
+    }
+
+    static {
+        try {
+            STATUS_PACKET_ID_FIELD = PacketPlayOutEntityStatus.class.getDeclaredField("a");
+            STATUS_PACKET_ID_FIELD.setAccessible(true);
+            STATUS_PACKET_STATUS_FIELD = PacketPlayOutEntityStatus.class.getDeclaredField("b");
+            STATUS_PACKET_STATUS_FIELD.setAccessible(true);
+            SPAWN_PACKET_ID_FIELD = PacketPlayOutNamedEntitySpawn.class.getDeclaredField("a");
+            SPAWN_PACKET_ID_FIELD.setAccessible(true);
+        } catch (NoSuchFieldException ex) {
+            ex.printStackTrace();
+        }
+
     }
 }

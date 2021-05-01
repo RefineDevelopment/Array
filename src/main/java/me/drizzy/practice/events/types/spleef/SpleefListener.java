@@ -148,7 +148,7 @@ public class SpleefListener implements Listener {
 	@EventHandler
 	public void onMove(PlayerMoveEvent event) {
 		Location to = event.getTo();
-		Profile profile=Profile.getByUuid(event.getPlayer());
+		Profile profile = Profile.getByPlayer(event.getPlayer());
 		if (profile.isInSpleef() && profile.getSpleef().getState() == SpleefState.ROUND_FIGHTING) {
 			if (BlockUtil.isOnLiquid(to, 0) || BlockUtil.isOnLiquid(to, 1)) {
 				if (profile.getSpleef().getCatcher().contains(event.getPlayer())) {

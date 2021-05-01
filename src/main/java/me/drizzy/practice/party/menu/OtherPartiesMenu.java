@@ -7,6 +7,7 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.inventory.ItemBuilder;
 import me.drizzy.practice.util.menu.Menu;
+import me.drizzy.practice.util.other.SkullCreator;
 import org.bukkit.event.inventory.ClickType;
 import java.util.List;
 import org.bukkit.Material;
@@ -21,7 +22,7 @@ public class OtherPartiesMenu extends Menu {
 
     @Override
     public String getTitle(final Player player) {
-        return "&bOther Parties";
+        return "&cOther Parties";
     }
     
     @Override
@@ -53,8 +54,8 @@ public class OtherPartiesMenu extends Menu {
             if (this.party.getTeamPlayers().size() != added) {
                 lore.add(CC.GRAY + " and " + (this.party.getTeamPlayers().size() - added) + " others...");
             }
-            return new ItemBuilder(Material.SKULL_ITEM)
-                    .name("&bParty of &r" + party.getLeader().getDisplayName())
+            return new ItemBuilder(SkullCreator.itemFromUuid(party.getLeader().getUuid()))
+                    .name("&cParty of &r" + party.getLeader().getDisplayName())
                     .amount(this.party.getPlayers().size())
                     .durability(3)
                     .lore(lore)
@@ -70,11 +71,11 @@ public class OtherPartiesMenu extends Menu {
                 player.sendMessage(CC.RED + "You can only duel parties as a leader.");
                 return;
             }
-            if (senderProfile.isBusy(player)) {
+            if (senderProfile.isBusy()) {
                 player.sendMessage(CC.RED + "You cannot duel right now.");
                 return;
             }
-            if (receiverProfile.isBusy(receiverProfile.getParty().getLeader().getPlayer())) {
+            if (Profile.getByPlayer(receiverProfile.getParty().getLeader().getPlayer()).isBusy()) {
                 player.sendMessage(CC.translate(this.party.getLeader().getPlayer().getDisplayName()) + CC.RED + " is currently busy.");
                 return;
             }

@@ -35,37 +35,37 @@ public class ActiveEventSelectEventMenu extends Menu {
 
         int i = 0;
         for ( EventType eventType : EventType.values()) {
-            if (eventType.getTitle().equals("&b&lLMS")) {
+            if (eventType.getTitle().equals("&c&lLMS")) {
                 if (Array.getInstance().getLMSManager().getActiveLMS() != null && Array.getInstance().getLMSManager().getActiveLMS().isWaiting()) {
                     buttons.put(i, new SelectEventButton(EventType.LMS));
                     i++;
                 }
             }
-            if (eventType.getTitle().equals("&b&lBrackets")) {
+            if (eventType.getTitle().equals("&c&lBrackets")) {
                 if (Array.getInstance().getBracketsManager().getActiveBrackets() != null && Array.getInstance().getBracketsManager().getActiveBrackets().isWaiting()) {
                     buttons.put(i, new SelectEventButton(EventType.BRACKETS));
                     i++;
                 }
             }
-            if (eventType.getTitle().equals("&b&lSumo")) {
+            if (eventType.getTitle().equals("&c&lSumo")) {
                 if (Array.getInstance().getSumoManager().getActiveSumo() != null && Array.getInstance().getSumoManager().getActiveSumo().isWaiting()) {
                     buttons.put(i, new SelectEventButton(EventType.SUMO));
                     i++;
                 }
             }
-            if (eventType.getTitle().equals("&b&lParkour")) {
+            if (eventType.getTitle().equals("&c&lParkour")) {
                 if (Array.getInstance().getParkourManager().getActiveParkour() != null && Array.getInstance().getParkourManager().getActiveParkour().isWaiting()) {
                     buttons.put(i, new SelectEventButton(EventType.PARKOUR));
                     i++;
                 }
             }
-            if (eventType.getTitle().equals("&b&lSpleef")) {
+            if (eventType.getTitle().equals("&c&lSpleef")) {
                 if (Array.getInstance().getSpleefManager().getActiveSpleef() != null && Array.getInstance().getSpleefManager().getActiveSpleef().isWaiting()) {
                     buttons.put(i, new SelectEventButton(EventType.SPLEEF));
                     i++;
                 }
             }
-            if (eventType.getTitle().equals("&b&lGulag")) {
+            if (eventType.getTitle().equals("&c&lGulag")) {
                 if (Array.getInstance().getGulagManager().getActiveGulag() != null && Array.getInstance().getGulagManager().getActiveGulag().isWaiting()) {
                     buttons.put(i, new SelectEventButton(EventType.GULAG));
                     i++;
@@ -86,26 +86,26 @@ public class ActiveEventSelectEventMenu extends Menu {
             List<String> lore = new ArrayList<>();
 
             switch (eventType.getTitle()) {
-                case "&b&lBrackets":
+                case "&c&lBrackets":
                     lore=Array.getInstance().getBracketsManager().getActiveBrackets().getLore();
                     break;
-                case "&b&lSumo":
+                case "&c&lSumo":
                     lore=Array.getInstance().getSumoManager().getActiveSumo().getLore();
                     break;
-                case "&b&lLMS":
+                case "&c&lLMS":
                     lore=Array.getInstance().getLMSManager().getActiveLMS().getLore();
                     break;
-                case "&b&lParkour":
+                case "&c&lParkour":
                     lore=Array.getInstance().getParkourManager().getActiveParkour().getLore();
                     break;
-                case "&b&lSpleef":
+                case "&c&lSpleef":
                     lore=Array.getInstance().getSpleefManager().getActiveSpleef().getLore();
                     break;
-                case "&b&lGulag":
+                case "&c&lGulag":
                     lore=Array.getInstance().getGulagManager().getActiveGulag().getLore();
                     break;
             }
-            lore.add("&bClick to join");
+            lore.add("&cClick to join");
             lore.add(CC.MENU_BAR);
 
 
@@ -120,22 +120,22 @@ public class ActiveEventSelectEventMenu extends Menu {
             Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
             player.closeInventory();
             switch (eventType.getTitle()) {
-                case "&b&lBrackets":
+                case "&c&lBrackets":
                     BracketsJoinCommand.execute(player);
                     break;
-                case "&b&lSumo":
+                case "&c&lSumo":
                     SumoJoinCommand.execute(player);
                     break;
-                case "&b&lLMS":
+                case "&c&lLMS":
                     LMSJoinCommand.execute(player);
                     break;
-                case "&b&lParkour":
+                case "&c&lParkour":
                     ParkourJoinCommand.execute(player);
                     break;
-                case "&b&lSpleef":
+                case "&c&lSpleef":
                     SpleefJoinCommand.execute(player);
                     break;
-                case "&b&lGulag":
+                case "&c&lGulag":
                     GulagJoinCommand.execute(player);
                     break;
             }

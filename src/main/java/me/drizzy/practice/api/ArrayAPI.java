@@ -4,7 +4,6 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.profile.Profile;
 import org.bukkit.entity.Player;
 
-@SuppressWarnings("all")
 public class ArrayAPI {
 
     public static boolean isInLobby(Player player) {
@@ -13,7 +12,7 @@ public class ArrayAPI {
             return true;
         if (p.isInQueue())
             return true;
-        return !p.isInFight() && !p.isInEvent() && !p.isSpectating() && !p.isInTournament(player);
+        return !p.isInFight() && !p.isInEvent() && !p.isSpectating() && !p.isInTournament();
     }
 
     public static void handleVisibility(Player player) {
@@ -26,22 +25,22 @@ public class ArrayAPI {
     }
 
     public static boolean isInParty(Player player) {
-        Profile p = Profile.getByUuid(player);
+        Profile p = Profile.getByPlayer(player);
         return p.getParty() != null;
     }
 
     public static boolean isInTournament(Player player) {
-        Profile p = Profile.getByUuid(player);
-        return p.isInTournament(player);
+        Profile p = Profile.getByPlayer(player);
+        return p.isInTournament();
     }
 
     public static boolean isInEvent(Player player) {
-        Profile p = Profile.getByUuid(player);
+        Profile p = Profile.getByPlayer(player);
         return p.isInEvent();
     }
 
     public static Profile getProfile(Player player) {
-        return Profile.getByUuid(player);
+        return Profile.getByPlayer(player);
     }
 
 }

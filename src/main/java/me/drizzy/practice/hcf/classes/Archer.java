@@ -1,9 +1,9 @@
 package me.drizzy.practice.hcf.classes;
 
-import me.drizzy.practice.hcf.HCFClasses;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
+import me.drizzy.practice.hcf.HCFClasses;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.chat.CC;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -81,60 +81,58 @@ public class Archer extends HCFClasses implements Listener {
                 if ((equipped == null) || (!equipped.equals(this))) {
                     return;
                 }
-                if (true) {
-                    if ((this.plugin.getHCFManager().getEquippedClass(damaged) != null) && (this.plugin.getHCFManager().getEquippedClass(damaged).equals(this))) {
-                        return;
-                    }
+                if ((this.plugin.getHCFManager().getEquippedClass(damaged) != null) && (this.plugin.getHCFManager().getEquippedClass(damaged).equals(this))) {
+                    return;
+                }
 
-                    int heartdamage = 1;
-                    if (TAGGED.containsKey(damaged.getUniqueId())) {
-                        heartdamage = 2;
-                    }
+                int heartdamage = 1;
+                if (TAGGED.containsKey(damaged.getUniqueId())) {
+                    heartdamage = 2;
+                }
 
-                    event.setDamage(0);
+                event.setDamage(0);
 
-                    damaged.setHealth(Math.max(0, damaged.getHealth() - (heartdamage * 2)));
+                damaged.setHealth(Math.max(0, damaged.getHealth() - (heartdamage * 2)));
 
-                    TAGGED.put(damaged.getUniqueId(), shooter.getUniqueId());
-                    double distance = shooter.getLocation().distance(damaged.getLocation());
+                TAGGED.put(damaged.getUniqueId(), shooter.getUniqueId());
+                double distance = shooter.getLocation().distance(damaged.getLocation());
 
-                    shooter.sendMessage(CC.translate("&bRange: " + String.format("%.1f", distance)));
-                    shooter.sendMessage(CC.translate("&7Marked &b" + damaged.getName() + " &7for &b10 seconds &b" + heartdamage + "&4 ❤"));
+                shooter.sendMessage(Locale.HCF_ARCHER_RANGE.toString().replace("<range>", String.format("%.1f", distance)));
+                shooter.sendMessage(Locale.HCF_ARCHER_MARKED.toString().replace("<damaged>", damaged.getName()).replace("<damagedhealth>", String.valueOf(heartdamage)));
 
-                    damaged.sendMessage(CC.translate("&bMarked! &7" + shooter.getName() + " has &bshot &7you and &bmarked &7you (+25% damage) for &b10 seconds&7. &b(" + String.format("%.1f", distance) + " blocks away)"));
+                damaged.sendMessage(Locale.HCF_ARCHER_DAMAGEMARKED.toString().replace("<shooter>", shooter.getName()).replace("<distance>", String.format("%.1f", distance)));
 
-                    LeatherArmorMeta helmMeta = (LeatherArmorMeta) shooter.getInventory().getHelmet().getItemMeta();
-                    LeatherArmorMeta chestMeta = (LeatherArmorMeta) shooter.getInventory().getChestplate().getItemMeta();
-                    LeatherArmorMeta leggingsMeta = (LeatherArmorMeta) shooter.getInventory().getLeggings().getItemMeta();
-                    LeatherArmorMeta bootsMeta = (LeatherArmorMeta) shooter.getInventory().getBoots().getItemMeta();
+                LeatherArmorMeta helmMeta = (LeatherArmorMeta) shooter.getInventory().getHelmet().getItemMeta();
+                LeatherArmorMeta chestMeta = (LeatherArmorMeta) shooter.getInventory().getChestplate().getItemMeta();
+                LeatherArmorMeta leggingsMeta = (LeatherArmorMeta) shooter.getInventory().getLeggings().getItemMeta();
+                LeatherArmorMeta bootsMeta = (LeatherArmorMeta) shooter.getInventory().getBoots().getItemMeta();
 
-                    Color green = Color.fromRGB(6717235);
+                Color green = Color.fromRGB(6717235);
 
-                    double r = random.nextDouble();
+                double r = random.nextDouble();
 
-                    if ((r <= 0.5D) && (helmMeta.getColor().equals(green)) && (chestMeta.getColor().equals(green)) && (leggingsMeta.getColor().equals(green)) && (bootsMeta.getColor().equals(green))) {
-                        damaged.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 120, 0));
-                        shooter.sendMessage(ChatColor.GRAY + "Since your armor is green, you gave " + damaged.getName() + " the poison effect for 6 seconds...");
-                        damaged.sendMessage(ChatColor.GRAY + "Since " + shooter.getName() + "'s armor is green, you were given the poison effect for 6 seconds...");
-                    }
-                    Color blue = Color.fromRGB(3361970);
-                    if ((r <= 0.5D) && (helmMeta.getColor().equals(blue)) && (chestMeta.getColor().equals(blue)) && (leggingsMeta.getColor().equals(blue)) && (bootsMeta.getColor().equals(blue))) {
-                        damaged.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 120, 0));
-                        shooter.sendMessage(ChatColor.GRAY + "Since your armor is blue, you gave " + damaged.getName() + " the slowness effect for 6 seconds...");
-                        damaged.sendMessage(ChatColor.GRAY + "Since " + shooter.getName() + "'s armor is blue, you were given the slowness effect for 6 seconds...");
-                    }
-                    Color gray = Color.fromRGB(5000268);
-                    if ((r <= 0.5D) && (helmMeta.getColor().equals(gray)) && (chestMeta.getColor().equals(gray)) && (leggingsMeta.getColor().equals(gray)) && (bootsMeta.getColor().equals(gray))) {
-                        damaged.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 120, 0));
-                        shooter.sendMessage(ChatColor.GRAY + "Since your armor is gray, you gave " + damaged.getName() + " the blindness effect for 6 seconds...");
-                        damaged.sendMessage(ChatColor.GRAY + "Since " + shooter.getName() + "'s armor is gray, you were given the blindness effect for 6 seconds...");
-                    }
-                    Color black = Color.fromRGB(1644825);
-                    if ((r <= 0.2D) && (helmMeta.getColor().equals(black)) && (chestMeta.getColor().equals(black)) && (leggingsMeta.getColor().equals(black)) && (bootsMeta.getColor().equals(black))) {
-                        damaged.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 120, 0));
-                        shooter.sendMessage(ChatColor.GRAY + "Since your armor is black, you gave " + damaged.getName() + " the wither effect for 6 seconds...");
-                        damaged.sendMessage(ChatColor.GRAY + "Since " + shooter.getName() + "'s armor is black, you were given the wither effect for 6 seconds...");
-                    }
+                if ((r <= 0.5D) && (helmMeta.getColor().equals(green)) && (chestMeta.getColor().equals(green)) && (leggingsMeta.getColor().equals(green)) && (bootsMeta.getColor().equals(green))) {
+                    damaged.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 120, 0));
+                    shooter.sendMessage(ChatColor.GRAY + "Since your armor is green, you gave " + damaged.getName() + " the poison effect for 6 seconds...");
+                    damaged.sendMessage(ChatColor.GRAY + "Since " + shooter.getName() + "'s armor is green, you were given the poison effect for 6 seconds...");
+                }
+                Color blue = Color.fromRGB(3361970);
+                if ((r <= 0.5D) && (helmMeta.getColor().equals(blue)) && (chestMeta.getColor().equals(blue)) && (leggingsMeta.getColor().equals(blue)) && (bootsMeta.getColor().equals(blue))) {
+                    damaged.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 120, 0));
+                    shooter.sendMessage(ChatColor.GRAY + "Since your armor is blue, you gave " + damaged.getName() + " the slowness effect for 6 seconds...");
+                    damaged.sendMessage(ChatColor.GRAY + "Since " + shooter.getName() + "'s armor is blue, you were given the slowness effect for 6 seconds...");
+                }
+                Color gray = Color.fromRGB(5000268);
+                if ((r <= 0.5D) && (helmMeta.getColor().equals(gray)) && (chestMeta.getColor().equals(gray)) && (leggingsMeta.getColor().equals(gray)) && (bootsMeta.getColor().equals(gray))) {
+                    damaged.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 120, 0));
+                    shooter.sendMessage(ChatColor.GRAY + "Since your armor is gray, you gave " + damaged.getName() + " the blindness effect for 6 seconds...");
+                    damaged.sendMessage(ChatColor.GRAY + "Since " + shooter.getName() + "'s armor is gray, you were given the blindness effect for 6 seconds...");
+                }
+                Color black = Color.fromRGB(1644825);
+                if ((r <= 0.2D) && (helmMeta.getColor().equals(black)) && (chestMeta.getColor().equals(black)) && (leggingsMeta.getColor().equals(black)) && (bootsMeta.getColor().equals(black))) {
+                    damaged.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 120, 0));
+                    shooter.sendMessage(ChatColor.GRAY + "Since your armor is black, you gave " + damaged.getName() + " the wither effect for 6 seconds...");
+                    damaged.sendMessage(ChatColor.GRAY + "Since " + shooter.getName() + "'s armor is black, you were given the wither effect for 6 seconds...");
                 }
             }
         }
@@ -159,7 +157,7 @@ public class Archer extends HCFClasses implements Listener {
             long remaining = timestamp - millis;
 
             if (remaining > 0L) {
-                player.sendMessage(ChatColor.RED + "You cannot use this for another " + ChatColor.BOLD.toString() + DurationFormatUtils.formatDurationWords(remaining, true, true) + ".");
+                player.sendMessage(Locale.HCF_COOLDOWN.toString().replace("<cooldown>", DurationFormatUtils.formatDurationWords(remaining, true, true)));
             } else {
                 ItemStack stack = player.getItemInHand();
 
@@ -183,7 +181,7 @@ public class Archer extends HCFClasses implements Listener {
             long remaining1 = timestamp - millis;
 
             if (remaining1 > 0L) {
-                player.sendMessage(ChatColor.RED + "You cannot use this for another " + ChatColor.BOLD.toString() + DurationFormatUtils.formatDurationWords(remaining1, true, true) + ".");
+                player.sendMessage(Locale.HCF_COOLDOWN.toString().replace("<cooldown>", DurationFormatUtils.formatDurationWords(remaining1, true, true)));
             } else {
                 ItemStack stack = player.getItemInHand();
 
@@ -207,7 +205,7 @@ public class Archer extends HCFClasses implements Listener {
             long remaining1 = timestamp - millis;
 
             if (remaining1 > 0L) {
-                player.sendMessage(ChatColor.RED + "You cannot use this for another " + ChatColor.BOLD.toString() + DurationFormatUtils.formatDurationWords(remaining1, true, true) + ".");
+                player.sendMessage(Locale.HCF_COOLDOWN.toString().replace("<cooldown>", DurationFormatUtils.formatDurationWords(remaining1, true, true)));
             } else {
                 ItemStack stack = player.getItemInHand();
 

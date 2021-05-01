@@ -151,7 +151,7 @@ public class GulagListener implements Listener {
 	@EventHandler(priority=EventPriority.MONITOR)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player=event.getPlayer();
-		if (Profile.getByUuid(player).isInGulag() && Profile.getByUuid(player).getGulag().getState() == GulagState.ROUND_FIGHTING) {
+		if (Profile.getByPlayer(player).isInGulag() && Profile.getByPlayer(player).getGulag().getState() == GulagState.ROUND_FIGHTING) {
 			if (!event.hasItem() || event.getItem().getType() != Material.DIAMOND_HOE || !event.getAction().name().contains("RIGHT_")) {
 				return;
 			}
@@ -165,9 +165,9 @@ public class GulagListener implements Listener {
 	public void onHit(EntityDamageEvent event) {
 		Player attacker;
 		if (event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
-			attacker=(Player) event.getEntity();
+			attacker = (Player) event.getEntity();
 			if (attacker != null) {
-				Profile profile=Profile.getByUuid(attacker);
+				Profile profile = Profile.getByPlayer(attacker);
 				if (profile.isInGulag() && profile.getGulag().isFighting()) {
 					if (event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
 						event.setDamage(2.0);

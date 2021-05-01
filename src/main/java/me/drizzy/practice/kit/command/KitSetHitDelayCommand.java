@@ -11,7 +11,7 @@ public class KitSetHitDelayCommand {
 
     public void execute(Player player, @CPL("kit") Kit kit, @CPL("delay") String delay) {
         if (kit == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7That kit does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That kit does not exist."));
         } else {
             int test;
             try {
@@ -22,7 +22,7 @@ public class KitSetHitDelayCommand {
             }
             kit.getGameRules().setHitDelay(test);
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated &b" + kit.getName() + " &7hitdelay set to &b" + test));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Updated &c" + kit.getName() + " &7hitdelay set to &c" + test));
         }
     }
 }

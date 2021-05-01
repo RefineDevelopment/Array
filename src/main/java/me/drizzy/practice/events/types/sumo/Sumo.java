@@ -8,7 +8,7 @@ import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.other.PlayerSnapshot;
 import me.drizzy.practice.util.other.PlayerUtil;
-import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.util.other.Cooldown;
 import me.drizzy.practice.util.other.TimeUtil;
@@ -26,7 +26,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 @Getter
 public class Sumo {
 
-	protected static String EVENT_PREFIX=CC.translate("&8[&bSumo&8] &r");
+	protected static String EVENT_PREFIX=CC.translate("&8[&cSumo&8] &r");
 
 	private final String name;
 	@Setter private SumoState state = SumoState.WAITING;
@@ -54,10 +54,10 @@ public class Sumo {
 		Sumo sumo = Array.getInstance().getSumoManager().getActiveSumo();
 
 		toReturn.add(CC.MENU_BAR);
-		toReturn.add(CC.translate("&fHost: &b" + sumo.getName()));
+		toReturn.add(CC.translate("&fHost: &c" + sumo.getName()));
 
 		if (sumo.isWaiting()) {
-			toReturn.add("&fPlayers: &b" + sumo.getEventPlayers().size() + "/" + Sumo.getMaxPlayers());
+			toReturn.add("&fPlayers: &c" + sumo.getEventPlayers().size() + "/" + Sumo.getMaxPlayers());
 			toReturn.add("");
 
 			if (sumo.getCooldown() == null) {
@@ -72,8 +72,8 @@ public class Sumo {
 				toReturn.add(CC.translate("&fStarting in " + remaining + "s"));
 			}
 		} else {
-			toReturn.add("&fRemaining: &b" + sumo.getRemainingPlayers().size() + "/" + sumo.getTotalPlayers());
-			toReturn.add("&fDuration: &b" + sumo.getRoundDuration());
+			toReturn.add("&fRemaining: &c" + sumo.getRemainingPlayers().size() + "/" + sumo.getTotalPlayers());
+			toReturn.add("&fDuration: &c" + sumo.getRoundDuration());
 			toReturn.add("");
 			toReturn.add("&a" + sumo.getRoundPlayerA().getUsername());
 			toReturn.add("vs");
@@ -140,8 +140,8 @@ public class Sumo {
 	public void handleJoin(Player player) {
 		eventPlayers.put(player.getUniqueId(), new SumoPlayer(player));
 
-		broadcastMessage(CC.AQUA + player.getName() + CC.GRAY + " has joined the &bSumo Event&8! &8(&b" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-		player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &bSumo Event&8!"));
+		broadcastMessage(CC.RED + player.getName() + CC.GRAY + " has joined the &cSumo Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
+		player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &cSumo Event&8!"));
 		onJoin(player);
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -171,8 +171,8 @@ public class Sumo {
 		eventPlayers.remove(player.getUniqueId());
 
 		if (state == SumoState.WAITING) {
-			broadcastMessage(CC.AQUA + player.getName() + CC.GRAY + " left the &bSumo Event&8! &8(&b" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-			player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &bSumo Event&8!"));
+			broadcastMessage(CC.RED + player.getName() + CC.GRAY + " left the &cSumo Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
+			player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &cSumo Event&8!"));
 		}
 
 		onLeave(player);
@@ -182,7 +182,7 @@ public class Sumo {
 		profile.setSumo(null);
 		profile.refreshHotbar();
 
-		Essentials.teleportToSpawn(player);
+		profile.teleportToSpawn();
 
 		new BukkitRunnable() {
 			@Override
@@ -218,9 +218,9 @@ public class Sumo {
 		if (winner == null) {
 			Bukkit.broadcastMessage(EVENT_PREFIX + CC.RED + "The sumo events has been canceled.");
 		} else {
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Sumo Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Sumo Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Sumo Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Sumo Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Sumo Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Sumo Event" + CC.GRAY + "!");
 		}
 
 		for (SumoPlayer sumoPlayer : eventPlayers.values()) {
@@ -232,7 +232,7 @@ public class Sumo {
 				profile.setSumo(null);
 				profile.refreshHotbar();
 
-				Essentials.teleportToSpawn(player);
+				profile.teleportToSpawn();
 			}
 		}
 
@@ -269,11 +269,11 @@ public class Sumo {
 		List<String> strings=new ArrayList<>();
 		strings.add(CC.translate(" "));
 		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
-		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&b&l[Sumo Event]"));
-		strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + ""));
-		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&fA &bSumo &fevent is being hosted by &b" + this.host.getUsername()));
-		strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
-		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
+		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&c&l[Sumo Event]"));
+		strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + ""));
+		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&fA &cSumo &fevent is being hosted by &c" + this.host.getUsername()));
+		strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
+		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
 		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
 		strings.add(CC.translate(" "));
 		for ( String string : strings ) {
@@ -360,7 +360,7 @@ public class Sumo {
 		winner.getPlayer().teleport(Array.getInstance().getSumoManager().getSumoSpectator());
 
 
-		broadcastMessage("&b" + player.getName() + "&7 was eliminated by &b" + winner.getUsername() + "&7!");
+		broadcastMessage("&c" + player.getName() + "&7 was eliminated by &c" + winner.getUsername() + "&7!");
 
 		setState(SumoState.ROUND_ENDING);
 		setEventTask(new SumoRoundEndTask(this));
@@ -433,7 +433,7 @@ public class Sumo {
 		profile.refreshHotbar();
 		profile.handleVisibility();
 
-		Essentials.teleportToSpawn(player);
+		profile.teleportToSpawn();
 	}
 
 }

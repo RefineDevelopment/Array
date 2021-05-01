@@ -22,7 +22,7 @@ public class MatchPearlCooldownTask extends BukkitRunnable {
                 if (profile.isInFight() || profile.isInEvent()) {
                     if (!profile.getEnderpearlCooldown().isNotified()) {
                         profile.getEnderpearlCooldown().setNotified(true);
-                        player.sendMessage(CC.AQUA + "You can now pearl again.");
+                        player.sendMessage(CC.RED + "You can now pearl again.");
                     }
                 }
 

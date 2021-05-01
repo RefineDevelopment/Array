@@ -1,5 +1,6 @@
 package me.drizzy.practice.kiteditor;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.kiteditor.menu.KitManagementMenu;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
@@ -25,24 +26,22 @@ public class KitEditorListener implements Listener {
             event.setCancelled(true);
 
             if (event.getMessage().length() > 16) {
-                event.getPlayer().sendMessage(CC.RED + "A kit name cannot be more than 16 characters long.");
+                event.getPlayer().sendMessage(Locale.KITEDITOR_LONG.toString());
                 return;
             }
-            if (event.getMessage().contains("&")) {
-                event.getPlayer().sendMessage(CC.RED + "Please Don't Use Color Codes or Symbols.");
-                return;
-            }
+
+            String customName = CC.translate(event.getMessage());
+
+            profile.getKitEditor().getSelectedKitInventory().setCustomName(customName);
+            profile.getKitEditor().setActive(false);
+            profile.getKitEditor().setRename(false);
+            profile.getKitEditor().setSelectedKit(null);
 
             if (!profile.isInFight()) {
                 new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(event.getPlayer());
             }
 
-            profile.getKitEditor().getSelectedKitInventory().setCustomName(event.getMessage());
-            profile.getKitEditor().setActive(false);
-            profile.getKitEditor().setRename(false);
-            profile.getKitEditor().setSelectedKit(null);
-            event.getPlayer().closeInventory();
-            event.getPlayer().sendMessage(ChatColor.GREEN + "Successfully renamed");
+            event.getPlayer().sendMessage(Locale.KITEDITOR_RENAMED.toString().replace("<custom_name>", customName));
         }
     }
 
@@ -71,9 +70,9 @@ public class KitEditorListener implements Listener {
                             player.updateInventory();
                         } else if (clicked.equals(player.getOpenInventory().getTopInventory())) {
                             if (event.getCursor().getType() != Material.AIR &&
-                                    event.getCurrentItem().getType() == Material.AIR ||
-                                    event.getCursor().getType() != Material.AIR &&
-                                            event.getCurrentItem().getType() != Material.AIR) {
+                                event.getCurrentItem().getType() == Material.AIR ||
+                                event.getCursor().getType() != Material.AIR &&
+                                event.getCurrentItem().getType() != Material.AIR) {
                                 event.setCancelled(true);
                                 event.setCursor(null);
                                 player.updateInventory();

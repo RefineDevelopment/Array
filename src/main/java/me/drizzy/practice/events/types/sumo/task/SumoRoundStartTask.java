@@ -17,7 +17,7 @@ public class SumoRoundStartTask extends SumoTask {
 	@Override
 	public void onRun() {
 		if (getTicks() >= 3) {
-			this.getSumo().broadcastMessage(CC.AQUA + CC.BOLD + "The round has started!");
+			this.getSumo().broadcastMessage(CC.RED + CC.BOLD + "The round has started!");
 			this.getSumo().setEventTask(null);
 			this.getSumo().setState(SumoState.ROUND_FIGHTING);
 

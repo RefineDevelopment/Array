@@ -8,12 +8,14 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
+@Getter
+@Setter
 public class ParkourPlayer {
 
-	@Getter private final UUID uuid;
-	@Getter private final String username;
-	@Getter @Setter private Location lastLocation;
-	@Getter @Setter private ParkourPlayerState state = ParkourPlayerState.WAITING;
+	private final UUID uuid;
+	private final String username;
+	private Location lastLocation;
+	private ParkourPlayerState state = ParkourPlayerState.WAITING;
 
 	public ParkourPlayer(Player player) {
 		this.uuid = player.getUniqueId();

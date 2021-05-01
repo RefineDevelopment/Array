@@ -3,12 +3,10 @@ package me.drizzy.practice.profile.meta;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.kit.Kit;
-import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.types.SoloMatch;
-import me.drizzy.practice.match.types.SumoMatch;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.queue.QueueType;
+import me.drizzy.practice.enums.QueueType;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.ChatComponentBuilder;
 import lombok.Getter;
@@ -21,18 +19,15 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 @Getter
+@Setter
 public class ProfileRematchData {
 
     private final UUID key;
     private final UUID sender;
     private final UUID target;
-    @Setter
     private Kit kit;
-    @Setter
     private Arena arena;
-    @Setter
     private boolean sent;
-    @Setter
     private boolean receive;
     private final long timestamp = System.currentTimeMillis();
 
@@ -61,7 +56,7 @@ public class ProfileRematchData {
             return;
         }
 
-        if (senderProfile.isBusy(sender)) {
+        if (senderProfile.isBusy()) {
             sender.sendMessage(CC.RED + "You cannot duel right now.");
             return;
         }
@@ -83,6 +78,7 @@ public class ProfileRematchData {
 
         senderProfile.checkForHotbarUpdate();
         targetProfile.checkForHotbarUpdate();
+
         Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), () -> {
             senderProfile.checkForHotbarUpdate();
             targetProfile.checkForHotbarUpdate();
@@ -105,12 +101,12 @@ public class ProfileRematchData {
             return;
         }
 
-        if (senderProfile.isBusy(sender)) {
+        if (senderProfile.isBusy()) {
             sender.sendMessage(CC.RED + "You cannot duel right now.");
             return;
         }
 
-        if (targetProfile.isBusy(target)) {
+        if (targetProfile.isBusy()) {
             sender.sendMessage(CC.translate(CC.RED + target.getDisplayName()) + CC.RED + " is currently busy.");
             return;
         }
@@ -127,14 +123,8 @@ public class ProfileRematchData {
         }
 
         arena.setActive(true);
-        Match match;
 
-        if(kit.getGameRules().isSumo()) {
-            match = new SumoMatch(null, new TeamPlayer(sender), new TeamPlayer(target), kit, arena, QueueType.UNRANKED);
-        } else {
-            match = new SoloMatch(null, new TeamPlayer(sender), new TeamPlayer(target), kit, arena, QueueType.UNRANKED,0,0);
-        }
-        match.start();
+        new SoloMatch(null, new TeamPlayer(sender), new TeamPlayer(target), kit, arena, QueueType.UNRANKED).start();
     }
 
 }

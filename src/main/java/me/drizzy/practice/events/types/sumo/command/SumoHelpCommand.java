@@ -10,16 +10,16 @@ public class SumoHelpCommand {
 
     public void execute(Player player) {
         player.sendMessage(CC.CHAT_BAR);
-        player.sendMessage(Color.translate("&b&lSumo &8(&7&o&7Sumo Commands&8&o)"));
+        player.sendMessage(Color.translate("&c&lSumo &8(&7&o&7Sumo Commands&8&o)"));
         player.sendMessage(CC.CHAT_BAR);
-        player.sendMessage(Color.translate(" &8• &b/sumo cancel &8(&7&o&7Cancel current sumo Event&8&o)"));
-        player.sendMessage(Color.translate(" &8• &b/sumo cooldown &8(&7&o&7Reset the sumo Event cooldown&8&o)"));
-        player.sendMessage(Color.translate(" &8• &b/sumo host &8(&7&o&7Host a sumo Event&8&o)"));
-        player.sendMessage(Color.translate(" &8• &b/sumo forcestart &8(&7&o&7Force start a sumo events&8&o)"));
-        player.sendMessage(Color.translate(" &8• &b/sumo join &8(&7&o&7Join ongoing sumo Event&8&o)"));
-        player.sendMessage(Color.translate(" &8• &b/sumo leave &8(&7&o&7Leave ongoing sumo Event&8&o)"));
-        player.sendMessage(Color.translate(" &8• &b/sumo tp &8(&7&o&7Teleport to the sumo Event Arena&8&o)"));
-        player.sendMessage(Color.translate(" &8• &b/sumo setspawn  &8(&7&o&7Set the spawns for sumo Event&8&o)"));
+        player.sendMessage(Color.translate(" &8• &c/sumo cancel &8(&7&o&7Cancel current sumo Event&8&o)"));
+        player.sendMessage(Color.translate(" &8• &c/sumo cooldown &8(&7&o&7Reset the sumo Event cooldown&8&o)"));
+        player.sendMessage(Color.translate(" &8• &c/sumo host &8(&7&o&7Host a sumo Event&8&o)"));
+        player.sendMessage(Color.translate(" &8• &c/sumo forcestart &8(&7&o&7Force start a sumo events&8&o)"));
+        player.sendMessage(Color.translate(" &8• &c/sumo join &8(&7&o&7Join ongoing sumo Event&8&o)"));
+        player.sendMessage(Color.translate(" &8• &c/sumo leave &8(&7&o&7Leave ongoing sumo Event&8&o)"));
+        player.sendMessage(Color.translate(" &8• &c/sumo tp &8(&7&o&7Teleport to the sumo Event Arena&8&o)"));
+        player.sendMessage(Color.translate(" &8• &c/sumo setspawn  &8(&7&o&7Set the spawns for sumo Event&8&o)"));
         player.sendMessage(Color.translate("&7(one = First spawn, two = Second spawn, spec = Spectator spawn&7)"));
         player.sendMessage(CC.CHAT_BAR);
     }

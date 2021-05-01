@@ -1,12 +1,11 @@
 package me.drizzy.practice.hcf.classes;
 
-import me.drizzy.practice.hcf.HCFClasses;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
+import me.drizzy.practice.hcf.HCFClasses;
 import org.apache.commons.lang.time.DurationFormatUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -58,30 +57,28 @@ public class Rogue extends HCFClasses implements Listener {
                 if ((stack != null) && (stack.getType() == Material.GOLD_SWORD)
                         && (stack.getEnchantments().isEmpty())) {
                     Player player = (Player) entity;
-                    if (direction(attacker) == direction(player)) {
-                        Damageable damage = player;
-                        if (damage.getHealth() <= 0.0D) {
+                    if (direction(attacker).equals(direction(player))) {
+                        if (player.getHealth() <= 0.0D) {
                             return;
                         }
                         if (stabCoolDown.containsKey(attacker.getUniqueId())) {
                             final long value = stabCoolDown.get(attacker.getUniqueId());
                             if (value > System.currentTimeMillis()) {
                                 event.setCancelled(true);
-                                attacker.sendMessage(ChatColor.YELLOW + "You can not do this for another " + ChatColor.RED + ROUGEDECIMAL.format((value - System.currentTimeMillis()) / 1000.0D) + " seconds" + ChatColor.YELLOW + "!");
+                                attacker.sendMessage(Locale.HCF_COOLDOWN.toString().replace("<duration>", ROUGEDECIMAL.format((value - System.currentTimeMillis()) / 1000.0D) ));
                                 return;
                             }
                         }
                         stabCoolDown.put(attacker.getUniqueId(), System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(2));
 
-                        if (damage.getHealth() <= 6.0D) {
-                            damage.damage(20.0D);
+                        if (player.getHealth() <= 6.0D) {
+                            player.damage(20.0D);
                         } else {
-                            damage.setHealth(damage.getHealth() - 6.0D);
+                            player.setHealth(player.getHealth() - 6.0D);
                         }
-                        player.sendMessage("§c" + attacker.getName() + ChatColor.YELLOW + " has backstabbed you.");
+                        player.sendMessage(Locale.HCF_ROUGE_BACKSTABBED.toString().replace("<attacker>", attacker.getName()));
                         player.playSound(player.getLocation(), Sound.ITEM_BREAK, 1.0F, 1.0F);
-                        attacker.sendMessage(ChatColor.YELLOW + "You have backstabbed " + "§c" + player.getName()
-                                + ChatColor.YELLOW + '.');
+                        attacker.sendMessage(Locale.HCF_ROUGE_BACKSTABBER.toString().replace("<target>", player.getName()));
                         attacker.setItemInHand(new ItemStack(Material.AIR, 1));
                         attacker.playSound(player.getLocation(), Sound.ITEM_BREAK, 1.0F, 1.0F);
                         attacker.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 1));
@@ -100,7 +97,6 @@ public class Rogue extends HCFClasses implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
         Action action = event.getAction();
         if (((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK)) && (event.hasItem()) && (event.getItem().getType() == Material.SUGAR)) {
             if (this.plugin.getHCFManager().getEquippedClass(event.getPlayer()) != this) {
@@ -110,7 +106,7 @@ public class Rogue extends HCFClasses implements Listener {
             long millis = System.currentTimeMillis();
             long remaining = timestamp - millis;
             if (remaining > 0L) {
-                player.sendMessage(ChatColor.RED + "You cannot use this for another " + ChatColor.BOLD.toString() + DurationFormatUtils.formatDurationWords(remaining, true, true) + ".");
+                player.sendMessage(Locale.HCF_COOLDOWN.toString().replace("<duration>", DurationFormatUtils.formatDurationWords(remaining, true, true)));
             } else {
                 ItemStack stack = player.getItemInHand();
                 if (stack.getAmount() == 1) {
@@ -132,7 +128,7 @@ public class Rogue extends HCFClasses implements Listener {
             long millis = System.currentTimeMillis();
             long remaining1 = timestamp - millis;
             if (remaining1 > 0L) {
-                player.sendMessage(ChatColor.RED + "You cannot use this for another " + ChatColor.BOLD.toString() + DurationFormatUtils.formatDurationWords(remaining1, true, true) + ".");
+                player.sendMessage(Locale.HCF_COOLDOWN.toString().replace("<duration>", DurationFormatUtils.formatDurationWords(remaining1, true, true)));
             } else {
                 ItemStack stack = player.getItemInHand();
                 if (stack.getAmount() == 1) {

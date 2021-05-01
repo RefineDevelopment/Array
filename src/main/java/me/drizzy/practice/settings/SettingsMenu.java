@@ -1,12 +1,15 @@
 package me.drizzy.practice.settings;
 
 import lombok.AllArgsConstructor;
+import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.enums.SettingsType;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.inventory.ItemBuilder;
 import me.drizzy.practice.util.menu.Button;
 import me.drizzy.practice.util.menu.Menu;
+import me.drizzy.practice.util.other.TaskUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -28,13 +31,14 @@ public class SettingsMenu extends Menu {
         final Map<Integer, Button> buttons = new HashMap<>();
         buttons.put(0, new SettingsButton(SettingsType.TOGGLESCOREBOARD));
         buttons.put(1, new SettingsButton(SettingsType.TOGGLEPINGONSCOREBOARD));
-        buttons.put(2, new SettingsButton(SettingsType.TOGGLESPECTATORS));
-        buttons.put(3, new SettingsButton(SettingsType.TOGGLESHOWPLAYERS));
-        buttons.put(4, new SettingsButton(SettingsType.TOGGLEDUELREQUESTS));
-        buttons.put(5, new SettingsButton(SettingsType.TOGGLETOURNAMENTMESSAGES));
-        buttons.put(6, new SettingsButton(SettingsType.TOGGLEVANILLATAB));
-        buttons.put(7, new SettingsButton(SettingsType.TOGGLEPINGFACTOR));
-        buttons.put(8, new SettingsButton(SettingsType.TOGGLELIGHTNING));
+        buttons.put(2, new SettingsButton(SettingsType.TOGGLECPSONSCOREBOARD));
+        buttons.put(3, new SettingsButton(SettingsType.TOGGLESPECTATORS));
+        buttons.put(4, new SettingsButton(SettingsType.TOGGLESHOWPLAYERS));
+        buttons.put(5, new SettingsButton(SettingsType.TOGGLEDUELREQUESTS));
+        buttons.put(6, new SettingsButton(SettingsType.TOGGLETOURNAMENTMESSAGES));
+        buttons.put(7, new SettingsButton(SettingsType.TOGGLEVANILLATAB));
+        buttons.put(8, new SettingsButton(SettingsType.TOGGLEPINGFACTOR));
+        buttons.put(9, new SettingsButton(SettingsType.TOGGLELIGHTNING));
         return buttons;
     }
 
@@ -75,7 +79,7 @@ public class SettingsMenu extends Menu {
                         lines.add("&7players of similar ping as you.");
                         lines.add("");
                         lines.add("&7You do not have permission to use this.");
-                        lines.add("&7&oUpgrade your Rank at &b&ostore.purgecommunity.com&7");
+                        lines.add("&7&oVisit: &a" + Array.getInstance().getEssentials().getSocialMeta().getStore());
                     }
                     break;
                 case TOGGLESPECTATORS:
@@ -97,7 +101,7 @@ public class SettingsMenu extends Menu {
                         lines.add("&7Death effect for your Profile.");
                         lines.add("");
                         lines.add("&7You do not have permission to use this.");
-                        lines.add("&7&oUpgrade your Rank at &b&ostore.purgecommunity.com&7");
+                        lines.add("&7&oVisit: &a" + Array.getInstance().getEssentials().getSocialMeta().getStore());
                     }
                     break;
                 case TOGGLEPINGONSCOREBOARD:
@@ -106,6 +110,13 @@ public class SettingsMenu extends Menu {
                     lines.add("");
                     lines.add((profile.getSettings().isPingScoreboard() ? "&a&l■ " : "&8&l■ ") + "&fShow Ping on Scoreboard");
                     lines.add((!profile.getSettings().isPingScoreboard() ? "&a&l■ " : "&8&l■ ") + "&fDon't Show Ping on Scoreboard");
+                    break;
+                case TOGGLECPSONSCOREBOARD:
+                    lines.add("&7Enable or Disable CPS on");
+                    lines.add("&7Scoreboard for your Profile.");
+                    lines.add("");
+                    lines.add((profile.getSettings().isCpsScoreboard() ? "&a&l■ " : "&8&l■ ") + "&fShow CPS on Scoreboard");
+                    lines.add((!profile.getSettings().isCpsScoreboard() ? "&a&l■ " : "&8&l■ ") + "&fDon't Show CPS on Scoreboard");
                     break;
                 case TOGGLETOURNAMENTMESSAGES:
                     lines.add("&7Enable or Disable Tournament");
@@ -130,7 +141,7 @@ public class SettingsMenu extends Menu {
                     break;
             }
             lines.add(CC.MENU_BAR);
-            return new ItemBuilder(this.type.getMaterial()).name("&b" + this.type.getName()).lore(lines).build();
+            return new ItemBuilder(this.type.getMaterial()).name("&c" + this.type.getName()).lore(lines).build();
         }
 
         @Override
@@ -145,7 +156,6 @@ public class SettingsMenu extends Menu {
                     Button.playSuccess(player);
                     profile.getSettings().setReceiveDuelRequests(!profile.getSettings().isReceiveDuelRequests());
                     break;
-
                 case TOGGLEPINGFACTOR:
                 if (player.hasPermission("array.donator+")) {
                     Button.playSuccess(player);
@@ -153,13 +163,16 @@ public class SettingsMenu extends Menu {
                 } else {
                     Button.playFail(player);
                     player.closeInventory();
-                    player.sendMessage(CC.translate("&7You do not have permission to use this setting."));
-                    player.sendMessage(CC.translate("&7&oPlease consider upgrading your Rank at &b&ostore.purgemc.club &7!"));
+                    Locale.ERROR_SETTING_NOPERM.toList().forEach(player::sendMessage);
                 }
                     break;
                 case TOGGLESPECTATORS:
                     Button.playSuccess(player);
                     profile.getSettings().setAllowSpectators(!profile.getSettings().isAllowSpectators());
+                    break;
+                case TOGGLECPSONSCOREBOARD:
+                    Button.playSuccess(player);
+                    profile.getSettings().setCpsScoreboard(!profile.getSettings().isCpsScoreboard());
                     break;
                 case TOGGLELIGHTNING:
                 if (player.hasPermission("array.donator")) {
@@ -168,8 +181,7 @@ public class SettingsMenu extends Menu {
                 } else {
                     Button.playFail(player);
                     player.closeInventory();
-                    player.sendMessage(CC.translate("&7You do not have permission to use this setting."));
-                    player.sendMessage(CC.translate("&7&oPlease consider buying a Rank at &b&ostore.purgemc.club &7!"));
+                    Locale.ERROR_SETTING_NOPERM.toList().forEach(player::sendMessage);
                 }
                     break;
                 case TOGGLEPINGONSCOREBOARD:
@@ -183,7 +195,6 @@ public class SettingsMenu extends Menu {
                 case TOGGLEVANILLATAB:
                     Button.playSuccess(player);
                     profile.getSettings().setVanillaTab(!profile.getSettings().isVanillaTab());
-                    profile.save();
                     break;
                 case TOGGLESHOWPLAYERS:
                     Button.playSuccess(player);
@@ -191,6 +202,7 @@ public class SettingsMenu extends Menu {
                     profile.handleVisibility();
                     break;
             }
+            TaskUtil.runSync(profile::save);
         }
 
         @Override

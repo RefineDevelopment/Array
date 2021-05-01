@@ -13,7 +13,7 @@ public class ArenaSetSpawnCommand {
 
     public void execute(Player player, @CPL("arena") Arena arena, @CPL("[1|2]") Integer pos) {
         if (arena == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7An arena with that name does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7An arena with that name does not exist."));
             return;
         }
 
@@ -26,11 +26,11 @@ public class ArenaSetSpawnCommand {
             } else if (pos.equals(2)) {
                 arena.setSpawn2(loc);
             }
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully updated the position of &b" + arena.getName() + "&8&o (&7&oPosition: " + pos + "&8&o)"));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully updated the position of &c" + arena.getName() + "&8&o (&7&oPosition: " + pos + "&8&o)"));
             arena.save();
 
         } else {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Please use the command /arena setbridgespawn to set the spawn for a bridge arena."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Please use the command /arena setbridgespawn to set the spawn for a bridge arena."));
         }
     }
 

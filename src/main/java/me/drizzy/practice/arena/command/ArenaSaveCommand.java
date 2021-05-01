@@ -12,6 +12,6 @@ public class ArenaSaveCommand {
         for ( Arena arena : Arena.getArenas() ) {
             arena.save();
         }
-        sender.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully saved &b" + Arena.getArenas().size() + " &7arenas!"));
+        sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully saved &c" + Arena.getArenas().size() + " &7arenas!"));
     }
 }

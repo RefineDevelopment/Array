@@ -11,14 +11,14 @@ public class KitSetKnockbackProfileCommand {
 
     public void execute(Player player, Kit kit, @CPL("KnockbackProfile") String knockbackProfile) {
         if (kit == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7That kit does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That kit does not exist."));
             return;
         }
 
         kit.setKnockbackProfile(knockbackProfile);
         kit.save();
 
-        player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated knockback profile for &b" + kit.getName() +  " &7to &b" + knockbackProfile));
+        player.sendMessage(CC.translate("&8[&c&lArray&8] &7Updated knockback profile for &c" + kit.getName() +  " &7to &c" + knockbackProfile));
     }
 
 }

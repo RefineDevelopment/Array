@@ -16,7 +16,7 @@ public class BracketsRoundStartTask extends BracketsTask {
 	@Override
 	public void onRun() {
 		if (getTicks() >= 3) {
-			this.getBrackets().broadcastMessage(CC.AQUA + "The round has started!");
+			this.getBrackets().broadcastMessage(CC.RED + "The round has started!");
 			this.getBrackets().setEventTask(null);
 			this.getBrackets().setState(BracketsState.ROUND_FIGHTING);
 
@@ -45,7 +45,7 @@ public class BracketsRoundStartTask extends BracketsTask {
 				playerB.playSound(playerB.getLocation(), Sound.NOTE_PLING, 1.0F, 1.0F);
 			}
 
-			this.getBrackets().broadcastMessage("&b" + seconds + "...");
+			this.getBrackets().broadcastMessage("&c" + seconds + "...");
 		}
 	}
 

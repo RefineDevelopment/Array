@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 @CommandMeta(label={"spleef forcestart"}, permission="array.staff")
 public class SpleefForceStartCommand {
     public void execute(Player player) {
-        Profile profile =Profile.getByUuid(player);
+        Profile profile =Profile.getByPlayer(player);
         profile.getSpleef().onRound();
     }
 }

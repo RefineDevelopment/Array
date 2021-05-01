@@ -17,7 +17,7 @@ public class GulagRoundStartTask extends GulagTask {
 	@Override
 	public void onRun() {
 		if (getTicks() >= 3) {
-			this.getGulag().broadcastMessage(CC.AQUA + "The round has started!");
+			this.getGulag().broadcastMessage(CC.RED + "The round has started!");
 			this.getGulag().setEventTask(null);
 			this.getGulag().setState(GulagState.ROUND_FIGHTING);
 
@@ -48,7 +48,7 @@ public class GulagRoundStartTask extends GulagTask {
 				playerB.playSound(playerB.getLocation(), Sound.NOTE_PLING, 1.0F, 1.0F);
 			}
 
-			this.getGulag().broadcastMessage("&b" + seconds + "...");
+			this.getGulag().broadcastMessage("&c" + seconds + "...");
 		}
 	}
 

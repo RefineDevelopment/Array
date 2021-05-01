@@ -1,6 +1,6 @@
 package me.drizzy.practice.duel.command;
 
-import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.arena.impl.StandaloneArena;
 import me.drizzy.practice.arena.impl.TheBridgeArena;
@@ -10,8 +10,7 @@ import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.match.types.*;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.profile.rank.RankType;
-import me.drizzy.practice.queue.QueueType;
+import me.drizzy.practice.enums.QueueType;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
@@ -28,18 +27,18 @@ public class DuelAcceptCommand {
         }
 
         if (player.hasMetadata("frozen")) {
-            player.sendMessage(CC.RED + "You cannot duel a player while being frozen.");
+            player.sendMessage(CC.RED + "You cannot duel a player while being frozen!");
             return;
         }
 
         if (target.hasMetadata("frozen")) {
-            player.sendMessage(CC.RED + "You cannot duel a player who's frozen.");
+            player.sendMessage(CC.RED + "You cannot duel a player who's frozen!");
             return;
         }
 
         Profile senderProfile=Profile.getByUuid(player.getUniqueId());
 
-        if (senderProfile.isBusy(player)) {
+        if (senderProfile.isBusy()) {
             player.sendMessage(CC.RED + "You cannot duel anyone right now.");
             return;
         }
@@ -51,7 +50,7 @@ public class DuelAcceptCommand {
             return;
         }
 
-        if (receiverProfile.isBusy(target)) {
+        if (receiverProfile.isBusy()) {
             player.sendMessage(CC.translate(CC.RED + target.getDisplayName()) + CC.RED + " is currently busy.");
             return;
         }
@@ -164,38 +163,35 @@ public class DuelAcceptCommand {
                         teamB.getTeamPlayers().add(new TeamPlayer(partyMember));
                     }
                 }
-
-                if (request.getKit().getGameRules().isSumo()) {
-                    match=new SumoTeamMatch(teamA, teamB, request.getKit(), arena);
-                } else {
-                    match=new TeamMatch(teamA, teamB, request.getKit(), arena);
-                }
-
+                match=new TeamMatch(teamA, teamB, request.getKit(), arena);
             }
 
         } else if(request.getKit().getGameRules().isBridge()) {
-            match=new TheBridgeMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,
+            match = new TheBridgeMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,
                     QueueType.UNRANKED);
         } else {
-            match=new SoloMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,
-                    QueueType.UNRANKED, 0, 0);
+            match = new SoloMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,
+                    QueueType.UNRANKED);
         }
         if (!request.isParty()) {
-            for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Start-Message.Solo") ) {
-                final String opponentMessages=this.formatMessages(string, player.getDisplayName(), target.getDisplayName());
-                final String message=CC.translate(opponentMessages).replace("{kit}", match.getKit().getName()).replace("{arena}", request.getArena().getName());
+            for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList()) {
+                String opponentMessages=this.formatMessages(string, player.getDisplayName(), target.getDisplayName());
+                String message=CC.translate(opponentMessages)
+                        .replace("<kit>", match.getKit().getName())
+                        .replace("<arena>", request.getArena().getName());
                 match.broadcastMessage(message);
             }
         }
         match.start();
     }
 
-    private String formatMessages(final String string, final String player1, final String player2) {
+    private String formatMessages(String string, String player1, String player2) {
         String player1Format;
         String player2Format;
         player1Format = player1;
         player2Format = player2;
-        return string.replace("{player1}", player1Format).replace("{player2}", player2Format);
+        string = string.replace("<player1>", player1Format).replace("<player2>", player2Format);
+        return string;
     }
 
 

@@ -3,7 +3,7 @@ package me.drizzy.practice.events.types.lms;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
-import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.events.types.lms.player.LMSPlayer;
 import me.drizzy.practice.events.types.lms.player.LMSPlayerState;
 import me.drizzy.practice.events.types.lms.task.LMSRoundEndTask;
@@ -33,7 +33,7 @@ import java.util.UUID;
 @Setter
 public class LMS {
 
-    protected static String EVENT_PREFIX =CC.translate("&8[&bLMS&8] &r");
+    protected static String EVENT_PREFIX =CC.translate("&8[&cLMS&8] &r");
     private Kit kit;
     private final String name;
     private LMSState state = LMSState.WAITING;
@@ -62,11 +62,11 @@ public class LMS {
         LMS LMS = Array.getInstance().getLMSManager().getActiveLMS();
 
         toReturn.add(CC.MENU_BAR);
-        toReturn.add(CC.translate("&bHost: &r" + LMS.getName()));
-        toReturn.add(CC.translate("&bKit: &r" + kit.getName()));
+        toReturn.add(CC.translate("&cHost: &r" + LMS.getName()));
+        toReturn.add(CC.translate("&cKit: &r" + kit.getName()));
 
         if (LMS.isWaiting()) {
-            toReturn.add("&bPlayers: &r" + LMS.getEventPlayers().size() + "/" + getMaxPlayers());
+            toReturn.add("&cPlayers: &r" + LMS.getEventPlayers().size() + "/" + getMaxPlayers());
             toReturn.add("");
 
             if (LMS.getCooldown() == null) {
@@ -81,8 +81,8 @@ public class LMS {
                 toReturn.add(CC.translate("&fStarting in " + remaining + "s"));
             }
         } else {
-            toReturn.add("&bPlayers: &r" + LMS.getRemainingPlayers().size() + "/" + LMS.getTotalPlayers());
-            toReturn.add("&bDuration: &r" + LMS.getRoundDuration());
+            toReturn.add("&cPlayers: &r" + LMS.getRemainingPlayers().size() + "/" + LMS.getTotalPlayers());
+            toReturn.add("&cDuration: &r" + LMS.getRoundDuration());
         }
         toReturn.add(CC.MENU_BAR);
 
@@ -150,8 +150,8 @@ public class LMS {
 
         eventPlayers.put(player.getUniqueId(), new LMSPlayer(player));
 
-        broadcastMessage(CC.AQUA + player.getName() + CC.GRAY + " has joined the &bLMS Event&8! &8(&b" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-        player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &bLMS Event&8!"));
+        broadcastMessage(CC.RED + player.getName() + CC.GRAY + " has joined the &cLMS Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
+        player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &cLMS Event&8!"));
         onJoin(player);
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -183,8 +183,8 @@ public class LMS {
         eventPlayers.remove(player.getUniqueId());
 
         if (state == LMSState.WAITING) {
-            broadcastMessage(CC.AQUA + player.getName() + CC.GRAY + " left the &bLMS Event&8! &8(&b" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-            player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &bLMS Event&8!"));
+            broadcastMessage(CC.RED + player.getName() + CC.GRAY + " left the &cLMS Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
+            player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &cLMS Event&8!"));
         }
 
         onLeave(player);
@@ -194,7 +194,7 @@ public class LMS {
         profile.setLms(null);
         profile.refreshHotbar();
 
-        Essentials.teleportToSpawn(player);
+        profile.teleportToSpawn();
 
         new BukkitRunnable() {
             @Override
@@ -237,9 +237,9 @@ public class LMS {
             Bukkit.broadcastMessage(EVENT_PREFIX + CC.RED + "The LMS events has been canceled.");
             Bukkit.broadcastMessage(CC.GRAY + "");
         } else {
-            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "LMS Event" + CC.GRAY + "!");
-            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "LMS Event" + CC.GRAY + "!");
-            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "LMS Event" + CC.GRAY + "!");
+            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "LMS Event" + CC.GRAY + "!");
+            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "LMS Event" + CC.GRAY + "!");
+            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "LMS Event" + CC.GRAY + "!");
         }
         placedBlocks.forEach(location -> location.getBlock().setType(Material.AIR));
         for (LMSPlayer LMSPlayer : eventPlayers.values()) {
@@ -250,7 +250,7 @@ public class LMS {
                 profile.setState(ProfileState.IN_LOBBY);
                 profile.setLms(null);
                 profile.refreshHotbar();
-                Essentials.teleportToSpawn(player);
+                profile.teleportToSpawn();
             }
         }
 
@@ -287,11 +287,11 @@ public class LMS {
         List<String> strings=new ArrayList<>();
         strings.add(CC.translate(" "));
         strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
-        strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&b&l[LMS Event]"));
-        strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + ""));
-        strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&fA &bLMS &fevent is being hosted by &b" + this.host.getUsername()));
-        strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
-        strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
+        strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&c&l[LMS Event]"));
+        strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + ""));
+        strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&fA &cLMS &fevent is being hosted by &c" + this.host.getUsername()));
+        strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
+        strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
         strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
         strings.add(CC.translate(" "));
         for ( String string : strings ) {
@@ -340,7 +340,7 @@ public class LMS {
         Profile profile = Profile.getByUuid(player.getUniqueId());
 
         if (killer != null) {
-            broadcastMessage("&b" + player.getName() + "&7 was eliminated by &b" + killer.getName() + "&7!");
+            broadcastMessage("&c" + player.getName() + "&7 was eliminated by &c" + killer.getName() + "&7!");
         }
 
 
@@ -412,6 +412,6 @@ public class LMS {
         profile.refreshHotbar();
         profile.handleVisibility();
 
-        Essentials.teleportToSpawn(player);
+        profile.teleportToSpawn();
     }
 }

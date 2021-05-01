@@ -13,16 +13,12 @@ public class CancelMatchCommand {
             player.sendMessage(CC.translate("&7That player doesn't exist!"));
             return;
         }
-        Profile profile = Profile.getByUuid(target);
+        Profile profile = Profile.getByPlayer(target);
         if (!profile.isInFight()) {
             player.sendMessage(CC.translate("&7That player is not in a fight!"));
             return;
         }
-        if (profile.getMatch() == null) {
-            player.sendMessage(CC.translate("&7That player is not in a fight!"));
-            return;
-        }
-        profile.getMatch().end();
-        player.sendMessage(CC.translate("&7Successfully cancelled &b" + profile.getName() + "'s &7Match!"));
+        profile.getMatch().onEnd();
+        player.sendMessage(CC.translate("&7Successfully cancelled &c" + profile.getName() + "'s &7Match!"));
     }
 }

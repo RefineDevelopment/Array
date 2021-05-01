@@ -12,9 +12,9 @@ import org.bukkit.entity.Player;
 public class KitListCommand {
 
 	public void execute(CommandSender player) {
-		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b&m--------&7&m" + StringUtils.repeat("-", 37) + "&b&m--------"));
-		player.sendMessage(CC.translate("&bArray &7» All Kits"));
-		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b&m--------&7&m" + StringUtils.repeat("-", 37) + "&b&m--------"));
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&m--------&7&m" + StringUtils.repeat("-", 37) + "&c&m--------"));
+		player.sendMessage(CC.translate("&cArray &7» All Kits"));
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&m--------&7&m" + StringUtils.repeat("-", 37) + "&c&m--------"));
 		for ( Kit kit : Kit.getKits() ) {
 			if (kit == null) {
 				player.sendMessage(CC.translate(""));
@@ -24,6 +24,6 @@ public class KitListCommand {
 				player.sendMessage(CC.translate(" • " + (kit.isEnabled() ? CC.GREEN : CC.RED) + kit.getName() + (kit.getGameRules().isRanked() ? " &7[&aRanked&7]" : " &7[&eNot-Ranked&7]")));
 			}
 		}
-		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b&m--------&7&m" + StringUtils.repeat("-", 37) + "&b&m--------"));
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&m--------&7&m" + StringUtils.repeat("-", 37) + "&c&m--------"));
 	}
 }

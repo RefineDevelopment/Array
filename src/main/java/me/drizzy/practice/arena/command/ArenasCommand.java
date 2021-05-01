@@ -11,9 +11,9 @@ import org.bukkit.command.CommandSender;
 public class ArenasCommand
 {
     public void execute(CommandSender player) {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b&m--------&7&m" + StringUtils.repeat("-", 37) + "&b&m--------"));
-        player.sendMessage(CC.translate( "&bArray &7» All Arenas"));
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b&m--------&7&m" + StringUtils.repeat("-", 37) + "&b&m--------"));
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&m--------&7&m" + StringUtils.repeat("-", 37) + "&c&m--------"));
+        player.sendMessage(CC.translate( "&cArray &7» All Arenas"));
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&m--------&7&m" + StringUtils.repeat("-", 37) + "&c&m--------"));
         if (Arena.getArenas().isEmpty()) {
             player.sendMessage("");
             player.sendMessage(CC.GRAY + CC.ITALIC + "There are no arenas setup.");
@@ -34,6 +34,6 @@ public class ArenasCommand
             }
                 player.sendMessage(CC.DARK_GRAY + " • " + (arena.isSetup() ? CC.GREEN : CC.RED) + arena.getName() + CC.translate((arena.isActive() ? " &8[&eIn-Match&8]" : " &8[&aFree&8]") + " &8[&7" + type + "&8]"));
         }
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b&m--------&7&m" + StringUtils.repeat("-", 37) + "&b&m--------"));
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&m--------&7&m" + StringUtils.repeat("-", 37) + "&c&m--------"));
     }
 }

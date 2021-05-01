@@ -15,7 +15,7 @@ public class SumoKnockbackCommand {
           }
           else {
               Array.getInstance().getSumoManager().setSumoKnockbackProfile(kb);
-              player.sendMessage(CC.GREEN + "Successfully set the nms profile!");
+              player.sendMessage(CC.GREEN + "Successfully set the knockback profile!");
           }
     }
 }

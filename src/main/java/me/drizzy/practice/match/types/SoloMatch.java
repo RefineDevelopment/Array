@@ -1,61 +1,54 @@
 package me.drizzy.practice.match.types;
 
+import lombok.Getter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
+import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.MatchState;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.nametags.NametagHandler;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.queue.Queue;
-import me.drizzy.practice.queue.QueueType;
+import me.drizzy.practice.enums.QueueType;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.other.TaskUtil;
-import me.drizzy.practice.array.essentials.Essentials;
-import org.bukkit.potion.PotionEffectType;
-import me.drizzy.practice.kit.Kit;
-import me.drizzy.practice.util.other.PlayerUtil;
-import me.drizzy.practice.util.elo.EloUtil;
 import me.drizzy.practice.util.chat.ChatComponentBuilder;
-import me.drizzy.practice.util.nametag.NameTags;
-import lombok.Getter;
+import me.drizzy.practice.util.elo.EloUtil;
+import me.drizzy.practice.util.other.PlayerUtil;
+import me.drizzy.practice.util.other.TaskUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 @Getter
 public class SoloMatch extends Match {
 
     private final TeamPlayer playerA;
     private final TeamPlayer playerB;
-    private final int playerARoundWins;
-    private final int playerBRoundWins;
 
-    public SoloMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType, int playerARoundWins, int playerBRoundWins) {
+    public SoloMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
         super(queue, kit, arena, queueType);
 
         this.playerA = playerA;
         this.playerB = playerB;
-        this.playerARoundWins = playerARoundWins;
-        this.playerBRoundWins = playerBRoundWins;
     }
 
     @Override
     public boolean isSoloMatch() {
         return true;
-    }
-
-    @Override
-    public boolean isSumoTeamMatch() {
-        return false;
     }
 
     @Override
@@ -70,11 +63,6 @@ public class SoloMatch extends Match {
 
     @Override
     public boolean isHCFMatch() {
-        return false;
-    }
-
-    @Override
-    public boolean isSumoMatch() {
         return false;
     }
 
@@ -96,7 +84,7 @@ public class SoloMatch extends Match {
 
         PlayerUtil.reset(player);
 
-        if (getKit().getGameRules().isStickSpawn() || getKit().getGameRules().isSumo()) {
+        if (getKit().getGameRules().isStickSpawn() || getKit().getGameRules().isSumo() || getKit().getGameRules().isParkour()) {
             PlayerUtil.denyMovement(player);
         }
 
@@ -109,7 +97,7 @@ public class SoloMatch extends Match {
 
         if (getKit().getGameRules().isCombo()) {
             player.setMaximumNoDamageTicks(0);
-            player.setNoDamageTicks(3);
+            player.setNoDamageTicks(2);
         }
 
         if (getKit().getGameRules().isInfiniteSpeed()) {
@@ -134,12 +122,8 @@ public class SoloMatch extends Match {
             teamPlayer.setParkourCheckpoint(spawn);
         }
 
-        NameTags.color(player, this.getOpponentPlayer(player), org.bukkit.ChatColor.RED, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
-    }
-
-    @Override
-    public void cleanPlayer(Player player) {
-
+        NametagHandler.reloadPlayer(player);
+        NametagHandler.reloadOthersFor(player);
     }
 
     @Override
@@ -195,7 +179,6 @@ public class SoloMatch extends Match {
                         Player opponent = getOpponentPlayer(player);
 
                         if (player != null) {
-                            NameTags.reset(player, opponent);
 
                             player.setFireTicks(0);
                             player.updateInventory();
@@ -203,15 +186,14 @@ public class SoloMatch extends Match {
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
-                            NameTags.reset(player, teamPlayer.getPlayer());
-                            TaskUtil.runSync(profile::refreshHotbar);
+                            profile.refreshHotbar();
                             profile.handleVisibility();
                             Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
                             if (opponent != null) {
                                 profile.setRematchData(new ProfileRematchData(rematchKey, player.getUniqueId(),
-                                        opponent.getUniqueId(), getKit(), getArena()));
+                                opponent.getUniqueId(), getKit(), getArena()));
                             }
-                            Essentials.teleportToSpawn(player);
+                            profile.teleportToSpawn();
                         }
                     }
                 }
@@ -232,7 +214,7 @@ public class SoloMatch extends Match {
         inventoriesBuilder.setCurrentHoverEvent(getHoverEvent(losingTeamPlayer)).setCurrentClickEvent(getClickEvent(losingTeamPlayer));
 
         List<BaseComponent[]> components = new ArrayList<>();
-        components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7(Click name to view inventory)").create());
+        components.add(new ChatComponentBuilder("").parse("&c&lMatch Details &7(Click name to view inventory)").create());
         components.add(inventoriesBuilder.create());
 
 
@@ -270,7 +252,7 @@ public class SoloMatch extends Match {
         StringBuilder builder = new StringBuilder();
 
         if (!(getSpectators().size() <= 0)) {
-            ArrayList<Player> specs = new ArrayList<>(getSpectators());
+            List<Player> specs = new ArrayList<>(getSpectators());
             int i = 0;
             for (Player spectator : getSpectators()) {
                 if (getSpectators().size() >= 1) {
@@ -289,7 +271,7 @@ public class SoloMatch extends Match {
                 }
             }
             if (specs.size() >= 1) {
-                components.add(new ChatComponentBuilder("").parse("&bSpectators (" + specs.size() + "): &7" + builder.substring(0, builder.length())).create());
+                components.add(new ChatComponentBuilder("").parse("&cSpectators (" + specs.size() + "): &7" + builder.substring(0, builder.length())).create());
             }
         }
 
@@ -466,27 +448,6 @@ public class SoloMatch extends Match {
     }
 
     @Override
-    public int getTotalRoundWins() {
-        return playerARoundWins + playerBRoundWins;
-    }
-
-    @Override
-    public int getRoundsNeeded(TeamPlayer teamPlayer) {
-        if (playerA.equals(teamPlayer)) {
-            return 3 - playerARoundWins;
-        } else if (playerB.equals(teamPlayer)) {
-            return 3 - playerBRoundWins;
-        } else {
-            return -1;
-        }
-    }
-
-    @Override
-    public int getRoundsNeeded(Team team) {
-        throw new UnsupportedOperationException("Cannot getInstance team round wins from SoloMatch");
-    }
-
-    @Override
     public void onDeath(Player deadPlayer, Player killerPlayer) {
             TeamPlayer roundLoser = getTeamPlayer(deadPlayer);
             TeamPlayer roundWinner = getOpponentTeamPlayer(deadPlayer);
@@ -497,13 +458,13 @@ public class SoloMatch extends Match {
 
             for (Player otherPlayer : getPlayersAndSpectators()) {
                 Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
-                profile.handleVisibility(otherPlayer, deadPlayer);
+                TaskUtil.runLater(() -> profile.handleVisibility(otherPlayer, deadPlayer), 10L);
             }
     }
 
     @Override
     public void onRespawn(Player player) {
-        Essentials.teleportToSpawn(player);
+        Profile.getByPlayer(player).teleportToSpawn();
     }
 
     @Override
@@ -515,7 +476,7 @@ public class SoloMatch extends Match {
         if (playerA.getUuid().equals(viewer.getUniqueId()) || playerB.getUuid().equals(viewer.getUniqueId())) {
             return org.bukkit.ChatColor.RED;
         } else {
-            return org.bukkit.ChatColor.AQUA;
+            return org.bukkit.ChatColor.RED;
         }
     }
 }

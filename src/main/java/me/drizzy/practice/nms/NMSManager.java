@@ -45,7 +45,6 @@ public class NMSManager {
 
     }
 
-
     public boolean check(String string) {
         try {
             Class.forName(string);

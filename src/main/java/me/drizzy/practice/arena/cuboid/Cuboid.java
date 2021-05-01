@@ -197,7 +197,7 @@ public class Cuboid implements Iterable<Location> {
 	/**
 	 * Get the Blocks at the four corners of the Cuboid, without respect to y-value
 	 *
-	 * @return array of Block objects representing the Cuboid corners
+	 * @return essentials of Block objects representing the Cuboid corners
 	 */
 	public Location[] getCorners() {
 		Location[] res = new Location[4];

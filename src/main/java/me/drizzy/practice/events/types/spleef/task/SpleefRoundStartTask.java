@@ -14,7 +14,7 @@ public class SpleefRoundStartTask extends SpleefTask {
 	@Override
 	public void onRun() {
 		if (getTicks() >= 3) {
-			this.getSpleef().broadcastMessage(CC.AQUA + "The round has started!");
+			this.getSpleef().broadcastMessage(CC.RED + "The round has started!");
 			this.getSpleef().setEventTask(null);
 			this.getSpleef().setState(SpleefState.ROUND_FIGHTING);
 
@@ -22,7 +22,7 @@ public class SpleefRoundStartTask extends SpleefTask {
 		} else {
 			int seconds = getSeconds();
 
-			this.getSpleef().broadcastMessage("&b" + seconds + "...");
+			this.getSpleef().broadcastMessage("&c" + seconds + "...");
 		}
 	}
 

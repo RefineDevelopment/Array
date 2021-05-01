@@ -32,14 +32,14 @@ public class KitLeaderboardsButton extends Button {
         for (final LeaderboardsAdapter leaderboardsAdapter : this.kit.getRankedEloLeaderboards()) {
             Profile profile = Profile.getByUuid(ArrayCache.getUUID(leaderboardsAdapter.getName()));
             if (position == 1 || position == 2 || position == 3) {
-                lore.add(" &a" + position + " &7&l| &b" + leaderboardsAdapter.getName() + "&7: &f" + leaderboardsAdapter.getElo() + " &7(" + ChatColor.stripColor(profile.getEloLeague()) + "&7)");
+                lore.add(" &a" + position + " &7&l| &c" + leaderboardsAdapter.getName() + "&7: &f" + leaderboardsAdapter.getElo() + " &7(" + ChatColor.stripColor(profile.getEloLeague()) + "&7)");
             } else {
-                lore.add(" &7" + position + " &7&l| &b" + leaderboardsAdapter.getName() + "&7: &f" + leaderboardsAdapter.getElo() + " &7(" + ChatColor.stripColor(profile.getEloLeague()) + "&7)");
+                lore.add(" &7" + position + " &7&l| &c" + leaderboardsAdapter.getName() + "&7: &f" + leaderboardsAdapter.getElo() + " &7(" + ChatColor.stripColor(profile.getEloLeague()) + "&7)");
             }
             ++position;
         }
         lore.add(CC.MENU_BAR);
-        return new ItemBuilder(this.kit.getDisplayIcon()).name("&b" + this.kit.getName() + " &7&l| &fTop 10").lore(lore).build();
+        return new ItemBuilder(this.kit.getDisplayIcon()).name("&c" + this.kit.getName() + " &7&l| &fTop 10").lore(lore).build();
     }
 }
 

@@ -15,7 +15,7 @@ public class BracketsJoinCommand {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		Brackets activeBrackets = Array.getInstance().getBracketsManager().getActiveBrackets();
 
-		if (profile.isBusy(player) || profile.getParty() != null) {
+		if (profile.isBusy() || profile.getParty() != null) {
 			player.sendMessage(CC.RED + "You cannot join the brackets right now.");
 			return;
 		}

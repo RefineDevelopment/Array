@@ -9,6 +9,6 @@ import org.bukkit.command.CommandSender;
 public class BroadcastCommand
 {
     public void execute(final CommandSender sender, final String message) {
-        Bukkit.broadcastMessage(ChatColor.AQUA + message);
+        Bukkit.broadcastMessage(ChatColor.RED + message);
     }
 }

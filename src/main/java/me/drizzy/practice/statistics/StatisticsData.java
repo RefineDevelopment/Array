@@ -59,7 +59,7 @@ public class StatisticsData {
                 if (loadout != null) {
                     final ItemStack itemStack = new ItemStack(Material.ENCHANTED_BOOK);
                     final ItemMeta itemMeta = itemStack.getItemMeta();
-                    itemMeta.setDisplayName(CC.AQUA + loadout.getCustomName() + CC.GRAY + " (Right-Click)");
+                    itemMeta.setDisplayName(CC.translate(loadout.getCustomName() + CC.GRAY + " (Right-Click)"));
                     itemMeta.setLore(Arrays.asList(ChatColor.GRAY + "Right click this book", ChatColor.GRAY + "to receive the kit."));
                     itemStack.setItemMeta(itemMeta);
 

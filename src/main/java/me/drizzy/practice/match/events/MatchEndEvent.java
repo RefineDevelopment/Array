@@ -6,8 +6,9 @@ import org.bukkit.event.HandlerList;
 
 @Getter
 public class MatchEndEvent extends MatchEvent {
+
     private boolean cancelled = false;
-    private static HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
     public MatchEndEvent(final Match match) {
         super(match);

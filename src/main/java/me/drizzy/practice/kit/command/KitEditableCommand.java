@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class KitEditableCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7That kit does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That kit does not exist."));
 } else {
             if (kit.getGameRules().isEditable()) {
                 kit.getGameRules().setEditable(false);
@@ -18,7 +18,7 @@ public class KitEditableCommand {
                 kit.getGameRules().setEditable(true);
             }
             kit.save();
-            player.sendMessage((CC.translate("&8[&b&lArray&8] &a")) + "Kit set editable mode to " + (kit.getGameRules().isBuild() ? "true!" : "false!"));
+            player.sendMessage((CC.translate("&8[&c&lArray&8] &a")) + "Kit set editable mode to " + (kit.getGameRules().isBuild() ? "true!" : "false!"));
         }
     }
 }

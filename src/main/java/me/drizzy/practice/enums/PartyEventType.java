@@ -4,9 +4,9 @@ import java.beans.ConstructorProperties;
 import org.bukkit.Material;
 
 public enum PartyEventType {
-    FFA("&bFFA", Material.DIAMOND),
-    SPLIT("&bSplit", Material.LEASH),
-    HCF("&bHCF", Material.GOLDEN_APPLE);
+    FFA("&cFFA", Material.DIAMOND),
+    SPLIT("&cSplit", Material.LEASH),
+    HCF("&cHCF", Material.GOLDEN_APPLE);
 
     private final String name;
     private final Material material;

@@ -7,11 +7,13 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
+@Getter
+@Setter
 public class SpleefPlayer {
 
-	@Getter private final UUID uuid;
-	@Getter private final String username;
-	@Getter @Setter private SpleefPlayerState state = SpleefPlayerState.WAITING;
+	private final UUID uuid;
+	private final String username;
+	private SpleefPlayerState state = SpleefPlayerState.WAITING;
 
 	public SpleefPlayer(Player player) {
 		this.uuid = player.getUniqueId();

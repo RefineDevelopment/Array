@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 public class ArenaSetDuplicateCommand {
     public void execute(Player player, @CPL("arena")Arena arena, @CPL("[1|2]") Integer pos, @CPL("Duplicate Arena Number") Integer number) {
         if (arena == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7An arena with that name does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7An arena with that name does not exist."));
             return;
         }
         final Arena darena = ((StandaloneArena)arena).getDuplicates().get(number - 2);
@@ -28,7 +28,7 @@ public class ArenaSetDuplicateCommand {
             else if (pos.equals(2)) {
                 darena.setSpawn2(loc2);
             }
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully updated the position of &b" + arena.getName() + "&8&o (&7&oPosition: " + pos + "&8&o) (&7&oDupe Arena #" + (number - 1) + "&8&o)"));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully updated the position of &c" + arena.getName() + "&8&o (&7&oPosition: " + pos + "&8&o) (&7&oDupe Arena #" + (number - 1) + "&8&o)"));
             arena.save();
         }
     }

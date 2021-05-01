@@ -2,6 +2,8 @@ package me.drizzy.practice;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +11,7 @@ import me.allen.ziggurat.Ziggurat;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.arena.ArenaTypeAdapter;
 import me.drizzy.practice.arena.ArenaTypeTypeAdapter;
-import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.divisions.Divisions;
 import me.drizzy.practice.enums.ArenaType;
 import me.drizzy.practice.events.types.brackets.BracketsManager;
@@ -25,6 +27,8 @@ import me.drizzy.practice.leaderboards.external.LeaderboardPlaceholders;
 import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.kit.KitTypeAdapter;
+import me.drizzy.practice.nametags.NametagHandler;
+import me.drizzy.practice.nametags.provider.NametagEngine;
 import me.drizzy.practice.nms.NMSManager;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.party.Party;
@@ -37,6 +41,7 @@ import me.drizzy.practice.register.RegisterCommands;
 import me.drizzy.practice.register.RegisterListeners;
 import me.drizzy.practice.scoreboard.Scoreboard;
 import me.drizzy.practice.tablist.Tab;
+import me.drizzy.practice.tablist.TabManager;
 import me.drizzy.practice.util.other.Description;
 import me.drizzy.practice.util.other.EntityHider;
 import me.drizzy.practice.util.inventory.InventoryUtil;
@@ -56,6 +61,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -63,17 +69,13 @@ import java.util.concurrent.Executors;
 @Getter
 public class Array extends JavaPlugin {
 
-    @Getter private static Array instance;
+    private static Array instance;
 
     /*
      * All ours Configs
      */
-    private BasicConfigurationFile mainConfig;
-    private BasicConfigurationFile arenasConfig;
-    private BasicConfigurationFile kitsConfig;
-    private BasicConfigurationFile eventsConfig;
-    private BasicConfigurationFile messagesConfig;
-    private BasicConfigurationFile divisionsConfig;
+    private BasicConfigurationFile mainConfig, arenasConfig, kitsConfig, eventsConfig,
+            messagesConfig, scoreboardConfig, tablistConfig, divisionsConfig, hotbarConfig;
 
     /*
      * All ours Async Threads
@@ -86,8 +88,8 @@ public class Array extends JavaPlugin {
      * Manager for ranks from APIs
      */
     @Setter private RankType rankManager;
-
     private Kit hcfKit;
+    private Hotbar hotbar;
 
     /*
      * Mongo Database
@@ -99,6 +101,7 @@ public class Array extends JavaPlugin {
      */
     private Aether scoreboard;
     private Ziggurat tab;
+    private NametagHandler nametag;
 
     /*
      * All Event Managers
@@ -120,6 +123,7 @@ public class Array extends JavaPlugin {
      * Miscellaneous Managers
      */
     private NMSManager NMSManager;
+    private TabManager tabManager;
     private HCFManager HCFManager;
     private EffectRestorer effectRestorer;
 
@@ -132,6 +136,9 @@ public class Array extends JavaPlugin {
     private EntityHider entityHider;
     private boolean disabling = false;
 
+    public static Array getInstance() {
+        return instance;
+    }
 
     @Override
     public void onEnable() {
@@ -146,7 +153,6 @@ public class Array extends JavaPlugin {
         this.mongoThread = Executors.newFixedThreadPool(1);
         this.taskThread = Executors.newFixedThreadPool(1);
 
-
         /*
          * Main Configs
          */
@@ -154,10 +160,19 @@ public class Array extends JavaPlugin {
         arenasConfig = new BasicConfigurationFile(this, "arenas");
         kitsConfig = new BasicConfigurationFile(this, "kits");
         eventsConfig = new BasicConfigurationFile(this, "events");
-        messagesConfig = new BasicConfigurationFile(this, "messages");
+        hotbarConfig = new BasicConfigurationFile(this, "hotbar");
+        messagesConfig = new BasicConfigurationFile(this, "lang");
+        tablistConfig = new BasicConfigurationFile(this, "tablist");
+        scoreboardConfig = new BasicConfigurationFile(this, "scoreboard");
         divisionsConfig = new BasicConfigurationFile(this, "divisions");
 
         this.loadMessages();
+
+        essentials = new Essentials();
+        essentials.load();
+
+        tabManager = new TabManager();
+        tabManager.load();
 
         //To Prevent Stealing and Renaming (Skidding)
         if (!Description.getAuthor().contains("Drizzy")) {
@@ -183,9 +198,10 @@ public class Array extends JavaPlugin {
 
         this.mainThread.execute(() -> {
             registerAll();
-            RegisterCommands.register();
+            Array.logger("&7Registering Commands...");
+            TaskUtil.runLater(RegisterCommands::register, 5L);
 
-            this.divisionsManager = new Divisions();
+            divisionsManager = new Divisions();
 
             sumoManager = new SumoManager();
             bracketsManager = new BracketsManager();
@@ -195,20 +211,21 @@ public class Array extends JavaPlugin {
             gulagManager = new GulagManager();
             OITCManager = new OITCManager();
 
-            if (mainConfig.getBoolean("Array.Core-Hook")) {
+            if (essentials.getMeta().isCoreHookEnabled()) {
                 new Rank();
             } else {
                 setRankManager(new DefaultProvider());
             }
+
             this.entityHider = EntityHider.enable();
             this.effectRestorer = new EffectRestorer(this);
             this.HCFManager = new HCFManager(this);
 
-            if (mainConfig.getBoolean("Array.HCF-Enabled")) {
+            if (essentials.getMeta().isHCFEnabled()) {
                 //Create HCF's Duel Kit
                 this.hcfKit = new Kit("HCFTeamFight");
-                hcfKit.setDisplayIcon(new ItemBuilder(Material.BEACON).clearEnchantments().clearFlags().build());
-                hcfKit.save();
+                this.hcfKit.setDisplayIcon(new ItemBuilder(Material.BEACON).clearEnchantments().clearFlags().build());
+                this.hcfKit.save();
             }
 
             Arrays.asList(Material.WORKBENCH,
@@ -230,13 +247,17 @@ public class Array extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        this.mainThread.execute(() -> {
+        mainThread.execute(() -> {
             //Stop all matches and Remove the placed Block
             Match.cleanup();
             //Save Everything before disabling to prevent data loss
             Kit.getKits().forEach(Kit::save);
             Arena.getArenas().forEach(Arena::save);
             Profile.getProfiles().values().forEach(Profile::save);
+            //Save our Values to Config
+            getTabManager().save();
+            getEssentials().save();
+            getHotbar().save();
             //Save our Event Setup
             getBracketsManager().save();
             getLMSManager().save();
@@ -263,12 +284,12 @@ public class Array extends JavaPlugin {
             return;
         }
 
-        logger("&bLoading Profiles!");
+        logger("&7Loading Profiles!");
         Profile.preload();
         logger("&aLoaded Profiles!");
 
         try {
-            logger("&bLoading Kits!");
+            logger("&7Loading Kits!");
             Kit.preload();
             logger("&aLoaded Kits!");
         } catch (YAMLException e) {
@@ -282,7 +303,7 @@ public class Array extends JavaPlugin {
             return;
         }
         try {
-            logger("&bLoading Arenas!");
+            logger("&7Loading Arenas!");
             Arena.preload();
         } catch (YAMLException e) {
             logger(CC.CHAT_BAR);
@@ -294,11 +315,12 @@ public class Array extends JavaPlugin {
             this.shutDown();
             return;
         }
-        new Hotbar();
+
+        hotbar = new Hotbar();
+        Hotbar.preload();
         Match.preload();
         Party.preload();
-        TaskUtil.runAsync(() -> NMSManager= new NMSManager());
-        essentials = new Essentials();
+        TaskUtil.runAsync(() -> NMSManager = new NMSManager());
 
         honcho.registerTypeAdapter(Arena.class, new ArenaTypeAdapter());
         honcho.registerTypeAdapter(ArenaType.class, new ArenaTypeTypeAdapter());
@@ -310,16 +332,23 @@ public class Array extends JavaPlugin {
 
         this.scoreboard = new Aether(this, new Scoreboard());
         this.scoreboard.getOptions().hook(true);
+        logger("&7Setting up Scoreboard");
 
-        if (mainConfig.getBoolean("Tab.Enabled")) {
+        if (essentials.getMeta().isTabEnabled()) {
+            logger("&7Setting up Tablist");
             this.tab = new Ziggurat(this, new Tab());
         }
+
+        this.nametag = new NametagHandler();
+        this.nametag.preLoad();
+        this.nametag.setEngine(new NametagEngine());
+        logger("&7Setting up Nametags");
 
         new QueueThread().start();
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new LeaderboardPlaceholders().register();
-            logger("&bFound PlaceholderAPI, Registering Expansions....");
+            logger("&7Found PlaceholderAPI, Registering Expansions....");
         } else {
             logger("&cPlaceholderAPI was NOT found, Holograms will NOT work!");
         }
@@ -328,13 +357,31 @@ public class Array extends JavaPlugin {
     }
 
     public static void logger(String message) {
-        String msg = CC.translate("&8[&bArray&8] &r" + message);
+        String msg = CC.translate("&8[&cArray&8] &r" + message);
         Bukkit.getConsoleSender().sendMessage(msg);
     }
 
     private void preLoadMongo() {
-        MongoClient client = new MongoClient(new MongoClientURI(mainConfig.getString("Mongo.URL")));
-        this.mongoDatabase = client.getDatabase(mainConfig.getString("Mongo.Database"));
+        if (mainConfig.getBoolean("MONGO.URI-MODE")) {
+            MongoClient client = new MongoClient(new MongoClientURI(mainConfig.getString("MONGO.URI.CONNECTION_STRING")));
+            this.mongoDatabase = client.getDatabase(mainConfig.getString("MONGO.URI.DATABASE"));
+        } else {
+            MongoClient client;
+            if (mainConfig.getBoolean("MONGO.NORMAL.AUTHENTICATION.ENABLED")) {
+                MongoCredential credential = MongoCredential.createCredential(
+                        mainConfig.getString("MONGO.NORMAL.AUTHENTICATION.USERNAME"),
+                        mainConfig.getString("MONGO.NORMAL.DATABASE"),
+                        mainConfig.getString("MONGO.NORMAL.AUTHENTICATION.PASSWORD").toCharArray()
+                );
+
+                client = new MongoClient(new ServerAddress(mainConfig.getString("MONGO.NORMAL.HOST"),
+                        mainConfig.getInteger("MONGO.NORMAL.PORT")), Collections.singletonList(credential));
+            } else {
+                client = new MongoClient(mainConfig.getString("MONGO.NORMAL.HOST"),
+                        mainConfig.getInteger("MONGO.NORMAL.PORT"));
+            }
+            this.mongoDatabase = client.getDatabase(mainConfig.getString("MONGO.NORMAL.DATABASE"));
+        }
     }
 
     public void shutDown() {
@@ -350,10 +397,9 @@ public class Array extends JavaPlugin {
         }
 
         Arrays.stream(Locale.values()).forEach(language -> {
-            if (this.messagesConfig.getConfiguration().getString(language.getPath()) == null) {
-                if (language.getListValue() != null && this.messagesConfig.getConfiguration().getStringList(language.getPath()) == null) {
+            if (this.messagesConfig.getConfiguration().getString(language.getPath()) == null || this.messagesConfig.getConfiguration().getStringList(language.getPath()) == null) {
+                if (language.getListValue() != null) {
                     this.messagesConfig.getConfiguration().set(language.getPath(), language.getListValue());
-                    return;
                 }
                 if (language.getValue() != null) {
                     this.messagesConfig.getConfiguration().set(language.getPath(), language.getValue());
@@ -363,8 +409,6 @@ public class Array extends JavaPlugin {
 
         try {
             this.messagesConfig.getConfiguration().save(messagesConfig.getFile());
-        } catch (Exception e) {
-            //
-        }
+        } catch (Exception ignored) {}
     }
 }

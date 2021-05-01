@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class KitTimedCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7That kit does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That kit does not exist."));
         } else {
             if (kit.getGameRules().isTimed()) {
                 kit.getGameRules().setTimed(false);
@@ -18,7 +18,7 @@ public class KitTimedCommand {
                 kit.getGameRules().setTimed(true);
             }
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated timed mode for &b" + kit.getName() +  " &7to &b" + (kit.getGameRules().isTimed() ? "true!" : "false!")));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Updated timed mode for &c" + kit.getName() +  " &7to &c" + (kit.getGameRules().isTimed() ? "true!" : "false!")));
         }
     }
 }

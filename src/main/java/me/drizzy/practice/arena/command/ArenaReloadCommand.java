@@ -16,7 +16,7 @@ public class ArenaReloadCommand {
         Arena.getArenas().clear();
         Arena.preload();
         long et = System.currentTimeMillis();
-        player.sendMessage(CC.translate("&8[&b&lArray&8] &7Arenas were reloaded in &b" + (et - st) + " ms&7."));
+        player.sendMessage(CC.translate("&8[&c&lArray&8] &7Arenas were reloaded in &c" + (et - st) + " ms&7."));
     }
 
 }

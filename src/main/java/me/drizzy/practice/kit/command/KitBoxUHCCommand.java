@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class KitBoxUHCCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {
-            player.sendMessage((CC.translate("&8[&b&lArray&8] &c")) + "Kit does not exist");
+            player.sendMessage((CC.translate("&8[&c&lArray&8] &c")) + "Kit does not exist");
         } else {
             if (kit.getGameRules().isBoxUHC()) {
                 kit.getGameRules().setBoxUHC(false);
@@ -18,8 +18,8 @@ public class KitBoxUHCCommand {
                 kit.getGameRules().setBoxUHC(true);
             }
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated BoxUHC mode for &b" + kit.getName() +  " &7to &b" + (kit.getGameRules().isBoxUHC() ? "true!" : "false!")));
-            player.sendMessage(CC.translate("&8[&bTIP&8] &7Please make the Arena a Barrier Box with Wood filled inside it except on the spawn points!"));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Updated BoxUHC mode for &c" + kit.getName() +  " &7to &c" + (kit.getGameRules().isBoxUHC() ? "true!" : "false!")));
+            player.sendMessage(CC.translate("&8[&cTIP&8] &7Please make the Arena a Barrier Box with Wood filled inside it except on the spawn points!"));
         }
     }
 }

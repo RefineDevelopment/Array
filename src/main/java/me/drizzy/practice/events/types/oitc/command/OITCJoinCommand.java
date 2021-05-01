@@ -15,7 +15,7 @@ public class OITCJoinCommand {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         OITC activeOITC = Array.getInstance().getOITCManager().getActiveOITC();
 
-        if (profile.isBusy(player) || profile.getParty() != null) {
+        if (profile.isBusy() || profile.getParty() != null) {
             player.sendMessage(CC.RED + "You cannot join the OITC right now.");
             return;
         }

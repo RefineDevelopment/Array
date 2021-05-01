@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class KitSetFallDamageCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7That kit does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That kit does not exist."));
         } else {
             if (kit.getGameRules().isDisableFallDamage()) {
                 kit.getGameRules().setDisableFallDamage(false);
@@ -18,7 +18,7 @@ public class KitSetFallDamageCommand {
                 kit.getGameRules().setDisableFallDamage(true);
             }
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated fall-damage for &b" + kit.getName() + " &7to &b" + (kit.getGameRules().isDisableFallDamage() ? "true!" : "false!")));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Updated fall-damage for &c" + kit.getName() + " &7to &c" + (kit.getGameRules().isDisableFallDamage() ? "true!" : "false!")));
         }
     }
 }

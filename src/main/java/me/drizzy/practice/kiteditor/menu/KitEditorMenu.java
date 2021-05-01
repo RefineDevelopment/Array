@@ -40,7 +40,7 @@ public class KitEditorMenu extends Menu {
     @Override
     public String getTitle(Player player) {
         Profile profile = Profile.getByUuid(player.getUniqueId());
-        return "&bEditing &7(" + profile.getKitEditor().getSelectedKit().getName() + ")";
+        return "&cEditing &7(" + profile.getKitEditor().getSelectedKit().getName() + ")";
     }
 
     @Override
@@ -121,7 +121,7 @@ public class KitEditorMenu extends Menu {
             }
 
             return new ItemBuilder(itemStack.clone())
-                    .name(CC.AQUA + BukkitReflection.getItemStackName(itemStack))
+                    .name(CC.RED + BukkitReflection.getItemStackName(itemStack))
                     .lore(CC.GREEN + "This is automatically equipped.")
                     .build();
         }
@@ -136,7 +136,7 @@ public class KitEditorMenu extends Menu {
             Profile profile = Profile.getByUuid(player.getUniqueId());
 
             return new ItemBuilder(Material.NAME_TAG)
-                    .name("&bEditing &r" + profile.getKitEditor().getSelectedKit().getName())
+                    .name("&cEditing &r" + profile.getKitEditor().getSelectedKit().getName())
                     .build();
         }
 
@@ -149,7 +149,7 @@ public class KitEditorMenu extends Menu {
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(Material.STAINED_CLAY)
                     .durability(13)
-                    .name("&b&lClear Inventory")
+                    .name("&c&lClear Inventory")
                     .lore(Arrays.asList(
                             "&7This will clear your inventory",
                             "&7so you can start over."
@@ -178,7 +178,7 @@ public class KitEditorMenu extends Menu {
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(Material.STAINED_CLAY)
                     .durability(7)
-                    .name(CC.RED + CC.BOLD + "&bLoad default kit")
+                    .name(CC.RED + CC.BOLD + "&cLoad default kit")
                     .lore(Arrays.asList(
                             CC.RED + "&7Click this to load the default kit",
                             CC.RED + "&7into the kit editing menu."
@@ -242,7 +242,7 @@ public class KitEditorMenu extends Menu {
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(Material.STAINED_CLAY)
                     .durability(14)
-                    .name("&b&lCancel")
+                    .name("&c&lCancel")
                     .lore(Arrays.asList(
                             "&7Click this to abort editing your kit,",
                             "&7and return to the kit menu."

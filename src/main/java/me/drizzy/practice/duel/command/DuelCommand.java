@@ -29,11 +29,12 @@ public class DuelCommand {
         }
         final Profile senderProfile=Profile.getByUuid(player.getUniqueId());
         final Profile receiverProfile=Profile.getByUuid(target.getUniqueId());
-        if (senderProfile.isBusy(player)) {
+
+        if (senderProfile.isBusy()) {
             player.sendMessage(CC.RED + "You cannot duel anyone right now.");
             return;
         }
-        if (receiverProfile.isBusy(target)) {
+        if (receiverProfile.isBusy()) {
             player.sendMessage(CC.translate(CC.RED + target.getDisplayName()) + CC.RED + " is currently busy.");
             return;
         }

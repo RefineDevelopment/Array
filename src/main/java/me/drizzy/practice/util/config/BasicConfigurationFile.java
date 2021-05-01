@@ -1,10 +1,13 @@
 package me.drizzy.practice.util.config;
 
+import me.drizzy.practice.Array;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class BasicConfigurationFile extends AbstractConfigurationFile {
@@ -50,6 +53,23 @@ public class BasicConfigurationFile extends AbstractConfigurationFile {
 
     public List<String> getStringList(String path) {
         return this.configuration.contains(path) ? this.configuration.getStringList(path) : null;
+    }
+
+    public void reload(){
+        try {
+            getConfiguration().load(file);
+            getConfiguration().save(file);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void save() {
+        try {
+            getConfiguration().save(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public File getFile() {

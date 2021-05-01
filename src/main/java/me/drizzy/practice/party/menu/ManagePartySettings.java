@@ -17,8 +17,8 @@ import java.util.Map;
 import org.bukkit.entity.Player;
 import me.drizzy.practice.util.menu.Menu;
 
-public class ManagePartySettings extends Menu
-{
+public class ManagePartySettings extends Menu {
+
     @Override
     public String getTitle(final Player player) {
         return "&7Party Settings";
@@ -54,31 +54,31 @@ public class ManagePartySettings extends Menu
             ArrayList<String> lore = new ArrayList<>();
             if (this.partyManageType == PartyManageType.LIMIT) {
                 lore.add(CC.MENU_BAR);
-                lore.add("&bCurrent Limit:");
-                lore.add("&8 • &fLimit: &b" + profile.getParty().getLimit());
+                lore.add("&cCurrent Limit:");
+                lore.add("&8 • &fLimit: &c" + profile.getParty().getLimit());
                 lore.add("");
-                lore.add("&8(&bLeft-Click&8) - &7Increase Limit");
-                lore.add("&8(&bRight-Click&8) - &7Decrease Limit");
+                lore.add("&8(&cLeft-Click&8) - &7Increase Limit");
+                lore.add("&8(&cRight-Click&8) - &7Decrease Limit");
                 lore.add(CC.MENU_BAR);
-                return new ItemBuilder(Material.INK_SACK).durability(2).name("&b" + this.partyManageType.getName()).lore(lore).build();
+                return new ItemBuilder(Material.INK_SACK).durability(2).name("&c" + this.partyManageType.getName()).lore(lore).build();
             }
             if (this.partyManageType == PartyManageType.PUBLIC) {
                 lore.add(CC.MENU_BAR);
-                lore.add("&bCurrent State:");
+                lore.add("&cCurrent State:");
                 lore.add("&8 • &fPublic: " + (profile.getParty().isPublic() ? "&aPublic" : "&eInvite Only"));
                 lore.add("");
-                lore.add("&bClick to change party state.");
+                lore.add("&cClick to change party state.");
                 lore.add(CC.MENU_BAR);
-                return new ItemBuilder(Material.CHEST).name("&b" + this.partyManageType.getName()).lore(lore).build();
+                return new ItemBuilder(Material.CHEST).name("&c" + this.partyManageType.getName()).lore(lore).build();
             }
             lore.add(CC.MENU_BAR);
             lore.add("&7Click here to manage your party");
             lore.add("&7members, you can make them either");
             lore.add("&7leader or kick them from the party");
             lore.add("");
-            lore.add("&bClick to change party state.");
+            lore.add("&cClick to change party state.");
             lore.add(CC.MENU_BAR);
-            return new ItemBuilder(Material.SKULL_ITEM).name("&b" + this.partyManageType.getName()).lore(lore).build();
+            return new ItemBuilder(Material.SKULL_ITEM).name("&c" + this.partyManageType.getName()).lore(lore).build();
         }
         
         @Override
@@ -92,7 +92,7 @@ public class ManagePartySettings extends Menu
             }
             if (!player.hasPermission("array.donator")) {
                 player.sendMessage(CC.translate("&7You do not have permission to use this."));
-                player.sendMessage(CC.translate("&7&oPlease upgrading your Rank at &b&ostore.purgemc.club &7"));
+                player.sendMessage(CC.translate("&7&oPlease upgrading your Rank at &c&ostore.purgemc.club &7"));
                 Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
                 player.closeInventory();
                 return;

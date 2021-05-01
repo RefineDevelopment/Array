@@ -26,7 +26,7 @@ public class GulagStartTask extends GulagTask {
 		if (this.getGulag().getPlayers().size() == Gulag.getMaxPlayers() || (getTicks() >= 30 && this.getGulag().getPlayers().size() >= 2)) {
 			if (this.getGulag().getCooldown() == null) {
 				this.getGulag().setCooldown(new Cooldown(11_000));
-				this.getGulag().broadcastMessage("&fThe Gulag will start in &b10 seconds&f...");
+				this.getGulag().broadcastMessage("&fThe Gulag will start in &c10 seconds&f...");
 			} else {
 				if (this.getGulag().getCooldown().hasExpired()) {
 					this.getGulag().setState(GulagState.ROUND_STARTING);

@@ -11,7 +11,7 @@ public class ArenaRemoveCommand {
 
     public void execute(Player player, @CPL("name") String name) {
         if (name == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Please provide a valid name."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Please provide a valid name."));
             return;
         }
         Arena arena = Arena.getByName(name);
@@ -19,7 +19,7 @@ public class ArenaRemoveCommand {
         if (arena != null) {
             arena.delete();
             Arena.getArenas().remove(arena);
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully removed the arena &b" + name));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully removed the arena &c" + name));
         }
     }
 

@@ -1,13 +1,14 @@
 package me.drizzy.practice.enums;
 
-import java.beans.ConstructorProperties;
+import lombok.AllArgsConstructor;
 
-public enum HotbarType
-{
+
+@AllArgsConstructor
+public enum HotbarType {
+
     QUEUE_JOIN_RANKED(null), 
     QUEUE_JOIN_UNRANKED(null), 
-    QUEUE_JOIN_KITPVP(null),
-    QUEUE_LEAVE(null), 
+    QUEUE_LEAVE(null),
     PARTY_EVENTS(null), 
     PARTY_CREATE("party create"), 
     PARTY_DISBAND("party disband"), 
@@ -16,11 +17,9 @@ public enum HotbarType
     PARTY_SETTINGS(null), 
     OTHER_PARTIES(null), 
     PARTY_INFO(null),
-    LEADERBOARDS_MENU(null),
-    SETTINGS_MENU(null),
-    KIT_EDITOR(null), 
+    KIT_EDITOR(null),
+    MAIN_MENU(null),
     SPECTATE_STOP("stopspectating"), 
-    VIEW_INVENTORY(null), 
     EVENT_JOIN("events"),
     SUMO_LEAVE("sumo leave"), 
     BRACKETS_LEAVE("brackets leave"), 
@@ -41,12 +40,7 @@ public enum HotbarType
     ROGUE_KIT(null), 
     ARCHER_KIT(null);
     
-    private String command;
-    
-    @ConstructorProperties({ "command" })
-    private HotbarType(final String command) {
-        this.command = command;
-    }
+    private final String command;
     
     public String getCommand() {
         return this.command;

@@ -7,7 +7,7 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.kiteditor.KitEditRules;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.queue.Queue;
-import me.drizzy.practice.queue.QueueType;
+import me.drizzy.practice.enums.QueueType;
 import me.drizzy.practice.leaderboards.LeaderboardsAdapter;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.inventory.InventoryUtil;
@@ -43,7 +43,7 @@ public class Kit {
 
     public Kit(String name) {
         this.name = name;
-        this.displayName = CC.AQUA + name;
+        this.displayName = CC.RED + name;
         this.displayIcon = new ItemStack(Material.DIAMOND_CHESTPLATE);
         this.knockbackProfile = "default";
     }
@@ -66,7 +66,7 @@ public class Kit {
             String path = "kits." + key;
 
             Kit kit = new Kit(key);
-            kit.setDisplayName(CC.AQUA + kit.getName());
+            kit.setDisplayName(CC.RED + kit.getName());
             kit.setEnabled(config.getBoolean(path + ".enabled"));
             if (config.contains(path + ".display-name")) {
                 kit.setDisplayName(CC.translate(config.getString(path + ".display-name")));
@@ -216,29 +216,31 @@ public class Kit {
 
     public void updateKitLeaderboards() {
         if (!this.getRankedEloLeaderboards().isEmpty()) this.getRankedEloLeaderboards().clear();
+        if (!this.getWinLeaderboards().isEmpty()) this.getWinLeaderboards().clear();
         Array.getInstance().getMongoThread().execute(() -> {
-            for ( Document document : Profile.getCollection().find().sort(Sorts.descending("kitStatistics." + getName() + ".elo")).limit(10).into(new ArrayList<>()) ) {
-                Document kitStatistics=(Document) document.get("kitStatistics");
+            for (Document document : Profile.getCollection().find().sort(Sorts.descending("kitStatistics." + getName() + ".elo")).limit(10).into(new ArrayList<>())) {
+                Document kitStatistics = (Document) document.get("kitStatistics");
                 if (kitStatistics.containsKey(getName())) {
-                    Document kitDocument=(Document) kitStatistics.get(getName());
-                    LeaderboardsAdapter leaderboardsAdapter=new LeaderboardsAdapter();
+                    Document kitDocument = (Document) kitStatistics.get(getName());
+                    LeaderboardsAdapter leaderboardsAdapter= new LeaderboardsAdapter();
                     leaderboardsAdapter.setName((String) document.get("name"));
                     leaderboardsAdapter.setElo((Integer) kitDocument.get("elo"));
+                    rankedEloLeaderboards.removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
                     this.getRankedEloLeaderboards().add(leaderboardsAdapter);
                 }
             }
-            if (!this.getWinLeaderboards().isEmpty()) this.getWinLeaderboards().clear();
-            for ( Document document : Profile.getCollection().find().sort(Sorts.descending("kitStatistics." + getName() + ".unrankedWon")).limit(10).into(new ArrayList<>()) ) {
-                Document kitStatistics=(Document) document.get("kitStatistics");
+            for (Document document : Profile.getCollection().find().sort(Sorts.descending("kitStatistics." + getName() + ".won")).limit(10).into(new ArrayList<>())) {
+                Document kitStatistics = (Document) document.get("kitStatistics");
                 if (kitStatistics.containsKey(getName())) {
-                    Document kitDocument=(Document) kitStatistics.get(getName());
-                    LeaderboardsAdapter leaderboardsAdapter=new LeaderboardsAdapter();
+                    Document kitDocument = (Document) kitStatistics.get(getName());
+                    LeaderboardsAdapter leaderboardsAdapter= new LeaderboardsAdapter();
                     leaderboardsAdapter.setName((String) document.get("name"));
                     leaderboardsAdapter.setElo((Integer) kitDocument.get("won"));
+                    winLeaderboards.removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
                     this.getWinLeaderboards().add(leaderboardsAdapter);
                 }
             }
-        });
+            });
     }
 
     public boolean isParty() {

@@ -1,14 +1,14 @@
 package me.drizzy.practice.hotbar;
 
+import me.drizzy.practice.Array;
 import me.drizzy.practice.Locale;
 import me.drizzy.practice.enums.HotbarType;
+import me.drizzy.practice.enums.QueueType;
 import me.drizzy.practice.events.menu.ActiveEventSelectEventMenu;
+import me.drizzy.practice.events.types.brackets.Brackets;
+import me.drizzy.practice.events.types.gulag.Gulag;
 import me.drizzy.practice.events.types.lms.LMS;
 import me.drizzy.practice.events.types.parkour.Parkour;
-import me.drizzy.practice.events.types.gulag.Gulag;
-import me.drizzy.practice.profile.meta.ProfileRematchData;
-import me.drizzy.practice.Array;
-import me.drizzy.practice.events.types.brackets.Brackets;
 import me.drizzy.practice.events.types.spleef.Spleef;
 import me.drizzy.practice.events.types.sumo.Sumo;
 import me.drizzy.practice.kiteditor.menu.KitEditorSelectKitMenu;
@@ -19,11 +19,10 @@ import me.drizzy.practice.party.menu.PartyEventSelectEventMenu;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.profile.menu.PlayerMenu;
-import me.drizzy.practice.settings.SettingsMenu;
-import me.drizzy.practice.queue.QueueType;
+import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.queue.menu.QueueSelectKitMenu;
 import me.drizzy.practice.util.chat.CC;
-import net.minecraft.server.v1_8_R3.PacketPlayOutEntity;
+import me.drizzy.practice.util.other.PlayerUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -33,11 +32,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class HotbarListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerInteract(final PlayerInteractEvent event) {
+    public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getItem() != null && event.getAction().name().contains("RIGHT")) {
             final Player player = event.getPlayer();
             final Profile profile = Profile.getByUuid(player.getUniqueId());
-            final HotbarType hotbarType= Hotbar.fromItemStack(event.getItem());
+            final HotbarType hotbarType = Hotbar.fromItemStack(event.getItem());
             if (hotbarType == null) {
                 return;
             }
@@ -48,9 +47,19 @@ public class HotbarListener implements Listener {
             }
             switch (hotbarType) {
                 case QUEUE_JOIN_RANKED: {
+                    if (!Array.getInstance().getEssentials().getMeta().isRankedEnabled()) {
+                        player.sendMessage(CC.translate(Array.getInstance().getMessagesConfig().getString("Ranked.Disabled")));
+                        break;
+                    }
+                    if (Array.getInstance().getEssentials().getMeta().isLimitPing()) {
+                        if (PlayerUtil.getPing(player) > Array.getInstance().getEssentials().getMeta().getPingLimit()) {
+                            player.sendMessage(CC.translate("&cYou're ping is too high to join ranked queue!"));
+                            break;
+                        }
+                    }
                     if (!player.hasPermission("array.donator")) {
-                        if (Array.getInstance().getMainConfig().getBoolean("Ranked.Require-Kills")) {
-                            if (profile.getTotalWins() < Array.getInstance().getMainConfig().getInteger("Ranked.Required-Kills")) {
+                        if (Array.getInstance().getEssentials().getMeta().isRequireKills()) {
+                            if (profile.getTotalWins() < Array.getInstance().getEssentials().getMeta().getRequiredKills()) {
                                 for ( String error : Array.getInstance().getMessagesConfig().getStringList("Ranked.Required") ) {
                                     player.sendMessage(CC.translate(error));
                                 }
@@ -58,18 +67,14 @@ public class HotbarListener implements Listener {
                             }
                         }
                     }
-                    if (!Array.getInstance().getMainConfig().getBoolean("Ranked.Enabled")) {
-                        player.sendMessage(CC.translate(Array.getInstance().getMessagesConfig().getString("Ranked.Disabled")));
-                        break;
-                    }
-                    if (!profile.isBusy(player)) {
+                    if (!profile.isBusy()) {
                         new QueueSelectKitMenu(QueueType.RANKED).openMenu(event.getPlayer());
                         break;
                     }
                     break;
                 }
                 case QUEUE_JOIN_UNRANKED: {
-                    if (!profile.isBusy(player)) {
+                    if (!profile.isBusy()) {
                         new QueueSelectKitMenu(QueueType.UNRANKED).openMenu(event.getPlayer());
                         break;
                     }
@@ -98,11 +103,7 @@ public class HotbarListener implements Listener {
                     new ManagePartySettings().openMenu(event.getPlayer());
                     break;
                 }
-                case SETTINGS_MENU: {
-                    new SettingsMenu().openMenu(event.getPlayer());
-                    break;
-                }
-                case LEADERBOARDS_MENU: {
+                case MAIN_MENU: {
                     new PlayerMenu().openMenu(event.getPlayer());
                     break;
                 }
@@ -166,11 +167,11 @@ public class HotbarListener implements Listener {
                 case SUMO_LEAVE: {
                     final Sumo activeSumo = Array.getInstance().getSumoManager().getActiveSumo();
                     if (activeSumo == null) {
-                        player.sendMessage(CC.RED + "There is no active sumo.");
+                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "sumo"));
                         return;
                     }
                     if (!profile.isInSumo() || !activeSumo.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(CC.RED + "You are not apart of the active sumo.");
+                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "sumo"));
                         return;
                     }
                     Array.getInstance().getSumoManager().getActiveSumo().handleLeave(player);
@@ -179,11 +180,11 @@ public class HotbarListener implements Listener {
                 case BRACKETS_LEAVE: {
                     final Brackets activeBrackets=Array.getInstance().getBracketsManager().getActiveBrackets();
                     if (activeBrackets == null) {
-                        player.sendMessage(CC.RED + "There is no active brackets.");
+                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "brackets"));
                         return;
                     }
                     if (!profile.isInBrackets() || !activeBrackets.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(CC.RED + "You are not apart of the active brackets.");
+                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "brackets"));
                         return;
                     }
                     Array.getInstance().getBracketsManager().getActiveBrackets().handleLeave(player);
@@ -192,11 +193,11 @@ public class HotbarListener implements Listener {
                 case LMS_LEAVE: {
                     final LMS activeLMS = Array.getInstance().getLMSManager().getActiveLMS();
                     if (activeLMS == null) {
-                        player.sendMessage(CC.RED + "There is no active Lms.");
+                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "LMS"));
                         return;
                     }
                     if (!profile.isInLMS() || !activeLMS.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(CC.RED + "You are not apart of the active Lms.");
+                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "LMS"));
                         return;
                     }
                     Array.getInstance().getLMSManager().getActiveLMS().handleLeave(player);
@@ -205,11 +206,11 @@ public class HotbarListener implements Listener {
                 case PARKOUR_LEAVE: {
                     final Parkour activeParkour = Array.getInstance().getParkourManager().getActiveParkour();
                     if (activeParkour == null) {
-                        player.sendMessage(CC.RED + "There is no active Parkour.");
+                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "parkour"));
                         return;
                     }
                     if (!profile.isInParkour() || !activeParkour.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(CC.RED + "You are not apart of the active Parkour.");
+                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "parkour"));
                         return;
                     }
                     Array.getInstance().getParkourManager().getActiveParkour().handleLeave(player);
@@ -218,11 +219,11 @@ public class HotbarListener implements Listener {
                 case GULAG_LEAVE: {
                     final Gulag activeGulag = Array.getInstance().getGulagManager().getActiveGulag();
                     if (activeGulag == null) {
-                        player.sendMessage(CC.RED + "There is no active Gulag.");
+                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "gulag"));
                         return;
                     }
                     if (!profile.isInGulag() || !activeGulag.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(CC.RED + "You are not apart of the active Gulag.");
+                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "gulag"));
                         return;
                     }
                     Array.getInstance().getGulagManager().getActiveGulag().handleLeave(player);
@@ -231,11 +232,11 @@ public class HotbarListener implements Listener {
                 case SPLEEF_LEAVE: {
                     final Spleef activeSpleef = Array.getInstance().getSpleefManager().getActiveSpleef();
                     if (activeSpleef == null) {
-                        player.sendMessage(CC.RED + "There is no active Spleef.");
+                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "spleef"));
                         return;
                     }
                     if (!profile.isInSpleef() || !activeSpleef.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(CC.RED + "You are not apart of the active Spleef.");
+                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "spleef"));
                         return;
                     }
                     Array.getInstance().getSpleefManager().getActiveSpleef().handleLeave(player);
@@ -249,7 +250,7 @@ public class HotbarListener implements Listener {
                         break;
                     }
                     if (!profile.isSpectating()) {
-                        player.sendMessage(CC.RED + "You are not spectating a match.");
+                        player.sendMessage(Locale.ERROR_NOTSPECTATING.toString());
                         break;
                     }
                     if (profile.getMatch() != null) {
@@ -281,12 +282,12 @@ public class HotbarListener implements Listener {
                 case REMATCH_REQUEST:
                 case REMATCH_ACCEPT: {
                     if (profile.getRematchData() == null) {
-                        player.sendMessage(CC.RED + "You do not have anyone to re-match.");
+                        player.sendMessage(Locale.ERROR_NOREMATCH.toString());
                         return;
                     }
                     profile.checkForHotbarUpdate();
                     if (profile.getRematchData() == null) {
-                        player.sendMessage(CC.RED + "That player is no longer available.");
+                        player.sendMessage(Locale.ERROR_EXPIREREMATCH.toString());
                         return;
                     }
                     final ProfileRematchData profileRematchData = profile.getRematchData();
@@ -295,7 +296,7 @@ public class HotbarListener implements Listener {
                     }
                     else {
                         if (profileRematchData.isSent()) {
-                            player.sendMessage(CC.RED + "You have already sent a rematch request to that player.");
+                            player.sendMessage(Locale.ERROR_REMATCHSENT.toString());
                             return;
                         }
                         profileRematchData.request();

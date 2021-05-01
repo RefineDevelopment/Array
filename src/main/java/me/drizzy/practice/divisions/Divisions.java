@@ -30,7 +30,7 @@ public class Divisions {
         divisionMeta.setThirdDivision(CC.translate(configuration.getString(path + "1050 (Third Division)")));
         divisionMeta.setFourthDivision(CC.translate(configuration.getString(path + "1075 (Fourth Division)")));
         divisionMeta.setFifthDivision(CC.translate(configuration.getString(path + "1100 (Fifth Division)")));
-        divisionMeta.setSixthDivision(CC.translate(configuration.getString(path + "1150 (Sixth Divison)")));
+        divisionMeta.setSixthDivision(CC.translate(configuration.getString(path + "1150 (Sixth Division)")));
         divisionMeta.setSeventhDivision(CC.translate(configuration.getString(path + "1300 (Seventh Division)")));
         divisionMeta.setEighthDivision(CC.translate(configuration.getString(path + "1350 (Eighth Division)")));
         divisionMeta.setNinthDivision(CC.translate(configuration.getString(path + "1400 (Ninth Division)")));
@@ -43,11 +43,11 @@ public class Divisions {
         divisionMeta.setSixteenthDivision(CC.translate(configuration.getString(path + "2000 (Sixteenth Division)")));
         divisionMeta.setSeventeenthDivision(CC.translate(configuration.getString(path + "2100 (Seventeenth Division)")));
         divisionMeta.setEighteenthDivision(CC.translate(configuration.getString(path + "2200 (Eighteenth Division)")));
-        divisionMeta.setNineteenthDivision(CC.translate(configuration.getString(path + "2300 (Ninteenth Division)")));
+        divisionMeta.setNineteenthDivision(CC.translate(configuration.getString(path + "2300 (Nineteenth Division)")));
         divisionMeta.setTwentiethDivision(CC.translate(configuration.getString(path + "2400 (Twentieth Division)")));
         divisionMeta.setTwentyFirstDivison(CC.translate(configuration.getString(path + "2500 (TwentyFirst Division)")));
         divisionMeta.setTwentySecondDivision(CC.translate(configuration.getString(path + "2600 (TwentySecond Division)")));
-        divisionMeta.setTwentyThirdDivision(CC.translate(configuration.getString(path + "2700 (TwentyThird Divison)")));
+        divisionMeta.setTwentyThirdDivision(CC.translate(configuration.getString(path + "2700 (TwentyThird Division)")));
         divisionMeta.setTwentyFourthDivision(CC.translate(configuration.getString(path + "2800 (TwentyFourth Division)")));
         divisionMeta.setTwentyFifthDivision(CC.translate(configuration.getString(path + "2900 (TwentyFifth Division)")));
         divisionMeta.setTwentySixthDivision(CC.translate(configuration.getString(path + "3000 (TwentySixth Division)")));

@@ -1,9 +1,14 @@
 main: me.drizzy.practice.Array
 name: Array
+<<<<<<< Updated upstream
 version: Beta 4.4
 authors: ["Tinuy", "Nick"]
 credits: ["Drizzy", "Veltus", "Joel"
 forked: nPractice (With Permission)
+=======
+version: 1.0
+authors: ["Nick", "Drizzy", "Joeleoli", "veltus5184", "Tinuy"]
+>>>>>>> Stashed changes
 depend:
   - ProtocolLib
 softdepend:

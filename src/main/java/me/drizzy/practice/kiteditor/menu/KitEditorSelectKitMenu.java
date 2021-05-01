@@ -46,7 +46,7 @@ public class KitEditorSelectKitMenu extends Menu {
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
             lore.add("");
-            lore.add("&bClick to edit this kit.");
+            lore.add("&cClick to edit this kit.");
             return new ItemBuilder(kit.getDisplayIcon())
                     .name(kit.getDisplayName()).lore(lore)
                     .build();

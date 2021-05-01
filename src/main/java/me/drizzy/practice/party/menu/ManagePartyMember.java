@@ -21,7 +21,7 @@ public class ManagePartyMember extends Menu {
 
     @Override
     public String getTitle(final Player player) {
-        return "&bSelect an action for &9" + this.target.getName();
+        return "&cSelect an action for &9" + this.target.getName();
     }
 
     @Override
@@ -47,33 +47,33 @@ public class ManagePartyMember extends Menu {
             Player target = ManagePartyMember.this.target;
             if (this.partyManageType == PartyManageType.LEADER) {
                 lore.add(CC.MENU_BAR);
-                lore.add("&7Click here to make &b" + target.getName());
+                lore.add("&7Click here to make &c" + target.getName());
                 lore.add("&7the party leader, this will grant them");
-                lore.add("&b&lCOMPLETE &7control of the party!");
+                lore.add("&c&lCOMPLETE &7control of the party!");
                 lore.add("");
-                lore.add("&bClick to Grant party leadership.");
+                lore.add("&cClick to Grant party leadership.");
                 lore.add(CC.MENU_BAR);
-                return new ItemBuilder(Material.GOLD_SWORD).name("&b" + this.partyManageType.getName()).lore(lore).build();
+                return new ItemBuilder(Material.GOLD_SWORD).name("&c" + this.partyManageType.getName()).lore(lore).build();
             }
             if (this.partyManageType == PartyManageType.KICK) {
                 lore.add(CC.MENU_BAR);
-                lore.add("&7Click here to Kick &b" + target.getName());
+                lore.add("&7Click here to Kick &c" + target.getName());
                 lore.add("&7this will make them leave the party");
                 lore.add("&7but, they can join back unless invited");
                 lore.add("");
-                lore.add("&bClick to Kick " + target.getName() + ".");
+                lore.add("&cClick to Kick " + target.getName() + ".");
                 lore.add(CC.MENU_BAR);
-                return new ItemBuilder(Material.BOOK).name("&b" + this.partyManageType.getName()).lore(lore).build();
+                return new ItemBuilder(Material.BOOK).name("&c" + this.partyManageType.getName()).lore(lore).build();
             }
             lore.add(CC.MENU_BAR);
-            lore.add("&7Click here to Ban &b" + target.getName());
+            lore.add("&7Click here to Ban &c" + target.getName());
             lore.add("&7this will make them leave the party");
             lore.add("&7and they will not be able to join back");
             lore.add("&7unless unbanned manually!");
             lore.add("");
-            lore.add("&bClick to Ban " + target.getName() + ".");
+            lore.add("&cClick to Ban " + target.getName() + ".");
             lore.add(CC.MENU_BAR);
-            return new ItemBuilder(Material.SKULL_ITEM).name("&b" + this.partyManageType.getName()).lore(lore).build();
+            return new ItemBuilder(Material.SKULL_ITEM).name("&c" + this.partyManageType.getName()).lore(lore).build();
         }
         
         @Override

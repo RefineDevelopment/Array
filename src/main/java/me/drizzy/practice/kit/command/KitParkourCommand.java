@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class KitParkourCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7That kit does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That kit does not exist."));
         } else {
             if (kit.getGameRules().isParkour()) {
                 kit.getGameRules().setParkour(false);
@@ -18,8 +18,8 @@ public class KitParkourCommand {
                 kit.getGameRules().setParkour(true);
             }
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated parkour mode for &b" + kit.getName() +  " &7to &b" + (kit.getGameRules().isParkour() ? "true!" : "false!")));
-            player.sendMessage(CC.translate("&8[&bTIP&8] &7&oUse Iron pressure plate for Check-Point and Gold pressure plate for Win-point!"));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Updated parkour mode for &c" + kit.getName() +  " &7to &c" + (kit.getGameRules().isParkour() ? "true!" : "false!")));
+            player.sendMessage(CC.translate("&8[&cTIP&8] &7&oUse Iron pressure plate for Check-Point and Gold pressure plate for Win-point!"));
         }
     }
 }

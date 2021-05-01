@@ -7,14 +7,12 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
+@Getter
+@Setter
 public class LMSPlayer {
 
-    @Getter
     private final UUID uuid;
-    @Getter
     private final String username;
-    @Getter
-    @Setter
     private LMSPlayerState state = LMSPlayerState.WAITING;
 
     public LMSPlayer(Player player) {

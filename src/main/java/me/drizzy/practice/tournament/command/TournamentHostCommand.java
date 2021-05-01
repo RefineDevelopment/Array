@@ -65,8 +65,8 @@ public class TournamentHostCommand {
 
         Tournament.CURRENT_TOURNAMENT.setLadder(Kit.getByName("NoDebuff"));
 
-        Bukkit.broadcastMessage(CC.translate("&8[&b&lTournament&8] &b" + player.getPlayer().getDisplayName() + CC.WHITE + " is hosting a Tournament!"));
-        broadcastMessage(CC.translate("&8[&b&lTournament&8] &b" + ChatColor.AQUA + "(Click to accept)"));
+        Bukkit.broadcastMessage(CC.translate("&8[&c&lTournament&8] &c" + player.getPlayer().getDisplayName() + CC.WHITE + " is hosting a Tournament!"));
+        broadcastMessage(CC.translate("&8[&c&lTournament&8] &c" + ChatColor.RED + "(Click to accept)"));
 
         Tournament.RUNNABLE = new BukkitRunnable() {
             private int countdown = 60;
@@ -76,15 +76,15 @@ public class TournamentHostCommand {
                 countdown--;
                 if (countdown == 30 || countdown == 10 || countdown <= 3) {
                     if (countdown > 0) {
-                        Bukkit.broadcastMessage(CC.translate("&8[&b&lTournament&8] &f" + "Tournament is starting in &b" + countdown + " &fseconds!"));
-                        broadcastMessage(CC.translate("&8[&b&lTournament&8] &b" + ChatColor.AQUA + "(Click to accept)"));
+                        Bukkit.broadcastMessage(CC.translate("&8[&c&lTournament&8] &f" + "Tournament is starting in &c" + countdown + " &fseconds!"));
+                        broadcastMessage(CC.translate("&8[&c&lTournament&8] &c" + ChatColor.RED + "(Click to accept)"));
                     }
                 }
                 if(countdown <= 0){
                     Tournament.RUNNABLE = null;
                     cancel();
                     if(Tournament.CURRENT_TOURNAMENT.getParticipatingCount() < 2){
-                        Bukkit.broadcastMessage(CC.translate("&8[&b&lTournament&8] " + CC.RED + "The Tournament has been cancelled."));
+                        Bukkit.broadcastMessage(CC.translate("&8[&c&lTournament&8] " + CC.RED + "The Tournament has been cancelled."));
                         Tournament.CURRENT_TOURNAMENT.cancel();
                         Tournament.CURRENT_TOURNAMENT = null;
                     } else {

@@ -31,13 +31,13 @@ public class PartyEventSelectEventMenu extends Menu {
 
     @Override
     public String getTitle(final Player player) {
-        return "&bSelect a party events";
+        return "&cSelect a party events";
     }
 
     @Override
     public Map<Integer, Button> getButtons(final Player player) {
         final Map<Integer, Button> buttons = new HashMap<>();
-        if (Array.getInstance().getMainConfig().getBoolean("Array.HCF-Enabled")) {
+        if (Array.getInstance().getEssentials().getMeta().isHCFEnabled()) {
             buttons.put(2, new SelectEventButton(PartyEventType.SPLIT));
             buttons.put(4, new SelectEventButton(PartyEventType.FFA));
             buttons.put(6, new SelectEventButton(PartyEventType.HCF));
@@ -73,7 +73,7 @@ public class PartyEventSelectEventMenu extends Menu {
                 lore.add(CC.translate("&7&oLast Team standing wins!"));
             }
             lore.add(CC.GRAY + CC.STRIKE_THROUGH + "------------------------");
-            return new ItemBuilder(this.partyEventType.getMaterial()).name("&b&l" + this.partyEventType.getName()).lore(lore).build();
+            return new ItemBuilder(this.partyEventType.getMaterial()).name("&c&l" + this.partyEventType.getName()).lore(lore).build();
         }
 
         @Override
@@ -84,8 +84,8 @@ public class PartyEventSelectEventMenu extends Menu {
                 return;
             }
             for (Player players : profile.getParty().getPlayers()) {
-                Profile profile1 = Profile.getByUuid(players);
-                if (profile1.isBusy(players)) {
+                Profile profile1 = Profile.getByPlayer(players);
+                if (profile1.isBusy()) {
                     player.sendMessage(CC.translate("&cYour party members are busy right now, please try again."));
                     return;
                 }

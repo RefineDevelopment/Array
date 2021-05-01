@@ -2,9 +2,9 @@ package me.drizzy.practice.register;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.selection.ArenaSelectionListener;
-import me.drizzy.practice.array.listener.GoldenHeads;
-import me.drizzy.practice.array.listener.MOTDListener;
-import me.drizzy.practice.array.listener.ToggleSprintFix;
+import me.drizzy.practice.essentials.listener.GoldenHeads;
+import me.drizzy.practice.essentials.listener.MOTDListener;
+import me.drizzy.practice.essentials.listener.ToggleSprintFix;
 import me.drizzy.practice.events.types.brackets.BracketsListener;
 import me.drizzy.practice.events.types.gulag.GulagListener;
 import me.drizzy.practice.events.types.lms.LMSListener;
@@ -26,7 +26,7 @@ import java.util.Arrays;
 public class RegisterListeners {
 
     public static void register() {
-        Array.logger("&bRegistering Listeners....");
+        Array.logger("&7Registering Listeners....");
         for ( Listener listener : Arrays.asList(
                 new ProfileListener(),
                 new MenuListener(Array.getInstance()),

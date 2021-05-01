@@ -9,7 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -28,6 +28,7 @@ public class TeamPlayer {
     private int hits;
     private int combo;
     private int longestCombo;
+    private Map<UUID, List<Long>> cpsMap = new HashMap<>();
 
     public TeamPlayer(Player player) {
         this.uuid = player.getUniqueId();
@@ -51,7 +52,6 @@ public class TeamPlayer {
         this.uuid = uuid;
         this.username = username;
         int pots = 0;
-
         for (ItemStack item : Bukkit.getPlayer(uuid).getInventory().getContents()) {
             if (item == null)
                 continue;
@@ -78,6 +78,14 @@ public class TeamPlayer {
     public int getPing() {
         Player player = getPlayer();
         return player == null ? 0 : PlayerUtil.getPing(player);
+    }
+
+    public int getCps() {
+        if (cpsMap.get(uuid) == null) {
+            return 0;
+        }
+        cpsMap.get(uuid).removeIf(count -> count < System.currentTimeMillis() - 1000L);
+        return cpsMap.get(uuid).size();
     }
 
     public double getPotionAccuracy() {

@@ -23,7 +23,7 @@ public class JumpToPageButton extends Button {
         ItemStack itemStack = new ItemStack(this.current ? Material.ENCHANTED_BOOK : Material.BOOK, this.page);
         ItemMeta itemMeta = itemStack.getItemMeta();
 
-        itemMeta.setDisplayName(ChatColor.AQUA + "Page " + this.page);
+        itemMeta.setDisplayName(ChatColor.RED + "Page " + this.page);
 
         if (this.current) {
             itemMeta.setLore(Arrays.asList(

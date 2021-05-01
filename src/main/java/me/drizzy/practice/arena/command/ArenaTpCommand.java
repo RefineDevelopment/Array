@@ -12,7 +12,7 @@ public class ArenaTpCommand {
     public void execute(Player player, @CPL("Arena") Arena arena) {
         if (arena != null) {
             player.teleport(arena.getSpawn1());
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully &bteleported &7to the arena &b" + arena.getName() + "&7!"));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &cteleported &7to the arena &c" + arena.getName() + "&7!"));
         }
     }
 

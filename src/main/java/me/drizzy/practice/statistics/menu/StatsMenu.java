@@ -50,9 +50,9 @@ public class StatsMenu extends Menu {
             Profile profile = Profile.getByUuid(target.getUniqueId());
             String elo = kit.getGameRules().isRanked() ? Integer.toString(profile.getStatisticsData().get(kit).getElo()) : "N/A";
             lore.add(CC.MENU_BAR);
-            lore.add("&8 • &bELO: &f" + elo);
-            lore.add("&8 • &bWins: &f" + profile.getStatisticsData().get(kit).getWon());
-            lore.add("&8 • &bLosses: &f" + profile.getStatisticsData().get(kit).getLost());
+            lore.add("&8 • &cELO: &f" + elo);
+            lore.add("&8 • &cWins: &f" + profile.getStatisticsData().get(kit).getWon());
+            lore.add("&8 • &cLosses: &f" + profile.getStatisticsData().get(kit).getLost());
             lore.add(CC.MENU_BAR);
 
             return new ItemBuilder(kit.getDisplayIcon())
@@ -70,16 +70,16 @@ public class StatsMenu extends Menu {
             List<String> lore = new ArrayList<>();
             Profile profile = Profile.getByUuid(target.getUniqueId());
             lore.add(CC.MENU_BAR);
-            lore.add("&8 • &bELO: &r" + profile.getGlobalElo());
-            lore.add("&8 • &bWins: &f" + profile.getTotalWins());
-            lore.add("&8 • &bLosses: &f" + profile.getTotalLost());
+            lore.add("&8 • &cELO: &r" + profile.getGlobalElo());
+            lore.add("&8 • &cWins: &f" + profile.getTotalWins());
+            lore.add("&8 • &cLosses: &f" + profile.getTotalLost());
             lore.add(CC.MENU_BAR);
-            lore.add("&8 • &bLeague: &f" + profile.getEloLeague());
-            lore.add("&8 • &bW/L Ratio: &f" + profile.getWLR());
+            lore.add("&8 • &cLeague: &f" + profile.getEloLeague());
+            lore.add("&8 • &cW/L Ratio: &f" + profile.getWLR());
             lore.add(CC.MENU_BAR);
 
             return new ItemBuilder(SkullCreator.itemFromUuid(target.getUniqueId()))
-                    .name("&b&lGlobal &7｜ &fStats")
+                    .name("&c&lGlobal &7｜ &fStats")
                     .lore(lore)
                     .build();
         }

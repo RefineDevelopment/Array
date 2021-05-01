@@ -38,14 +38,14 @@ public class ArenaSelectionListener implements Listener {
             event.setUseItemInHand(Event.Result.DENY);
             event.setUseInteractedBlock(Event.Result.DENY);
 
-            String message = CC.AQUA + (location == 1 ? "First" : "Second") +
+            String message = CC.RED + (location == 1 ? "First" : "Second") +
                     " location " + CC.DARK_GRAY + "(" + CC.GRAY +
                     clicked.getX() + CC.DARK_GRAY + ", " + CC.GRAY +
                     clicked.getY() + CC.DARK_GRAY + ", " + CC.GRAY +
-                    clicked.getZ() + CC.DARK_GRAY + ")" + CC.AQUA + " has been set!";
+                    clicked.getZ() + CC.DARK_GRAY + ")" + CC.RED + " has been set!";
 
             if (selection.isFullObject()) {
-                message += CC.DARK_GRAY + " (" + CC.GRAY + selection.getCuboid().volume() + CC.AQUA + " blocks" +
+                message += CC.DARK_GRAY + " (" + CC.GRAY + selection.getCuboid().volume() + CC.RED + " blocks" +
                         CC.DARK_GRAY + ")";
             }
 

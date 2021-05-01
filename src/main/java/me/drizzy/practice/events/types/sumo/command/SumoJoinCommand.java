@@ -15,7 +15,7 @@ public class SumoJoinCommand {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		Sumo activeSumo = Array.getInstance().getSumoManager().getActiveSumo();
 
-		if (profile.isBusy(player) || profile.getParty() != null) {
+		if (profile.isBusy() || profile.getParty() != null) {
 			player.sendMessage(CC.RED + "You cannot join the Sumo Event right now.");
 			return;
 		}

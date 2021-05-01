@@ -40,7 +40,6 @@ public class RematchCommand {
                 return;
             }
             new DuelSelectKitMenu("rematch").openMenu(player);
-            //profileRematchData.request();
         }
     }
 

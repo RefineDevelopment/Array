@@ -1,0 +1,212 @@
+SCOREBOARD:
+  HEADER: "&c&lPurge &7&l%splitter% &fTest Server"
+  FOOTER: "&7purgecommunity.com"
+  LINES: "&7&m----------------------"
+  ELO_RANGE_FORMAT: "<min_range> -> <max_range>"
+  LOBBY:
+    - "&fOnline: &c<online>"
+    - "&fQueueing: &c<in_queues>"
+    - "&fFighting: &c<in_fights>"
+  PARTY:
+    - "&7&m----------------------"
+    - "&c&lParty&7:"
+    - "&c * &fLeader: &c<party_leader>"
+    - "&c * &fMembers: &c<party_size>"
+  UNRANKED_QUEUE:
+    - "&7&m----------------------"
+    - "&c&l<queue_name>&7:"
+    - "&c * &fTime: &c<queue_duration>"
+  RANKED_QUEUE:
+    - "&7&m----------------------"
+    - "&c&l<queue_name>&7:"
+    - "&c * &fTime: &c<queue_duration>"
+    - "&c * &fELO Range: &c<queue_elo_range>"
+  TOURNAMENT:
+    - "&7&m----------------------"
+    - "&c&lTournament&7:"
+    - "&c * &fKit: &c<tournament_kit> &7(<tournament_team> v <tournament_team>)"
+    - "&c * &fRound: &c<tournament_round>"
+    - "&c * &f<tournament_type>: &c<tournament_count>/<tournament_size>"
+  MATCH:
+    SOLO:
+      - "&fRival: &c<opponent_name>"
+      - "&fTime: &c<match_duration>"
+    PING_ADDITION:
+      - "&fPing: &a<your_ping> &7%splitter% &c<opponent_ping>"
+    CPS_ADDITION:
+      - "&fCPS: &a<your_cps> &7%splitter% &c<opponent_cps>"
+    BRIDGE:
+      - "&fRival: &c<opponent_name>"
+      - "&fTime: &c<match_duration>"
+      - ""
+      - "&c&lRound #<bridge_round>&7:"
+      - "&c Red: &r<red_points_formatted>"
+      - "&9 Blue: &r<blue_points_formatted>"
+    BRIDGE_BOW_COOLDOWN:
+      - ""
+      - "&c&lCooldown&7:"
+      - "&c * &fBow: &c<bow_cooldown>"
+    TEAM:
+      - "&fTime: &c<match_duration>"
+      - "&fKit: &c<match_kit>"
+      - ""
+      - "&fYour Team: &c<your_team_alive>/<your_team_count>"
+      - "&fRival Team: &c<opponent_team_alive>/<opponent_team_count>"
+    HCF:
+      - "&fTime: &c<match_duration>"
+      - "&fKit: &c<match_kit>"
+      - ""
+      - "&fYour Team: &c<your_team_alive>/<your_team_count>"
+      - "&fRival Team: &c<opponent_team_alive>/<opponent_team_count>"
+    HCF_BARD_ADDITION:
+      - "&fBard Energy: &c<your_bard_energy>"
+    FFA:
+      - "&fPlayers: &c<players_alive>/<player_count>"
+      - "&fTime: &c<match_duration>"
+    ENDING:
+      - "&cMatch Status: &fEnded"
+      - ""
+      - "&7Your match has ended,"
+      - "&7teleporting you to spawn."
+  SPECTATOR:
+    MATCH:
+      SOLO:
+        - "&fKit: &c<match_kit>"
+        - "&fTime: &c<match_duration>"
+        - ""
+        - "&c<playerA_name> &7(&f<playerA_ping>&7)"
+        - "&7vs"
+        - "&c<playerB_name> &7(&f<playerB_ping>&7)"
+      BRIDGE:
+        - "&fKit: &c<match_kit>"
+        - "&fTime: &c<match_duration>"
+        - ""
+        - "&c&lRound #<bridge_round>"
+        - "&c Red: &r<red_points_formatted>"
+        - "&9 Blue: &r<blue_points_formatted>"
+      TEAM:
+        - "&fKit: &c<match_kit>"
+        - "&fTime: &c<match_duration>"
+        - ""
+        - "&c<teamA_leader_name>'s Team &7(&f<teamA_size>&7)"
+        - "&7vs"
+        - "&c<teamB_leader_name>'s Team &7(&f<teamB_size>&7)"
+      HCF:
+        - "&fKit: &c<match_kit>"
+        - "&fTime: &c<match_duration>"
+        - ""
+        - "&c<teamA_leader_name>'s Team &7(&f<teamA_size>&7)"
+        - "&7vs"
+        - "&c<teamB_leader_name>'s Team &7(&f<teamB_size>&7)"
+      FFA:
+        - "&fKit: &c<match_kit>"
+        - "&fTime: &c<match_duration>"
+        - "&fAlive: &c<players_alive>/<player_count>"
+      ENDING:
+        - "&cMatch Status: &fEnded"
+        - ""
+        - "&7Your match has ended,"
+        - "&7teleporting you to spawn."
+  EVENT:
+    SUMO:
+      WAITING:
+        - "&c&lSumo Event"
+        - ""
+        - "&fHost: &c<sumo_host_name>"
+        - "&fPlayers: &c<sumo_player_count>/<sumo_max_players>"
+        - ""
+        - "<status>"
+      STATUS_WAITING: "&fWaiting for players..."
+      STATUS_COUNTING: "&fStarting in &c<countdown>&fs"
+      FIGHTING:
+        - "&c&lSumo Event"
+        - ""
+        - "&fPlayers: &c<sumo_players_alive>/<sumo_max_players>"
+        - "&fDuration: &c<sumo_duration>"
+        - ""
+        - "&c<sumo_playerA_name> &7(&f<sumo_playerA_ping>)"
+        - "&7 vs"
+        - "&c<sumo_playerB_name> &7(&f<sumo_playerB_ping>)"
+    PARKOUR:
+      WAITING:
+        - "&c&lParkour Event"
+        - ""
+        - "&fHost: &c<parkour_host_name>"
+        - "&fPlayers: &c<parkour_player_count>/<parkour_max_players>"
+        - ""
+        - "<status>"
+      STATUS_WAITING: "&fWaiting for players..."
+      STATUS_COUNTING: "&fStarting in &c<countdown>&fs"
+      FIGHTING:
+        - "&c&lParkour Event"
+        - ""
+        - "&fPlayers: &c<parkour_players_alive>/<parkour_max_players>"
+        - "&fDuration: &c<parkour_duration>"
+    BRACKETS:
+      WAITING:
+        - "&c&lBrackets Event"
+        - ""
+        - "&fHost: &c<brackets_host_name>"
+        - "&fPlayers: &c<brackets_player_count>/<brackets_max_players>"
+        - ""
+        - "<status>"
+      STATUS_WAITING: "&fWaiting for players..."
+      STATUS_COUNTING: "&fStarting in &c<countdown>&fs"
+      FIGHTING:
+        - "&c&lBrackets Event"
+        - ""
+        - "&fPlayers: &c<brackets_players_alive>/<brackets_max_players>"
+        - "&fDuration: &c<brackets_duration>"
+        - ""
+        - "&c<brackets_playerA_name> &7(&f<brackets_playerA_ping>)"
+        - "&7 vs"
+        - "&c<brackets_playerB_name> &7(&f<brackets_playerB_ping>)"
+    LMS:
+      WAITING:
+        - "&c&lLMS Event"
+        - ""
+        - "&fHost: &c<lms_host_name>"
+        - "&fPlayers: &c<lms_player_count>/<lms_max_players>"
+        - ""
+        - "<status>"
+      STATUS_WAITING: "&fWaiting for players..."
+      STATUS_COUNTING: "&fStarting in &c<countdown>&fs"
+      FIGHTING:
+        - "&c&lLMS Event"
+        - ""
+        - "&fPlayers: &c<lms_players_alive>/<lms_max_players>"
+        - "&fDuration: &c<lms_duration>"
+    GULAG:
+      WAITING:
+        - "&c&lGulag Event"
+        - ""
+        - "&fHost: &c<gulag_host_name>"
+        - "&fPlayers: &c<gulag_player_count>/<gulag_max_players>"
+        - ""
+        - "<status>"
+      STATUS_WAITING: "&fWaiting for players..."
+      STATUS_COUNTING: "&fStarting in &c<countdown>&fs"
+      FIGHTING:
+        - "&c&lGulag Event"
+        - ""
+        - "&fPlayers: &c<gulag_players_alive>/<gulag_max_players>"
+        - "&fDuration: &c<gulag_duration>"
+        - ""
+        - "&c<gulag_playerA_name> &7(&f<gulag_playerA_ping>)"
+        - "&7 vs"
+        - "&c<gulag_playerB_name> &7(&f<gulag_playerB_ping>)"
+    SPLEEF:
+      WAITING:
+        - "&c&lSpleef Event"
+        - ""
+        - "&fHost: &c<spleef_host_name>"
+        - "&fPlayers: &c<spleef_player_count>/<spleef_max_players>"
+        - ""
+        - "<status>"
+      STATUS_WAITING: "&fWaiting for players..."
+      STATUS_COUNTING: "&fStarting in &c<countdown>&fs"
+      FIGHTING:
+        - "&c&lSpleef Event"
+        - ""
+        - "&fPlayers: &c<spleef_players_alive>/<spleef_max_players>"
+        - "&fDuration: &c<spleef_duration>"

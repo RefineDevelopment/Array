@@ -11,12 +11,12 @@ public class KitSetDisplayNameCommand {
     public void execute(Player player, @CPL("kit") String kit, @CPL("displayname") String display) {
         Kit dakit = Kit.getByName(kit);
         if (dakit == null) {
-            player.sendMessage(CC.translate("&8[&bArray&8] &7A Kit with that name does not exist."));
+            player.sendMessage(CC.translate("&8[&cArray&8] &7A Kit with that name does not exist."));
             return;
         }
         dakit.setDisplayName(display);
         dakit.save();
-        player.sendMessage(CC.translate("&8[&bArray&8] &7Successfully updated the kit &b" + dakit.getName() + "'s &7display name."));
+        player.sendMessage(CC.translate("&8[&cArray&8] &7Successfully updated the kit &c" + dakit.getName() + "'s &7display name."));
 
     }
 }

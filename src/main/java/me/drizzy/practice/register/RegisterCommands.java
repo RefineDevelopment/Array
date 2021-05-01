@@ -2,12 +2,12 @@ package me.drizzy.practice.register;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.command.*;
-import me.drizzy.practice.array.ArrayCommand;
-import me.drizzy.practice.array.commands.*;
-import me.drizzy.practice.array.commands.donator.FlyCommand;
-import me.drizzy.practice.array.commands.staff.FollowCommand;
-import me.drizzy.practice.array.commands.staff.GetUUIDCommand;
-import me.drizzy.practice.array.commands.staff.UnFollowCommand;
+import me.drizzy.practice.essentials.commands.ArrayCommand;
+import me.drizzy.practice.essentials.commands.*;
+import me.drizzy.practice.essentials.commands.donator.FlyCommand;
+import me.drizzy.practice.essentials.commands.staff.FollowCommand;
+import me.drizzy.practice.essentials.commands.staff.GetUUIDCommand;
+import me.drizzy.practice.essentials.commands.staff.UnFollowCommand;
 import me.drizzy.practice.duel.command.DuelAcceptCommand;
 import me.drizzy.practice.duel.command.DuelCommand;
 import me.drizzy.practice.duel.command.RematchCommand;
@@ -23,6 +23,8 @@ import me.drizzy.practice.kit.command.*;
 import me.drizzy.practice.match.command.*;
 import me.drizzy.practice.party.command.*;
 import me.drizzy.practice.leaderboards.command.LeaderboardsCommand;
+import me.drizzy.practice.settings.commands.ToggleDuelsCommand;
+import me.drizzy.practice.settings.commands.ToggleScoreboardCommand;
 import me.drizzy.practice.statistics.command.StatsCommand;
 import me.drizzy.practice.tournament.command.*;
 import org.bukkit.Bukkit;
@@ -32,7 +34,6 @@ import java.util.Arrays;
 public class RegisterCommands {
     
     public static void register() {
-        Array.logger("&bRegistering Commands...");
         for (Object command : Arrays.asList(
                 //Staff commands
                 new FollowCommand(),
@@ -42,7 +43,6 @@ public class RegisterCommands {
                 //Array Commands
                 new ArrayCommand(),
                 new ArraySetLobbyCommand(),
-                new ArraySetEloCommand(),
                 new ArrayGoldenHeadCommand(),
                 new ArrayReloadCommand(),
                 new ArrayReloadDivisionsCommand(),
@@ -57,11 +57,10 @@ public class RegisterCommands {
                 new ArrayHCFCommand(),
                 new ArrayClearLoadoutsCommand(),
                 new ArraySpawnCommand(),
-                new ArrayToggleScoreboardCommand(),
-                new ArrayToggleDuelCommand(),
+                new ToggleScoreboardCommand(),
+                new ToggleDuelsCommand(),
                 new ArrayVerCommand(),
                 new ArrayWorldCommand(),
-                new ArrayDebugCommand(),
 
                 //Player command
                 new LeaderboardsCommand(),
@@ -198,6 +197,7 @@ public class RegisterCommands {
                 //LMS commands
                 new LMSCancelCommand(),
                 new LMSCooldownCommand(),
+                new LMSKnockbackCommand(),
                 new LMSHostCommand(),
                 new LMSJoinCommand(),
                 new LMSLeaveCommand(),

@@ -2,7 +2,7 @@ package me.drizzy.practice.events.types.parkour;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.util.chat.Clickable;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -29,7 +29,7 @@ import java.util.UUID;
 @Getter
 public class Parkour {
 
-	protected static String EVENT_PREFIX =CC.translate("&8[&bParkour&8] &r");
+	protected static String EVENT_PREFIX =CC.translate("&8[&cParkour&8] &r");
 
 	private final String name;
 	@Setter private ParkourState state = ParkourState.WAITING;
@@ -56,10 +56,10 @@ public class Parkour {
 		Parkour parkour = Array.getInstance().getParkourManager().getActiveParkour();
 
 		toReturn.add(CC.MENU_BAR);
-		toReturn.add(CC.translate("&bHost: &r" + parkour.getName()));
+		toReturn.add(CC.translate("&cHost: &r" + parkour.getName()));
 
 		if (parkour.isWaiting()) {
-			toReturn.add("&bPlayers: &r" + parkour.getEventPlayers().size() + "/" + getMaxPlayers());
+			toReturn.add("&cPlayers: &r" + parkour.getEventPlayers().size() + "/" + getMaxPlayers());
 			toReturn.add("");
 
 			if (parkour.getCooldown() == null) {
@@ -74,8 +74,8 @@ public class Parkour {
 				toReturn.add(CC.translate("&fStarting in " + remaining + "s"));
 			}
 		} else {
-			toReturn.add("&bPlayers: &r" + parkour.getRemainingPlayers().size() + "/" + parkour.getTotalPlayers());
-			toReturn.add("&bDuration: &r" + parkour.getRoundDuration());
+			toReturn.add("&cPlayers: &r" + parkour.getRemainingPlayers().size() + "/" + parkour.getTotalPlayers());
+			toReturn.add("&cDuration: &r" + parkour.getRoundDuration());
 		}
 		toReturn.add(CC.MENU_BAR);
 
@@ -147,8 +147,8 @@ public class Parkour {
 
 		eventPlayers.put(player.getUniqueId(), new ParkourPlayer(player));
 
-		broadcastMessage(CC.AQUA + player.getName() + CC.GRAY + " has joined the &bParkour Event! &8(&b" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-		player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &bParkour Event&8!"));
+		broadcastMessage(CC.RED + player.getName() + CC.GRAY + " has joined the &cParkour Event! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
+		player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &cParkour Event&8!"));
 
 		onJoin(player);
 
@@ -177,8 +177,8 @@ public class Parkour {
 		eventPlayers.remove(player.getUniqueId());
 
 		if (state == ParkourState.WAITING) {
-			broadcastMessage(CC.AQUA + player.getName() + CC.GRAY + " left the &bParkour Event&8! &8(&b" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-			player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &bParkour Event&8!"));
+			broadcastMessage(CC.RED + player.getName() + CC.GRAY + " left the &cParkour Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
+			player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &cParkour Event&8!"));
 		}
 
 		onLeave(player);
@@ -188,7 +188,7 @@ public class Parkour {
 		profile.setParkour(null);
 		profile.refreshHotbar();
 
-		Essentials.teleportToSpawn(player);
+		profile.teleportToSpawn();
 
 		new BukkitRunnable() {
 			@Override
@@ -219,9 +219,9 @@ public class Parkour {
 		if (winner == null) {
 			Bukkit.broadcastMessage(EVENT_PREFIX + CC.RED + "The parkour events has been canceled.");
 		} else {
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Parkour Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Parkour Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Parkour Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Parkour Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Parkour Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Parkour Event" + CC.GRAY + "!");
 		}
 
 		for (ParkourPlayer parkourPlayer : eventPlayers.values()) {
@@ -233,7 +233,7 @@ public class Parkour {
 				profile.setParkour(null);
 				profile.refreshHotbar();
 
-				Essentials.teleportToSpawn(player);
+				profile.teleportToSpawn();
 			}
 		}
 
@@ -243,7 +243,7 @@ public class Parkour {
 			Profile.getByUuid(player.getUniqueId()).handleVisibility();
 		}
 		for ( Player player : getPlayers() ) {
-			Profile profile = Profile.getByUuid(player);
+			Profile profile = Profile.getByPlayer(player);
 			profile.getPlates().clear();
 		}
 	}
@@ -252,11 +252,11 @@ public class Parkour {
 		List<String> strings=new ArrayList<>();
 		strings.add(CC.translate(" "));
 		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
-		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&b&l[Parkour Event]"));
-		strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + ""));
-		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&fA &bParkour &fevent is being hosted by &b" + this.host.getUsername()));
-		strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
-		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
+		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&c&l[Parkour Event]"));
+		strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + ""));
+		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&fA &cParkour &fevent is being hosted by &c" + this.host.getUsername()));
+		strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
+		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
 		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
 		strings.add(CC.translate(" "));
 		for ( String string : strings ) {
@@ -350,6 +350,6 @@ public class Parkour {
 		profile.refreshHotbar();
 		profile.handleVisibility();
 
-		Essentials.teleportToSpawn(player);
+		profile.teleportToSpawn();
 	}
 }

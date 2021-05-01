@@ -26,7 +26,7 @@ public class OITCStartTask extends OITCTask {
         if (this.getOITC().getPlayers().size() == OITC.getMaxPlayers() || (getTicks() >= 30 && this.getOITC().getPlayers().size() >= 2)) {
             if (this.getOITC().getCooldown() == null) {
                 this.getOITC().setCooldown(new Cooldown(11_000));
-                this.getOITC().broadcastMessage("&7The OITC will start in &b10 seconds&e7...");
+                this.getOITC().broadcastMessage("&7The OITC will start in &c10 seconds&e7...");
             } else {
                 if (this.getOITC().getCooldown().hasExpired()) {
                     this.getOITC().setState(OITCState.ROUND_STARTING);

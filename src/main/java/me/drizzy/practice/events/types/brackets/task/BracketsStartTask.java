@@ -26,7 +26,7 @@ public class BracketsStartTask extends BracketsTask {
 		if (this.getBrackets().getPlayers().size() == Brackets.getMaxPlayers() || (getTicks() >= 30 && this.getBrackets().getPlayers().size() >= 2)) {
 			if (this.getBrackets().getCooldown() == null) {
 				this.getBrackets().setCooldown(new Cooldown(11_000));
-				this.getBrackets().broadcastMessage("&fThe brackets will start in &b10 seconds&f...");
+				this.getBrackets().broadcastMessage("&fThe brackets will start in &c10 seconds&f...");
 			} else {
 				if (this.getBrackets().getCooldown().hasExpired()) {
 					this.getBrackets().setState(BracketsState.ROUND_STARTING);

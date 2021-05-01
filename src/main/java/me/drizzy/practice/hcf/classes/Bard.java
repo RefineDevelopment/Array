@@ -1,5 +1,6 @@
 package me.drizzy.practice.hcf.classes;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.hcf.HCFClasses;
 import me.drizzy.practice.hcf.bard.BardData;
@@ -69,7 +70,6 @@ public class Bard extends HCFClasses implements Listener {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         Match match = profile.getMatch();
         if (match != null && (match.isHCFMatch() )) {
-            Team team = profile.getMatch().getTeam(player);
             BardData bardData = new BardData();
             bardDataMap.put(player.getUniqueId(), bardData);
             bardData.startEnergyTracking();
@@ -85,7 +85,7 @@ public class Bard extends HCFClasses implements Listener {
                         EffectData bardEffect = bardEffects.get(held.getType());
                         if (bardEffect == null) return;
 
-                        // Apply the held effect to faction members.
+                        // Apply the held effect to hcf members.
                         if (player.getItemInHand().getType() == Material.FEATHER) {
                             plugin.getEffectRestorer().setRestoreEffect(player, bardEffect.heldable);
                         }
@@ -108,7 +108,7 @@ public class Bard extends HCFClasses implements Listener {
                     // the -1 check is for offsets with the energy per millisecond
                     if (energy != 0 && energy != lastEnergy && (energy % 10 == 0 || lastEnergy - energy - 1 > 0 || energy == BardData.MAX_ENERGY)) {
                         lastEnergy = energy;
-                        player.sendMessage(Color.translate("&bBard Energy: &r" + energy));
+                        player.sendMessage(Locale.HCF_BARD_ENERGY.toString().replace("<energy>", String.valueOf(energy)));
                     }
                 }
             }.runTaskTimer(plugin, 0L, HELD_REAPPLY_TICKS);
@@ -221,7 +221,7 @@ public class Bard extends HCFClasses implements Listener {
 
                     @SuppressWarnings("unused")
                     double newEnergy = this.setEnergy(player, bardData.getEnergy() - bardEffect.energyCost);
-                    player.sendMessage(Color.translate("&7You have just used a &b&lBard Buff &7that cost you &b" + bardEffect.energyCost + " &7of your Energy."));
+                    player.sendMessage(Locale.HCF_BARD_BARDBUFF.toString().replace("<cost>", String.valueOf(bardEffect.energyCost)));
                 }
             }
         }
@@ -231,12 +231,12 @@ public class Bard extends HCFClasses implements Listener {
         String errorFeedback = null;
         double currentEnergy = bardData.getEnergy();
         if (bardEffect.energyCost > currentEnergy) {
-            errorFeedback = CC.translate("&bYou do not have enough energy for this! You need " + bardEffect.energyCost + " energy, but you only have " + currentEnergy);
+            errorFeedback = Locale.HCF_BARD_NOTENOUGHENERGY.toString().replace("<cost>", String.valueOf(bardEffect)).replace("<energy>", String.valueOf(currentEnergy));
         }
 
         long remaining = bardData.getRemainingBuffDelay() / 1000;
         if (remaining > 0L) {
-            errorFeedback = ChatColor.RED + "You cannot use this for another " + ChatColor.BOLD.toString() + remaining + ChatColor.RED + " seconds.";
+            errorFeedback = Locale.HCF_COOLDOWN.toString().replace("<duration>", String.valueOf(remaining));
         }
 
         if (sendFeedback && errorFeedback != null) {

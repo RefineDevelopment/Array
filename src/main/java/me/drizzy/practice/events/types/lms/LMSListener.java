@@ -172,7 +172,7 @@ public class LMSListener implements Listener {
     public void onDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = ((Player) event.getEntity()).getPlayer();
-            Profile profile=Profile.getByUuid(player);
+            Profile profile=Profile.getByPlayer(player);
             if (profile.isInLMS() && profile.getLms().isWaiting()) {
                 event.setCancelled(true);
             } else if (profile.getLms() != null && profile.getLms().getSpectators().contains(player.getUniqueId())) {

@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class KitPartySplitCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7A kit with that name does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7A kit with that name does not exist."));
         } else {
             if (kit.getGameRules().isDisablePartySplit()) {
                 kit.getGameRules().setDisablePartySplit(false);
@@ -18,7 +18,7 @@ public class KitPartySplitCommand {
                 kit.getGameRules().setDisablePartySplit(true);
             }
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated party-split mode for &b" + kit.getName() +  " &7to &b" + (kit.getGameRules().isDisablePartySplit() ? "true!" : "false!")));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Updated party-split mode for &c" + kit.getName() +  " &7to &c" + (kit.getGameRules().isDisablePartySplit() ? "true!" : "false!")));
         }
     }
 }

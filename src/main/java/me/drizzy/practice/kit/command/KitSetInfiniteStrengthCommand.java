@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class KitSetInfiniteStrengthCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7That kit does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That kit does not exist."));
         } else {
             if (kit.getGameRules().isInfiniteStrength()) {
                 kit.getGameRules().setInfiniteStrength(false);
@@ -18,7 +18,7 @@ public class KitSetInfiniteStrengthCommand {
                 kit.getGameRules().setInfiniteStrength(true);
             }
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated infinite-strength mode for &b" + kit.getName() +  " &7to &b" + (kit.getGameRules().isInfiniteStrength() ? "true!" : "false!")));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Updated infinite-strength mode for &c" + kit.getName() +  " &7to &c" + (kit.getGameRules().isInfiniteStrength() ? "true!" : "false!")));
         }
     }
 }

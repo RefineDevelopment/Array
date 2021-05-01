@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class KitWaterKillCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7That kit does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That kit does not exist."));
         } else {
             if (kit.getGameRules().isWaterKill()) {
                 kit.getGameRules().setWaterKill(false);
@@ -18,7 +18,7 @@ public class KitWaterKillCommand {
                 kit.getGameRules().setWaterKill(true);
             }
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated water kill mode for &b" + kit.getName() +  " &7to &b" + (kit.getGameRules().isWaterKill() ? "true!" : "false!")));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Updated water kill mode for &c" + kit.getName() +  " &7to &c" + (kit.getGameRules().isWaterKill() ? "true!" : "false!")));
         }
     }
 }

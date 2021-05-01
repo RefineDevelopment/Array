@@ -3,20 +3,19 @@ package me.drizzy.practice.match.types;
 import lombok.Getter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.MatchState;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.nametags.NametagHandler;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.queue.QueueType;
+import me.drizzy.practice.enums.QueueType;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.ChatComponentBuilder;
-import me.drizzy.practice.util.nametag.NameTags;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
@@ -33,8 +32,6 @@ public class TeamMatch extends Match {
 
     private final Team teamA;
     private final Team teamB;
-    private final int teamARoundWins = 0;
-    private final int teamBRoundWins = 0;
 
     public TeamMatch(Team teamA, Team teamB, Kit kit, Arena arena) {
         super(null, kit, arena, QueueType.UNRANKED);
@@ -45,11 +42,6 @@ public class TeamMatch extends Match {
 
     @Override
     public boolean isSoloMatch() {
-        return false;
-    }
-
-    @Override
-    public boolean isSumoTeamMatch() {
         return false;
     }
 
@@ -69,12 +61,6 @@ public class TeamMatch extends Match {
     }
 
     @Override
-    public boolean isSumoMatch() {
-        return false;
-    }
-
-
-    @Override
     public boolean isTheBridgeMatch() {
         return false;
     }
@@ -92,7 +78,7 @@ public class TeamMatch extends Match {
 
         PlayerUtil.reset(player);
 
-        if (getKit().getGameRules().isStickSpawn()) {
+        if (getKit().getGameRules().isStickSpawn() || getKit().getGameRules().isSumo()) {
             PlayerUtil.denyMovement(player);
         }
 
@@ -113,7 +99,8 @@ public class TeamMatch extends Match {
         }
 
         if (!getKit().getGameRules().isNoItems()) {
-            Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
+            Profile profile = Profile.getByPlayer(player);
+            profile.getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
         }
 
         Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(player, getKit());
@@ -121,11 +108,11 @@ public class TeamMatch extends Match {
         Team team = getTeam(player);
 
         for (Player friendly : team.getPlayers()) {
-            NameTags.color(player, friendly, org.bukkit.ChatColor.GREEN, getKit().getGameRules().isShowHealth());
+            NametagHandler.reloadPlayer(player, friendly);
         }
 
         for (Player enemy : getOpponentTeam(team).getPlayers()) {
-            NameTags.color(player, enemy, org.bukkit.ChatColor.RED, getKit().getGameRules().isShowHealth());
+            NametagHandler.reloadPlayer(player, enemy);
         }
 
         Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
@@ -136,11 +123,6 @@ public class TeamMatch extends Match {
             player.teleport(spawn.add(0, 2, 0));
         }
         teamPlayer.setPlayerSpawn(spawn);
-    }
-
-    @Override
-    public void cleanPlayer(Player player) {
-
     }
 
     @Override
@@ -201,9 +183,6 @@ public class TeamMatch extends Match {
                                 if (secondPlayer != null) {
                                     player.hidePlayer(secondPlayer);
                                 }
-
-                                NameTags.reset(player, secondPlayer);
-                                NameTags.reset(player, firstTeamPlayer.getPlayer());
                             }
 
                             if (firstTeamPlayer.isAlive()) {
@@ -216,14 +195,10 @@ public class TeamMatch extends Match {
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
-                            NameTags.reset(player, firstTeamPlayer.getPlayer());
-                            PlayerUtil.reset(player, false);
                             profile.refreshHotbar();
                             profile.handleVisibility();
                             Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
-                            Essentials.teleportToSpawn(player);
-                            PlayerUtil.reset(player, false);
-                            profile.refreshHotbar();
+                            profile.teleportToSpawn();
                         }
                     }
                 }
@@ -241,7 +216,7 @@ public class TeamMatch extends Match {
 
         for (TeamPlayer teamPlayer : winningTeam.getTeamPlayers()) {
             winnerInventories.append(teamPlayer.getUsername()).color(ChatColor.WHITE);
-            winnerInventories.setCurrentHoverEvent(getHoverEvent(teamPlayer)).setCurrentClickEvent(getClickEvent(teamPlayer)).append(", ").color(ChatColor.AQUA);
+            winnerInventories.setCurrentHoverEvent(getHoverEvent(teamPlayer)).setCurrentClickEvent(getClickEvent(teamPlayer)).append(", ").color(ChatColor.RED);
         }
 
         for (TeamPlayer teamPlayer : losingTeam.getTeamPlayers()) {
@@ -259,7 +234,7 @@ public class TeamMatch extends Match {
 
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
-        components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7(Click name to view inventory)").create());
+        components.add(new ChatComponentBuilder("").parse("&c&lMatch Details &7(Click name to view inventory)").create());
         components.add(new ChatComponentBuilder("").create());
         components.add(winnerInventories.create());
         components.add(loserInventories.create());
@@ -289,11 +264,10 @@ public class TeamMatch extends Match {
             Team team = getTeam(player);
             Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
             player.teleport(spawn);
-            Profile profile = Profile.getByUuid(player.getUniqueId());
-            PlayerUtil.reset(player, false);
-            profile.refreshHotbar();
             player.setAllowFlight(true);
             player.setFlying(true);
+            Profile profile = Profile.getByUuid(player.getUniqueId());
+            profile.refreshHotbar();
             profile.setState(ProfileState.SPECTATE_MATCH);
         }
     }
@@ -508,27 +482,6 @@ public class TeamMatch extends Match {
     }
 
     @Override
-    public int getTotalRoundWins() {
-        return teamARoundWins + teamBRoundWins;
-    }
-
-    @Override
-    public int getRoundsNeeded(TeamPlayer teamPlayer) {
-        throw new UnsupportedOperationException("Cannot getInstance solo rounds needed from TeamMatch");
-    }
-
-    @Override
-    public int getRoundsNeeded(Team Team) {
-        if (teamA.equals(Team)) {
-            return 3 - teamARoundWins;
-        } else if (teamB.equals(Team)) {
-            return 3 - teamBRoundWins;
-        } else {
-            return -1;
-        }
-    }
-
-    @Override
     public org.bukkit.ChatColor getRelationColor(Player viewer, Player target) {
         if (viewer.equals(target)) {
             return org.bukkit.ChatColor.GREEN;
@@ -538,7 +491,7 @@ public class TeamMatch extends Match {
         Team viewerTeam = getTeam(viewer);
 
         if (team == null || viewerTeam == null) {
-            return org.bukkit.ChatColor.AQUA;
+            return org.bukkit.ChatColor.RED;
         }
 
         if (team.equals(viewerTeam)) {

@@ -19,7 +19,7 @@ import java.util.Map;
 public class PartyListMenu extends Menu {
     @Override
     public String getTitle(final Player player) {
-        return "&bClick to Manage a Member";
+        return "&cClick to Manage a Member";
     }
     
     @Override

@@ -1,5 +1,6 @@
 package me.drizzy.practice.hcf;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.util.chat.Color;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -53,7 +54,7 @@ public abstract class HCFClasses {
             player.addPotionEffect(effect, true);
         }
 
-        player.sendMessage(Color.translate("&bClass: " + name + "  &aEnabled!"));
+        player.sendMessage(Locale.HCF_CLASS_ENABLED.toString().replace("<class>", name));
         return true;
     }
 

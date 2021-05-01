@@ -24,8 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Getter
 public class Arena {
 
-    @Getter
-    private static final List<Arena> arenas = new ArrayList<>();
+    @Getter private static final List<Arena> arenas = new ArrayList<>();
     protected String name;
     protected boolean active;
     @Setter private String displayName;
@@ -37,7 +36,7 @@ public class Arena {
 
     public Arena(String name) {
         this.name = name;
-        this.displayName = CC.AQUA + name;
+        this.displayName = CC.RED + name;
         this.displayIcon = new ItemStack(Material.PAPER);
     }
 

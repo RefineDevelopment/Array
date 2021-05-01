@@ -19,7 +19,7 @@ public class SpectateCommand {
 
         Profile playerProfile = Profile.getByUuid(player.getUniqueId());
 
-        if (playerProfile.isBusy(player)) {
+        if (playerProfile.isBusy()) {
             player.sendMessage(CC.RED + "You must be in the lobby and not queueing to spectate.");
             return;
         }
@@ -52,7 +52,7 @@ public class SpectateCommand {
             }
         }
 
-        if (targetProfile.isInFight() || targetProfile.isInTournament(target)) {
+        if (targetProfile.isInFight() || targetProfile.isInTournament()) {
             targetProfile.getMatch().addSpectator(player, target);
         } else if (targetProfile.isInSumo()) {
             targetProfile.getSumo().addSpectator(player);

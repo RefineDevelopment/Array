@@ -1,9 +1,11 @@
 package me.drizzy.practice.queue;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.arena.impl.TheBridgeArena;
 import me.drizzy.practice.enums.ArenaType;
+import me.drizzy.practice.enums.QueueType;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.TeamPlayer;
@@ -121,24 +123,18 @@ public class QueueThread extends Thread {
                                 secondProfile.calculateGlobalElo();
                                 firstProfile.calculateGlobalElo();
                             }
-                            kit=queue.getKit();
+                            kit = queue.getKit();
 
                             // Create match
                             Match match;
-                            /*if (queue.getKit().getGameRules().isSumo()) {
-                                match = new SumoMatch(queue, firstMatchPlayer, secondMatchPlayer,
-                                        queue.getKit(), arena, queue.getQueueType());
-                            } else*/
                             if (queue.getKit().getGameRules().isBuild() && queue.getKit().getGameRules().isBridge()) {
-                                match = new TheBridgeMatch(queue, firstMatchPlayer, secondMatchPlayer,
-                                        queue.getKit(), arena, queue.getQueueType());
+                                match = new TheBridgeMatch(queue, firstMatchPlayer, secondMatchPlayer, queue.getKit(), arena, queue.getType());
                             } else {
-                                match = new SoloMatch(queue, firstMatchPlayer, secondMatchPlayer,
-                                        queue.getKit(), arena, queue.getQueueType(), 0, 0);
+                                match = new SoloMatch(queue, firstMatchPlayer, secondMatchPlayer, queue.getKit(), arena, queue.getType());
                             }
-                            for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Start-Message.Solo") ) {
-                                final String opponentMessages=this.formatMessages(string, rank.getFullName(firstPlayer), rank.getFullName(secondPlayer), firstMatchPlayer.getElo(), secondMatchPlayer.getElo(), queue.getQueueType());
-                                final String message=CC.translate(this.replace(opponentMessages));
+                            for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList() ) {
+                                String opponentMessages = this.formatMessages(string, rank.getFullName(firstPlayer), rank.getFullName(secondPlayer), firstMatchPlayer.getElo(), secondMatchPlayer.getElo(), queue.getType());
+                                String message = CC.translate(this.replace(opponentMessages));
                                 firstPlayer.sendMessage(message);
                                 secondPlayer.sendMessage(message);
                             }
@@ -184,12 +180,12 @@ public class QueueThread extends Thread {
             player1Format = player1;
             player2Format = player2;
         }
-        return string.replace("{player1}", player1Format).replace("{player2}", player2Format);
+        return string.replace("<player1>", player1Format).replace("<player2>", player2Format);
     }
 
     public String replace(String string) {
-        string = string.replace("{arena}", this.arena.getDisplayName())
-                .replace("{kit}", this.kit.getDisplayName());
+        string = string.replace("<arena>", this.arena.getDisplayName())
+                .replace("<kit>", this.kit.getDisplayName());
         return string;
     }
 }

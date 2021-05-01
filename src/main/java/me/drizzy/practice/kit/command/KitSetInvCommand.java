@@ -14,7 +14,7 @@ public class KitSetInvCommand {
 
     public void execute(Player player, Kit kit) {
         if (kit == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7That kit does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That kit does not exist."));
             return;
         }
 
@@ -23,7 +23,7 @@ public class KitSetInvCommand {
         List<PotionEffect> potionEffects = new ArrayList<>(player.getActivePotionEffects());
         kit.getKitInventory().setEffects(potionEffects);
         kit.save();
-        player.sendMessage((CC.translate("&8[&b&lArray&8] &aYou updated the kit's loadout.")));
+        player.sendMessage((CC.translate("&8[&c&lArray&8] &aYou updated the kit's loadout.")));
     }
 
 }

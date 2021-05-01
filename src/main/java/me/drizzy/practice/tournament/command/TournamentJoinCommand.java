@@ -35,7 +35,7 @@ public class TournamentJoinCommand {
                 return;
             }
         }
-        if (profile.isBusy(player)) {
+        if (profile.isBusy()) {
             player.sendMessage(ChatColor.RED + "You cannot join the Tournament in your current state");
             return;
         }

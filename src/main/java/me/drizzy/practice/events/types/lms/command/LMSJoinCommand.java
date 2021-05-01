@@ -15,7 +15,7 @@ public class LMSJoinCommand {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         LMS activeLMS = Array.getInstance().getLMSManager().getActiveLMS();
 
-        if (profile.isBusy(player) || profile.getParty() != null) {
+        if (profile.isBusy() || profile.getParty() != null) {
             player.sendMessage(CC.RED + "You cannot join the lms right now.");
             return;
         }

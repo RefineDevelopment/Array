@@ -3,8 +3,8 @@ package me.drizzy.practice.match.types;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
@@ -12,18 +12,17 @@ import me.drizzy.practice.match.MatchState;
 import me.drizzy.practice.match.task.MatchStartTask;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.nametags.NametagHandler;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.queue.Queue;
-import me.drizzy.practice.queue.QueueType;
+import me.drizzy.practice.enums.QueueType;
 import me.drizzy.practice.util.other.PlayerUtil;
-import me.drizzy.practice.util.other.TaskUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.elo.EloUtil;
 import me.drizzy.practice.util.chat.ChatComponentBuilder;
 import me.drizzy.practice.util.inventory.ItemBuilder;
-import me.drizzy.practice.util.nametag.NameTags;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.*;
@@ -39,13 +38,14 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
+@Setter
 public class TheBridgeMatch extends Match {
 
-    @Setter private TeamPlayer playerA;
-    @Setter private TeamPlayer playerB;
-    @Getter private final List<Player> caughtPlayers = new ArrayList<>();
-    @Setter private int round = 0;
-    @Getter @Setter private BukkitTask startTask;
+    private TeamPlayer playerA;
+    private TeamPlayer playerB;
+    private int round = 0;
+    private BukkitTask startTask;
+    private final List<Player> caughtPlayers = new ArrayList<>();
 
     public TheBridgeMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
         super(queue, kit, arena, queueType);
@@ -55,11 +55,6 @@ public class TheBridgeMatch extends Match {
 
     @Override
     public boolean isSoloMatch() {
-        return false;
-    }
-
-    @Override
-    public boolean isSumoTeamMatch() {
         return false;
     }
 
@@ -78,11 +73,6 @@ public class TheBridgeMatch extends Match {
         return false;
     }
 
-    @Override
-    public boolean isSumoMatch() {
-        return false;
-    }
-    
     @Override
     public boolean isTheBridgeMatch() {
         return true;
@@ -118,16 +108,13 @@ public class TheBridgeMatch extends Match {
             player.teleport(spawn.add(0, 2, 0));
         }
         teamPlayer.setPlayerSpawn(spawn);
+
         player.getInventory().setArmorContents(getKit().getKitInventory().getArmor());
         player.getInventory().setContents(getKit().getKitInventory().getContents());
         giveBridgeKit(player);
-        NameTags.color(player, getOpponentPlayer(player), (this.getPlayerA().getPlayer() == player ? org.bukkit.ChatColor.BLUE :  org.bukkit.ChatColor.RED), getKit().getGameRules().isBuild());
 
-    }
-
-    @Override
-    public void cleanPlayer(Player player) {
-
+        NametagHandler.reloadPlayer(player);
+        NametagHandler.reloadOthersFor(player);
     }
 
     @Override
@@ -168,7 +155,6 @@ public class TheBridgeMatch extends Match {
                         Player opponent = getOpponentPlayer(player);
 
                         if (player != null) {
-                            NameTags.reset(player, opponent);
 
                             player.setFireTicks(0);
                             player.updateInventory();
@@ -176,8 +162,7 @@ public class TheBridgeMatch extends Match {
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
-                            NameTags.reset(player, teamPlayer.getPlayer());
-                            TaskUtil.runSync(profile::refreshHotbar);
+                            profile.refreshHotbar();
                             profile.handleVisibility();
                             Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
 
@@ -186,7 +171,7 @@ public class TheBridgeMatch extends Match {
                                         opponent.getUniqueId(), getKit(), getArena()));
                             }
 
-                            Essentials.teleportToSpawn(player);
+                            profile.teleportToSpawn();
                         }
                     }
                 }
@@ -207,7 +192,7 @@ public class TheBridgeMatch extends Match {
         inventoriesBuilder.setCurrentHoverEvent(getHoverEvent(losingTeamPlayer)).setCurrentClickEvent(getClickEvent(losingTeamPlayer));
 
         List<BaseComponent[]> components = new ArrayList<>();
-        components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7(Click name to view inventory)").create());
+        components.add(new ChatComponentBuilder("").parse("&c&lMatch Details &7(Click name to view inventory)").create());
         components.add(inventoriesBuilder.create());
 
 
@@ -264,7 +249,7 @@ public class TheBridgeMatch extends Match {
                 }
             }
             if (specs.size() >= 1) {
-                components.add(new ChatComponentBuilder("").parse("&bSpectators (" + specs.size() + "): &7" + builder.substring(0, builder.length())).create());
+                components.add(new ChatComponentBuilder("").parse("&cSpectators (" + specs.size() + "): &7" + builder.substring(0, builder.length())).create());
             }
         }
 
@@ -437,14 +422,13 @@ public class TheBridgeMatch extends Match {
         }
     }
 
-    @Override
+    @SuppressWarnings("unused")
     public int getTotalRoundWins() {
         Profile aProfile = Profile.getByUuid(playerA.getUuid());
         Profile bProfile = Profile.getByUuid(playerB.getUuid());
         return aProfile.getBridgeRounds() + bProfile.getBridgeRounds();
     }
 
-    @Override
     public int getRoundsNeeded(TeamPlayer teamPlayer) {
         Profile aProfile = Profile.getByUuid(playerA.getUuid());
         Profile bProfile = Profile.getByUuid(playerB.getUuid());
@@ -456,11 +440,6 @@ public class TheBridgeMatch extends Match {
         } else {
             return -1;
         }
-    }
-
-    @Override
-    public int getRoundsNeeded(Team team) {
-        throw new UnsupportedOperationException("Cannot getInstance team round wins from SoloMatch");
     }
 
     @Override
@@ -477,7 +456,7 @@ public class TheBridgeMatch extends Match {
                 }
 
                 this.broadcastMessage("");
-                this.broadcastMessage(CC.translate(CC.AQUA + getWinningPlayer().getName() + " &7has won this round!"));
+                this.broadcastMessage(CC.translate(CC.RED + getWinningPlayer().getName() + " &7has won this round!"));
                 this.broadcastMessage("");
 
                 if (aProfile.getBridgeRounds() >= 3 || bProfile.getBridgeRounds() >= 3) {
@@ -497,35 +476,38 @@ public class TheBridgeMatch extends Match {
                     }
                     end();
                 } else {
-                        //Cleanup the blocks and the multiple goal catcher
+
                     if (caughtPlayers != null) {
                         caughtPlayers.clear();
                     }
 
+                    if (Array.getInstance().getEssentials().getMeta().isBridgeClearBlocks()) {
                         cleanup();
+                    }
 
-                        //Setup Both Players
                         setupPlayer(playerA.getPlayer());
                         setupPlayer(playerB.getPlayer());
 
-                        //Show The Players if their visibility is fucked
                         playerA.getPlayer().showPlayer(playerB.getPlayer());
                         playerB.getPlayer().showPlayer(playerA.getPlayer());
 
-                        //Restart the Match
                         onStart();
-                    for ( String string : Array.getInstance().getMessagesConfig().getStringList("Match.Round-Message.TheBridge") ) {
-                        //Send Round Message
-                        playerA.getPlayer().sendMessage(CC.translate(string.replace("{round_number}", String.valueOf(this.getRound()))
-                                .replace("{playerA_points}", String.valueOf(Profile.getByUuid(playerA.getPlayer()).getBridgeRounds()))
-                                .replace("{playerB_points}", String.valueOf(Profile.getByUuid(playerB.getPlayer()).getBridgeRounds())))
-                                .replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName())
-                                .replace("{ping}", String.valueOf(playerB.getPing())));
-                        playerB.getPlayer().sendMessage(CC.translate(string.replace("{round_number}", String.valueOf(this.getRound()))
-                                .replace("{playerA_points}", String.valueOf(Profile.getByUuid(playerA.getPlayer()).getBridgeRounds()))
-                                .replace("{playerB_points}", String.valueOf(Profile.getByUuid(playerB.getPlayer()).getBridgeRounds())))
-                                .replace("{arena}", this.getArena().getName()).replace("{kit}", this.getKit().getName())
-                                .replace("{ping}", String.valueOf(playerA.getPing())));
+                    for ( String string : Locale.MATCH_ROUND_MESSAGE.toList() ) {
+
+                        playerA.getPlayer().sendMessage(CC.translate(string
+                                .replace("<round_number>", String.valueOf(this.getRound()))
+                                .replace("<your_points>", String.valueOf(Profile.getByPlayer(playerA.getPlayer()).getBridgeRounds()))
+                                .replace("<their_points>", String.valueOf(Profile.getByPlayer(playerB.getPlayer()).getBridgeRounds())))
+                                .replace("<arena>", this.getArena().getName())
+                                .replace("<kit>", this.getKit().getName())
+                                .replace("<ping>", String.valueOf(playerB.getPing())));
+                        playerB.getPlayer().sendMessage(CC.translate(string
+                                .replace("<round_number>", String.valueOf(this.getRound()))
+                                .replace("<your_points>", String.valueOf(Profile.getByPlayer(playerB.getPlayer()).getBridgeRounds()))
+                                .replace("<their_points>", String.valueOf(Profile.getByPlayer(playerA.getPlayer()).getBridgeRounds())))
+                                .replace("<arena>", this.getArena().getName())
+                                .replace("<kit>", this.getKit().getName())
+                                .replace("<ping>", String.valueOf(playerA.getPing())));
                     }
                         //Continue the Match
                         setState(MatchState.STARTING);
@@ -543,7 +525,7 @@ public class TheBridgeMatch extends Match {
 
     @Override
     public void onRespawn(Player player) {
-        Essentials.teleportToSpawn(player);
+        Profile.getByPlayer(player).teleportToSpawn();
     }
 
     @Override
@@ -556,17 +538,19 @@ public class TheBridgeMatch extends Match {
     }
 
     public static void giveBridgeKit(Player player) {
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = Profile.getByPlayer(player);
         TheBridgeMatch teamMatch = (TheBridgeMatch) profile.getMatch();
+
         ItemStack[] armorRed = leatherArmor(Color.RED);
         ItemStack[] armorBlue = leatherArmor(Color.BLUE);
-        if(teamMatch.getTeamPlayerA().getPlayer() == player){
+
+        if ( teamMatch.getTeamPlayerA().getPlayer() == player ) {
             player.getInventory().setArmorContents(armorRed);
             player.getInventory().all(Material.STAINED_CLAY).forEach((key, value) -> {
                 player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(14).amount(64).build());
                 player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(14).amount(64).build());
             });
-        }else{
+        } else {
             player.getInventory().setArmorContents(armorBlue);
             player.getInventory().all(Material.STAINED_CLAY).forEach((key, value) -> {
                 player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(11).amount(64).build());

@@ -27,7 +27,7 @@ public class ParkourStartTask extends ParkourTask {
 		if (this.getParkour().getPlayers().size() == this.getParkour().getMaxPlayers() || (getTicks() >= 30 && this.getParkour().getPlayers().size() >= 2)) {
 			if (this.getParkour().getCooldown() == null) {
 				this.getParkour().setCooldown(new Cooldown(11_000));
-				this.getParkour().broadcastMessage("&fThe parkour will start in &b10 seconds&f...");
+				this.getParkour().broadcastMessage("&fThe parkour will start in &c10 seconds&f...");
 			} else {
 				if (this.getParkour().getCooldown().hasExpired()) {
 					this.getParkour().setState(ParkourState.ROUND_STARTING);

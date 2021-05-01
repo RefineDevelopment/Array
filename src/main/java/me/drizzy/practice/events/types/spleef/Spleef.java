@@ -3,7 +3,7 @@ package me.drizzy.practice.events.types.spleef;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
-import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.events.types.spleef.player.SpleefPlayer;
 import me.drizzy.practice.events.types.spleef.player.SpleefPlayerState;
@@ -35,7 +35,7 @@ import java.util.UUID;
 @Getter
 public class Spleef {
 
-	protected static String EVENT_PREFIX=CC.translate("&8[&bSpleef&8] &r");
+	protected static String EVENT_PREFIX=CC.translate("&8[&cSpleef&8] &r");
     public final List<Player> catcher = new ArrayList<>();
 	private final String name;
 	@Setter private SpleefState state = SpleefState.WAITING;
@@ -65,10 +65,10 @@ public class Spleef {
 		Spleef spleef = Array.getInstance().getSpleefManager().getActiveSpleef();
 
 		toReturn.add(CC.MENU_BAR);
-		toReturn.add(CC.translate("&bHost: &r" + spleef.getName()));
+		toReturn.add(CC.translate("&cHost: &r" + spleef.getName()));
 
 		if (spleef.isWaiting()) {
-			toReturn.add("&bPlayers: &r" + spleef.getEventPlayers().size() + "/" + Spleef.getMaxPlayers());
+			toReturn.add("&cPlayers: &r" + spleef.getEventPlayers().size() + "/" + Spleef.getMaxPlayers());
 			toReturn.add("");
 
 			if (spleef.getCooldown() == null) {
@@ -83,8 +83,8 @@ public class Spleef {
 				toReturn.add(CC.translate("&fStarting in " + remaining + "s"));
 			}
 		} else {
-			toReturn.add("&bPlayers: &r" + spleef.getRemainingPlayers().size() + "/" + spleef.getTotalPlayers());
-			toReturn.add("&bDuration: &r" + spleef.getRoundDuration());
+			toReturn.add("&cPlayers: &r" + spleef.getRemainingPlayers().size() + "/" + spleef.getTotalPlayers());
+			toReturn.add("&cDuration: &r" + spleef.getRoundDuration());
 		}
 		toReturn.add(CC.MENU_BAR);
 
@@ -155,8 +155,8 @@ public class Spleef {
 	public void handleJoin(Player player) {
 		eventPlayers.put(player.getUniqueId(), new SpleefPlayer(player));
 
-		broadcastMessage(CC.AQUA + player.getName() + CC.GRAY + " has joined the &bSpleef Event&8! &8(&b" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-		player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &bSpleef Event&8!"));
+		broadcastMessage(CC.RED + player.getName() + CC.GRAY + " has joined the &cSpleef Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
+		player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &cSpleef Event&8!"));
 
 		onJoin(player);
 
@@ -189,8 +189,8 @@ public class Spleef {
 		eventPlayers.remove(player.getUniqueId());
 
 		if (state == SpleefState.WAITING) {
-			broadcastMessage(CC.AQUA + player.getName() + CC.GRAY + " left the &bSpleef Event&8! &8(&b" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-			player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &bSpleef Event&8!"));
+			broadcastMessage(CC.RED + player.getName() + CC.GRAY + " left the &cSpleef Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
+			player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &cSpleef Event&8!"));
 		}
 
 		onLeave(player);
@@ -200,7 +200,7 @@ public class Spleef {
 		profile.setSpleef(null);
 		profile.refreshHotbar();
 
-		Essentials.teleportToSpawn(player);
+		profile.teleportToSpawn();
 
 		new BukkitRunnable() {
 			@Override
@@ -238,9 +238,9 @@ public class Spleef {
 		if (winner == null) {
 			Bukkit.broadcastMessage(EVENT_PREFIX + CC.RED + "The spleef events has been canceled.");
 		} else {
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Spleef Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Spleef Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Spleef Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Spleef Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Spleef Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Spleef Event" + CC.GRAY + "!");
 		}
 
 		for (SpleefPlayer spleefPlayer : eventPlayers.values()) {
@@ -252,7 +252,7 @@ public class Spleef {
 				profile.setSpleef(null);
 				profile.refreshHotbar();
 
-				Essentials.teleportToSpawn(player);
+				profile.teleportToSpawn();
 			}
 		}
 
@@ -289,11 +289,11 @@ public class Spleef {
 		List<String> strings=new ArrayList<>();
 		strings.add(CC.translate(" "));
 		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
-		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&b&l[Spleef Event]"));
-		strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + ""));
-		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&fA &bSpleef &fevent is being hosted by &b" + this.host.getUsername()));
-		strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
-		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
+		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&c&l[Spleef Event]"));
+		strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + ""));
+		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&fA &cSpleef &fevent is being hosted by &c" + this.host.getUsername()));
+		strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
+		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
 		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
 		strings.add(CC.translate(" "));
 		for ( String string : strings ) {
@@ -346,7 +346,7 @@ public class Spleef {
 	public void onDeath(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 
-		broadcastMessage("&b" + player.getName() + "&7 died!");
+		broadcastMessage("&c" + player.getName() + "&7 died!");
 
 
 		if (canEnd()) {
@@ -408,6 +408,6 @@ public class Spleef {
 		profile.refreshHotbar();
 		profile.handleVisibility();
 
-		Essentials.teleportToSpawn(player);
+		profile.teleportToSpawn();
 	}
 }

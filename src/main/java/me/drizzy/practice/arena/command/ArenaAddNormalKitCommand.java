@@ -12,13 +12,13 @@ public class ArenaAddNormalKitCommand {
     public void execute(Player player, @CPL("Arena") Arena arena) {
 
         if (arena == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Arena does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Arena does not exist."));
             return;
         }
 
         for ( Kit kit : Kit.getKits() ) {
             if (kit == null) {
-                player.sendMessage(CC.translate("&8[&b&lArray&8] &7There are no kits."));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7There are no kits."));
                 return;
             }
         if (kit.getGameRules().isBuild() || kit.getGameRules().isBoxUHC() || kit.getGameRules().isSpleef() || kit.getGameRules().isSumo() || kit.getGameRules().isParkour() || kit.getGameRules().isWaterKill()) {
@@ -26,7 +26,7 @@ public class ArenaAddNormalKitCommand {
         }
 
         if (!arena.getKits().contains(kit.getName())) arena.getKits().add(kit.getName());
-        player.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully added the kit &b" + kit.getName() + "&7 to &b" + arena.getName() + "&7."));
+        player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully added the kit &c" + kit.getName() + "&7 to &c" + arena.getName() + "&7."));
     }
         arena.save();
 

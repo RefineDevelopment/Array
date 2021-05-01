@@ -15,7 +15,7 @@ public class GulagJoinCommand {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		Gulag activeGulag= Array.getInstance().getGulagManager().getActiveGulag();
 
-		if (profile.isBusy(player) || profile.getParty() != null) {
+		if (profile.isBusy() || profile.getParty() != null) {
 			player.sendMessage(CC.RED + "You cannot join the gulag right now.");
 			return;
 		}

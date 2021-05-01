@@ -26,7 +26,7 @@ public class SpleefStartTask extends SpleefTask {
 		if (this.getSpleef().getPlayers().size() == this.getSpleef().getMaxPlayers() || (getTicks() >= 30 && this.getSpleef().getPlayers().size() >= 2)) {
 			if (this.getSpleef().getCooldown() == null) {
 				this.getSpleef().setCooldown(new Cooldown(11_000));
-				this.getSpleef().broadcastMessage("&fThe spleef will start in &b10 seconds&f...");
+				this.getSpleef().broadcastMessage("&fThe spleef will start in &c10 seconds&f...");
 			} else {
 				if (this.getSpleef().getCooldown().hasExpired()) {
 					this.getSpleef().setState(SpleefState.ROUND_STARTING);

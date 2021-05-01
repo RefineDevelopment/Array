@@ -13,16 +13,16 @@ public class Rank {
     public static void preLoad() {
         if (Bukkit.getPluginManager().getPlugin("AquaCore") != null) {
             Array.getInstance().setRankManager(new AquaCore());
-            Array.logger("&bFound AquaCore! Hooking in...");
+            Array.logger("&7Found AquaCore! Hooking in...");
         } else if (Bukkit.getPluginManager().getPlugin("MizuCore") != null) {
             Array.getInstance().setRankManager(new MizuCore());
-            Array.logger("&bFound MizuCore! Hooking in...");
+            Array.logger("&7Found MizuCore! Hooking in...");
         } else if (Bukkit.getPluginManager().getPlugin("HestiaCore") != null) {
             Array.getInstance().setRankManager(new HestiaCore());
-            Array.logger("&bFound HestiaCore! Hooking in...");
+            Array.logger("&7Found HestiaCore! Hooking in...");
         } else if (Bukkit.getPluginManager().getPlugin("ZoomCore") != null) {
             Array.getInstance().setRankManager(new ZoomCore());
-            Array.logger("&bFound ZoomCore! Hooking in...");
+            Array.logger("&7Found ZoomCore! Hooking in...");
         } else {
             Array.getInstance().setRankManager(new DefaultProvider());
         }

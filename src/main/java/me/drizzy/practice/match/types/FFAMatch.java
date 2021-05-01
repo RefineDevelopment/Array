@@ -2,20 +2,19 @@ package me.drizzy.practice.match.types;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.nametags.NametagHandler;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.queue.QueueType;
+import me.drizzy.practice.enums.QueueType;
 import me.drizzy.practice.util.location.Circle;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.ChatComponentBuilder;
-import me.drizzy.practice.util.nametag.NameTags;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -42,11 +41,6 @@ public class FFAMatch extends Match {
     }
 
     @Override
-    public boolean isSumoTeamMatch() {
-        return false;
-    }
-
-    @Override
     public boolean isTeamMatch() {
         return false;
     }
@@ -58,11 +52,6 @@ public class FFAMatch extends Match {
 
     @Override
     public boolean isHCFMatch() {
-        return false;
-    }
-
-    @Override
-    public boolean isSumoMatch() {
         return false;
     }
 
@@ -110,7 +99,7 @@ public class FFAMatch extends Match {
 
         Team team = getTeam(player);
         for (Player enemy : team.getPlayers()) {
-            NameTags.color(player, enemy, org.bukkit.ChatColor.RED, getKit().getGameRules().isShowHealth());
+            NametagHandler.reloadPlayer(player, enemy);
             Profile.getByUuid(enemy.getUniqueId()).handleVisibility();
         }
     }
@@ -122,19 +111,14 @@ public class FFAMatch extends Match {
     }
 
     @Override
-    public void cleanPlayer(Player player) {
-
-    }
-
-    @Override
     public void onStart() {
         int i = 0;
         for ( Player player : getPlayers() ) {
-            Location midSpawn=this.getMidSpawn();
+            Location midSpawn = this.getMidSpawn();
             List<Location> circleLocations=Circle.getCircle(midSpawn, 7, this.getPlayers().size());
-            Location center=midSpawn.clone();
-            Location loc=circleLocations.get(i);
-            Location target=loc.setDirection(center.subtract(loc).toVector());
+            Location center = midSpawn.clone();
+            Location loc = circleLocations.get(i);
+            Location target = loc.setDirection(center.subtract(loc).toVector());
             player.teleport(target.add(0, 0.5, 0));
             circleLocations.remove(i);
             i++;
@@ -173,15 +157,15 @@ public class FFAMatch extends Match {
                             //Reset the Player
                             player.setFireTicks(0);
                             player.updateInventory();
+
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
                             profile.handleVisibility();
-                            PlayerUtil.reset(player, false);
                             profile.refreshHotbar();
                             //Reset their Knockback Profile and Teleport them to Spawn
                             Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(player, getKit());
-                            Essentials.teleportToSpawn(player);
+                            profile.teleportToSpawn();
                         }
                     }
                 }
@@ -213,7 +197,7 @@ public class FFAMatch extends Match {
 
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
-        components.add(new ChatComponentBuilder("").parse("&b&lMatch Details &7(Click name to view inventory)").create());
+        components.add(new ChatComponentBuilder("").parse("&c&lMatch Details &7(Click name to view inventory)").create());
         components.add(winnerInventories.create());
         components.add(loserInventories.create());
         components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
@@ -226,7 +210,7 @@ public class FFAMatch extends Match {
 
     @Override
     public boolean canEnd() {
-        return team.getAliveTeamPlayers().size() == 1;
+        return getAlivePlayers().size() == 1;
     }
 
     @Override
@@ -237,12 +221,11 @@ public class FFAMatch extends Match {
         PlayerUtil.reset(player);
 
         if (!canEnd() && !teamPlayer.isDisconnected()) {
-            player.teleport(getArena().getSpawn1());
-            Profile profile = Profile.getByUuid(player.getUniqueId());
-            PlayerUtil.reset(player, false);
-            profile.refreshHotbar();
+            player.teleport(getMidSpawn());
             player.setAllowFlight(true);
             player.setFlying(true);
+            Profile profile = Profile.getByUuid(player.getUniqueId());
+            profile.refreshHotbar();
             profile.setState(ProfileState.SPECTATE_MATCH);
         }
     }
@@ -348,21 +331,6 @@ public class FFAMatch extends Match {
     @Override
     public TeamPlayer getOpponentTeamPlayer(Player player) {
         throw new UnsupportedOperationException("Cannot getInstance opponent team from a Juggernaut match");
-    }
-
-    @Override
-    public int getRoundsNeeded(Team Team) {
-        return 0;
-    }
-
-    @Override
-    public int getRoundsNeeded(TeamPlayer teamPlayer) {
-        return 0;
-    }
-
-    @Override
-    public int getTotalRoundWins() {
-        return 0;
     }
 
     @Override

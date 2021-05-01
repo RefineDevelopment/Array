@@ -1,5 +1,10 @@
 package me.drizzy.practice.duel;
 
+import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
+import me.drizzy.practice.profile.rank.Rank;
+import me.drizzy.practice.profile.rank.RankType;
+import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.arena.Arena;
@@ -12,20 +17,19 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
 public class DuelProcedure {
 
-    @Getter
     private final boolean party;
-    @Getter
     private final Player sender;
-    @Getter
     private final Player target;
-    @Getter
-    @Setter
     private Kit kit;
-    @Getter
-    @Setter
     private Arena arena;
+    public static RankType rank = Array.getInstance().getRankManager();
 
     public DuelProcedure(Player sender, Player target, boolean party) {
         this.sender = sender;
@@ -42,17 +46,31 @@ public class DuelProcedure {
         request.setKit(kit);
         request.setArena(arena);
 
-        Profile senderProfile = Profile.getByUuid(sender.getUniqueId());
+        Profile senderProfile = Profile.getByPlayer(sender);
+
         senderProfile.setDuelProcedure(null);
         senderProfile.getSentDuelRequests().put(target.getUniqueId(), request);
 
-        this.sender.sendMessage(CC.translate("&8[&b&lDuel&8] &fYou sent a duel request to &b" + this.target.getName() + " &7(" + PlayerUtil.getPing(target) + ")" + " &f with kit &b" + (this.kit.getName()) + " &fon the arena &b" + arena.getDisplayName()));
-        this.target.sendMessage(CC.translate("&8[&b&lDuel&8] &b" + this.sender.getName() + "&7(" + PlayerUtil.getPing(sender) + ")" + " &fhas sent you a duel request with kit &b" + (this.kit.getName()) + " &fon the arena &b" + arena.getDisplayName()));
-        target.spigot().sendMessage(new ChatComponentBuilder("")
-                .parse("&a(Click to accept)")
-                .attachToEachPart(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/duel accept " + sender.getName()))
-                .attachToEachPart(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentBuilder(CC.GREEN + "Click to accept this duel invite.").create()))
-                .create());
+        sender.sendMessage(Locale.DUEL_SENT.toString()
+                .replace("<target_name>", rank.getFullName(target))
+                .replace("<target_ping>", String.valueOf(PlayerUtil.getPing(target)))
+                .replace("<duel_kit>", request.getKit().getDisplayName())
+                .replace("<duel_arena>", request.getArena().getDisplayName()));
+
+        List<String> strings = new ArrayList<>();
+
+        strings.add(Locale.DUEL_RECIEVED.toString()
+                .replace("<sender_name>", rank.getFullName(sender))
+                .replace("<sender_ping>", String.valueOf(PlayerUtil.getPing(sender)))
+                .replace("<duel_kit>", request.getKit().getDisplayName())
+                .replace("<duel_arena>", request.getArena().getDisplayName()));
+
+        strings.add(Locale.DUEL_ACCEPT.toString());
+
+        for ( String string : strings ) {
+            Clickable clickable = new Clickable(string, Locale.DUEL_HOVER.toString(),"/duel accept " + sender.getName());
+            clickable.sendToPlayer(target);
+        }
     }
 
 }

@@ -14,6 +14,7 @@ public class SettingsMeta {
     private boolean allowTournamentMessages=true;
     private boolean isVanillaTab=false;
     private boolean isShowPlayers=true;
+    private boolean isCpsScoreboard=false;
 
     //Party Chat
     private boolean isPartyChat=false;

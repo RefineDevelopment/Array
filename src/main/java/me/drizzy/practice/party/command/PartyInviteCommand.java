@@ -8,14 +8,15 @@ import org.bukkit.entity.Player;
 import me.drizzy.practice.util.command.command.CommandMeta;
 
 @CommandMeta(label = { "party invite", "p invite" })
-public class PartyInviteCommand
-{
-    public void execute(final Player player, @CPL("player") final Player target) {
+public class PartyInviteCommand {
+
+    public void execute(Player player, @CPL("player") Player target) {
+        Profile profile = Profile.getByUuid(player.getUniqueId());
         if (target == null) {
             player.sendMessage(CC.RED + "A player with that name could not be found.");
             return;
         }
-        final Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile targetData = Profile.getByUuid(target.getUniqueId());
         if (profile.getParty() == null) {
             player.sendMessage(CC.RED + "You do not have a party.");
             return;
@@ -32,8 +33,7 @@ public class PartyInviteCommand
             player.sendMessage(CC.RED + "The party state is Open. You do not need to invite players.");
             return;
         }
-        final Profile targetData = Profile.getByUuid(target.getUniqueId());
-        if (targetData.isBusy(target)) {
+        if (targetData.isBusy()) {
             player.sendMessage(target.getDisplayName() + CC.RED + " is currently busy.");
             return;
         }

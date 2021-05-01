@@ -1,28 +1,17 @@
 package me.drizzy.practice.leaderboards.menu;
 
-import com.google.common.collect.Lists;
-import lombok.AllArgsConstructor;
-import me.drizzy.practice.api.ArrayCache;
-import me.drizzy.practice.leaderboards.LeaderboardsAdapter;
+import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.leaderboards.menu.buttons.GlobalLeaderboardsButton;
 import me.drizzy.practice.leaderboards.menu.buttons.KitLeaderboardsButton;
 import me.drizzy.practice.leaderboards.menu.buttons.StatsButton;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.other.SkullCreator;
-import org.bukkit.ChatColor;
+import me.drizzy.practice.util.menu.Button;
+import me.drizzy.practice.util.menu.Menu;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import me.drizzy.practice.kit.Kit;
-import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.inventory.ItemBuilder;
-import me.drizzy.practice.util.menu.Button;
-import me.drizzy.practice.util.menu.Menu;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class LeaderboardsMenu extends Menu {

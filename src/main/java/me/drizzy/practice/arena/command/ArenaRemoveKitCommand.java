@@ -12,19 +12,19 @@ public class ArenaRemoveKitCommand {
 
     public void execute(Player player, @CPL("arena") Arena arena, @CPL("kit") Kit kit) {
         if (arena == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7An arena with that name does not exist"));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7An arena with that name does not exist"));
             return;
         }
 
         if (kit == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7A kit with that name does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7A kit with that name does not exist."));
             return;
         }
 
         if (arena.getKits().contains(kit.getName())) {
             arena.getKits().remove(kit.getName());
 
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully removed the kit &b" + kit.getName() + " &7from &b" + arena.getName()));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully removed the kit &c" + kit.getName() + " &7from &c" + arena.getName()));
             arena.save();
         }
     }

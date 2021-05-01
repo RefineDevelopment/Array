@@ -1,16 +1,14 @@
 package me.drizzy.practice.profile;
 
 import me.drizzy.practice.Array;
-import me.drizzy.practice.array.essentials.Essentials;
-import me.drizzy.practice.array.essentials.event.SpawnTeleportEvent;
+import me.drizzy.practice.essentials.event.SpawnTeleportEvent;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchState;
 import me.drizzy.practice.match.events.MatchEvent;
 import me.drizzy.practice.match.events.MatchStartEvent;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.other.PlayerUtil;
-import me.drizzy.practice.util.nametag.NameTags;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.ItemFrame;
@@ -30,24 +28,9 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ProfileListener implements Listener {
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onPlayerMatchStart(MatchEvent e) {
-        if (e instanceof MatchStartEvent) {
-            Match match = e.getMatch();
-            Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), () -> match.getPlayers().forEach(player -> {
-                Profile profile = Profile.getByUuid(player.getUniqueId());
-                List<Player> followers = profile.getFollower();
-                for (Player follower : followers) {
-                    if (follower != null) {
-                        follower.chat("/spec " + profile.getName());
-                    }
-                }
-            }), 20L);
-        }
-    }
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
@@ -77,30 +60,12 @@ public class ProfileListener implements Listener {
     public void onSpawnTeleportEvent(SpawnTeleportEvent event) {
         Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
 
-        if (!profile.isBusy(event.getPlayer()) && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-            Array.getInstance().getTaskThread().execute(() -> {
-                PlayerUtil.reset(event.getPlayer(), false);
-                Player player = event.getPlayer();
-                player.getActivePotionEffects().clear();
-                player.setHealth(20.0D);
-                player.setFoodLevel(20);
-                profile.refreshHotbar();
-            });
+        if (!profile.isBusy() && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+            profile.refreshHotbar();
             profile.handleVisibility();
         }
-        for ( Player ps : Bukkit.getOnlinePlayers() ) {
-            NameTags.color(event.getPlayer(), ps, ChatColor.GREEN, false);
-            if (!Profile.getByUuid(ps).isBusy(ps) && !Profile.getByUuid(ps).isInSomeSortOfFight()) {
-                if (Profile.getByUuid(ps).getState() == ProfileState.IN_LOBBY || Profile.getByUuid(ps).getState() == ProfileState.IN_QUEUE)
-                    if (profile.getParty() != null) {
-                        NameTags.color(ps, event.getPlayer(), ChatColor.BLUE, false);
-                    } else {
-                        NameTags.color(ps, event.getPlayer(), ChatColor.GREEN, false);
-                    }
-            }
             PlayerUtil.allowMovement(event.getPlayer());
         }
-    }
 
     @EventHandler
     public void onPlayerPickupItemEvent(PlayerPickupItemEvent event) {
@@ -222,7 +187,7 @@ public class ProfileListener implements Listener {
                 event.setCancelled(true);
 
                 if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                    Essentials.teleportToSpawn((Player) event.getEntity());
+                    profile.teleportToSpawn();
                 }
             }
         }
@@ -247,12 +212,31 @@ public class ProfileListener implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.LOW)
+    public void onAsyncPlayerPreLoginEvent(AsyncPlayerPreLoginEvent event) {
+        UUID uuid = event.getUniqueId();
+        Profile profile = new Profile(uuid);
+        try {
+            profile.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+            event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
+            event.setKickMessage(CC.RED + "Failed to load your profile, Please contact an Administrator!");
+            return;
+        }
+        Profile.getProfiles().put(uuid, profile);
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         event.setJoinMessage(null);
         Player player = event.getPlayer();
-        Profile profile = new Profile(player.getUniqueId());
+        Profile profile = Profile.getByPlayer(player);
         profile.handleJoin();
+        if (Array.getInstance().getEssentials().getNametagMeta().isEnabled()) {
+            profile.handleNametag();
+        }
+
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -281,6 +265,12 @@ public class ProfileListener implements Listener {
         }
     }
 
+    /**
+     * This is the patch for the Kit Editor Bug
+     * when you can exit the editor with F6
+     *
+     * @param event {@link ProjectileLaunchEvent}
+     */
     @EventHandler (priority = EventPriority.LOW)
     public void onPearlThrow(final ProjectileLaunchEvent event) {
         final ProjectileSource source=event.getEntity().getShooter();
@@ -301,6 +291,12 @@ public class ProfileListener implements Listener {
         }
     }
 
+    /**
+     * This is the patch for the Kit Editor Bug
+     * when you can exit the editor with F6
+     *
+     * @param event {@link PotionSplashEvent}
+     */
     @EventHandler (priority = EventPriority.LOW)
     public void onPotionThrow(final PotionSplashEvent event) {
         ProjectileSource source = event.getPotion().getShooter();
@@ -321,6 +317,12 @@ public class ProfileListener implements Listener {
             }
     }
 
+    /**
+     * This is the patch for the Kit Editor Bug
+     * when you can exit the editor with F6
+     *
+     * @param event {@link PlayerInteractEvent}
+     */
     @EventHandler
     public void onUse(PlayerInteractEvent event) {
         final Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());

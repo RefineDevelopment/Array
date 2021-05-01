@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class KitPartyFFACommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7That kit does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That kit does not exist."));
         } else {
             if (kit.getGameRules().isDisablePartyFFA()) {
                 kit.getGameRules().setDisablePartyFFA(false);
@@ -18,7 +18,7 @@ public class KitPartyFFACommand {
                 kit.getGameRules().setDisablePartyFFA(true);
             }
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated Party-FFA mode for &b" + kit.getName() +  " &7to &b" + (kit.getGameRules().isDisablePartyFFA() ? "true!" : "false!")));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Updated Party-FFA mode for &c" + kit.getName() +  " &7to &c" + (kit.getGameRules().isDisablePartyFFA() ? "true!" : "false!")));
         }
     }
 }

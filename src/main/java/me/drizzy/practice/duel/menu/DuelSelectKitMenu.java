@@ -18,13 +18,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@AllArgsConstructor
 public class DuelSelectKitMenu extends Menu {
 
     String type;
-
-    public DuelSelectKitMenu(String type) {
-        this.type = type;
-    }
 
     @Override
     public String getTitle(Player player) {
@@ -38,17 +35,17 @@ public class DuelSelectKitMenu extends Menu {
         boolean party = Profile.getByUuid(player.getUniqueId()).getParty() != null;
 
         if (party) {
-            if (Array.getInstance().getMainConfig().getBoolean("Array.HCF-Enabled")) {
+            if (Array.getInstance().getEssentials().getMeta().isHCFEnabled()) {
                 for ( Kit kit : Kit.getKits() ) {
                     if (kit.isEnabled() || kit.getName().equalsIgnoreCase("HCFTeamFight")) {
-                        if (!(kit.getGameRules().isTimed() && party))
+                        if (!kit.getGameRules().isTimed() && !kit.getGameRules().isBridge())
                             buttons.put(buttons.size(), new SelectKitButton(kit));
                     }
                 }
             } else {
                 for ( Kit kit : Kit.getKits() ) {
                     if (kit.isEnabled() && !kit.getName().equalsIgnoreCase("HCFTeamFight")) {
-                        if (!(kit.getGameRules().isTimed() && party))
+                        if (!kit.getGameRules().isTimed() && !kit.getGameRules().isBridge())
                             buttons.put(buttons.size(), new SelectKitButton(kit));
                     }
                 }
@@ -81,7 +78,7 @@ public class DuelSelectKitMenu extends Menu {
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
             lore.add("");
-            lore.add("&bClick to send a duel with this kit.");
+            lore.add("&cClick to send a duel with this kit.");
             return new ItemBuilder(kit.getDisplayIcon())
                     .name(kit.getDisplayName()).lore(lore)
                     .clearFlags()

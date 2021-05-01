@@ -26,7 +26,7 @@ public class StatsButton extends Button {
         lore.add(CC.MENU_BAR);
         for ( Kit kit : Kit.getKits() ) {
             if (kit.getGameRules().isRanked() && kit.isEnabled()) {
-                lore.add("&b" + kit.getName() + ": &f" + profile.getStatisticsData().get(kit).getElo());
+                lore.add("&c" + kit.getName() + ": &f" + profile.getStatisticsData().get(kit).getElo());
             }
         }
         lore.add(CC.MENU_BAR);
@@ -35,7 +35,7 @@ public class StatsButton extends Button {
         lore.add(CC.MENU_BAR);
 
         return new ItemBuilder(SkullCreator.itemFromUuid(player.getUniqueId()))
-                .name("&b&l" + player.getName() + " | Statistics")
+                .name("&c&l" + player.getName() + " | Statistics")
                 .lore(lore)
                 .build();
     }

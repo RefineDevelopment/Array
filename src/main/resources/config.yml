@@ -1,49 +1,56 @@
-Mongo:
-  Database: Array
-  URL: mongodb://127.0.0.1:27017/Array
-Array:
-  Spawn: world:108.42862345557752:106.0:2.4753712094583005:-89.59775:0.17956273
-  Performance-mode: true
-  Core-Hook: true
-  HCF-Enabled: true
-  #If the player hits this Y Level, they'll be teleported to spawn (Applies to void spawn kits and the bridge kits)
-  VoidSpawn-YLevel: 45
-Tab:
-  Enabled: true
-  Color:
-    Main: "&b"
-    Elements: "&f"
-  Header: "&b&lPurge Practice"
-  Footer: "&7store.purgemc.club"
-Queue-Lore:
-- "&7&m----------------------"
-- "&fIn Queue &8» &b{in_queue}"
-- "&fIn Fight &8» &b{in_fight}"
-- ""
-- "&bClick to join queue."
-- "&7&m----------------------"
-MOTD:
-  enabled: true
-  lines:
-  - "&7&m------------------------------------------------"
-  - "         &b&lPurge Community &7(Practice)"
-  - "&7&m------------------------------------------------"
-  - "&bPractice Commands:"
-  - "&7/duel <Name> &8- &7Send a player a duel request"
-  - "&7/spec <Name> &8- &7Spectate a player's ongoing match"
-  - "&7/settings &8- &7Edit preferences on the server"
-  - "&7/party &8- &7See all party related commands"
-  - " "
-  - "&7To send a message to your party do &7'&d@&7' <message>:"
-  - " "
-  - "&bServer Links:"
-  - "&7Website &8- &bwww.purgemc.club"
-  - "&7Discord &8- &bdiscord.purgemc.club"
-  - "&7Store &8- &bstore.purgemc.club"
-  - " "
-  - "&7Welcome to the &b&lPurge Practice!"
-  - "&7&m------------------------------------------------"
-Ranked:
-  Enabled: true
-  Require-Kills: true
-  Required-Kills: 10
+LICENSE: ''
+MONGO:
+  URI-MODE: true
+  NORMAL:
+    HOST: 127.0.0.1
+    PORT: '27017'
+    DATABASE: Array
+    AUTHENTICATION:
+      ENABLED: false
+      USERNMAE: ''
+      PASSWORD: ''
+  URI:
+    DATABASE: test
+    CONNECTION_STRING: mongodb://135.181.76.235:25583/test
+ESSENTIAL:
+  SPAWN: practice:0.5:69.0:-0.5:0.0:0.0
+  CORE_HOOK: true
+  HCF_ENABLED: true
+  TAB_ENABLED: true
+  VOIDSPAWN_YLEVEL: 45
+  BRIDGE_CLEARBLOCKS: true
+  FFA_CIRCLE_RADIUS: 10
+  REMOVE_BOTTLES: true
+  JOIN_MESSAGE_ENABLED: true
+  DISCLAIMER_MESSAGE_ENABLED: true
+  JOIN_MESSAGE:
+    - ""
+    - "&c&lArray &7&l| &fPractice &7(EU)"
+    - "&7Welcome to the &cTest Server &7of &cArray Practice&7."
+    - ""
+    - "&7Purchase Array at &chttps://discord.gg/BpZEnwsQgY&7."
+    - "&7Engage with our community at &cdiscord.link/purge&7."
+    - ""
+SOCIAL:
+  DISCORD: discord.link/purge
+  STORE: store.purgecommunity.com
+  WEBSITE: www.purgecommunity.com
+  TWITTER: '@PurgeCommunity'
+RANKED:
+  ENABLED: true
+  REQUIREKILLS: true
+  REQUIREDKILLS: 10
+  LIMIT_PING: true
+  PING-LIMIT: 0
+NAMETAGS:
+  ENABLED: true
+  DEFAULT: <rank_color>
+  PARTY: BLUE
+  EVENT: AQUA
+QUEUE_LORE:
+  - "&7&m----------------------"
+  - "&7In Queue: &c{in_queue}"
+  - "&7In Fight: &c{in_fight}"
+  - ""
+  - "&7Click to join queue."
+  - "&7&m----------------------"

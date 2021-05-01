@@ -12,13 +12,13 @@ public class ArenaAddBuildKitsCommand {
     public void execute(Player player, @CPL("Arena") Arena arena) {
 
         if (arena == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7An arena with that name does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7An arena with that name does not exist."));
             return;
         }
 
         for ( Kit kit : Kit.getKits() ) {
             if (kit == null) {
-                player.sendMessage(CC.translate("&8[&b&lArray&8] &7There are no kits setup."));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7There are no kits setup."));
                 return;
             }
             if (!kit.getGameRules().isBuild()) {
@@ -29,7 +29,7 @@ public class ArenaAddBuildKitsCommand {
                     arena.getKits().add(kit.getName());
                 }
             }
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully added the kit &b" + kit.getName() + "&7 to &b" + arena.getName()));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully added the kit &c" + kit.getName() + "&7 to &c" + arena.getName()));
         }
         arena.save();
 

@@ -1,6 +1,7 @@
 package me.drizzy.practice.match.task;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchState;
 import me.drizzy.practice.util.chat.CC;
@@ -21,21 +22,22 @@ public class MatchStartTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        int seconds= 5 - ticks;
+        int seconds = 5 - ticks;
         if (match.isEnding()) {
             cancel();
             return;
         }
 
+        final String replace = Locale.MATCH_COUNTDOWN.toString().replace("<seconds>", String.valueOf((seconds - 2)));
         if (match.isHCFMatch()) {
             if (seconds == 2) {
                 match.getPlayers().forEach(PlayerUtil::allowMovement);
                 match.setState(MatchState.FIGHTING);
                 match.setStartTimestamp(System.currentTimeMillis());
-                match.broadcastMessage(CC.GREEN + "Match Started!");
-                if (Array.getInstance().getMessagesConfig().getBoolean("Disclaimer-Message.Enabled")) {
+                match.broadcastMessage(Locale.MATCH_STARTED.toString());
+                if (Array.getInstance().getEssentials().getMeta().isDisclaimerEnabled()) {
                     match.broadcastMessage("");
-                    for ( String string : Array.getInstance().getMessagesConfig().getStringList("Disclaimer-Message.Message")) {
+                    for ( String string : Locale.MATCH_DISCLAIMER.toList()) {
                         match.broadcastMessage(CC.translate(string));
                     }
                 }
@@ -43,7 +45,7 @@ public class MatchStartTask extends BukkitRunnable {
                 cancel();
                 return;
             }
-            match.broadcastMessage(CC.WHITE + "Starting in " + CC.AQUA + (seconds - 2) + CC.WHITE +  "...");
+            match.broadcastMessage(replace);
             match.broadcastSound(Sound.NOTE_PLING);
         } else {
             if (match.getKit().getGameRules().isSumo() || match.getKit().getGameRules().isParkour()) {
@@ -51,7 +53,7 @@ public class MatchStartTask extends BukkitRunnable {
                     match.getPlayers().forEach(PlayerUtil::allowMovement);
                     match.setState(MatchState.FIGHTING);
                     match.setStartTimestamp(System.currentTimeMillis());
-                    match.broadcastMessage(CC.GREEN + "The round has started!");
+                    match.broadcastMessage(Locale.MATCH_ROUND.toString());
                     match.broadcastSound(Sound.NOTE_BASS);
                     for (Player player : match.getPlayers()) {
                         player.getInventory().remove(Material.INK_SACK);
@@ -66,17 +68,17 @@ public class MatchStartTask extends BukkitRunnable {
                     cancel();
                     return;
                 }
-                match.broadcastMessage(CC.AQUA + (seconds - 2) + "...");
+                match.broadcastMessage(Locale.MATCH_ROUND_COUNTDOWN.toString().replace("<seconds>", String.valueOf((seconds - 2))));
                 match.broadcastSound(Sound.NOTE_PLING);
             } else {
                 if (seconds == 2) {
                     match.getPlayers().forEach(PlayerUtil::allowMovement);
                     match.setState(MatchState.FIGHTING);
                     match.setStartTimestamp(System.currentTimeMillis());
-                    match.broadcastMessage(CC.GREEN + "Match Started!");
-                    if (Array.getInstance().getMessagesConfig().getBoolean("Disclaimer-Message.Enabled")) {
+                    match.broadcastMessage(Locale.MATCH_STARTED.toString());
+                    if (Array.getInstance().getEssentials().getMeta().isDisclaimerEnabled()) {
                         match.broadcastMessage("");
-                        for ( String string : Array.getInstance().getMessagesConfig().getStringList("Disclaimer-Message.Message")) {
+                        for ( String string : Locale.MATCH_DISCLAIMER.toList()) {
                             match.broadcastMessage(CC.translate(string));
                         }
                     }
@@ -89,7 +91,7 @@ public class MatchStartTask extends BukkitRunnable {
                     return;
                 }
 
-                match.broadcastMessage(CC.WHITE + "Starting in " + CC.AQUA + (seconds - 2) +  "...");
+                match.broadcastMessage(replace);
                 match.broadcastSound(Sound.NOTE_PLING);
             }
         }

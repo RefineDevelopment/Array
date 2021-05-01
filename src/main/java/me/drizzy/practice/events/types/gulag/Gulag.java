@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.Array;
-import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.events.types.gulag.player.GulagPlayer;
 import me.drizzy.practice.events.types.gulag.player.GulagPlayerState;
 import me.drizzy.practice.events.types.gulag.task.GulagRoundEndTask;
@@ -31,7 +31,7 @@ import java.util.UUID;
 @Getter
 public class Gulag {
 
-	protected static String EVENT_PREFIX=CC.translate("&8[&bGulag&8] &r");
+	protected static String EVENT_PREFIX=CC.translate("&8[&cGulag&8] &r");
 
 	private final String name;
 	@Setter private GulagState state=GulagState.WAITING;
@@ -61,9 +61,9 @@ public class Gulag {
 		Gulag gulag= Array.getInstance().getGulagManager().getActiveGulag();
 
 		toReturn.add(CC.MENU_BAR);
-		toReturn.add(CC.translate("&bHost: &r" + gulag.getName()));
+		toReturn.add(CC.translate("&cHost: &r" + gulag.getName()));
 		if (gulag.isWaiting()) {
-			toReturn.add("&bPlayers: &r" + gulag.getEventPlayers().size() + "/" + Gulag.getMaxPlayers());
+			toReturn.add("&cPlayers: &r" + gulag.getEventPlayers().size() + "/" + Gulag.getMaxPlayers());
 			toReturn.add("");
 
 			if (gulag.getCooldown() == null) {
@@ -78,8 +78,8 @@ public class Gulag {
 				toReturn.add(CC.translate("&fStarting in " + remaining + "s"));
 			}
 		} else {
-			toReturn.add("&bPlayers: &r" + gulag.getRemainingPlayers().size() + "/" + gulag.getTotalPlayers());
-			toReturn.add("&bDuration: &r" + gulag.getRoundDuration());
+			toReturn.add("&cPlayers: &r" + gulag.getRemainingPlayers().size() + "/" + gulag.getTotalPlayers());
+			toReturn.add("&cDuration: &r" + gulag.getRoundDuration());
 			toReturn.add("");
 			toReturn.add("&a" + gulag.getRoundPlayerA().getUsername());
 			toReturn.add("vs");
@@ -151,8 +151,8 @@ public class Gulag {
 
 		eventPlayers.put(player.getUniqueId(), new GulagPlayer(player));
 
-		broadcastMessage(CC.AQUA + player.getName() + CC.GRAY + " has joined the &bGulag Event&8! &8(&b" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-		player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &bGulag Event&8!"));
+		broadcastMessage(CC.RED + player.getName() + CC.GRAY + " has joined the &cGulag Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
+		player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &cGulag Event&8!"));
 
 		onJoin(player);
 
@@ -183,8 +183,8 @@ public class Gulag {
 		eventPlayers.remove(player.getUniqueId());
 
 		if (state == GulagState.WAITING) {
-			broadcastMessage(CC.AQUA + player.getName() + CC.GRAY + " left the &bGulag Event&8! &8(&b" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-			player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &bGulag Event&8!"));
+			broadcastMessage(CC.RED + player.getName() + CC.GRAY + " left the &cGulag Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
+			player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &cGulag Event&8!"));
 		}
 
 		onLeave(player);
@@ -194,7 +194,7 @@ public class Gulag {
 		profile.setGulag(null);
 		profile.refreshHotbar();
 
-		Essentials.teleportToSpawn(player);
+		profile.teleportToSpawn();
 
 		new BukkitRunnable() {
 			@Override
@@ -230,9 +230,9 @@ public class Gulag {
 		if (winner == null) {
 			Bukkit.broadcastMessage(EVENT_PREFIX + CC.RED + "The Gulag events has been canceled.");
 		} else {
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Gulag Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Gulag Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "Gulag Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Gulag Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Gulag Event" + CC.GRAY + "!");
+			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Gulag Event" + CC.GRAY + "!");
 		}
 
 		for ( GulagPlayer gulagPlayer : eventPlayers.values()) {
@@ -244,7 +244,7 @@ public class Gulag {
 				profile.setGulag(null);
 				profile.refreshHotbar();
 
-				Essentials.teleportToSpawn(player);
+				profile.teleportToSpawn();
 			}
 		}
 
@@ -281,11 +281,11 @@ public class Gulag {
 		List<String> strings=new ArrayList<>();
 		strings.add(CC.translate(" "));
 		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
-		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&b&l[Gulag Event]"));
-		strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + ""));
-		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&fA &bGulag &fevent is being hosted by &b" + this.host.getUsername()));
-		strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
-		strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
+		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&c&l[Gulag Event]"));
+		strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + ""));
+		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&fA &cGulag &fevent is being hosted by &c" + this.host.getUsername()));
+		strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
+		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
 		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
 		strings.add(CC.translate(" "));
 		for ( String string : strings ) {
@@ -367,7 +367,7 @@ public class Gulag {
 		winner.setState(GulagPlayerState.WAITING);
 		winner.incrementRoundWins();
 
-		broadcastMessage("&b" + player.getName() + "&7 was eliminated by &b" + winner.getUsername() + "&7!");
+		broadcastMessage("&c" + player.getName() + "&7 was eliminated by &c" + winner.getUsername() + "&7!");
 		player.setFireTicks(0);
 		winner.getPlayer().hidePlayer(player);
 		setState(GulagState.ROUND_ENDING);
@@ -443,6 +443,6 @@ public class Gulag {
 		profile.refreshHotbar();
 		profile.handleVisibility();
 
-		Essentials.teleportToSpawn(player);
+		profile.teleportToSpawn();
 	}
 }

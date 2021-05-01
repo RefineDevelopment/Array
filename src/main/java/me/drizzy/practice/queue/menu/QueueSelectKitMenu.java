@@ -2,7 +2,7 @@ package me.drizzy.practice.queue.menu;
 
 import lombok.AllArgsConstructor;
 import me.drizzy.practice.queue.Queue;
-import me.drizzy.practice.queue.QueueType;
+import me.drizzy.practice.enums.QueueType;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.profile.Profile;
@@ -49,7 +49,7 @@ public class QueueSelectKitMenu extends Menu {
         @Override
         public ItemStack getButtonItem(final Player player) {
             List<String> lore = new ArrayList<>();
-            for ( String lines : Array.getInstance().getMainConfig().getStringList("Queue-Lore") ) {
+            for ( String lines : Array.getInstance().getEssentials().getQueueLore() ) {
                 lore.add(CC.translate(this.replace(lines)));
             }
             return new ItemBuilder(this.queue.getKit().getDisplayIcon()).name(this.queue.getKit().getDisplayName()).lore(lore).clearFlags().build();
@@ -58,7 +58,7 @@ public class QueueSelectKitMenu extends Menu {
         @Override
         public void clicked(final Player player, final ClickType clickType) {
             final Profile profile = Profile.getByUuid(player.getUniqueId());
-            if (profile.isBusy(player)) {
+            if (profile.isBusy()) {
                 player.sendMessage(CC.RED + "You cannot queue right now.");
                 return;
             }

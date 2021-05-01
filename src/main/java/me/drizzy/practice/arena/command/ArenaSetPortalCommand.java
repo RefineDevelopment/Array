@@ -13,17 +13,17 @@ import org.bukkit.entity.Player;
 public class ArenaSetPortalCommand {
     public void execute(Player player, @CPL("arena") String arena, @CPL("[blue|red]") String color) {
         if (!color.equals("blue") && !color.equals("red")) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7That is an invalid team."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That is an invalid team."));
             return;
         }
         Arena mainArena = Arena.getByName(arena);
         if (mainArena == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7An arena with that name does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7An arena with that name does not exist."));
             return;
         }
 
         if (mainArena.getType() != ArenaType.THEBRIDGE) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7That arena is not a &bTheBridge &7arena."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That arena is not a &cTheBridge &7arena."));
             return;
         }
 
@@ -31,21 +31,21 @@ public class ArenaSetPortalCommand {
             TheBridgeArena bridgeArena = (TheBridgeArena) mainArena;
             Selection selection = Selection.createOrGetSelection(player);
             if (!selection.isFullObject()) {
-                player.sendMessage(CC.translate("&8[&b&lArray&8] &7Your selection is incomplete."));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Your selection is incomplete."));
                 return;
             }
             bridgeArena.setBluePortal(selection.getCuboid());
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully set the &bBlue Portal&7!"));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully set the &cBlue Portal&7!"));
         }
         if (color.equalsIgnoreCase("red")) {
             TheBridgeArena bridgeArena = (TheBridgeArena) mainArena;
             Selection selection = Selection.createOrGetSelection(player);
             if (!selection.isFullObject()) {
-                player.sendMessage(CC.translate("&8[&b&lArray&8] &7Your selection is incomplete."));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Your selection is incomplete."));
                 return;
             }
             bridgeArena.setRedPortal(selection.getCuboid());
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully set the &bRed Portal&7!"));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully set the &cRed Portal&7!"));
         }
     }
 }

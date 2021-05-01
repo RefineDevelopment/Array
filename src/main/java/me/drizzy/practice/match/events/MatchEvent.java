@@ -8,6 +8,7 @@ import org.bukkit.event.HandlerList;
 
 @Getter
 public class MatchEvent extends Event implements Cancellable {
+
     private boolean cancelled = false;
     private static HandlerList handlers = new HandlerList();
     private Match match;

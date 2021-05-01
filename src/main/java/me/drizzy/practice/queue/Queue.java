@@ -1,10 +1,11 @@
 package me.drizzy.practice.queue;
 
 import lombok.Getter;
+import me.drizzy.practice.Locale;
+import me.drizzy.practice.enums.QueueType;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.other.TimeUtil;
 import org.bukkit.Bukkit;
@@ -61,7 +62,7 @@ public class Queue {
         if (type != QueueType.RANKED) {
             for ( Queue queue : queues ) {
                 if (queue.getKit() == kit) {
-                    if (queue.getQueueType() != type) {
+                    if (queue.getType() != type) {
                         return queue;
                     }
                 }
@@ -82,14 +83,16 @@ public class Queue {
         profile.setQueue(this);
         profile.setQueueProfile(queueProfile);
         profile.setState(ProfileState.IN_QUEUE);
-        PlayerUtil.reset(player, false);
         profile.refreshHotbar();
 
         if (this.type == QueueType.UNRANKED) {
-            player.sendMessage(CC.GRAY + "You have been added to the " + CC.AQUA + this.getQueueName() + CC.GRAY + " queue.");
+            player.sendMessage(Locale.QUEUE_JOIN_UNRANKED.toString()
+                    .replace("<queue_name>", getQueueName()));
         }
         if (this.type == QueueType.RANKED) {
-            player.sendMessage(CC.GRAY + "You have been added to the " + CC.AQUA + this.getQueueName() + CC.GRAY +  " queue." + CC.AQUA + " [" + profile.getStatisticsData().get(kit).getElo() + "]");
+            player.sendMessage(Locale.QUEUE_JOIN_RANKED.toString()
+                    .replace("<queue_name>", getQueueName())
+                    .replace("<queue_elo>", String.valueOf(profile.getStatisticsData().get(kit).getElo())));
         }
         this.players.add(queueProfile);
     }
@@ -107,15 +110,10 @@ public class Queue {
         profile.setQueue(null);
         profile.setQueueProfile(null);
         profile.setState(ProfileState.IN_LOBBY);
-        PlayerUtil.reset(profile.getPlayer(), false);
         profile.refreshHotbar();
     }
 
     public long getPlayerQueueTime(UUID uuid) {
         return this.playerQueueTime.get(uuid);
-    }
-
-    public QueueType getQueueType() {
-        return type;
     }
 }

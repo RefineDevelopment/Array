@@ -21,7 +21,7 @@ public class PartyJoinCommand
             return;
         }
         final Profile profile = Profile.getByUuid(player.getUniqueId());
-        if (profile.isBusy(player)) {
+        if (profile.isBusy()) {
             player.sendMessage(CC.RED + "You can not do that right now");
             return;
         }

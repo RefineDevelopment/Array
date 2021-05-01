@@ -32,7 +32,7 @@ public class KitManagementMenu extends Menu {
 
     @Override
     public String getTitle(Player player) {
-        return "&bManaging &7(" + kit.getName() + ")";
+        return "&cManaging &7(" + kit.getName() + ")";
     }
 
     @Override
@@ -168,7 +168,7 @@ public class KitManagementMenu extends Menu {
 
             player.closeInventory();
             player.sendMessage(CC.GREEN + "Renaming " + CC.GREEN + kitInventory.getCustomName() + CC.GREEN + "," +
-                    CC.GREEN + "Enter the new name now (Don't use Color Codes).");
+                    CC.GREEN + "Enter the new name now...");
         }
 
     }
@@ -222,7 +222,7 @@ public class KitManagementMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(Material.BOOK)
-                    .name("&b&l" + kitInventory.getCustomName())
+                    .name("&c&l" + kitInventory.getCustomName())
                     .build();
         }
 

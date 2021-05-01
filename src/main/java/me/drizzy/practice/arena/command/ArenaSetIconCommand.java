@@ -12,14 +12,14 @@ public class ArenaSetIconCommand {
     public void execute(Player player, @CPL("arena") Arena arena) {
     ItemStack item = player.getItemInHand();
     if (item == null) {
-        player.sendMessage(CC.translate("&8[&b&lArray&8] &7Please hold a valid item in your hand!"));
+        player.sendMessage(CC.translate("&8[&c&lArray&8] &7Please hold a valid item in your hand!"));
     }
     else if (arena == null) {
-        player.sendMessage(CC.translate("&8[&b&lArray&8] &7An arena with that name does not exist."));
+        player.sendMessage(CC.translate("&8[&c&lArray&8] &7An arena with that name does not exist."));
     } else {
         arena.setDisplayIcon(item);
         arena.save();
-        player.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully set the &barena icon &7to the &bitem&7 in your hand."));
+        player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully set the &carena icon &7to the &citem&7 in your hand."));
     }
   }
 }

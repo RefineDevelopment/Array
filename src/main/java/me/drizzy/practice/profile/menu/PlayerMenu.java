@@ -24,7 +24,7 @@ public class PlayerMenu extends Menu {
 
     @Override
     public String getTitle(Player player) {
-        return "&bMain Menu";
+        return "&cMain Menu";
     }
 
     @Override
@@ -59,9 +59,9 @@ public class PlayerMenu extends Menu {
             lore.add("&7View every kit's top 10");
             lore.add("&7elo and global statistics");
             lore.add("");
-            lore.add("&bClick to view leaderboards.");
+            lore.add("&cClick to view leaderboards.");
             return new ItemBuilder(Material.ITEM_FRAME)
-                    .name("&b&lLeaderboards")
+                    .name("&c&lLeaderboards")
                     .lore(lore)
                     .build();
         }
@@ -84,9 +84,9 @@ public class PlayerMenu extends Menu {
             lore.add("&7View complete global and elo");
             lore.add("&7Statistics of your Profile");
             lore.add("");
-            lore.add("&bClick to view statistics.");
+            lore.add("&cClick to view statistics.");
             return new ItemBuilder(Material.PAPER)
-                    .name("&b&lStatistics")
+                    .name("&c&lStatistics")
                     .lore(lore)
                     .build();
         }
@@ -109,9 +109,9 @@ public class PlayerMenu extends Menu {
             lore.add("&7Change your complete");
             lore.add("&7profile settings");
             lore.add("");
-            lore.add("&bClick to view settings,");
+            lore.add("&cClick to view settings,");
             return new ItemBuilder(Material.ANVIL)
-                    .name("&b&lSettings")
+                    .name("&c&lSettings")
                     .lore(lore)
                     .build();
         }
@@ -134,9 +134,9 @@ public class PlayerMenu extends Menu {
             lore.add("&7Join/Host events here");
             lore.add("&7You need donator perms to host");
             lore.add("");
-            lore.add("&bClick to view events menu.");
+            lore.add("&cClick to view events menu.");
             return new ItemBuilder(Material.ENDER_PEARL)
-                    .name("&b&lView Events")
+                    .name("&c&lView Events")
                     .lore(lore)
                     .build();
         }
@@ -158,9 +158,9 @@ public class PlayerMenu extends Menu {
             lore.add("&7Click to edit and make");
             lore.add("&7your custom kits");
             lore.add("");
-            lore.add("&bClick to open kit editor menu.");
+            lore.add("&cClick to open kit editor menu.");
             return new ItemBuilder(Material.BOOK)
-                    .name("&b&lKit Editor")
+                    .name("&c&lKit Editor")
                     .lore(lore)
                     .build();
         }

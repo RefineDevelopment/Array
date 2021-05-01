@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class KitComboCommand {
     public void execute(Player player, @CPL("kit") Kit kit) {
         if (kit == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7That kit does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That kit does not exist."));
         } else {
             if (kit.getGameRules().isCombo()) {
                 kit.getGameRules().setCombo(false);
@@ -18,8 +18,8 @@ public class KitComboCommand {
                 kit.getGameRules().setCombo(true);
             }
             kit.save();
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Updated combo mode for &b" + kit.getName() + " &7to &b" + (kit.getGameRules().isCombo() ? "true!" : "false!")));
-            player.sendMessage(CC.translate("&8[&bTIP&8] &7This will set the No-Damage Ticks to 2 and players will be able to hit faster!"));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Updated combo mode for &c" + kit.getName() + " &7to &c" + (kit.getGameRules().isCombo() ? "true!" : "false!")));
+            player.sendMessage(CC.translate("&8[&cTIP&8] &7This will set the No-Damage Ticks to 2 and players will be able to hit faster!"));
         }
     }
 }

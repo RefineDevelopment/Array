@@ -29,7 +29,7 @@ public class SumoStartTask extends SumoTask {
 		if (this.getSumo().getPlayers().size() == Sumo.getMaxPlayers() || (getTicks() >= 30 && this.getSumo().getPlayers().size() >= 2)) {
 			if (this.getSumo().getCooldown() == null) {
 				this.getSumo().setCooldown(new Cooldown(11_000));
-				this.getSumo().broadcastMessage("&7The sumo events will start in &b10 seconds&7...");
+				this.getSumo().broadcastMessage("&7The sumo events will start in &c10 seconds&7...");
 				for ( Player player : getSumo().getPlayers() ) {
 					Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(player, Kit.getByName("Sumo"));
 				}

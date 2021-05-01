@@ -3,7 +3,7 @@ package me.drizzy.practice.events.types.oitc;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
-import me.drizzy.practice.array.essentials.Essentials;
+import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.events.types.oitc.player.OITCPlayer;
 import me.drizzy.practice.events.types.oitc.player.OITCPlayerState;
 import me.drizzy.practice.events.types.oitc.task.OITCRoundEndTask;
@@ -31,7 +31,7 @@ import java.util.UUID;
 @Getter
 public class OITC {
 
-    protected static String EVENT_PREFIX =CC.translate("&8[&bOITC&8] &r");
+    protected static String EVENT_PREFIX =CC.translate("&8[&cOITC&8] &r");
     @Getter @Setter private Kit kit;
     private final String name;
     @Setter private OITCState state = OITCState.WAITING;
@@ -59,11 +59,11 @@ public class OITC {
         OITC OITC = Array.getInstance().getOITCManager().getActiveOITC();
 
         toReturn.add(CC.MENU_BAR);
-        toReturn.add(CC.translate("&bHost: &r" + OITC.getName()));
-        toReturn.add(CC.translate("&bKit: &r" + kit.getName()));
+        toReturn.add(CC.translate("&cHost: &r" + OITC.getName()));
+        toReturn.add(CC.translate("&cKit: &r" + kit.getName()));
 
         if (OITC.isWaiting()) {
-            toReturn.add("&bPlayers: &r" + OITC.getEventPlayers().size() + "/" + getMaxPlayers());
+            toReturn.add("&cPlayers: &r" + OITC.getEventPlayers().size() + "/" + getMaxPlayers());
             toReturn.add("");
 
             if (OITC.getCooldown() == null) {
@@ -78,8 +78,8 @@ public class OITC {
                 toReturn.add(CC.translate("&fStarting in " + remaining + "s"));
             }
         } else {
-            toReturn.add("&bPlayers: &r" + OITC.getRemainingPlayers().size() + "/" + OITC.getTotalPlayers());
-            toReturn.add("&bDuration: &r" + OITC.getRoundDuration());
+            toReturn.add("&cPlayers: &r" + OITC.getRemainingPlayers().size() + "/" + OITC.getTotalPlayers());
+            toReturn.add("&cDuration: &r" + OITC.getRoundDuration());
         }
         toReturn.add(CC.MENU_BAR);
 
@@ -147,8 +147,8 @@ public class OITC {
 
         eventPlayers.put(player.getUniqueId(), new OITCPlayer(player));
 
-        broadcastMessage(CC.AQUA + player.getName() + CC.GRAY + " has joined the &bOITC Event&8! &8(&b" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-        player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &bOITC Event&8!"));
+        broadcastMessage(CC.RED + player.getName() + CC.GRAY + " has joined the &cOITC Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
+        player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &cOITC Event&8!"));
         onJoin(player);
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -180,8 +180,8 @@ public class OITC {
         eventPlayers.remove(player.getUniqueId());
 
         if (state == OITCState.WAITING) {
-            broadcastMessage(CC.AQUA + player.getName() + CC.GRAY + " left the &bOITC Event&8! &8(&b" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-            player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &bOITC Event&8!"));
+            broadcastMessage(CC.RED + player.getName() + CC.GRAY + " left the &cOITC Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
+            player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &cOITC Event&8!"));
         }
 
         onLeave(player);
@@ -191,7 +191,7 @@ public class OITC {
         profile.setOITC(null);
         profile.refreshHotbar();
 
-        Essentials.teleportToSpawn(player);
+        profile.teleportToSpawn();
 
         new BukkitRunnable() {
             @Override
@@ -229,9 +229,9 @@ public class OITC {
             Bukkit.broadcastMessage(EVENT_PREFIX + CC.RED + "The OITC events has been canceled.");
             Bukkit.broadcastMessage(CC.GRAY + "");
         } else {
-            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "OITC Event" + CC.GRAY + "!");
-            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "OITC Event" + CC.GRAY + "!");
-            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.AQUA + "OITC Event" + CC.GRAY + "!");
+            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "OITC Event" + CC.GRAY + "!");
+            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "OITC Event" + CC.GRAY + "!");
+            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "OITC Event" + CC.GRAY + "!");
         }
 
         for ( me.drizzy.practice.events.types.oitc.player.OITCPlayer OITCPlayer : eventPlayers.values()) {
@@ -244,7 +244,7 @@ public class OITC {
             PlayerUtil.reset(player, false);
         profile.refreshHotbar();
 
-                Essentials.teleportToSpawn(player);
+                profile.teleportToSpawn();
             }
         }
 
@@ -281,11 +281,11 @@ public class OITC {
         List<String> strings=new ArrayList<>();
         strings.add(CC.translate(" "));
         strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
-        strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&b&l[OITC Event]"));
-        strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + ""));
-        strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&fA &bOITC &fevent is being hosted by &b" + this.host.getUsername()));
-        strings.add(CC.translate("&7⬛⬛&b⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
-        strings.add(CC.translate("&7⬛⬛&b⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
+        strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&c&l[OITC Event]"));
+        strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + ""));
+        strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&fA &cOITC &fevent is being hosted by &c" + this.host.getUsername()));
+        strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
+        strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
         strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
         strings.add(CC.translate(" "));
         for ( String string : strings ) {
@@ -334,7 +334,7 @@ public class OITC {
         Profile profile = Profile.getByUuid(player.getUniqueId());
 
         if (killer != null) {
-            broadcastMessage("&b" + player.getName() + "&7 was eliminated by &b" + killer.getName() + "&7!");
+            broadcastMessage("&c" + player.getName() + "&7 was eliminated by &c" + killer.getName() + "&7!");
         }
 
 
@@ -404,6 +404,6 @@ public class OITC {
         profile.refreshHotbar();
         profile.handleVisibility();
 
-        Essentials.teleportToSpawn(player);
+        profile.teleportToSpawn();
     }
 }

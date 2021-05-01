@@ -12,7 +12,7 @@ public class ArenaPortalWandCommand {
             player.getInventory().remove(Selection.SELECTION_WAND);
         } else {
             player.getInventory().addItem(Selection.SELECTION_WAND);
-            player.sendMessage(CC.translate("&8[&bTIP&8] &7&oLeft-Click to select first position and Right-Click to select second position."));
+            player.sendMessage(CC.translate("&8[&cTIP&8] &7&oLeft-Click to select first position and Right-Click to select second position."));
         }
 
         player.updateInventory();

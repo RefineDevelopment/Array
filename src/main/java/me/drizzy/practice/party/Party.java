@@ -3,19 +3,17 @@ package me.drizzy.practice.party;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Locale;
-import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.duel.DuelRequest;
 import me.drizzy.practice.enums.PartyPrivacyType;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.nametags.NametagHandler;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.Clickable;
-import me.drizzy.practice.util.nametag.NameTags;
 import me.drizzy.practice.util.other.TaskUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -46,9 +44,14 @@ public class Party extends Team {
      * @param player The Leader of the party
      */
     public Party(Player player) {
-
         super(new TeamPlayer(player.getUniqueId(), player.getName()));
-        this.limit= 10;
+
+        if (player.hasPermission("array.donator")) {
+            this.limit = 50;
+        } else {
+            this.limit = 10;
+        }
+
         this.isPublic = false;
         this.privacy = PartyPrivacyType.CLOSED;
         this.invites = new ArrayList<>();
@@ -155,6 +158,9 @@ public class Party extends Team {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setParty(this);
 
+        NametagHandler.reloadPlayer(player);
+        NametagHandler.reloadOthersFor(player);
+
         /*
          * Clear Their Invite
          */
@@ -175,19 +181,8 @@ public class Party extends Team {
             profile.handleVisibility();
         }
 
-        //TODO: Replace with NameTag Thread
-        for (final TeamPlayer teamPlayer : this.getTeamPlayers()) {
-            final Player otherPlayer = teamPlayer.getPlayer();
-            NameTags.color(player, teamPlayer.getPlayer(), ChatColor.BLUE, false);
-            NameTags.color(teamPlayer.getPlayer(), player, ChatColor.BLUE, false);
-            if (otherPlayer != null) {
-                final Profile teamProfile = Profile.getByUuid(teamPlayer.getUuid());
-                teamProfile.handleVisibility(otherPlayer, player);
-            }
-        }
-
         Player random = getTeamPlayers().get(0).getPlayer();
-        Profile profile1 = Profile.getByUuid(random);
+        Profile profile1 = Profile.getByPlayer(random);
         if (profile1.isInMatch()) {
             profile1.getMatch().addSpectator(player, random);
         }
@@ -216,10 +211,8 @@ public class Party extends Team {
             profile.handleVisibility();
             profile.refreshHotbar();
 
-            //TODO: Replace with NameTag Thread
-            for ( Player other : Bukkit.getOnlinePlayers() ) {
-                NameTags.color(player, other, ChatColor.GREEN, false);
-            }
+            NametagHandler.reloadPlayer(player);
+            NametagHandler.reloadOthersFor(player);
         }
 
         /*
@@ -240,7 +233,8 @@ public class Party extends Team {
                     if (secondPlayer != null) {
                         player.hidePlayer(secondPlayer);
                     }
-                    NameTags.reset(player, secondPlayer);
+                    NametagHandler.reloadPlayer(player);
+                    NametagHandler.reloadOthersFor(player);
                 }
             }
 
@@ -251,19 +245,18 @@ public class Party extends Team {
             profile.setMatch(null);
             profile.refreshHotbar();
             profile.handleVisibility();
-            Essentials.teleportToSpawn(player);
+            profile.teleportToSpawn();
         }
 
-        //TODO: Replace with NameTag Thread
         for (final TeamPlayer teamPlayer : this.getTeamPlayers()) {
             final Player otherPlayer = teamPlayer.getPlayer();
             if (otherPlayer != null) {
-                NameTags.reset(player, otherPlayer);
-                NameTags.reset(otherPlayer, player);
                 final Profile otherProfile = Profile.getByUuid(teamPlayer.getUuid());
                 otherProfile.handleVisibility(otherPlayer, player);
             }
         }
+        NametagHandler.reloadPlayer(player);
+        NametagHandler.reloadOthersFor(player);
     }
 
     /**
@@ -310,8 +303,8 @@ public class Party extends Team {
             if (profile.isInLobby() || profile.isInQueue()) {
                 profile.refreshHotbar();
                 profile.handleVisibility();
-                NameTags.reset(player, this.getLeader().getPlayer());
-                NameTags.color(player, this.getLeader().getPlayer(), ChatColor.GREEN, false);
+                NametagHandler.reloadPlayer(player);
+                NametagHandler.reloadOthersFor(player);
             }
         });
 
@@ -320,7 +313,7 @@ public class Party extends Team {
 
         for (Player partyps : this.getPlayers()) {
             for ( Player player : Bukkit.getOnlinePlayers() ) {
-                NameTags.color(partyps, player, ChatColor.GREEN, false);
+                NametagHandler.reloadPlayer(partyps, player);
             }
         }
     }
@@ -345,11 +338,11 @@ public class Party extends Team {
 
         final List<String> lines = new ArrayList<>();
         lines.add(CC.CHAT_BAR);
-        lines.add(CC.AQUA + "Party Information");
+        lines.add(CC.RED + "Party Information");
         lines.add(CC.CHAT_BAR);
-        lines.add(CC.translate("&8• &bLeader: " + CC.WHITE + this.getLeader().getUsername()));
-        lines.add(CC.translate("&8• &bPrivacy: " + CC.WHITE + this.privacy.toString()));
-        lines.add(CC.translate("&8• &bMembers: " + CC.GRAY + "(" + (this.getTeamPlayers().size() - 1) + ") " + builder.substring(0, builder.length() - 2)));
+        lines.add(CC.translate("&8 • &cLeader: " + CC.WHITE + this.getLeader().getUsername()));
+        lines.add(CC.translate("&8 • &cPrivacy: " + CC.WHITE + this.privacy.toString()));
+        lines.add(CC.translate("&8 • &cMembers: " + CC.GRAY + "(" + (this.getTeamPlayers().size() - 1) + ") " + builder.substring(0, builder.length() - 2)));
         lines.add(CC.CHAT_BAR);
         for ( String line : lines ) {
             player.sendMessage(line);

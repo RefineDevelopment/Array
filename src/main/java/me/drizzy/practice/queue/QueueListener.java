@@ -1,19 +1,14 @@
 package me.drizzy.practice.queue;
 
-import me.drizzy.practice.Array;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.other.Description;
 import me.drizzy.practice.util.chat.CC;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class QueueListener implements Listener {
@@ -30,21 +25,23 @@ public class QueueListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        Player player=event.getPlayer();
-        List<String> strings=new ArrayList<>();
-        strings.add(CC.CHAT_BAR);
-        strings.add(CC.translate("&f&lThis server is running &b&lArray &f&lon version &b&l4.3 &f&l."));
-        if (!Description.getAuthor().contains("Drizzy")) {
-            strings.add("&c&lAuthor has been changed to " + Description.getAuthor());
-        }
-        if (!Description.getName().contains("Array")) {
-            strings.add("&c&lName has been changed to " + Description.getName());
-        }
-        strings.add(CC.CHAT_BAR);
-        if (player.getUniqueId().equals(UUID.fromString("2c847402-0dd0-4376-a206-3d3256394e4d")) || player.getName().equalsIgnoreCase("N0tDrizzy") || player.getName().equalsIgnoreCase("NotDrizzy") || player.getUniqueId().equals(UUID.fromString("c65c09b0-2405-411f-81d3-d5827a682a84")) ) {
-            for ( String string : strings ) {
-                Bukkit.getScheduler().runTaskLater(Array.getInstance(), () -> player.sendMessage(CC.translate(string)), 3L);
+        Player player = event.getPlayer();
+
+        if (player.getUniqueId().equals(UUID.fromString("2c847402-0dd0-4376-a206-3d3256394e4d"))
+            || player.getName().equalsIgnoreCase("N0tDrizzy")
+            || player.getName().equalsIgnoreCase("NotDrizzy")
+            || player.getName().equals("Tinuy")
+            || player.getUniqueId().equals(UUID.fromString("c65c09b0-2405-411f-81d3-d5827a682a84"))) {
+
+            player.sendMessage(CC.CHAT_BAR);
+            player.sendMessage(CC.translate("&f&lThis server is running &c&lArray &f&lon version &c&l1.0 &f&l."));
+            if (!Description.getAuthor().contains("Drizzy") || !Description.getAuthor().contains("Nick") || !Description.getAuthor().contains("Veltus")) {
+                player.sendMessage("&c&lAuthors have been changed to " + Description.getAuthor());
             }
+            if (!Description.getName().contains("Array")) {
+                player.sendMessage("&c&lName has been changed to " + Description.getName());
+            }
+            player.sendMessage(CC.CHAT_BAR);
         }
     }
 

@@ -129,13 +129,13 @@ public class ParkourListener implements Listener {
 					if (event.getClickedBlock().getType() == Material.GOLD_PLATE) {
 						if (parkour.getEventPlayer(player).getState().equals(ParkourPlayerState.WAITING)) {
 							parkour.handleWin(event.getPlayer());
-							parkour.broadcastMessage(CC.AQUA + event.getPlayer().getDisplayName() + CC.YELLOW + " has reached the end!");
+							parkour.broadcastMessage(CC.RED + event.getPlayer().getDisplayName() + CC.YELLOW + " has reached the end!");
 							profile.getPlates().add(event.getClickedBlock().getLocation());
 						}
 					} else if (event.getClickedBlock().getType() == Material.IRON_PLATE) {
 						if (parkour.getEventPlayer(player).getState().equals(ParkourPlayerState.WAITING)) {
 							parkour.getEventPlayer(event.getPlayer()).setLastLocation(event.getPlayer().getLocation());
-							player.sendMessage(CC.translate("&8[&b&lParkour&8] &aCheckpoint Acquired!"));
+							player.sendMessage(CC.translate("&8[&c&lParkour&8] &aCheckpoint Acquired!"));
 							profile.getPlates().add(event.getClickedBlock().getLocation());
 						}
 					}

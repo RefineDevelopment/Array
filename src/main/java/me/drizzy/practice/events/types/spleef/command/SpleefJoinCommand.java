@@ -15,7 +15,7 @@ public class SpleefJoinCommand {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		Spleef activeSpleef = Array.getInstance().getSpleefManager().getActiveSpleef();
 
-		if (profile.isBusy(player) || profile.getParty() != null) {
+		if (profile.isBusy() || profile.getParty() != null) {
 			player.sendMessage(CC.RED + "You cannot join the spleef right now.");
 			return;
 		}

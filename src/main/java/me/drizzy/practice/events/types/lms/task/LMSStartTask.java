@@ -26,7 +26,7 @@ public class LMSStartTask extends LMSTask {
         if (this.getLMS().getPlayers().size() == this.getLMS().getMaxPlayers() || (getTicks() >= 30 && this.getLMS().getPlayers().size() >= 2)) {
             if (this.getLMS().getCooldown() == null) {
                 this.getLMS().setCooldown(new Cooldown(11_000));
-                this.getLMS().broadcastMessage("&7The LMS will start in &b10 seconds&e7...");
+                this.getLMS().broadcastMessage("&7The LMS will start in &c10 seconds&e7...");
             } else {
                 if (this.getLMS().getCooldown().hasExpired()) {
                     this.getLMS().setState(LMSState.ROUND_STARTING);

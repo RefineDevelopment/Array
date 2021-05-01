@@ -7,32 +7,93 @@ import me.drizzy.practice.util.config.Replacement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * @author Drizzy
  * Created at 4/11/2021
  */
+
 public enum Locale {
 
-    PARTY_INVITED("PARTY.INVITED", "&8[&b&lParty&8] &7You have been invited to join &b<leader>'s &7party."),
-    PARTY_CLICK_TO_JOIN("PARTY.CLICK_TO_JOIN", "&b(Click to accept)"),
+    PARTY_INVITED("PARTY.INVITED", "&8[&c&lParty&8] &7You have been invited to join &c<leader>'s &7party."),
+    PARTY_CLICK_TO_JOIN("PARTY.CLICK_TO_JOIN", "&c(Click to accept)"),
     PARTY_INVITE_HOVER("PARTY.INVITE_HOVER", "&aClick to to accept this party invite"),
-    PARTY_PLAYER_INVITED("PARTY.PLAYER_INVITED", "&8[&b&lParty&8] &b<invited> &7has been invited to your party."),
-    PARTY_PLAYER_JOINED("PARTY.PLAYER_JOINED", "&8[&b&lParty&8] &b<joiner> &7joined your party."),
-    PARTY_PLAYER_LEFT("PARTY.PLAYER_LEFT", "&8[&b&lParty&8] &c<leaver> &7has left your party."),
-    PARTY_PLAYER_KICKED("PARTY.PLAYER_KICK", "&8[&b&lParty&8] &c<leaver> &7has been kicked from your party."),
-    PARTY_CREATED("PARTY.CREATED", "&8[&b&lParty&8] &aYou created a party."),
-    PARTY_DISABANDED("PARTY.DISBANDED", "&8[&b&lParty&8] &cYour party has been disbanded."),
-    PARTY_PUBLIC("PARTY.PUBLIC", "&8[&b&lParty&8] &b<host> &ais hosting a public party"),
-    PARTY_PRIVACY("PARTY.PRIVACY", "&8[&b&lParty&8] &7Your party privacy has been changed to &b<privacy>"),
-    PARTY_PROMOTED("PARTY.PROMOTED", "&8[&b&lParty&8] &b<promoted> &ahas been promoted to Leader in your party."),
-    PARTY_ALREADYHAVE("PARTY.ALREAD_HAVE", "&8[&b&lParty&8] &7You already have a party!"),
-    PARTY_NOTLEADER("PARTY.NOTLEADER", "&8[&b&lParty&8] &7You are not the leader of this party!"),
-    PARTY_DONOTHAVE("PARTY.DO_NOT_HAVE", "&8[&b&lParty&8] &7You don't have a party!"),
-    PARTY_NOTLOBBY("PARTY.NOT_IN_LOBBY", "&8[&b&lParty&8] &7You are not in lobby, please finish your current task!"),
-    MATCH_HCF_START_MESSAGE("MATCH.HCF_START_MESSAGE", Arrays.asList("", "&b&lHCF Match&7!", "", "&7Pick between &bBard&7, &bArcher&7, &bRogue&7 and &bDiamond", "&7Kits and Fight to the death to &bWin!", "")),
+    PARTY_PLAYER_INVITED("PARTY.PLAYER_INVITED", "&8[&c&lParty&8] &c<invited> &7has been invited to your party."),
+    PARTY_PLAYER_JOINED("PARTY.PLAYER_JOINED", "&8[&c&lParty&8] &c<joiner> &7joined your party."),
+    PARTY_PLAYER_LEFT("PARTY.PLAYER_LEFT", "&8[&c&lParty&8] &c<leaver> &7has left your party."),
+    PARTY_PLAYER_KICKED("PARTY.PLAYER_KICK", "&8[&c&lParty&8] &c<leaver> &7has been kicked from your party."),
+    PARTY_CREATED("PARTY.CREATED", "&8[&c&lParty&8] &aYou created a party."),
+    PARTY_DISABANDED("PARTY.DISBANDED", "&8[&c&lParty&8] &cYour party has been disbanded."),
+    PARTY_PUBLIC("PARTY.PUBLIC", "&8[&c&lParty&8] &c<host> &ais hosting a public party"),
+    PARTY_PRIVACY("PARTY.PRIVACY", "&8[&c&lParty&8] &7Your party privacy has been changed to &c<privacy>"),
+    PARTY_PROMOTED("PARTY.PROMOTED", "&8[&c&lParty&8] &c<promoted> &ahas been promoted to Leader in your party."),
+    PARTY_ALREADYHAVE("PARTY.ALREAD_HAVE", "&8[&c&lParty&8] &7You already have a party!"),
+    PARTY_NOTLEADER("PARTY.NOTLEADER", "&8[&c&lParty&8] &7You are not the leader of this party!"),
+    PARTY_DONOTHAVE("PARTY.DO_NOT_HAVE", "&8[&c&lParty&8] &7You don't have a party!"),
+    PARTY_NOTLOBBY("PARTY.NOT_IN_LOBBY", "&8[&c&lParty&8] &7You are not in lobby, please finish your current task!"),
+
+    ERROR_NOTACTIVE("ERROR.NOT_ACTIVE", "&7There is no current on-going <event> event!"),
+    ERROR_NOTPARTOF("ERROR.NOT_PARTOF", "&7You are not part of any on-going <event> event!"),
+    ERROR_NOTSPECTATING("ERROR.NOT_SPECTATING", "&7You are not spectating!"),
+    ERROR_NOREMATCH("ERROR.NO_REMATCH", "&7You don't have anyone to rematch with!"),
+    ERROR_EXPIREREMATCH("ERROR.REMATCH_EXPIRED", "&7Your rematch time has been expired!"),
+    ERROR_PEARLSDISABLED("ERROR.PEARLS_DISABLED", "&cYou can't enderpearl in this arena!"),
+    ERROR_REMATCHSENT("ERROR.REMATCH_SENT", "&7You have already sent the rematch request!"),
+    ERROR_PLAYERNOTFOUND("ERROR.PLAYER_NOT_FOUND", "&7That player does not exist or is not currently online."),
+    ERROR_SETTING_NOPERM("ERROR.SETTINGS_NO_PERM", Arrays.asList("&7You don't have permission to use this setting", "&7&oyou can upgrade your rank at &c&ostore.purgemc.club&7&o.")),
+
+    RANKED_DISABLED("RANKED.DISABLED", "&7Ranked has been disabled by an Admin!"),
+    RANKED_REQUIRED("RANKED.REQUIRED", Arrays.asList("&7You need to win at least &c10 Unranked Matches &7 to queue Ranked!", "&7&oYou can bypass this limit by upgrading your rank at &c&ostore.purgemc.club")),
+
+    HCF_CLASS_ENABLED("HCF.CLASS_ENABLED", "&cClass: &f<class> &aenabled!"),
+    HCF_COOLDOWN("HCF.COOLDOWN", "&7You cannot use this for another <duration>!"),
+    HCF_ARCHER_RANGE("HCF.ARCHER_RANGE", "&cRange: &f<range>"),
+    HCF_ARCHER_MARKED("HCF.ARCHER_MARKED_SHOOTER", "&7You Marked &c<damaged> &7for &c10 seconds &c<damagedhealth> &4❤"),
+    HCF_ARCHER_DAMAGEMARKED("HCF.ARCHER_MARKED_DAMAGED", "&7Marked! &c<shooter> &7has shot &cyou &7and &cmarked &7you (+25% damage) for &c10 seconds&7. &8(&c<distance> blocks away&8)"),
+    HCF_BARD_ENERGY("HCF.BARD_ENERGY", "&cBard Energy: &f<energy>"),
+    HCF_BARD_BARDBUFF("HCF.BARD_BARDBUFF", "&7You have just used a &c&lBard Buff &7that cost you &c<cost> &7of your Energy."),
+    HCF_BARD_NOTENOUGHENERGY("HCF.BARD_NOTENOUGHENERGY", "&7You do not have enough energy for this! You need &c<cost> &7energy, but you only have &c<energy>&7!"),
+    HCF_ROUGE_BACKSTABBED("HCF.ROUGE_BEENBACKSTABBED", "&c<attacker> &ehas backstabbed you!"),
+    HCF_ROUGE_BACKSTABBER("HCF.ROGUE_HAVEBACKSTABBED", "&eYou have backstabbed &c<target>&e."),
+
+    MATCH_HCF_STARTMESSAGE("MATCH.HCF_START_MESSAGE", Arrays.asList("", "&c&lHCF Match&7!", "", "&7Pick between &cBard&7, &cArcher&7, &cRogue&7 and &cDiamond", "&7Kits and Fight to the death to &cWin!", "")),
+    MATCH_TEAM_STARTMESSAGE("MATCH.TEAM_START_MESSAGE", Arrays.asList("&c&lMatch Found!", "", "&fYou are playing on &c<arena>&f on a &cTeam Match!")),
+    MATCH_SOLO_STARTMESSAGE("MATCH.SOLO_START_MESSAGE", Arrays.asList("&c&lMatch Found!", "", "&fYou are playing on &c<arena>&f with &fPlayers: &c<player1> &7vs &c<player2>")),
+    MATCH_ROUND_MESSAGE("MATCH.ROUND_MESSAGE", Arrays.asList(" &c&lRound #<round_number>", "  &fYour Points: &c<your_points>", "  &fTheir Points: &c<their_points>")),
+    MATCH_DISCLAIMER("MATCH.DISCLAIMER_MESSAGE", Arrays.asList("&c&lReminder: &fButterfly clicking is &cdiscouraged &fand could result in a &cban. Use at your own risk.")),
+    MATCH_COUNTDOWN("MATCH.COUNTDOWN", "&fStarting in &c<seconds>&f..."),
+    MATCH_ROUND_COUNTDOWN("MATCH.ROUND_COUNTDOWN", "&c<seconds>&f..."),
+    MATCH_STARTED("MATCH.STARTED", "&aMatch Started!"),
+    MATCH_ROUND("MATCH.ROUND_STARTED", "&aThe Round has Started!"),
+    MATCH_SPECTATE("MATCH.SPECTATE_JOIN", "&c<spectator> &eis now spectating your match!"),
+    MATCH_STOPSPEC("MATCH.SPECTATE_LEAVE", "&c<spectator> &eis no longer spectating your match!"),
+    MATCH_INVENTORY_HOVER("MATCH.INVENTORY_HOVER", "&7Click to view &c<inventory_name>'s &7inventory."),
+    MATCH_CHECKPOINT("MATCH.CHECKPOINT_ACCQUIRED", "&8[&cParkour&8] &cCheckpoint Accquired!"),
+    MATCH_DISCONNECTED("MATCH.PARTICIPANT_DISCONNECTED", "<relation_color><participant_name> &7has disconnected."),
+    MATCH_WON("MATCH.PARTICIPANT_WON", "<relation_color><participant_name> &ahas won!"),
+    MATCH_DIED("MATCH.PARTICIPANT_DIED", "<relation_color><participant_name> &7has died!"),
+    MATCH_KILLED("MATCH.PARTICIPANT_KILLED", "<relation_color_dead><dead_name> &7was killed by <relation_color_killer><killer_name>&7."),
+
+    TOURNAMENT_ROUND("TOURNAMENT.ROUND_MESSAGE", "&8[&9&lRound&8] &c<round> &7has started!"),
+    TOURNAMENT_NOT_PICKED("TOURNAMENT.NOT_PICKED", "&8[&c&lTournament&8] &7You weren't picked this round, please wait for your turn!"),
+    TOURNAMENT_ELIMINATED("TOURNAMENT.ELIMINATED", "&8[&c&lTournament&8] &c<eliminated> &7has been eliminated. &8(&c<participants_size>&7/&c<participants_count>&8)"),
+    TOURNAMANET_WON("TOURNAMENT.WON", "&8[&c&lTournament&8] &c<won> &7won the &ctournament&7!"),
+
+    QUEUE_JOIN_UNRANKED("QUEUE.JOIN_UNRANKED", "&7You have been added to the &c<queue_name> &7queue."),
+    QUEUE_JOIN_RANKED("QUEUE.JOIN_RANKED", "&7You have been added to the &c<queue_name> &7queue. &c[<queue_elo>]"),
+
+    DUEL_SENT("DUEL.SENT", "&8[&c&lDuel&8] &fYou sent a duel request to &c<target_name> &7(<target_ping>) &f with kit &c<duel_kit> &fon the arena &c<duel_arena>"),
+    DUEL_RECIEVED("DUEL.RECIEVED", "&8[&c&lDuel&8] &c<sender_name> &7(<sender_ping>&7) &fhas sent you a duel request with kit &b<duel_kit> &fon the arena &c<duel_arena>"),
+    DUEL_HOVER("DUEL.INVITE_HOVER", "&7Click to accept this duel."),
+    DUEL_ACCEPT("DUEL.CLICK_TO_ACCEPT", "&a(Click to Accept)"),
+
+    KITEDITOR_LONG("KITEDITOR.TOO_LONG", "&7A name cannot be longer than &c16 &7characters!"),
+    KITEDITOR_RENAMED("KITEDITOR.RENAMED", "&7Successfully &crenamed &7the kit to &c<custom_name>&7!"),
+
+    LEADERBOARDS_KIT_FORMAT("LEADERBOARDS.KIT_FORMAT", "&c<leaderboards_pos>. &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
+    LEADERBOARDS_GLOBAL_FORMAT("LEADERBOARDS.GLOBAL_FORMAT", "&c<leaderboards_pos>. &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
+
     END("", "");
 
     @Getter private final String path;

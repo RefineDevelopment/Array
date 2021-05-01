@@ -15,7 +15,7 @@ public class ParkourRoundStartTask extends ParkourTask {
 	@Override
 	public void onRun() {
 		if (getTicks() >= 3) {
-			this.getParkour().broadcastMessage(CC.AQUA + "The parkour has started!");
+			this.getParkour().broadcastMessage(CC.RED + "The parkour has started!");
 			this.getParkour().setEventTask(null);
 			this.getParkour().setState(ParkourState.ROUND_FIGHTING);
 			this.getParkour().getPlayers().forEach(PlayerUtil::allowMovement);
@@ -24,7 +24,7 @@ public class ParkourRoundStartTask extends ParkourTask {
 		} else {
 			int seconds = getSeconds();
 
-			this.getParkour().broadcastMessage("&b" + seconds + "...");
+			this.getParkour().broadcastMessage("&c" + seconds + "...");
 		}
 	}
 

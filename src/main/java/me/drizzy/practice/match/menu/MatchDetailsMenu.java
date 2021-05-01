@@ -28,7 +28,7 @@ public class MatchDetailsMenu extends Menu {
 
     @Override
     public String getTitle(Player player) {
-        return "&7&lInventory of &b" + snapshot.getTeamPlayer().getUsername();
+        return "&7&lInventory of &c" + snapshot.getTeamPlayer().getUsername();
     }
 
     @Override
@@ -81,14 +81,14 @@ public class MatchDetailsMenu extends Menu {
         public ItemStack getButtonItem(Player player) {
             if (opponent != null) {
                 return new ItemBuilder(Material.LEVER)
-                        .name("&b&lNext Inventory")
-                        .lore("&7Switch to &b" + opponent.getTeamPlayer().getUsername() + "&7's inventory")
+                        .name("&c&lNext Inventory")
+                        .lore("&7Switch to &c" + opponent.getTeamPlayer().getUsername() + "&7's inventory")
                         .build();
             }
 
             return new ItemBuilder(Material.LEVER)
-                    .name("&b&lNext Inventory")
-                    .lore("&7Switch to &b" + switchTo.getUsername() + "&7's inventory")
+                    .name("&c&lNext Inventory")
+                    .lore("&7Switch to &c" + switchTo.getUsername() + "&7's inventory")
                     .build();
         }
 
@@ -124,7 +124,7 @@ public class MatchDetailsMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(Material.MELON)
-                    .name("&bHealth: &7" + health + "/10&c" + StringEscapeUtils.unescapeJava("\u2764"))
+                    .name("&cHealth: &7" + health + "/10&c" + StringEscapeUtils.unescapeJava("\u2764"))
                     .amount(health == 0 ? 1 : health)
                     .build();
         }
@@ -139,7 +139,7 @@ public class MatchDetailsMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(Material.COOKED_BEEF)
-                    .name("&bHunger: &7" + hunger + "/20")
+                    .name("&cHunger: &7" + hunger + "/20")
                     .amount(hunger == 0 ? 1 : hunger)
                     .build();
         }
@@ -153,17 +153,17 @@ public class MatchDetailsMenu extends Menu {
 
         @Override
         public ItemStack getButtonItem(Player player) {
-            ItemBuilder builder=new ItemBuilder(Material.POTION).name("&b&lPotion Effects");
+            ItemBuilder builder=new ItemBuilder(Material.POTION).name("&c&lPotion Effects");
 
             if (effects.isEmpty()) {
-                builder.lore("&bNo potion effects");
+                builder.lore("&cNo potion effects");
             } else {
                 List<String> lore=new ArrayList<>();
 
                 effects.forEach(effect -> {
                     String name = PotionUtil.getName(effect.getType()) + " " + (effect.getAmplifier() + 1);
                     String duration = " (" + TimeUtil.millisToTimer((effect.getDuration() / 20) * 1000) + ")";
-                    lore.add("&b" + name + "&f" + duration);
+                    lore.add("&c" + name + "&f" + duration);
                 });
 
                 builder.lore(lore);
@@ -200,13 +200,13 @@ public class MatchDetailsMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(Material.PAPER)
-                    .name("&bStatistics")
+                    .name("&cStatistics")
                     .lore(Arrays.asList(
-                            "&fTotal Hits: &b" + teamPlayer.getHits(),
-                            "&fLongest Combo: &b" + teamPlayer.getLongestCombo(),
-                            "&fPotions Thrown: &b" + teamPlayer.getPotionsThrown(),
-                            "&fPotions Missed: &b" + teamPlayer.getPotionsMissed(),
-                            "&fPotion Accuracy: &b" + teamPlayer.getPotionAccuracy() + "%"
+                            "&fTotal Hits: &c" + teamPlayer.getHits(),
+                            "&fLongest Combo: &c" + teamPlayer.getLongestCombo(),
+                            "&fPotions Thrown: &c" + teamPlayer.getPotionsThrown(),
+                            "&fPotions Missed: &c" + teamPlayer.getPotionsMissed(),
+                            "&fPotion Accuracy: &c" + teamPlayer.getPotionAccuracy() + "%"
                     ))
                     .build();
         }

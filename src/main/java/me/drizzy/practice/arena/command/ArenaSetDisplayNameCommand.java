@@ -11,12 +11,12 @@ public class ArenaSetDisplayNameCommand {
      public void execute(Player player, @CPL("arena") String arenaname, @CPL("displayname") String displayname) {
          Arena arena = Arena.getByName(arenaname);
          if (arena == null) {
-             player.sendMessage(CC.translate("&8[&b&lArray&8] &7Arena does not exist"));
+             player.sendMessage(CC.translate("&8[&c&lArray&8] &7Arena does not exist"));
              return;
          }
          arena.setDisplayName(displayname);
          arena.save();
-         player.sendMessage(CC.translate("&8[&bArray&8] &7Successfully updated the arena &b" + arena.getName() + "'s &7display name."));
+         player.sendMessage(CC.translate("&8[&cArray&8] &7Successfully updated the arena &c" + arena.getName() + "'s &7display name."));
 
 
      }

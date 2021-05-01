@@ -14,10 +14,10 @@ import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.api.ArrayCache;
-import me.drizzy.practice.array.essentials.Essentials;
 import me.drizzy.practice.duel.DuelProcedure;
 import me.drizzy.practice.duel.DuelRequest;
 import me.drizzy.practice.enums.HotbarType;
+import me.drizzy.practice.essentials.event.SpawnTeleportEvent;
 import me.drizzy.practice.events.types.brackets.Brackets;
 import me.drizzy.practice.events.types.brackets.player.BracketsPlayer;
 import me.drizzy.practice.events.types.brackets.player.BracketsPlayerState;
@@ -43,30 +43,33 @@ import me.drizzy.practice.hotbar.HotbarLayout;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.kit.KitInventory;
 import me.drizzy.practice.kiteditor.KitEditor;
+import me.drizzy.practice.leaderboards.LeaderboardsAdapter;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.nametags.NametagHandler;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueProfile;
 import me.drizzy.practice.settings.meta.SettingsMeta;
-import me.drizzy.practice.leaderboards.LeaderboardsAdapter;
 import me.drizzy.practice.statistics.StatisticsData;
 import me.drizzy.practice.tournament.Tournament;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.inventory.InventoryUtil;
+import me.drizzy.practice.util.other.Cooldown;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.other.TaskUtil;
-import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.other.Cooldown;
-import me.drizzy.practice.util.nametag.NameTags;
+import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
 import org.bson.Document;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.Executor;
@@ -74,47 +77,83 @@ import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings(value = "all")
 @Getter
+@Setter
 public class Profile {
 
     @Getter private static final Map<UUID, Profile> profiles = new HashMap<>();
-    @Getter static final List<Player> playerList = new ArrayList<>();
+    @Getter private static MongoCollection<Document> collection = Array.getInstance().getMongoDatabase().getCollection("profiles");
+    public static Executor mongoThread = Array.getInstance().getMongoThread();
+
+
+    @Getter public static final List<Player> playerList = new ArrayList<>();
     @Getter private static final List<LeaderboardsAdapter> globalEloLeaderboards = new ArrayList<>();
-    @Getter private static MongoCollection<Document> collection;
-    @Setter String name;
-    @Setter int globalElo = 1000;
-    @Setter int bridgeRounds = 0;
-    @Setter int sumoRounds = 0;
-    @Setter private ProfileState state;
-    @Setter private Party party;
-    @Setter private Match match;
-    @Setter private Sumo sumo;
-    @Setter private Brackets brackets;
-    @Setter private LMS lms;
-    @Setter private Parkour parkour;
-    @Setter private Gulag gulag;
-    @Setter private OITC OITC;
-    @Setter private Spleef spleef;
-    @Setter private Queue queue;
-    @Setter private QueueProfile queueProfile;
-    @Setter private String hcfClass = "HCFDIAMOND";
-    @Setter private DuelProcedure duelProcedure;
-    @Setter private ProfileRematchData rematchData;
-    @Setter private Player lastMessager;
-    @Setter private boolean followMode = false;
-    @Setter private boolean visibility = false;
-    @Setter private Player following;
-    @Setter private long lastRunVisibility = 0L;
-    @Setter private List<Player> follower = new ArrayList<>();
-    @Setter private Player spectating;
+    private final Map<UUID, DuelRequest> sentDuelRequests = new HashMap<>();
+    private final Map<Kit, StatisticsData> statisticsData = new LinkedHashMap<>();
+    private final List<Location> plates = new ArrayList<>();
+
+    /*
+     * Part of Constructor
+     */
+    private String name;
     private final UUID uuid;
+
+
+    /*
+     * Integer Values
+     */
+    int globalElo = 1000;
+    int bridgeRounds = 0;
+
+    /*
+     * Events
+     */
+    private Sumo sumo;
+    private Brackets brackets;
+    private LMS lms;
+    private Parkour parkour;
+    private Gulag gulag;
+    private OITC OITC;
+    private Spleef spleef;
+
+    /*
+     * Objects
+     */
+    private ProfileState state;
+    private Party party;
+    private Match match;
+    private Queue queue;
+
+    /*
+     * Fight Meta
+     */
+    private QueueProfile queueProfile;
+    private DuelProcedure duelProcedure;
+    private ProfileRematchData rematchData;
+
+    /*
+     * Follow Mode
+     */
+    private boolean followMode = false;
+    private List<Player> follower = new ArrayList<>();
+    private Player following;
+
+    /*
+     * Miscellaneous Parts
+     */
+    private Player lastMessager;
+    private Player spectating;
+
+    /*
+     * Cooldowns
+     */
     private Cooldown enderpearlCooldown = new Cooldown(0);
     private Cooldown bowCooldown = new Cooldown(0);
-    private final Map<UUID, DuelRequest> sentDuelRequests = new HashMap<>();
+
+    /*
+     * Essential Meta
+     */
     private final SettingsMeta settings = new SettingsMeta();
     private final KitEditor kitEditor = new KitEditor();
-    private final Map<Kit, StatisticsData> statisticsData= new LinkedHashMap<>();
-    private final List<Location> plates = new ArrayList<>();
-    public static Executor mongoThread = Array.getInstance().getMongoThread();
 
     public Profile(UUID uuid) {
         this.uuid = uuid;
@@ -127,8 +166,6 @@ public class Profile {
     }
 
     public static void preload() {
-        collection = Array.getInstance().getMongoDatabase().getCollection("profiles");
-
         // Players might have joined before the plugin finished loading
         for (Player player : Bukkit.getOnlinePlayers()) {
             Profile profile = new Profile(player.getUniqueId());
@@ -147,25 +184,16 @@ public class Profile {
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (Profile profile : Profile.getProfiles().values()) {
-                    profile.save();
-                }
+                Profile.getProfiles().values().forEach(Profile::save);
+                Profile.getProfiles().values().forEach(Profile::load);
             }
         }.runTaskTimerAsynchronously(Array.getInstance(), 36000L, 36000L);
-
-        // Load all players from database
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Profile.getProfiles().values().forEach(Profile::load);
-                Kit.getKits().forEach(Kit::updateKitLeaderboards);
-            }
-        }.runTaskTimerAsynchronously(Array.getInstance(), 600L, 600L);
 
         // Reload global elo leaderboards
         new BukkitRunnable() {
             @Override
             public void run() {
+                Kit.getKits().forEach(Kit::updateKitLeaderboards);
                 loadGlobalLeaderboards();
             }
         }.runTaskTimerAsynchronously(Array.getInstance(), 600L, 600L);
@@ -181,6 +209,12 @@ public class Profile {
         }.runTaskTimerAsynchronously(Array.getInstance(), 40L, 40L);
     }
 
+    /**
+     * Returns a Profile from a uuid
+     *
+     * @param uuid The uuid whose profile is being returned
+     * @return {@link Profile}
+     */
     public static Profile getByUuid(UUID uuid) {
         Profile profile = profiles.get(uuid);
 
@@ -191,7 +225,13 @@ public class Profile {
         return profile;
     }
 
-    public static Profile getByUuid(Player player) {
+    /**
+     * Returns a Profile from a player
+     *
+     * @param player The player whose profile is being returned
+     * @return {@link Profile}
+     */
+    public static Profile getByPlayer(Player player) {
         Profile profile = profiles.get(player.getUniqueId());
 
         if (profile == null) {
@@ -201,18 +241,21 @@ public class Profile {
         return profile;
     }
 
-
-
     public static void loadGlobalLeaderboards() {
         if (!getGlobalEloLeaderboards().isEmpty()) getGlobalEloLeaderboards().clear();
             mongoThread.execute(() -> {
             for ( Document document : Profile.getCollection().find().sort(Sorts.descending("globalElo")).limit(10).into(new ArrayList<>()) ) {
-                LeaderboardsAdapter leaderboardsAdapter=new LeaderboardsAdapter();
+                LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
                 leaderboardsAdapter.setName((String) document.get("name"));
                 leaderboardsAdapter.setElo((Integer) document.get("globalElo"));
+                globalEloLeaderboards.removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
                 getGlobalEloLeaderboards().add(leaderboardsAdapter);
             }
         });
+    }
+
+    public String getColor() {
+        return Array.getInstance().getRankManager().getRankColor(this.getPlayer());
     }
 
     public void load() {
@@ -415,43 +458,63 @@ public class Profile {
     }
 
     public void handleJoin() {
-        Profile.getPlayerList().add(this.getPlayer());
+
+        Player player = getPlayer();
+
+        for ( Player players : getPlayerList() ) {
+            if (players.getName().equalsIgnoreCase(player.getName())) {
+                getPlayerList().remove(players);
+            }
+        }
+        Profile.getPlayerList().add(player);
         for ( Profile other : Profile.getProfiles().values() ) {
             other.handleVisibility();
         }
 
         Array.getInstance().getTaskThread().execute(() -> {
-            if (!ArrayCache.getPlayerCache().containsKey(this.getPlayer().getName())) {
-                ArrayCache.getPlayerCache().put(this.getPlayer().getName(), this.getUuid());
+            if (!ArrayCache.getPlayerCache().containsKey(player.getName())) {
+                ArrayCache.getPlayerCache().put(player.getName(), this.getUuid());
             }
-            try {
-                this.load();
-            } catch (Exception e) {
-                e.printStackTrace();
-                this.getPlayer().kickPlayer(CC.AQUA + "Failed to load your profile, Please contact an Administrator!");
-                return;
-            }
-            Profile.getProfiles().put(this.getPlayer().getUniqueId(), this);
-            this.setName(this.getPlayer().getName());
+            this.setName(player.getName());
             this.refreshHotbar();
         });
 
-        Essentials.teleportToSpawn(this.getPlayer());
+        this.teleportToSpawn();
 
         //Visibility Bug Fix :)
         new BukkitRunnable() {
             @Override
             public void run() {
-                Profile.this.handleVisibility();
+                handleVisibility();
             }
         }.runTaskLater(Array.getInstance(), 5L);
+    }
 
-        for ( Player ps : Bukkit.getOnlinePlayers() ) {
-            NameTags.color(this.getPlayer(), ps, ChatColor.GREEN, false);
-            if (!Profile.getByUuid(ps).isBusy(ps) && !Profile.getByUuid(ps).isInSomeSortOfFight()) {
-                if (Profile.getByUuid(ps).getState() == ProfileState.IN_LOBBY || Profile.getByUuid(ps).getState() == ProfileState.IN_QUEUE)
-                    NameTags.color(ps, getPlayer(), ChatColor.GREEN, false);
+    /**
+     * Credit for nametags goes to PotPvP
+     */
+    public void handleNametag() {
+        Player player = getPlayer();
+
+        //Load our Nametag and apply it to the player
+        player.setMetadata("array-Nametag", new FixedMetadataValue(Array.getInstance(), true));
+        NametagHandler.initiatePlayer(player);
+        NametagHandler.reloadPlayer(player);
+        NametagHandler.reloadOthersFor(player);
+
+        try {
+            PacketPlayOutScoreboardTeam a = new PacketPlayOutScoreboardTeam();
+            team_mode.set(a, 3);
+            team_name.set(a, "zLane");
+            team_display.set(a, "zLane");
+            team_color.set(a, -1);
+            team_players.set(a, Collections.singletonList(getName()));
+
+            for (Player other : Bukkit.getOnlinePlayers()) {
+                TaskUtil.runAsync(() -> ((CraftPlayer) other).getHandle().playerConnection.sendPacket(a));
             }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
 
@@ -459,11 +522,7 @@ public class Profile {
         Array.getInstance().getTaskThread().execute(() -> {
             Profile.getPlayerList().remove(this.getPlayer());
             if (this.getMatch() != null) {
-                if (this.getMatch().isSoloMatch() || this.getMatch().isSumoMatch() || this.getMatch().isTheBridgeMatch()) {
-                    this.getMatch().handleDeath(this.getPlayer(), null, true);
-                } else {
-                    this.getMatch().handleDeath(this.getPlayer(), null, true);
-                }
+                this.getMatch().handleDeath(this.getPlayer(), null, true);
             }
             if (this.isInQueue()) {
                 this.getQueue().removePlayer(this.getQueueProfile());
@@ -479,6 +538,17 @@ public class Profile {
                 Tournament.CURRENT_TOURNAMENT.leave(this.getParty());
             }
         });
+    }
+
+    public void teleportToSpawn() {
+        SpawnTeleportEvent event = new SpawnTeleportEvent(getPlayer(), Array.getInstance().getEssentials().getSpawn());
+        event.call();
+
+        this.handleVisibility();
+
+        if (!event.isCancelled() && event.getLocation() != null) {
+            getPlayer().teleport(event.getLocation());
+        }
     }
 
     public boolean isInLobby() {
@@ -509,9 +579,9 @@ public class Profile {
         return state == ProfileState.IN_EVENT;
     }
 
-    public boolean isInTournament(Player player) {
+    public boolean isInTournament() {
         if (Tournament.CURRENT_TOURNAMENT != null) {
-            return Tournament.CURRENT_TOURNAMENT.isParticipating(player);
+            return Tournament.CURRENT_TOURNAMENT.isParticipating(getPlayer());
         } else {
             return false;
         }
@@ -550,8 +620,8 @@ public class Profile {
 
     }
 
-    public boolean isBusy(Player player) {
-        return isInQueue() || isInFight() || isInEvent() || isSpectating() || isInTournament(player) || isFollowMode();
+    public boolean isBusy() {
+        return isInQueue() || isInFight() || isInEvent() || isSpectating() || isInTournament() || isFollowMode();
     }
 
     public void checkForHotbarUpdate() {
@@ -592,8 +662,7 @@ public class Profile {
                     }
                 }
 
-                {
-                    boolean activeEvent=(Array.getInstance().getSumoManager().getActiveSumo() != null && Array.getInstance().getSumoManager().getActiveSumo().isWaiting())
+                    boolean activeEvent = (Array.getInstance().getSumoManager().getActiveSumo() != null && Array.getInstance().getSumoManager().getActiveSumo().isWaiting())
                             || (Array.getInstance().getBracketsManager().getActiveBrackets() != null && Array.getInstance().getBracketsManager().getActiveBrackets().isWaiting())
                             || (Array.getInstance().getLMSManager().getActiveLMS() != null && Array.getInstance().getLMSManager().getActiveLMS().isWaiting())
                             || (Array.getInstance().getParkourManager().getActiveParkour() != null && Array.getInstance().getParkourManager().getActiveParkour().isWaiting())
@@ -603,11 +672,11 @@ public class Profile {
                     int eventSlot=player.getInventory().first(Hotbar.getItems().get(HotbarType.EVENT_JOIN));
 
                     if (eventSlot == -1 && activeEvent) {
-                        update=true;
+                        update = true;
                     } else if (eventSlot != -1 && !activeEvent) {
-                        update=true;
+                        update = true;
                     }
-                }
+
             }
             if (update) {
                 new BukkitRunnable() {
@@ -703,14 +772,15 @@ public class Profile {
             }
             if (party != null && party.containsPlayer(otherPlayer)) {
                 hide = false;
-                NameTags.color(player, otherPlayer, ChatColor.BLUE, false);
             }
+            TaskUtil.runAsync(() -> NametagHandler.reloadPlayer(player, otherPlayer));
         } else if (isInFight()) {
             TeamPlayer teamPlayer = match.getTeamPlayer(otherPlayer);
 
             if (teamPlayer != null && teamPlayer.isAlive()) {
                 hide = false;
             }
+            TaskUtil.runAsync(() -> NametagHandler.reloadPlayer(player, otherPlayer));
         } else if (isSpectating()) {
             if (sumo != null) {
                 SumoPlayer sumoPlayer = sumo.getEventPlayer(otherPlayer);
@@ -748,6 +818,7 @@ public class Profile {
                     hide = false;
                 }
             }
+            TaskUtil.runAsync(() -> NametagHandler.reloadPlayer(player, otherPlayer));
         } else if (isInEvent()) {
             if (sumo != null) {
                 if (!sumo.getSpectators().contains(otherPlayer.getUniqueId())) {
@@ -782,7 +853,7 @@ public class Profile {
                     hide = false;
                 }
             }
-
+            TaskUtil.runAsync(() -> NametagHandler.reloadPlayer(player, otherPlayer));
         }
 
         if (hide) {
@@ -846,8 +917,35 @@ public class Profile {
         } catch (Exception e) {
             Array.logger("Could not send LC-Cooldown!");
         }
-
-
     }
 
+
+    private Field team_name;
+    private Field team_display;
+    private Field team_players;
+    private Field team_mode;
+    private Field team_color;
+
+    {
+        try {
+            team_name = PacketPlayOutScoreboardTeam.class.getDeclaredField("a");
+            team_name.setAccessible(true);
+            team_display = PacketPlayOutScoreboardTeam.class.getDeclaredField("b");
+            team_display.setAccessible(true);
+            Field team_prefix = PacketPlayOutScoreboardTeam.class.getDeclaredField("c");
+            team_prefix.setAccessible(true);
+            Field team_suffix = PacketPlayOutScoreboardTeam.class.getDeclaredField("d");
+            team_suffix.setAccessible(true);
+            team_players = PacketPlayOutScoreboardTeam.class.getDeclaredField("g");
+            team_players.setAccessible(true);
+            team_color = PacketPlayOutScoreboardTeam.class.getDeclaredField("f");
+            team_color.setAccessible(true);
+            team_mode = PacketPlayOutScoreboardTeam.class.getDeclaredField("h");
+            team_mode.setAccessible(true);
+            Field team_nametag = PacketPlayOutScoreboardTeam.class.getDeclaredField("e");
+            team_nametag.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
 }

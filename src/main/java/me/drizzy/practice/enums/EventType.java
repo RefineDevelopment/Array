@@ -14,12 +14,12 @@ import me.drizzy.practice.events.types.sumo.Sumo;
 @AllArgsConstructor
 @Getter
 public enum EventType {
-    BRACKETS(Array.getInstance().getBracketsManager().getActiveBrackets(), "&b&lBrackets", Material.IRON_SWORD, Brackets.isEnabled(), Brackets.getMaxPlayers()),
-    SUMO(Array.getInstance().getSumoManager().getActiveSumo(), "&b&lSumo", Material.LEASH, Sumo.isEnabled(), Sumo.getMaxPlayers()),
-    LMS(Array.getInstance().getLMSManager().getActiveLMS(), "&b&lLMS", Material.DIAMOND_SWORD, me.drizzy.practice.events.types.lms.LMS.isEnabled(), me.drizzy.practice.events.types.lms.LMS.getMaxPlayers()),
-    PARKOUR(Array.getInstance().getParkourManager().getActiveParkour(), "&b&lParkour", Material.FEATHER, Parkour.isEnabled(), Parkour.getMaxPlayers()),
-    GULAG(Array.getInstance().getGulagManager().getActiveGulag(), "&b&lGulag", Material.IRON_FENCE, Gulag.isEnabled(), Gulag.getMaxPlayers()),
-    SPLEEF(Array.getInstance().getSpleefManager().getActiveSpleef(), "&b&lSpleef", Material.SNOW_BALL, Spleef.isEnabled(), Spleef.getMaxPlayers()),
+    BRACKETS(Array.getInstance().getBracketsManager().getActiveBrackets(), "&c&lBrackets", Material.IRON_SWORD, Brackets.isEnabled(), Brackets.getMaxPlayers()),
+    SUMO(Array.getInstance().getSumoManager().getActiveSumo(), "&c&lSumo", Material.LEASH, Sumo.isEnabled(), Sumo.getMaxPlayers()),
+    LMS(Array.getInstance().getLMSManager().getActiveLMS(), "&c&lLMS", Material.DIAMOND_SWORD, me.drizzy.practice.events.types.lms.LMS.isEnabled(), me.drizzy.practice.events.types.lms.LMS.getMaxPlayers()),
+    PARKOUR(Array.getInstance().getParkourManager().getActiveParkour(), "&c&lParkour", Material.FEATHER, Parkour.isEnabled(), Parkour.getMaxPlayers()),
+    GULAG(Array.getInstance().getGulagManager().getActiveGulag(), "&c&lGulag", Material.IRON_FENCE, Gulag.isEnabled(), Gulag.getMaxPlayers()),
+    SPLEEF(Array.getInstance().getSpleefManager().getActiveSpleef(), "&c&lSpleef", Material.SNOW_BALL, Spleef.isEnabled(), Spleef.getMaxPlayers()),
     OITC(null, "&c&lOITC", Material.BOW, false, 0),
     KOTH(null, "&c&lKoTH", Material.IRON_BOOTS, false, 0);
 

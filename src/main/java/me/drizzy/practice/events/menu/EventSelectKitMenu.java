@@ -48,7 +48,7 @@ public class EventSelectKitMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(kit.getDisplayIcon())
-                    .name("&b" + kit.getName())
+                    .name("&c" + kit.getName())
                     .clearFlags()
                     .build();
         }

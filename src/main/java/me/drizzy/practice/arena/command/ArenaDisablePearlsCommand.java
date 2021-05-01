@@ -10,15 +10,15 @@ import org.bukkit.entity.Player;
 public class ArenaDisablePearlsCommand {
     public void execute(Player player, @CPL("arena") Arena arena) {
         if (arena == null) {
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7That arena does not exist."));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That arena does not exist."));
             return;
         }
         if (arena.isDisablePearls()) {
             arena.setDisablePearls(false);
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully &benabled &7pearls in the arena &b" + arena.getName()));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &cenabled &7pearls in the arena &c" + arena.getName()));
         } else {
             arena.setDisablePearls(true);
-            player.sendMessage(CC.translate("&8[&b&lArray&8] &7Successfully &cdisabled &7pearls in the arena &b" + arena.getName()));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &cdisabled &7pearls in the arena &c" + arena.getName()));
         }
     }
 }

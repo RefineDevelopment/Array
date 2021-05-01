@@ -1,11 +1,12 @@
 package me.drizzy.practice.events.types.sumo;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.events.types.sumo.player.SumoPlayer;
+import me.drizzy.practice.match.team.TeamPlayer;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerItemBreakEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.*;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.location.BlockUtil;
 import me.drizzy.practice.util.other.PlayerUtil;
@@ -16,8 +17,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SumoListener implements Listener {
 
@@ -46,6 +48,25 @@ public class SumoListener implements Listener {
 			} else if (profile.getSumo() != null && profile.getSumo().getSpectators().contains(player.getUniqueId())) {
 				event.setCancelled(true);
 			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onClick(final PlayerInteractEvent event) {
+		final Profile profile = Profile.getByPlayer(event.getPlayer());
+
+		if (profile.isInSumo()) {
+			SumoPlayer player = profile.getSumo().getEventPlayer(event.getPlayer());
+
+			List<Long> list;
+			if (player.getCpsMap().containsKey(player.getUuid())) {
+				list = player.getCpsMap().get(player.getUuid());
+			} else {
+				list = new ArrayList<>();
+			}
+
+			list.add(System.currentTimeMillis());
+			player.getCpsMap().put(event.getPlayer().getUniqueId(), list);
 		}
 	}
 
@@ -151,7 +172,7 @@ public class SumoListener implements Listener {
 		Player player=e.getPlayer();
 		Location to=e.getTo();
 		Location from=e.getFrom();
-		Profile profile = Profile.getByUuid(player);
+		Profile profile = Profile.getByPlayer(player);
 		Sumo sumo = profile.getSumo();
 
 		if (sumo == null) {
