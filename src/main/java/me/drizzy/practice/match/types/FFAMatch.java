@@ -7,11 +7,11 @@ import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
-import me.drizzy.practice.nametags.NametagHandler;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.enums.QueueType;
 import me.drizzy.practice.util.location.Circle;
+import me.drizzy.practice.util.other.NameTags;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.ChatComponentBuilder;
@@ -99,8 +99,10 @@ public class FFAMatch extends Match {
 
         Team team = getTeam(player);
         for (Player enemy : team.getPlayers()) {
-            NametagHandler.reloadPlayer(player, enemy);
-            Profile.getByUuid(enemy.getUniqueId()).handleVisibility();
+            NameTags.color(player, enemy, org.bukkit.ChatColor.RED, getKit().getGameRules().isShowHealth());
+
+            Profile enemyProfile = Profile.getByPlayer(enemy);
+            enemyProfile.handleVisibility();
         }
     }
 
@@ -157,6 +159,8 @@ public class FFAMatch extends Match {
                             //Reset the Player
                             player.setFireTicks(0);
                             player.updateInventory();
+
+                            NameTags.reset(player, firstTeamPlayer.getPlayer());
 
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);

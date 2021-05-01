@@ -2,6 +2,7 @@ package me.drizzy.practice.profile.rank.apis;
 
 import me.drizzy.practice.profile.rank.RankType;
 import me.quartz.hestia.HestiaAPI;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 
 public class HestiaCore implements RankType {
@@ -27,7 +28,7 @@ public class HestiaCore implements RankType {
     }
 
     @Override
-    public String getRankColor(OfflinePlayer player) {
-        return HestiaAPI.instance.getRankColor(player.getUniqueId()).toString();
+    public ChatColor getRankColor(OfflinePlayer player) {
+        return HestiaAPI.instance.getRankColor(player.getUniqueId());
     }
 }

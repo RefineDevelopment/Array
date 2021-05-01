@@ -28,7 +28,7 @@ public class DefaultProvider implements RankType {
     }
 
     @Override
-    public String getRankColor(OfflinePlayer player) {
-        return ChatColor.GREEN.toString();
+    public ChatColor getRankColor(OfflinePlayer player) {
+        return ChatColor.GREEN;
     }
 }

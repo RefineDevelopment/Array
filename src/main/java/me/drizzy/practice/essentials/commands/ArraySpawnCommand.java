@@ -4,6 +4,7 @@ import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.essentials.Essentials;
+import me.drizzy.practice.util.other.TaskUtil;
 import org.bukkit.entity.Player;
 
 @CommandMeta(label= {"spawn", "array spawn"}, permission = "array.staff")
@@ -14,6 +15,6 @@ public class ArraySpawnCommand {
             player.sendMessage(CC.translate("Unable to teleport to spawn, Please finish your current task!"));
         }
         profile.teleportToSpawn();
-        profile.refreshHotbar();
+        TaskUtil.runLater(profile::refreshHotbar, 5L);
     }
 }

@@ -1,5 +1,6 @@
 package me.drizzy.practice.profile.rank;
 
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 
 public interface RankType {
@@ -12,5 +13,5 @@ public interface RankType {
 
     String getFullName(OfflinePlayer player);
 
-    String getRankColor(OfflinePlayer player);
+    ChatColor getRankColor(OfflinePlayer player);
 }

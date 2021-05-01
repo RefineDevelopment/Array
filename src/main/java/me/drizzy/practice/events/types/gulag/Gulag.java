@@ -14,10 +14,7 @@ import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.other.PlayerSnapshot;
-import me.drizzy.practice.util.other.PlayerUtil;
-import me.drizzy.practice.util.other.Cooldown;
-import me.drizzy.practice.util.other.TimeUtil;
+import me.drizzy.practice.util.other.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -52,7 +49,7 @@ public class Gulag {
 	public Gulag(Player player) {
 		this.name = player.getName();
 		this.host = new PlayerSnapshot(player.getUniqueId(), player.getName());
-		Gulag.maxPlayers=100;
+		maxPlayers = 100;
 
 	}
 	public List<String> getLore() {
@@ -170,6 +167,7 @@ public class Gulag {
 					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
 					otherProfile.handleVisibility(otherPlayer, player);
 					profile.handleVisibility(player, otherPlayer);
+					NameTags.color(player, otherPlayer, Array.getInstance().getEssentials().getNametagMeta().getEventColor(), false);
 				}
 			}
 		}.runTaskAsynchronously(Array.getInstance());
@@ -190,11 +188,6 @@ public class Gulag {
 		onLeave(player);
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		profile.setState(ProfileState.IN_LOBBY);
-		profile.setGulag(null);
-		profile.refreshHotbar();
-
-		profile.teleportToSpawn();
 
 		new BukkitRunnable() {
 			@Override
@@ -203,9 +196,15 @@ public class Gulag {
 					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
 					otherProfile.handleVisibility(otherPlayer, player);
 					profile.handleVisibility(player, otherPlayer);
+					NameTags.reset(player, otherPlayer);
 				}
 			}
 		}.runTaskAsynchronously(Array.getInstance());
+
+		profile.setState(ProfileState.IN_LOBBY);
+		profile.setGulag(null);
+		profile.refreshHotbar();
+		profile.teleportToSpawn();
 	}
 
 	protected List<Player> getSpectatorsList() {

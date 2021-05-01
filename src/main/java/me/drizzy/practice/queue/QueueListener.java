@@ -35,11 +35,11 @@ public class QueueListener implements Listener {
 
             player.sendMessage(CC.CHAT_BAR);
             player.sendMessage(CC.translate("&f&lThis server is running &c&lArray &f&lon version &c&l1.0 &f&l."));
-            if (!Description.getAuthor().contains("Drizzy") || !Description.getAuthor().contains("Nick") || !Description.getAuthor().contains("Veltus")) {
-                player.sendMessage("&c&lAuthors have been changed to " + Description.getAuthor());
+            if (!Description.getAuthor().contains("Drizzy") || !Description.getAuthor().contains("Nick") || !Description.getAuthor().contains("veltus5184")) {
+                player.sendMessage(CC.translate("&fAuthors have been changed to &c" + Description.getAuthor()));
             }
             if (!Description.getName().contains("Array")) {
-                player.sendMessage("&c&lName has been changed to " + Description.getName());
+                player.sendMessage(CC.translate("&fName has been changed to &c" + Description.getName()));
             }
             player.sendMessage(CC.CHAT_BAR);
         }

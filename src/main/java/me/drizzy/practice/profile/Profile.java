@@ -46,7 +46,6 @@ import me.drizzy.practice.kiteditor.KitEditor;
 import me.drizzy.practice.leaderboards.LeaderboardsAdapter;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.TeamPlayer;
-import me.drizzy.practice.nametags.NametagHandler;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.queue.Queue;
@@ -55,18 +54,19 @@ import me.drizzy.practice.settings.meta.SettingsMeta;
 import me.drizzy.practice.statistics.StatisticsData;
 import me.drizzy.practice.tournament.Tournament;
 import me.drizzy.practice.util.chat.CC;
+import me.drizzy.practice.util.chat.ColourUtils;
 import me.drizzy.practice.util.inventory.InventoryUtil;
 import me.drizzy.practice.util.other.Cooldown;
+import me.drizzy.practice.util.other.NameTags;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.other.TaskUtil;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Field;
@@ -254,8 +254,12 @@ public class Profile {
         });
     }
 
-    public String getColor() {
-        return Array.getInstance().getRankManager().getRankColor(this.getPlayer());
+    public ChatColor getColor() {
+        if(Array.getInstance().getEssentials().getNametagMeta().getDefaultColor().equalsIgnoreCase("<rank_color>")) {
+            return Array.getInstance().getRankManager().getRankColor(this.getPlayer());
+        } else {
+            return ChatColor.valueOf(Array.getInstance().getEssentials().getNametagMeta().getDefaultColor());
+        }
     }
 
     public void load() {
@@ -490,34 +494,6 @@ public class Profile {
         }.runTaskLater(Array.getInstance(), 5L);
     }
 
-    /**
-     * Credit for nametags goes to PotPvP
-     */
-    public void handleNametag() {
-        Player player = getPlayer();
-
-        //Load our Nametag and apply it to the player
-        player.setMetadata("array-Nametag", new FixedMetadataValue(Array.getInstance(), true));
-        NametagHandler.initiatePlayer(player);
-        NametagHandler.reloadPlayer(player);
-        NametagHandler.reloadOthersFor(player);
-
-        try {
-            PacketPlayOutScoreboardTeam a = new PacketPlayOutScoreboardTeam();
-            team_mode.set(a, 3);
-            team_name.set(a, "zLane");
-            team_display.set(a, "zLane");
-            team_color.set(a, -1);
-            team_players.set(a, Collections.singletonList(getName()));
-
-            for (Player other : Bukkit.getOnlinePlayers()) {
-                TaskUtil.runAsync(() -> ((CraftPlayer) other).getHandle().playerConnection.sendPacket(a));
-            }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void handleLeave() {
         Array.getInstance().getTaskThread().execute(() -> {
             Profile.getPlayerList().remove(this.getPlayer());
@@ -548,6 +524,18 @@ public class Profile {
 
         if (!event.isCancelled() && event.getLocation() != null) {
             getPlayer().teleport(event.getLocation());
+        }
+
+        for ( Player otherPlayer : Bukkit.getOnlinePlayers() ) {
+            if (Array.getInstance().getEssentials().getNametagMeta().isEnabled()) {
+                if (party == null) {
+                    NameTags.color(getPlayer(), otherPlayer, getColor(), false);
+                } else {
+                    NameTags.color(getPlayer(), otherPlayer, Array.getInstance().getEssentials().nametagMeta.getPartyColor(), false);
+                }
+            } else {
+                NameTags.reset(getPlayer(), otherPlayer);
+            }
         }
     }
 
@@ -773,14 +761,12 @@ public class Profile {
             if (party != null && party.containsPlayer(otherPlayer)) {
                 hide = false;
             }
-            TaskUtil.runAsync(() -> NametagHandler.reloadPlayer(player, otherPlayer));
         } else if (isInFight()) {
             TeamPlayer teamPlayer = match.getTeamPlayer(otherPlayer);
 
             if (teamPlayer != null && teamPlayer.isAlive()) {
                 hide = false;
             }
-            TaskUtil.runAsync(() -> NametagHandler.reloadPlayer(player, otherPlayer));
         } else if (isSpectating()) {
             if (sumo != null) {
                 SumoPlayer sumoPlayer = sumo.getEventPlayer(otherPlayer);
@@ -818,7 +804,6 @@ public class Profile {
                     hide = false;
                 }
             }
-            TaskUtil.runAsync(() -> NametagHandler.reloadPlayer(player, otherPlayer));
         } else if (isInEvent()) {
             if (sumo != null) {
                 if (!sumo.getSpectators().contains(otherPlayer.getUniqueId())) {
@@ -853,7 +838,6 @@ public class Profile {
                     hide = false;
                 }
             }
-            TaskUtil.runAsync(() -> NametagHandler.reloadPlayer(player, otherPlayer));
         }
 
         if (hide) {

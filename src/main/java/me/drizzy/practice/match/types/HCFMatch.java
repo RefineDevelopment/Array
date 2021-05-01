@@ -9,10 +9,10 @@ import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
-import me.drizzy.practice.nametags.NametagHandler;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.enums.QueueType;
+import me.drizzy.practice.util.other.NameTags;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.ChatComponentBuilder;
@@ -84,11 +84,11 @@ public class HCFMatch extends Match {
         Team team = getTeam(player);
 
         for (Player friendly : team.getPlayers()) {
-            NametagHandler.reloadPlayer(player, friendly);
+            NameTags.color(player, friendly, org.bukkit.ChatColor.GREEN, getKit().getGameRules().isShowHealth());
         }
 
         for (Player enemy : getOpponentTeam(team).getPlayers()) {
-            NametagHandler.reloadPlayer(player, enemy);
+            NameTags.color(player, enemy, org.bukkit.ChatColor.RED, getKit().getGameRules().isShowHealth());
         }
 
         Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
@@ -117,7 +117,7 @@ public class HCFMatch extends Match {
                 Player player=teamPlayer.getPlayer();
 
                 if (player != null) {
-                    Profile profile=Profile.getByUuid(player.getUniqueId());
+                    Profile profile = Profile.getByUuid(player.getUniqueId());
                     profile.handleVisibility();
 
                     getSnapshots().add(new MatchSnapshot(teamPlayer));
@@ -155,13 +155,16 @@ public class HCFMatch extends Match {
                             player.setFireTicks(0);
                             player.updateInventory();
 
+                            NameTags.reset(player, firstTeamPlayer.getPlayer());
+
+                            Array.getInstance().getHCFManager().setEquippedClass(player, null);
+                            Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
+
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
-                            Array.getInstance().getHCFManager().setEquippedClass(player, null);
                             profile.refreshHotbar();
                             profile.handleVisibility();
-                            Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
                             profile.teleportToSpawn();
                         }
                     }

@@ -101,12 +101,12 @@ public class Scoreboard implements BoardAdapter {
                 final String particpantType = (tournament.getTeamCount() > 1) ? "Parties" : "Players";
 
                  config.getStringList("SCOREBOARD.TOURNAMENT").forEach(line -> lines.add(CC.translate(line
-                            .replace("<tournament_round>", round)
-                            .replace("<tournament_kit>", tournament.getLadder().getName())
-                            .replace("<tournament_team>", String.valueOf(tournament.getTeamCount()))
-                            .replace("<tournament_type>", particpantType)
-                            .replace("<tournament_count>", String.valueOf(tournament.getParticipatingCount()))
-                            .replace("<tournament_size>", String.valueOf(tournament.getParticipants().size()))).replace("%splitter%", "┃").replace("|", "┃")));
+                            .replace("<round>", round)
+                            .replace("<kit>", tournament.getLadder().getName())
+                            .replace("<team>", String.valueOf(tournament.getTeamCount()))
+                            .replace("<participant_type>", particpantType)
+                            .replace("<participant_count>", String.valueOf(tournament.getParticipatingCount()))
+                            .replace("<participant_size>", String.valueOf(tournament.getParticipants().size()))).replace("%splitter%", "┃").replace("|", "┃")));
 
             }
         } else if (profile.isInFight()) {
@@ -874,10 +874,8 @@ public class Scoreboard implements BoardAdapter {
     }
 
     public String getEloRangeFormat(Profile profile) {
-        String string = config.getStringOrDefault("SCOREBOARD.ELO_RANGE_FORMAT", "<min_range> -> <max_range>");
-        string = string.replace("<min_range>", String.valueOf(profile.getQueueProfile().getMinRange()))
+        return config.getStringOrDefault("SCOREBOARD.ELO_RANGE_FORMAT", "<min_range> -> <max_range>").replace("<min_range>", String.valueOf(profile.getQueueProfile().getMinRange()))
                        .replace("<max_range>", String.valueOf(profile.getQueueProfile().getMaxRange()));
-        return string;
     }
 
 

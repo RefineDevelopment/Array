@@ -12,12 +12,9 @@ import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.location.Circle;
-import me.drizzy.practice.util.other.PlayerSnapshot;
-import me.drizzy.practice.util.other.PlayerUtil;
+import me.drizzy.practice.util.other.*;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.Clickable;
-import me.drizzy.practice.util.other.Cooldown;
-import me.drizzy.practice.util.other.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -168,6 +165,7 @@ public class LMS {
                     Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
                     otherProfile.handleVisibility(otherPlayer, player);
                     profile.handleVisibility(player, otherPlayer);
+                    NameTags.color(player, otherPlayer, Array.getInstance().getEssentials().getNametagMeta().getEventColor(), getKit().getGameRules().isShowHealth() || getKit().getGameRules().isBuild());
                 }
             }
         }.runTaskAsynchronously(Array.getInstance());
@@ -190,11 +188,6 @@ public class LMS {
         onLeave(player);
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
-        profile.setState(ProfileState.IN_LOBBY);
-        profile.setLms(null);
-        profile.refreshHotbar();
-
-        profile.teleportToSpawn();
 
         new BukkitRunnable() {
             @Override
@@ -203,9 +196,15 @@ public class LMS {
                     Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
                     otherProfile.handleVisibility(otherPlayer, player);
                     profile.handleVisibility(player, otherPlayer);
+                    NameTags.reset(player, otherPlayer);
                 }
             }
         }.runTaskAsynchronously(Array.getInstance());
+
+        profile.setState(ProfileState.IN_LOBBY);
+        profile.setLms(null);
+        profile.refreshHotbar();
+        profile.teleportToSpawn();
     }
 
     protected List<Player> getSpectatorsList() {

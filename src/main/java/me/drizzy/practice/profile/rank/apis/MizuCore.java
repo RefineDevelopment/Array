@@ -2,6 +2,8 @@ package me.drizzy.practice.profile.rank.apis;
 
 import com.broustudio.MizuAPI.MizuAPI;
 import me.drizzy.practice.profile.rank.RankType;
+import me.drizzy.practice.util.chat.ColourUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 
 public class MizuCore implements RankType {
@@ -27,7 +29,7 @@ public class MizuCore implements RankType {
     }
 
     @Override
-    public String getRankColor(OfflinePlayer player) {
-        return MizuAPI.getAPI().getRankColor(MizuAPI.getAPI().getRank(player.getUniqueId()));
+    public ChatColor getRankColor(OfflinePlayer player) {
+        return ColourUtils.format(MizuAPI.getAPI().getRankColor(MizuAPI.getAPI().getRank(player.getUniqueId())));
     }
 }

@@ -2,18 +2,21 @@ package me.drizzy.practice.party;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.drizzy.practice.Array;
 import me.drizzy.practice.Locale;
 import me.drizzy.practice.duel.DuelRequest;
 import me.drizzy.practice.enums.PartyPrivacyType;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
-import me.drizzy.practice.nametags.NametagHandler;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.Clickable;
+import me.drizzy.practice.util.chat.ColourUtils;
+import me.drizzy.practice.util.other.NameTags;
 import me.drizzy.practice.util.other.TaskUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -158,8 +161,9 @@ public class Party extends Team {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setParty(this);
 
-        NametagHandler.reloadPlayer(player);
-        NametagHandler.reloadOthersFor(player);
+        for ( Player otherPlayer : getPlayers() ) {
+            NameTags.color(player, otherPlayer, Array.getInstance().getEssentials().getNametagMeta().getPartyColor(), false);
+        }
 
         /*
          * Clear Their Invite
@@ -179,6 +183,16 @@ public class Party extends Team {
         if (profile.isInLobby() || profile.isInQueue()) {
             profile.refreshHotbar();
             profile.handleVisibility();
+        }
+
+        for (TeamPlayer teamPlayer : this.getTeamPlayers()) {
+            Player otherPlayer = teamPlayer.getPlayer();
+            NameTags.color(player, teamPlayer.getPlayer(), ChatColor.BLUE, false);
+            NameTags.color(teamPlayer.getPlayer(), player, ChatColor.BLUE, false);
+            if (otherPlayer != null) {
+                Profile teamProfile = Profile.getByUuid(teamPlayer.getUuid());
+                teamProfile.handleVisibility(otherPlayer, player);
+            }
         }
 
         Player random = getTeamPlayers().get(0).getPlayer();
@@ -211,8 +225,9 @@ public class Party extends Team {
             profile.handleVisibility();
             profile.refreshHotbar();
 
-            NametagHandler.reloadPlayer(player);
-            NametagHandler.reloadOthersFor(player);
+            for ( Player otherPlayer : getPlayers() ) {
+                NameTags.color(player, otherPlayer, profile.getColor(), false);
+            }
         }
 
         /*
@@ -233,8 +248,7 @@ public class Party extends Team {
                     if (secondPlayer != null) {
                         player.hidePlayer(secondPlayer);
                     }
-                    NametagHandler.reloadPlayer(player);
-                    NametagHandler.reloadOthersFor(player);
+                    NameTags.reset(player, secondPlayer);
                 }
             }
 
@@ -255,8 +269,6 @@ public class Party extends Team {
                 otherProfile.handleVisibility(otherPlayer, player);
             }
         }
-        NametagHandler.reloadPlayer(player);
-        NametagHandler.reloadOthersFor(player);
     }
 
     /**
@@ -294,28 +306,27 @@ public class Party extends Team {
         Profile leaderProfile = Profile.getByUuid(this.getLeader().getUuid());
         leaderProfile.getSentDuelRequests().values().removeIf(DuelRequest::isParty);
 
+        for (Player partyps : this.getPlayers()) {
+            for ( Player player : Bukkit.getOnlinePlayers() ) {
+                NameTags.reset(partyps, player);
+            }
+        }
+
         this.getPlayers().forEach(player -> {
             Profile profile = Profile.getByUuid(player.getUniqueId());
-            if(profile.isInFight()) {
+            if ( profile.isInFight() ) {
                 profile.getMatch().handleDeath(player, this.getLeader().getPlayer(), true);
             }
             profile.setParty(null);
-            if (profile.isInLobby() || profile.isInQueue()) {
+            if ( profile.isInLobby() || profile.isInQueue() ) {
                 profile.refreshHotbar();
                 profile.handleVisibility();
-                NametagHandler.reloadPlayer(player);
-                NametagHandler.reloadOthersFor(player);
+                profile.teleportToSpawn();
             }
         });
 
         parties.remove(this);
         this.disbanded = true;
-
-        for (Player partyps : this.getPlayers()) {
-            for ( Player player : Bukkit.getOnlinePlayers() ) {
-                NametagHandler.reloadPlayer(partyps, player);
-            }
-        }
     }
 
     /**

@@ -20,13 +20,13 @@ SCOREBOARD:
     - "&7&m----------------------"
     - "&c&l<queue_name>&7:"
     - "&c * &fTime: &c<queue_duration>"
-    - "&c * &fELO Range: &c<queue_elo_range>"
+    - "&c * &fELO Range: &c<queue_range>"
   TOURNAMENT:
     - "&7&m----------------------"
     - "&c&lTournament&7:"
-    - "&c * &fKit: &c<tournament_kit> &7(<tournament_team> v <tournament_team>)"
-    - "&c * &fRound: &c<tournament_round>"
-    - "&c * &f<tournament_type>: &c<tournament_count>/<tournament_size>"
+    - "&c * &fKit: &c<kit>"
+    - "&c * &fRound: &c<round>"
+    - "&c * &f<participant_type>: &c<participant_count>/<participant_size>"
   MATCH:
     SOLO:
       - "&fRival: &c<opponent_name>"

@@ -27,8 +27,6 @@ import me.drizzy.practice.leaderboards.external.LeaderboardPlaceholders;
 import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.kit.KitTypeAdapter;
-import me.drizzy.practice.nametags.NametagHandler;
-import me.drizzy.practice.nametags.provider.NametagEngine;
 import me.drizzy.practice.nms.NMSManager;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.party.Party;
@@ -101,7 +99,6 @@ public class Array extends JavaPlugin {
      */
     private Aether scoreboard;
     private Ziggurat tab;
-    private NametagHandler nametag;
 
     /*
      * All Event Managers
@@ -330,19 +327,14 @@ public class Array extends JavaPlugin {
 
     private void registerEssentials() {
 
+        logger("&7Setting up Scoreboard");
         this.scoreboard = new Aether(this, new Scoreboard());
         this.scoreboard.getOptions().hook(true);
-        logger("&7Setting up Scoreboard");
 
         if (essentials.getMeta().isTabEnabled()) {
             logger("&7Setting up Tablist");
             this.tab = new Ziggurat(this, new Tab());
         }
-
-        this.nametag = new NametagHandler();
-        this.nametag.preLoad();
-        this.nametag.setEngine(new NametagEngine());
-        logger("&7Setting up Nametags");
 
         new QueueThread().start();
 

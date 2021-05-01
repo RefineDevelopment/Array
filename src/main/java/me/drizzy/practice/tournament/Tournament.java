@@ -242,6 +242,7 @@ public class Tournament {
                                 Profile winnerProfile = Profile.getByUuid(winner.getLeader().getUuid());
                                 winnerProfile.getStatisticsData().get(getKit()).setElo(winnerProfile.getStatisticsData().get(getKit()).getElo() + 10);
                                 winnerProfile.calculateGlobalElo();
+                                winnerProfile.save();
                             }
                         }
                         CURRENT_TOURNAMENT = null;

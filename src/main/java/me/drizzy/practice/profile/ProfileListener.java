@@ -8,6 +8,7 @@ import me.drizzy.practice.match.events.MatchEvent;
 import me.drizzy.practice.match.events.MatchStartEvent;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.other.PlayerUtil;
+import me.drizzy.practice.util.other.TaskUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -233,10 +234,6 @@ public class ProfileListener implements Listener {
         Player player = event.getPlayer();
         Profile profile = Profile.getByPlayer(player);
         profile.handleJoin();
-        if (Array.getInstance().getEssentials().getNametagMeta().isEnabled()) {
-            profile.handleNametag();
-        }
-
     }
 
     @EventHandler(priority = EventPriority.NORMAL)

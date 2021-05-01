@@ -16,4 +16,7 @@ public class NametagMeta {
     public String defaultColor = "<rank_color>";
     public ChatColor partyColor = ChatColor.BLUE;
     public ChatColor eventColor = ChatColor.RED;
+
+
+
 }

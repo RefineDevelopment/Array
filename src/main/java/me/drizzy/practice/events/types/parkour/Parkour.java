@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.util.chat.Clickable;
+import me.drizzy.practice.util.other.*;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -15,11 +16,7 @@ import me.drizzy.practice.events.types.parkour.task.ParkourRoundEndTask;
 import me.drizzy.practice.events.types.parkour.task.ParkourRoundStartTask;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.util.other.PlayerSnapshot;
-import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.other.Cooldown;
-import me.drizzy.practice.util.other.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -168,6 +165,7 @@ public class Parkour {
 					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
 					otherProfile.handleVisibility(otherPlayer, player);
 					profile.handleVisibility(player, otherPlayer);
+					NameTags.color(player, otherPlayer, Array.getInstance().getEssentials().getNametagMeta().getEventColor(), false);
 				}
 			}
 		}.runTaskAsynchronously(Array.getInstance());
@@ -184,11 +182,6 @@ public class Parkour {
 		onLeave(player);
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
-		profile.setState(ProfileState.IN_LOBBY);
-		profile.setParkour(null);
-		profile.refreshHotbar();
-
-		profile.teleportToSpawn();
 
 		new BukkitRunnable() {
 			@Override
@@ -197,9 +190,15 @@ public class Parkour {
 					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
 					otherProfile.handleVisibility(otherPlayer, player);
 					profile.handleVisibility(player, otherPlayer);
+					NameTags.reset(player, otherPlayer);
 				}
 			}
 		}.runTaskAsynchronously(Array.getInstance());
+
+		profile.setState(ProfileState.IN_LOBBY);
+		profile.setParkour(null);
+		profile.refreshHotbar();
+		profile.teleportToSpawn();
 
 		if (getRemainingPlayers().size() == 1) {
 			handleWin(getRemainingPlayers().get(0));

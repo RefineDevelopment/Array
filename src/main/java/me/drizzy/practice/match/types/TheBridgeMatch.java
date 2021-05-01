@@ -12,12 +12,12 @@ import me.drizzy.practice.match.MatchState;
 import me.drizzy.practice.match.task.MatchStartTask;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
-import me.drizzy.practice.nametags.NametagHandler;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.profile.meta.ProfileRematchData;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.enums.QueueType;
+import me.drizzy.practice.util.other.NameTags;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.elo.EloUtil;
@@ -113,8 +113,7 @@ public class TheBridgeMatch extends Match {
         player.getInventory().setContents(getKit().getKitInventory().getContents());
         giveBridgeKit(player);
 
-        NametagHandler.reloadPlayer(player);
-        NametagHandler.reloadOthersFor(player);
+        NameTags.color(player, getOpponentPlayer(player), (this.getTeamPlayerA().getPlayer() == player ? org.bukkit.ChatColor.BLUE :  org.bukkit.ChatColor.RED), getKit().getGameRules().isBuild());
     }
 
     @Override
@@ -158,6 +157,8 @@ public class TheBridgeMatch extends Match {
 
                             player.setFireTicks(0);
                             player.updateInventory();
+
+                            NameTags.reset(player, teamPlayer.getPlayer());
 
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
@@ -215,7 +216,9 @@ public class TheBridgeMatch extends Match {
                 winningProfile.getStatisticsData().get(getKit()).incrementWon();
                 losingProfile.getStatisticsData().get(getKit()).incrementLost();
                 winningProfile.calculateGlobalElo();
+                winningProfile.save();
                 losingProfile.calculateGlobalElo();
+                losingProfile.save();
 
                 int winnerEloChange=newWinnerElo - oldWinnerElo;
                 int loserEloChange=oldLoserElo - newLoserElo;

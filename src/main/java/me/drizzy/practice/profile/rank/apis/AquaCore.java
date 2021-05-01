@@ -32,8 +32,8 @@ public class AquaCore implements RankType {
     }
 
     @Override
-    public String getRankColor(OfflinePlayer player) {
+    public ChatColor getRankColor(OfflinePlayer player) {
         PlayerData data = AquaCoreAPI.INSTANCE.getPlayerData(player.getUniqueId());
-        return (data == null) ? ChatColor.GREEN.toString() : data.getHighestRank().getColor().toString();
+        return (data == null) ? ChatColor.GREEN : data.getHighestRank().getColor();
     }
 }

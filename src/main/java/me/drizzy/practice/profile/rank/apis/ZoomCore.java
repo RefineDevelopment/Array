@@ -2,6 +2,7 @@ package me.drizzy.practice.profile.rank.apis;
 
 import club.frozed.core.ZoomAPI;
 import me.drizzy.practice.profile.rank.RankType;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 
 public class ZoomCore implements RankType {
@@ -26,7 +27,7 @@ public class ZoomCore implements RankType {
     }
 
     @Override
-    public String getRankColor(OfflinePlayer player) {
-        return ZoomAPI.getRankColor(player.getPlayer()).toString();
+    public ChatColor getRankColor(OfflinePlayer player) {
+        return ZoomAPI.getRankColor(player.getPlayer());
     }
 }
