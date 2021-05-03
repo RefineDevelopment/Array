@@ -299,7 +299,7 @@ public abstract class Match {
 
                 player.sendMessage(Locale.MATCH_DISCONNECTED.toString()
                         .replace("<relation_color>", getRelationColor(player, deadPlayer).toString())
-                        .replace("<participant>", deadPlayer.getName()));
+                        .replace("<participant_name>", deadPlayer.getName()));
 
                 continue;
             }

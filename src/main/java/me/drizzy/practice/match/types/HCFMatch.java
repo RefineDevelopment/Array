@@ -84,11 +84,11 @@ public class HCFMatch extends Match {
         Team team = getTeam(player);
 
         for (Player friendly : team.getPlayers()) {
-            NameTags.color(player, friendly, org.bukkit.ChatColor.GREEN, getKit().getGameRules().isShowHealth());
+            NameTags.color(player, friendly, org.bukkit.ChatColor.GREEN, false);
         }
 
         for (Player enemy : getOpponentTeam(team).getPlayers()) {
-            NameTags.color(player, enemy, org.bukkit.ChatColor.RED, getKit().getGameRules().isShowHealth());
+            NameTags.color(player, enemy, org.bukkit.ChatColor.RED, false);
         }
 
         Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();

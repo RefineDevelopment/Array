@@ -27,6 +27,8 @@ import me.drizzy.practice.leaderboards.external.LeaderboardPlaceholders;
 import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.kit.KitTypeAdapter;
+import me.drizzy.practice.managers.CommandsManager;
+import me.drizzy.practice.managers.ListenersManager;
 import me.drizzy.practice.nms.NMSManager;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.party.Party;
@@ -35,8 +37,7 @@ import me.drizzy.practice.profile.rank.Rank;
 import me.drizzy.practice.profile.rank.RankType;
 import me.drizzy.practice.profile.rank.apis.DefaultProvider;
 import me.drizzy.practice.queue.QueueThread;
-import me.drizzy.practice.managers.CommandsManager;
-import me.drizzy.practice.managers.ListenersManager;
+
 import me.drizzy.practice.scoreboard.Scoreboard;
 import me.drizzy.practice.tablist.Tab;
 import me.drizzy.practice.tablist.TabManager;

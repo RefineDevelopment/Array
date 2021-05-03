@@ -105,8 +105,8 @@ public class Scoreboard implements BoardAdapter {
                             .replace("<kit>", tournament.getLadder().getName())
                             .replace("<team>", String.valueOf(tournament.getTeamCount()))
                             .replace("<participant_type>", particpantType)
-                            .replace("<participant_count>", String.valueOf(tournament.getParticipatingCount()))
-                            .replace("<participant_size>", String.valueOf(tournament.getParticipants().size()))).replace("%splitter%", "┃").replace("|", "┃")));
+                            .replace("<participant_count>", String.valueOf(tournament.getParticipants().size()))
+                            .replace("<participant_size>", String.valueOf(50))).replace("%splitter%", "┃").replace("|", "┃")));
 
             }
         } else if (profile.isInFight()) {

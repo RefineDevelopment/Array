@@ -530,8 +530,16 @@ public class Profile {
                 } else {
                     NameTags.color(getPlayer(), otherPlayer, Array.getInstance().getEssentials().nametagMeta.getPartyColor(), false);
                 }
+                Profile profile = Profile.getByPlayer(otherPlayer);
+
+                if (profile.getParty() == null) {
+                    NameTags.color(otherPlayer, getPlayer(), profile.getColor(), false);
+                } else {
+                    NameTags.color(otherPlayer, getPlayer(), Array.getInstance().getEssentials().nametagMeta.getPartyColor(), false);
+                }
             } else {
                 NameTags.reset(getPlayer(), otherPlayer);
+                NameTags.reset(otherPlayer, getPlayer());
             }
         }
     }

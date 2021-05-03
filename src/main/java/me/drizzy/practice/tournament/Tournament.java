@@ -14,6 +14,7 @@ import me.drizzy.practice.match.types.TeamMatch;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
+import me.drizzy.practice.util.chat.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -28,7 +29,7 @@ public class Tournament {
     @Getter public static Tournament CURRENT_TOURNAMENT = null;
     @Getter public static TournamentMatch tournamentMatch;
 
-    @Getter
+
     private final List<Party> participants = new ArrayList<Party>() {
         @Override
         public Iterator<Party> iterator() {
@@ -54,8 +55,7 @@ public class Tournament {
             removeAll(toRemove);
         }
     };
-
-    private final List<TournamentMatch> tournamentMatches = new ArrayList<>();
+    private final List<TournamentMatch> tournamentMatches = Lists.newArrayList();
     public final List<UUID> spectators = new ArrayList<>();
 
     private Kit ladder;
@@ -65,9 +65,6 @@ public class Tournament {
     private int teamCount;
     private boolean canceled = false;
 
-    public boolean hasStarted() {
-        return round != 0;
-    }
 
     /**
      * Returns a boolean for if the player is participating
@@ -95,7 +92,9 @@ public class Tournament {
         if(participants.contains(party)) {
             for (Party partyparticipants : participants) {
                 for (Player player : partyparticipants.getPlayers()) {
-                    player.sendMessage(Locale.TOURNAMENT_LEAVE.toString().replace("<left_party>", party.getLeader().getUsername() + "'s Party"));
+                    player.sendMessage(Locale.TOURNAMENT_LEAVE.toString()
+                            .replace("<left_party>", party.getLeader().getUsername() + "'s Party")
+                            .replace("<participants_size>", String.valueOf(this.getParticipatingCount())));
                 }
             }
             participants.remove(party);
@@ -108,32 +107,36 @@ public class Tournament {
      *
      * @param party The party joining the tournament
      */
-    public void participate(Party party){
+    public void participate(Party party) {
         Preconditions.checkState(round == 0  , "Can not join after start.");
         if(!participants.contains(party)) {
             participants.add(party);
             for (Party partyparticipants : participants) {
                 for (Player player : partyparticipants.getPlayers()) {
-                    player.sendMessage(Locale.TOURNAMENT_JOIN.toString().replace("<joined_party>", party.getLeader().getUsername() + "'s Party"));
+                    player.sendMessage(Locale.TOURNAMENT_JOIN.toString()
+                            .replace("<joined_party>", party.getLeader().getUsername() + "'s Party")
+                            .replace("<participants_size>", String.valueOf(this.getParticipatingCount())));
                 }
             }
         }
     }
 
-    /**
-     * Cancels the tournament
-     */
+
+    public boolean hasStarted() {
+        return round != 0;
+    }
+
+    public int getParticipatingCount() {
+        return participants.size();
+    }
+
     public void cancel() {
         canceled = true;
         participants.clear();
         tournamentMatches.clear();
     }
 
-    /**
-     * Starts the tournament
-     */
     public void tournamentstart(){
-        round++;
         Collections.shuffle(participants);
         if(participatingCount == 0){
             participatingCount = participants.size();
@@ -152,7 +155,7 @@ public class Tournament {
             }
             Party other = iterator.next();
             Arena arena = Arena.getRandom(ladder);
-
+            {
                 Team teamA = new Team(new TeamPlayer(player.getLeader().getPlayer()));
                 Team teamB = new Team(new TeamPlayer(other.getLeader().getPlayer()));
                 tournamentMatch = new TournamentMatch(teamA, teamB, getLadder(), arena);
@@ -177,8 +180,10 @@ public class Tournament {
                         teamB.getTeamPlayers().add(new TeamPlayer(player1));
                     }
                 }
+            }
             tournamentMatch.start();
             tournamentMatches.add(tournamentMatch);
+
 
         }
     }
@@ -232,9 +237,9 @@ public class Tournament {
 
                 if (tournamentMatches.isEmpty()) {
                     if (participants.size() <= 1) {
-                        Bukkit.broadcastMessage( "");
+                        Bukkit.broadcastMessage(CC.BLUE + CC.BOLD + "");
                         Bukkit.broadcastMessage(Locale.TOURNAMANET_WON.toString().replace("<won>", builder.toString()));
-                        Bukkit.broadcastMessage("");
+                        Bukkit.broadcastMessage(CC.BLUE + CC.BOLD + "");
                         if (participants.get(0) != null) {
                             if (getTeamCount() == 1) {
                                 Party winner = participants.get(0);
