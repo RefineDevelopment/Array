@@ -7,7 +7,6 @@ import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.other.*;
-import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.events.types.sumo.player.SumoPlayer;
 import me.drizzy.practice.events.types.sumo.player.SumoPlayerState;
@@ -414,7 +413,7 @@ public class Sumo {
 		profile.setSumo(this);
 		PlayerUtil.spectator(player);
 		player.setFlying(true);
-		profile.setState(ProfileState.SPECTATE_MATCH);
+		profile.setState(ProfileState.SPECTATING);
 		profile.refreshHotbar();
 		profile.handleVisibility();
 

@@ -1,5 +1,6 @@
 package me.drizzy.practice.events.types.brackets.task;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.brackets.Brackets;
 import me.drizzy.practice.events.types.brackets.BracketsState;
 import me.drizzy.practice.events.types.brackets.BracketsTask;
@@ -20,13 +21,13 @@ public class BracketsStartTask extends BracketsTask {
 
 		if (this.getBrackets().getPlayers().size() <= 1 && this.getBrackets().getCooldown() != null) {
 			this.getBrackets().setCooldown(null);
-			this.getBrackets().broadcastMessage("&cThere are not enough players for the brackets to start.");
+			this.getBrackets().broadcastMessage(Locale.EVENT_NOT_ENOUGH_PLAYERS.toString().replace("<event_name>", "Brackets"));
 		}
 
 		if (this.getBrackets().getPlayers().size() == Brackets.getMaxPlayers() || (getTicks() >= 30 && this.getBrackets().getPlayers().size() >= 2)) {
 			if (this.getBrackets().getCooldown() == null) {
 				this.getBrackets().setCooldown(new Cooldown(11_000));
-				this.getBrackets().broadcastMessage("&fThe brackets will start in &c10 seconds&f...");
+				this.getBrackets().broadcastMessage(Locale.EVENT_STARTING.toString().replace("<event_name>", "Brackets"));
 			} else {
 				if (this.getBrackets().getCooldown().hasExpired()) {
 					this.getBrackets().setState(BracketsState.ROUND_STARTING);

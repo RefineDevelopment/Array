@@ -14,7 +14,6 @@ import me.drizzy.practice.match.types.TeamMatch;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.util.chat.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -96,7 +95,7 @@ public class Tournament {
         if(participants.contains(party)) {
             for (Party partyparticipants : participants) {
                 for (Player player : partyparticipants.getPlayers()) {
-                    player.sendMessage(CC.translate("&8[&c&lTournament&8] &c" + party.getLeader().getPlayer().getDisplayName()) + CC.GRAY + " has left Tournament!" + CC.GRAY + "(&c" + participants.size() + "/" + "50" + "&8)");
+                    player.sendMessage(Locale.TOURNAMENT_LEAVE.toString().replace("<left_party>", party.getLeader().getUsername() + "'s Party"));
                 }
             }
             participants.remove(party);
@@ -115,7 +114,7 @@ public class Tournament {
             participants.add(party);
             for (Party partyparticipants : participants) {
                 for (Player player : partyparticipants.getPlayers()) {
-                    player.sendMessage(CC.translate("&8[&c&lTournament&8] &c" + party.getLeader().getPlayer().getDisplayName() + CC.GRAY + " has joined the Tournament! " + "&8(&c" + participants.size() + "/" + "50" + "&8)"));
+                    player.sendMessage(Locale.TOURNAMENT_JOIN.toString().replace("<joined_party>", party.getLeader().getUsername() + "'s Party"));
                 }
             }
         }

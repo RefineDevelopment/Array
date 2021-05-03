@@ -2,7 +2,6 @@ package me.drizzy.practice.events.types.parkour;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.util.other.*;
 import org.bukkit.Bukkit;
@@ -330,7 +329,7 @@ public class Parkour {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setParkour(this);
 		PlayerUtil.spectator(player);
-		profile.setState(ProfileState.SPECTATE_MATCH);
+		profile.setState(ProfileState.SPECTATING);
 		player.setFlying(true);
 		profile.refreshHotbar();
 		profile.handleVisibility();

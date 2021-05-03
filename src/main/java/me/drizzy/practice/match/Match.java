@@ -425,7 +425,7 @@ public abstract class Match {
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setMatch(this);
-        profile.setState(ProfileState.SPECTATE_MATCH);
+        profile.setState(ProfileState.SPECTATING);
         profile.refreshHotbar();
         player.setAllowFlight(true);
         player.setFlying(true);

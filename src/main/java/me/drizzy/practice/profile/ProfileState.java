@@ -7,6 +7,6 @@ public enum ProfileState {
     IN_FIGHT,
     IN_EVENT,
     SPECTATE_TOURNAMENT,
-    SPECTATE_MATCH
+    SPECTATING
 
 }

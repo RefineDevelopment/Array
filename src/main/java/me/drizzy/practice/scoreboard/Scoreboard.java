@@ -874,8 +874,9 @@ public class Scoreboard implements BoardAdapter {
     }
 
     public String getEloRangeFormat(Profile profile) {
-        return config.getStringOrDefault("SCOREBOARD.ELO_RANGE_FORMAT", "<min_range> -> <max_range>").replace("<min_range>", String.valueOf(profile.getQueueProfile().getMinRange()))
-                       .replace("<max_range>", String.valueOf(profile.getQueueProfile().getMaxRange()));
+        return config.getStringOrDefault("SCOREBOARD.ELO_RANGE_FORMAT", "<min_range> -> <max_range>")
+                .replace("<min_range>", String.valueOf(profile.getQueueProfile().getMinRange()))
+                .replace("<max_range>", String.valueOf(profile.getQueueProfile().getMaxRange()));
     }
 
 

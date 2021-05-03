@@ -3,7 +3,6 @@ package me.drizzy.practice.events.types.lms;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
-import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.events.types.lms.player.LMSPlayer;
 import me.drizzy.practice.events.types.lms.player.LMSPlayerState;
 import me.drizzy.practice.events.types.lms.task.LMSRoundEndTask;
@@ -392,7 +391,7 @@ public class LMS {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setLms(this);
         PlayerUtil.spectator(player);
-        profile.setState(ProfileState.SPECTATE_MATCH);
+        profile.setState(ProfileState.SPECTATING);
         player.setFlying(true);
         profile.refreshHotbar();
         profile.handleVisibility();

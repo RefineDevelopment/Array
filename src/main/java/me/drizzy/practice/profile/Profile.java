@@ -54,13 +54,11 @@ import me.drizzy.practice.settings.meta.SettingsMeta;
 import me.drizzy.practice.statistics.StatisticsData;
 import me.drizzy.practice.tournament.Tournament;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.chat.ColourUtils;
 import me.drizzy.practice.util.inventory.InventoryUtil;
 import me.drizzy.practice.util.other.Cooldown;
 import me.drizzy.practice.util.other.NameTags;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.other.TaskUtil;
-import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -69,7 +67,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.Executor;
@@ -556,7 +553,7 @@ public class Profile {
     }
 
     public boolean isSpectating() {
-        return state == ProfileState.SPECTATE_MATCH && (
+        return state == ProfileState.SPECTATING && (
                 match != null || sumo != null ||
                 brackets != null || lms != null ||
                 parkour != null || gulag !=null ||
@@ -693,43 +690,43 @@ public class Profile {
             } else if (isInSumo()) {
                 if (getSumo().getEventPlayer(player).getState().equals(SumoPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this)), 2L);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SUMO_SPECTATE, this)), 2L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SUMO_SPECTATE, this));
             } else if (isInBrackets()) {
                 if (getBrackets().getEventPlayer(player).getState().equals(BracketsPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this)), 2L);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.BRACKETS_SPECTATE, this)), 2L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.BRACKETS_SPECTATE, this));
             } else if (isInLMS()) {
                 if (getLms().getEventPlayer(player).getState().equals(LMSPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this)), 2L);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.LMS_SPECTATE, this)), 2L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.LMS_SPECTATE, this));
             } else if (isInParkour()) {
                 if (getParkour().getEventPlayer(player).getState().equals(ParkourPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this)), 2L);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.PARKOUR_SPECTATE, this)), 2L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.PARKOUR_SPECTATE, this));
             } else if (isInSpleef()) {
                 if (getSpleef().getEventPlayer(player).getState().equals(SpleefPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this)), 2L);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SPLEEF_SPECTATE, this)), 2L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SPLEEF_SPECTATE, this));
             } else if (isInOITC()) {
                 if (getOITC().getEventPlayer(player).getState().equals(OITCPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this)), 2L);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.OITC_SPECTATE, this)), 2L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.OITC_SPECTATE, this));
             } else if(isInGulag()) {
                 if (getGulag().getEventPlayer(player).getState().equals(GulagPlayerState.ELIMINATED)) {
                     PlayerUtil.spectator(player);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this)), 2L);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.GULAG_SPECTATE, this)), 2L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.GULAG_SPECTATE, this));
             } else if (isInFight()) {
@@ -900,36 +897,6 @@ public class Profile {
             }
         } catch (Exception e) {
             Array.logger("Could not send LC-Cooldown!");
-        }
-    }
-
-
-    private Field team_name;
-    private Field team_display;
-    private Field team_players;
-    private Field team_mode;
-    private Field team_color;
-
-    {
-        try {
-            team_name = PacketPlayOutScoreboardTeam.class.getDeclaredField("a");
-            team_name.setAccessible(true);
-            team_display = PacketPlayOutScoreboardTeam.class.getDeclaredField("b");
-            team_display.setAccessible(true);
-            Field team_prefix = PacketPlayOutScoreboardTeam.class.getDeclaredField("c");
-            team_prefix.setAccessible(true);
-            Field team_suffix = PacketPlayOutScoreboardTeam.class.getDeclaredField("d");
-            team_suffix.setAccessible(true);
-            team_players = PacketPlayOutScoreboardTeam.class.getDeclaredField("g");
-            team_players.setAccessible(true);
-            team_color = PacketPlayOutScoreboardTeam.class.getDeclaredField("f");
-            team_color.setAccessible(true);
-            team_mode = PacketPlayOutScoreboardTeam.class.getDeclaredField("h");
-            team_mode.setAccessible(true);
-            Field team_nametag = PacketPlayOutScoreboardTeam.class.getDeclaredField("e");
-            team_nametag.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
         }
     }
 }

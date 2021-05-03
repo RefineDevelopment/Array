@@ -72,19 +72,19 @@ public class MatchListener implements Listener {
                     final Arena arena = match.getArena();
                     final int y = (int) event.getBlockPlaced().getLocation().getY();
                     if (y > arena.getMaxBuildHeight()) {
-                        event.getPlayer().sendMessage(CC.RED + "You have reached the maximum build height.");
+                        event.getPlayer().sendMessage(Locale.MATCH_MAX_BUILD.toString());
                         event.setCancelled(true);
                         return;
                     }
                     if (arena instanceof TheBridgeArena) {
                         TheBridgeArena standaloneArena = (TheBridgeArena) arena;
                         if (standaloneArena.getBlueCuboid() != null && standaloneArena.getBlueCuboid().contains(event.getBlockPlaced())) {
-                            event.getPlayer().sendMessage(CC.translate("&cYou can't place blocks here!"));
+                            event.getPlayer().sendMessage(Locale.MATCH_BRIDGE_BLOCK.toString());
                             event.setCancelled(true);
                             return;
                         }
                         if (standaloneArena.getRedCuboid() != null && standaloneArena.getRedCuboid().contains(event.getBlockPlaced())) {
-                            event.getPlayer().sendMessage(CC.translate("&cYou can't place blocks here!"));
+                            event.getPlayer().sendMessage(Locale.MATCH_BRIDGE_BLOCK.toString());
                             event.setCancelled(true);
                             return;
                         }
@@ -103,22 +103,30 @@ public class MatchListener implements Listener {
     public void onPortal(EntityPortalEnterEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            Profile profile=Profile.getByUuid(player.getUniqueId());
+            Profile profile = Profile.getByUuid(player.getUniqueId());
             if (profile.isInFight()) {
                 if (profile.getMatch().getKit().getGameRules().isBridge()) {
                     if (player.getLocation().getBlock().getType() == Material.ENDER_PORTAL ||
                         player.getLocation().getBlock().getType() == Material.ENDER_PORTAL_FRAME) {
-                        TheBridgeMatch match=(TheBridgeMatch) profile.getMatch();
+                        TheBridgeMatch match = (TheBridgeMatch) profile.getMatch();
+
                         if (match.getState() == MatchState.ENDING) return;
+
                         if (LocationUtils.isTeamPortal(player)) {
                             new BridgePlayerTask(match, player).run();
-                            player.sendMessage(CC.translate("&cYou Jumped in the wrong portal."));
+                            player.sendMessage(Locale.MATCH_BRIDGE_WRONG_PORTAL.toString());
                             return;
                         }
+
                         if (match.getCaughtPlayers().contains(player)) return;
+
                         for ( TeamPlayer teamPlayer : match.getTeamPlayers() ) {
                             Player other = teamPlayer.getPlayer();
-                            other.sendMessage(CC.translate(match.getRelationColor(other, player) + player.getDisplayName() + "&f has scored a Point!"));
+
+                            other.sendMessage(Locale.MATCH_BRIDGE_SCORED.toString()
+                                    .replace("<relation_color_scored>", match.getRelationColor(other, player).toString())
+                                    .replace("<scored_name>", player.getName()));
+
                             teamPlayer.getPlayer().teleport(teamPlayer.getPlayerSpawn());
                         }
                         match.handleDeath(match.getOpponentPlayer(player), null, false);
@@ -231,7 +239,7 @@ public class MatchListener implements Listener {
                     final Block block = event.getBlockClicked().getRelative(event.getBlockFace());
                     final int y = (int) block.getLocation().getY();
                     if (y > arena.getMaxBuildHeight()) {
-                        event.getPlayer().sendMessage(CC.RED + "You have reached the maximum build height.");
+                        event.getPlayer().sendMessage(Locale.MATCH_MAX_BUILD.toString());
                         event.setCancelled(true);
                         return;
                     }
@@ -330,31 +338,6 @@ public class MatchListener implements Listener {
         }
     }
 
-    /**
-     * Apply the below health display for
-     * Build/Show health kit matches
-     *
-     * @param event {@link MatchPlayerSetupEvent}
-     */
-    @EventHandler
-    public void onStart(MatchPlayerSetupEvent event) {
-        if (event.getMatch().getKit().getGameRules().isBuild() || event.getMatch().getKit().getGameRules().isShowHealth()) {
-            for ( TeamPlayer otherPlayerTeam : event.getMatch().getTeamPlayers() ) {
-                Player otherPlayer=otherPlayerTeam.getPlayer();
-                Scoreboard scoreboard=event.getPlayer().getScoreboard();
-                Objective objective=scoreboard.getObjective(DisplaySlot.BELOW_NAME);
-
-                if (objective == null) {
-                    objective=scoreboard.registerNewObjective("showhealth", "health");
-                }
-
-                objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
-                objective.setDisplayName(ChatColor.RED + org.apache.commons.lang.StringEscapeUtils.unescapeJava("\u2764"));
-                objective.getScore(otherPlayer.getName()).setScore((int) Math.floor(otherPlayer.getHealth() / 2));
-            }
-        }
-    }
-
     @EventHandler
     public void onPlayerDeathEvent(PlayerDeathEvent event) {
         //event.getEntity().spigot().respawn();
@@ -371,11 +354,17 @@ public class MatchListener implements Listener {
                 event.getDrops().clear();
                 PlayerUtil.reset(player);
                 TheBridgeMatch bridgeMatch = (TheBridgeMatch) match;
-                for ( Player player2 : bridgeMatch.getPlayers() ) {
+                for ( Player player2 : bridgeMatch.getPlayersAndSpectators() ) {
                     if (player.getKiller() == null) {
-                        player2.sendMessage(bridgeMatch.getRelationColor(player2, player) + player.getName() + CC.GRAY + " has died.");
+                        player2.sendMessage(Locale.MATCH_DIED.toString()
+                                .replace("<relation_color>", bridgeMatch.getRelationColor(player2, player).toString())
+                                .replace("<participant_name>", player.getName()));
                     } else {
-                        player2.sendMessage(bridgeMatch.getRelationColor(player2, player) + player.getName() + CC.GRAY + " was killed by " + bridgeMatch.getRelationColor(player2, event.getEntity().getKiller()) + event.getEntity().getKiller().getName() + CC.GRAY + ".");
+                        player2.sendMessage(Locale.MATCH_KILLED.toString()
+                                .replace("<relation_color_dead>", bridgeMatch.getRelationColor(player2, player).toString())
+                                .replace("<dead_name>", player.getName())
+                                .replace("<relation_color_killer>", bridgeMatch.getRelationColor(player2, player.getKiller()).toString())
+                                .replace("<killer_name>", player.getKiller().getName()));
                     }
                 }
                 Bukkit.getScheduler().runTaskLater(plugin, new BridgePlayerTask(bridgeMatch, player), 2L);
@@ -398,9 +387,7 @@ public class MatchListener implements Listener {
 
             //PotPvP aka Lunar Death Animation
             player.teleport(player.getLocation().add(0.0, 0.5, 0.0));
-
             TaskUtil.runLater(() -> event.getDrops().clear(), 5L);
-
         }
     }
 
@@ -480,8 +467,10 @@ public class MatchListener implements Listener {
                             TheBridgeMatch bridgeMatch = (TheBridgeMatch) match;
 
                                 PlayerUtil.reset(player);
-                                for ( Player player2 : bridgeMatch.getPlayers() ) {
-                                    player2.sendMessage(CC.translate(bridgeMatch.getRelationColor(player2, player) + player.getName() + " &7has died"));
+                                for ( Player player2 : bridgeMatch.getPlayersAndSpectators() ) {
+                                    player2.sendMessage(Locale.MATCH_DIED.toString()
+                                            .replace("<relation_color>", bridgeMatch.getRelationColor(player2, player).toString())
+                                            .replace("<participant_name>", player.getName()));
                                 }
 
                             Bukkit.getScheduler().runTaskLater(plugin, new BridgePlayerTask(bridgeMatch, player), 2L);
@@ -540,13 +529,15 @@ public class MatchListener implements Listener {
         Match match = profile.getMatch();
         if (profile.isInFight()) {
             if (player.getLocation().getBlockY() <= plugin.getEssentials().getMeta().getVoidSpawnLevel()) {
-                if (match.getCatcher().contains(player)) return;
+            if (match.getCatcher().contains(player)) return;
                 match.getCatcher().add(player);
                 if (profile.getMatch().isTheBridgeMatch()) {
-                    TheBridgeMatch bridgeMatch=(TheBridgeMatch) match;
+                    TheBridgeMatch bridgeMatch = (TheBridgeMatch) match;
                     PlayerUtil.reset(player);
-                    for ( Player player2 : bridgeMatch.getPlayers() ) {
-                        player2.sendMessage(CC.translate(bridgeMatch.getRelationColor(player2, player) + player.getName() + " &7has died"));
+                    for ( Player player2 : bridgeMatch.getPlayersAndSpectators() ) {
+                        player2.sendMessage(Locale.MATCH_DIED.toString()
+                                .replace("<relation_color>", bridgeMatch.getRelationColor(player2, player).toString())
+                                .replace("<participant_name>", player.getName()));
                     }
                     Bukkit.getScheduler().runTaskLater(plugin, new BridgePlayerTask(bridgeMatch, player), 2L);
                 }
@@ -599,10 +590,12 @@ public class MatchListener implements Listener {
                     attackerProfile.getMatch().getTeamPlayer(attacker).handleHit();
                     damagedProfile.getMatch().getTeamPlayer(damaged).resetCombo();
                     if (event.getDamager() instanceof Arrow) {
-                        final double health = Math.ceil(damaged.getHealth() - event.getFinalDamage()) / 2.0;
+                        double health = Math.ceil(damaged.getHealth() - event.getFinalDamage()) / 2.0;
                         if (match.getKit().getGameRules().isBowHP()) {
                             if (!attacker.getName().equalsIgnoreCase(damaged.getName())) {
-                                attacker.sendMessage(CC.translate("&c" + damaged.getName() + " &7is now at &c" + health + " &4" + StringEscapeUtils.unescapeJava("\u2764")));
+                                attacker.sendMessage(Locale.MATCH_BOW_HIT.toString()
+                                        .replace("<damaged_name>", damaged.getName())
+                                        .replace("<damaged_health>", String.valueOf(health)));
                             }
                         }
                     }
@@ -619,10 +612,12 @@ public class MatchListener implements Listener {
                         attackerProfile.getMatch().getTeamPlayer(attacker).handleHit();
                         damagedProfile.getMatch().getTeamPlayer(damaged).resetCombo();
                         if (event.getDamager() instanceof Arrow) {
-                            final double health2 = Math.ceil(damaged.getHealth() - event.getFinalDamage()) / 2.0;
+                            final double health = Math.ceil(damaged.getHealth() - event.getFinalDamage()) / 2.0;
                             if (match.getKit() == null || match.getKit().getGameRules().isBowHP()) {
                                 if (!attacker.getName().equalsIgnoreCase(damaged.getName())) {
-                                    attacker.sendMessage(CC.translate("&c" + damaged.getName() + " &7is now at &c" + health2 + " &4" + StringEscapeUtils.unescapeJava("\u2764")));
+                                    attacker.sendMessage(Locale.MATCH_BOW_HIT.toString()
+                                            .replace("<damaged_name>", damaged.getName())
+                                            .replace("<damaged_health>", String.valueOf(health)));
                                 }
                             }
                         }
@@ -740,7 +735,7 @@ public class MatchListener implements Listener {
                         String time = TimeUtil.millisToSeconds(profile.getEnderpearlCooldown().getRemaining());
                         String context = "second" + (time.equalsIgnoreCase("1.0") ? "" : "s");
 
-                        shooter.sendMessage(CC.RED + "You are on pearl cooldown for " + time + " " + context);
+                        shooter.sendMessage(Locale.MATCH_PEARL_COOLDOWN.toString().replace("<cooldown>", time + " " + context));
                         shooter.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 1));
 
                         event.setCancelled(true);
@@ -763,8 +758,7 @@ public class MatchListener implements Listener {
                         final String time = TimeUtil.millisToSeconds(profile.getBowCooldown().getRemaining());
                         final String context = "second" + (time.equalsIgnoreCase("1.0") ? "" : "s");
 
-                        shooter.sendMessage(CC.RED + "You are on bow cooldown for " + time + " " + context);
-                        shooter.getInventory().addItem(new ItemStack(Material.ARROW, 1));
+                        shooter.sendMessage(Locale.MATCH_BOW_COOLDOWN.toString().replace("<cooldown>", time + " " + context));
 
                         event.setCancelled(true);
                     } else {

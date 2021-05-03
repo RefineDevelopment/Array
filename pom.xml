@@ -6,49 +6,7 @@
 
     <groupId>me.drizzy.practice</groupId>
     <artifactId>Array</artifactId>
-    <version>BETA-4.3</version>
-
-    <!--Repositories-->
-
-    <repositories>
-        <repository>
-            <id>vault-repo</id>
-            <url>http://nexus.hc.to/content/repositories/pub_releases</url>
-        </repository>
-        <repository>
-            <id>spigot</id>
-            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>dmulloy2-repo</id>
-            <url>http://repo.dmulloy2.net/nexus/repository/public/</url>
-        </repository>
-        <repository>
-            <id>apache-commons-lang</id>
-            <url>https://mvnrepository.com/artifact/org.apache.commons/commons-lang3</url>
-        </repository>
-        <repository>
-            <id>apache-commons-text</id>
-            <url>https://mvnrepository.com/artifact/org.apache.commons/commons-text</url>
-        </repository>
-        <repository>
-            <id>google-gson</id>
-            <url>https://mvnrepository.com/artifact/com.google.code.gson/gson</url>
-        </repository>
-        <repository>
-            <id>placeholderapi</id>
-            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-        <repository>
-            <id>codemc-repo</id>
-            <url>https://repo.codemc.io/repository/maven-public/</url>
-        </repository>
-        <repository>
-            <id>viaversion-repo</id>
-            <url>https://repo.viaversion.com</url>
-        </repository>
-
-    </repositories>
+    <version>1.0</version>
 
     <dependencies>
         <!--Annotations-->
@@ -114,6 +72,15 @@
             <version>4.4</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/ProtocolLib.jar</systemPath>
+        </dependency>
+
+        <!--Robot Handler-->
+        <dependency>
+            <groupId>net.citizens.api</groupId>
+            <artifactId>Citizens</artifactId>
+            <version>Latest</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Citizens.jar</systemPath>
         </dependency>
 
         <!--Tablist Handler-->

@@ -271,7 +271,7 @@ public class TeamMatch extends Match {
             player.setFlying(true);
             Profile profile = Profile.getByUuid(player.getUniqueId());
             profile.refreshHotbar();
-            profile.setState(ProfileState.SPECTATE_MATCH);
+            profile.setState(ProfileState.SPECTATING);
         }
     }
 

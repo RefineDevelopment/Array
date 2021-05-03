@@ -35,8 +35,8 @@ import me.drizzy.practice.profile.rank.Rank;
 import me.drizzy.practice.profile.rank.RankType;
 import me.drizzy.practice.profile.rank.apis.DefaultProvider;
 import me.drizzy.practice.queue.QueueThread;
-import me.drizzy.practice.register.RegisterCommands;
-import me.drizzy.practice.register.RegisterListeners;
+import me.drizzy.practice.managers.CommandsManager;
+import me.drizzy.practice.managers.ListenersManager;
 import me.drizzy.practice.scoreboard.Scoreboard;
 import me.drizzy.practice.tablist.Tab;
 import me.drizzy.practice.tablist.TabManager;
@@ -196,7 +196,7 @@ public class Array extends JavaPlugin {
         this.mainThread.execute(() -> {
             registerAll();
             Array.logger("&7Registering Commands...");
-            TaskUtil.runLater(RegisterCommands::register, 5L);
+            TaskUtil.runLater(CommandsManager::register, 5L);
 
             divisionsManager = new Divisions();
 
@@ -236,7 +236,7 @@ public class Array extends JavaPlugin {
                 world.setDifficulty(Difficulty.EASY);
             }
             //Register Essentials and Listeners
-            RegisterListeners.register();
+            ListenersManager.register();
             this.registerEssentials();
 
         });

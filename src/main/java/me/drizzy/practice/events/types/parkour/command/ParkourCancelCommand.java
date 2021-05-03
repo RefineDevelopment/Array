@@ -1,5 +1,6 @@
 package me.drizzy.practice.events.types.parkour.command;
 
+import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.util.chat.CC;
@@ -14,6 +15,8 @@ public class ParkourCancelCommand {
 			return;
 		}
 
+		Profile.getProfiles().values().stream().filter(Profile::isInLobby).forEach(Profile::refreshHotbar);
+		Profile.getProfiles().values().stream().filter(Profile::isInQueue).forEach(Profile::refreshHotbar);
 		Array.getInstance().getParkourManager().getActiveParkour().end(null);
 	}
 

@@ -1,20 +1,17 @@
 package me.drizzy.practice.events.types.brackets;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import me.drizzy.practice.Array;
 import org.bukkit.scheduler.BukkitRunnable;
 
 @Getter
+@RequiredArgsConstructor
 public abstract class BracketsTask extends BukkitRunnable {
 
 	private int ticks;
-	private Brackets brackets;
-	private BracketsState eventState;
-
-	public BracketsTask(Brackets brackets, BracketsState eventState) {
-		this.brackets = brackets;
-		this.eventState = eventState;
-	}
+	private final Brackets brackets;
+	private final BracketsState eventState;
 
 	@Override
 	public void run() {
@@ -23,9 +20,7 @@ public abstract class BracketsTask extends BukkitRunnable {
 			cancel();
 			return;
 		}
-
 		onRun();
-
 		ticks++;
 	}
 

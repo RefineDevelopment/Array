@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.Array;
-import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.events.types.gulag.player.GulagPlayer;
 import me.drizzy.practice.events.types.gulag.player.GulagPlayerState;
 import me.drizzy.practice.events.types.gulag.task.GulagRoundEndTask;
@@ -421,7 +420,7 @@ public class Gulag {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setGulag(this);
 		PlayerUtil.spectator(player);
-		profile.setState(ProfileState.SPECTATE_MATCH);
+		profile.setState(ProfileState.SPECTATING);
 		player.setFlying(true);
 		profile.refreshHotbar();
 		profile.handleVisibility();
@@ -441,7 +440,6 @@ public class Gulag {
 		player.setFlying(false);
 		profile.refreshHotbar();
 		profile.handleVisibility();
-
 		profile.teleportToSpawn();
 	}
 }

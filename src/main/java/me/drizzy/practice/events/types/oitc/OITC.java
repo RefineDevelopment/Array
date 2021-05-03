@@ -3,7 +3,6 @@ package me.drizzy.practice.events.types.oitc;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
-import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.events.types.oitc.player.OITCPlayer;
 import me.drizzy.practice.events.types.oitc.player.OITCPlayerState;
 import me.drizzy.practice.events.types.oitc.task.OITCRoundEndTask;
@@ -387,7 +386,7 @@ public class OITC {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setOITC(this);
         player.setFlying(true);
-        profile.setState(ProfileState.SPECTATE_MATCH);
+        profile.setState(ProfileState.SPECTATING);
         profile.refreshHotbar();
         profile.handleVisibility();
 

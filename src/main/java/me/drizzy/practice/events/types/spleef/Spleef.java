@@ -3,7 +3,6 @@ package me.drizzy.practice.events.types.spleef;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
-import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.events.types.spleef.player.SpleefPlayer;
 import me.drizzy.practice.events.types.spleef.player.SpleefPlayerState;
@@ -387,7 +386,7 @@ public class Spleef {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setSpleef(this);
 		PlayerUtil.spectator(player);
-		profile.setState(ProfileState.SPECTATE_MATCH);
+		profile.setState(ProfileState.SPECTATING);
 		profile.refreshHotbar();
 		profile.handleVisibility();
 		player.setFlying(true);
