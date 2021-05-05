@@ -35,6 +35,7 @@ public class Archer extends HCFClasses implements Listener {
     public static PotionEffect ARCHER_SPEED_EFFECT = new PotionEffect(PotionEffectType.SPEED, 160, 3);
     public static PotionEffect ARCHER_JUMP_EFFECT = new PotionEffect(PotionEffectType.JUMP, 160, 7);
     public static PotionEffect ARCHER_RES_EFFECT = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 160, 2);
+
     public static Map<UUID, Long> archerSpeedCooldowns = new HashMap<>();
     public static Map<UUID, Long> archerJumpCooldowns = new HashMap<>();
     public static Map<UUID, Long> archerResistanceCooldowns = new HashMap<>();

@@ -132,9 +132,8 @@ public class Profile {
     private ProfileRematchData rematchData;
 
     /*
-     * Miscellaneous Parts
+     * Spectator Mode
      */
-    private Player lastMessager;
     private Player spectating;
 
     /*

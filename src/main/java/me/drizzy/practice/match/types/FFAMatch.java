@@ -122,7 +122,7 @@ public class FFAMatch extends Match {
         int i = 0;
         for ( Player player : getPlayers() ) {
             Location midSpawn = this.getMidSpawn();
-            List<Location> circleLocations=Circle.getCircle(midSpawn, 7, this.getPlayers().size());
+            List<Location> circleLocations=Circle.getCircle(midSpawn, Array.getInstance().getEssentials().getMeta().getFfaSpawnRadius(), this.getPlayers().size());
             Location center = midSpawn.clone();
             Location loc = circleLocations.get(i);
             Location target = loc.setDirection(center.subtract(loc).toVector());

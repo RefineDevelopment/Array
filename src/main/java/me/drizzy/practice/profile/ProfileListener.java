@@ -59,7 +59,7 @@ public class ProfileListener implements Listener {
 
     @EventHandler(ignoreCancelled=true)
     public void onSpawnTeleportEvent(SpawnTeleportEvent event) {
-        Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
+        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
         if (!profile.isBusy() && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
             profile.refreshHotbar();

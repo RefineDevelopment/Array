@@ -161,6 +161,7 @@ public class HCFMatch extends Match {
 
                             NameTags.reset(player, firstTeamPlayer.getPlayer());
 
+                            Array.getInstance().getHCFManager().getEquippedClass(player).onUnequip(player);
                             Array.getInstance().getHCFManager().setEquippedClass(player, null);
                             Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
                             player.getActivePotionEffects().clear();

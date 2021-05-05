@@ -1,5 +1,7 @@
 package me.drizzy.practice.hcf.classes;
 
+import gnu.trove.map.TObjectLongMap;
+import gnu.trove.map.hash.TObjectLongHashMap;
 import me.drizzy.practice.Locale;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.hcf.HCFClasses;
@@ -8,9 +10,6 @@ import me.drizzy.practice.hcf.bard.EffectData;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.chat.Color;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -34,13 +33,16 @@ import java.util.concurrent.TimeUnit;
 public class Bard extends HCFClasses implements Listener {
 
     public static int HELD_EFFECT_DURATION_TICKS = 100; // the amount of time in ticks to apply a Held potion effect for faction members
-    public static Map<UUID, Long> archerJumpCooldowns = new HashMap<>();
-    private static final long BUFF_COOLDOWN_MILLIS = TimeUnit.SECONDS.toMillis(10L); // time in milliseconds for Bard buff cooldowns
-    private static final int TEAMMATE_NEARBY_RADIUS = 25;
-    private static final long HELD_REAPPLY_TICKS = 20L;
-    private final Map<UUID, BardData> bardDataMap = new HashMap<>();
-    private final Map<Material, EffectData> bardEffects = new EnumMap<>(Material.class);
-    private final Array plugin;
+
+    private static long BUFF_COOLDOWN_MILLIS = TimeUnit.SECONDS.toMillis(10L); // time in milliseconds for Bard buff cooldowns
+    private static int TEAMMATE_NEARBY_RADIUS = 25;
+    private static long HELD_REAPPLY_TICKS = 20L;
+
+    private TObjectLongMap<UUID> msgCooldowns = new TObjectLongHashMap<>();
+    private Map<UUID, BardData> bardDataMap = new HashMap<>();
+    private Map<Material, EffectData> bardEffects = new EnumMap<>(Material.class);
+
+    private Array plugin;
 
     public Bard(Array plugin) {
         super("Bard", TimeUnit.SECONDS.toMillis(1L));
@@ -56,7 +58,7 @@ public class Bard extends HCFClasses implements Listener {
         this.bardEffects.put(Material.BLAZE_POWDER, new EffectData(45, new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 120, 1), new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 100, 0)));
         this.bardEffects.put(Material.IRON_INGOT, new EffectData(35, new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 80, 2), new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 0)));
         this.bardEffects.put(Material.GHAST_TEAR, new EffectData(45, new PotionEffect(PotionEffectType.REGENERATION, 60, 2), new PotionEffect(PotionEffectType.REGENERATION, 100, 0)));
-        this.bardEffects.put(Material.FEATHER, new EffectData(25, new PotionEffect(PotionEffectType.JUMP, 120, 7), new PotionEffect(PotionEffectType.JUMP, 100, 1)));
+        this.bardEffects.put(Material.FEATHER, new EffectData(30, new PotionEffect(PotionEffectType.JUMP, 120, 5), new PotionEffect(PotionEffectType.JUMP, 100, 1)));
         this.bardEffects.put(Material.SPIDER_EYE, new EffectData(50, new PotionEffect(PotionEffectType.WITHER, 100, 1), null));
         this.bardEffects.put(Material.MAGMA_CREAM, new EffectData(10, new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 900, 0), new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 120, 0)));
     }
@@ -69,13 +71,12 @@ public class Bard extends HCFClasses implements Listener {
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         Match match = profile.getMatch();
-        if (match != null && (match.isHCFMatch() )) {
-            Team team = profile.getMatch().getTeam(player);
+        if (match != null && (match.isHCFMatch())) {
             BardData bardData = new BardData();
             bardDataMap.put(player.getUniqueId(), bardData);
             bardData.startEnergyTracking();
             bardData.heldTask = new BukkitRunnable() {
-                int lastEnergy;
+            int lastEnergy;
 
                 @Override
                 public void run() {
@@ -122,7 +123,7 @@ public class Bard extends HCFClasses implements Listener {
         super.onUnequip(player);
         Profile profile = Profile.getByUuid(player.getUniqueId());
         Match match = profile.getMatch();
-        if (match != null && (match.isHCFMatch() )) {
+        if (match != null && (match.isHCFMatch())) {
             clearBardData(player.getUniqueId());
         }
     }
@@ -138,7 +139,7 @@ public class Bard extends HCFClasses implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
         Match match = profile.getMatch();
-        if (match != null && (match.isHCFMatch() )) {
+        if (match != null && (match.isHCFMatch())) {
             clearBardData(event.getPlayer().getUniqueId());
         }
     }
@@ -147,7 +148,7 @@ public class Bard extends HCFClasses implements Listener {
     public void onPlayerKick(PlayerKickEvent event) {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
         Match match = profile.getMatch();
-        if (match != null && (match.isHCFMatch() )) {
+        if (match != null && (match.isHCFMatch())) {
             clearBardData(event.getPlayer().getUniqueId());
         }
     }
@@ -165,10 +166,9 @@ public class Bard extends HCFClasses implements Listener {
             }
 
             UUID uuid = player.getUniqueId();
-            long timestamp = archerJumpCooldowns.getOrDefault(event.getPlayer().getUniqueId(), 0L);
+            long lastMessage = msgCooldowns.get(uuid);
             long millis = System.currentTimeMillis();
-            long remaining = timestamp - millis;
-            if (remaining > 0L) {
+            if (lastMessage != msgCooldowns.getNoEntryValue() && lastMessage - millis > 0L) {
                 return;
             }
         }
@@ -178,7 +178,7 @@ public class Bard extends HCFClasses implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
         Match match = profile.getMatch();
-        if (match != null && (match.isHCFMatch() )) {
+        if (match != null && match.isHCFMatch()) {
             Team team = profile.getMatch().getTeam(event.getPlayer());
             if (!event.hasItem()) {
                 return;
@@ -202,15 +202,17 @@ public class Bard extends HCFClasses implements Listener {
                     } else {
                         player.setItemInHand(new ItemStack(Material.AIR, 1));
                     }
-                    if (team != null && !bardEffect.clickable.getType().equals(PotionEffectType.WITHER)) {
-                        Collection<Entity> nearbyEntities = player.getNearbyEntities(30.0, 30.0, 30.0);
-                        for (Entity nearby : nearbyEntities) {
-                            if (nearby instanceof Player && !player.equals(nearby)) {
-                                Player target = (Player) nearby;
-                                if (!team.getAliveTeamPlayers().contains(match.getTeamPlayer(target))) {
-                                    continue;
+                    if (bardEffect != null) {
+                        if (team != null && !bardEffect.clickable.getType().equals(PotionEffectType.WITHER)) {
+                            Collection<Entity> nearbyEntities = player.getNearbyEntities(25.0, 25.0, 25.0);
+                            for (Entity nearby : nearbyEntities) {
+                                if (nearby instanceof Player && !player.equals(nearby)) {
+                                    Player target = (Player) nearby;
+                                    if (!team.getAliveTeamPlayers().contains(match.getTeamPlayer(target))) {
+                                        continue;
+                                    }
+                                    plugin.getEffectRestorer().setRestoreEffect(target, bardEffect.clickable);
                                 }
-                                plugin.getEffectRestorer().setRestoreEffect(target, bardEffect.clickable);
                             }
                         }
                     }
@@ -274,7 +276,7 @@ public class Bard extends HCFClasses implements Listener {
     /**
      * Gets the energy of a {@link Player}.
      *
-     * @param player the {@link Player} to getInstance for
+     * @param player the {@link Player} to get for
      * @return the energy, or 0 if not tracking this player
      */
     public double getEnergy(Player player) {

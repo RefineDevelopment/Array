@@ -54,7 +54,7 @@ public abstract class HCFClasses {
             player.addPotionEffect(effect, true);
         }
 
-        player.sendMessage(Locale.HCF_CLASS_ENABLED.toString().replace("<class>", name));
+        player.sendMessage(Color.translate("&bClass: " + name + "  &aEnabled!"));
         return true;
     }
 

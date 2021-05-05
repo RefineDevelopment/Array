@@ -1,10 +1,10 @@
 package me.drizzy.practice.hcf;
 
 import me.drizzy.practice.enums.HotbarType;
-import me.drizzy.practice.hotbar.Hotbar;
-import me.drizzy.practice.match.Match;
 import me.drizzy.practice.hcf.events.ArmorClassEquipEvent;
 import me.drizzy.practice.hcf.events.ArmorClassUnequipEvent;
+import me.drizzy.practice.hotbar.Hotbar;
+import me.drizzy.practice.match.Match;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.hcf.classes.Archer;
 import me.drizzy.practice.hcf.classes.Bard;
@@ -24,10 +24,12 @@ import java.util.*;
 
 public class HCFManager implements Listener {
 
+    // Mapping to get the PVP Class a player has equipped.
+    private Map<UUID, HCFClasses> equippedClassMap = new HashMap<>();
+
     protected Map<UUID, HCFClasses> classWarmups = new HashMap<>();
-    // Mapping to getInstance the PVP Class a player has equipped.
-    private final Map<UUID, HCFClasses> equippedClassMap = new HashMap<>();
-    private final List<HCFClasses> pvpClasses = new ArrayList<>();
+
+    private List<HCFClasses> pvpClasses = new ArrayList<>();
 
     public HCFManager(Array plugin) {
         pvpClasses.add(new Bard(plugin));
@@ -35,15 +37,15 @@ public class HCFManager implements Listener {
         pvpClasses.add(new Rogue(plugin));
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
-        for ( HCFClasses pvpClass : pvpClasses) {
+        for (HCFClasses pvpClass : pvpClasses) {
             if (pvpClass instanceof Listener) {
                 plugin.getServer().getPluginManager().registerEvents((Listener) pvpClass, plugin);
             }
         }
-        new BukkitRunnable() {
+        new BukkitRunnable(){
             @Override
             public void run() {
-                for (Player player : Bukkit.getOnlinePlayers()) {
+                for(Player player : Bukkit.getOnlinePlayers()){
                     Profile profile = Profile.getByUuid(player.getUniqueId());
                     Match match = profile.getMatch();
                     if (match != null && match.isHCFMatch()) {
@@ -53,7 +55,7 @@ public class HCFManager implements Listener {
                     }
                 }
             }
-        }.runTaskTimerAsynchronously(plugin, 20, 20);
+        }.runTaskTimer(plugin , 1 , 1);
     }
 
     public void onDisable() {
@@ -65,9 +67,10 @@ public class HCFManager implements Listener {
         this.equippedClassMap.clear();
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
-        if (Profile.getByUuid(event.getEntity().getUniqueId()).isInMatch() && Profile.getByUuid(event.getEntity().getUniqueId()).getMatch().isHCFMatch()) {
+        Profile profile = Profile.getByUuid(event.getEntity().getUniqueId());
+        if (profile.isInMatch() && profile.getMatch().isHCFMatch()) {
             setEquippedClass(event.getEntity(), null);
         }
     }
@@ -99,7 +102,7 @@ public class HCFManager implements Listener {
         }
 
         Collection<HCFClasses> pvpClasses = Array.getInstance().getHCFManager().getPvpClasses();
-        for ( HCFClasses pvpClass : pvpClasses) {
+        for (HCFClasses pvpClass : pvpClasses) {
             if (pvpClass.isApplicableFor(player)) {
                 Array.getInstance().getHCFManager().setEquippedClass(player, pvpClass);
                 break;
@@ -119,7 +122,7 @@ public class HCFManager implements Listener {
     /**
      * Gets the equipped {@link HCFClasses} of a {@link Player}.
      *
-     * @param player the {@link Player} to getInstance for
+     * @param player the {@link Player} to get for
      * @return the equipped {@link HCFClasses}
      */
     public HCFClasses getEquippedClass(Player player) {
@@ -141,7 +144,7 @@ public class HCFManager implements Listener {
     public void setEquippedClass(Player player, HCFClasses pvpClass) {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         Match match = profile.getMatch();
-        if (match != null && match.isHCFMatch() ) {
+        if (match != null && match.isHCFMatch()) {
             if (pvpClass == null) {
                 HCFClasses equipped = this.equippedClassMap.remove(player.getUniqueId());
                 if (equipped != null) {

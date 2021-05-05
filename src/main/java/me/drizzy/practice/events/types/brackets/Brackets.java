@@ -102,10 +102,8 @@ public class Brackets {
 					.replace("<brackets_players_alive>", String.valueOf(brackets.getRemainingPlayers().size()))
 					.replace("<brackets_playerA_name>", brackets.getRoundPlayerA().getUsername())
 					.replace("<brackets_playerA_ping>", String.valueOf(brackets.getRoundPlayerA().getPing()))
-					.replace("<brackets_playerA_cps>", String.valueOf(brackets.getRoundPlayerA().getCps()))
 					.replace("<brackets_playerB_name>", brackets.getRoundPlayerB().getUsername())
 					.replace("<brackets_playerB_ping>", String.valueOf(brackets.getRoundPlayerB().getPing()))
-					.replace("<brackets_playerB_cps>", String.valueOf(brackets.getRoundPlayerB().getCps()))
 					.replace("<brackets_player_count>", String.valueOf(brackets.getEventPlayers().size()))
 					.replace("<brackets_max_players>", String.valueOf(Brackets.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
 		}
@@ -320,7 +318,7 @@ public class Brackets {
 					.replace("<event_host>", this.getHost().getUsername())
 					.replace("<event_prefix>", EVENT_PREFIX);
 
-			Clickable message = new Clickable(main, Locale.EVENT_HOVER.toString(), "/brackets join");
+			Clickable message = new Clickable(main, Locale.EVENT_HOVER.toString().replace("<event_name>", "Brackets"), "/brackets join");
 
 			for ( Player player : Bukkit.getOnlinePlayers() ) {
 				if (!eventPlayers.containsKey(player.getUniqueId())) {

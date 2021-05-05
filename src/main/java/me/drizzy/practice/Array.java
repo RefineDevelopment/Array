@@ -252,6 +252,7 @@ public class Array extends JavaPlugin {
             Kit.getKits().forEach(Kit::save);
             Arena.getArenas().forEach(Arena::save);
             Profile.getProfiles().values().forEach(Profile::save);
+            getHCFManager().onDisable();
             //Save our Values to Config
             getTabManager().save();
             getEssentials().save();

@@ -549,10 +549,12 @@ public class TheBridgeMatch extends Match {
 
     @Override
     public org.bukkit.ChatColor getRelationColor(Player viewer, Player target) {
-        if (viewer == playerA.getPlayer() && target == playerB.getPlayer()) {
+        if (target == playerB.getPlayer()) {
             return org.bukkit.ChatColor.BLUE;
-        } else {
+        } else if (target == playerA.getPlayer()) {
             return org.bukkit.ChatColor.RED;
+        } else {
+            return org.bukkit.ChatColor.AQUA;
         }
     }
 

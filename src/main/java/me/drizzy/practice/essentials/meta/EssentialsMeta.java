@@ -23,5 +23,6 @@ public class EssentialsMeta {
     public boolean bridgeClearBlocks = true;
     public int pingLimit = 300;
     public int requiredKills = 10;
+    public int ffaSpawnRadius = 7;
     public int voidSpawnLevel = 45;
 }

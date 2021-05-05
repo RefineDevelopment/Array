@@ -323,7 +323,7 @@ public class Spleef {
 		for (Player player : this.getRemainingPlayers()) {
 			if (player != null) {
 				Location midSpawn = Array.getInstance().getSpleefManager().getSpleefSpawn();
-				List<Location> circleLocations = Circle.getCircle(midSpawn, 7, this.getPlayers().size());
+				List<Location> circleLocations = Circle.getCircle(midSpawn, Array.getInstance().getEssentials().getMeta().getFfaSpawnRadius(), this.getPlayers().size());
 				Location center = midSpawn.clone();
 				Location loc = circleLocations.get(i);
 				Location target = loc.setDirection(center.subtract(loc).toVector());

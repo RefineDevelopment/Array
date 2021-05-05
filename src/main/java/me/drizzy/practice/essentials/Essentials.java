@@ -55,6 +55,7 @@ public class Essentials {
         meta.setCoreHookEnabled(config.getBoolean(key + "CORE_HOOK"));
         meta.setTabEnabled(config.getBoolean(key + "TAB_ENABLED"));
         meta.setVoidSpawnLevel(config.getInteger(key + "VOIDSPAWN_YLEVEL"));
+        meta.setFfaSpawnRadius(config.getInteger(key + "FFA_CIRCLE_RADIUS"));
         meta.setBridgeClearBlocks(config.getBoolean(key + "BRIDGE_CLEARBLOCKS"));
         meta.setDisclaimerEnabled(config.getBoolean(key + "DISCLAIMER_MESSAGE_ENABLED"));
 
@@ -90,6 +91,7 @@ public class Essentials {
         configuration.set(key + "CORE_HOOK", meta.isCoreHookEnabled());
         configuration.set(key + "TAB_ENABLED", meta.isTabEnabled());
         configuration.set(key + "VOIDSPAWN_YLEVEL", meta.getVoidSpawnLevel());
+        configuration.set(key + "FFA_CIRCLE_RADIUS", meta.getFfaSpawnRadius());
         configuration.set(key + "BRIDGE_CLEARBLOCKS", meta.isBridgeClearBlocks());
         configuration.set(key + "DISCLAIMER_MESSAGE_ENABLED", meta.isDisclaimerEnabled());
         configuration.set(key + "JOIN_MESSAGE_ENABLED", meta.isMotdEnabled());

@@ -48,8 +48,8 @@ public class ArrayCache {
 
     public static UUID getUUID(String name) {
         UUID uuid = null;
-        if (ArrayCache.getPlayerCache().containsKey(name)) {
-            uuid = ArrayCache.getPlayerCache().get(name);
+        if (playerCache.containsKey(name)) {
+            uuid = playerCache.get(name);
         }
         return uuid;
     }

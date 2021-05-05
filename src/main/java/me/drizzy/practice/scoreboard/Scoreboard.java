@@ -337,7 +337,7 @@ public class Scoreboard implements BoardAdapter {
 
                 } else {
 
-                    config.getStringList("SCOREBOARD.EVENT.SUMO.STATUS_WAITING").forEach(line -> lines.add(CC.translate(line
+                    config.getStringList("SCOREBOARD.EVENT.SUMO.FIGHTING").forEach(line -> lines.add(CC.translate(line
                             .replace("<sumo_host_name>", sumo.getName())
                             .replace("<sumo_duration>", sumo.getRoundDuration())
                             .replace("<sumo_players_alive>", String.valueOf(sumo.getRemainingPlayers().size()))
@@ -600,7 +600,7 @@ public class Scoreboard implements BoardAdapter {
 
             } else {
 
-                config.getStringList("SCOREBOARD.EVENT.SUMO.STATUS_WAITING").forEach(line -> lines.add(CC.translate(line
+                config.getStringList("SCOREBOARD.EVENT.SUMO.FIGHTING").forEach(line -> lines.add(CC.translate(line
                         .replace("<sumo_host_name>", sumo.getName())
                         .replace("<sumo_duration>", sumo.getRoundDuration())
                         .replace("<sumo_players_alive>", String.valueOf(sumo.getRemainingPlayers().size()))

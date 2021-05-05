@@ -93,7 +93,7 @@ public class Tournament {
             for (Party partyparticipants : participants) {
                 for (Player player : partyparticipants.getPlayers()) {
                     player.sendMessage(Locale.TOURNAMENT_LEAVE.toString()
-                            .replace("<left_party>", party.getLeader().getUsername() + "'s Party")
+                            .replace("<left_party>", party.getLeader().getPlayer().getName())
                             .replace("<participants_size>", String.valueOf(this.getParticipatingCount())));
                 }
             }
@@ -114,7 +114,7 @@ public class Tournament {
             for (Party partyparticipants : participants) {
                 for (Player player : partyparticipants.getPlayers()) {
                     player.sendMessage(CC.translate(Locale.TOURNAMENT_JOIN.toString())
-                            .replace("<joined_party>", party.getLeader().getUsername() + "'s Party")
+                            .replace("<joined_party>", party.getLeader().getPlayer().getName())
                             .replace("<participants_size>", String.valueOf(this.getParticipatingCount())));
                 }
             }
@@ -212,12 +212,12 @@ public class Tournament {
                 StringBuilder builder = new StringBuilder();
 
                 for (TeamPlayer matchPlayer : winningTeam.getTeamPlayers()) {
-                    builder.append(matchPlayer.getPlayer().getDisplayName());
+                    builder.append(Array.getInstance().getRankManager().getFullName(matchPlayer.getPlayer()));
                     builder.append("&7, ");
                 }
                 StringBuilder builders = new StringBuilder();
                 for (TeamPlayer matchPlayer : losingTeam.getTeamPlayers()) {
-                    builders.append(matchPlayer.getPlayer().getDisplayName());
+                    builders.append(Array.getInstance().getRankManager().getFullName(matchPlayer.getPlayer()));
                     builders.append("&7, ");
                 }
                 if (builders.length() > 0) {
@@ -230,7 +230,7 @@ public class Tournament {
                 for ( Player player : Bukkit.getOnlinePlayers() ) {
                     if (Profile.getByPlayer(player).getSettings().isAllowTournamentMessages()) {
                         player.sendMessage(CC.translate(Locale.TOURNAMENT_ELIMINATED.toString())
-                                .replace("<eliminated>", builders.toString())
+                                .replace("<eliminated>", CC.translate(builders.toString()))
                                 .replace("<participants_size>", String.valueOf(participants.size()))
                                 .replace("<participants_count>", String.valueOf(participatingCount)));
                     }
@@ -239,7 +239,7 @@ public class Tournament {
                 if (tournamentMatches.isEmpty()) {
                     if (participants.size() <= 1) {
                         Bukkit.broadcastMessage(CC.BLUE + CC.BOLD + "");
-                        Bukkit.broadcastMessage(Locale.TOURNAMANET_WON.toString().replace("<won>", builder.toString()));
+                        Bukkit.broadcastMessage(Locale.TOURNAMANET_WON.toString().replace("<won>", CC.translate(builder.toString())));
                         Bukkit.broadcastMessage(CC.BLUE + CC.BOLD + "");
                         if (participants.get(0) != null) {
                             if (getTeamCount() == 1) {

@@ -29,11 +29,14 @@ public class Rogue extends HCFClasses implements Listener {
 
     public static PotionEffect ROGUE_SPEED_EFFECT = new PotionEffect(PotionEffectType.SPEED, 160, 3);
     public static PotionEffect ROGUE_JUMP_EFFECT = new PotionEffect(PotionEffectType.JUMP, 160, 4);
+
     public static long ROGUE_SPEED_COOLDOWN_DELAY = TimeUnit.SECONDS.toMillis(45L);
     public static long ROGUE_JUMP_COOLDOWN_DELAY = TimeUnit.MINUTES.toMillis(1L);
+
     public static Map<UUID, Long> rogueSpeedCooldowns = new HashMap<>();
     public static Map<UUID, Long> rogueJumpCooldowns = new HashMap<>();
     public static Map<UUID, Long> stabCoolDown = new HashMap<>();
+
     private static final DecimalFormat ROUGEDECIMAL = new DecimalFormat("0.0");
     private final Array plugin;
 
