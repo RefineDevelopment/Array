@@ -81,14 +81,14 @@ public enum Locale {
     MATCH_BRIDGE_BLOCK("MATCH.BRIDGE_BLOCK_PLACE", "&cYou cannot place blocks here!"),
     MATCH_BRIDGE_WRONG_PORTAL("MATCH.BRIDGE_WRONG_PORTAL", "&cYou jumped in the wrong portal!"),
     MATCH_BRIDGE_SCORED("MATCH.BRIDGE_SCORED", "<relation_color_scored><scored_name> &fhas scored a Point!"),
-    MATCH_BRIDGE_WON("MATCH.BRIDGE_WON_ROUND", Arrays.asList()),
+    MATCH_BRIDGE_WON("MATCH.BRIDGE_WON_ROUND", Arrays.asList("", "&c<winner_name> &7has won this round!", "")),
 
     TOURNAMENT_ROUND("TOURNAMENT.ROUND_MESSAGE", "&8[&9&lRound&8] &c<round> &7has started!"),
     TOURNAMENT_NOT_PICKED("TOURNAMENT.NOT_PICKED", "&8[&c&lTournament&8] &7You weren't picked this round, please wait for your turn!"),
     TOURNAMENT_ELIMINATED("TOURNAMENT.ELIMINATED", "&8[&c&lTournament&8] &c<eliminated> &7has been eliminated. &8(&c<participants_size>&7/&c<participants_count>&8)"),
     TOURNAMANET_WON("TOURNAMENT.WON", "&8[&c&lTournament&8] &c<won> &7won the &ctournament&7!"),
-    TOURNAMENT_JOIN("TOURNAMENT.JOIN", "&8[&c&lTournament&8] &c<joined_party> &7has joined the tournament!&8(&c<participants_size>/50&8)"),
-    TOURNAMENT_LEAVE("TOURNAMENT.LEAVE", "&8[&c&lTournament&8] &c<left_party> &7has left the tournament!&8(&c<participants_size>/50&8)"),
+    TOURNAMENT_JOIN("TOURNAMENT.JOIN", "&8[&c&lTournament&8] &c<joined_party> &7has joined the tournament! &8(&c<participants_size>/50&8)"),
+    TOURNAMENT_LEAVE("TOURNAMENT.LEAVE", "&8[&c&lTournament&8] &c<left_party> &7has left the tournament! &8(&c<participants_size>/50&8)"),
 
     EVENT_PREFIX("EVENTS.PREFIX", "&8[&c<event_name>&8] &r"),
     EVENT_JOIN("EVENTS.JOIN", "&c<joined> &7has joined the &c<event_name> Event&8! &8(&c<event_participants_size>/<event_max_players>&8)"),

@@ -343,10 +343,8 @@ public class Scoreboard implements BoardAdapter {
                             .replace("<sumo_players_alive>", String.valueOf(sumo.getRemainingPlayers().size()))
                             .replace("<sumo_playerA_name>", sumo.getRoundPlayerA().getUsername())
                             .replace("<sumo_playerA_ping>", String.valueOf(sumo.getRoundPlayerA().getPing()))
-                            .replace("<sumo_playerA_cps>", String.valueOf(sumo.getRoundPlayerA().getCps()))
                             .replace("<sumo_playerB_name>", sumo.getRoundPlayerB().getUsername())
                             .replace("<sumo_playerB_ping>", String.valueOf(sumo.getRoundPlayerB().getPing()))
-                            .replace("<sumo_playerB_cps>", String.valueOf(sumo.getRoundPlayerB().getCps()))
                             .replace("<sumo_player_count>", String.valueOf(sumo.getEventPlayers().size()))
                             .replace("<sumo_max_players>", String.valueOf(Sumo.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
                 }
@@ -390,10 +388,8 @@ public class Scoreboard implements BoardAdapter {
                             .replace("<gulag_players_alive>", String.valueOf(gulag.getRemainingPlayers().size()))
                             .replace("<gulag_playerA_name>", gulag.getRoundPlayerA().getUsername())
                             .replace("<gulag_playerA_ping>", String.valueOf(gulag.getRoundPlayerA().getPing()))
-                            .replace("<gulag_playerA_cps>", String.valueOf(gulag.getRoundPlayerA().getCps()))
                             .replace("<gulag_playerB_name>", gulag.getRoundPlayerB().getUsername())
                             .replace("<gulag_playerB_ping>", String.valueOf(gulag.getRoundPlayerB().getPing()))
-                            .replace("<gulag_playerB_cps>", String.valueOf(gulag.getRoundPlayerB().getCps()))
                             .replace("<gulag_player_count>", String.valueOf(gulag.getEventPlayers().size()))
                             .replace("<gulag_max_players>", String.valueOf(Gulag.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
                 }
@@ -479,10 +475,8 @@ public class Scoreboard implements BoardAdapter {
                             .replace("<brackets_players_alive>", String.valueOf(brackets.getRemainingPlayers().size()))
                             .replace("<brackets_playerA_name>", brackets.getRoundPlayerA().getUsername())
                             .replace("<brackets_playerA_ping>", String.valueOf(brackets.getRoundPlayerA().getPing()))
-                            .replace("<brackets_playerA_cps>", String.valueOf(brackets.getRoundPlayerA().getCps()))
                             .replace("<brackets_playerB_name>", brackets.getRoundPlayerB().getUsername())
                             .replace("<brackets_playerB_ping>", String.valueOf(brackets.getRoundPlayerB().getPing()))
-                            .replace("<brackets_playerB_cps>", String.valueOf(brackets.getRoundPlayerB().getCps()))
                             .replace("<brackets_player_count>", String.valueOf(brackets.getEventPlayers().size()))
                             .replace("<brackets_max_players>", String.valueOf(Brackets.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
                 }
@@ -612,10 +606,8 @@ public class Scoreboard implements BoardAdapter {
                         .replace("<sumo_players_alive>", String.valueOf(sumo.getRemainingPlayers().size()))
                         .replace("<sumo_playerA_name>", sumo.getRoundPlayerA().getUsername())
                         .replace("<sumo_playerA_ping>", String.valueOf(sumo.getRoundPlayerA().getPing()))
-                        .replace("<sumo_playerA_cps>", String.valueOf(sumo.getRoundPlayerA().getCps()))
                         .replace("<sumo_playerB_name>", sumo.getRoundPlayerB().getUsername())
                         .replace("<sumo_playerB_ping>", String.valueOf(sumo.getRoundPlayerB().getPing()))
-                        .replace("<sumo_playerB_cps>", String.valueOf(sumo.getRoundPlayerB().getCps()))
                         .replace("<sumo_player_count>", String.valueOf(sumo.getEventPlayers().size()))
                         .replace("<sumo_max_players>", String.valueOf(Sumo.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
             }
@@ -660,10 +652,8 @@ public class Scoreboard implements BoardAdapter {
                         .replace("<gulag_players_alive>", String.valueOf(gulag.getRemainingPlayers().size()))
                         .replace("<gulag_playerA_name>", gulag.getRoundPlayerA().getUsername())
                         .replace("<gulag_playerA_ping>", String.valueOf(gulag.getRoundPlayerA().getPing()))
-                        .replace("<gulag_playerA_cps>", String.valueOf(gulag.getRoundPlayerA().getCps()))
                         .replace("<gulag_playerB_name>", gulag.getRoundPlayerB().getUsername())
                         .replace("<gulag_playerB_ping>", String.valueOf(gulag.getRoundPlayerB().getPing()))
-                        .replace("<gulag_playerB_cps>", String.valueOf(gulag.getRoundPlayerB().getCps()))
                         .replace("<gulag_player_count>", String.valueOf(gulag.getEventPlayers().size()))
                         .replace("<gulag_max_players>", String.valueOf(Gulag.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
             }
@@ -708,10 +698,8 @@ public class Scoreboard implements BoardAdapter {
                         .replace("<brackets_players_alive>", String.valueOf(brackets.getRemainingPlayers().size()))
                         .replace("<brackets_playerA_name>", brackets.getRoundPlayerA().getUsername())
                         .replace("<brackets_playerA_ping>", String.valueOf(brackets.getRoundPlayerA().getPing()))
-                        .replace("<brackets_playerA_cps>", String.valueOf(brackets.getRoundPlayerA().getCps()))
                         .replace("<brackets_playerB_name>", brackets.getRoundPlayerB().getUsername())
                         .replace("<brackets_playerB_ping>", String.valueOf(brackets.getRoundPlayerB().getPing()))
-                        .replace("<brackets_playerB_cps>", String.valueOf(brackets.getRoundPlayerB().getCps()))
                         .replace("<brackets_player_count>", String.valueOf(brackets.getEventPlayers().size()))
                         .replace("<brackets_max_players>", String.valueOf(Brackets.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
             }

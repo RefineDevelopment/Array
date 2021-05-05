@@ -315,8 +315,13 @@ public class Brackets {
 
 	public void announce() {
 		for ( String string : Locale.EVENT_ANNOUNCE.toList() ) {
-			String main = string.replace("<event_name>", "Brackets").replace("<event_host>", this.getHost().getUsername()).replace("<event_prefix>", EVENT_PREFIX);
+			String main = string
+					.replace("<event_name>", "Brackets")
+					.replace("<event_host>", this.getHost().getUsername())
+					.replace("<event_prefix>", EVENT_PREFIX);
+
 			Clickable message = new Clickable(main, Locale.EVENT_HOVER.toString(), "/brackets join");
+
 			for ( Player player : Bukkit.getOnlinePlayers() ) {
 				if (!eventPlayers.containsKey(player.getUniqueId())) {
 					message.sendToPlayer(player);
@@ -401,6 +406,7 @@ public class Brackets {
 		broadcastMessage(Locale.EVENT_ELIMINATED.toString()
 				        .replace("<eliminated_name>", player.getName())
 				        .replace("<eliminator_name>", winner.getPlayer().getName()));
+
 		player.setFireTicks(0);
 		addSpectator(player);
 		winner.getPlayer().hidePlayer(player);

@@ -13,6 +13,7 @@ import me.drizzy.practice.events.types.parkour.Parkour;
 import me.drizzy.practice.events.types.spleef.Spleef;
 import me.drizzy.practice.events.types.sumo.Sumo;
 import me.drizzy.practice.kit.Kit;
+import me.drizzy.practice.managers.TabManager;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
@@ -147,7 +148,7 @@ public class Tab implements ZigguratAdapter {
                     elements.add(new BufferedTabObject().text(tabManager.getSecondaryColor() + "Kit: " + tabManager.getMainColor() + "" + match2.getKit().getName()).slot(26));
                     elements.add(new BufferedTabObject().text("&c" + opponent.getUsername()).slot(45));
 
-                    if (match2.isTheBridgeMatch()) {
+                    if (match2.isTheBridgeMatch() && match2.getOpponentPlayer(player) != null) {
                         elements.add(new BufferedTabObject().text(tabManager.getMainColor() + "&lPoints").slot(28));
                         Profile profile1 = Profile.getByPlayer(match2.getOpponentPlayer(player));
                         elements.add(new BufferedTabObject().text("&aYour Points (&f" + profile.getBridgeRounds() + "&a)").slot(9));
@@ -161,7 +162,7 @@ public class Tab implements ZigguratAdapter {
                         elements.add(new BufferedTabObject().text("&aTeam &a(" + team.getAliveCount() + "/" + team.getTeamPlayers().size() + ")").slot(4));
                         int added2 = 5;
                         for (final TeamPlayer teamPlayer : team.getTeamPlayers()) {
-                            elements.add(new BufferedTabObject().text(" " + ((!teamPlayer.isAlive() || teamPlayer.isDisconnected()) ? "&7&m" : "") + teamPlayer.getUsername()).slot(added2));
+                            elements.add(new BufferedTabObject().text(" " + ((!teamPlayer.isAlive() || teamPlayer.isDisconnected()) ? "&7&m" : "") + teamPlayer.getUsername()).slot(added2).skin(new SkinTexture(Skin.getPlayer(teamPlayer.getPlayer()).getProperty().getValue(), Skin.getPlayer(teamPlayer.getPlayer()).getProperty().getSignature())));
                             if (++added2 >= 20) {
                                 break;
                             }
@@ -173,7 +174,7 @@ public class Tab implements ZigguratAdapter {
                         int added3 = 45;
                         elements.add(new BufferedTabObject().text("&cOpponents &c(" + opponentTeam.getAliveCount() + "/" + opponentTeam.getTeamPlayers().size() + ")").slot(44));
                         for (final TeamPlayer teamPlayer2 : opponentTeam.getTeamPlayers()) {
-                            elements.add(new BufferedTabObject().text(" " + ((!teamPlayer2.isAlive() || teamPlayer2.isDisconnected()) ? "&7&m" : "") + teamPlayer2.getUsername()).slot(added3));
+                            elements.add(new BufferedTabObject().text(" " + ((!teamPlayer2.isAlive() || teamPlayer2.isDisconnected()) ? "&7&m" : "") + teamPlayer2.getUsername()).slot(added3).skin(new SkinTexture(Skin.getPlayer(teamPlayer2.getPlayer()).getProperty().getValue(), Skin.getPlayer(teamPlayer2.getPlayer()).getProperty().getSignature())));
                             if (++added3 >= 60) {
                                 break;
                             }
@@ -186,7 +187,7 @@ public class Tab implements ZigguratAdapter {
                         elements.add(new BufferedTabObject().text("&aTeam &a(" + team.getAliveCount() + "/" + team.getTeamPlayers().size() + ")").slot(4));
                         int added2 = 5;
                         for (final TeamPlayer teamPlayer : team.getTeamPlayers()) {
-                            elements.add(new BufferedTabObject().text(" " + ((!teamPlayer.isAlive() || teamPlayer.isDisconnected()) ? "&7&m" : "") + teamPlayer.getUsername()).slot(added2));
+                            elements.add(new BufferedTabObject().text(" " + ((!teamPlayer.isAlive() || teamPlayer.isDisconnected()) ? "&7&m" : "") + teamPlayer.getUsername()).slot(added2).skin(new SkinTexture(Skin.getPlayer(teamPlayer.getPlayer()).getProperty().getValue(), Skin.getPlayer(teamPlayer.getPlayer()).getProperty().getSignature())));
                             if (++added2 >= 20) {
                                 break;
                             }
@@ -197,7 +198,7 @@ public class Tab implements ZigguratAdapter {
                         int added3 = 45;
                         elements.add(new BufferedTabObject().text("&cOpponents &c(" + opponentTeam.getAliveCount() + "/" + opponentTeam.getTeamPlayers().size() + ")").slot(44));
                         for (final TeamPlayer teamPlayer2 : opponentTeam.getTeamPlayers()) {
-                            elements.add(new BufferedTabObject().text(" " + ((!teamPlayer2.isAlive() || teamPlayer2.isDisconnected()) ? "&7&m" : "") + teamPlayer2.getUsername()).slot(added3));
+                            elements.add(new BufferedTabObject().text(" " + ((!teamPlayer2.isAlive() || teamPlayer2.isDisconnected()) ? "&7&m" : "") + teamPlayer2.getUsername()).slot(added3).skin(new SkinTexture(Skin.getPlayer(teamPlayer2.getPlayer()).getProperty().getValue(), Skin.getPlayer(teamPlayer2.getPlayer()).getProperty().getSignature())));
                             if (++added3 >= 60) {
                                 break;
                             }

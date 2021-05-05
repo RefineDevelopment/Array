@@ -71,6 +71,10 @@ public class SoloMatch extends Match {
         return false;
     }
 
+    @Override
+    public boolean isRobotMatch() {
+        return false;
+    }
 
     @Override
     public void setupPlayer(Player player) {

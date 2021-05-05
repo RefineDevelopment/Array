@@ -8,6 +8,13 @@
     <artifactId>Array</artifactId>
     <version>1.0</version>
 
+    <repositories>
+        <repository>
+            <id>everything</id>
+            <url>http://repo.citizensnpcs.co/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <!--Annotations-->
         <dependency>
@@ -76,9 +83,10 @@
 
         <!--Robot Handler-->
         <dependency>
-            <groupId>net.citizens.api</groupId>
-            <artifactId>Citizens</artifactId>
-            <version>Latest</version>
+            <groupId>net.citizensnpcs</groupId>
+            <artifactId>citizensapi</artifactId>
+            <version>2.0.18-SNAPSHOT</version>
+            <type>jar</type>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/Citizens.jar</systemPath>
         </dependency>
@@ -154,7 +162,7 @@
     </dependencies>
 
 
-    <!--Maven Compiler (Depricated)-->
+    <!--Maven Compiler (Deprecated)-->
     <!--Use Artifact to compile please!-->
 
     <build>

@@ -1,11 +1,10 @@
 package me.drizzy.practice.statistics;
 
+import lombok.Data;
 import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.kit.KitInventory;
 import me.drizzy.practice.util.chat.CC;
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -13,8 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-@Getter
-@Setter
+@Data
 public class StatisticsData {
 
     private int elo = 1000;

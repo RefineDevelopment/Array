@@ -9,6 +9,7 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.enums.QueueType;
 import me.drizzy.practice.leaderboards.LeaderboardsAdapter;
+import me.drizzy.practice.robot.Robot;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.inventory.InventoryUtil;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
@@ -17,6 +18,7 @@ import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
@@ -24,22 +26,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 public class Kit {
 
     @Getter private static final List<Kit> kits = new ArrayList<>();
+    private final List<LeaderboardsAdapter> rankedEloLeaderboards = new ArrayList<>();
+    private final List<LeaderboardsAdapter> winLeaderboards = new ArrayList<>();
+    private final List<LeaderboardsAdapter> killsLeaderboards = new ArrayList<>();
+
     private final String name;
     private final KitInventory kitInventory= new KitInventory();
     private final KitEditRules editRules = new KitEditRules();
     private final KitGameRules gameRules = new KitGameRules();
-    @Setter private Queue unrankedQueue;
-    @Setter private Queue rankedQueue;
-    @Setter private boolean enabled;
-    @Setter private String knockbackProfile;
-    @Setter private ItemStack displayIcon;
-    @Setter private String displayName;
-    private final List<LeaderboardsAdapter> rankedEloLeaderboards = new ArrayList<>();
-    private final List<LeaderboardsAdapter> winLeaderboards = new ArrayList<>();
-    private final List<LeaderboardsAdapter> killsLeaderboards = new ArrayList<>();
+
+    private Queue unrankedQueue;
+    private Queue rankedQueue;
+    private boolean enabled;
+    private String knockbackProfile;
+    private ItemStack displayIcon;
+    private String displayName;
 
     public Kit(String name) {
         this.name = name;
@@ -249,6 +254,13 @@ public class Kit {
         } else {
             return false;
         }
+    }
+
+    public void applyToRobot(Robot robot) {
+        robot.getPlayer().getInventory().setContents(getKitInventory().getContents());
+        robot.getPlayer().getInventory().setArmorContents(getKitInventory().getArmor());
+        robot.getPlayer().updateInventory();
+        Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(robot.getPlayer(), this);
     }
 
 }

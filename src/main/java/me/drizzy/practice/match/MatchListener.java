@@ -147,10 +147,10 @@ public class MatchListener implements Listener {
                 return;
             }
 
-            final int id = event.getBlock().getTypeId();
+            int id = event.getBlock().getTypeId();
             if (id >= 8 && id <= 11) {
-                final Block b = event.getToBlock();
-                final int toid = b.getTypeId();
+                Block b = event.getToBlock();
+                int toid = b.getTypeId();
                 if (toid == 0 && BlockUtil.generatesCobble(id, b)) {
                     event.setCancelled(true);
                 }
@@ -167,9 +167,9 @@ public class MatchListener implements Listener {
                 }
             }
 
-            final Location l = event.getToBlock().getLocation();
-            final List<UUID> playersinarena = new ArrayList<>();
-            for (final Entity entity : BlockUtil.getNearbyEntities(l, 50)) {
+            Location l = event.getToBlock().getLocation();
+            List<UUID> playersinarena = new ArrayList<>();
+            for (Entity entity : BlockUtil.getNearbyEntities(l, 50)) {
                 if (entity instanceof Player) {
                     playersinarena.add(((Player) entity).getPlayer().getUniqueId());
                 }
@@ -235,9 +235,9 @@ public class MatchListener implements Listener {
             final Match match = profile.getMatch();
             if (!profile.getMatch().isHCFMatch()) {
                 if (match.getKit().getGameRules().isBuild() && profile.getMatch().isFighting()) {
-                    final Arena arena = match.getArena();
-                    final Block block = event.getBlockClicked().getRelative(event.getBlockFace());
-                    final int y = (int) block.getLocation().getY();
+                    Arena arena = match.getArena();
+                    Block block = event.getBlockClicked().getRelative(event.getBlockFace());
+                    int y = (int) block.getLocation().getY();
                     if (y > arena.getMaxBuildHeight()) {
                         event.getPlayer().sendMessage(Locale.MATCH_MAX_BUILD.toString());
                         event.setCancelled(true);
@@ -374,6 +374,7 @@ public class MatchListener implements Listener {
             //Reset the Player's damage ticks and knockback profile
             event.getEntity().getPlayer().setMaximumNoDamageTicks(20);
             event.getEntity().getPlayer().setNoDamageTicks(20);
+            event.getDrops().clear();
             plugin.getNMSManager().getKnockbackType().applyDefaultKnockback(player);
 
             if (PlayerUtil.getLastDamager(event.getEntity()) instanceof CraftPlayer) {
@@ -387,7 +388,6 @@ public class MatchListener implements Listener {
 
             //PotPvP aka Lunar Death Animation
             player.teleport(player.getLocation().add(0.0, 0.5, 0.0));
-            TaskUtil.runLater(() -> event.getDrops().clear(), 5L);
         }
     }
 

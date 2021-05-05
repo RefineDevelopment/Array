@@ -12,7 +12,6 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Array" target="1.8" />
-      <module name="LunarClient-API" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -14,6 +14,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
@@ -98,6 +99,24 @@ public class PlayerUtil {
         player.setFoodLevel(20);
         player.setSprinting(true);
         player.removePotionEffect(PotionEffectType.JUMP);
+    }
+
+    public static void removeItems(Inventory inventory, ItemStack item, int amount) {
+        for (int size = inventory.getSize(), slot = 0; slot < size; ++slot) {
+            ItemStack is = inventory.getItem(slot);
+            if (is != null && item.getType() == is.getType() && item.getDurability() == is.getDurability()) {
+                int newAmount = is.getAmount() - amount;
+                if (newAmount > 0) {
+                    is.setAmount(newAmount);
+                } else {
+                    inventory.setItem(slot, new ItemStack(Material.AIR));
+                    amount = -newAmount;
+                    if (amount == 0) {
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public static void animateDeath(Player player) {

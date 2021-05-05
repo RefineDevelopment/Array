@@ -79,6 +79,11 @@ public class TheBridgeMatch extends Match {
     }
 
     @Override
+    public boolean isRobotMatch() {
+        return false;
+    }
+
+    @Override
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
@@ -139,8 +144,8 @@ public class TheBridgeMatch extends Match {
             }
 
             if (getKit().getGameRules().isTimed()) {
-                TeamPlayer roundLoser=getTeamPlayer(getWinningPlayer());
-                TeamPlayer roundWinner=getOpponentTeamPlayer(getOpponentPlayer(getWinningPlayer()));
+                TeamPlayer roundLoser = getTeamPlayer(getWinningPlayer());
+                TeamPlayer roundWinner = getOpponentTeamPlayer(getOpponentPlayer(getWinningPlayer()));
 
                 getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
             }
@@ -432,6 +437,12 @@ public class TheBridgeMatch extends Match {
         return aProfile.getBridgeRounds() + bProfile.getBridgeRounds();
     }
 
+    /**
+     * Get points needed to win the round
+     *
+     * @param teamPlayer The teamplayer whose points are being returned
+     * @return {@link Integer}
+     */
     public int getRoundsNeeded(TeamPlayer teamPlayer) {
         Profile aProfile = Profile.getByUuid(playerA.getUuid());
         Profile bProfile = Profile.getByUuid(playerB.getUuid());
@@ -452,19 +463,21 @@ public class TheBridgeMatch extends Match {
 
         if (deadPlayer.isOnline()) {
             if (getRoundsNeeded(playerA) != 0 || getRoundsNeeded(playerB) != 0) {
+
                 if (getWinningPlayer().getUniqueId().toString().equals(playerA.getUuid().toString())) {
                     aProfile.setBridgeRounds(aProfile.getBridgeRounds() + 1);
                 } else if (getWinningPlayer().getUniqueId().toString().equals(playerB.getUuid().toString())) {
                     bProfile.setBridgeRounds(bProfile.getBridgeRounds() + 1);
                 }
 
-                this.broadcastMessage("");
-                this.broadcastMessage(CC.translate(CC.RED + getWinningPlayer().getName() + " &7has won this round!"));
-                this.broadcastMessage("");
+                Locale.MATCH_BRIDGE_WON.toList().forEach(string -> {
+                        string = string.replace("<winner_name>", getWinningPlayer().getName());
+                        this.broadcastMessage(string);
+                });
 
                 if (aProfile.getBridgeRounds() >= 3 || bProfile.getBridgeRounds() >= 3) {
-                    TeamPlayer roundWinner=getTeamPlayer(getWinningPlayer());
-                    TeamPlayer roundLoser=getOpponentTeamPlayer(getWinningPlayer());
+                    TeamPlayer roundWinner = getTeamPlayer(getWinningPlayer());
+                    TeamPlayer roundLoser = getOpponentTeamPlayer(getWinningPlayer());
 
                     getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
 
@@ -474,9 +487,11 @@ public class TheBridgeMatch extends Match {
                         Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
                         profile.handleVisibility(otherPlayer, deadPlayer);
                     }
+
                     if (caughtPlayers != null) {
                         caughtPlayers.clear();
                     }
+
                     end();
                 } else {
 
@@ -495,6 +510,7 @@ public class TheBridgeMatch extends Match {
                         playerB.getPlayer().showPlayer(playerA.getPlayer());
 
                         onStart();
+
                     for ( String string : Locale.MATCH_ROUND_MESSAGE.toList() ) {
 
                         playerA.getPlayer().sendMessage(CC.translate(string
@@ -515,7 +531,7 @@ public class TheBridgeMatch extends Match {
                         //Continue the Match
                         setState(MatchState.STARTING);
                         setStartTimestamp(-1);
-                    startTask = new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
+                        startTask = new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
                 }
             }
         } else if (!deadPlayer.isOnline() || !killerPlayer.isOnline()){
@@ -540,6 +556,12 @@ public class TheBridgeMatch extends Match {
         }
     }
 
+    /**
+     * Replace and color the clay blocks and leather
+     * armor of the specified player to their coressponding color
+     *
+     * @param player The player getting the kit applied
+     */
     public static void giveBridgeKit(Player player) {
         Profile profile = Profile.getByPlayer(player);
         TheBridgeMatch teamMatch = (TheBridgeMatch) profile.getMatch();

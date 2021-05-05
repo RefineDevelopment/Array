@@ -48,7 +48,7 @@ public class Essentials {
     }
 
     public void load() {
-        String key="ESSENTIAL.";
+        String key = "ESSENTIAL.";
 
         spawn=LocationUtil.deserialize(config.getStringOrDefault(key + "SPAWN", "world:0:60:0:-89.59775:0.17956273"));
         meta.setHCFEnabled(config.getBoolean(key + "HCF_ENABLED"));
@@ -57,8 +57,10 @@ public class Essentials {
         meta.setVoidSpawnLevel(config.getInteger(key + "VOIDSPAWN_YLEVEL"));
         meta.setBridgeClearBlocks(config.getBoolean(key + "BRIDGE_CLEARBLOCKS"));
         meta.setDisclaimerEnabled(config.getBoolean(key + "DISCLAIMER_MESSAGE_ENABLED"));
+
         meta.setMotdEnabled(config.getBoolean(key + "JOIN_MESSAGE_ENABLED"));
         motd.addAll(config.getStringList(key + "JOIN_MESSAGE"));
+
         meta.setRankedEnabled(config.getBoolean("RANKED.ENABLED"));
         meta.setRequireKills(config.getBoolean("RANKED.REQUIREKILLS"));
         meta.setRequiredKills(config.getInteger("RANKED.REQUIREDKILLS"));
@@ -123,8 +125,8 @@ public class Essentials {
         try {
             nametagMeta.setEventColor(ChatColor.valueOf(config.getString("NAMETAGS.EVENT")));
         } catch (Exception e) {
-            nametagMeta.setEventColor(ChatColor.RED);
-            Array.logger("&cInvalid Color setup for Event Nametags, retreating to default event color (RED)");
+            nametagMeta.setEventColor(ChatColor.AQUA);
+            Array.logger("&cInvalid Color setup for Event Nametags, retreating to default event color (AQUA)");
         }
         try {
             nametagMeta.setPartyColor(ChatColor.valueOf(config.getString("NAMETAGS.PARTY")));

@@ -113,7 +113,7 @@ public class Tournament {
             participants.add(party);
             for (Party partyparticipants : participants) {
                 for (Player player : partyparticipants.getPlayers()) {
-                    player.sendMessage(Locale.TOURNAMENT_JOIN.toString()
+                    player.sendMessage(CC.translate(Locale.TOURNAMENT_JOIN.toString())
                             .replace("<joined_party>", party.getLeader().getUsername() + "'s Party")
                             .replace("<participants_size>", String.valueOf(this.getParticipatingCount())));
                 }
@@ -136,7 +136,8 @@ public class Tournament {
         tournamentMatches.clear();
     }
 
-    public void tournamentstart(){
+    public void tournamentstart() {
+        round++;
         Collections.shuffle(participants);
         if(participatingCount == 0){
             participatingCount = participants.size();
@@ -228,7 +229,7 @@ public class Tournament {
 
                 for ( Player player : Bukkit.getOnlinePlayers() ) {
                     if (Profile.getByPlayer(player).getSettings().isAllowTournamentMessages()) {
-                        player.sendMessage(Locale.TOURNAMENT_ELIMINATED.toString()
+                        player.sendMessage(CC.translate(Locale.TOURNAMENT_ELIMINATED.toString())
                                 .replace("<eliminated>", builders.toString())
                                 .replace("<participants_size>", String.valueOf(participants.size()))
                                 .replace("<participants_count>", String.valueOf(participatingCount)));

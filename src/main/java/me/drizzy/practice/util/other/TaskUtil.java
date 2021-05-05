@@ -5,8 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class TaskUtil {
-    public TaskUtil() {
-    }
 
     public static void run(Runnable runnable) {
         Array.getInstance().getServer().getScheduler().runTask(Array.getInstance(), runnable);

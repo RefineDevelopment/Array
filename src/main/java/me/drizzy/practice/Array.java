@@ -40,7 +40,7 @@ import me.drizzy.practice.queue.QueueThread;
 
 import me.drizzy.practice.scoreboard.Scoreboard;
 import me.drizzy.practice.tablist.Tab;
-import me.drizzy.practice.tablist.TabManager;
+import me.drizzy.practice.managers.TabManager;
 import me.drizzy.practice.util.other.Description;
 import me.drizzy.practice.util.other.EntityHider;
 import me.drizzy.practice.util.inventory.InventoryUtil;
@@ -167,7 +167,7 @@ public class Array extends JavaPlugin {
         this.loadMessages();
 
         essentials = new Essentials();
-        essentials.load();
+        essentials.setupEssentials();
 
         tabManager = new TabManager();
         tabManager.load();

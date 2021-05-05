@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="FacetManager">
-    <facet type="minecraft" name="Minecraft">
-      <configuration>
-        <autoDetectTypes>
-          <platformType>SPIGOT</platformType>
-        </autoDetectTypes>
-      </configuration>
-    </facet>
-  </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
@@ -61,7 +52,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: net.citizens.api:Citizens:Latest">
+      <library name="Maven: net.citizensnpcs:citizensapi:2.0.18-SNAPSHOT">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/Citizens.jar!/" />
         </CLASSES>

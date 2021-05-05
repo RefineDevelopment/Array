@@ -8,6 +8,6 @@ public class KitGameRules {
 
     private boolean ranked, boxUHC, infiniteSpeed, infiniteStrength, disablePartyFFA, disablePartySplit, editable,
                     noItems, bridge, build, spleef, sumo, combo, stickSpawn, parkour, timed, waterKill, lavaKill, bedwars,
-                    bowHP, voidSpawn, healthRegeneration, showHealth, antiFoodLoss, mlgRush, disableFallDamage = false;
+                    bowHP, voidSpawn, healthRegeneration, showHealth, antiFoodLoss, mlgRush, clan, disableFallDamage = false;
     private int hitDelay = 20;
 }

@@ -20,6 +20,10 @@ import org.bukkit.entity.Player;
 
 public class OtherPartiesMenu extends Menu {
 
+    public OtherPartiesMenu() {
+        setAutoUpdate(true);
+    }
+
     @Override
     public String getTitle(final Player player) {
         return "&cOther Parties";

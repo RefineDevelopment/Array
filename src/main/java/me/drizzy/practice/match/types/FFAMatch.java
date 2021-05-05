@@ -61,6 +61,11 @@ public class FFAMatch extends Match {
     }
 
     @Override
+    public boolean isRobotMatch() {
+        return false;
+    }
+
+    @Override
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 

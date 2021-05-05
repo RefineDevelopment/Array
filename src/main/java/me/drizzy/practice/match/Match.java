@@ -535,6 +535,8 @@ public abstract class Match {
 
     public abstract boolean isSoloMatch();
 
+    public abstract boolean isRobotMatch();
+
     public abstract boolean isTeamMatch();
 
     public abstract boolean isFreeForAllMatch();

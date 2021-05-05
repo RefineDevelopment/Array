@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.api.ArrayCache;
+import me.drizzy.practice.clan.Clan;
+import me.drizzy.practice.clan.ClanInvite;
 import me.drizzy.practice.duel.DuelProcedure;
 import me.drizzy.practice.duel.DuelRequest;
 import me.drizzy.practice.enums.HotbarType;
@@ -86,6 +88,7 @@ public class Profile {
     @Getter private static final List<LeaderboardsAdapter> globalEloLeaderboards = new ArrayList<>();
     private final Map<UUID, DuelRequest> sentDuelRequests = new HashMap<>();
     private final Map<Kit, StatisticsData> statisticsData = new LinkedHashMap<>();
+    private final List<ClanInvite> clanInviteList = new ArrayList<>();
     private final List<Location> plates = new ArrayList<>();
 
     /*
@@ -119,6 +122,7 @@ public class Profile {
     private Party party;
     private Match match;
     private Queue queue;
+    private Clan clan;
 
     /*
      * Fight Meta
@@ -126,13 +130,6 @@ public class Profile {
     private QueueProfile queueProfile;
     private DuelProcedure duelProcedure;
     private ProfileRematchData rematchData;
-
-    /*
-     * Follow Mode
-     */
-    private boolean followMode = false;
-    private List<Player> follower = new ArrayList<>();
-    private Player following;
 
     /*
      * Miscellaneous Parts
@@ -152,6 +149,11 @@ public class Profile {
     private final SettingsMeta settings = new SettingsMeta();
     private final KitEditor kitEditor = new KitEditor();
 
+    /**
+     * The main constructor for the Profile
+     *
+     * @param uuid The {@link UUID} of the Player
+     */
     public Profile(UUID uuid) {
         this.uuid = uuid;
         this.state = ProfileState.IN_LOBBY;
@@ -238,6 +240,9 @@ public class Profile {
         return profile;
     }
 
+    /**
+     * Load the global leaderboards from the mongo database
+     */
     public static void loadGlobalLeaderboards() {
         if (!getGlobalEloLeaderboards().isEmpty()) getGlobalEloLeaderboards().clear();
             mongoThread.execute(() -> {
@@ -251,16 +256,41 @@ public class Profile {
         });
     }
 
+    /**
+     * Get a profile's rank color from the Core Hook
+     * in ChatColor format
+     *
+     * @return {@link ChatColor}
+     */
     public ChatColor getColor() {
-        if(Array.getInstance().getEssentials().getNametagMeta().getDefaultColor().equalsIgnoreCase("<rank_color>")) {
+        if (Array.getInstance().getEssentials().getNametagMeta().getDefaultColor().equalsIgnoreCase("<rank_color>")) {
             return Array.getInstance().getRankManager().getRankColor(this.getPlayer());
         } else {
             return ChatColor.valueOf(Array.getInstance().getEssentials().getNametagMeta().getDefaultColor());
         }
     }
 
+    /**
+     * Does the profile have a clan
+     * or is he a part of the clan
+     *
+     * @return {@link Boolean}
+     */
+    public boolean hasClan() {
+        if (clan == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Load the profile from the mongo database
+     */
     public void load() {
         mongoThread.execute(() -> {
+        try {
+
             Document document=collection.find(Filters.eq("uuid", uuid.toString())).first();
 
             if (document == null) {
@@ -268,9 +298,13 @@ public class Profile {
                 return;
             }
 
-            this.globalElo=document.getInteger("globalElo");
+            this.globalElo = document.getInteger("globalElo");
 
-            Document options=(Document) document.get("settings");
+            if (document.getString("clan") != null) {
+                this.clan = Clan.getByName(document.getString("clan"));
+            }
+
+            Document options = (Document) document.get("settings");
 
             this.settings.setShowScoreboard(options.getBoolean("showScoreboard"));
             this.settings.setAllowSpectators(options.getBoolean("allowSpectators"));
@@ -278,6 +312,7 @@ public class Profile {
             this.settings.setUsingPingFactor(options.getBoolean("usingPingFactor"));
             this.settings.setLightning(options.getBoolean("toggleLightning"));
             this.settings.setPingScoreboard(options.getBoolean("pingScoreboard"));
+            this.settings.setCpsScoreboard(options.getBoolean("cpsScoreboard") == null ? false : options.getBoolean("cpsScoreboard"));
             this.settings.setAllowTournamentMessages(options.getBoolean("allowTournamentMessages"));
             this.settings.setVanillaTab(options.getBoolean("usingVanillaTab"));
 
@@ -330,17 +365,27 @@ public class Profile {
                     statisticsData.get(kit).setLoadouts(loadouts);
                 }
             }
+        } catch(Exception e) {
+            this.save();
+        }
         });
     }
 
+    /**
+     * Save the profile to the mongo database
+     */
     public void save() {
         mongoThread.execute(() -> {
-            Document document=new Document();
+            Document document = new Document();
             document.put("uuid", uuid.toString());
             document.put("name", Bukkit.getOfflinePlayer(uuid).getName());
             document.put("globalElo", globalElo);
 
-            Document optionsDocument=new Document();
+            if (clan != null) {
+                document.put("clan", clan.getName());
+            }
+
+            Document optionsDocument = new Document();
             optionsDocument.put("showScoreboard", settings.isShowScoreboard());
             optionsDocument.put("allowSpectators", settings.isAllowSpectators());
             optionsDocument.put("receiveDuelRequests", settings.isReceiveDuelRequests());
@@ -349,29 +394,30 @@ public class Profile {
             optionsDocument.put("pingScoreboard", settings.isPingScoreboard());
             optionsDocument.put("allowTournamentMessages", settings.isAllowTournamentMessages());
             optionsDocument.put("usingVanillaTab", settings.isVanillaTab());
+            optionsDocument.put("cpsScoreboard", settings.isCpsScoreboard());
+
             document.put("settings", optionsDocument);
 
-            Document kitStatisticsDocument=new Document();
-
+            Document kitStatisticsDocument = new Document();
             for ( Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet() ) {
-                Document kitDocument=new Document();
+                Document kitDocument = new Document();
                 kitDocument.put("elo", entry.getValue().getElo());
                 kitDocument.put("won", entry.getValue().getWon());
                 kitDocument.put("lost", entry.getValue().getLost());
                 kitStatisticsDocument.put(entry.getKey().getName(), kitDocument);
             }
+
             document.put("kitStatistics", kitStatisticsDocument);
 
-            Document kitsDocument=new Document();
-
+            Document kitsDocument = new Document();
             for ( Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet() ) {
-                JsonArray kitsArray=new JsonArray();
+                JsonArray kitsArray = new JsonArray();
 
                 for ( int i=0; i < 4; i++ ) {
                     KitInventory loadout=entry.getValue().getLoadout(i);
 
                     if (loadout != null) {
-                        JsonObject kitObject=new JsonObject();
+                        JsonObject kitObject = new JsonObject();
                         kitObject.addProperty("index", i);
                         kitObject.addProperty("name", loadout.getCustomName());
                         kitObject.addProperty("armor", InventoryUtil.serializeInventory(loadout.getArmor()));
@@ -389,6 +435,9 @@ public class Profile {
         });
     }
 
+    /**
+     * Recalculate the profile's global elo
+     */
     public void calculateGlobalElo() {
         int globalElo = 0;
         int kitCounter = 0;
@@ -401,6 +450,9 @@ public class Profile {
         this.globalElo = Math.round(globalElo / kitCounter);
     }
 
+    /**
+     * Update the profile's elo in the mongo
+     */
     public void updateElo() {
         Document document = collection.find(Filters.eq("uuid", uuid.toString())).first();
         Document kitStatistics = (Document) document.get("kitStatistics");
@@ -411,23 +463,13 @@ public class Profile {
         }
     }
 
-    public String getEloLeague() {
-        return Array.getInstance().getDivisionsManager().getDivision(this);
-    }
-
-    public Integer getTotalWins() {
-        return this.statisticsData.values().stream().mapToInt(StatisticsData::getWon).sum();
-    }
-
-    public Integer getTotalLost() {
-        return this.statisticsData.values().stream().mapToInt(StatisticsData::getLost).sum();
-    }
-
-
-    public Player getPlayer() {
-        return Bukkit.getPlayer(uuid);
-    }
-
+    /**
+     * Can the profile send a duel request
+     * to another player
+     *
+     * @param player The player receiving the duel request
+     * @return {@link Boolean}
+     */
     public boolean canSendDuelRequest(Player player) {
         if (!sentDuelRequests.containsKey(player.getUniqueId())) {
             return true;
@@ -443,6 +485,12 @@ public class Profile {
         }
     }
 
+    /**
+     * Does the profile have a pending duel request
+     *
+     * @param player The player whose request is pending to this profile
+     * @return {@link Boolean}
+     */
     public boolean isPendingDuelRequest(Player player) {
         if (!sentDuelRequests.containsKey(player.getUniqueId())) {
             return false;
@@ -458,8 +506,10 @@ public class Profile {
         }
     }
 
+    /**
+     * Execute join tasks for the profile
+     */
     public void handleJoin() {
-
         Player player = getPlayer();
 
         for ( Player players : getPlayerList() ) {
@@ -482,7 +532,7 @@ public class Profile {
 
         this.teleportToSpawn();
 
-        //Visibility Bug Fix :)
+        //Visibility Bug Fix
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -491,38 +541,57 @@ public class Profile {
         }.runTaskLater(Array.getInstance(), 5L);
     }
 
+    /**
+     * Execute leave tasks for the profile
+     */
     public void handleLeave() {
         Array.getInstance().getTaskThread().execute(() -> {
+            //Remove from the Tab PlayerList
             Profile.getPlayerList().remove(this.getPlayer());
+
+            //If they are in a match, remove them
             if (this.getMatch() != null) {
                 this.getMatch().handleDeath(this.getPlayer(), null, true);
             }
+
+            //If they are in a queue, remove them
             if (this.isInQueue()) {
                 this.getQueue().removePlayer(this.getQueueProfile());
             }
+            //Save their Profile
             this.save();
+
+            //If there is a rematch request pending for them, remove it
             if (this.getRematchData() != null) {
                 Player target = Array.getInstance().getServer().getPlayer(this.getRematchData().getTarget());
                 if (target != null && target.isOnline()) {
                     Profile.getByUuid(target.getUniqueId()).checkForHotbarUpdate();
                 }
             }
+
+            //Bug fix for tournament party leave
             if (this.getParty() !=null && Tournament.CURRENT_TOURNAMENT !=null && Tournament.CURRENT_TOURNAMENT.isParticipating(this.getPlayer())) {
                 Tournament.CURRENT_TOURNAMENT.leave(this.getParty());
             }
         });
     }
 
+    /**
+     * Teleport the profile to spawn and update
+     * their nametag color
+     */
     public void teleportToSpawn() {
         SpawnTeleportEvent event = new SpawnTeleportEvent(getPlayer(), Array.getInstance().getEssentials().getSpawn());
         event.call();
 
+        //Update their visibility
         this.handleVisibility();
 
         if (!event.isCancelled() && event.getLocation() != null) {
             getPlayer().teleport(event.getLocation());
         }
 
+        //Handle their nametag and update it accordingly
         for ( Player otherPlayer : Bukkit.getOnlinePlayers() ) {
             if (Array.getInstance().getEssentials().getNametagMeta().isEnabled()) {
                 if (party == null) {
@@ -544,79 +613,9 @@ public class Profile {
         }
     }
 
-    public boolean isInLobby() {
-        return state == ProfileState.IN_LOBBY;
-    }
-
-    public boolean isInQueue() {
-        return state == ProfileState.IN_QUEUE && queue != null && queueProfile != null;
-    }
-
-    public boolean isInMatch() {
-        return match != null;
-    }
-
-    public boolean isInFight() {
-        return state == ProfileState.IN_FIGHT && match != null;
-    }
-
-    public boolean isSpectating() {
-        return state == ProfileState.SPECTATING && (
-                match != null || sumo != null ||
-                brackets != null || lms != null ||
-                parkour != null || gulag !=null ||
-                OITC !=null || spleef != null);
-    }
-
-    public boolean isInEvent() {
-        return state == ProfileState.IN_EVENT;
-    }
-
-    public boolean isInTournament() {
-        if (Tournament.CURRENT_TOURNAMENT != null) {
-            return Tournament.CURRENT_TOURNAMENT.isParticipating(getPlayer());
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isInSumo() {
-        return state == ProfileState.IN_EVENT && sumo != null;
-    }
-
-    public boolean isInBrackets() {
-        return state == ProfileState.IN_EVENT && brackets != null;
-    }
-
-    public boolean isInLMS() {
-        return state == ProfileState.IN_EVENT && lms != null;
-    }
-
-    public boolean isInParkour() {
-        return state == ProfileState.IN_EVENT && parkour != null;
-    }
-
-    public boolean isInSpleef() {
-        return state == ProfileState.IN_EVENT && spleef != null;
-    }
-
-    public boolean isInGulag() {
-        return state == ProfileState.IN_EVENT && gulag !=null;
-    }
-
-    public boolean isInOITC() {
-        return state == ProfileState.IN_EVENT && OITC != null;
-    }
-
-    public boolean isInSomeSortOfFight() {
-        return (state == ProfileState.IN_FIGHT && match != null) || (state == ProfileState.IN_EVENT);
-
-    }
-
-    public boolean isBusy() {
-        return isInQueue() || isInFight() || isInEvent() || isSpectating() || isInTournament() || isFollowMode();
-    }
-
+    /**
+     * See if the profile's hotbar needs to be updated
+     */
     public void checkForHotbarUpdate() {
         Player player = getPlayer();
 
@@ -627,34 +626,36 @@ public class Profile {
         if (isInLobby() && !kitEditor.isActive()) {
             boolean update = false;
 
-            if (this.rematchData != null) {
-                final Player target=Bukkit.getPlayer(this.rematchData.getTarget());
-                if (System.currentTimeMillis() - this.rematchData.getTimestamp() >= 30000L) {
-                    this.rematchData=null;
-                    update=true;
+            if (rematchData != null) {
+                Player target = Bukkit.getPlayer(rematchData.getTarget());
+
+                if (System.currentTimeMillis() - rematchData.getTimestamp() >= 30_000) {
+                    rematchData = null;
+                    update = true;
                 } else if (target == null || !target.isOnline()) {
-                    this.rematchData=null;
-                    update=true;
+                    rematchData = null;
+                    update = true;
                 } else {
-                    final Profile profile=getByUuid(target.getUniqueId());
-                    if (!profile.isInLobby() && !profile.isInQueue()) {
-                        this.rematchData=null;
-                        update=true;
+                    Profile profile = Profile.getByUuid(target.getUniqueId());
+
+                    if (!(profile.isInLobby() || profile.isInQueue())) {
+                        rematchData = null;
+                        update = true;
                     } else if (this.getRematchData() == null) {
-                        this.rematchData=null;
-                        update=true;
-                    } else if (!this.rematchData.getKey().equals(this.getRematchData().getKey())) {
-                        this.rematchData=null;
-                        update=true;
-                    } else if (this.rematchData.isReceive()) {
-                        int requestSlot=player.getInventory().first(Hotbar.getItems().get(HotbarType.REMATCH_ACCEPT));
+                        rematchData = null;
+                        update = true;
+                    } else if (!rematchData.getKey().equals(this.getRematchData().getKey())) {
+                        rematchData = null;
+                        update = true;
+                    } else if (rematchData.isReceive()) {
+                        int requestSlot = player.getInventory().first(Hotbar.getItems().get(HotbarType.REMATCH_REQUEST));
 
                         if (requestSlot != -1) {
-                            update=true;
+                            update = true;
                         }
                     }
                 }
-
+            }
                     boolean activeEvent = (Array.getInstance().getSumoManager().getActiveSumo() != null && Array.getInstance().getSumoManager().getActiveSumo().isWaiting())
                             || (Array.getInstance().getBracketsManager().getActiveBrackets() != null && Array.getInstance().getBracketsManager().getActiveBrackets().isWaiting())
                             || (Array.getInstance().getLMSManager().getActiveLMS() != null && Array.getInstance().getLMSManager().getActiveLMS().isWaiting())
@@ -670,7 +671,7 @@ public class Profile {
                         update = true;
                     }
 
-            }
+
             if (update) {
                 new BukkitRunnable() {
                     @Override
@@ -682,6 +683,9 @@ public class Profile {
         }
     }
 
+    /**
+     * Update the profile's hotbar
+     */
     public void refreshHotbar() {
         Player player = getPlayer();
 
@@ -747,6 +751,11 @@ public class Profile {
         }
     }
 
+    /**
+     * Get the profile's win/loose ratio
+     *
+     * @return Returns the WLR in {@link String} format
+     */
     public String getWLR() {
         double totalWins = this.getTotalWins();
         double totalLosses = this.getTotalLost();
@@ -756,6 +765,12 @@ public class Profile {
         return format.format(ratio);
     }
 
+    /**
+     * Handle and update the player's visibility
+     *
+     * @param player The player whose visibility is being updated
+     * @param otherPlayer The viewer of the player
+     */
     public void handleVisibility(Player player, Player otherPlayer) {
         if (player == null || otherPlayer == null) return;
         boolean hide = true;
@@ -862,6 +877,10 @@ public class Profile {
         }
     }
 
+    /**
+     * More simpler and direct method to access
+     * and update profile's visibility
+     */
     public void handleVisibility() {
         Player player = getPlayer();
         if (player != null) {
@@ -876,10 +895,23 @@ public class Profile {
         }
     }
 
+    /**
+     * Set the profile's knockback profile to
+     * the specified knockback profile
+     *
+     * @param player The player whose knockback is being changed
+     * @param kb The knockback profile name in {@link String} format
+     */
     public static void setKb(Player player, String kb) {
        TaskUtil.runAsync(() -> Array.getInstance().getNMSManager().getKnockbackType().applyKnockback(player, kb));
     }
 
+    /**
+     * Apply the Enderpearl cooldown to the profile
+     * and send it to LunarAPI if they are on Lunar
+     *
+     * @param cooldown {@link Cooldown}
+     */
     public void setEnderpearlCooldown(Cooldown cooldown) {
         this.enderpearlCooldown = cooldown;
 
@@ -890,10 +922,16 @@ public class Profile {
                 LunarClientAPICooldown.sendCooldown(player, "Enderpearl");
             }
         } catch (Exception e) {
-            Array.logger("Could not send LC-Cooldown!");
+            Array.logger("&cCould not send LC-Cooldown!");
         }
     }
 
+    /**
+     * Apply the Bow cooldown to the profile
+     * and send it to LunarAPI if they are on Lunar
+     *
+     * @param cooldown {@link Cooldown}
+     */
     public void setBowCooldown(Cooldown cooldown) {
         this.bowCooldown = cooldown;
 
@@ -904,7 +942,95 @@ public class Profile {
                 LunarClientAPICooldown.sendCooldown(player, "Bow");
             }
         } catch (Exception e) {
-            Array.logger("Could not send LC-Cooldown!");
+            Array.logger("&cCould not send LC-Cooldown!");
         }
+    }
+
+    public String getEloLeague() {
+        return Array.getInstance().getDivisionsManager().getDivision(this);
+    }
+
+    public Integer getTotalWins() {
+        return this.statisticsData.values().stream().mapToInt(StatisticsData::getWon).sum();
+    }
+
+    public Integer getTotalLost() {
+        return this.statisticsData.values().stream().mapToInt(StatisticsData::getLost).sum();
+    }
+
+    public Player getPlayer() {
+        return Bukkit.getPlayer(uuid);
+    }
+
+    public boolean isInLobby() {
+        return state == ProfileState.IN_LOBBY;
+    }
+
+    public boolean isInQueue() {
+        return state == ProfileState.IN_QUEUE && queue != null && queueProfile != null;
+    }
+
+    public boolean isInMatch() {
+        return match != null;
+    }
+
+    public boolean isInFight() {
+        return state == ProfileState.IN_FIGHT && match != null;
+    }
+
+    public boolean isSpectating() {
+        return state == ProfileState.SPECTATING && (
+                match != null || sumo != null ||
+                        brackets != null || lms != null ||
+                        parkour != null || gulag !=null ||
+                        OITC !=null || spleef != null);
+    }
+
+    public boolean isInEvent() {
+        return state == ProfileState.IN_EVENT;
+    }
+
+    public boolean isInTournament() {
+        if (Tournament.CURRENT_TOURNAMENT != null) {
+            return Tournament.CURRENT_TOURNAMENT.isParticipating(getPlayer());
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isInSumo() {
+        return state == ProfileState.IN_EVENT && sumo != null;
+    }
+
+    public boolean isInBrackets() {
+        return state == ProfileState.IN_EVENT && brackets != null;
+    }
+
+    public boolean isInLMS() {
+        return state == ProfileState.IN_EVENT && lms != null;
+    }
+
+    public boolean isInParkour() {
+        return state == ProfileState.IN_EVENT && parkour != null;
+    }
+
+    public boolean isInSpleef() {
+        return state == ProfileState.IN_EVENT && spleef != null;
+    }
+
+    public boolean isInGulag() {
+        return state == ProfileState.IN_EVENT && gulag !=null;
+    }
+
+    public boolean isInOITC() {
+        return state == ProfileState.IN_EVENT && OITC != null;
+    }
+
+    public boolean isInSomeSortOfFight() {
+        return (state == ProfileState.IN_FIGHT && match != null) || (state == ProfileState.IN_EVENT);
+    }
+
+    public boolean isBusy() {
+        return isInQueue() || isInFight() || isInEvent() || isSpectating() || isInTournament();
     }
 }

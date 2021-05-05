@@ -17,6 +17,7 @@ import me.drizzy.practice.party.PartyListener;
 import me.drizzy.practice.profile.ProfileListener;
 import me.drizzy.practice.hotbar.HotbarListener;
 import me.drizzy.practice.queue.QueueListener;
+import me.drizzy.practice.robot.listener.RobotHitDelay;
 import me.drizzy.practice.util.events.WorldListener;
 import me.drizzy.practice.util.menu.MenuListener;
 import org.bukkit.event.Listener;
@@ -33,6 +34,7 @@ public class ListenersManager {
                 new SumoListener(),
                 new GulagListener(),
                 new BracketsListener(),
+                new RobotHitDelay(),
                 new LMSListener(),
                 new ParkourListener(),
                 new SpleefListener(),

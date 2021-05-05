@@ -65,6 +65,10 @@ public class HCFMatch extends Match {
         return false;
     }
 
+    @Override
+    public boolean isRobotMatch() {
+        return false;
+    }
 
     @Override
     public void setupPlayer(Player player) {
@@ -159,6 +163,7 @@ public class HCFMatch extends Match {
 
                             Array.getInstance().getHCFManager().setEquippedClass(player, null);
                             Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
+                            player.getActivePotionEffects().clear();
 
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);

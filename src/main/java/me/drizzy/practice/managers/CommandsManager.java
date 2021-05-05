@@ -5,9 +5,6 @@ import me.drizzy.practice.arena.command.*;
 import me.drizzy.practice.essentials.commands.ArrayCommand;
 import me.drizzy.practice.essentials.commands.*;
 import me.drizzy.practice.essentials.commands.donator.FlyCommand;
-import me.drizzy.practice.essentials.commands.staff.FollowCommand;
-import me.drizzy.practice.essentials.commands.staff.GetUUIDCommand;
-import me.drizzy.practice.essentials.commands.staff.UnFollowCommand;
 import me.drizzy.practice.duel.command.DuelAcceptCommand;
 import me.drizzy.practice.duel.command.DuelCommand;
 import me.drizzy.practice.duel.command.RematchCommand;
@@ -36,8 +33,6 @@ public class CommandsManager {
     public static void register() {
         for (Object command : Arrays.asList(
                 //Staff commands
-                new FollowCommand(),
-                new UnFollowCommand(),
                 new CancelMatchCommand(),
 
                 //Array Commands
@@ -66,7 +61,6 @@ public class CommandsManager {
                 new LeaderboardsCommand(),
                 new ArraySettingsCommand(),
                 new EventCommand(),
-                new GetUUIDCommand(),
                 new EventHelpCommand(),
                 new FlyCommand(),
 
@@ -236,7 +230,9 @@ public class CommandsManager {
                 new TournamentCancelCommand(),
                 new TournamentListCommand()
         ))
-            Array.getHoncho().registerCommand(command);
+
+        Array.getHoncho().registerCommand(command);
+
         Bukkit.getCommandMap().register("stats", new StatsCommand());
     }
 }

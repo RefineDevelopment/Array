@@ -41,14 +41,10 @@ public class HotbarListener implements Listener {
                 return;
             }
             event.setCancelled(true);
-            if (profile.isFollowMode()) {
-                player.sendMessage(CC.translate("&cYou are currently in follow mode, please execute /unfollow to stop following first!"));
-                return;
-            }
             switch (hotbarType) {
                 case QUEUE_JOIN_RANKED: {
                     if (!Array.getInstance().getEssentials().getMeta().isRankedEnabled()) {
-                        player.sendMessage(CC.translate(Array.getInstance().getMessagesConfig().getString("Ranked.Disabled")));
+                        player.sendMessage(Locale.RANKED_DISABLED.toString());
                         break;
                     }
                     if (Array.getInstance().getEssentials().getMeta().isLimitPing()) {
@@ -60,7 +56,7 @@ public class HotbarListener implements Listener {
                     if (!player.hasPermission("array.donator")) {
                         if (Array.getInstance().getEssentials().getMeta().isRequireKills()) {
                             if (profile.getTotalWins() < Array.getInstance().getEssentials().getMeta().getRequiredKills()) {
-                                for ( String error : Array.getInstance().getMessagesConfig().getStringList("Ranked.Required") ) {
+                                for ( String error : Locale.RANKED_REQUIRED.toList()) {
                                     player.sendMessage(CC.translate(error));
                                 }
                                 break;

@@ -70,13 +70,13 @@ public class Bard extends HCFClasses implements Listener {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         Match match = profile.getMatch();
         if (match != null && (match.isHCFMatch() )) {
+            Team team = profile.getMatch().getTeam(player);
             BardData bardData = new BardData();
             bardDataMap.put(player.getUniqueId(), bardData);
             bardData.startEnergyTracking();
             bardData.heldTask = new BukkitRunnable() {
                 int lastEnergy;
 
-                @SuppressWarnings("deprecation")
                 @Override
                 public void run() {
                     // Apply the bard effects here.
@@ -85,7 +85,7 @@ public class Bard extends HCFClasses implements Listener {
                         EffectData bardEffect = bardEffects.get(held.getType());
                         if (bardEffect == null) return;
 
-                        // Apply the held effect to hcf members.
+                        // Apply the held effect to faction members.
                         if (player.getItemInHand().getType() == Material.FEATHER) {
                             plugin.getEffectRestorer().setRestoreEffect(player, bardEffect.heldable);
                         }
@@ -164,6 +164,7 @@ public class Bard extends HCFClasses implements Listener {
                 return;
             }
 
+            UUID uuid = player.getUniqueId();
             long timestamp = archerJumpCooldowns.getOrDefault(event.getPlayer().getUniqueId(), 0L);
             long millis = System.currentTimeMillis();
             long remaining = timestamp - millis;
@@ -173,7 +174,6 @@ public class Bard extends HCFClasses implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
@@ -231,12 +231,15 @@ public class Bard extends HCFClasses implements Listener {
         String errorFeedback = null;
         double currentEnergy = bardData.getEnergy();
         if (bardEffect.energyCost > currentEnergy) {
-            errorFeedback = Locale.HCF_BARD_NOTENOUGHENERGY.toString().replace("<cost>", String.valueOf(bardEffect)).replace("<energy>", String.valueOf(currentEnergy));
+            errorFeedback = Locale.HCF_BARD_NOTENOUGHENERGY.toString()
+                    .replace("<cost>", String.valueOf(bardEffect.energyCost))
+                    .replace("<energy>", String.valueOf(currentEnergy));
         }
 
         long remaining = bardData.getRemainingBuffDelay() / 1000;
         if (remaining > 0L) {
-            errorFeedback = Locale.HCF_COOLDOWN.toString().replace("<duration>", String.valueOf(remaining));
+            errorFeedback = Locale.HCF_COOLDOWN.toString()
+                    .replace("<duration>", String.valueOf(remaining));
         }
 
         if (sendFeedback && errorFeedback != null) {
