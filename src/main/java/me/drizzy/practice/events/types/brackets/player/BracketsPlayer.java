@@ -19,7 +19,6 @@ public class BracketsPlayer {
 	private final String username;
 	private BracketsPlayerState state = BracketsPlayerState.WAITING;
 	private int roundWins = 0;
-	private final Map<UUID, List<Long>> cpsMap = new HashMap<>();
 
 	public BracketsPlayer(Player player) {
 		this.uuid = player.getUniqueId();
@@ -32,11 +31,6 @@ public class BracketsPlayer {
 
 	public void incrementRoundWins() {
 		this.roundWins++;
-	}
-
-	public int getCps() {
-		cpsMap.get(uuid).removeIf(count -> count < System.currentTimeMillis() - 1000L);
-		return cpsMap.get(uuid).size();
 	}
 
 	public int getPing() {

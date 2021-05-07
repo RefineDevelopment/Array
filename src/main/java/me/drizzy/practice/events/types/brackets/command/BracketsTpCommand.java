@@ -10,7 +10,7 @@ public class BracketsTpCommand {
 
 	public void execute(Player player) {
 		player.teleport(Array.getInstance().getBracketsManager().getBracketsSpectator());
-		player.sendMessage(CC.GREEN + "Teleported to brackets's spawn location.");
+		player.sendMessage(CC.translate("&8[&c&lArray&8] &7Teleported to &cBrackets's &7spawn location."));
 	}
 
 }

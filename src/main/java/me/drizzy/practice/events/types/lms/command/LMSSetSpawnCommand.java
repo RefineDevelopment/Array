@@ -9,10 +9,8 @@ import org.bukkit.entity.Player;
 public class LMSSetSpawnCommand {
 
     public void execute(Player player) {
-        Array.getInstance().getLMSManager().setLmsSpectator(player.getLocation());
-
-        player.sendMessage(CC.GREEN + "Updated lms's spawn location.");
-
+        Array.getInstance().getLMSManager().setLmsSpawn(player.getLocation());
+        player.sendMessage(CC.translate("&7Updated &cLMS's &7spawn location."));
         Array.getInstance().getLMSManager().save();
     }
 

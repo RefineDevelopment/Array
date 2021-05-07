@@ -11,11 +11,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.IOException;
 
+@Getter
+@Setter
 public class ParkourManager {
 
-	@Getter private Parkour activeParkour;
-	@Getter @Setter private Cooldown cooldown = new Cooldown(0);
-	@Getter @Setter private Location parkourSpawn;
+	private Parkour activeParkour;
+	private Cooldown cooldown = new Cooldown(0);
+	private Location parkourSpawn;
 
 	public ParkourManager() {
 		load();
@@ -38,8 +40,8 @@ public class ParkourManager {
 	public void load() {
 		FileConfiguration configuration = Array.getInstance().getEventsConfig().getConfiguration();
 
-		if (configuration.contains("events.parkour.spectator")) {
-			parkourSpawn = LocationUtil.deserialize(configuration.getString("events.parkour.spectator"));
+		if (configuration.contains("events.parkour.spawn")) {
+			parkourSpawn = LocationUtil.deserialize(configuration.getString("events.parkour.spawn"));
 		}
 	}
 

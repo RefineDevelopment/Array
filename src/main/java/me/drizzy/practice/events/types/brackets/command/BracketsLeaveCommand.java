@@ -1,5 +1,6 @@
 package me.drizzy.practice.events.types.brackets.command;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.events.types.brackets.Brackets;
@@ -15,12 +16,12 @@ public class BracketsLeaveCommand {
 		Brackets activeBrackets = Array.getInstance().getBracketsManager().getActiveBrackets();
 
 		if (activeBrackets == null) {
-			player.sendMessage(CC.RED + "There isn't any active Brackets Events.");
+			player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "Brackets"));
 			return;
 		}
 
 		if (!profile.isInBrackets() || !activeBrackets.getEventPlayers().containsKey(player.getUniqueId())) {
-			player.sendMessage(CC.RED + "You are not apart of the active Brackets Event.");
+			player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "Brackets"));
 			return;
 		}
 

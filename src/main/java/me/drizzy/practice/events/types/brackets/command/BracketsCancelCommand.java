@@ -1,6 +1,7 @@
 package me.drizzy.practice.events.types.brackets.command;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
@@ -11,12 +12,12 @@ public class BracketsCancelCommand {
 
 	public void execute(CommandSender sender) {
 		if (Array.getInstance().getBracketsManager().getActiveBrackets() == null) {
-			sender.sendMessage(CC.RED + "There isn't an active Brackets events.");
+			sender.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "Brackets"));
 			return;
 		}
 
-		Profile.getProfiles().values().stream().filter(Profile::isInLobby).forEach(Profile::refreshHotbar);
-		Profile.getProfiles().values().stream().filter(Profile::isInQueue).forEach(Profile::refreshHotbar);
+		Profile.getProfiles().values().stream().filter(profile -> !profile.getKitEditor().isActive()).filter(Profile::isInLobby).forEach(Profile::refreshHotbar);
+
 		Array.getInstance().getBracketsManager().getActiveBrackets().end();
 	}
 

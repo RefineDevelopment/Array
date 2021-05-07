@@ -17,7 +17,7 @@ public class LMSManager {
 
     private LMS activeLMS;
     private Cooldown cooldown = new Cooldown(0);
-    private Location lmsSpectator;
+    private Location lmsSpawn;
     private String lmsKnockbackProfile;
 
     public LMSManager() {
@@ -41,8 +41,8 @@ public class LMSManager {
     public void load() {
         FileConfiguration configuration = Array.getInstance().getEventsConfig().getConfiguration();
 
-        if (configuration.contains("events.lms.spectator")) {
-            lmsSpectator = LocationUtil.deserialize(configuration.getString("events.lms.spectator"));
+        if (configuration.contains("events.lms.spawn")) {
+            lmsSpawn= LocationUtil.deserialize(configuration.getString("events.lms.spawn"));
         }
 
         if (configuration.contains("events.lms.knockback-profile")) {
@@ -53,8 +53,8 @@ public class LMSManager {
     public void save() {
         FileConfiguration configuration = Array.getInstance().getEventsConfig().getConfiguration();
 
-        if (lmsSpectator != null) {
-            configuration.set("events.lms.spectator", LocationUtil.serialize(lmsSpectator));
+        if (lmsSpawn != null) {
+            configuration.set("events.lms.spectator", LocationUtil.serialize(lmsSpawn));
         }
 
         if (lmsKnockbackProfile != null) {

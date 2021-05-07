@@ -1,14 +1,12 @@
 package me.drizzy.practice.events.types.lms;
 
-import me.drizzy.practice.events.types.brackets.Brackets;
+import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.events.types.lms.player.LMSPlayerState;
+import me.drizzy.practice.hotbar.Hotbar;
 import me.drizzy.practice.kit.KitInventory;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.hotbar.Hotbar;
-import me.drizzy.practice.enums.HotbarType;
-import me.drizzy.practice.util.inventory.ItemBuilder;
-import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
+import me.drizzy.practice.util.inventory.ItemBuilder;
 import me.drizzy.practice.util.other.Cooldown;
 import me.drizzy.practice.util.other.TimeUtil;
 import org.bukkit.ChatColor;
@@ -43,7 +41,6 @@ public class LMSListener implements Listener {
         if (profile.isInLMS()) {
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
-                PlayerUtil.spectator(player);
                 if (player.getKiller() != null) {
                     profile.getLms().handleDeath(player, player.getKiller());
                 } else {

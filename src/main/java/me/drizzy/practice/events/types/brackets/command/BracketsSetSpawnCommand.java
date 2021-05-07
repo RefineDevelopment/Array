@@ -1,5 +1,8 @@
 package me.drizzy.practice.events.types.brackets.command;
 
+import me.drizzy.practice.events.types.brackets.Brackets;
+import me.drizzy.practice.events.types.brackets.BracketsManager;
+import me.drizzy.practice.events.types.gulag.GulagManager;
 import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.Array;
@@ -10,20 +13,21 @@ import org.bukkit.entity.Player;
 public class BracketsSetSpawnCommand {
 
 	public void execute(Player player, @CPL("[one|two|spec]") String position) {
+		BracketsManager brackets = Array.getInstance().getBracketsManager();
+
 		if (!(position.equals("one") || position.equals("two") || position.equals("spec"))) {
-			player.sendMessage(CC.RED + "The position must be one/two/spec.");
+			player.sendMessage(CC.translate("&7The position must be &cone&7/&ctwo&7/&cspec&7."));
 		} else {
-			if (position.equals("one")) {
-				Array.getInstance().getBracketsManager().setBracketsSpawn1(player.getLocation());
+			if (position.equals("one"))  {
+				brackets.setBracketsSpawn1(player.getLocation());
 			} else if (position.equals("two")){
-				Array.getInstance().getBracketsManager().setBracketsSpawn2(player.getLocation());
+				brackets.setBracketsSpawn2(player.getLocation());
 			} else {
-				Array.getInstance().getBracketsManager().setBracketsSpectator(player.getLocation());
+				brackets.setBracketsSpectator(player.getLocation());
 			}
 
-			player.sendMessage(CC.GREEN + "Updated brackets's spawn location " + position + ".");
-
-			Array.getInstance().getBracketsManager().save();
+			player.sendMessage(CC.translate("&7Updated &cBrackets's &7spawn location &c" + position + "&7."));
+			brackets.save();
 		}
 	}
 

@@ -1,6 +1,7 @@
-package me.drizzy.practice.hcf;
+package me.drizzy.practice.managers;
 
 import me.drizzy.practice.enums.HotbarType;
+import me.drizzy.practice.hcf.HCFClasses;
 import me.drizzy.practice.hcf.events.ArmorClassEquipEvent;
 import me.drizzy.practice.hcf.events.ArmorClassUnequipEvent;
 import me.drizzy.practice.hotbar.Hotbar;

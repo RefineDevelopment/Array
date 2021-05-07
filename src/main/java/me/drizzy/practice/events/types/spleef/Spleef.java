@@ -3,19 +3,20 @@ package me.drizzy.practice.events.types.spleef;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.events.types.spleef.player.SpleefPlayer;
 import me.drizzy.practice.events.types.spleef.player.SpleefPlayerState;
 import me.drizzy.practice.events.types.spleef.task.SpleefRoundEndTask;
 import me.drizzy.practice.events.types.spleef.task.SpleefRoundStartTask;
 import me.drizzy.practice.hotbar.Hotbar;
-import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.util.location.Circle;
-import me.drizzy.practice.util.other.*;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.Clickable;
+import me.drizzy.practice.util.config.BasicConfigurationFile;
+import me.drizzy.practice.util.location.Circle;
+import me.drizzy.practice.util.other.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
@@ -28,24 +29,30 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
+@Setter
 public class Spleef {
 
-	protected static String EVENT_PREFIX=CC.translate("&8[&cSpleef&8] &r");
-    public final List<Player> catcher = new ArrayList<>();
-	private final String name;
-	@Setter private SpleefState state = SpleefState.WAITING;
-	@Getter @Setter static private Kit kit = Kit.getByName("Spleef");
-	private SpleefTask eventTask;
-	private final PlayerSnapshot host;
+	@Getter	@Setter	private static boolean enabled = true;
+	protected static String EVENT_PREFIX = Locale.EVENT_PREFIX.toString().replace("<event_name>", "Spleef");
+	private static BasicConfigurationFile config = Array.getInstance().getScoreboardConfig();
+
+	private static Array plugin = Array.getInstance();
+	
 	private final LinkedHashMap<UUID, SpleefPlayer> eventPlayers = new LinkedHashMap<>();
-	@Getter private final List<UUID> spectators = new ArrayList<>();
+	private final List<UUID> spectators = new ArrayList<>();
 	private final List<Location> placedBlocks = new ArrayList<>();
 	private final List<BlockState> changedBlocks = new ArrayList<>();
-	@Getter @Setter	public static int maxPlayers;
-	@Getter @Setter private int totalPlayers;
-	@Setter private Cooldown cooldown;
-	@Setter private long roundStart;
-	@Getter	@Setter	private static boolean enabled = true;
+	private final List<Player> catcher = new ArrayList<>();
+	
+	private final String name;
+	private final PlayerSnapshot host;
+	private Cooldown cooldown;
+	private SpleefTask eventTask;
+	private SpleefState state = SpleefState.WAITING;
+	
+	@Getter @Setter public static int maxPlayers;
+	private int totalPlayers;
+	private long roundStart;
 
 
 	public Spleef(Player player) {
@@ -57,29 +64,49 @@ public class Spleef {
 	public List<String> getLore() {
 		List<String> toReturn = new ArrayList<>();
 
-		Spleef spleef = Array.getInstance().getSpleefManager().getActiveSpleef();
+		Spleef spleef = plugin.getSpleefManager().getActiveSpleef();
 
 		toReturn.add(CC.MENU_BAR);
-		toReturn.add(CC.translate("&cHost: &r" + spleef.getName()));
-
 		if (spleef.isWaiting()) {
-			toReturn.add("&cPlayers: &r" + spleef.getEventPlayers().size() + "/" + Spleef.getMaxPlayers());
-			toReturn.add("");
 
+			String status;
 			if (spleef.getCooldown() == null) {
-				toReturn.add(CC.translate("&fWaiting for players..."));
+
+				status = CC.translate(config.getString("SCOREBOARD.EVENT.SPLEEF.STATUS_WAITING")
+						.replace("<spleef_host_name>", spleef.getName())
+						.replace("<spleef_player_count>", String.valueOf(spleef.getEventPlayers().size()))
+						.replace("<spleef_max_players>", String.valueOf(Spleef.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
+
 			} else {
-				String remaining = TimeUtil.millisToSeconds(spleef.getCooldown().getRemaining());
-
+				String remaining=TimeUtil.millisToSeconds(spleef.getCooldown().getRemaining());
 				if (remaining.startsWith("-")) {
-					remaining = "0.0";
+					remaining="0.0";
 				}
+				String finalRemaining = remaining;
 
-				toReturn.add(CC.translate("&fStarting in " + remaining + "s"));
+				status = CC.translate(config.getString("SCOREBOARD.EVENT.SPLEEF.STATUS_COUNTING")
+						.replace("<spleef_host_name>", spleef.getName())
+						.replace("<remaining>", finalRemaining)
+						.replace("<spleef_player_count>", String.valueOf(spleef.getEventPlayers().size()))
+						.replace("<spleef_max_players>", String.valueOf(Spleef.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
+
 			}
+
+			config.getStringList("SCOREBOARD.EVENT.SPLEEF.WAITING").forEach(line -> toReturn.add(CC.translate(line
+					.replace("<spleef_host_name>", spleef.getName())
+					.replace("<status>", status)
+					.replace("<spleef_player_count>", String.valueOf(spleef.getEventPlayers().size()))
+					.replace("<spleef_max_players>", String.valueOf(Spleef.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
+
 		} else {
-			toReturn.add("&cPlayers: &r" + spleef.getRemainingPlayers().size() + "/" + spleef.getTotalPlayers());
-			toReturn.add("&cDuration: &r" + spleef.getRoundDuration());
+
+			config.getStringList("SCOREBOARD.EVENT.SPLEEF.FIGHTING").forEach(line -> toReturn.add(CC.translate(line
+					.replace("<spleef_host_name>", spleef.getName())
+					.replace("<spleef_duration>", spleef.getRoundDuration())
+					.replace("<spleef_players_alive>", String.valueOf(spleef.getRemainingPlayers().size()))
+					.replace("<spleef_player_count>", String.valueOf(spleef.getEventPlayers().size()))
+					.replace("<spleef_max_players>", String.valueOf(Spleef.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
+
 		}
 		toReturn.add(CC.MENU_BAR);
 
@@ -94,7 +121,7 @@ public class Spleef {
 		eventTask = task;
 
 		if (eventTask != null) {
-			eventTask.runTaskTimer(Array.getInstance(), 0L, 20L);
+			eventTask.runTaskTimer(plugin, 0L, 20L);
 		}
 	}
 
@@ -150,8 +177,13 @@ public class Spleef {
 	public void handleJoin(Player player) {
 		eventPlayers.put(player.getUniqueId(), new SpleefPlayer(player));
 
-		broadcastMessage(CC.RED + player.getName() + CC.GRAY + " has joined the &cSpleef Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-		player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &cSpleef Event&8!"));
+		broadcastMessage(Locale.EVENT_JOIN.toString()
+				.replace("<event_name>", "Spleef")
+				.replace("<joined>", player.getName())
+				.replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
+				.replace("<event_max_players>", String.valueOf(getMaxPlayers())));
+
+		player.sendMessage(Locale.EVENT_PLAYER_JOIN.toString().replace("<event_name>", "Spleef"));
 
 		onJoin(player);
 
@@ -160,7 +192,7 @@ public class Spleef {
 		profile.setState(ProfileState.IN_EVENT);
 		profile.refreshHotbar();
 
-		player.teleport(Array.getInstance().getSpleefManager().getSpleefSpawn());
+		player.teleport(plugin.getSpleefManager().getSpleefSpawn());
 
 		new BukkitRunnable() {
 			@Override
@@ -169,10 +201,10 @@ public class Spleef {
 					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
 					otherProfile.handleVisibility(otherPlayer, player);
 					profile.handleVisibility(player, otherPlayer);
-					NameTags.color(player, otherPlayer, Array.getInstance().getEssentials().getNametagMeta().getEventColor(), false);
+					NameTags.color(player, otherPlayer, plugin.getEssentials().getNametagMeta().getEventColor(), false);
 				}
 			}
-		}.runTaskAsynchronously(Array.getInstance());
+		}.runTaskAsynchronously(plugin);
 	}
 
 	public void handleLeave(Player player) {
@@ -185,9 +217,13 @@ public class Spleef {
 		eventPlayers.remove(player.getUniqueId());
 
 		if (state == SpleefState.WAITING) {
-			broadcastMessage(CC.RED + player.getName() + CC.GRAY + " left the &cSpleef Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-			player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &cSpleef Event&8!"));
+			broadcastMessage(Locale.EVENT_LEAVE.toString()
+					.replace("<event_name>", "Parkour")
+					.replace("<left>", player.getName())
+					.replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
+					.replace("<event_max_players>", String.valueOf(getMaxPlayers())));
 		}
+		player.sendMessage(Locale.EVENT_PLAYER_LEAVE.toString().replace("<event_name>", "Parkour"));
 
 		onLeave(player);
 
@@ -203,7 +239,7 @@ public class Spleef {
 					NameTags.reset(player, otherPlayer);
 				}
 			}
-		}.runTaskAsynchronously(Array.getInstance());
+		}.runTaskAsynchronously(plugin);
 
 		profile.setState(ProfileState.IN_LOBBY);
 		profile.setSpleef(null);
@@ -223,21 +259,25 @@ public class Spleef {
 	}
 
 	public void end() {
-		Array.getInstance().getSpleefManager().setActiveSpleef(null);
-		Array.getInstance().getSpleefManager().setCooldown(new Cooldown(60_000L * 10));
+		plugin.getSpleefManager().setActiveSpleef(null);
+		plugin.getSpleefManager().setCooldown(new Cooldown(60_000L * 10));
         this.getCatcher().clear();
 		setEventTask(null);
 
-		new SpleefResetTask(this).runTask(Array.getInstance());
+		new SpleefResetTask(this).runTask(plugin);
 
 		Player winner = this.getWinner();
 
 		if (winner == null) {
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.RED + "The spleef events has been canceled.");
+			Bukkit.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", "Spleef"));
 		} else {
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Spleef Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Spleef Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Spleef Event" + CC.GRAY + "!");
+			String win = Locale.EVENT_WON.toString().replace("<winner_name>", winner.getName())
+					.replace("<event_name>", "Spleef")
+					.replace("<event_prefix>", EVENT_PREFIX);
+
+			Bukkit.broadcastMessage(win);
+			Bukkit.broadcastMessage(win);
+			Bukkit.broadcastMessage(win);
 		}
 
 		for (SpleefPlayer spleefPlayer : eventPlayers.values()) {
@@ -248,7 +288,6 @@ public class Spleef {
 				profile.setState(ProfileState.IN_LOBBY);
 				profile.setSpleef(null);
 				profile.refreshHotbar();
-
 				profile.teleportToSpawn();
 			}
 		}
@@ -283,18 +322,14 @@ public class Spleef {
 	}
 
 	public void announce() {
-		List<String> strings=new ArrayList<>();
-		strings.add(CC.translate(" "));
-		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
-		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&c&l[Spleef Event]"));
-		strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + ""));
-		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&fA &cSpleef &fevent is being hosted by &c" + this.host.getUsername()));
-		strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
-		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
-		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
-		strings.add(CC.translate(" "));
-		for ( String string : strings ) {
-			Clickable message = new Clickable(string, "Click to join Spleef events", "/spleef join");
+		for ( String string : Locale.EVENT_ANNOUNCE.toList() ) {
+			String main = string
+					.replace("<event_name>", "Spleef")
+					.replace("<event_host>", this.getHost().getUsername())
+					.replace("<event_prefix>", EVENT_PREFIX);
+
+			Clickable message = new Clickable(main, Locale.EVENT_HOVER.toString().replace("<event_name>", "Spleef"), "/spleef join");
+
 			for ( Player player : Bukkit.getOnlinePlayers() ) {
 				if (!eventPlayers.containsKey(player.getUniqueId())) {
 					message.sendToPlayer(player);
@@ -310,10 +345,10 @@ public class Spleef {
 	}
 
 	public void onJoin(Player player) {
-		TaskUtil.runAsync(() -> Array.getInstance().getNMSManager().getKnockbackType().applyKnockback(player, Array.getInstance().getBracketsManager().getBracketsKnockbackProfile()));
+		plugin.getNMSManager().getKnockbackType().applyKnockback(player, plugin.getSpleefManager().getSpleefKnockbackProfile());
 	}
 	public void onLeave(Player player) {
-		Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
+		plugin.getNMSManager().getKnockbackType().applyDefaultKnockback(player);
 	}
 
 	public void onRound() {
@@ -321,21 +356,20 @@ public class Spleef {
 
 		int i = 0;
 		for (Player player : this.getRemainingPlayers()) {
-			if (player != null) {
-				Location midSpawn = Array.getInstance().getSpleefManager().getSpleefSpawn();
-				List<Location> circleLocations = Circle.getCircle(midSpawn, Array.getInstance().getEssentials().getMeta().getFfaSpawnRadius(), this.getPlayers().size());
-				Location center = midSpawn.clone();
-				Location loc = circleLocations.get(i);
-				Location target = loc.setDirection(center.subtract(loc).toVector());
-				player.teleport(target.add(0, 0.5, 0));
-				circleLocations.remove(i);				i++;
-				Profile profile = Profile.getByUuid(player.getUniqueId());
-				if (profile.isInSpleef()) {
-					profile.refreshHotbar();
-				}
-				PlayerUtil.reset(player);
-				player.getInventory().addItem(Hotbar.getItems().get(HotbarType.SPLEEF_MATCH));
-			}
+
+			Location midSpawn = plugin.getSpleefManager().getSpleefSpawn();
+
+			List<Location> circleLocations = Circle.getCircle(midSpawn, plugin.getEssentials().getMeta().getFfaSpawnRadius(), this.getPlayers().size());
+
+			Location center = midSpawn.clone();
+			Location loc = circleLocations.get(i);
+			Location target = loc.setDirection(center.subtract(loc).toVector());
+
+			player.teleport(target.add(0, 0.5, 0));
+			circleLocations.remove(i);
+			i++;
+
+			player.getInventory().addItem(Hotbar.getItems().get(HotbarType.SPLEEF_MATCH));
 		}
 		setEventTask(new SpleefRoundStartTask(this));
 	}
@@ -343,7 +377,8 @@ public class Spleef {
 	public void onDeath(Player player) {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 
-		broadcastMessage("&c" + player.getName() + "&7 died!");
+		broadcastMessage(Locale.EVENT_DIED.toString()
+				.replace("<eliminated_name>", player.getName()));
 
 
 		if (canEnd()) {
@@ -360,23 +395,18 @@ public class Spleef {
 					profile.handleVisibility(player, otherPlayer);
 				}
 			}
-		}.runTaskAsynchronously(Array.getInstance());
-
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				profile.refreshHotbar();
-			}
-		}.runTask(Array.getInstance());
+		}.runTaskAsynchronously(plugin);
+		profile.refreshHotbar();
 	}
 
 	public String getRoundDuration() {
-		if (getState() == SpleefState.ROUND_STARTING) {
-			return "00:00";
-		} else if (getState() == SpleefState.ROUND_FIGHTING) {
-			return TimeUtil.millisToTimer(System.currentTimeMillis() - roundStart);
-		} else {
-			return "Ending";
+		switch (getState()) {
+			case ROUND_STARTING:
+				return "00:00";
+			case ROUND_FIGHTING:
+				return TimeUtil.millisToTimer(System.currentTimeMillis() - roundStart);
+			default:
+				return "Ending";
 		}
 	}
 
@@ -385,14 +415,11 @@ public class Spleef {
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setSpleef(this);
-		PlayerUtil.spectator(player);
 		profile.setState(ProfileState.SPECTATING);
 		profile.refreshHotbar();
 		profile.handleVisibility();
-		player.setFlying(true);
 
-
-		player.teleport(Array.getInstance().getSpleefManager().getSpleefSpawn());
+		player.teleport(plugin.getSpleefManager().getSpleefSpawn());
 	}
 
 	public void removeSpectator(Player player) {
@@ -404,7 +431,6 @@ public class Spleef {
 		profile.setState(ProfileState.IN_LOBBY);
 		profile.refreshHotbar();
 		profile.handleVisibility();
-
 		profile.teleportToSpawn();
 	}
 }

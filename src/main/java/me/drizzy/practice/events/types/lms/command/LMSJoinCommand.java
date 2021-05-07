@@ -1,6 +1,7 @@
 package me.drizzy.practice.events.types.lms.command;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.lms.LMS;
 import me.drizzy.practice.events.types.lms.LMSState;
 import me.drizzy.practice.util.command.command.CommandMeta;
@@ -16,21 +17,20 @@ public class LMSJoinCommand {
         LMS activeLMS = Array.getInstance().getLMSManager().getActiveLMS();
 
         if (profile.isBusy() || profile.getParty() != null) {
-            player.sendMessage(CC.RED + "You cannot join the lms right now.");
+            player.sendMessage(Locale.EVENT_NOTABLE_JOIN.toString());
             return;
         }
 
         if (activeLMS == null) {
-            player.sendMessage(CC.RED + "There isn't any active LMS Events right now.");
+            player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "LMS"));
             return;
         }
 
         if (activeLMS.getState() != LMSState.WAITING) {
-            player.sendMessage(CC.RED + "This LMS Event is currently on-going and cannot be joined.");
+            player.sendMessage(Locale.EVENT_ALREADY_STARED.toString().replace("<event>", "LMS"));
             return;
         }
-
-        Array.getInstance().getLMSManager().getActiveLMS().handleJoin(player);
+        activeLMS.handleJoin(player);
     }
 
 }

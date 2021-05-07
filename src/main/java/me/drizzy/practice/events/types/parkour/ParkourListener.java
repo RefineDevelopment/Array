@@ -1,6 +1,8 @@
 package me.drizzy.practice.events.types.parkour;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
+import me.drizzy.practice.events.types.parkour.player.ParkourPlayer;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.events.types.parkour.player.ParkourPlayerState;
 import me.drizzy.practice.util.location.BlockUtil;
@@ -118,6 +120,7 @@ public class ParkourListener implements Listener {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		if (profile.isInParkour()) {
 			Parkour parkour = profile.getParkour();
+			ParkourPlayer parkourPlayer = parkour.getEventPlayer(player);
 			if (!parkour.getState().equals(ParkourState.ROUND_ENDING)) {
 				if (event.getClickedBlock().getLocation() !=null && profile.getPlates() !=null) {
 					if (profile.getPlates().contains(event.getClickedBlock().getLocation())) {
@@ -128,14 +131,14 @@ public class ParkourListener implements Listener {
 				if (event.getAction().equals(Action.PHYSICAL)) {
 					if (event.getClickedBlock().getType() == Material.GOLD_PLATE) {
 						if (parkour.getEventPlayer(player).getState().equals(ParkourPlayerState.WAITING)) {
-							parkour.handleWin(event.getPlayer());
-							parkour.broadcastMessage(CC.RED + event.getPlayer().getDisplayName() + CC.YELLOW + " has reached the end!");
+							parkour.handleWin(player);
+							parkour.broadcastMessage(Locale.EVENT_PARKROUR_WON.toString().replace("<winner>", player.getDisplayName()));
 							profile.getPlates().add(event.getClickedBlock().getLocation());
 						}
 					} else if (event.getClickedBlock().getType() == Material.IRON_PLATE) {
-						if (parkour.getEventPlayer(player).getState().equals(ParkourPlayerState.WAITING)) {
-							parkour.getEventPlayer(event.getPlayer()).setLastLocation(event.getPlayer().getLocation());
-							player.sendMessage(CC.translate("&8[&c&lParkour&8] &aCheckpoint Acquired!"));
+						if (parkourPlayer.getState().equals(ParkourPlayerState.WAITING)) {
+							parkourPlayer.setLastLocation(player.getLocation());
+							player.sendMessage(Locale.MATCH_CHECKPOINT.toString());
 							profile.getPlates().add(event.getClickedBlock().getLocation());
 						}
 					}
@@ -148,11 +151,13 @@ public class ParkourListener implements Listener {
 	@EventHandler
 	public void onArrow(PlayerInteractEvent event) {
 		Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
-		Player player=event.getPlayer();
+		Player player = event.getPlayer();
 		if (profile.isInParkour() && event.getMaterial() == Material.ARROW && event.getAction().name().contains("RIGHT")) {
-			if (profile.getParkour().getState() == ParkourState.ROUND_FIGHTING) {
-				if (profile.getParkour().getEventPlayer(player).getLastLocation() != null) {
-					player.teleport(profile.getParkour().getEventPlayer(player).getLastLocation());
+			Parkour parkour = profile.getParkour();
+			ParkourPlayer parkourPlayer = parkour.getEventPlayer(player);
+			if (parkour.getState() == ParkourState.ROUND_FIGHTING) {
+				if (parkourPlayer.getLastLocation() != null) {
+					player.teleport(parkourPlayer.getLastLocation());
 				} else {
 					player.teleport(Array.getInstance().getParkourManager().getParkourSpawn());
 				}

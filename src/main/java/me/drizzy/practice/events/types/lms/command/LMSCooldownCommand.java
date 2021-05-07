@@ -11,12 +11,10 @@ public class LMSCooldownCommand {
 
     public void execute(CommandSender sender) {
         if (Array.getInstance().getLMSManager().getCooldown().hasExpired()) {
-            sender.sendMessage(CC.RED + "There isn't a LMS Event cooldown.");
+            sender.sendMessage(CC.translate("&7There is no currently active LMS Event cooldown."));
             return;
         }
-
-        sender.sendMessage(CC.GREEN + "You reset the LMS Event cooldown.");
-
+        sender.sendMessage(CC.translate("&7Successfully reset the &cLMS Event &7cooldown."));
         Array.getInstance().getLMSManager().setCooldown(new Cooldown(0));
     }
 

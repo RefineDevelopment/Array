@@ -81,7 +81,7 @@ public class Tab implements ZigguratAdapter {
                 int statslots = 4;
                 for (final Kit kit : Kit.getKits()) {
                     if (kit.isEnabled() && kit.getGameRules().isRanked()) {
-                        elements.add(new BufferedTabObject().skin(new SkinTexture(Skin.getDot(ChatColor.RED).getProperty().getValue(), Skin.getDot(ChatColor.RED).getProperty().getSignature())).text(tabManager.getSecondaryColor() + kit.getName() + ": " + tabManager.getMainColor() + profile.getStatisticsData().get(kit).getElo()).slot(statslots));
+                        elements.add(new BufferedTabObject().skin(new SkinTexture(Skin.getDot(tabManager.getDotColor()).getProperty().getValue(), Skin.getDot(tabManager.getDotColor()).getProperty().getSignature())).text(tabManager.getSecondaryColor() + kit.getName() + ": " + tabManager.getMainColor() + profile.getStatisticsData().get(kit).getElo()).slot(statslots));
                         if (++statslots >= 20) {
                             break;
                         }
@@ -308,9 +308,9 @@ public class Tab implements ZigguratAdapter {
             final Match match2=profile.getMatch();
             if (match2 != null) {
                 if (match2.isSoloMatch() || match2.isTheBridgeMatch()) {
-                    elements.add(new BufferedTabObject().text("&aTeam A").slot(4));
+                    elements.add(new BufferedTabObject().text("&aPlayer A").slot(4));
                     elements.add(new BufferedTabObject().text(tabManager.getMainColor() + "&lMatch Info").slot(23));
-                    elements.add(new BufferedTabObject().text("&aTeam B").slot(44));
+                    elements.add(new BufferedTabObject().text("&aPlayer B").slot(44));
                     elements.add(new BufferedTabObject().text(tabManager.getMainColor() + match2.getTeamPlayerA().getUsername()).slot(5));
                     elements.add(new BufferedTabObject().text(tabManager.getSecondaryColor() + "Duration:").slot(24));
                     elements.add(new BufferedTabObject().text(tabManager.getSecondaryColor() + match2.getDuration()).slot(25));

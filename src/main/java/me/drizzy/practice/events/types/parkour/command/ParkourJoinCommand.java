@@ -1,5 +1,6 @@
 package me.drizzy.practice.events.types.parkour.command;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.parkour.Parkour;
 import me.drizzy.practice.events.types.parkour.ParkourState;
 import me.drizzy.practice.util.command.command.CommandMeta;
@@ -16,21 +17,20 @@ public class ParkourJoinCommand {
 		Parkour activeParkour = Array.getInstance().getParkourManager().getActiveParkour();
 
 		if (profile.isBusy() || profile.getParty() != null) {
-			player.sendMessage(CC.RED + "You cannot join the parkour right now.");
+			player.sendMessage(Locale.EVENT_NOTABLE_JOIN.toString());
 			return;
 		}
 
 		if (activeParkour == null) {
-			player.sendMessage(CC.RED + "There isn't any active Parkour Events right now.");
+			player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "Parkour"));
 			return;
 		}
 
 		if (activeParkour.getState() != ParkourState.WAITING) {
-			player.sendMessage(CC.RED + "This Parkour Event is currently on-going and cannot be joined.");
+			player.sendMessage(Locale.EVENT_ALREADY_STARED.toString().replace("<event>", "Parkour"));
 			return;
 		}
-
-		Array.getInstance().getParkourManager().getActiveParkour().handleJoin(player);
+		activeParkour.handleJoin(player);
 	}
 
 }

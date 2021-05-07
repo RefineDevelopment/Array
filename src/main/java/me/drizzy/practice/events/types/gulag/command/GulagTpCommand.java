@@ -10,7 +10,7 @@ public class GulagTpCommand {
 
 	public void execute(Player player) {
 		player.teleport(Array.getInstance().getGulagManager().getGulagSpectator());
-		player.sendMessage(CC.GREEN + "Teleported to gulag's spawn location.");
+		player.sendMessage(CC.translate("&8[&c&lArray&8] &7Teleported to &cGulag's &7spawn location."));
 	}
 
 }

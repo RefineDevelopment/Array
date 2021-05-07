@@ -29,13 +29,15 @@ public class Brackets {
 
 	@Getter @Setter private static boolean enabled = true;
 	protected static String EVENT_PREFIX = Locale.EVENT_PREFIX.toString().replace("<event_name>", "Brackets");
-    private static BasicConfigurationFile config = Array.getInstance().getScoreboardConfig();
+	private static BasicConfigurationFile config = Array.getInstance().getScoreboardConfig();
 
+	private static Array plugin = Array.getInstance();
+	
 	private final LinkedHashMap<UUID, BracketsPlayer> eventPlayers = new LinkedHashMap<>();
 	private final List<UUID> spectators = new ArrayList<>();
 	private final List<Location> placedBlocks = new ArrayList<>();
 	private final List<Entity> entities = new ArrayList<>();
-
+	
 	private final String name;
 	private final PlayerSnapshot host;
 	private Kit kit;
@@ -49,7 +51,6 @@ public class Brackets {
 	private int totalPlayers;
 	private long roundStart;
 
-
 	public Brackets(Player player, Kit kit) {
 		this.name = player.getName();
 		this.host = new PlayerSnapshot(player.getUniqueId(), player.getName());
@@ -60,7 +61,7 @@ public class Brackets {
 	public List<String> getLore() {
 		List<String> toReturn = new ArrayList<>();
 
-		Brackets brackets = Array.getInstance().getBracketsManager().getActiveBrackets();
+		Brackets brackets = plugin.getBracketsManager().getActiveBrackets();
 
 		toReturn.add(CC.MENU_BAR);
 		if (brackets.isWaiting()) {
@@ -120,7 +121,7 @@ public class Brackets {
 		eventTask = task;
 
 		if (eventTask != null) {
-			eventTask.runTaskTimer(Array.getInstance(), 0L, 20L);
+			eventTask.runTaskTimer(plugin, 0L, 20L);
 		}
 	}
 
@@ -188,7 +189,7 @@ public class Brackets {
 		profile.setBrackets(this);
 		profile.setState(ProfileState.IN_EVENT);
 		profile.refreshHotbar();
-		player.teleport(Array.getInstance().getBracketsManager().getBracketsSpectator());
+		player.teleport(plugin.getBracketsManager().getBracketsSpectator());
 
 		new BukkitRunnable() {
 			@Override
@@ -197,10 +198,10 @@ public class Brackets {
 					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
 					otherProfile.handleVisibility(otherPlayer, player);
 					profile.handleVisibility(player, otherPlayer);
-					NameTags.color(player, otherPlayer, Array.getInstance().getEssentials().getNametagMeta().getEventColor(), getKit().getGameRules().isShowHealth() || getKit().getGameRules().isBuild());
+					NameTags.color(player, otherPlayer, plugin.getEssentials().getNametagMeta().getEventColor(), getKit().getGameRules().isShowHealth() || getKit().getGameRules().isBuild());
 				}
 			}
-		}.runTaskAsynchronously(Array.getInstance());
+		}.runTaskAsynchronously(plugin);
 	}
 
 	public void handleLeave(Player player) {
@@ -234,7 +235,7 @@ public class Brackets {
 					NameTags.reset(player, otherPlayer);
 				}
 			}
-		}.runTaskAsynchronously(Array.getInstance());
+		}.runTaskAsynchronously(plugin);
 
 		profile.setState(ProfileState.IN_LOBBY);
 		profile.setBrackets(null);
@@ -254,8 +255,8 @@ public class Brackets {
 	}
 
 	public void end() {
-		Array.getInstance().getBracketsManager().setActiveBrackets(null);
-		Array.getInstance().getBracketsManager().setCooldown(new Cooldown(60_000L * 10));
+		plugin.getBracketsManager().setActiveBrackets(null);
+		plugin.getBracketsManager().setCooldown(new Cooldown(60_000L * 10));
 
 		setEventTask(null);
 
@@ -335,10 +336,10 @@ public class Brackets {
 	}
 
 	public void onJoin(Player player) {
-		TaskUtil.runAsync(() -> Array.getInstance().getNMSManager().getKnockbackType().applyKnockback(player, Array.getInstance().getBracketsManager().getBracketsKnockbackProfile()));
+		plugin.getNMSManager().getKnockbackType().applyKnockback(player, plugin.getBracketsManager().getBracketsKnockbackProfile());
 	}
 	public void onLeave(Player player) {
-		Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
+		plugin.getNMSManager().getKnockbackType().applyDefaultKnockback(player);
 	}
 
 	public void onRound() {
@@ -348,7 +349,7 @@ public class Brackets {
 			Player player = roundPlayerA.getPlayer();
 
 			if (player != null) {
-				player.teleport(Array.getInstance().getBracketsManager().getBracketsSpectator());
+				player.teleport(plugin.getBracketsManager().getBracketsSpectator());
 
 				Profile profile = Profile.getByUuid(player.getUniqueId());
 
@@ -364,7 +365,7 @@ public class Brackets {
 			Player player = roundPlayerB.getPlayer();
 
 			if (player != null) {
-				player.teleport(Array.getInstance().getBracketsManager().getBracketsSpectator());
+				player.teleport(plugin.getBracketsManager().getBracketsSpectator());
 
 				Profile profile = Profile.getByUuid(player.getUniqueId());
 
@@ -385,13 +386,12 @@ public class Brackets {
 		PlayerUtil.reset(playerA);
 		PlayerUtil.reset(playerB);
 
-		playerA.teleport(Array.getInstance().getBracketsManager().getBracketsSpawn1());
-		playerA.getInventory().setContents(getKit().getKitInventory().getContents());
-		playerA.getInventory().setArmorContents(getKit().getKitInventory().getArmor());
+		playerA.teleport(plugin.getBracketsManager().getBracketsSpawn1());
+		TaskUtil.runLater(() -> Profile.getByUuid(playerA.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> playerA.getInventory().setItem(integer, itemStack)), 10L);
 
-		playerB.teleport(Array.getInstance().getBracketsManager().getBracketsSpawn2());
-		playerB.getInventory().setContents(getKit().getKitInventory().getContents());
-		playerB.getInventory().setArmorContents(getKit().getKitInventory().getArmor());
+
+		playerB.teleport(plugin.getBracketsManager().getBracketsSpawn2());
+		TaskUtil.runLater(() -> Profile.getByUuid(playerB.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> playerB.getInventory().setItem(integer, itemStack)), 10L);
 
 		setEventTask(new BracketsRoundStartTask(this));
 	}
@@ -413,12 +413,13 @@ public class Brackets {
 	}
 
 	public String getRoundDuration() {
-		if (getState() == BracketsState.ROUND_STARTING) {
-			return "00:00";
-		} else if (getState() == BracketsState.ROUND_FIGHTING) {
-			return TimeUtil.millisToTimer(System.currentTimeMillis() - roundStart);
-		} else {
-			return "Ending";
+		switch (getState()) {
+			case ROUND_STARTING:
+				return "00:00";
+			case ROUND_FIGHTING:
+				return TimeUtil.millisToTimer(System.currentTimeMillis() - roundStart);
+			default:
+				return "Ending";
 		}
 	}
 
@@ -427,7 +428,7 @@ public class Brackets {
 	}
 
 	public int getMaxBuildHeight() {
-		int highest = (int) (Math.max(Array.getInstance().getBracketsManager().getBracketsSpawn1().getY(), Array.getInstance().getBracketsManager().getBracketsSpawn2().getY()));
+		int highest = (int) (Math.max(plugin.getBracketsManager().getBracketsSpawn1().getY(), plugin.getBracketsManager().getBracketsSpawn2().getY()));
 		return highest + 5;
 	}
 
@@ -464,20 +465,17 @@ public class Brackets {
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setBrackets(this);
-		PlayerUtil.spectator(player);
 		profile.setState(ProfileState.SPECTATING);
 		profile.refreshHotbar();
 		profile.handleVisibility();
-		PlayerUtil.spectator(player);
 
-		player.teleport(Array.getInstance().getBracketsManager().getBracketsSpectator());
+		player.teleport(plugin.getBracketsManager().getBracketsSpectator());
 	}
 
 	public void removeSpectator(Player player) {
 		spectators.remove(player.getUniqueId());
 		eventPlayers.remove(player.getUniqueId());
 
-		PlayerUtil.reset(player);
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setBrackets(null);
 		profile.setState(ProfileState.IN_LOBBY);

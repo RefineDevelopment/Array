@@ -1,5 +1,6 @@
 package me.drizzy.practice.events.types.brackets.command;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.events.types.brackets.Brackets;
 import me.drizzy.practice.events.types.brackets.BracketsState;
@@ -16,17 +17,17 @@ public class BracketsJoinCommand {
 		Brackets activeBrackets = Array.getInstance().getBracketsManager().getActiveBrackets();
 
 		if (profile.isBusy() || profile.getParty() != null) {
-			player.sendMessage(CC.RED + "You cannot join the brackets right now.");
+			player.sendMessage(Locale.EVENT_NOTABLE_JOIN.toString());
 			return;
 		}
 
 		if (activeBrackets == null) {
-			player.sendMessage(CC.RED + "There isn't any active Brackets Events right now.");
+			player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "Brackets"));
 			return;
 		}
 
 		if (activeBrackets.getState() != BracketsState.WAITING) {
-			player.sendMessage(CC.RED + "This Brackets Event is currently on-going and cannot be joined.");
+			player.sendMessage(Locale.EVENT_ALREADY_STARED.toString().replace("<event>", "Brackets"));
 			return;
 		}
 

@@ -18,7 +18,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class DuelSelectArenaMenu extends PaginatedMenu {
 
-    String type;
+    public String type;
 
     @Override
     public String getPrePaginatedTitle(Player player) {

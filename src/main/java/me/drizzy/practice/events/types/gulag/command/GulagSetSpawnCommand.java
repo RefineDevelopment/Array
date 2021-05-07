@@ -13,7 +13,7 @@ public class GulagSetSpawnCommand {
 	public void execute(Player player, @CPL("[one|two|spec]") String position) {
 		GulagManager gulag = Array.getInstance().getGulagManager();
 		if (!(position.equals("one") || position.equals("two") || position.equals("spec"))) {
-			player.sendMessage(CC.RED + "The position must be one/two/spec.");
+			player.sendMessage(CC.translate("&7The position must be &cone&7/&ctwo&7/&cspec&7."));
 		} else {
 			if (position.equals("one")) {
 				gulag.setGulagSpawn1(player.getLocation());
@@ -23,8 +23,7 @@ public class GulagSetSpawnCommand {
 				gulag.setGulagSpectator(player.getLocation());
 			}
 
-			player.sendMessage(CC.GREEN + "Updated gulag's spawn location " + position + ".");
-
+			player.sendMessage(CC.translate("&7Updated &cGulag's &7spawn location &c" + position + "&7."));
 			gulag.save();
 		}
 	}

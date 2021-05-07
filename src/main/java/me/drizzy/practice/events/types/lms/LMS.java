@@ -3,6 +3,7 @@ package me.drizzy.practice.events.types.lms;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.lms.player.LMSPlayer;
 import me.drizzy.practice.events.types.lms.player.LMSPlayerState;
 import me.drizzy.practice.events.types.lms.task.LMSRoundEndTask;
@@ -10,6 +11,7 @@ import me.drizzy.practice.events.types.lms.task.LMSRoundStartTask;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
+import me.drizzy.practice.util.config.BasicConfigurationFile;
 import me.drizzy.practice.util.location.Circle;
 import me.drizzy.practice.util.other.*;
 import me.drizzy.practice.util.chat.CC;
@@ -29,56 +31,80 @@ import java.util.UUID;
 @Setter
 public class LMS {
 
-    protected static String EVENT_PREFIX =CC.translate("&8[&cLMS&8] &r");
-    private Kit kit;
-    private final String name;
-    private LMSState state = LMSState.WAITING;
-    private LMSTask eventTask;
-    private final PlayerSnapshot host;
+    @Getter @Setter private static boolean enabled = true;
+    protected static String EVENT_PREFIX = Locale.EVENT_PREFIX.toString().replace("<event_name>", "LMS");
+    private static BasicConfigurationFile config = Array.getInstance().getScoreboardConfig();
+
+    private static Array plugin = Array.getInstance();
+
     private final LinkedHashMap<UUID, LMSPlayer> eventPlayers = new LinkedHashMap<>();
-    @Getter private final List<UUID> spectators = new ArrayList<>();
+    private final List<UUID> spectators = new ArrayList<>();
     private final List<Location> placedBlocks = new ArrayList<>();
+
+    private final String name;
+    private final PlayerSnapshot host;
+    private Kit kit;
+    private Cooldown cooldown;
+    private LMSTask eventTask;
+    private LMSState state = LMSState.WAITING;
+
     @Getter @Setter public static int maxPlayers;
     private int totalPlayers;
-    private Cooldown cooldown;
     private long roundStart;
-    @Getter @Setter private static boolean enabled = true;
-
 
     public LMS(Player player, Kit kit) {
         this.name = player.getName();
         this.host = new PlayerSnapshot(player.getUniqueId(), player.getName());
-        maxPlayers = 100;
         this.kit = kit;
+        maxPlayers = 100;
     }
 
     public List<String> getLore() {
         List<String> toReturn=new ArrayList<>();
 
-        LMS LMS = Array.getInstance().getLMSManager().getActiveLMS();
+        LMS lms = plugin.getLMSManager().getActiveLMS();
 
         toReturn.add(CC.MENU_BAR);
-        toReturn.add(CC.translate("&cHost: &r" + LMS.getName()));
-        toReturn.add(CC.translate("&cKit: &r" + kit.getName()));
+        if (lms.isWaiting()) {
 
-        if (LMS.isWaiting()) {
-            toReturn.add("&cPlayers: &r" + LMS.getEventPlayers().size() + "/" + getMaxPlayers());
-            toReturn.add("");
+            String status;
+            if (lms.getCooldown() == null) {
 
-            if (LMS.getCooldown() == null) {
-                toReturn.add(CC.translate("&fWaiting for players..."));
+                status = CC.translate(config.getString("SCOREBOARD.EVENT.LMS.STATUS_WAITING")
+                        .replace("<lms_host_name>", lms.getName())
+                        .replace("<lms_player_count>", String.valueOf(lms.getEventPlayers().size()))
+                        .replace("<lms_max_players>", String.valueOf(LMS.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
+
             } else {
-                String remaining=TimeUtil.millisToSeconds(LMS.getCooldown().getRemaining());
-
+                String remaining=TimeUtil.millisToSeconds(lms.getCooldown().getRemaining());
                 if (remaining.startsWith("-")) {
                     remaining="0.0";
                 }
+                String finalRemaining = remaining;
 
-                toReturn.add(CC.translate("&fStarting in " + remaining + "s"));
+                status = CC.translate(config.getString("SCOREBOARD.EVENT.LMS.STATUS_COUNTING")
+                        .replace("<lms_host_name>", lms.getName())
+                        .replace("<remaining>", finalRemaining)
+                        .replace("<lms_player_count>", String.valueOf(lms.getEventPlayers().size()))
+                        .replace("<lms_max_players>", String.valueOf(LMS.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
+
             }
+
+            config.getStringList("SCOREBOARD.EVENT.LMS.WAITING").forEach(line -> toReturn.add(CC.translate(line
+                    .replace("<lms_host_name>", lms.getName())
+                    .replace("<status>", status)
+                    .replace("<lms_player_count>", String.valueOf(lms.getEventPlayers().size()))
+                    .replace("<lms_max_players>", String.valueOf(LMS.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
+
         } else {
-            toReturn.add("&cPlayers: &r" + LMS.getRemainingPlayers().size() + "/" + LMS.getTotalPlayers());
-            toReturn.add("&cDuration: &r" + LMS.getRoundDuration());
+
+            config.getStringList("SCOREBOARD.EVENT.LMS.FIGHTING").forEach(line -> toReturn.add(CC.translate(line
+                    .replace("<lms_host_name>", lms.getName())
+                    .replace("<lms_duration>", lms.getRoundDuration())
+                    .replace("<lms_players_alive>", String.valueOf(lms.getRemainingPlayers().size()))
+                    .replace("<lms_player_count>", String.valueOf(lms.getEventPlayers().size()))
+                    .replace("<lms_max_players>", String.valueOf(LMS.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
+
         }
         toReturn.add(CC.MENU_BAR);
 
@@ -93,7 +119,7 @@ public class LMS {
         eventTask = task;
 
         if (eventTask != null) {
-            eventTask.runTaskTimer(Array.getInstance(), 0L, 20L);
+            eventTask.runTaskTimer(plugin, 0L, 20L);
         }
     }
 
@@ -140,14 +166,19 @@ public class LMS {
 
     public void handleJoin(Player player) {
         if (this.eventPlayers.size() >= maxPlayers) {
-            player.sendMessage(CC.RED + "The events is full");
+            player.sendMessage(Locale.EVENT_FULL.toString());
             return;
         }
 
         eventPlayers.put(player.getUniqueId(), new LMSPlayer(player));
 
-        broadcastMessage(CC.RED + player.getName() + CC.GRAY + " has joined the &cLMS Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-        player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &cLMS Event&8!"));
+        broadcastMessage(Locale.EVENT_JOIN.toString()
+                .replace("<event_name>", "LMS")
+                .replace("<joined>", player.getName())
+                .replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
+                .replace("<event_max_players>", String.valueOf(getMaxPlayers())));
+
+        player.sendMessage(Locale.EVENT_PLAYER_JOIN.toString().replace("<event_name>", "LMS"));
         onJoin(player);
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -155,7 +186,7 @@ public class LMS {
         profile.setState(ProfileState.IN_EVENT);
         profile.refreshHotbar();
 
-        player.teleport(Array.getInstance().getLMSManager().getLmsSpectator());
+        player.teleport(plugin.getLMSManager().getLmsSpawn());
 
         new BukkitRunnable() {
             @Override
@@ -164,10 +195,10 @@ public class LMS {
                     Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
                     otherProfile.handleVisibility(otherPlayer, player);
                     profile.handleVisibility(player, otherPlayer);
-                    NameTags.color(player, otherPlayer, Array.getInstance().getEssentials().getNametagMeta().getEventColor(), getKit().getGameRules().isShowHealth() || getKit().getGameRules().isBuild());
+                    NameTags.color(player, otherPlayer, plugin.getEssentials().getNametagMeta().getEventColor(), getKit().getGameRules().isShowHealth() || getKit().getGameRules().isBuild());
                 }
             }
-        }.runTaskAsynchronously(Array.getInstance());
+        }.runTaskAsynchronously(plugin);
     }
 
     public void handleLeave(Player player) {
@@ -180,9 +211,13 @@ public class LMS {
         eventPlayers.remove(player.getUniqueId());
 
         if (state == LMSState.WAITING) {
-            broadcastMessage(CC.RED + player.getName() + CC.GRAY + " left the &cLMS Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-            player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &cLMS Event&8!"));
+            broadcastMessage(Locale.EVENT_LEAVE.toString()
+                    .replace("<event_name>", "LMS")
+                    .replace("<left>", player.getName())
+                    .replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
+                    .replace("<event_max_players>", String.valueOf(getMaxPlayers())));
         }
+        player.sendMessage(Locale.EVENT_PLAYER_LEAVE.toString().replace("<event_name>", "LMS"));
 
         onLeave(player);
 
@@ -198,7 +233,7 @@ public class LMS {
                     NameTags.reset(player, otherPlayer);
                 }
             }
-        }.runTaskAsynchronously(Array.getInstance());
+        }.runTaskAsynchronously(plugin);
 
         profile.setState(ProfileState.IN_LOBBY);
         profile.setLms(null);
@@ -218,28 +253,32 @@ public class LMS {
     }
 
     public int getMaxBuildHeight() {
-        int highest = (int) Array.getInstance().getLMSManager().getLmsSpectator().getY();
+        int highest = (int) plugin.getLMSManager().getLmsSpawn().getY();
         return highest + 5;
     }
 
     public void end() {
-        Array.getInstance().getLMSManager().setActiveLMS(null);
-        Array.getInstance().getLMSManager().setCooldown(new Cooldown(60_000L * 10));
+        plugin.getLMSManager().setActiveLMS(null);
+        plugin.getLMSManager().setCooldown(new Cooldown(60_000L * 10));
 
         setEventTask(null);
 
         Player winner = this.getWinner();
 
         if (winner == null) {
-            Bukkit.broadcastMessage(CC.GRAY + "");
-            Bukkit.broadcastMessage(EVENT_PREFIX + CC.RED + "The LMS events has been canceled.");
-            Bukkit.broadcastMessage(CC.GRAY + "");
+            Bukkit.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", "LMS"));
         } else {
-            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "LMS Event" + CC.GRAY + "!");
-            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "LMS Event" + CC.GRAY + "!");
-            Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "LMS Event" + CC.GRAY + "!");
+            String win = Locale.EVENT_WON.toString().replace("<winner_name>", winner.getName())
+                    .replace("<event_name>", "LMS")
+                    .replace("<event_prefix>", EVENT_PREFIX);
+
+            Bukkit.broadcastMessage(win);
+            Bukkit.broadcastMessage(win);
+            Bukkit.broadcastMessage(win);
         }
+        
         placedBlocks.forEach(location -> location.getBlock().setType(Material.AIR));
+        
         for (LMSPlayer LMSPlayer : eventPlayers.values()) {
             Player player = LMSPlayer.getPlayer();
 
@@ -282,18 +321,14 @@ public class LMS {
     }
 
     public void announce() {
-        List<String> strings=new ArrayList<>();
-        strings.add(CC.translate(" "));
-        strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
-        strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&c&l[LMS Event]"));
-        strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + ""));
-        strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&fA &cLMS &fevent is being hosted by &c" + this.host.getUsername()));
-        strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
-        strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
-        strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
-        strings.add(CC.translate(" "));
-        for ( String string : strings ) {
-            Clickable message = new Clickable(string, "Click to join LMS events", "/lms join");
+        for ( String string : Locale.EVENT_ANNOUNCE.toList() ) {
+            String main = string
+                    .replace("<event_name>", "LMS")
+                    .replace("<event_host>", this.getHost().getUsername())
+                    .replace("<event_prefix>", EVENT_PREFIX);
+
+            Clickable message = new Clickable(main, Locale.EVENT_HOVER.toString().replace("<event_name>", "LMS"), "/lms join");
+
             for ( Player player : Bukkit.getOnlinePlayers() ) {
                 if (!eventPlayers.containsKey(player.getUniqueId())) {
                     message.sendToPlayer(player);
@@ -309,27 +344,33 @@ public class LMS {
     }
 
     public void onJoin(Player player) {
-        Profile.setKb(player, Array.getInstance().getLMSManager().getLmsKnockbackProfile());
+        plugin.getNMSManager().getKnockbackType().applyKnockback(player, plugin.getLMSManager().getLmsKnockbackProfile());
     }
     public void onLeave(Player player) {
-        Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
+        plugin.getNMSManager().getKnockbackType().applyDefaultKnockback(player);
     }
 
     public void onRound() {
         setState(LMSState.ROUND_STARTING);
 
-        int i=0;
+        int i = 0;
         for (Player player : this.getRemainingPlayers()) {
-                Location midSpawn = Array.getInstance().getLMSManager().getLmsSpectator();
-                List<Location> circleLocations = Circle.getCircle(midSpawn, Array.getInstance().getEssentials().getMeta().getFfaSpawnRadius(), this.getPlayers().size());
-                Location center = midSpawn.clone();
-                Location loc = circleLocations.get(i);
-                Location target = loc.setDirection(center.subtract(loc).toVector());
-                player.teleport(target.add(0, 0.5, 0));
-                circleLocations.remove(i);
-                i++;
-                player.getInventory().setContents(getKit().getKitInventory().getContents());
-                player.getInventory().setArmorContents(getKit().getKitInventory().getArmor());
+
+            Location midSpawn = plugin.getLMSManager().getLmsSpawn();
+
+            List<Location> circleLocations=Circle.getCircle(midSpawn, plugin.getEssentials().getMeta().getFfaSpawnRadius(), this.getPlayers().size());
+
+            Location center = midSpawn.clone();
+            Location loc = circleLocations.get(i);
+            Location target = loc.setDirection(center.subtract(loc).toVector());
+
+            player.teleport(target.add(0, 0.5, 0));
+            circleLocations.remove(i);
+            i++;
+
+            TaskUtil.runLater(() ->
+                    Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) ->
+                            player.getInventory().setItem(integer, itemStack)), 10L);
         }
         setEventTask(new LMSRoundStartTask(this));
     }
@@ -338,7 +379,9 @@ public class LMS {
         Profile profile = Profile.getByUuid(player.getUniqueId());
 
         if (killer != null) {
-            broadcastMessage("&c" + player.getName() + "&7 was eliminated by &c" + killer.getName() + "&7!");
+            broadcastMessage(Locale.EVENT_ELIMINATED.toString()
+                    .replace("<eliminated_name>", player.getName())
+                    .replace("<eliminator_name>", killer.getPlayer().getName()));
         }
 
 
@@ -356,24 +399,18 @@ public class LMS {
                     profile.handleVisibility(player, otherPlayer);
                 }
             }
-        }.runTaskAsynchronously(Array.getInstance());
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-            PlayerUtil.reset(player, false);
+        }.runTaskAsynchronously(plugin);
         profile.refreshHotbar();
-            }
-        }.runTask(Array.getInstance());
     }
 
     public String getRoundDuration() {
-        if (getState() == LMSState.ROUND_STARTING) {
-            return "00:00";
-        } else if (getState() == LMSState.ROUND_FIGHTING) {
-            return TimeUtil.millisToTimer(System.currentTimeMillis() - roundStart);
-        } else {
-            return "Ending";
+        switch (getState()) {
+            case ROUND_STARTING:
+                return "00:00";
+            case ROUND_FIGHTING:
+                return TimeUtil.millisToTimer(System.currentTimeMillis() - roundStart);
+            default:
+                return "Ending";
         }
     }
 
@@ -390,13 +427,10 @@ public class LMS {
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setLms(this);
-        PlayerUtil.spectator(player);
         profile.setState(ProfileState.SPECTATING);
-        player.setFlying(true);
         profile.refreshHotbar();
         profile.handleVisibility();
-
-        player.teleport(Array.getInstance().getLMSManager().getLmsSpectator());
+        player.teleport(plugin.getLMSManager().getLmsSpawn());
     }
 
     public void removeSpectator(Player player) {
@@ -406,10 +440,8 @@ public class LMS {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setLms(null);
         profile.setState(ProfileState.IN_LOBBY);
-        player.setFlying(false);
         profile.refreshHotbar();
         profile.handleVisibility();
-
         profile.teleportToSpawn();
     }
 }

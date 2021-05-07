@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
  */
 @CommandMeta(label = "arena setduplicatespawn", permission = "array.dev")
 public class ArenaSetDuplicateCommand {
+
     public void execute(Player player, @CPL("arena")Arena arena, @CPL("[1|2]") Integer pos, @CPL("Duplicate Arena Number") Integer number) {
         if (arena == null) {
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7An arena with that name does not exist."));

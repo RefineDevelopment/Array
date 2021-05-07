@@ -1,5 +1,6 @@
 package me.drizzy.practice.events.types.parkour.command;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.parkour.Parkour;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.Array;
@@ -15,16 +16,15 @@ public class ParkourLeaveCommand {
 		Parkour activeParkour = Array.getInstance().getParkourManager().getActiveParkour();
 
 		if (activeParkour == null) {
-			player.sendMessage(CC.RED + "There isn't any active Parkour Events.");
+			player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "Parkour"));
 			return;
 		}
 
 		if (!profile.isInParkour() || !activeParkour.getEventPlayers().containsKey(player.getUniqueId())) {
-			player.sendMessage(CC.RED + "You are not apart of the active Parkour Event.");
+			player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "Parkour"));
 			return;
 		}
-
-		Array.getInstance().getParkourManager().getActiveParkour().handleLeave(player);
+		activeParkour.handleLeave(player);
 	}
 
 }

@@ -11,14 +11,16 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.IOException;
 
+@Getter
+@Setter
 public class BracketsManager {
 
-	@Getter private Brackets activeBrackets;
-	@Getter @Setter private Cooldown cooldown = new Cooldown(0);
-	@Getter @Setter private Location bracketsSpectator;
-	@Getter @Setter private Location bracketsSpawn1;
-	@Getter @Setter private Location bracketsSpawn2;
-	@Getter @Setter private String bracketsKnockbackProfile;
+	private Brackets activeBrackets;
+	private Cooldown cooldown = new Cooldown(0);
+	private Location bracketsSpectator;
+	private Location bracketsSpawn1;
+	private Location bracketsSpawn2;
+	private String bracketsKnockbackProfile;
 
 	public BracketsManager() {
 		load();

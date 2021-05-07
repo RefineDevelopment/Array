@@ -21,7 +21,7 @@ import me.drizzy.practice.events.types.oitc.OITCManager;
 import me.drizzy.practice.events.types.parkour.ParkourManager;
 import me.drizzy.practice.events.types.spleef.SpleefManager;
 import me.drizzy.practice.events.types.sumo.SumoManager;
-import me.drizzy.practice.hcf.HCFManager;
+import me.drizzy.practice.managers.HCFManager;
 import me.drizzy.practice.hcf.bard.EffectRestorer;
 import me.drizzy.practice.leaderboards.external.LeaderboardPlaceholders;
 import me.drizzy.practice.hotbar.Hotbar;

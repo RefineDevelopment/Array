@@ -1,5 +1,6 @@
 package me.drizzy.practice.events.types.brackets.task;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.brackets.Brackets;
 import me.drizzy.practice.events.types.brackets.BracketsState;
 import me.drizzy.practice.events.types.brackets.BracketsTask;
@@ -16,7 +17,7 @@ public class BracketsRoundStartTask extends BracketsTask {
 	@Override
 	public void onRun() {
 		if (getTicks() >= 3) {
-			this.getBrackets().broadcastMessage(CC.RED + "The round has started!");
+			this.getBrackets().broadcastMessage(Locale.EVENT_ROUND_STARTED.toString());
 			this.getBrackets().setEventTask(null);
 			this.getBrackets().setState(BracketsState.ROUND_FIGHTING);
 
@@ -45,7 +46,7 @@ public class BracketsRoundStartTask extends BracketsTask {
 				playerB.playSound(playerB.getLocation(), Sound.NOTE_PLING, 1.0F, 1.0F);
 			}
 
-			this.getBrackets().broadcastMessage("&c" + seconds + "...");
+			this.getBrackets().broadcastMessage(Locale.EVENT_START_COUNTDOWN.toString().replace("<seconds>", String.valueOf(seconds)));
 		}
 	}
 

@@ -1,5 +1,6 @@
 package me.drizzy.practice.events.types.gulag.task;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.gulag.Gulag;
 import me.drizzy.practice.events.types.gulag.GulagState;
 import me.drizzy.practice.events.types.gulag.GulagTask;
@@ -20,13 +21,13 @@ public class GulagStartTask extends GulagTask {
 
 		if (this.getGulag().getPlayers().size() <= 1 && this.getGulag().getCooldown() != null) {
 			this.getGulag().setCooldown(null);
-			this.getGulag().broadcastMessage("&cThere are not enough players for the brackets to start.");
+			this.getGulag().broadcastMessage(Locale.EVENT_NOT_ENOUGH_PLAYERS.toString().replace("<event_name>", "Gulag"));
 		}
 
 		if (this.getGulag().getPlayers().size() == Gulag.getMaxPlayers() || (getTicks() >= 30 && this.getGulag().getPlayers().size() >= 2)) {
 			if (this.getGulag().getCooldown() == null) {
 				this.getGulag().setCooldown(new Cooldown(11_000));
-				this.getGulag().broadcastMessage("&fThe Gulag will start in &c10 seconds&f...");
+				this.getGulag().broadcastMessage(Locale.EVENT_STARTING.toString().replace("<event_name>", "Gulag"));
 			} else {
 				if (this.getGulag().getCooldown().hasExpired()) {
 					this.getGulag().setState(GulagState.ROUND_STARTING);

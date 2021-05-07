@@ -1,5 +1,6 @@
 package me.drizzy.practice.events.types.brackets;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.arena.impl.TheBridgeArena;
 import me.drizzy.practice.hotbar.Hotbar;
@@ -68,7 +69,7 @@ public class BracketsListener implements Listener {
 					if (!profile.getEnderpearlCooldown().hasExpired()) {
 						String time = TimeUtil.millisToSeconds(profile.getEnderpearlCooldown().getRemaining());
 						String context = "second" + (time.equalsIgnoreCase("1.0") ? "" : "s");
-						shooter.sendMessage(CC.RED + "You are on pearl cooldown for " + time + " " + context);
+						shooter.sendMessage(Locale.MATCH_PEARL_COOLDOWN.toString().replace("<cooldown>", time + " " + context));
 						shooter.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 1));
 						event.setCancelled(true);
 					} else {
@@ -183,15 +184,15 @@ public class BracketsListener implements Listener {
 				}
 
 				if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
-					String displayName = ChatColor.stripColor(event.getItem().getItemMeta().getDisplayName());
-
-					if (displayName.startsWith("Kit: ")) {
-						String kitName = displayName.replace("Kit: ", "");
-
-						for ( KitInventory kitInventory : profile.getStatisticsData().get(profile.getBrackets().getKit()).getLoadouts()) {
-							if (kitInventory != null && ChatColor.stripColor(kitInventory.getCustomName()).equals(kitName)) {
-								event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
-								event.getPlayer().getInventory().setContents(kitInventory.getContents());
+					final String displayName = CC.translate(event.getItem().getItemMeta().getDisplayName());
+					if (displayName.endsWith(" (Right-Click)")) {
+						final String kitName = displayName.replace(" (Right-Click)", "");
+						for ( final KitInventory kitInventory2 : profile.getStatisticsData().get(profile.getMatch().getKit()).getLoadouts() ) {
+							if (kitInventory2 != null && ChatColor.stripColor(kitInventory2.getCustomName()).equals(ChatColor.stripColor(kitName))) {
+								event.getPlayer().getInventory().setArmorContents(kitInventory2.getArmor());
+								event.getPlayer().getInventory().setContents(kitInventory2.getContents());
+								event.getPlayer().getActivePotionEffects().clear();
+								event.getPlayer().addPotionEffects(profile.getMatch().getKit().getKitInventory().getEffects());
 								event.getPlayer().updateInventory();
 								event.setCancelled(true);
 								return;

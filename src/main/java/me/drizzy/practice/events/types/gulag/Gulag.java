@@ -2,6 +2,7 @@ package me.drizzy.practice.events.types.gulag;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.events.types.gulag.player.GulagPlayer;
@@ -13,6 +14,7 @@ import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.chat.CC;
+import me.drizzy.practice.util.config.BasicConfigurationFile;
 import me.drizzy.practice.util.other.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -25,61 +27,87 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
+@Setter
 public class Gulag {
 
-	protected static String EVENT_PREFIX=CC.translate("&8[&cGulag&8] &r");
+	@Getter	@Setter	private static boolean enabled = true;
+	protected static String EVENT_PREFIX = Locale.EVENT_PREFIX.toString().replace("<event_name>", "Gulag");
+	private static BasicConfigurationFile config = Array.getInstance().getScoreboardConfig();
+
+	private static Array plugin = Array.getInstance();
+	
+	private final LinkedHashMap<UUID, GulagPlayer> eventPlayers = new LinkedHashMap<>();
+	private final List<UUID> spectators = new ArrayList<>();
+	private final List<Entity> entities = new ArrayList<>();
 
 	private final String name;
-	@Setter private GulagState state=GulagState.WAITING;
-	private GulagTask eventTask;
 	private final PlayerSnapshot host;
-	private final LinkedHashMap<UUID, GulagPlayer> eventPlayers=new LinkedHashMap<>();
-	@Getter private final List<UUID> spectators=new ArrayList<>();
-	@Getter @Setter	public static int maxPlayers;
-	@Getter	@Setter	private int totalPlayers;
-	@Setter	private Cooldown cooldown;
-	private final List<Entity> entities=new ArrayList<>();
+	private Cooldown cooldown;
 	private GulagPlayer roundPlayerA;
 	private GulagPlayer roundPlayerB;
-	@Setter	private long roundStart;
-	@Getter	@Setter	private static boolean enabled = true;
+	private GulagTask eventTask;
+	private GulagState state = GulagState.WAITING;
+
+	@Getter @Setter public static int maxPlayers;
+	private long roundStart;
+	private int totalPlayers;
 
 
 	public Gulag(Player player) {
 		this.name = player.getName();
 		this.host = new PlayerSnapshot(player.getUniqueId(), player.getName());
 		maxPlayers = 100;
-
 	}
+
 	public List<String> getLore() {
 		List<String> toReturn = new ArrayList<>();
 
-		Gulag gulag= Array.getInstance().getGulagManager().getActiveGulag();
+		Gulag gulag = plugin.getGulagManager().getActiveGulag();
 
 		toReturn.add(CC.MENU_BAR);
-		toReturn.add(CC.translate("&cHost: &r" + gulag.getName()));
 		if (gulag.isWaiting()) {
-			toReturn.add("&cPlayers: &r" + gulag.getEventPlayers().size() + "/" + Gulag.getMaxPlayers());
-			toReturn.add("");
 
+			String status;
 			if (gulag.getCooldown() == null) {
-				toReturn.add(CC.translate("&fWaiting for players..."));
+
+				status = CC.translate(config.getString("SCOREBOARD.EVENT.GULAG.STATUS_WAITING")
+						.replace("<gulag_host_name>", gulag.getName())
+						.replace("<gulag_player_count>", String.valueOf(gulag.getEventPlayers().size()))
+						.replace("<gulag_max_players>", String.valueOf(Gulag.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
+
 			} else {
-				String remaining = TimeUtil.millisToSeconds(gulag.getCooldown().getRemaining());
-
+				String remaining=TimeUtil.millisToSeconds(gulag.getCooldown().getRemaining());
 				if (remaining.startsWith("-")) {
-					remaining = "0.0";
+					remaining="0.0";
 				}
+				String finalRemaining = remaining;
 
-				toReturn.add(CC.translate("&fStarting in " + remaining + "s"));
+				status = CC.translate(config.getString("SCOREBOARD.EVENT.GULAG.STATUS_COUNTING")
+						.replace("<gulag_host_name>", gulag.getName())
+						.replace("<remaining>", finalRemaining)
+						.replace("<gulag_player_count>", String.valueOf(gulag.getEventPlayers().size()))
+						.replace("<gulag_max_players>", String.valueOf(Gulag.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
+
 			}
+
+			config.getStringList("SCOREBOARD.EVENT.GULAG.WAITING").forEach(line -> toReturn.add(CC.translate(line
+					.replace("<gulag_host_name>", gulag.getName())
+					.replace("<status>", status)
+					.replace("<gulag_player_count>", String.valueOf(gulag.getEventPlayers().size()))
+					.replace("<gulag_max_players>", String.valueOf(Gulag.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
+
 		} else {
-			toReturn.add("&cPlayers: &r" + gulag.getRemainingPlayers().size() + "/" + gulag.getTotalPlayers());
-			toReturn.add("&cDuration: &r" + gulag.getRoundDuration());
-			toReturn.add("");
-			toReturn.add("&a" + gulag.getRoundPlayerA().getUsername());
-			toReturn.add("vs");
-			toReturn.add("&c" + gulag.getRoundPlayerB().getUsername());
+
+			config.getStringList("SCOREBOARD.EVENT.GULAG.FIGHTING").forEach(line -> toReturn.add(CC.translate(line
+					.replace("<gulag_host_name>", gulag.getName())
+					.replace("<gulag_duration>", gulag.getRoundDuration())
+					.replace("<gulag_players_alive>", String.valueOf(gulag.getRemainingPlayers().size()))
+					.replace("<gulag_playerA_name>", gulag.getRoundPlayerA().getUsername())
+					.replace("<gulag_playerA_ping>", String.valueOf(gulag.getRoundPlayerA().getPing()))
+					.replace("<gulag_playerB_name>", gulag.getRoundPlayerB().getUsername())
+					.replace("<gulag_playerB_ping>", String.valueOf(gulag.getRoundPlayerB().getPing()))
+					.replace("<gulag_player_count>", String.valueOf(gulag.getEventPlayers().size()))
+					.replace("<gulag_max_players>", String.valueOf(Gulag.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
 		}
 		toReturn.add(CC.MENU_BAR);
 
@@ -94,7 +122,7 @@ public class Gulag {
 		eventTask = task;
 
 		if (eventTask != null) {
-			eventTask.runTaskTimer(Array.getInstance(), 0L, 20L);
+			eventTask.runTaskTimer(plugin, 0L, 20L);
 		}
 	}
 
@@ -141,14 +169,19 @@ public class Gulag {
 
 	public void handleJoin(Player player) {
 		if (this.eventPlayers.size() >= maxPlayers) {
-			player.sendMessage(CC.RED + "The events is full");
+			player.sendMessage(Locale.EVENT_FULL.toString());
 			return;
 		}
 
 		eventPlayers.put(player.getUniqueId(), new GulagPlayer(player));
 
-		broadcastMessage(CC.RED + player.getName() + CC.GRAY + " has joined the &cGulag Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-		player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &cGulag Event&8!"));
+		broadcastMessage(Locale.EVENT_JOIN.toString()
+				.replace("<event_name>", "Gulag")
+				.replace("<joined>", player.getName())
+				.replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
+				.replace("<event_max_players>", String.valueOf(getMaxPlayers())));
+
+		player.sendMessage(Locale.EVENT_PLAYER_JOIN.toString().replace("<event_name>", "Gulag"));
 
 		onJoin(player);
 
@@ -157,7 +190,7 @@ public class Gulag {
 		profile.setState(ProfileState.IN_EVENT);
 		profile.refreshHotbar();
 
-		player.teleport(Array.getInstance().getGulagManager().getGulagSpectator());
+		player.teleport(plugin.getGulagManager().getGulagSpectator());
 
 		new BukkitRunnable() {
 			@Override
@@ -166,10 +199,10 @@ public class Gulag {
 					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
 					otherProfile.handleVisibility(otherPlayer, player);
 					profile.handleVisibility(player, otherPlayer);
-					NameTags.color(player, otherPlayer, Array.getInstance().getEssentials().getNametagMeta().getEventColor(), false);
+					NameTags.color(player, otherPlayer, plugin.getEssentials().getNametagMeta().getEventColor(), false);
 				}
 			}
-		}.runTaskAsynchronously(Array.getInstance());
+		}.runTaskAsynchronously(plugin);
 	}
 
 	public void handleLeave(Player player) {
@@ -180,9 +213,13 @@ public class Gulag {
 		eventPlayers.remove(player.getUniqueId());
 
 		if (state == GulagState.WAITING) {
-			broadcastMessage(CC.RED + player.getName() + CC.GRAY + " left the &cGulag Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-			player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &cGulag Event&8!"));
+			broadcastMessage(Locale.EVENT_LEAVE.toString()
+					.replace("<event_name>", "Gulag")
+					.replace("<left>", player.getName())
+					.replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
+					.replace("<event_max_players>", String.valueOf(getMaxPlayers())));
 		}
+		player.sendMessage(Locale.EVENT_PLAYER_LEAVE.toString().replace("<event_name>", "Gulag"));
 
 		onLeave(player);
 
@@ -198,7 +235,7 @@ public class Gulag {
 					NameTags.reset(player, otherPlayer);
 				}
 			}
-		}.runTaskAsynchronously(Array.getInstance());
+		}.runTaskAsynchronously(plugin);
 
 		profile.setState(ProfileState.IN_LOBBY);
 		profile.setGulag(null);
@@ -218,19 +255,23 @@ public class Gulag {
 	}
 
 	public void end() {
-		Array.getInstance().getGulagManager().setActiveGulag(null);
-		Array.getInstance().getGulagManager().setCooldown(new Cooldown(60_000L * 10));
+		plugin.getGulagManager().setActiveGulag(null);
+		plugin.getGulagManager().setCooldown(new Cooldown(60_000L * 10));
 
 		setEventTask(null);
 
 		Player winner = this.getWinner();
 
 		if (winner == null) {
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.RED + "The Gulag events has been canceled.");
+			Bukkit.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", "Gulag"));
 		} else {
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Gulag Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Gulag Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Gulag Event" + CC.GRAY + "!");
+			String win = Locale.EVENT_WON.toString().replace("<winner_name>", winner.getName())
+					.replace("<event_name>", "Gulag")
+					.replace("<event_prefix>", EVENT_PREFIX);
+
+			Bukkit.broadcastMessage(win);
+			Bukkit.broadcastMessage(win);
+			Bukkit.broadcastMessage(win);
 		}
 
 		for ( GulagPlayer gulagPlayer : eventPlayers.values()) {
@@ -241,7 +282,6 @@ public class Gulag {
 				profile.setState(ProfileState.IN_LOBBY);
 				profile.setGulag(null);
 				profile.refreshHotbar();
-
 				profile.teleportToSpawn();
 			}
 		}
@@ -276,18 +316,14 @@ public class Gulag {
 	}
 
 	public void announce() {
-		List<String> strings=new ArrayList<>();
-		strings.add(CC.translate(" "));
-		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
-		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&c&l[Gulag Event]"));
-		strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + ""));
-		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&fA &cGulag &fevent is being hosted by &c" + this.host.getUsername()));
-		strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
-		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
-		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
-		strings.add(CC.translate(" "));
-		for ( String string : strings ) {
-			Clickable message = new Clickable(string, "Click to join Gulag events", "/gulag join");
+		for ( String string : Locale.EVENT_ANNOUNCE.toList() ) {
+			String main = string
+					.replace("<event_name>", "Gulag")
+					.replace("<event_host>", this.getHost().getUsername())
+					.replace("<event_prefix>", EVENT_PREFIX);
+
+			Clickable message = new Clickable(main, Locale.EVENT_HOVER.toString().replace("<event_name>", "Gulag"), "/gulag join");
+
 			for ( Player player : Bukkit.getOnlinePlayers() ) {
 				if (!eventPlayers.containsKey(player.getUniqueId())) {
 					message.sendToPlayer(player);
@@ -303,10 +339,10 @@ public class Gulag {
 	}
 
 	public void onJoin(Player player) {
-		Profile.setKb(player, Array.getInstance().getGulagManager().getGulagKnockbackProfile());
+		plugin.getNMSManager().getKnockbackType().applyKnockback(player, plugin.getGulagManager().getGulagKnockbackProfile());
 	}
 	public void onLeave(Player player) {
-		Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
+		plugin.getNMSManager().getKnockbackType().applyDefaultKnockback(player);
 	}
 
 	public void onRound() {
@@ -316,7 +352,7 @@ public class Gulag {
 			Player player = roundPlayerA.getPlayer();
 
 			if (player != null) {
-				player.teleport(Array.getInstance().getGulagManager().getGulagSpectator());
+				player.teleport(plugin.getGulagManager().getGulagSpectator());
 
 				Profile profile = Profile.getByUuid(player.getUniqueId());
 
@@ -332,7 +368,7 @@ public class Gulag {
 			Player player = roundPlayerB.getPlayer();
 
 			if (player != null) {
-				player.teleport(Array.getInstance().getGulagManager().getGulagSpectator());
+				player.teleport(plugin.getGulagManager().getGulagSpectator());
 
 				Profile profile = Profile.getByUuid(player.getUniqueId());
 
@@ -353,10 +389,12 @@ public class Gulag {
 		PlayerUtil.reset(playerA);
 		PlayerUtil.reset(playerB);
 
-		playerA.teleport(Array.getInstance().getGulagManager().getGulagSpawn1());
+		playerA.teleport(plugin.getGulagManager().getGulagSpawn1());
 		playerA.getInventory().setItem(0, Hotbar.getItems().get(HotbarType.GULAG_GUN));
-		playerB.teleport(Array.getInstance().getGulagManager().getGulagSpawn2());
+
+		playerB.teleport(plugin.getGulagManager().getGulagSpawn2());
 		playerB.getInventory().setItem(0, Hotbar.getItems().get(HotbarType.GULAG_GUN));
+
 		setEventTask(new GulagRoundStartTask(this));
 	}
 
@@ -365,7 +403,10 @@ public class Gulag {
 		winner.setState(GulagPlayerState.WAITING);
 		winner.incrementRoundWins();
 
-		broadcastMessage("&c" + player.getName() + "&7 was eliminated by &c" + winner.getUsername() + "&7!");
+		broadcastMessage(Locale.EVENT_ELIMINATED.toString()
+				.replace("<eliminated_name>", player.getName())
+				.replace("<eliminator_name>", winner.getPlayer().getName()));
+
 		player.setFireTicks(0);
 		winner.getPlayer().hidePlayer(player);
 		setState(GulagState.ROUND_ENDING);
@@ -373,12 +414,13 @@ public class Gulag {
 	}
 
 	public String getRoundDuration() {
-		if (getState() == GulagState.ROUND_STARTING) {
-			return "00:00";
-		} else if (getState() == GulagState.ROUND_FIGHTING) {
-			return TimeUtil.millisToTimer(System.currentTimeMillis() - roundStart);
-		} else {
-			return "Ending";
+		switch (getState()) {
+			case ROUND_STARTING:
+				return "00:00";
+			case ROUND_FIGHTING:
+				return TimeUtil.millisToTimer(System.currentTimeMillis() - roundStart);
+			default:
+				return "Ending";
 		}
 	}
 
@@ -419,25 +461,20 @@ public class Gulag {
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setGulag(this);
-		PlayerUtil.spectator(player);
 		profile.setState(ProfileState.SPECTATING);
-		player.setFlying(true);
 		profile.refreshHotbar();
 		profile.handleVisibility();
-		PlayerUtil.spectator(player);
 
-		player.teleport(Array.getInstance().getGulagManager().getGulagSpawn1());
+		player.teleport(plugin.getGulagManager().getGulagSpawn1());
 	}
 
 	public void removeSpectator(Player player) {
 		spectators.remove(player.getUniqueId());
 		eventPlayers.remove(player.getUniqueId());
 
-        PlayerUtil.reset(player);
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setGulag(null);
 		profile.setState(ProfileState.IN_LOBBY);
-		player.setFlying(false);
 		profile.refreshHotbar();
 		profile.handleVisibility();
 		profile.teleportToSpawn();

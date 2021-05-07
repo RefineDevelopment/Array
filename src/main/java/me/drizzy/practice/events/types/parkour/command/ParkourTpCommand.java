@@ -10,7 +10,7 @@ public class ParkourTpCommand {
 
 	public void execute(Player player) {
 		player.teleport(Array.getInstance().getParkourManager().getParkourSpawn());
-		player.sendMessage(CC.GREEN + "Teleported to parkour's spawn location.");
+		player.sendMessage(CC.translate("&8[&c&lArray&8] &7Teleported to &cParkour's &7spawn location."));
 	}
 
 }

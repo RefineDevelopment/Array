@@ -65,7 +65,7 @@ public class SpectateCommand {
         } else if (targetProfile.isInLMS()) {
             targetProfile.getLms().addSpectator(player);
             PlayerUtil.spectator(player);
-            player.teleport(Array.getInstance().getLMSManager().getLmsSpectator());
+            player.teleport(Array.getInstance().getLMSManager().getLmsSpawn());
         } else if (targetProfile.isInParkour()) {
             targetProfile.getParkour().addSpectator(player);
             PlayerUtil.spectator(player);

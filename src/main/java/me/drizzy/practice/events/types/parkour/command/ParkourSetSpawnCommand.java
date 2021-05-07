@@ -10,9 +10,7 @@ public class ParkourSetSpawnCommand {
 
 	public void execute(Player player) {
 		Array.getInstance().getParkourManager().setParkourSpawn(player.getLocation());
-
-		player.sendMessage(CC.GREEN + "Updated parkour's spawn location.");
-
+		player.sendMessage(CC.translate("&7Updated &cParkour's &7spawn location."));
 		Array.getInstance().getParkourManager().save();
 	}
 

@@ -3,7 +3,7 @@ package me.drizzy.practice.match.types;
 import lombok.Getter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.hcf.HCFManager;
+import me.drizzy.practice.managers.HCFManager;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;

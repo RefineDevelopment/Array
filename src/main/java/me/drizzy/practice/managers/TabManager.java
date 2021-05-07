@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
@@ -20,6 +21,7 @@ public class TabManager {
     public String mainColor;
     public String secondaryColor;
     public String header;
+    public ChatColor dotColor;
     public String legacyHeader;
     public String footer;
 
@@ -37,6 +39,12 @@ public class TabManager {
         setHeader(config.getStringOrDefault(key + "HEADER", "\n&c&lArray Practice\n&7&opurgecommunity.com\n").replace("%splitter%", "┃"));
         setFooter(config.getStringOrDefault(key + "FOOTER", "\n&c&oYou can buy ranks and perks at\n&7<store>\n").replace("<store>", Array.getInstance().getEssentials().getSocialMeta().getStore()).replace("%splitter%", "┃"));
         setLegacyHeader(config.getStringOrDefault(key + "1DOT7_HEADER", mainColor + "&lPractice &7| " + secondaryColor + "&lEU").replace("|", "┃").replace("%splitter%", "┃"));
+        try {
+            setDotColor(ChatColor.valueOf(config.getStringOrDefault(key + "DOT_COLOR", "RED")));
+        } catch (Exception e) {
+            setDotColor(ChatColor.RED);
+            Array.logger("&cInvalid Dot Color setup for Tablist, falling back to default &7(RED)");
+        }
     }
 
     /**
@@ -50,6 +58,7 @@ public class TabManager {
         configuration.set(key + "HEADER", header);
         configuration.set(key + "FOOTER", footer);
         configuration.set(key + "1DOT7_HEADER", legacyHeader);
+        configuration.set(key + "DOT_COLOR", dotColor.name());
     }
 
 

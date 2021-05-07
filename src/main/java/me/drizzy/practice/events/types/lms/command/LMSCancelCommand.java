@@ -15,8 +15,8 @@ public class LMSCancelCommand {
             return;
         }
 
-        Profile.getProfiles().values().stream().filter(Profile::isInLobby).forEach(Profile::refreshHotbar);
-        Profile.getProfiles().values().stream().filter(Profile::isInQueue).forEach(Profile::refreshHotbar);
+        Profile.getProfiles().values().stream().filter(profile -> !profile.getKitEditor().isActive()).filter(Profile::isInLobby).forEach(Profile::refreshHotbar);
+
         Array.getInstance().getLMSManager().getActiveLMS().end();
     }
 

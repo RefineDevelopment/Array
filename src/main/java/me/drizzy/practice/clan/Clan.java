@@ -79,7 +79,7 @@ public class Clan {
      * @param message The message to broadcast
      */
     public void broadcast(String message) {
-        members.stream().map(ClanProfile::getUuid).map(Bukkit::getPlayer).collect(Collectors.toList())
+        members.stream().map(ClanProfile::getUuid).map(Bukkit::getPlayer).filter(Objects::nonNull)
         .forEach(player -> player.sendMessage(CC.translate(message)));
     }
 
@@ -312,10 +312,19 @@ public class Clan {
         });
     }
 
-    //TODO: Complete this
     public void promote(final ClanProfile member) {
+        OfflinePlayer player = Bukkit.getOfflinePlayer(member.getUuid());
+        member.setClanProfileType(ClanProfileType.CAPTAIN);
+        this.members.remove(member);
+        this.captains.add(member);
+        this.saveClan();
+        this.broadcast(CC.translate("&8[&cClan&8] &c" + player.getName() + " &7has been promoted to &c&lCaptain&7!"));
+    }
+
+    public void leader(final ClanProfile member) {
 
     }
+
 
     //TODO: Complete this
     public void demote(final ClanProfile member) {
@@ -379,24 +388,27 @@ public class Clan {
 
         Array.getInstance().getTaskThread().execute(() -> {
             ClanProfile clanProfile = getByUUID(leaver.getUniqueId());
-            if (clanProfile.getClanProfileType().equals(ClanProfileType.MEMBER)) {
-                this.getMembers().remove(clanProfile);
-                this.getAllMembers().remove(getByUUID(leaver.getUniqueId()));
-                profile.setClan(null);
-                profile.save();
-                profile.refreshHotbar();
-                this.saveClan();
-                this.broadcast(CC.RED + leaver.getDisplayName() + CC.GRAY + " has left the clan!");
-            } else if (clanProfile.getClanProfileType().equals(ClanProfileType.LEADER)) {
-                this.getCaptains().remove(clanProfile);
-                this.getAllMembers().remove(getByUUID(leaver.getUniqueId()));
-                profile.setClan(null);
-                profile.save();
-                profile.refreshHotbar();
-                this.saveClan();
-                this.broadcast(CC.RED + leaver.getDisplayName() + CC.GRAY + " has left the clan!");
-            } else if (clanProfile.getClanProfileType().equals(ClanProfileType.LEADER)) {
-                throw new IllegalArgumentException("Leader can not leave the clan!");
+            switch (clanProfile.getClanProfileType()) {
+                case MEMBER:
+                    this.getMembers().remove(clanProfile);
+                    this.getAllMembers().remove(getByUUID(leaver.getUniqueId()));
+                    profile.setClan(null);
+                    profile.save();
+                    profile.refreshHotbar();
+                    this.saveClan();
+                    this.broadcast(CC.RED + leaver.getDisplayName() + CC.GRAY + " has left the clan!");
+                    break;
+                case CAPTAIN:
+                    this.getCaptains().remove(clanProfile);
+                    this.getAllMembers().remove(getByUUID(leaver.getUniqueId()));
+                    profile.setClan(null);
+                    profile.save();
+                    profile.refreshHotbar();
+                    this.saveClan();
+                    this.broadcast(CC.RED + leaver.getDisplayName() + CC.GRAY + " has left the clan!");
+                    break;
+                case LEADER:
+                    throw new IllegalArgumentException("Leader can not leave the clan!");
             }
         });
     }

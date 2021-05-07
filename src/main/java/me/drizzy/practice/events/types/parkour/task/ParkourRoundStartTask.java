@@ -1,5 +1,6 @@
 package me.drizzy.practice.events.types.parkour.task;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.parkour.Parkour;
 import me.drizzy.practice.events.types.parkour.ParkourState;
 import me.drizzy.practice.events.types.parkour.ParkourTask;
@@ -15,16 +16,14 @@ public class ParkourRoundStartTask extends ParkourTask {
 	@Override
 	public void onRun() {
 		if (getTicks() >= 3) {
-			this.getParkour().broadcastMessage(CC.RED + "The parkour has started!");
+			this.getParkour().broadcastMessage(Locale.EVENT_STARTED.toString().replace("<event_name>", "Parkour"));
 			this.getParkour().setEventTask(null);
 			this.getParkour().setState(ParkourState.ROUND_FIGHTING);
 			this.getParkour().getPlayers().forEach(PlayerUtil::allowMovement);
-
-			((Parkour) this.getParkour()).setRoundStart(System.currentTimeMillis());
+			this.getParkour().setRoundStart(System.currentTimeMillis());
 		} else {
 			int seconds = getSeconds();
-
-			this.getParkour().broadcastMessage("&c" + seconds + "...");
+			this.getParkour().broadcastMessage(Locale.EVENT_START_COUNTDOWN.toString().replace("<seconds>", String.valueOf(seconds)));
 		}
 	}
 

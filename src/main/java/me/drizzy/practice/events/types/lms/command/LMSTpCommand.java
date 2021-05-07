@@ -9,8 +9,8 @@ import org.bukkit.entity.Player;
 public class LMSTpCommand {
 
     public void execute(Player player) {
-        player.teleport(Array.getInstance().getLMSManager().getLmsSpectator());
-        player.sendMessage(CC.GREEN + "Teleported to lms's spawn location.");
+        player.teleport(Array.getInstance().getLMSManager().getLmsSpawn());
+        player.sendMessage(CC.translate("&8[&c&lArray&8] &7Teleported to &cLMS's &7spawn location."));
     }
 
 }

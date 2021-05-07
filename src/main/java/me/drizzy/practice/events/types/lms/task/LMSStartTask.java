@@ -1,5 +1,6 @@
 package me.drizzy.practice.events.types.lms.task;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.lms.LMS;
 import me.drizzy.practice.events.types.lms.LMSState;
 import me.drizzy.practice.events.types.lms.LMSTask;
@@ -20,13 +21,13 @@ public class LMSStartTask extends LMSTask {
 
         if (this.getLMS().getPlayers().size() <= 1 && this.getLMS().getCooldown() != null) {
             this.getLMS().setCooldown(null);
-            this.getLMS().broadcastMessage("&cThere are not enough players for the ffa to start.");
+            this.getLMS().broadcastMessage(Locale.EVENT_NOT_ENOUGH_PLAYERS.toString().replace("<event_name>", "LMS"));
         }
 
-        if (this.getLMS().getPlayers().size() == this.getLMS().getMaxPlayers() || (getTicks() >= 30 && this.getLMS().getPlayers().size() >= 2)) {
+        if (this.getLMS().getPlayers().size() == LMS.getMaxPlayers() || (getTicks() >= 30 && this.getLMS().getPlayers().size() >= 2)) {
             if (this.getLMS().getCooldown() == null) {
                 this.getLMS().setCooldown(new Cooldown(11_000));
-                this.getLMS().broadcastMessage("&7The LMS will start in &c10 seconds&e7...");
+                this.getLMS().broadcastMessage(Locale.EVENT_STARTING.toString().replace("<event_name>", "LMS"));
             } else {
                 if (this.getLMS().getCooldown().hasExpired()) {
                     this.getLMS().setState(LMSState.ROUND_STARTING);

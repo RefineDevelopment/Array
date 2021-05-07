@@ -1,13 +1,18 @@
 package me.drizzy.practice.events.types.gulag;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.other.Cooldown;
+import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.other.TimeUtil;
-import org.bukkit.*;
-import org.bukkit.entity.*;
+import org.bukkit.Effect;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.EnderPearl;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,7 +21,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 
@@ -40,24 +48,27 @@ public class GulagListener implements Listener {
 
 	@EventHandler(ignoreCancelled=true, priority=EventPriority.MONITOR)
 	public void onProjectileLaunch(ProjectileLaunchEvent event) {
-		Projectile projectile=event.getEntity();
+		Projectile projectile = event.getEntity();
 		if (projectile instanceof EnderPearl) {
-			EnderPearl enderPearl=(EnderPearl) projectile;
-			ProjectileSource source=enderPearl.getShooter();
+			EnderPearl enderPearl = (EnderPearl) projectile;
+			ProjectileSource source = enderPearl.getShooter();
 			if (source instanceof Player) {
-				Player shooter=(Player) source;
-				Profile profile=Profile.getByUuid(shooter.getUniqueId());
+				Player shooter = (Player) source;
+				Profile profile = Profile.getByUuid(shooter.getUniqueId());
 				if (profile.isInGulag()) {
+
 					if (profile.getGulag().getState().equals(GulagState.ROUND_STARTING)) {
 						event.setCancelled(true);
 						return;
 					}
 
 					if (!profile.getEnderpearlCooldown().hasExpired()) {
-						String time=TimeUtil.millisToSeconds(profile.getEnderpearlCooldown().getRemaining());
-						String context="second" + (time.equalsIgnoreCase("1.0") ? "" : "s");
-						shooter.sendMessage(CC.RED + "You are on pearl cooldown for " + time + " " + context);
+						String time = TimeUtil.millisToSeconds(profile.getEnderpearlCooldown().getRemaining());
+						String context = "second" + (time.equalsIgnoreCase("1.0") ? "" : "s");
+
+						shooter.sendMessage(Locale.MATCH_PEARL_COOLDOWN.toString().replace("<cooldown>", time + " " + context));
 						shooter.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 1));
+
 						event.setCancelled(true);
 					} else {
 						profile.setEnderpearlCooldown(new Cooldown(16_000));
@@ -88,9 +99,9 @@ public class GulagListener implements Listener {
 			}
 
 			if (attacker != null && event.getEntity() instanceof Player) {
-				Player damaged=(Player) event.getEntity();
-				Profile damagedProfile=Profile.getByUuid(damaged.getUniqueId());
-				Profile attackerProfile=Profile.getByUuid(attacker.getUniqueId());
+				Player damaged = (Player) event.getEntity();
+				Profile damagedProfile = Profile.getByUuid(damaged.getUniqueId());
+				Profile attackerProfile = Profile.getByUuid(attacker.getUniqueId());
 
 				if (damagedProfile.isInGulag() && attackerProfile.isInGulag()) {
 					if (!(event.getDamager() instanceof Projectile)) {
@@ -103,7 +114,7 @@ public class GulagListener implements Listener {
 
 	@EventHandler
 	public void onBreak(BlockBreakEvent event) {
-		Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
+		Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 		if (profile.isInGulag()) {
 			event.setCancelled(true);
 		}
@@ -111,7 +122,7 @@ public class GulagListener implements Listener {
 
 	@EventHandler(priority=EventPriority.LOW, ignoreCancelled=true)
 	public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
-		Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
+		Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 		if (profile.isInGulag()) {
 			event.setCancelled(true);
 		}
@@ -119,7 +130,7 @@ public class GulagListener implements Listener {
 
 	@EventHandler
 	public void onItemPickup(PlayerPickupItemEvent event) {
-		Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
+		Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 		if (profile.isInGulag()) {
 			event.setCancelled(true);
 		}
@@ -141,7 +152,7 @@ public class GulagListener implements Listener {
 
 	@EventHandler(priority=EventPriority.LOW)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
+		Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
 		if (profile.isInGulag()) {
 			profile.getGulag().handleLeave(event.getPlayer());

@@ -1,5 +1,6 @@
 package me.drizzy.practice.events.types.parkour.task;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.parkour.Parkour;
 import me.drizzy.practice.events.types.parkour.ParkourState;
 import me.drizzy.practice.events.types.parkour.ParkourTask;
@@ -21,13 +22,13 @@ public class ParkourStartTask extends ParkourTask {
 
 		if (this.getParkour().getPlayers().size() <= 1 && this.getParkour().getCooldown() != null) {
 			this.getParkour().setCooldown(null);
-			this.getParkour().broadcastMessage("&cThere are not enough players for the parkour to start.");
+			this.getParkour().broadcastMessage(Locale.EVENT_NOT_ENOUGH_PLAYERS.toString().replace("<event_name>", "Parkour"));
 		}
 
-		if (this.getParkour().getPlayers().size() == this.getParkour().getMaxPlayers() || (getTicks() >= 30 && this.getParkour().getPlayers().size() >= 2)) {
+		if (this.getParkour().getPlayers().size() == Parkour.getMaxPlayers() || (getTicks() >= 30 && this.getParkour().getPlayers().size() >= 2)) {
 			if (this.getParkour().getCooldown() == null) {
 				this.getParkour().setCooldown(new Cooldown(11_000));
-				this.getParkour().broadcastMessage("&fThe parkour will start in &c10 seconds&f...");
+				this.getParkour().broadcastMessage(Locale.EVENT_STARTING.toString().replace("<event_name>", "Parkour"));
 			} else {
 				if (this.getParkour().getCooldown().hasExpired()) {
 					this.getParkour().setState(ParkourState.ROUND_STARTING);

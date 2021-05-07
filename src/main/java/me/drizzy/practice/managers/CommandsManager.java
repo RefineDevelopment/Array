@@ -40,6 +40,7 @@ public class CommandsManager {
                 new ArraySetLobbyCommand(),
                 new ArrayGoldenHeadCommand(),
                 new ArrayReloadCommand(),
+                new ArenaSetDuplicateCommand(),
                 new ArrayReloadDivisionsCommand(),
                 new ArrayRenameCommand(),
                 new ArrayRefillCommand(),

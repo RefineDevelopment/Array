@@ -2,13 +2,8 @@ package me.drizzy.practice.events.types.parkour;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.drizzy.practice.util.chat.Clickable;
-import me.drizzy.practice.util.other.*;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.parkour.player.ParkourPlayer;
 import me.drizzy.practice.events.types.parkour.player.ParkourPlayerState;
 import me.drizzy.practice.events.types.parkour.task.ParkourRoundEndTask;
@@ -16,6 +11,12 @@ import me.drizzy.practice.events.types.parkour.task.ParkourRoundStartTask;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.chat.CC;
+import me.drizzy.practice.util.chat.Clickable;
+import me.drizzy.practice.util.config.BasicConfigurationFile;
+import me.drizzy.practice.util.other.*;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -23,21 +24,27 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
+@Setter
 public class Parkour {
 
-	protected static String EVENT_PREFIX =CC.translate("&8[&cParkour&8] &r");
-
-	private final String name;
-	@Setter private ParkourState state = ParkourState.WAITING;
-	private ParkourTask eventTask;
-	private final PlayerSnapshot host;
-	private final LinkedHashMap<UUID, ParkourPlayer> eventPlayers = new LinkedHashMap<>();
-	@Getter private final List<UUID> spectators = new ArrayList<>();
-	@Getter	@Setter	public static int maxPlayers;
-	@Getter @Setter private int totalPlayers;
-	@Setter private Cooldown cooldown;
-	@Setter private long roundStart;
 	@Getter	@Setter	private static boolean enabled = true;
+	protected static String EVENT_PREFIX = Locale.EVENT_PREFIX.toString().replace("<event_name>", "Parkour");
+	private static BasicConfigurationFile config = Array.getInstance().getScoreboardConfig();
+	
+	private static Array plugin = Array.getInstance();
+	
+	private final LinkedHashMap<UUID, ParkourPlayer> eventPlayers = new LinkedHashMap<>();
+	private final List<UUID> spectators = new ArrayList<>();
+	
+	private final String name;
+	private final PlayerSnapshot host;
+	private Cooldown cooldown;
+	private ParkourTask eventTask;
+	private ParkourState state = ParkourState.WAITING;
+
+	@Getter @Setter public static int maxPlayers;
+	private int totalPlayers;
+	private long roundStart;
 
 
 	public Parkour(Player player) {
@@ -49,29 +56,49 @@ public class Parkour {
 	public List<String> getLore() {
 		List<String> toReturn = new ArrayList<>();
 
-		Parkour parkour = Array.getInstance().getParkourManager().getActiveParkour();
+		Parkour parkour = plugin.getParkourManager().getActiveParkour();
 
 		toReturn.add(CC.MENU_BAR);
-		toReturn.add(CC.translate("&cHost: &r" + parkour.getName()));
-
 		if (parkour.isWaiting()) {
-			toReturn.add("&cPlayers: &r" + parkour.getEventPlayers().size() + "/" + getMaxPlayers());
-			toReturn.add("");
 
+			String status;
 			if (parkour.getCooldown() == null) {
-				toReturn.add(CC.translate("&fWaiting for players..."));
+
+				status = CC.translate(config.getString("SCOREBOARD.EVENT.PARKOUR.STATUS_WAITING")
+						.replace("<parkour_host_name>", parkour.getName())
+						.replace("<parkour_player_count>", String.valueOf(parkour.getEventPlayers().size()))
+						.replace("<parkour_max_players>", String.valueOf(Parkour.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
+
 			} else {
-				String remaining = TimeUtil.millisToSeconds(parkour.getCooldown().getRemaining());
-
+				String remaining=TimeUtil.millisToSeconds(parkour.getCooldown().getRemaining());
 				if (remaining.startsWith("-")) {
-					remaining = "0.0";
+					remaining="0.0";
 				}
+				String finalRemaining = remaining;
 
-				toReturn.add(CC.translate("&fStarting in " + remaining + "s"));
+				status = CC.translate(config.getString("SCOREBOARD.EVENT.PARKOUR.STATUS_COUNTING")
+						.replace("<parkour_host_name>", parkour.getName())
+						.replace("<remaining>", finalRemaining)
+						.replace("<parkour_player_count>", String.valueOf(parkour.getEventPlayers().size()))
+						.replace("<parkour_max_players>", String.valueOf(Parkour.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
+
 			}
+
+			config.getStringList("SCOREBOARD.EVENT.PARKOUR.WAITING").forEach(line -> toReturn.add(CC.translate(line
+					.replace("<parkour_host_name>", parkour.getName())
+					.replace("<status>", status)
+					.replace("<parkour_player_count>", String.valueOf(parkour.getEventPlayers().size()))
+					.replace("<parkour_max_players>", String.valueOf(Parkour.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
+
 		} else {
-			toReturn.add("&cPlayers: &r" + parkour.getRemainingPlayers().size() + "/" + parkour.getTotalPlayers());
-			toReturn.add("&cDuration: &r" + parkour.getRoundDuration());
+
+			config.getStringList("SCOREBOARD.EVENT.PARKOUR.FIGHTING").forEach(line -> toReturn.add(CC.translate(line
+					.replace("<parkour_host_name>", parkour.getName())
+					.replace("<parkour_duration>", parkour.getRoundDuration())
+					.replace("<parkour_players_alive>", String.valueOf(parkour.getRemainingPlayers().size()))
+					.replace("<parkour_player_count>", String.valueOf(parkour.getEventPlayers().size()))
+					.replace("<parkour_max_players>", String.valueOf(Parkour.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
+
 		}
 		toReturn.add(CC.MENU_BAR);
 
@@ -86,7 +113,7 @@ public class Parkour {
 		eventTask = task;
 
 		if (eventTask != null) {
-			eventTask.runTaskTimer(Array.getInstance(), 0L, 20L);
+			eventTask.runTaskTimer(plugin, 0L, 20L);
 		}
 	}
 
@@ -137,14 +164,19 @@ public class Parkour {
 
 	public void handleJoin(Player player) {
 		if (this.eventPlayers.size() >= maxPlayers) {
-			player.sendMessage(CC.RED + "The events is full");
+			player.sendMessage(Locale.EVENT_FULL.toString());
 			return;
 		}
 
 		eventPlayers.put(player.getUniqueId(), new ParkourPlayer(player));
 
-		broadcastMessage(CC.RED + player.getName() + CC.GRAY + " has joined the &cParkour Event! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-		player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &cParkour Event&8!"));
+		broadcastMessage(Locale.EVENT_JOIN.toString()
+				.replace("<event_name>", "Parkour")
+				.replace("<joined>", player.getName())
+				.replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
+				.replace("<event_max_players>", String.valueOf(getMaxPlayers())));
+
+		player.sendMessage(Locale.EVENT_PLAYER_JOIN.toString().replace("<event_name>", "Parkour"));
 
 		onJoin(player);
 
@@ -153,7 +185,7 @@ public class Parkour {
 		profile.setState(ProfileState.IN_EVENT);
 		profile.refreshHotbar();
 
-		player.teleport(Array.getInstance().getParkourManager().getParkourSpawn());
+		player.teleport(plugin.getParkourManager().getParkourSpawn());
 
 		PlayerUtil.denyMovement(player);
 
@@ -164,19 +196,23 @@ public class Parkour {
 					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
 					otherProfile.handleVisibility(otherPlayer, player);
 					profile.handleVisibility(player, otherPlayer);
-					NameTags.color(player, otherPlayer, Array.getInstance().getEssentials().getNametagMeta().getEventColor(), false);
+					NameTags.color(player, otherPlayer, plugin.getEssentials().getNametagMeta().getEventColor(), false);
 				}
 			}
-		}.runTaskAsynchronously(Array.getInstance());
+		}.runTaskAsynchronously(plugin);
 	}
 
 	public void handleLeave(Player player) {
 		eventPlayers.remove(player.getUniqueId());
 
 		if (state == ParkourState.WAITING) {
-			broadcastMessage(CC.RED + player.getName() + CC.GRAY + " left the &cParkour Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-			player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &cParkour Event&8!"));
+			broadcastMessage(Locale.EVENT_LEAVE.toString()
+					.replace("<event_name>", "Parkour")
+					.replace("<left>", player.getName())
+					.replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
+					.replace("<event_max_players>", String.valueOf(getMaxPlayers())));
 		}
+		player.sendMessage(Locale.EVENT_PLAYER_LEAVE.toString().replace("<event_name>", "Parkour"));
 
 		onLeave(player);
 
@@ -192,7 +228,7 @@ public class Parkour {
 					NameTags.reset(player, otherPlayer);
 				}
 			}
-		}.runTaskAsynchronously(Array.getInstance());
+		}.runTaskAsynchronously(plugin);
 
 		profile.setState(ProfileState.IN_LOBBY);
 		profile.setParkour(null);
@@ -209,17 +245,21 @@ public class Parkour {
 	}
 
 	public void end(Player winner) {
-		Array.getInstance().getParkourManager().setActiveParkour(null);
-		Array.getInstance().getParkourManager().setCooldown(new Cooldown(60_000L * 10));
+		plugin.getParkourManager().setActiveParkour(null);
+		plugin.getParkourManager().setCooldown(new Cooldown(60_000L * 10));
 
 		setEventTask(null);
 
 		if (winner == null) {
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.RED + "The parkour events has been canceled.");
+			Bukkit.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", "Parkour"));
 		} else {
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Parkour Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Parkour Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Parkour Event" + CC.GRAY + "!");
+			String win = Locale.EVENT_WON.toString().replace("<winner_name>", winner.getName())
+					.replace("<event_name>", "Parkour")
+					.replace("<event_prefix>", EVENT_PREFIX);
+
+			Bukkit.broadcastMessage(win);
+			Bukkit.broadcastMessage(win);
+			Bukkit.broadcastMessage(win);
 		}
 
 		for (ParkourPlayer parkourPlayer : eventPlayers.values()) {
@@ -230,7 +270,6 @@ public class Parkour {
 				profile.setState(ProfileState.IN_LOBBY);
 				profile.setParkour(null);
 				profile.refreshHotbar();
-
 				profile.teleportToSpawn();
 			}
 		}
@@ -247,18 +286,14 @@ public class Parkour {
 	}
 
 	public void announce() {
-		List<String> strings=new ArrayList<>();
-		strings.add(CC.translate(" "));
-		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
-		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&c&l[Parkour Event]"));
-		strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + ""));
-		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&fA &cParkour &fevent is being hosted by &c" + this.host.getUsername()));
-		strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
-		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
-		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
-		strings.add(CC.translate(" "));
-		for ( String string : strings ) {
-			Clickable message = new Clickable(string, "Click to join Parkour events", "/parkour join");
+		for ( String string : Locale.EVENT_ANNOUNCE.toList() ) {
+			String main = string
+					.replace("<event_name>", "Parkour")
+					.replace("<event_host>", this.getHost().getUsername())
+					.replace("<event_prefix>", EVENT_PREFIX);
+
+			Clickable message = new Clickable(main, Locale.EVENT_HOVER.toString().replace("<event_name>", "Parkour"), "/parkour join");
+
 			for ( Player player : Bukkit.getOnlinePlayers() ) {
 				if (!eventPlayers.containsKey(player.getUniqueId())) {
 					message.sendToPlayer(player);
@@ -273,11 +308,12 @@ public class Parkour {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	public void onJoin(Player player) {
 	}
 
+	@SuppressWarnings("unused")
 	public void onLeave(Player player) {
-		//player.setKnockbackProfile(null);
 	}
 
 	public void onRound() {
@@ -285,41 +321,31 @@ public class Parkour {
 
 		for (Player player : this.getRemainingPlayers()) {
 			if (player != null) {
-				player.teleport(Array.getInstance().getParkourManager().getParkourSpawn());
+				player.teleport(plugin.getParkourManager().getParkourSpawn());
 
 				Profile profile = Profile.getByUuid(player.getUniqueId());
 
 				if (profile.isInParkour()) {
 					profile.refreshHotbar();
 				}
-				player.setHealth(20.0D);
-				player.setSaturation(20.0F);
-				player.setFallDistance(0.0F);
-				player.setFoodLevel(20);
-				player.setFireTicks(0);
-				player.setMaximumNoDamageTicks(20);
-				player.setExp(0.0F);
-				player.setLevel(0);
-				player.setAllowFlight(false);
-				player.setFlying(false);
-				player.setGameMode(GameMode.SURVIVAL);
 			}
 		}
 		setEventTask(new ParkourRoundStartTask(this));
 	}
 
 	public void handleWin(Player player) {
-		setState(ParkourState.ROUND_ENDING);
+		state = ParkourState.ROUND_ENDING;
 		setEventTask(new ParkourRoundEndTask(this, player));
 	}
 
 	public String getRoundDuration() {
-		if (getState() == ParkourState.ROUND_STARTING) {
-			return "00:00";
-		} else if (getState() == ParkourState.ROUND_FIGHTING) {
-			return TimeUtil.millisToTimer(System.currentTimeMillis() - roundStart);
-		} else {
-			return "Ending";
+		switch (getState()) {
+			case ROUND_STARTING:
+				return "00:00";
+			case ROUND_FIGHTING:
+				return TimeUtil.millisToTimer(System.currentTimeMillis() - roundStart);
+			default:
+				return "Ending";
 		}
 	}
 
@@ -328,13 +354,11 @@ public class Parkour {
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setParkour(this);
-		PlayerUtil.spectator(player);
 		profile.setState(ProfileState.SPECTATING);
-		player.setFlying(true);
 		profile.refreshHotbar();
 		profile.handleVisibility();
 
-		player.teleport(Array.getInstance().getParkourManager().getParkourSpawn());
+		player.teleport(plugin.getParkourManager().getParkourSpawn());
 	}
 
 	public void removeSpectator(Player player) {
@@ -344,10 +368,8 @@ public class Parkour {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setParkour(null);
 		profile.setState(ProfileState.IN_LOBBY);
-		player.setFlying(false);
 		profile.refreshHotbar();
 		profile.handleVisibility();
-
 		profile.teleportToSpawn();
 	}
 }

@@ -1,6 +1,7 @@
 package me.drizzy.practice.events.types.lms.command;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.lms.LMS;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
@@ -15,16 +16,15 @@ public class LMSLeaveCommand {
         LMS activeLMS = Array.getInstance().getLMSManager().getActiveLMS();
 
         if (activeLMS == null) {
-            player.sendMessage(CC.RED + "There isn't any active LMS Events.");
+            player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "LMS"));
             return;
         }
 
         if (!profile.isInLMS() || !activeLMS.getEventPlayers().containsKey(player.getUniqueId())) {
-            player.sendMessage(CC.RED + "You are not apart of the active LMS Event.");
+            player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "LMS"));
             return;
         }
-
-        Array.getInstance().getLMSManager().getActiveLMS().handleLeave(player);
+        activeLMS.handleLeave(player);
     }
 
 }

@@ -50,7 +50,7 @@ public class Essentials {
     public void load() {
         String key = "ESSENTIAL.";
 
-        spawn=LocationUtil.deserialize(config.getStringOrDefault(key + "SPAWN", "world:0:60:0:-89.59775:0.17956273"));
+        spawn = LocationUtil.deserialize(config.getStringOrDefault(key + "SPAWN", "world:0:60:0:-89.59775:0.17956273"));
         meta.setHCFEnabled(config.getBoolean(key + "HCF_ENABLED"));
         meta.setCoreHookEnabled(config.getBoolean(key + "CORE_HOOK"));
         meta.setTabEnabled(config.getBoolean(key + "TAB_ENABLED"));
@@ -86,7 +86,7 @@ public class Essentials {
         String key = "ESSENTIAL.";
 
         //Essentials
-        configuration.set(key + "SPAWN", LocationUtil.serialize(spawn));
+        configuration.set(key + "SPAWN", spawn == null ? "world:0:60:0:-89.59775:0.17956273" : LocationUtil.serialize(spawn));
         configuration.set(key + "HCF_ENABLED", meta.isHCFEnabled());
         configuration.set(key + "CORE_HOOK", meta.isCoreHookEnabled());
         configuration.set(key + "TAB_ENABLED", meta.isTabEnabled());

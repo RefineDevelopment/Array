@@ -11,12 +11,11 @@ public class GulagCooldownCommand {
 
 	public void execute(CommandSender sender) {
 		if (Array.getInstance().getGulagManager().getCooldown().hasExpired()) {
-			sender.sendMessage(CC.RED + "There isn't a Gulag Event cooldown.");
+			sender.sendMessage(CC.translate("&7There is no currently active Gulag Event cooldown."));
 			return;
 		}
 
-		sender.sendMessage(CC.GREEN + "You reset the Gulag Event cooldown.");
-
+		sender.sendMessage(CC.translate("&7Successfully reset the &cGulag Event &7cooldown."));
 		Array.getInstance().getGulagManager().setCooldown(new Cooldown(0));
 	}
 

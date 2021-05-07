@@ -1,6 +1,7 @@
 package me.drizzy.practice.events.types.gulag.command;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.gulag.Gulag;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
@@ -12,12 +13,12 @@ public class GulagHostCommand {
 
 	public static void execute(Player player) {
 		if (Array.getInstance().getGulagManager().getActiveGulag() != null) {
-			player.sendMessage(CC.RED + "There is already an active Gulag Event.");
+			player.sendMessage(Locale.EVENT_ON_GOING.toString());
 			return;
 		}
 
 		if (!Array.getInstance().getGulagManager().getCooldown().hasExpired()) {
-			player.sendMessage(CC.RED + "There is a Gulag Event cooldown active.");
+			player.sendMessage(Locale.EVENT_COOLDOWN_ACTIVE.toString());
 			return;
 		}
 

@@ -11,12 +11,11 @@ public class BracketsCooldownCommand {
 
 	public void execute(CommandSender sender) {
 		if (Array.getInstance().getBracketsManager().getCooldown().hasExpired()) {
-			sender.sendMessage(CC.RED + "There isn't a Brackets Event cooldown.");
+			sender.sendMessage(CC.translate("&7There is no currently active Brackets Event cooldown."));
 			return;
 		}
 
-		sender.sendMessage(CC.GREEN + "You reset the Brackets Event cooldown.");
-
+		sender.sendMessage(CC.translate("&7Successfully reset the &cBrackets Event &7cooldown."));
 		Array.getInstance().getBracketsManager().setCooldown(new Cooldown(0));
 	}
 
