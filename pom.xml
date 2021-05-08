@@ -4,16 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <name>Array</name>
+    <url>https://discord.link/purge</url>
+
+    <organization>
+        <name>Purge Development</name>
+        <url>https://discord.link/purge</url>
+    </organization>
+
     <groupId>me.drizzy.practice</groupId>
     <artifactId>Array</artifactId>
     <version>1.0</version>
-
-    <repositories>
-        <repository>
-            <id>everything</id>
-            <url>http://repo.citizensnpcs.co/</url>
-        </repository>
-    </repositories>
 
     <dependencies>
         <!--Annotations-->
@@ -157,6 +158,12 @@
             <version>2.10.3</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/api/PlaceholderAPI.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

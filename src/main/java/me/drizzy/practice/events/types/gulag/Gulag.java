@@ -407,7 +407,7 @@ public class Gulag {
 				.replace("<eliminated_name>", player.getName())
 				.replace("<eliminator_name>", winner.getPlayer().getName()));
 
-		player.setFireTicks(0);
+		addSpectator(player);
 		winner.getPlayer().hidePlayer(player);
 		setState(GulagState.ROUND_ENDING);
 		setEventTask(new GulagRoundEndTask(this));

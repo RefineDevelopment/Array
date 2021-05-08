@@ -19,7 +19,7 @@ public class ParkourHelpCommand {
         player.sendMessage(CC.translate(" &8• &c/parkour join &8(&7&o&7Join ongoing Parkour Event&8&o)"));
         player.sendMessage(CC.translate(" &8• &c/parkour leave &8(&7&o&7Leave ongoing Parkour Event&8&o)"));
         player.sendMessage(CC.translate(" &8• &c/parkour tp &8(&7&o&7Teleport to the Parkour Event Arena&8&o)"));
-        player.sendMessage(CC.translate(" &8• &c/parkour setspawn &8<&7one|two|spec&8> &8(&7&o&7Set the spawn locations for Parkour Event&8&o)"));
+        player.sendMessage(CC.translate(" &8• &c/parkour setspawn &8(&7&o&7Set the spawn locations for Parkour Event&8&o)"));
         player.sendMessage(CC.CHAT_BAR);
     }
 }

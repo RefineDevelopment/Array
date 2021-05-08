@@ -3,24 +3,18 @@ package me.drizzy.practice.essentials;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
-import me.drizzy.practice.Locale;
-import me.drizzy.practice.essentials.event.SpawnTeleportEvent;
 import me.drizzy.practice.essentials.meta.EssentialsMeta;
+import me.drizzy.practice.essentials.meta.PiracyMeta;
 import me.drizzy.practice.essentials.meta.NametagMeta;
 import me.drizzy.practice.essentials.meta.SocialMeta;
-import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
-import me.drizzy.practice.util.config.Lang;
 import me.drizzy.practice.util.location.LocationUtil;
 import me.drizzy.practice.util.menu.MenuUpdateTask;
 import me.drizzy.practice.util.other.TaskUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +34,11 @@ public class Essentials {
     public final EssentialsMeta meta = new EssentialsMeta();
     public final SocialMeta socialMeta = new SocialMeta();
     public final NametagMeta nametagMeta = new NametagMeta();
+    public String license = config.getStringOrDefault("LICENSE", "XXXX-XXXX-XXXX");
+
+    public Essentials() {
+        new PiracyMeta(Array.getInstance(), license);
+    }
 
     public void setupEssentials() {
         TaskUtil.runTimerAsync(new MenuUpdateTask(), 20L, 20L);

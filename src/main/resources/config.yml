@@ -1,4 +1,10 @@
-LICENSE: ''
+#######################################################################
+#                                                                     #
+#         Array Practice Core - Developed By Drizzy#0278              #
+#     Bought at Purge Development - https://discord.gg/VXzUMfBefZ     #
+#                                                                     #
+#######################################################################
+LICENSE: ""
 MONGO:
   URI-MODE: true
   NORMAL:
@@ -10,8 +16,8 @@ MONGO:
       USERNMAE: ''
       PASSWORD: ''
   URI:
-    DATABASE: test
-    CONNECTION_STRING: mongodb://135.181.76.235:25583/test
+    DATABASE: Array
+    CONNECTION_STRING: mongodb://127.0.0.1:27017/Array
 ESSENTIAL:
   SPAWN: practice:0.5:69.0:-0.5:0.0:0.0
   CORE_HOOK: true

@@ -1,4 +1,4 @@
-package me.drizzy.practice.match.events;
+package me.drizzy.practice.api.events;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 @Getter
 @Setter
 @AllArgsConstructor
-public class MatchSpectatorJoinEvent extends BaseEvent {
+public class MatchSpectatorLeaveEvent extends BaseEvent {
 
     public final Player spectator;
     public final Match match;

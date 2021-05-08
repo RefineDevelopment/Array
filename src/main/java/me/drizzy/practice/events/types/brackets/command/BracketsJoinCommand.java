@@ -30,8 +30,7 @@ public class BracketsJoinCommand {
 			player.sendMessage(Locale.EVENT_ALREADY_STARED.toString().replace("<event>", "Brackets"));
 			return;
 		}
-
-		Array.getInstance().getBracketsManager().getActiveBrackets().handleJoin(player);
+		activeBrackets.handleJoin(player);
 	}
 
 }

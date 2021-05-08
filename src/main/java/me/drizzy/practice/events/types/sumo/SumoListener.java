@@ -51,25 +51,6 @@ public class SumoListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onClick(final PlayerInteractEvent event) {
-		final Profile profile = Profile.getByPlayer(event.getPlayer());
-
-		if (profile.isInSumo()) {
-			SumoPlayer player = profile.getSumo().getEventPlayer(event.getPlayer());
-
-			List<Long> list;
-			if (player.getCpsMap().containsKey(player.getUuid())) {
-				list = player.getCpsMap().get(player.getUuid());
-			} else {
-				list = new ArrayList<>();
-			}
-
-			list.add(System.currentTimeMillis());
-			player.getCpsMap().put(event.getPlayer().getUniqueId(), list);
-		}
-	}
-
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled=true)
 	public void onHit(EntityDamageEvent event) {
 		if (event.getEntity() instanceof Player && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
@@ -169,9 +150,9 @@ public class SumoListener implements Listener {
 
 	@EventHandler
 	public void playerMoveEvent(PlayerMoveEvent e) {
-		Player player=e.getPlayer();
-		Location to=e.getTo();
-		Location from=e.getFrom();
+		Player player = e.getPlayer();
+		Location to = e.getTo();
+		Location from = e.getFrom();
 		Profile profile = Profile.getByPlayer(player);
 		Sumo sumo = profile.getSumo();
 

@@ -1,4 +1,4 @@
-package me.drizzy.practice.match.events;
+package me.drizzy.practice.api.events;
 
 import me.drizzy.practice.match.Match;
 import lombok.Getter;

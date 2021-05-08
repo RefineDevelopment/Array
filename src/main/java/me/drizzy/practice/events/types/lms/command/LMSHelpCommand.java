@@ -19,7 +19,7 @@ public class LMSHelpCommand {
         player.sendMessage(CC.translate(" &8• &c/lms join &8(&7&o&7Join ongoing LMSEvent&8&o)"));
         player.sendMessage(CC.translate(" &8• &c/lms leave &8(&7&o&7Leave ongoing LMSEvent&8&o)"));
         player.sendMessage(CC.translate(" &8• &c/lms tp &8(&7&o&7Teleport to the LMSEvent Arena&8&o)"));
-        player.sendMessage(CC.translate(" &8• &c/lms setspawn &8<&7one|two|spec&8> &8(&7&o&7Set the spawn locations for LMSEvent&8&o)"));
+        player.sendMessage(CC.translate(" &8• &c/lms setspawn &8(&7&o&7Set the spawn location for LMSEvent&8&o)"));
         player.sendMessage(CC.CHAT_BAR);
     }
 }

@@ -1,6 +1,8 @@
 package me.drizzy.practice.events.types.sumo.command;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
+import me.drizzy.practice.events.types.brackets.BracketsState;
 import me.drizzy.practice.events.types.sumo.Sumo;
 import me.drizzy.practice.events.types.sumo.SumoState;
 import me.drizzy.practice.profile.Profile;
@@ -16,21 +18,20 @@ public class SumoJoinCommand {
 		Sumo activeSumo = Array.getInstance().getSumoManager().getActiveSumo();
 
 		if (profile.isBusy() || profile.getParty() != null) {
-			player.sendMessage(CC.RED + "You cannot join the Sumo Event right now.");
+			player.sendMessage(Locale.EVENT_NOTABLE_JOIN.toString());
 			return;
 		}
 
 		if (activeSumo == null) {
-			player.sendMessage(CC.RED + "There isn't an active Sumo Event.");
+			player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "Sumo"));
 			return;
 		}
 
 		if (activeSumo.getState() != SumoState.WAITING) {
-			player.sendMessage(CC.RED + "That Sumo Event is currently on-going and cannot be joined.");
+			player.sendMessage(Locale.EVENT_ALREADY_STARED.toString().replace("<event>", "Sumo"));
 			return;
 		}
-
-		Array.getInstance().getSumoManager().getActiveSumo().handleJoin(player);
+		activeSumo.handleJoin(player);
 	}
 
 }

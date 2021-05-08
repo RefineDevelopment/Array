@@ -1,6 +1,7 @@
 package me.drizzy.practice.events.types.sumo.command;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.sumo.Sumo;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
@@ -15,12 +16,12 @@ public class SumoLeaveCommand {
 		Sumo activeSumo = Array.getInstance().getSumoManager().getActiveSumo();
 
 		if (activeSumo == null) {
-			player.sendMessage(CC.RED + "There isn't an active Sumo Event.");
+			player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "Sumo"));
 			return;
 		}
 
 		if (!profile.isInSumo() || !activeSumo.getEventPlayers().containsKey(player.getUniqueId())) {
-			player.sendMessage(CC.RED + "You are not apart of the active Sumo Event.");
+			player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "Sumo"));
 			return;
 		}
 

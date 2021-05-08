@@ -1,5 +1,6 @@
 package me.drizzy.practice.events.types.spleef.task;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.events.types.spleef.Spleef;
 import me.drizzy.practice.events.types.spleef.SpleefState;
@@ -14,15 +15,13 @@ public class SpleefRoundStartTask extends SpleefTask {
 	@Override
 	public void onRun() {
 		if (getTicks() >= 3) {
-			this.getSpleef().broadcastMessage(CC.RED + "The round has started!");
+			this.getSpleef().broadcastMessage(Locale.EVENT_STARTED.toString().replace("<event_name>", "Spleef"));
 			this.getSpleef().setEventTask(null);
 			this.getSpleef().setState(SpleefState.ROUND_FIGHTING);
-
-			((Spleef) this.getSpleef()).setRoundStart(System.currentTimeMillis());
+			this.getSpleef().setRoundStart(System.currentTimeMillis());
 		} else {
 			int seconds = getSeconds();
-
-			this.getSpleef().broadcastMessage("&c" + seconds + "...");
+			this.getSpleef().broadcastMessage(Locale.EVENT_START_COUNTDOWN.toString().replace("<seconds>", String.valueOf(seconds)));
 		}
 	}
 

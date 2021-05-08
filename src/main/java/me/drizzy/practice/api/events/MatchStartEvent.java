@@ -1,20 +1,16 @@
-package me.drizzy.practice.match.events;
+package me.drizzy.practice.api.events;
 
 import me.drizzy.practice.match.Match;
 import lombok.Getter;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 @Getter
-public class MatchEvent extends Event implements Cancellable {
-
+public class MatchStartEvent extends MatchEvent {
     private boolean cancelled = false;
     private static HandlerList handlers = new HandlerList();
-    private Match match;
 
-    public MatchEvent(final Match match) {
-        this.match = match;
+    public MatchStartEvent(final Match match) {
+        super(match);
     }
 
     @Override
@@ -27,16 +23,7 @@ public class MatchEvent extends Event implements Cancellable {
         this.cancelled = b;
     }
 
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
     public static HandlerList getHandlerList() {
         return handlers;
-    }
-
-    public Match getMatch() {
-        return this.match;
     }
 }

@@ -14,7 +14,6 @@ public class BracketsCooldownCommand {
 			sender.sendMessage(CC.translate("&7There is no currently active Brackets Event cooldown."));
 			return;
 		}
-
 		sender.sendMessage(CC.translate("&7Successfully reset the &cBrackets Event &7cooldown."));
 		Array.getInstance().getBracketsManager().setCooldown(new Cooldown(0));
 	}

@@ -1,6 +1,7 @@
 package me.drizzy.practice.events.types.spleef.command;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CommandMeta;
@@ -15,16 +16,15 @@ public class SpleefLeaveCommand {
 		Spleef activeSpleef = Array.getInstance().getSpleefManager().getActiveSpleef();
 
 		if (activeSpleef == null) {
-			player.sendMessage(CC.RED + "There isn't any active Spleef Events.");
+			player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "Spleef"));
 			return;
 		}
 
 		if (!profile.isInSpleef() || !activeSpleef.getEventPlayers().containsKey(player.getUniqueId())) {
-			player.sendMessage(CC.RED + "You are not apart of the active Spleef Event.");
+			player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "Spleef"));
 			return;
 		}
-
-		Array.getInstance().getSpleefManager().getActiveSpleef().handleLeave(player);
+		activeSpleef.handleLeave(player);
 	}
 
 }

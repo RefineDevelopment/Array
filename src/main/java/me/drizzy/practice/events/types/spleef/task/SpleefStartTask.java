@@ -1,5 +1,6 @@
 package me.drizzy.practice.events.types.spleef.task;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.spleef.Spleef;
 import me.drizzy.practice.events.types.spleef.SpleefState;
 import me.drizzy.practice.events.types.spleef.SpleefTask;
@@ -20,13 +21,13 @@ public class SpleefStartTask extends SpleefTask {
 
 		if (this.getSpleef().getPlayers().size() <= 1 && this.getSpleef().getCooldown() != null) {
 			this.getSpleef().setCooldown(null);
-			this.getSpleef().broadcastMessage("&cThere are not enough players for the spleef to start.");
+			this.getSpleef().broadcastMessage(Locale.EVENT_NOT_ENOUGH_PLAYERS.toString().replace("<event_name>", "Spleef"));
 		}
 
-		if (this.getSpleef().getPlayers().size() == this.getSpleef().getMaxPlayers() || (getTicks() >= 30 && this.getSpleef().getPlayers().size() >= 2)) {
+		if (this.getSpleef().getPlayers().size() == Spleef.getMaxPlayers() || (getTicks() >= 30 && this.getSpleef().getPlayers().size() >= 2)) {
 			if (this.getSpleef().getCooldown() == null) {
 				this.getSpleef().setCooldown(new Cooldown(11_000));
-				this.getSpleef().broadcastMessage("&fThe spleef will start in &c10 seconds&f...");
+				this.getSpleef().broadcastMessage(Locale.EVENT_STARTING.toString().replace("<event_name>", "Spleef"));
 			} else {
 				if (this.getSpleef().getCooldown().hasExpired()) {
 					this.getSpleef().setState(SpleefState.ROUND_STARTING);

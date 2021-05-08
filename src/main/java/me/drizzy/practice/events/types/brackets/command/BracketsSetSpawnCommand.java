@@ -1,8 +1,6 @@
 package me.drizzy.practice.events.types.brackets.command;
 
-import me.drizzy.practice.events.types.brackets.Brackets;
 import me.drizzy.practice.events.types.brackets.BracketsManager;
-import me.drizzy.practice.events.types.gulag.GulagManager;
 import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.Array;

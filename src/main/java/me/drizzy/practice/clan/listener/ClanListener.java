@@ -19,12 +19,6 @@ public class ClanListener implements Listener {
         Profile clansProfile = Profile.getByPlayer(player);
 
         if (chatMessage.startsWith(".") || chatMessage.startsWith("$") && clansProfile.getClan() != null) {
-
-            if (event.getMessage().equals("") || event.getMessage().equals(" ")) {
-                player.sendMessage(CC.translate("&cPlease specify a message!"));
-                return;
-            }
-
             event.setCancelled(true);
             String message = CC.translate("&8[&cClan&8] " + Array.getInstance().getRankManager().getFullName(player) + CC.GRAY + " » " + CC.WHITE + chatMessage.replace("$", "").replace(".", ""));
             clansProfile.getClan().broadcast(message);

@@ -2,6 +2,7 @@ package me.drizzy.practice.match.types;
 
 import lombok.Getter;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
@@ -242,7 +243,7 @@ public class TeamMatch extends Match {
 
         List<BaseComponent[]> components = new ArrayList<>();
         components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
-        components.add(new ChatComponentBuilder("").parse("&c&lMatch Details &7(Click name to view inventory)").create());
+        components.add(new ChatComponentBuilder("").parse(Locale.MATCH_INVENTORY_MESSAGE_TITLE.toString()).create());
         components.add(new ChatComponentBuilder("").create());
         components.add(winnerInventories.create());
         components.add(loserInventories.create());

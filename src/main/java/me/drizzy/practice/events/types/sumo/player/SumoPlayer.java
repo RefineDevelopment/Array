@@ -1,8 +1,5 @@
 package me.drizzy.practice.events.types.sumo.player;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +15,6 @@ public class SumoPlayer {
 	private final String username;
 	private SumoPlayerState state = SumoPlayerState.WAITING;
 	private int roundWins = 0;
-	private final Map<UUID, List<Long>> cpsMap = new HashMap<>();
 
 	public SumoPlayer(Player player) {
 		this.uuid = player.getUniqueId();
@@ -31,11 +27,6 @@ public class SumoPlayer {
 
 	public void incrementRoundWins() {
 		this.roundWins++;
-	}
-
-	public int getCps() {
-		cpsMap.get(uuid).removeIf(count -> count < System.currentTimeMillis() - 1000L);
-		return cpsMap.get(uuid).size();
 	}
 
 	public int getPing() {

@@ -11,12 +11,14 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.IOException;
 
+@Getter
+@Setter
 public class SpleefManager {
 
-	@Getter private Spleef activeSpleef;
-	@Getter @Setter private Cooldown cooldown = new Cooldown(0);
-	@Getter @Setter private Location spleefSpawn;
-	@Getter @Setter private String spleefKnockbackProfile;
+	private Spleef activeSpleef;
+	private Cooldown cooldown = new Cooldown(0);
+	private Location spleefSpawn;
+	private String spleefKnockbackProfile;
 
 	public SpleefManager() {
 		load();

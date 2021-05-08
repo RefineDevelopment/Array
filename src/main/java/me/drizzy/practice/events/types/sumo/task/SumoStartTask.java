@@ -1,12 +1,10 @@
 package me.drizzy.practice.events.types.sumo.task;
 
-import me.drizzy.practice.Array;
-import me.drizzy.practice.kit.Kit;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.sumo.Sumo;
 import me.drizzy.practice.events.types.sumo.SumoState;
 import me.drizzy.practice.events.types.sumo.SumoTask;
 import me.drizzy.practice.util.other.Cooldown;
-import org.bukkit.entity.Player;
 
 public class SumoStartTask extends SumoTask {
 
@@ -23,16 +21,13 @@ public class SumoStartTask extends SumoTask {
 
 		if (this.getSumo().getPlayers().size() <= 1 && this.getSumo().getCooldown() != null) {
 			this.getSumo().setCooldown(null);
-			this.getSumo().broadcastMessage("&cThere are not enough players for the sumo to start.");
+			this.getSumo().broadcastMessage(Locale.EVENT_NOT_ENOUGH_PLAYERS.toString().replace("<event_name>", "Sumo"));
 		}
 
 		if (this.getSumo().getPlayers().size() == Sumo.getMaxPlayers() || (getTicks() >= 30 && this.getSumo().getPlayers().size() >= 2)) {
 			if (this.getSumo().getCooldown() == null) {
 				this.getSumo().setCooldown(new Cooldown(11_000));
-				this.getSumo().broadcastMessage("&7The sumo events will start in &c10 seconds&7...");
-				for ( Player player : getSumo().getPlayers() ) {
-					Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(player, Kit.getByName("Sumo"));
-				}
+				this.getSumo().broadcastMessage(Locale.EVENT_STARTING.toString().replace("<event_name>", "Sumo"));
 			} else {
 				if (this.getSumo().getCooldown().hasExpired()) {
 					this.getSumo().setState(SumoState.ROUND_STARTING);

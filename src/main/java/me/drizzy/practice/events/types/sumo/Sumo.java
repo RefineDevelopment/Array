@@ -1,11 +1,13 @@
 package me.drizzy.practice.events.types.sumo;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.sumo.task.SumoRoundEndTask;
 import me.drizzy.practice.events.types.sumo.task.SumoRoundStartTask;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.util.config.BasicConfigurationFile;
 import me.drizzy.practice.util.other.*;
 import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.events.types.sumo.player.SumoPlayer;
@@ -20,23 +22,29 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 @Getter
+@Setter
 public class Sumo {
 
-	protected static String EVENT_PREFIX=CC.translate("&8[&cSumo&8] &r");
+	@Getter	@Setter	private static boolean enabled = true;
+	protected static String EVENT_PREFIX = Locale.EVENT_PREFIX.toString().replace("<event_name>", "Sumo");
+	private static BasicConfigurationFile config = Array.getInstance().getScoreboardConfig();
+
+	private static Array plugin = Array.getInstance();
+
+	private final LinkedHashMap<UUID, SumoPlayer> eventPlayers = new LinkedHashMap<>();
+	private final List<UUID> spectators = new ArrayList<>();
 
 	private final String name;
-	@Setter private SumoState state = SumoState.WAITING;
-	private SumoTask eventTask;
 	private final PlayerSnapshot host;
-	private final LinkedHashMap<UUID, SumoPlayer> eventPlayers = new LinkedHashMap<>();
-	@Getter final private List<UUID> spectators = new ArrayList<>();
-	@Getter @Setter	public static int maxPlayers;
-	@Getter @Setter private int totalPlayers;
-	@Setter private Cooldown cooldown;
+	private Cooldown cooldown;
 	private SumoPlayer roundPlayerA;
 	private SumoPlayer roundPlayerB;
-	@Setter	private long roundStart;
-	@Getter	@Setter	private static boolean enabled = true;
+	private SumoTask eventTask;
+	private SumoState state = SumoState.WAITING;
+	
+	@Getter @Setter public static int maxPlayers;
+	private int totalPlayers;
+	private long roundStart;
 
 	public Sumo(Player player) {
 		this.name = player.getName();
@@ -47,33 +55,52 @@ public class Sumo {
 	public List<String> getLore() {
 		List<String> toReturn = new ArrayList<>();
 
-		Sumo sumo = Array.getInstance().getSumoManager().getActiveSumo();
+		Sumo sumo = plugin.getSumoManager().getActiveSumo();
 
 		toReturn.add(CC.MENU_BAR);
-		toReturn.add(CC.translate("&fHost: &c" + sumo.getName()));
-
 		if (sumo.isWaiting()) {
-			toReturn.add("&fPlayers: &c" + sumo.getEventPlayers().size() + "/" + Sumo.getMaxPlayers());
-			toReturn.add("");
 
+			String status;
 			if (sumo.getCooldown() == null) {
-				toReturn.add(CC.translate("&fWaiting for players..."));
+
+				status = CC.translate(config.getString("SCOREBOARD.EVENT.SUMO.STATUS_WAITING")
+						.replace("<sumo_host_name>", sumo.getName())
+						.replace("<sumo_player_count>", String.valueOf(sumo.getEventPlayers().size()))
+						.replace("<sumo_max_players>", String.valueOf(Sumo.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
+
 			} else {
-				String remaining = TimeUtil.millisToSeconds(sumo.getCooldown().getRemaining());
-
+				String remaining=TimeUtil.millisToSeconds(sumo.getCooldown().getRemaining());
 				if (remaining.startsWith("-")) {
-					remaining = "0.0";
+					remaining="0.0";
 				}
+				String finalRemaining = remaining;
 
-				toReturn.add(CC.translate("&fStarting in " + remaining + "s"));
+				status = CC.translate(config.getString("SCOREBOARD.EVENT.SUMO.STATUS_COUNTING")
+						.replace("<sumo_host_name>", sumo.getName())
+						.replace("<remaining>", finalRemaining)
+						.replace("<sumo_player_count>", String.valueOf(sumo.getEventPlayers().size()))
+						.replace("<sumo_max_players>", String.valueOf(Sumo.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
+
 			}
+
+			config.getStringList("SCOREBOARD.EVENT.SUMO.WAITING").forEach(line -> toReturn.add(CC.translate(line
+					.replace("<sumo_host_name>", sumo.getName())
+					.replace("<status>", status)
+					.replace("<sumo_player_count>", String.valueOf(sumo.getEventPlayers().size()))
+					.replace("<sumo_max_players>", String.valueOf(Sumo.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
+
 		} else {
-			toReturn.add("&fRemaining: &c" + sumo.getRemainingPlayers().size() + "/" + sumo.getTotalPlayers());
-			toReturn.add("&fDuration: &c" + sumo.getRoundDuration());
-			toReturn.add("");
-			toReturn.add("&a" + sumo.getRoundPlayerA().getUsername());
-			toReturn.add("vs");
-			toReturn.add("&c" + sumo.getRoundPlayerB().getUsername());
+
+			config.getStringList("SCOREBOARD.EVENT.SUMO.FIGHTING").forEach(line -> toReturn.add(CC.translate(line
+					.replace("<sumo_host_name>", sumo.getName())
+					.replace("<sumo_duration>", sumo.getRoundDuration())
+					.replace("<sumo_players_alive>", String.valueOf(sumo.getRemainingPlayers().size()))
+					.replace("<sumo_playerA_name>", sumo.getRoundPlayerA().getUsername())
+					.replace("<sumo_playerA_ping>", String.valueOf(sumo.getRoundPlayerA().getPing()))
+					.replace("<sumo_playerB_name>", sumo.getRoundPlayerB().getUsername())
+					.replace("<sumo_playerB_ping>", String.valueOf(sumo.getRoundPlayerB().getPing()))
+					.replace("<sumo_player_count>", String.valueOf(sumo.getEventPlayers().size()))
+					.replace("<sumo_max_players>", String.valueOf(Sumo.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
 		}
 		toReturn.add(CC.MENU_BAR);
 
@@ -88,7 +115,7 @@ public class Sumo {
 		eventTask = task;
 
 		if (eventTask != null) {
-			eventTask.runTaskTimer(Array.getInstance(), 0L, 20L);
+			eventTask.runTaskTimer(plugin, 0L, 20L);
 		}
 	}
 
@@ -134,10 +161,22 @@ public class Sumo {
 	}
 
 	public void handleJoin(Player player) {
+
+		if (this.eventPlayers.size() >= maxPlayers) {
+			player.sendMessage(Locale.EVENT_FULL.toString());
+			return;
+		}
+
 		eventPlayers.put(player.getUniqueId(), new SumoPlayer(player));
 
-		broadcastMessage(CC.RED + player.getName() + CC.GRAY + " has joined the &cSumo Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-		player.sendMessage(CC.translate("&8[&a+&8] &7You have successfully joined the &cSumo Event&8!"));
+		broadcastMessage(Locale.EVENT_JOIN.toString()
+				.replace("<event_name>", "Sumo")
+				.replace("<joined>", player.getName())
+				.replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
+				.replace("<event_max_players>", String.valueOf(getMaxPlayers())));
+
+		player.sendMessage(Locale.EVENT_PLAYER_JOIN.toString().replace("<event_name>", "Sumo"));
+
 		onJoin(player);
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -145,7 +184,7 @@ public class Sumo {
 		profile.setState(ProfileState.IN_EVENT);
 		profile.refreshHotbar();
 
-		player.teleport(Array.getInstance().getSumoManager().getSumoSpectator());
+		player.teleport(plugin.getSumoManager().getSumoSpectator());
 
 		new BukkitRunnable() {
 			@Override
@@ -154,10 +193,10 @@ public class Sumo {
 					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
 					otherProfile.handleVisibility(otherPlayer, player);
 					profile.handleVisibility(player, otherPlayer);
-					NameTags.color(player, otherPlayer, Array.getInstance().getEssentials().getNametagMeta().getEventColor(), false);
+					NameTags.color(player, otherPlayer, plugin.getEssentials().getNametagMeta().getEventColor(), false);
 				}
 			}
-		}.runTaskAsynchronously(Array.getInstance());
+		}.runTaskAsynchronously(plugin);
 	}
 
 	public void handleLeave(Player player) {
@@ -168,9 +207,13 @@ public class Sumo {
 		eventPlayers.remove(player.getUniqueId());
 
 		if (state == SumoState.WAITING) {
-			broadcastMessage(CC.RED + player.getName() + CC.GRAY + " left the &cSumo Event&8! &8(&c" + getRemainingPlayers().size() + "/" + getMaxPlayers() + "&8)");
-			player.sendMessage(CC.translate("&8[&c-&8] &7You have successfully left the &cSumo Event&8!"));
+			broadcastMessage(Locale.EVENT_LEAVE.toString()
+					.replace("<event_name>", "Sumo")
+					.replace("<left>", player.getName())
+					.replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
+					.replace("<event_max_players>", String.valueOf(getMaxPlayers())));
 		}
+		player.sendMessage(Locale.EVENT_PLAYER_LEAVE.toString().replace("<event_name>", "Sumo"));
 
 		onLeave(player);
 
@@ -186,7 +229,7 @@ public class Sumo {
 					NameTags.reset(player, otherPlayer);
 				}
 			}
-		}.runTaskAsynchronously(Array.getInstance());
+		}.runTaskAsynchronously(plugin);
 
 		profile.setState(ProfileState.IN_LOBBY);
 		profile.setSpleef(null);
@@ -206,19 +249,24 @@ public class Sumo {
 	}
 
 	public void end() {
-		Array.getInstance().getSumoManager().setActiveSumo(null);
-		Array.getInstance().getSumoManager().setCooldown(new Cooldown(60_000L * 10));
+		plugin.getSumoManager().setActiveSumo(null);
+		plugin.getSumoManager().setCooldown(new Cooldown(60_000L * 10));
 
 		setEventTask(null);
 
 		Player winner = this.getWinner();
 
 		if (winner == null) {
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.RED + "The sumo events has been canceled.");
+			Bukkit.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", "Sumo"));
 		} else {
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Sumo Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Sumo Event" + CC.GRAY + "!");
-			Bukkit.broadcastMessage(EVENT_PREFIX + CC.GREEN + winner.getName() + CC.GRAY + " has won the " + CC.RED + "Sumo Event" + CC.GRAY + "!");
+			String win = Locale.EVENT_WON.toString()
+					.replace("<winner_name>", winner.getName())
+					.replace("<event_name>", "Sumo")
+					.replace("<event_prefix>", EVENT_PREFIX);
+
+			Bukkit.broadcastMessage(win);
+			Bukkit.broadcastMessage(win);
+			Bukkit.broadcastMessage(win);
 		}
 
 		for (SumoPlayer sumoPlayer : eventPlayers.values()) {
@@ -229,7 +277,6 @@ public class Sumo {
 				profile.setState(ProfileState.IN_LOBBY);
 				profile.setSumo(null);
 				profile.refreshHotbar();
-
 				profile.teleportToSpawn();
 			}
 		}
@@ -264,18 +311,14 @@ public class Sumo {
 	}
 
 	public void announce() {
-		List<String> strings=new ArrayList<>();
-		strings.add(CC.translate(" "));
-		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
-		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&c&l[Sumo Event]"));
-		strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + ""));
-		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&fA &cSumo &fevent is being hosted by &c" + this.host.getUsername()));
-		strings.add(CC.translate("&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ " + "&fEvent is starting in 60 seconds!"));
-		strings.add(CC.translate("&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ " + "&a&l[Click to Join]"));
-		strings.add(CC.translate("&7⬛⬛⬛⬛⬛⬛⬛⬛"));
-		strings.add(CC.translate(" "));
-		for ( String string : strings ) {
-			Clickable message = new Clickable(string, "Click to join Sumo events", "/sumo join");
+		for ( String string : Locale.EVENT_ANNOUNCE.toList() ) {
+			String main = string
+					.replace("<event_name>", "Sumo")
+					.replace("<event_host>", this.getHost().getUsername())
+					.replace("<event_prefix>", EVENT_PREFIX);
+
+			Clickable message = new Clickable(main, Locale.EVENT_HOVER.toString().replace("<event_name>", "Sumo"), "/sumo join");
+
 			for ( Player player : Bukkit.getOnlinePlayers() ) {
 				if (!eventPlayers.containsKey(player.getUniqueId())) {
 					message.sendToPlayer(player);
@@ -291,11 +334,11 @@ public class Sumo {
 	}
 
 	public void onJoin(Player player) {
-	  Profile.setKb(player, Array.getInstance().getSumoManager().getSumoKnockbackProfile());
+		plugin.getNMSManager().getKnockbackType().applyKnockback(player, plugin.getSumoManager().getSumoKnockbackProfile());
 	}
 
 	public void onLeave(Player player) {
-      Profile.setKb(player, Array.getInstance().getSumoManager().getSumoKnockbackProfile());
+		plugin.getNMSManager().getKnockbackType().applyDefaultKnockback(player);
 	}
 
 	public void onRound() {
@@ -305,7 +348,7 @@ public class Sumo {
 			Player player = roundPlayerA.getPlayer();
 
 			if (player != null) {
-				player.teleport(Array.getInstance().getSumoManager().getSumoSpectator());
+				player.teleport(plugin.getSumoManager().getSumoSpectator());
 
 				Profile profile = Profile.getByUuid(player.getUniqueId());
 
@@ -321,7 +364,7 @@ public class Sumo {
 			Player player = roundPlayerB.getPlayer();
 
 			if (player != null) {
-				player.teleport(Array.getInstance().getSumoManager().getSumoSpectator());
+				player.teleport(plugin.getSumoManager().getSumoSpectator());
 
 				Profile profile = Profile.getByUuid(player.getUniqueId());
 
@@ -345,8 +388,8 @@ public class Sumo {
 		PlayerUtil.denyMovement(playerA);
 		PlayerUtil.denyMovement(playerB);
 
-		playerA.teleport(Array.getInstance().getSumoManager().getSumoSpawn1());
-		playerB.teleport(Array.getInstance().getSumoManager().getSumoSpawn2());
+		playerA.teleport(plugin.getSumoManager().getSumoSpawn1());
+		playerB.teleport(plugin.getSumoManager().getSumoSpawn2());
 
 		setEventTask(new SumoRoundStartTask(this));
 	}
@@ -355,24 +398,29 @@ public class Sumo {
 		SumoPlayer winner = roundPlayerA.getUuid().equals(player.getUniqueId()) ? roundPlayerB : roundPlayerA;
 		winner.setState(SumoPlayerState.WAITING);
 		winner.incrementRoundWins();
-		winner.getPlayer().teleport(Array.getInstance().getSumoManager().getSumoSpectator());
+		winner.getPlayer().teleport(plugin.getSumoManager().getSumoSpectator());
 
 
-		broadcastMessage("&c" + player.getName() + "&7 was eliminated by &c" + winner.getUsername() + "&7!");
+		broadcastMessage(Locale.EVENT_ELIMINATED.toString()
+				.replace("<eliminated_name>", player.getName())
+				.replace("<eliminator_name>", winner.getPlayer().getName()));
 
+		addSpectator(player);
 		setState(SumoState.ROUND_ENDING);
 		setEventTask(new SumoRoundEndTask(this));
 	}
 
 	public String getRoundDuration() {
-		if (getState() == SumoState.ROUND_STARTING) {
-			return "00:00";
-		} else if (getState() == SumoState.ROUND_FIGHTING) {
-			return TimeUtil.millisToTimer(System.currentTimeMillis() - roundStart);
-		} else {
-			return "Ending";
+		switch (getState()) {
+			case ROUND_STARTING:
+				return "00:00";
+			case ROUND_FIGHTING:
+				return TimeUtil.millisToTimer(System.currentTimeMillis() - roundStart);
+			default:
+				return "Ending";
 		}
 	}
+
 
 	public boolean isFighting(UUID uuid) {
 		return (roundPlayerA != null && roundPlayerA.getUuid().equals(uuid)) || (roundPlayerB != null && roundPlayerB.getUuid().equals(uuid));
@@ -411,13 +459,11 @@ public class Sumo {
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setSumo(this);
-		PlayerUtil.spectator(player);
-		player.setFlying(true);
 		profile.setState(ProfileState.SPECTATING);
 		profile.refreshHotbar();
 		profile.handleVisibility();
 
-		player.teleport(Array.getInstance().getSumoManager().getSumoSpectator());
+		player.teleport(plugin.getSumoManager().getSumoSpectator());
 	}
 
 	public void removeSpectator(Player player) {
@@ -426,11 +472,9 @@ public class Sumo {
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setSumo(null);
-		player.setFlying(false);
 		profile.setState(ProfileState.IN_LOBBY);
 		profile.refreshHotbar();
 		profile.handleVisibility();
-
 		profile.teleportToSpawn();
 	}
 

@@ -7,7 +7,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 @AllArgsConstructor
 public class SpleefResetTask extends BukkitRunnable {
 
-    private Spleef match;
+    private final Spleef match;
 
     @Override
     public void run() {

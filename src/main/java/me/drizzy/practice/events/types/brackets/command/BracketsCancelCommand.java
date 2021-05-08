@@ -15,9 +15,7 @@ public class BracketsCancelCommand {
 			sender.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "Brackets"));
 			return;
 		}
-
 		Profile.getProfiles().values().stream().filter(profile -> !profile.getKitEditor().isActive()).filter(Profile::isInLobby).forEach(Profile::refreshHotbar);
-
 		Array.getInstance().getBracketsManager().getActiveBrackets().end();
 	}
 

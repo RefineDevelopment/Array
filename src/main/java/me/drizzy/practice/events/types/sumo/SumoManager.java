@@ -11,14 +11,16 @@ import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
+@Getter
+@Setter
 public class SumoManager {
 
-	@Getter private Sumo activeSumo;
-	@Getter @Setter private Cooldown cooldown = new Cooldown(0);
-	@Getter @Setter private Location sumoSpectator;
-	@Getter @Setter private Location sumoSpawn1;
-	@Getter @Setter private Location sumoSpawn2;
-	@Getter @Setter private String sumoKnockbackProfile;
+	private Sumo activeSumo;
+	private Cooldown cooldown = new Cooldown(0);
+	private Location sumoSpectator;
+	private Location sumoSpawn1;
+	private Location sumoSpawn2;
+	private String sumoKnockbackProfile;
 
 	public SumoManager() {
 		load();

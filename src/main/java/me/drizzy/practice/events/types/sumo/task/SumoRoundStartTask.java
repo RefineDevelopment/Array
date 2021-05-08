@@ -1,5 +1,6 @@
 package me.drizzy.practice.events.types.sumo.task;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.events.types.sumo.Sumo;
 import me.drizzy.practice.events.types.sumo.SumoState;
@@ -17,7 +18,7 @@ public class SumoRoundStartTask extends SumoTask {
 	@Override
 	public void onRun() {
 		if (getTicks() >= 3) {
-			this.getSumo().broadcastMessage(CC.RED + CC.BOLD + "The round has started!");
+			this.getSumo().broadcastMessage(Locale.EVENT_ROUND_STARTED.toString());
 			this.getSumo().setEventTask(null);
 			this.getSumo().setState(SumoState.ROUND_FIGHTING);
 
@@ -48,7 +49,7 @@ public class SumoRoundStartTask extends SumoTask {
 				playerB.playSound(playerB.getLocation(), Sound.NOTE_PLING, 1.0F, 1.0F);
 			}
 
-			this.getSumo().broadcastMessage("&d" + seconds + "...");
+			this.getSumo().broadcastMessage(Locale.EVENT_START_COUNTDOWN.toString().replace("<seconds>", String.valueOf(seconds)));
 		}
 	}
 

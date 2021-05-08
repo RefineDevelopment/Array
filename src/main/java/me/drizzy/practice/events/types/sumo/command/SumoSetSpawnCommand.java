@@ -1,6 +1,8 @@
 package me.drizzy.practice.events.types.sumo.command;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.events.types.brackets.BracketsManager;
+import me.drizzy.practice.events.types.sumo.SumoManager;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
@@ -10,20 +12,21 @@ import org.bukkit.entity.Player;
 public class SumoSetSpawnCommand {
 
 	public void execute(Player player, @CPL("[one|two|spec]") String position) {
+		SumoManager sumo = Array.getInstance().getSumoManager();
+
 		if (!(position.equals("one") || position.equals("two") || position.equals("spec"))) {
-			player.sendMessage(CC.RED + "The position must be 1 or 2.");
+			player.sendMessage(CC.translate("&7The position must be &cone&7/&ctwo&7/&cspec&7."));
 		} else {
-			if (position.equals("one")) {
-				Array.getInstance().getSumoManager().setSumoSpawn1(player.getLocation());
-			} else if (position.equals("two")) {
-				Array.getInstance().getSumoManager().setSumoSpawn2(player.getLocation());
+			if (position.equals("one"))  {
+				sumo.setSumoSpawn1(player.getLocation());
+			} else if (position.equals("two")){
+				sumo.setSumoSpawn2(player.getLocation());
 			} else {
-				Array.getInstance().getSumoManager().setSumoSpectator(player.getLocation());
+				sumo.setSumoSpectator(player.getLocation());
 			}
 
-			player.sendMessage(CC.GREEN + "Updated sumo's spawn location " + position + ".");
-
-			Array.getInstance().getSumoManager().save();
+			player.sendMessage(CC.translate("&7Updated &cSumo's &7spawn location &c" + position + "&7."));
+			sumo.save();
 		}
 	}
 

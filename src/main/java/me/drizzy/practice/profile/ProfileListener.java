@@ -2,14 +2,9 @@ package me.drizzy.practice.profile;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.essentials.event.SpawnTeleportEvent;
-import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchState;
-import me.drizzy.practice.match.events.MatchEvent;
-import me.drizzy.practice.match.events.MatchStartEvent;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.other.PlayerUtil;
-import me.drizzy.practice.util.other.TaskUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.ItemFrame;
@@ -28,7 +23,6 @@ import org.bukkit.event.player.*;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.List;
 import java.util.UUID;
 
 public class ProfileListener implements Listener {

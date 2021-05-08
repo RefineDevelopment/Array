@@ -31,7 +31,7 @@ public enum Locale {
     PARTY_ALREADYHAVE("PARTY.ALREAD_HAVE", "&8[&c&lParty&8] &7You already have a party!"),
     PARTY_NOTLEADER("PARTY.NOTLEADER", "&8[&c&lParty&8] &7You are not the leader of this party!"),
     PARTY_DONOTHAVE("PARTY.DO_NOT_HAVE", "&8[&c&lParty&8] &7You don't have a party!"),
-    PARTY_INFO("", Arrays.asList("")),
+    PARTY_INFO("PARTY.INFO", Arrays.asList(CC.CHAT_BAR, "&cParty Information", CC.CHAT_BAR, "&8 • &cLeader: <party_leader_name>", "&8 • &cPrivacy: <party_privacy>", "&8 • &cMembers: <party_members_formatted>", CC.CHAT_BAR)),
     PARTY_NOTLOBBY("PARTY.NOT_IN_LOBBY", "&8[&c&lParty&8] &7You are not in lobby, please finish your current task!"),
 
     ERROR_NOTACTIVE("ERROR.NOT_ACTIVE", "&7There is no current on-going <event> event!"),
@@ -42,10 +42,10 @@ public enum Locale {
     ERROR_PEARLSDISABLED("ERROR.PEARLS_DISABLED", "&cYou can't enderpearl in this arena!"),
     ERROR_REMATCHSENT("ERROR.REMATCH_SENT", "&7You have already sent the rematch request!"),
     ERROR_PLAYERNOTFOUND("ERROR.PLAYER_NOT_FOUND", "&7That player does not exist or is not currently online."),
-    ERROR_SETTING_NOPERM("ERROR.SETTINGS_NO_PERM", Arrays.asList("&7You don't have permission to use this setting", "&7&oyou can upgrade your rank at &c&ostore.purgemc.club&7&o.")),
+    ERROR_SETTING_NOPERM("ERROR.SETTINGS_NO_PERM", Arrays.asList("&7You don't have permission to use this setting", "&7&oyou can upgrade your rank at &c&ostore.purgecommunity.com&7&o.")),
 
     RANKED_DISABLED("RANKED.DISABLED", "&7Ranked has been disabled by an Admin!"),
-    RANKED_REQUIRED("RANKED.REQUIRED", Arrays.asList("&7You need to win at least &c10 Unranked Matches &7 to queue Ranked!", "&7&oYou can bypass this limit by upgrading your rank at &c&ostore.purgemc.club")),
+    RANKED_REQUIRED("RANKED.REQUIRED", Arrays.asList("&7You need to win at least &c10 Unranked Matches &7 to queue Ranked!", "&7&oYou can bypass this limit by upgrading your rank at &c&ostore.purgecommunity.com")),
 
     HCF_CLASS_ENABLED("HCF.CLASS_ENABLED", "&cClass: &f<class> &aenabled!"),
     HCF_COOLDOWN("HCF.COOLDOWN", "&7You cannot use this for another <duration>!"),
@@ -83,6 +83,7 @@ public enum Locale {
     MATCH_BRIDGE_WRONG_PORTAL("MATCH.BRIDGE_WRONG_PORTAL", "&cYou jumped in the wrong portal!"),
     MATCH_BRIDGE_SCORED("MATCH.BRIDGE_SCORED", "<relation_color_scored><scored_name> &fhas scored a Point!"),
     MATCH_BRIDGE_WON("MATCH.BRIDGE_WON_ROUND", Arrays.asList("", "&c<winner_name> &7has won this round!", "")),
+    MATCH_INVENTORY_MESSAGE_TITLE("MATCH.INVENTORY_MESSAGE_TITLE", "&c&lMatch Details &7(Click name to view inventory)"),
 
     TOURNAMENT_ROUND("TOURNAMENT.ROUND_MESSAGE", "&8[&9&lRound&8] &c<round> &7has started!"),
     TOURNAMENT_NOT_PICKED("TOURNAMENT.NOT_PICKED", "&8[&c&lTournament&8] &7You weren't picked this round, please wait for your turn!"),
@@ -102,6 +103,7 @@ public enum Locale {
     EVENT_ALREADY_STARED("EVENTS.ALREADY_STARTED", "&7This event has already and cannot be joined!"),
     EVENT_ELIMINATED("EVENTS.ELIMINATED", "&c<eliminated_name> &7was eliminated by &c<eliminator_name>&7!"),
     EVENT_DIED("EVENTS.DIED", "&c<eliminated_name> &7has died&7!"),
+    EVENT_NO_PERMISSION("EVENTS.NO_PERM", Arrays.asList("&7You do not have permission to use this.", "&7&oPlease upgrade your Rank at &c&ostore.purgecommunity.com &7")),
     EVENT_CANCELLED("EVENTS.CANCELLED", "&cThe <event_name> Event has been cancelled!"),
     EVENT_START_COUNTDOWN("EVENTS.START_COUNTDOWN", "&c<seconds>&f..."),
     EVENT_PARKROUR_WON("EVENTS.PARKOUR_WON", "&c<winner> &ehas reached the end!"),
@@ -113,23 +115,23 @@ public enum Locale {
     EVENT_KILLED("EVENTS.KILLED", "&c<killed_name> &7has died!"),
     EVENT_ANNOUNCE("EVENTS.ANNOUCE", Arrays.asList(" ", "&7⬛⬛⬛⬛⬛⬛⬛⬛", "&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &c&l[<event_name> Event]", "&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ ", "&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &fA &cBrackets &fevent is being hosted by &c<event_host>", "&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ &fEvent is starting in 60 seconds!", "&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &a&l[Click to Join]", "&7⬛⬛⬛⬛⬛⬛⬛⬛", "")),
     EVENT_HOVER("EVENTS.HOVER", "&7Click to join <event_name> Event"),
-    EVENT_WON("EVENTS.WON", "<event_prefix> &a<winner_name> &7has won the &c<event_name> Event&7!"),
+    EVENT_WON("EVENTS.WON", Arrays.asList(" ", "&7⬛⬛⬛⬛⬛⬛⬛⬛", "&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &c&l[<event_name> Event]", "&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ ", "&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &c<winner> &ehas won the <event_name> Event.", "&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ &7&oGood game!", "&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛", "&7⬛⬛⬛⬛⬛⬛⬛⬛", "")),
 
     QUEUE_JOIN_UNRANKED("QUEUE.JOIN_UNRANKED", "&7You have been added to the &c<queue_name> &7queue."),
     QUEUE_JOIN_RANKED("QUEUE.JOIN_RANKED", "&7You have been added to the &c<queue_name> &7queue. &c[<queue_elo>]"),
 
     DUEL_SENT("DUEL.SENT", "&8[&c&lDuel&8] &fYou sent a duel request to &c<target_name> &7(<target_ping>) &f with kit &c<duel_kit> &fon the arena &c<duel_arena>"),
-    DUEL_RECIEVED("DUEL.RECIEVED", "&8[&c&lDuel&8] &c<sender_name> &7(<sender_ping>&7) &fhas sent you a duel request with kit &b<duel_kit> &fon the arena &c<duel_arena>"),
+    DUEL_RECIEVED("DUEL.RECIEVED", "&8[&c&lDuel&8] &c<sender_name> &7(<sender_ping>&7) &fhas sent you a duel request with kit &c<duel_kit> &fon the arena &c<duel_arena>"),
     DUEL_HOVER("DUEL.INVITE_HOVER", "&7Click to accept this duel."),
     DUEL_ACCEPT("DUEL.CLICK_TO_ACCEPT", "&a(Click to Accept)"),
 
     KITEDITOR_LONG("KITEDITOR.TOO_LONG", "&7A name cannot be longer than &c16 &7characters!"),
     KITEDITOR_RENAMED("KITEDITOR.RENAMED", "&7Successfully &crenamed &7the kit to &c<custom_name>&7!"),
 
-    LEADERBOARDS_KIT_FORMAT("LEADERBOARDS.KIT_FORMAT", "&c<leaderboards_pos>. &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
-    LEADERBOARDS_GLOBAL_FORMAT("LEADERBOARDS.GLOBAL_FORMAT", "&c<leaderboards_pos>. &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
-
-    END("", "");
+    LEADERBOARDS_KIT_FORMAT("LEADERBOARDS.KIT_FORMAT", "&c<leaderboards_pos> &7&l| &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
+    LEADERBOARDS_KIT_HEADER("LEADERBOARDS.GLOBAL_HEADER", "&c<kit_name> &7| &fTop 10"),
+    LEADERBOARDS_GLOBAL_FORMAT("LEADERBOARDS.GLOBAL_FORMAT", "&c<leaderboards_pos> &7&l| &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
+    LEADERBOARDS_GLOBAL_HEADER("LEADERBOARDS.GLOBAL_HEADER", "&cGlobal &7| &fTop 10");
 
     @Getter private final String path;
     @Getter private String value;
@@ -149,7 +151,7 @@ public enum Locale {
 
     public String toString() {
         Replacement replacement = new Replacement(CC.translate(configFile.getConfiguration().getString(this.path)));
-        return replacement.toString().replace("{0}", "\n");
+        return replacement.toString().replace("{0}", "\n").replace("|", "┃");
     }
 
     public List<String> toList() {

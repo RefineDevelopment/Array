@@ -16,6 +16,7 @@ public class MOTDListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         if (Array.getInstance().getEssentials().getMeta().isMotdEnabled()) {
             Player player = event.getPlayer();
+            for (int i = 0; i < 300; i++) player.sendMessage(" ");
             for ( String string : replace(Array.getInstance().getEssentials().getMotd())) {
                 player.sendMessage(CC.translate(string));
             }

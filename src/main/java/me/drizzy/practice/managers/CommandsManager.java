@@ -218,6 +218,7 @@ public class CommandsManager {
                 new SpleefHostCommand(),
                 new SpleefJoinCommand(),
                 new SpleefLeaveCommand(),
+                new SpleefKnockbackCommand(),
                 new SpleefSetSpawnCommand(),
                 new SpleefTpCommand(),
                 new SpleefHelpCommand(),

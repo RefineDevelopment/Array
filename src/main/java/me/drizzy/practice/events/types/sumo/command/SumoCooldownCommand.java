@@ -11,12 +11,10 @@ public class SumoCooldownCommand {
 
 	public void execute(CommandSender sender) {
 		if (Array.getInstance().getSumoManager().getCooldown().hasExpired()) {
-			sender.sendMessage(CC.RED + "There isn't any cooldown for the Sumo Event.");
+			sender.sendMessage(CC.translate("&7There is no currently active Sumo Event cooldown."));
 			return;
 		}
-
-		sender.sendMessage(CC.GREEN + "You reset the Sumo Event cooldown.");
-
+		sender.sendMessage(CC.translate("&7Successfully reset the &cSumo Event &7cooldown."));
 		Array.getInstance().getSumoManager().setCooldown(new Cooldown(0));
 	}
 

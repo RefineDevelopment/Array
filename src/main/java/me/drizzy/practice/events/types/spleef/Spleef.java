@@ -99,7 +99,6 @@ public class Spleef {
 					.replace("<spleef_max_players>", String.valueOf(Spleef.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
 
 		} else {
-
 			config.getStringList("SCOREBOARD.EVENT.SPLEEF.FIGHTING").forEach(line -> toReturn.add(CC.translate(line
 					.replace("<spleef_host_name>", spleef.getName())
 					.replace("<spleef_duration>", spleef.getRoundDuration())
@@ -261,7 +260,9 @@ public class Spleef {
 	public void end() {
 		plugin.getSpleefManager().setActiveSpleef(null);
 		plugin.getSpleefManager().setCooldown(new Cooldown(60_000L * 10));
-        this.getCatcher().clear();
+
+		catcher.clear();
+
 		setEventTask(null);
 
 		new SpleefResetTask(this).runTask(plugin);

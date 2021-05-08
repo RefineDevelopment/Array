@@ -10,9 +10,7 @@ public class SpleefSetSpawnCommand {
 
 	public void execute(Player player) {
 		Array.getInstance().getSpleefManager().setSpleefSpawn(player.getLocation());
-
-		player.sendMessage(CC.GREEN + "Set spleef's spawn location.");
-
+		player.sendMessage(CC.translate("&7Updated &cSpleef's &7spawn location."));
 		Array.getInstance().getSpleefManager().save();
 	}
 

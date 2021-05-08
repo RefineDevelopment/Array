@@ -12,7 +12,6 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.Clickable;
-import me.drizzy.practice.util.chat.ColourUtils;
 import me.drizzy.practice.util.other.NameTags;
 import me.drizzy.practice.util.other.TaskUtil;
 import org.bukkit.Bukkit;
@@ -27,8 +26,7 @@ import java.util.UUID;
 @Setter
 public class Party extends Team {
 
-    @Getter
-    private static List<Party> parties = new ArrayList<>();
+    @Getter private static List<Party> parties = new ArrayList<>();
 
     private final List<PartyInvite> invites;
     private final List<Player> banned;
@@ -336,6 +334,7 @@ public class Party extends Team {
      */
     public void sendInformation(Player player) {
         StringBuilder builder = new StringBuilder();
+
         for (Player member : this.getPlayers()) {
             if (this.getPlayers().size() == 1) {
                 builder.append(CC.RESET).append("None").append(CC.GRAY).append(", ");
@@ -347,16 +346,14 @@ public class Party extends Team {
             }
         }
 
-        final List<String> lines = new ArrayList<>();
-        lines.add(CC.CHAT_BAR);
-        lines.add(CC.RED + "Party Information");
-        lines.add(CC.CHAT_BAR);
-        lines.add(CC.translate("&8 • &cLeader: " + CC.WHITE + this.getLeader().getUsername()));
-        lines.add(CC.translate("&8 • &cPrivacy: " + CC.WHITE + this.privacy.toString()));
-        lines.add(CC.translate("&8 • &cMembers: " + CC.GRAY + "(" + (this.getTeamPlayers().size() - 1) + ") " + builder.substring(0, builder.length() - 2)));
-        lines.add(CC.CHAT_BAR);
-        for ( String line : lines ) {
-            player.sendMessage(line);
-        }
+        Locale.PARTY_INFO.toList().forEach(string -> {
+
+            String main = string.replace("<party_leader_name>", this.getLeader().getUsername())
+                                .replace("<party_privacy>", this.privacy.toString())
+                                .replace("<party_members_formatted>", CC.GRAY + "(" + (this.getTeamPlayers().size() - 1) + ") " + builder.substring(0, builder.length() - 2))
+                                .replace("<party_members>", String.valueOf(getTeamPlayers().size()));
+            player.sendMessage(CC.translate(main));
+
+        });
     }
 }

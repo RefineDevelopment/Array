@@ -1,5 +1,6 @@
 package me.drizzy.practice.events.types.spleef.command;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.events.types.spleef.Spleef;
@@ -16,21 +17,21 @@ public class SpleefJoinCommand {
 		Spleef activeSpleef = Array.getInstance().getSpleefManager().getActiveSpleef();
 
 		if (profile.isBusy() || profile.getParty() != null) {
-			player.sendMessage(CC.RED + "You cannot join the spleef right now.");
+			player.sendMessage(Locale.EVENT_NOTABLE_JOIN.toString());
 			return;
 		}
 
 		if (activeSpleef == null) {
-			player.sendMessage(CC.RED + "There isn't any active Spleef Events right now.");
+			player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "Spleef"));
 			return;
 		}
 
 		if (activeSpleef.getState() != SpleefState.WAITING) {
-			player.sendMessage(CC.RED + "This Spleef Event is currently on-going and cannot be joined.");
+			player.sendMessage(Locale.EVENT_ALREADY_STARED.toString().replace("<event>", "Spleef"));
 			return;
 		}
 
-		Array.getInstance().getSpleefManager().getActiveSpleef().handleJoin(player);
+		activeSpleef.handleJoin(player);
 	}
 
 }

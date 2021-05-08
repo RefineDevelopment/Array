@@ -1,6 +1,7 @@
 package me.drizzy.practice.events.types.spleef.command;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.spleef.Spleef;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
@@ -12,26 +13,17 @@ public class SpleefHostCommand {
 
 	public static void execute(Player player) {
 		if (Array.getInstance().getSpleefManager().getActiveSpleef() != null) {
-			player.sendMessage(CC.RED + "There is already an active Spleef Event.");
+			player.sendMessage(Locale.EVENT_ON_GOING.toString().replace("<event>", "Spleef"));
 			return;
 		}
 
 		if (!Array.getInstance().getSpleefManager().getCooldown().hasExpired()) {
-			player.sendMessage(CC.RED + "There is an active cooldown for the Spleef Event.");
+			player.sendMessage(Locale.EVENT_COOLDOWN_ACTIVE.toString().replace("<event>", "Spleef"));
 			return;
 		}
 
 		Array.getInstance().getSpleefManager().setActiveSpleef(new Spleef(player));
-
-		for (Player other : Array.getInstance().getServer().getOnlinePlayers()) {
-			Profile profile = Profile.getByUuid(other.getUniqueId());
-
-			if (profile.isInLobby()) {
-				if (!profile.getKitEditor().isActive()) {
-					profile.refreshHotbar();
-				}
-			}
-		}
+		Profile.getProfiles().values().stream().filter(profile -> !profile.getKitEditor().isActive()).filter(Profile::isInLobby).forEach(Profile::refreshHotbar);
 	}
 
 }

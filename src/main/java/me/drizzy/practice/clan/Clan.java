@@ -38,11 +38,11 @@ public class Clan {
     @Getter public static final MongoCollection<Document> collection = Array.getInstance().getMongoDatabase().getCollection("Clans");
     @Getter private static final List<LeaderboardsAdapter> clanLeaderboards = new ArrayList<>();
 
-    public static Executor thread = Array.getInstance().getMongoThread();
-    private Map<Kit, ClanStatisticsData> statisticsData = new LinkedHashMap<>();
-    private List<ClanProfile> allMembers = new ArrayList<>();
-    private List<ClanProfile> members = new ArrayList<>();
-    private List<ClanProfile> captains = new ArrayList<>();
+    public static final Executor thread = Array.getInstance().getMongoThread();
+    private final Map<Kit, ClanStatisticsData> statisticsData = new LinkedHashMap<>();
+    private final List<ClanProfile> allMembers = new ArrayList<>();
+    private final List<ClanProfile> members = new ArrayList<>();
+    private final List<ClanProfile> captains = new ArrayList<>();
 
     private ClanProfile leader;
     private String name;

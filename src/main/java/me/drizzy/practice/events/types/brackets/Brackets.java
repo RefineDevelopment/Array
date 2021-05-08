@@ -217,9 +217,9 @@ public class Brackets {
 					.replace("<left>", player.getName())
 					.replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
 					.replace("<event_max_players>", String.valueOf(getMaxPlayers())));
-
-			player.sendMessage(Locale.EVENT_PLAYER_LEAVE.toString().replace("<event_name>", "Brackets"));
 		}
+		player.sendMessage(Locale.EVENT_PLAYER_LEAVE.toString().replace("<event_name>", "Brackets"));
+
 
 		onLeave(player);
 
@@ -265,7 +265,11 @@ public class Brackets {
 		if (winner == null) {
 			Bukkit.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", "Brackets"));
 		} else {
-			String win = Locale.EVENT_WON.toString().replace("<winner_name>", winner.getName()).replace("<event_name>", "Brackets"). replace("<event_prefix>", EVENT_PREFIX);
+			String win = Locale.EVENT_WON.toString()
+					.replace("<winner_name>", winner.getName())
+					.replace("<event_name>", "Sumo")
+					.replace("<event_prefix>", EVENT_PREFIX);
+
 			Bukkit.broadcastMessage(win);
 			Bukkit.broadcastMessage(win);
 			Bukkit.broadcastMessage(win);

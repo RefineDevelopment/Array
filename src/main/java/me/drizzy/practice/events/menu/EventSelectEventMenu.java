@@ -1,6 +1,7 @@
 package me.drizzy.practice.events.menu;
 
 import lombok.AllArgsConstructor;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.enums.EventType;
 import me.drizzy.practice.events.types.gulag.command.GulagHostCommand;
 import org.bukkit.Material;
@@ -108,14 +109,14 @@ public class EventSelectEventMenu extends Menu {
                     lore.add(CC.GRAY + "with your team, the last");
                     lore.add(CC.GRAY + "team standing until timer wins!");
                     lore.add("");
-                    lore.add("&c&lThis events is in development!");
+                    lore.add("&c&lThis event is in development!");
                     break;
                 case "&c&lOITC":
                     lore.add(CC.GRAY + "Run for your life and");
                     lore.add(CC.GRAY + "beat your opponents in a");
                     lore.add(CC.GRAY + "FFA with a One Hit Bow!");
                     lore.add("");
-                    lore.add("&c&lThis events is in development!");
+                    lore.add("&c&lThis event is in development!");
                     break;
             }
             lore.add(CC.MENU_BAR);
@@ -132,7 +133,7 @@ public class EventSelectEventMenu extends Menu {
             Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
             player.closeInventory();
             if (!eventType.isEnabled()) {
-                player.sendMessage(CC.translate("&7This events is disabled, Please contact an admin to enable this events."));
+                player.sendMessage(CC.translate("&7This event is disabled, Please contact an Administrator to enable this events."));
                 return;
             }
 
@@ -141,48 +142,42 @@ public class EventSelectEventMenu extends Menu {
                     if (player.hasPermission("array.host.brackets")) {
                         BracketsHostCommand.execute(player);
                     } else {
-                        player.sendMessage(CC.translate("&7You do not have permission to use this."));
-                        player.sendMessage(CC.translate("&7&oPlease upgrading your Rank at &c&ostore.purgemc.club &7"));
+                        Locale.EVENT_NO_PERMISSION.toList().forEach(player::sendMessage);
                     }
                     break;
                 case "&c&lSumo":
                     if (player.hasPermission("array.host.sumo")) {
                         SumoHostCommand.execute(player);
                     } else {
-                        player.sendMessage(CC.translate("&7You do not have permission to use this."));
-                        player.sendMessage(CC.translate("&7&oPlease upgrading your Rank at &c&ostore.purgemc.club &7"));
+                        Locale.EVENT_NO_PERMISSION.toList().forEach(player::sendMessage);
                     }
                     break;
                 case "&c&lLMS":
                     if (player.hasPermission("array.host.lms")) {
                         LMSHostCommand.execute(player);
                     } else {
-                        player.sendMessage(CC.translate("&7You do not have permission to use this."));
-                        player.sendMessage(CC.translate("&7&oPlease upgrading your Rank at &c&ostore.purgemc.club &7"));
+                        Locale.EVENT_NO_PERMISSION.toList().forEach(player::sendMessage);
                     }
                     break;
                 case "&c&lParkour":
                     if (player.hasPermission("array.host.parkour")) {
                         ParkourHostCommand.execute(player);
                     } else {
-                        player.sendMessage(CC.translate("&7You do not have permission to use this."));
-                        player.sendMessage(CC.translate("&7&oPlease upgrading your Rank at &c&ostore.purgemc.club &7"));
+                        Locale.EVENT_NO_PERMISSION.toList().forEach(player::sendMessage);
                     }
                     break;
                 case "&c&lSpleef":
                     if (player.hasPermission("array.host.spleef")) {
                         SpleefHostCommand.execute(player);
                     } else {
-                        player.sendMessage(CC.translate("&7You do not have permission to use this."));
-                        player.sendMessage(CC.translate("&7&oPlease upgrading your Rank at &c&ostore.purgemc.club &7"));
+                        Locale.EVENT_NO_PERMISSION.toList().forEach(player::sendMessage);
                     }
                     break;
                 case "&c&lGulag":
                     if (player.hasPermission("array.host.gulag")) {
                         GulagHostCommand.execute(player);
                     } else {
-                        player.sendMessage(CC.translate("&7You do not have permission to use this."));
-                        player.sendMessage(CC.translate("&7&oPlease upgrading your Rank at &c&ostore.purgemc.club &7"));
+                        Locale.EVENT_NO_PERMISSION.toList().forEach(player::sendMessage);
                     }
                     break;
                 case "&c&lRunner":

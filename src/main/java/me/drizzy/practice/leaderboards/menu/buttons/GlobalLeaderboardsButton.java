@@ -1,5 +1,6 @@
 package me.drizzy.practice.leaderboards.menu.buttons;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.api.ArrayCache;
 import me.drizzy.practice.leaderboards.LeaderboardsAdapter;
 import me.drizzy.practice.profile.Profile;
@@ -27,14 +28,14 @@ public class GlobalLeaderboardsButton extends Button {
         lore.add(CC.MENU_BAR);
         for (LeaderboardsAdapter leaderboardsAdapter : Profile.getGlobalEloLeaderboards()) {
             Profile profile = Profile.getByUuid(ArrayCache.getUUID(leaderboardsAdapter.getName()));
-            if (position == 1 || position == 2 || position == 3) {
-                lore.add(" &a" + position + " &7&l| &c" + leaderboardsAdapter.getName() + "&7: &f" + leaderboardsAdapter.getElo() + " &7(" + ChatColor.stripColor(profile.getEloLeague()) + "&7)");
-            } else {
-                lore.add(" &7" + position + " &7&l| &c" + leaderboardsAdapter.getName() + "&7: &f" + leaderboardsAdapter.getElo() + " &7(" + ChatColor.stripColor(profile.getEloLeague()) + "&7)");
-            }
+            lore.add(Locale.LEADERBOARDS_GLOBAL_FORMAT.toString()
+                    .replace("<leaderboards_pos>", String.valueOf(position))
+                    .replace("<leaderboards_name>", leaderboardsAdapter.getName())
+                    .replace("<leaderboards_elo>", String.valueOf(leaderboardsAdapter.getElo()))
+                    .replace("<leaderboards_division>", ChatColor.stripColor(profile.getEloLeague())));
             ++position;
         }
         lore.add(CC.MENU_BAR);
-        return new ItemBuilder(Material.SUGAR).name("&cGlobal &7| &fTop 10").lore(lore).build();
+        return new ItemBuilder(Material.SUGAR).name(Locale.LEADERBOARDS_GLOBAL_HEADER.toString()).lore(lore).build();
     }
 }

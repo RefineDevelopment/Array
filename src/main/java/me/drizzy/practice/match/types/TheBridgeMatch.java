@@ -198,7 +198,7 @@ public class TheBridgeMatch extends Match {
         inventoriesBuilder.setCurrentHoverEvent(getHoverEvent(losingTeamPlayer)).setCurrentClickEvent(getClickEvent(losingTeamPlayer));
 
         List<BaseComponent[]> components = new ArrayList<>();
-        components.add(new ChatComponentBuilder("").parse("&c&lMatch Details &7(Click name to view inventory)").create());
+        components.add(new ChatComponentBuilder("").parse(Locale.MATCH_INVENTORY_MESSAGE_TITLE.toString()).create());
         components.add(inventoriesBuilder.create());
 
 
@@ -212,10 +212,10 @@ public class TheBridgeMatch extends Match {
 
 
             if (getQueueType() == QueueType.RANKED) {
-                int oldWinnerElo=winningTeamPlayer.getElo();
-                int oldLoserElo=losingTeamPlayer.getElo();
-                int newWinnerElo=EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
-                int newLoserElo=EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
+                int oldWinnerElo = winningTeamPlayer.getElo();
+                int oldLoserElo = losingTeamPlayer.getElo();
+                int newWinnerElo = EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
+                int newLoserElo = EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
                 winningProfile.getStatisticsData().get(getKit()).setElo(newWinnerElo);
                 losingProfile.getStatisticsData().get(getKit()).setElo(newLoserElo);
                 winningProfile.getStatisticsData().get(getKit()).incrementWon();
