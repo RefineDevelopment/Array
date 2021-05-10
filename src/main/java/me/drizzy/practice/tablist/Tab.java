@@ -152,7 +152,7 @@ public class Tab implements ZigguratAdapter {
                         elements.add(new BufferedTabObject().text(tabManager.getMainColor() + "&lPoints").slot(28));
                         Profile profile1 = Profile.getByPlayer(match2.getOpponentPlayer(player));
                         elements.add(new BufferedTabObject().text("&aYour Points (&f" + profile.getBridgeRounds() + "&a)").slot(9));
-                        elements.add(new BufferedTabObject().text("&cTheir Pioints (&f" + profile1.getBridgeRounds() + "&c)").slot(49));
+                        elements.add(new BufferedTabObject().text("&cTheir Points (&f" + profile1.getBridgeRounds() + "&c)").slot(49));
                     }
                 }
                 else if (match2.isTeamMatch()) {
