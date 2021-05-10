@@ -1,6 +1,8 @@
 package me.drizzy.practice.essentials.meta;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.essentials.Essentials;
+import me.drizzy.practice.util.other.TaskUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -31,31 +33,32 @@ public class PiracyMeta {
         Array.logger("&7&m---------------&8[&c" + plugin.getName() + "&7-&cLicense&8]&7&m----------------");
         Array.logger("Checking license....");
         try {
-            if (key.equals("")) key = "XXXX-XXXX-XXXX";
-            
+            if (key.equals("")) key="XXXX-XXXX-XXXX";
+
             String LICENSE_CHECK_URL="https://licenses.colddev.cf/api/validate";
             URL url = new URL(LICENSE_CHECK_URL + "/" + key + "/" + plugin.getName() + "/");
-            
+
             HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json");
             con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36");
             InputStream is = con.getInputStream();
-            
+
             Scanner s = new Scanner((new InputStreamReader(is)));
             if (s.hasNext()) {
-                String response = s.next();
+                String response=s.next();
                 s.close();
                 if (response.equalsIgnoreCase("Success")) {
+                    TaskUtil.runLater(() -> Array.getInstance().getEssentials().setupEssentials(), 10L);
                     Array.logger("&aLicense valid!");
                     Array.logger("&aBy using this plugin you agree to our TOS!");
-                    Array.logger("&cArray &7is made by &c&lPurge Development &7at &c&ohttps://discord.gg/VXzUMfBefZ");
+                    Array.logger("&cArray &7is made by &c&lPurge Development");
                     Array.logger(" ");
-                    Array.logger("&7&oNote");
-                    Array.logger("&7&oIf this is a cracked copy then please don't use it,");
-                    Array.logger("&7&oWe work very hard to make this plugin affordable!");
+                    Array.logger("&7Note:");
+                    Array.logger("&7If this is a cracked copy then please don't use it,");
+                    Array.logger("&7We work very hard to make this plugin affordable!");
                     Array.logger("&7&m---------------&8[&c" + plugin.getName() + "&7-&cLicense&8]&7&m----------------");
-                    } else {
+                } else {
                     Array.logger("&c&lLicense is NOT Valid!");
                     Array.logger("&cFailed as a result of:" + response);
                     Array.logger(" ");
@@ -64,7 +67,7 @@ public class PiracyMeta {
                     Array.logger("&7&m---------------&8[&c" + plugin.getName() + "&7-&cLicense&8]&7&m----------------");
                     Bukkit.getScheduler().cancelTasks(plugin);
                     Bukkit.getPluginManager().disablePlugin(plugin);
-                    }
+                }
             } else {
                 s.close();
                 Array.logger("&c&lLicense is NOT Valid!");

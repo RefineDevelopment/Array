@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.clan.meta.ClanStatisticsData;
+import me.drizzy.practice.enums.ClanProfileType;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.leaderboards.LeaderboardsAdapter;
 import me.drizzy.practice.profile.Profile;

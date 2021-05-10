@@ -192,7 +192,7 @@ public class EventSelectEventMenu extends Menu {
 
         @Override
         public ItemStack getButtonItem(Player player) {
-            return new ItemBuilder(Material.STAINED_GLASS_PANE).name("").durability(3).build();
+            return new ItemBuilder(Material.STAINED_GLASS_PANE).name("").durability(8).build();
         }
     }
 }

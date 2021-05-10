@@ -23,7 +23,7 @@ public class GlobalLeaderboardsButton extends Button {
 
     @Override
     public ItemStack getButtonItem(final Player player) {
-        final List<String> lore =new ArrayList<>();
+        final List<String> lore = new ArrayList<>();
         int position = 1;
         lore.add(CC.MENU_BAR);
         for (LeaderboardsAdapter leaderboardsAdapter : Profile.getGlobalEloLeaderboards()) {

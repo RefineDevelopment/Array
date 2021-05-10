@@ -11,6 +11,10 @@ import me.allen.ziggurat.Ziggurat;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.arena.ArenaTypeAdapter;
 import me.drizzy.practice.arena.ArenaTypeTypeAdapter;
+import me.drizzy.practice.clan.Clan;
+import me.drizzy.practice.clan.ClanProfile;
+import me.drizzy.practice.clan.ClanProfileTypeAdapter;
+import me.drizzy.practice.clan.ClanTypeAdapter;
 import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.divisions.Divisions;
 import me.drizzy.practice.enums.ArenaType;
@@ -33,6 +37,7 @@ import me.drizzy.practice.nms.NMSManager;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.profile.ProfileTypeAdapter;
 import me.drizzy.practice.profile.rank.Rank;
 import me.drizzy.practice.profile.rank.RankType;
 import me.drizzy.practice.profile.rank.apis.DefaultProvider;
@@ -166,11 +171,17 @@ public class Array extends JavaPlugin {
 
         this.loadMessages();
 
-        essentials = new Essentials();
-        essentials.setupEssentials();
+        mainConfig.getConfiguration().options().header(
+                "#######################################################################\n" +
+                "#                                                                     #\n" +
+                "#         Array Practice Core - Developed By Drizzy#0278              #\n" +
+                "#     Bought at Purge Development - https://discord.gg/VXzUMfBefZ     #\n" +
+                "#                                                                     #\n" +
+                "#######################################################################");
+        mainConfig.save();
 
+        essentials = new Essentials();
         tabManager = new TabManager();
-        tabManager.load();
 
         //To Prevent Stealing and Renaming (Skidding)
         if (!Description.getAuthor().contains("Drizzy")) {
@@ -256,7 +267,6 @@ public class Array extends JavaPlugin {
             //Save our Values to Config
             getTabManager().save();
             getEssentials().save();
-            getHotbar().save();
             //Save our Event Setup
             getBracketsManager().save();
             getLMSManager().save();
@@ -321,10 +331,13 @@ public class Array extends JavaPlugin {
         Party.preload();
         TaskUtil.runAsync(() -> NMSManager = new NMSManager());
 
+        honcho.registerTypeAdapter(Profile.class, new ProfileTypeAdapter());
         honcho.registerTypeAdapter(Arena.class, new ArenaTypeAdapter());
         honcho.registerTypeAdapter(ArenaType.class, new ArenaTypeTypeAdapter());
         honcho.registerTypeAdapter(Kit.class, new KitTypeAdapter());
         honcho.registerTypeAdapter(Duration.class, new DurationTypeAdapter());
+        honcho.registerTypeAdapter(Clan.class, new ClanTypeAdapter());
+        honcho.registerTypeAdapter(ClanProfile.class, new ClanProfileTypeAdapter());
     }
 
     private void registerEssentials() {
@@ -379,8 +392,8 @@ public class Array extends JavaPlugin {
     }
 
     public void shutDown() {
-        this.onDisable();
         logger("Shutting down Array!");
+        Bukkit.getScheduler().cancelTasks(this);
         Bukkit.getPluginManager().disablePlugin(this);
     }
 
@@ -391,18 +404,19 @@ public class Array extends JavaPlugin {
         }
 
         Arrays.stream(Locale.values()).forEach(language -> {
+
             if (this.messagesConfig.getConfiguration().getString(language.getPath()) == null || this.messagesConfig.getConfiguration().getStringList(language.getPath()) == null) {
+
                 if (language.getListValue() != null) {
                     this.messagesConfig.getConfiguration().set(language.getPath(), language.getListValue());
                 }
+
                 if (language.getValue() != null) {
                     this.messagesConfig.getConfiguration().set(language.getPath(), language.getValue());
                 }
             }
-        });
 
-        try {
-            this.messagesConfig.getConfiguration().save(messagesConfig.getFile());
-        } catch (Exception ignored) {}
+        });
+        messagesConfig.save();
     }
 }

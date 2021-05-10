@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class SumoForceStartCommand {
     public void execute(Player player) {
         Profile profile = Profile.getByUuid(player.getUniqueId());
-        if (profile.getBrackets() == null) {
+        if (profile.getSumo() == null) {
             player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "Sumo"));
             return;
         }

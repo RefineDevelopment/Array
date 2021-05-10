@@ -122,7 +122,7 @@ public class KitManagementMenu extends Menu {
                 return;
             }
 
-            KitInventory kitInventory= new KitInventory("Kit " + (index + 1));
+            KitInventory kitInventory= new KitInventory(CC.RED + "Kit " + (index + 1));
 
             if (kit.getKitInventory() != null) {
                 if (kit.getKitInventory().getArmor() != null) {
@@ -167,7 +167,7 @@ public class KitManagementMenu extends Menu {
             profile.getKitEditor().setSelectedKitInventory(kitInventory);
 
             player.closeInventory();
-            player.sendMessage(CC.GREEN + "Renaming " + CC.GREEN + kitInventory.getCustomName() + CC.GREEN + "," +
+            player.sendMessage(CC.GREEN + "Renaming " + CC.GREEN + kitInventory.getCustomName() + CC.GREEN + ", " +
                     CC.GREEN + "Enter the new name now...");
         }
 
@@ -201,7 +201,7 @@ public class KitManagementMenu extends Menu {
             KitInventory kit = profile.getStatisticsData().get(profile.getKitEditor().getSelectedKit()).getLoadout(index);
 
             if (kit == null) {
-                kit = new KitInventory("Kit " + (index + 1));
+                kit = new KitInventory(CC.RED + "Kit " + (index + 1));
                 kit.setArmor(profile.getKitEditor().getSelectedKit().getKitInventory().getArmor());
                 kit.setContents(profile.getKitEditor().getSelectedKit().getKitInventory().getContents());
                 profile.getStatisticsData().get(profile.getKitEditor().getSelectedKit()).replaceKit(index, kit);

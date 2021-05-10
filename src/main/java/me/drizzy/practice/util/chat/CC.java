@@ -29,7 +29,7 @@ public class CC {
     public static final String DARK_GREEN = ChatColor.DARK_GREEN.toString();
     public static final String DARK_PURPLE = ChatColor.DARK_PURPLE.toString();
     public static final String PINK = ChatColor.LIGHT_PURPLE.toString();
-    public static final String MENU_BAR = ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() + "------------------------";
+    public static final String MENU_BAR = translate("&c&m-------&7&m---------&c&m--------");
     public static final String CHAT_BAR = ChatColor.translateAlternateColorCodes('&', "&c&m--------&7&m" + StringUtils.repeat("-", 37) + "&c&m--------");
     public static final String SB_BAR = ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() + "----------------------";
 

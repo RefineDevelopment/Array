@@ -188,38 +188,6 @@ public class LMSListener implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-                if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
-                    if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DEFAULT_KIT))) {
-                        KitInventory kitInventory= profile.getLms().getKit().getKitInventory();
-                        event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
-                        event.getPlayer().getInventory().setContents(kitInventory.getContents());
-                        event.getPlayer().getActivePotionEffects().clear();
-                        event.getPlayer().addPotionEffects(profile.getLms().getKit().getKitInventory().getEffects());
-                        event.getPlayer().updateInventory();
-                        event.setCancelled(true);
-                        return;
-                    }
-                }
-
-                if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
-                    String displayName = ChatColor.stripColor(event.getItem().getItemMeta().getDisplayName());
-
-                    if (displayName.startsWith("Kit: ")) {
-                        String kitName = displayName.replace("Kit: ", "");
-
-                        for ( KitInventory kitInventory : profile.getStatisticsData().get(profile.getLms().getKit()).getLoadouts()) {
-                            if (kitInventory != null && ChatColor.stripColor(kitInventory.getCustomName()).equals(kitName)) {
-                                event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
-                                event.getPlayer().getInventory().setContents(kitInventory.getContents());
-                                event.getPlayer().getActivePotionEffects().clear();
-                                event.getPlayer().addPotionEffects(profile.getLms().getKit().getKitInventory().getEffects());
-                                event.getPlayer().updateInventory();
-                                event.setCancelled(true);
-                                return;
-                            }
-                        }
-                    }
-                }
 
                 Player player = event.getPlayer();
                 if (((event.getAction() == Action.RIGHT_CLICK_BLOCK) || (event.getAction() == Action.RIGHT_CLICK_AIR)) &&

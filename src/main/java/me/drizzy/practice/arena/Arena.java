@@ -22,17 +22,19 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
+@Setter
 public class Arena {
 
     @Getter private static final List<Arena> arenas = new ArrayList<>();
-    protected String name;
+    private List<String> kits = new ArrayList<>();
+    public ItemStack displayIcon;
+
+    protected final String name;
+    protected String displayName;
+    protected Location spawn1;
+    protected Location spawn2;
     protected boolean active;
-    @Setter private String displayName;
-    @Setter protected Location spawn1;
-    @Setter protected Location spawn2;
-    @Setter protected boolean disablePearls;
-    @Setter private List<String> kits = new ArrayList<>();
-    @Setter public org.bukkit.inventory.ItemStack displayIcon;
+    protected boolean disablePearls;
 
     public Arena(String name) {
         this.name = name;
@@ -228,11 +230,9 @@ public class Arena {
     }
 
     public void save() {
-
     }
 
     public void delete() {
-
     }
 
 }

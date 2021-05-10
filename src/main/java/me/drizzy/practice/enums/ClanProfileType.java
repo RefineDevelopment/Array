@@ -1,4 +1,4 @@
-package me.drizzy.practice.clan;
+package me.drizzy.practice.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

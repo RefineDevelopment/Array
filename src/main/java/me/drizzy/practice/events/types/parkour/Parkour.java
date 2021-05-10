@@ -253,13 +253,10 @@ public class Parkour {
 		if (winner == null) {
 			Bukkit.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", "Parkour"));
 		} else {
-			String win = Locale.EVENT_WON.toString().replace("<winner_name>", winner.getName())
+			Locale.EVENT_WON.toList().forEach(line -> Bukkit.broadcastMessage(line
+					.replace("<winner>", winner.getName())
 					.replace("<event_name>", "Parkour")
-					.replace("<event_prefix>", EVENT_PREFIX);
-
-			Bukkit.broadcastMessage(win);
-			Bukkit.broadcastMessage(win);
-			Bukkit.broadcastMessage(win);
+					.replace("<event_prefix>", EVENT_PREFIX)));
 		}
 
 		for (ParkourPlayer parkourPlayer : eventPlayers.values()) {

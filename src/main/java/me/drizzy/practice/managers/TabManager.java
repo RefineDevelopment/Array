@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
+import me.drizzy.practice.util.other.TaskUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -24,11 +25,6 @@ public class TabManager {
     public ChatColor dotColor;
     public String legacyHeader;
     public String footer;
-
-    public TabManager() {
-        this.load();
-        this.save();
-    }
 
     /**
      * Load our strings from the Config

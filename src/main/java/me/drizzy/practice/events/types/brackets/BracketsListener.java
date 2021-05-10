@@ -172,34 +172,6 @@ public class BracketsListener implements Listener {
 			Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
 			if (profile.isInBrackets()) {
-				if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
-					if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DEFAULT_KIT))) {
-						KitInventory kitInventory= profile.getBrackets().getKit().getKitInventory();
-						event.getPlayer().getInventory().setArmorContents(kitInventory.getArmor());
-						event.getPlayer().getInventory().setContents(kitInventory.getContents());
-						event.getPlayer().updateInventory();
-						event.setCancelled(true);
-						return;
-					}
-				}
-
-				if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
-					final String displayName = CC.translate(event.getItem().getItemMeta().getDisplayName());
-					if (displayName.endsWith(" (Right-Click)")) {
-						final String kitName = displayName.replace(" (Right-Click)", "");
-						for ( final KitInventory kitInventory2 : profile.getStatisticsData().get(profile.getMatch().getKit()).getLoadouts() ) {
-							if (kitInventory2 != null && ChatColor.stripColor(kitInventory2.getCustomName()).equals(ChatColor.stripColor(kitName))) {
-								event.getPlayer().getInventory().setArmorContents(kitInventory2.getArmor());
-								event.getPlayer().getInventory().setContents(kitInventory2.getContents());
-								event.getPlayer().getActivePotionEffects().clear();
-								event.getPlayer().addPotionEffects(profile.getMatch().getKit().getKitInventory().getEffects());
-								event.getPlayer().updateInventory();
-								event.setCancelled(true);
-								return;
-							}
-						}
-					}
-				}
 
 				Player player = event.getPlayer();
 				if (((event.getAction() == Action.RIGHT_CLICK_BLOCK) || (event.getAction() == Action.RIGHT_CLICK_AIR)) &&

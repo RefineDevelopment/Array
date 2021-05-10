@@ -9,7 +9,6 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.enums.QueueType;
 import me.drizzy.practice.leaderboards.LeaderboardsAdapter;
-import me.drizzy.practice.robot.Robot;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.inventory.InventoryUtil;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
@@ -109,7 +108,6 @@ public class Kit {
             kit.getGameRules().setVoidSpawn(config.getBoolean(path + ".game-rules.voidSpawn"));
             kit.getGameRules().setDisableFallDamage(config.getBoolean(path + ".game-rules.disable-fall-damage"));
             kit.getGameRules().setSumo(config.getBoolean(path + ".game-rules.sumo"));
-            kit.getGameRules().setBedwars(config.getBoolean(path + ".game-rules.bedwars"));
             kit.getGameRules().setMlgRush(config.getBoolean(path + ".game-rules.mlgRush"));
             kit.getGameRules().setBoxUHC(config.getBoolean(path + ".game-rules.boxUHC"));
             kit.getGameRules().setTimed(config.getBoolean(path + ".game-rules.timed"));
@@ -122,6 +120,7 @@ public class Kit {
             kit.getGameRules().setBowHP(config.getBoolean(path + ".game-rules.bow-hp"));
             kit.getGameRules().setHitDelay(config.getInt(path + ".game-rules.hit-delay"));
             kit.getEditRules().setAllowPotionFill(config.getBoolean(".edit-rules.allow-potion-fill"));
+
             if (config.getConfigurationSection(path + ".edit-rules.items") != null) {
                 for (String itemKey : config.getConfigurationSection(path + ".edit-rules.items").getKeys(false)) {
                     kit.getEditRules().getEditorItems().add(
@@ -196,7 +195,6 @@ public class Kit {
         configFile.getConfiguration().set(path + ".game-rules.disable-fall-damage", gameRules.isDisableFallDamage());
         configFile.getConfiguration().set(path + ".game-rules.stickSpawn", gameRules.isStickSpawn());
         configFile.getConfiguration().set(path + ".game-rules.voidSpawn", gameRules.isVoidSpawn());
-        configFile.getConfiguration().set(path + ".game-rules.bedwars", gameRules.isBedwars());
         configFile.getConfiguration().set(path + ".game-rules.mlgrush", gameRules.isMlgRush());
         configFile.getConfiguration().set(path + ".game-rules.combo", gameRules.isCombo());
         configFile.getConfiguration().set(path + ".game-rules.sumo", gameRules.isSumo());
@@ -256,11 +254,11 @@ public class Kit {
         }
     }
 
-    public void applyToRobot(Robot robot) {
+    /*public void applyToRobot(Robot robot) {
         robot.getPlayer().getInventory().setContents(getKitInventory().getContents());
         robot.getPlayer().getInventory().setArmorContents(getKitInventory().getArmor());
         robot.getPlayer().updateInventory();
         Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(robot.getPlayer(), this);
-    }
+    }*/
 
 }

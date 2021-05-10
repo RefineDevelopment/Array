@@ -272,13 +272,10 @@ public class Spleef {
 		if (winner == null) {
 			Bukkit.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", "Spleef"));
 		} else {
-			String win = Locale.EVENT_WON.toString().replace("<winner_name>", winner.getName())
+			Locale.EVENT_WON.toList().forEach(line -> Bukkit.broadcastMessage(line
+					.replace("<winner>", winner.getName())
 					.replace("<event_name>", "Spleef")
-					.replace("<event_prefix>", EVENT_PREFIX);
-
-			Bukkit.broadcastMessage(win);
-			Bukkit.broadcastMessage(win);
-			Bukkit.broadcastMessage(win);
+					.replace("<event_prefix>", EVENT_PREFIX)));
 		}
 
 		for (SpleefPlayer spleefPlayer : eventPlayers.values()) {

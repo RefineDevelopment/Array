@@ -265,14 +265,11 @@ public class Brackets {
 		if (winner == null) {
 			Bukkit.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", "Brackets"));
 		} else {
-			String win = Locale.EVENT_WON.toString()
-					.replace("<winner_name>", winner.getName())
-					.replace("<event_name>", "Sumo")
-					.replace("<event_prefix>", EVENT_PREFIX);
+			Locale.EVENT_WON.toList().forEach(line -> Bukkit.broadcastMessage(line
+					.replace("<winner>", winner.getName())
+					.replace("<event_name>", "Brackets")
+					.replace("<event_prefix>", EVENT_PREFIX)));
 
-			Bukkit.broadcastMessage(win);
-			Bukkit.broadcastMessage(win);
-			Bukkit.broadcastMessage(win);
 		}
 
 		for (BracketsPlayer bracketsPlayer : eventPlayers.values()) {
@@ -391,16 +388,18 @@ public class Brackets {
 		PlayerUtil.reset(playerB);
 
 		playerA.teleport(plugin.getBracketsManager().getBracketsSpawn1());
-		TaskUtil.runLater(() -> Profile.getByUuid(playerA.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> playerA.getInventory().setItem(integer, itemStack)), 10L);
-
+		playerA.getInventory().setContents(kit.getKitInventory().getContents());
+		playerA.getInventory().setArmorContents(kit.getKitInventory().getArmor());
 
 		playerB.teleport(plugin.getBracketsManager().getBracketsSpawn2());
-		TaskUtil.runLater(() -> Profile.getByUuid(playerB.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> playerB.getInventory().setItem(integer, itemStack)), 10L);
+		playerB.getInventory().setContents(kit.getKitInventory().getContents());
+		playerB.getInventory().setArmorContents(kit.getKitInventory().getArmor());
 
 		setEventTask(new BracketsRoundStartTask(this));
 	}
 
 	public void onDeath(Player player) {
+		Profile profile = Profile.getByUuid(player.getUniqueId());
 		BracketsPlayer winner = roundPlayerA.getUuid().equals(player.getUniqueId()) ? roundPlayerB : roundPlayerA;
 		winner.setState(BracketsPlayerState.WAITING);
 		winner.incrementRoundWins();
@@ -410,10 +409,19 @@ public class Brackets {
 				        .replace("<eliminator_name>", winner.getPlayer().getName()));
 
 		player.setFireTicks(0);
-		addSpectator(player);
-		winner.getPlayer().hidePlayer(player);
 		setState(BracketsState.ROUND_ENDING);
 		setEventTask(new BracketsRoundEndTask(this));
+
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				for (Player otherPlayer : getPlayers()) {
+					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
+					otherProfile.handleVisibility(otherPlayer, player);
+					profile.handleVisibility(player, otherPlayer);
+				}
+			}
+		}.runTaskAsynchronously(plugin);
 	}
 
 	public String getRoundDuration() {

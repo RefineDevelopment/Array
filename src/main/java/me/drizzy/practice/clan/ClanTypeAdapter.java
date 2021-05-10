@@ -1,22 +1,21 @@
-package me.drizzy.practice.kit;
+package me.drizzy.practice.clan;
 
-import me.drizzy.practice.clan.Clan;
 import me.drizzy.practice.util.command.command.adapter.CommandTypeAdapter;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class KitTypeAdapter implements CommandTypeAdapter {
+public class ClanTypeAdapter implements CommandTypeAdapter {
 
     @Override
     public <T> T convert(String string, Class<T> type) {
-        return type.cast(Kit.getByName(string));
+        return type.cast(Clan.getByName(string));
     }
 
     @Override
     public <T> List<String> tabComplete(final String string, final Class<T> type) {
-        return Kit.getKits().stream().map(Kit::getName).filter(Objects::nonNull).collect(Collectors.toList());
+        return Clan.getClans().stream().map(Clan::getName).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
 }

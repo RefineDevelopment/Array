@@ -151,9 +151,8 @@ public class SpleefListener implements Listener {
 		Profile profile = Profile.getByPlayer(event.getPlayer());
 		if (profile.isInSpleef() && profile.getSpleef().getState() == SpleefState.ROUND_FIGHTING) {
 			if (BlockUtil.isOnLiquid(to, 0) || BlockUtil.isOnLiquid(to, 1)) {
-				if (profile.getSpleef().getCatcher().contains(event.getPlayer())) {
-					return;
-				}
+				if (profile.getSpleef().getCatcher().contains(event.getPlayer())) return;
+
 				profile.getSpleef().handleDeath(event.getPlayer());
 				profile.getSpleef().getCatcher().add(event.getPlayer());
 				((CraftPlayer)event.getPlayer()).getHandle().playerConnection.checkMovement = false;

@@ -1,0 +1,197 @@
+PARTY:
+  INVITED: '&8[&c&lParty&8] &7You have been invited to join &c<leader>''s &7party.'
+  CLICK_TO_JOIN: '&8[&c&lParty&8] &c(Click to accept)'
+  INVITE_HOVER: '&aClick to to accept this party invite'
+  PLAYER_INVITED: '&8[&c&lParty&8] &c<invited> &7has been invited to your party.'
+  PLAYER_JOINED: '&8[&c&lParty&8] &c<joiner> &7joined your party.'
+  PLAYER_LEFT: '&8[&c&lParty&8] &c<leaver> &7has left your party.'
+  PLAYER_KICK: '&8[&c&lParty&8] &c<leaver> &7has been kicked from your party.'
+  CREATED: '&8[&c&lParty&8] &aYou created a party.'
+  DISBANDED: '&8[&c&lParty&8] &cYour party has been disbanded.'
+  PUBLIC: '&8[&c&lParty&8] &c<host> &ais hosting a public party'
+  PRIVACY: '&8[&c&lParty&8] &7Your party privacy has been changed to &c<privacy>'
+  PROMOTED: '&8[&c&lParty&8] &c<promoted> &ahas been promoted to Leader in your party.'
+  ALREAD_HAVE: '&8[&c&lParty&8] &7You already have a party!'
+  NOTLEADER: '&8[&c&lParty&8] &7You are not the leader of this party!'
+  DO_NOT_HAVE: '&8[&c&lParty&8] &7You don''t have a party!'
+  INFO:
+    - "&c&m--------&7&m-------------------------------------&c&m--------"
+    - "&cParty Information"
+    - "&c&m--------&7&m-------------------------------------&c&m--------"
+    - "&8 • &cLeader: <party_leader_name>"
+    - "&8 • &cPrivacy: <party_privacy>"
+    - "&8 • &cMembers: <party_members_formatted>"
+    - "&c&m--------&7&m-------------------------------------&c&m--------"
+  NOT_IN_LOBBY: '&8[&c&lParty&8] &7You are not in lobby, please finish your current
+    task!'
+ERROR:
+  NOT_ACTIVE: '&7There is no current on-going <event> event!'
+  NOT_PARTOF: '&7You are not part of any on-going <event> event!'
+  NOT_SPECTATING: '&7You are not spectating!'
+  NO_REMATCH: '&7You don''t have anyone to rematch with!'
+  REMATCH_EXPIRED: '&7Your rematch time has been expired!'
+  PEARLS_DISABLED: '&cYou can''t enderpearl in this arena!'
+  REMATCH_SENT: '&7You have already sent the rematch request!'
+  PLAYER_NOT_FOUND: '&7That player does not exist or is not currently online.'
+  SETTINGS_NO_PERM:
+    - '&7You don''t have permission to use this setting'
+    - '&7&oyou can upgrade your rank at &c&ostore.purgecommunity.com&7&o.'
+RANKED:
+  DISABLED: '&7Ranked has been disabled by an Admin!'
+  REQUIRED:
+    - '&7You need to win at least &c10 Unranked Matches &7 to queue Ranked!'
+    - '&7&oYou can bypass this limit by upgrading your rank at &c&ostore.purgecommunity.com'
+HCF:
+  CLASS_ENABLED: '&cClass: &f<class> &aenabled!'
+  COOLDOWN: '&7You cannot use this for another <duration>!'
+  ARCHER_RANGE: '&cRange: &f<range>'
+  ARCHER_MARKED_SHOOTER: '&7You Marked &c<damaged> &7for &c10 seconds &c<damagedhealth>
+    &4❤'
+  ARCHER_MARKED_DAMAGED: '&7Marked! &c<shooter> &7has shot &cyou &7and &cmarked &7you
+    (+25% damage) for &c10 seconds&7. &8(&c<distance> blocks away&8)'
+  BARD_ENERGY: '&cBard Energy: &f<energy>'
+  BARD_BARDBUFF: '&7You have just used a &c&lBard Buff &7that cost you &c<cost> &7of
+    your Energy.'
+  BARD_NOTENOUGHENERGY: '&7You do not have enough energy for this! You need &c<cost>
+    &7energy, but you only have &c<energy>&7!'
+  ROUGE_BEENBACKSTABBED: '&c<attacker> &ehas backstabbed you!'
+  ROGUE_HAVEBACKSTABBED: '&eYou have backstabbed &c<target>&e.'
+MATCH:
+  HCF_START_MESSAGE:
+    - ''
+    - '&c&lHCF Match&7!'
+    - ''
+    - '&7Pick between &cBard&7, &cArcher&7, &cRogue&7 and &cDiamond'
+    - '&7Kits and Fight to the death to &cWin!'
+    - ''
+  TEAM_START_MESSAGE:
+    - '&c&lMatch Found!'
+    - ''
+    - '&fYou are playing on &c<arena>&f on a &cTeam Match!'
+  SOLO_START_MESSAGE:
+    - '&c&lMatch Found!'
+    - ''
+    - '&fYou are playing on &c<arena>&f with &fPlayers: &c<player1> &7vs &c<player2>'
+  ROUND_MESSAGE:
+    - ' &c&lRound #<round_number>'
+    - '  &fYour Points: &c<your_points>'
+    - '  &fTheir Points: &c<their_points>'
+  DISCLAIMER_MESSAGE:
+    - '&c&lReminder: &fButterfly clicking is &cdiscouraged &fand could result in a &cban.
+    Use at your own risk.'
+  COUNTDOWN: '&fStarting in &c<seconds>&f...'
+  ROUND_COUNTDOWN: '&c<seconds>&f...'
+  STARTED: '&aMatch Started!'
+  ROUND_STARTED: '&aThe Round has Started!'
+  SPECTATE_JOIN: '&c<spectator> &eis now spectating your match!'
+  SPECTATE_LEAVE: '&c<spectator> &eis no longer spectating your match!'
+  INVENTORY_HOVER: '&7Click to view &c<inventory_name>''s &7inventory.'
+  CHECKPOINT_ACCQUIRED: '&8[&cParkour&8] &cCheckpoint Accquired!'
+  PARTICIPANT_DISCONNECTED: <relation_color><participant_name> &7has disconnected.
+  PARTICIPANT_WON: <relation_color><participant_name> &ahas won!
+  PARTICIPANT_DIED: <relation_color><participant_name> &7has died!
+  PARTICIPANT_KILLED: <relation_color_dead><dead_name> &7was killed by <relation_color_killer><killer_name>&7.
+  MAX_BUILD_LIMIT: '&cYou have reached the build height limit!'
+  BOW_HIT: '&c<damaged_name> &7is now at &c<damaged_health> &4❤'
+  PEARL_COOLDOWN: '&cYou are on pearl cooldown for <cooldown>!'
+  BOW_COOLDOWN: '&cYou are on bow cooldown for <cooldown>!'
+  BRIDGE_BLOCK_PLACE: '&cYou cannot place blocks here!'
+  BRIDGE_WRONG_PORTAL: '&cYou jumped in the wrong portal!'
+  BRIDGE_SCORED: <relation_color_scored><scored_name> &fhas scored a Point!
+  BRIDGE_WON_ROUND:
+    - ''
+    - '&c<winner_name> &7has won this round!'
+    - ''
+  INVENTORY_MESSAGE_TITLE: '&c&lMatch Details &7(Click name to view inventory)'
+TOURNAMENT:
+  ROUND_MESSAGE: '&8[&9&lRound&8] &c<round> &7has started!'
+  NOT_PICKED: '&8[&c&lTournament&8] &7You weren''t picked this round, please wait
+    for your turn!'
+  ELIMINATED: '&8[&c&lTournament&8] &c<eliminated> &7has been eliminated. &8(&c<participants_size>&7/&c<participants_count>&8)'
+  WON: '&8[&c&lTournament&8] &c<won> &7won the &ctournament&7!'
+  JOIN: '&8[&c&lTournament&8] &c<joined_party>''s Party &7has joined the tournament!
+    &8(&c<participants_size>/50&8)'
+  LEAVE: '&8[&c&lTournament&8] &c<left_party>''s Party &7has left the tournament!
+    &8(&c<participants_size>/50&8)'
+EVENTS:
+  PREFIX: '&8[&c<event_name>&8] &r'
+  JOIN: '&c<joined> &7has joined the &c<event_name> Event&8! &8(&c<event_participants_size>/<event_max_players>&8)'
+  LEAVE: '&c<left> &7has left the &c<event_name> Event&8! &8(&c<event_participants_size>/<event_max_players>&8)'
+  PLAYER_JOIN: '&8[&a+&8] &7You have successfully joined the &c<event_name> Event&8!'
+  PLAYER_LEAVE: '&8[&c-&8] &7You have successfully left the &c<event_name> Event&8!'
+  NOT_ABLE_TO_JOIN: '&7You are not currently able to join the event!'
+  ON_GOING: '&7There is already an active &c<event> Event&7!'
+  COOLDOWN_ACTIVE: '&7This event is currently on cooldown, please try again later!'
+  ALREADY_STARTED: '&7This event has already and cannot be joined!'
+  ELIMINATED: '&c<eliminated_name> &7was eliminated by &c<eliminator_name>&7!'
+  DIED: '&c<eliminated_name> &7has died&7!'
+  NO_PERM:
+    - '&7You do not have permission to use this.'
+    - '&7&oPlease upgrade your Rank at &c&ostore.purgecommunity.com &7'
+  CANCELLED: '&cThe <event_name> Event has been cancelled!'
+  START_COUNTDOWN: '&c<seconds>&f...'
+  PARKOUR_WON: '&c<winner> &ehas reached the end!'
+  ROUND_STARTED: '&cThe round has started!'
+  STARTED: '&cThe event has started!'
+  FULL: '&cThis event is full on its player capacity!'
+  STARTING: '&fThe &c<event_name> &fEvent will start in &c10 seconds&f...'
+  NOT_ENOUGH_PLAYERS: '&cThere are not enough players to start this event!'
+  KILLED: '&c<killed_name> &7has died!'
+  ANNOUCE:
+    - ' '
+    - '&7⬛⬛⬛⬛⬛⬛⬛⬛'
+    - '&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &c&l[<event_name> Event]'
+    - '&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ '
+    - '&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &fA &c<event_name> &fevent is being hosted by &c<event_host>'
+    - '&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ &fEvent is starting in 60 seconds!'
+    - '&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &a&l[Click to Join]'
+    - '&7⬛⬛⬛⬛⬛⬛⬛⬛'
+    - ''
+  HOVER: '&7Click to join <event_name> Event'
+  WON:
+    - ' '
+    - '&7⬛⬛⬛⬛⬛⬛⬛⬛'
+    - '&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &c&l[<event_name> Event]'
+    - '&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ '
+    - '&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &c<winner> &ehas won the <event_name> Event.'
+    - '&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ &7&oGood game!'
+    - '&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛'
+    - '&7⬛⬛⬛⬛⬛⬛⬛⬛'
+    - ''
+QUEUE:
+  JOIN_UNRANKED: '&7You have been added to the &c<queue_name> &7queue.'
+  JOIN_RANKED: '&7You have been added to the &c<queue_name> &7queue. &c[<queue_elo>]'
+DUEL:
+  SENT: '&8[&c&lDuel&8] &fYou sent a duel request to &c<target_name> &7(<target_ping>)
+    &f with kit &c<duel_kit> &fon the arena &c<duel_arena>'
+  RECIEVED: '&8[&c&lDuel&8] &c<sender_name> &7(<sender_ping>&7) &fhas sent you a duel
+    request with kit &c<duel_kit> &fon the arena &c<duel_arena>'
+  INVITE_HOVER: '&7Click to accept this duel.'
+  CLICK_TO_ACCEPT: '&a(Click to Accept)'
+KITEDITOR:
+  TOO_LONG: '&7A name cannot be longer than &c16 &7characters!'
+  RENAMED: '&7Successfully &crenamed &7the kit to &c<custom_name>&7!'
+LEADERBOARDS:
+  KIT_FORMAT: '&c<leaderboards_pos> &7&l| &f<leaderboards_name>: &c<leaderboards_elo>
+    &7(<leaderboards_division>)'
+  KIT_HEADER: '&c<kit_name> &7| &fTop 10'
+  GLOBAL_FORMAT: '&c<leaderboards_pos> &7&l| &f<leaderboards_name>: &c<leaderboards_elo>
+    &7(<leaderboards_division>)'
+  GLOBAL_HEADER: '&cGlobal &7| &fTop 10'
+STATS:
+  KIT_LORE:
+    - "&c&m-------&7&m---------&c&m--------"
+    - "&8 • &cELO: &f<profile_kit_elo>"
+    - "&8 • &cWins: &f<profile_kit_wins>"
+    - "&8 • &cLosses: &f<profile_kit_losses>"
+    - "&c&m-------&7&m---------&c&m--------"
+  KIT_HEADER: "&c<kit> &7｜ &fStats"
+  GLOBAL_LORE:
+    - "&c&m-------&7&m---------&c&m--------"
+    - "&8 • &cELO: &f<profile_global_elo>"
+    - "&8 • &cWins: &f<profile_global_wins>"
+    - "&8 • &cLosses: &f<profile_global_losses>"
+    - "&c&m-------&7&m---------&c&m--------"
+    - "&8 • &cLeague: &f<profile_elo_division>"
+    - "&8 • &cW/L Ratio: &f<profile_wr_ratio>"
+    - "&c&m-------&7&m---------&c&m--------"

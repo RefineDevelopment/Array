@@ -122,48 +122,37 @@ public class ParkourListener implements Listener {
 			Parkour parkour = profile.getParkour();
 			ParkourPlayer parkourPlayer = parkour.getEventPlayer(player);
 			if (!parkour.getState().equals(ParkourState.ROUND_ENDING)) {
-				if (event.getClickedBlock().getLocation() !=null && profile.getPlates() !=null) {
-					if (profile.getPlates().contains(event.getClickedBlock().getLocation())) {
-						event.setCancelled(true);
-						return;
-					}
-				}
-				if (event.getAction().equals(Action.PHYSICAL)) {
-					if (event.getClickedBlock().getType() == Material.GOLD_PLATE) {
-						if (parkour.getEventPlayer(player).getState().equals(ParkourPlayerState.WAITING)) {
-							parkour.handleWin(player);
-							parkour.broadcastMessage(Locale.EVENT_PARKROUR_WON.toString().replace("<winner>", player.getDisplayName()));
-							profile.getPlates().add(event.getClickedBlock().getLocation());
+				try {
+					if (event.getClickedBlock().getLocation() != null && profile.getPlates() != null) {
+						if (profile.getPlates().contains(event.getClickedBlock().getLocation())) {
+							event.setCancelled(true);
+							return;
 						}
-					} else if (event.getClickedBlock().getType() == Material.IRON_PLATE) {
-						if (parkourPlayer.getState().equals(ParkourPlayerState.WAITING)) {
-							parkourPlayer.setLastLocation(player.getLocation());
-							player.sendMessage(Locale.MATCH_CHECKPOINT.toString());
-							profile.getPlates().add(event.getClickedBlock().getLocation());
+
+						if (event.getAction().equals(Action.PHYSICAL) && (!event.getAction().name().contains("LEFT") || !event.getAction().name().contains("RIGHT"))) {
+							if (event.getClickedBlock().getType() == Material.GOLD_PLATE) {
+								if (parkour.getEventPlayer(player).getState().equals(ParkourPlayerState.WAITING)) {
+									parkour.handleWin(player);
+									parkour.broadcastMessage(Locale.EVENT_PARKROUR_WON.toString().replace("<winner>", player.getDisplayName()));
+									profile.getPlates().add(event.getClickedBlock().getLocation());
+								}
+							} else if (event.getClickedBlock().getType() == Material.IRON_PLATE) {
+								if (parkourPlayer.getState().equals(ParkourPlayerState.WAITING)) {
+									parkourPlayer.setLastLocation(player.getLocation());
+									player.sendMessage(Locale.MATCH_CHECKPOINT.toString());
+									profile.getPlates().add(event.getClickedBlock().getLocation());
+								}
+							}
+							event.setCancelled(true);
 						}
 					}
-					event.setCancelled(true);
+				} catch (Exception e) {
+					//
 				}
 			}
 		}
 	}
 
-	@EventHandler
-	public void onArrow(PlayerInteractEvent event) {
-		Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
-		Player player = event.getPlayer();
-		if (profile.isInParkour() && event.getMaterial() == Material.ARROW && event.getAction().name().contains("RIGHT")) {
-			Parkour parkour = profile.getParkour();
-			ParkourPlayer parkourPlayer = parkour.getEventPlayer(player);
-			if (parkour.getState() == ParkourState.ROUND_FIGHTING) {
-				if (parkourPlayer.getLastLocation() != null) {
-					player.teleport(parkourPlayer.getLastLocation());
-				} else {
-					player.teleport(Array.getInstance().getParkourManager().getParkourSpawn());
-				}
-			}
-		}
-	}
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerMove(PlayerMoveEvent event) {

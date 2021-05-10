@@ -29,11 +29,13 @@ public class Essentials {
     public static BasicConfigurationFile config = Array.getInstance().getMainConfig();
 
     public Location spawn;
+
     public final List<String> motd = new ArrayList<>();
     public final List<String> queueLore = new ArrayList<>();
     public final EssentialsMeta meta = new EssentialsMeta();
     public final SocialMeta socialMeta = new SocialMeta();
     public final NametagMeta nametagMeta = new NametagMeta();
+
     public String license = config.getStringOrDefault("LICENSE", "XXXX-XXXX-XXXX");
 
     public Essentials() {
@@ -44,10 +46,15 @@ public class Essentials {
         TaskUtil.runTimerAsync(new MenuUpdateTask(), 20L, 20L);
         this.load();
         this.save();
+        Array.getInstance().getTabManager().load();
+        Array.getInstance().getTabManager().save();
     }
 
     public void load() {
         String key = "ESSENTIAL.";
+
+        if (!motd.isEmpty()) motd.clear();
+        if (!queueLore.isEmpty()) queueLore.clear();
 
         spawn = LocationUtil.deserialize(config.getStringOrDefault(key + "SPAWN", "world:0:60:0:-89.59775:0.17956273"));
         meta.setHCFEnabled(config.getBoolean(key + "HCF_ENABLED"));

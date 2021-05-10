@@ -117,7 +117,7 @@ SCOREBOARD:
         - ""
         - "<status>"
       STATUS_WAITING: "&fWaiting for players..."
-      STATUS_COUNTING: "&fStarting in &c<countdown>&fs"
+      STATUS_COUNTING: "&fStarting in &c<remaining>&fs"
       FIGHTING:
         - "&c&lSumo Event"
         - ""
@@ -136,7 +136,7 @@ SCOREBOARD:
         - ""
         - "<status>"
       STATUS_WAITING: "&fWaiting for players..."
-      STATUS_COUNTING: "&fStarting in &c<countdown>&fs"
+      STATUS_COUNTING: "&fStarting in &c<remaining>&fs"
       FIGHTING:
         - "&c&lParkour Event"
         - ""
@@ -151,7 +151,7 @@ SCOREBOARD:
         - ""
         - "<status>"
       STATUS_WAITING: "&fWaiting for players..."
-      STATUS_COUNTING: "&fStarting in &c<countdown>&fs"
+      STATUS_COUNTING: "&fStarting in &c<remaining>&fs"
       FIGHTING:
         - "&c&lBrackets Event"
         - ""
@@ -170,7 +170,7 @@ SCOREBOARD:
         - ""
         - "<status>"
       STATUS_WAITING: "&fWaiting for players..."
-      STATUS_COUNTING: "&fStarting in &c<countdown>&fs"
+      STATUS_COUNTING: "&fStarting in &c<remaining>&fs"
       FIGHTING:
         - "&c&lLMS Event"
         - ""
@@ -185,7 +185,7 @@ SCOREBOARD:
         - ""
         - "<status>"
       STATUS_WAITING: "&fWaiting for players..."
-      STATUS_COUNTING: "&fStarting in &c<countdown>&fs"
+      STATUS_COUNTING: "&fStarting in &c<remaining>&fs"
       FIGHTING:
         - "&c&lGulag Event"
         - ""
@@ -204,7 +204,7 @@ SCOREBOARD:
         - ""
         - "<status>"
       STATUS_WAITING: "&fWaiting for players..."
-      STATUS_COUNTING: "&fStarting in &c<countdown>&fs"
+      STATUS_COUNTING: "&fStarting in &c<remaining>&fs"
       FIGHTING:
         - "&c&lSpleef Event"
         - ""

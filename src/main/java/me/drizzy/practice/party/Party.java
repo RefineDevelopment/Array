@@ -39,7 +39,7 @@ public class Party extends Team {
     private boolean disbanded;
 
     /**
-     * Create a new Party for the Player
+     * Create a new Party for a Player
      * and assign him as the leader
      *
      * @param player The Leader of the party

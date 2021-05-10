@@ -259,14 +259,10 @@ public class Sumo {
 		if (winner == null) {
 			Bukkit.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", "Sumo"));
 		} else {
-			String win = Locale.EVENT_WON.toString()
-					.replace("<winner_name>", winner.getName())
+			Locale.EVENT_WON.toList().forEach(line -> Bukkit.broadcastMessage(line
+					.replace("<winner>", winner.getName())
 					.replace("<event_name>", "Sumo")
-					.replace("<event_prefix>", EVENT_PREFIX);
-
-			Bukkit.broadcastMessage(win);
-			Bukkit.broadcastMessage(win);
-			Bukkit.broadcastMessage(win);
+					.replace("<event_prefix>", EVENT_PREFIX)));
 		}
 
 		for (SumoPlayer sumoPlayer : eventPlayers.values()) {
@@ -405,7 +401,6 @@ public class Sumo {
 				.replace("<eliminated_name>", player.getName())
 				.replace("<eliminator_name>", winner.getPlayer().getName()));
 
-		addSpectator(player);
 		setState(SumoState.ROUND_ENDING);
 		setEventTask(new SumoRoundEndTask(this));
 	}

@@ -265,13 +265,10 @@ public class Gulag {
 		if (winner == null) {
 			Bukkit.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", "Gulag"));
 		} else {
-			String win = Locale.EVENT_WON.toString().replace("<winner_name>", winner.getName())
+			Locale.EVENT_WON.toList().forEach(line -> Bukkit.broadcastMessage(line
+					.replace("<winner>", winner.getName())
 					.replace("<event_name>", "Gulag")
-					.replace("<event_prefix>", EVENT_PREFIX);
-
-			Bukkit.broadcastMessage(win);
-			Bukkit.broadcastMessage(win);
-			Bukkit.broadcastMessage(win);
+					.replace("<event_prefix>", EVENT_PREFIX)));
 		}
 
 		for ( GulagPlayer gulagPlayer : eventPlayers.values()) {
@@ -399,6 +396,7 @@ public class Gulag {
 	}
 
 	public void onDeath(Player player) {
+		Profile profile = Profile.getByUuid(player.getUniqueId());
 		GulagPlayer winner = roundPlayerA.getUuid().equals(player.getUniqueId()) ? roundPlayerB : roundPlayerA;
 		winner.setState(GulagPlayerState.WAITING);
 		winner.incrementRoundWins();
@@ -407,10 +405,19 @@ public class Gulag {
 				.replace("<eliminated_name>", player.getName())
 				.replace("<eliminator_name>", winner.getPlayer().getName()));
 
-		addSpectator(player);
-		winner.getPlayer().hidePlayer(player);
 		setState(GulagState.ROUND_ENDING);
 		setEventTask(new GulagRoundEndTask(this));
+
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				for (Player otherPlayer : getPlayers()) {
+					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
+					otherProfile.handleVisibility(otherPlayer, player);
+					profile.handleVisibility(player, otherPlayer);
+				}
+			}
+		}.runTaskAsynchronously(plugin);
 	}
 
 	public String getRoundDuration() {

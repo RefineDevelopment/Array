@@ -1,6 +1,7 @@
 package me.drizzy.practice.clan;
 
 import lombok.*;
+import me.drizzy.practice.enums.ClanProfileType;
 
 import java.util.UUID;
 

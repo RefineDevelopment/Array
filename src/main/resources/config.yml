@@ -13,7 +13,7 @@ MONGO:
     DATABASE: Array
     AUTHENTICATION:
       ENABLED: false
-      USERNMAE: ''
+      USERNAME: ''
       PASSWORD: ''
   URI:
     DATABASE: Array

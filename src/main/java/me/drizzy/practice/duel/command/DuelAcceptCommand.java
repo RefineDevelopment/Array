@@ -104,26 +104,11 @@ public class DuelAcceptCommand {
                     }
                 }
             } else if (arena.getType().equals(ArenaType.THEBRIDGE)) {
-                TheBridgeArena sarena=(TheBridgeArena) arena;
-                if (sarena.getDuplicates() != null) {
-                    boolean foundarena=false;
-                    for ( Arena darena : sarena.getDuplicates() ) {
-                        if (!darena.isActive()) {
-                            arena=darena;
-                            foundarena=true;
-                            break;
-                        }
-                    }
-                    if (!foundarena) {
-                        player.sendMessage(CC.RED + "The arena you were dueled was a bridge arena and there were no arenas found.");
-                        return;
-                    }
-                }
-            } else {
-                player.sendMessage(CC.RED + "The arena you were dueled was a build match and there were no arenas found.");
+                player.sendMessage(CC.RED + "The arena you were dueled was a bridge arena and there were no arenas found.");
                 return;
             }
         }
+
         if (!arena.getType().equals(ArenaType.SHARED)) {
             arena.setActive(true);
         }

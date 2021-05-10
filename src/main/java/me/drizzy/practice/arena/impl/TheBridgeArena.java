@@ -14,13 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 public class TheBridgeArena extends Arena {
 
-    private final List<Arena> duplicates = new ArrayList<>();
-    @Setter private Cuboid redCuboid;
-    @Setter private Cuboid blueCuboid;
-    @Setter private Cuboid redPortal;
-    @Setter private Cuboid bluePortal;
+    private Cuboid redCuboid;
+    private Cuboid blueCuboid;
+    private Cuboid redPortal;
+    private Cuboid bluePortal;
 
     public TheBridgeArena(String name) {
         super(name);
@@ -67,17 +67,6 @@ public class TheBridgeArena extends Arena {
         if (bluePortal != null) {
             configuration.set(path + ".bluePortal.location1", LocationUtil.serialize(bluePortal.getLowerCorner()));
             configuration.set(path + ".bluePortal.location2", LocationUtil.serialize(bluePortal.getUpperCorner()));
-        }
-
-        if (!duplicates.isEmpty()) {
-            int i = 0;
-
-            for (Arena duplicate : duplicates) {
-                i++;
-
-                configuration.set(path + ".duplicates." + i + ".spawn1", LocationUtil.serialize(duplicate.getSpawn1()));
-                configuration.set(path + ".duplicates." + i + ".spawn2", LocationUtil.serialize(duplicate.getSpawn2()));
-            }
         }
 
         try {

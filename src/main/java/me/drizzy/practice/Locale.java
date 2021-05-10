@@ -113,7 +113,7 @@ public enum Locale {
     EVENT_STARTING("EVENTS.STARTING", "&fThe &c<event_name> &fEvent will start in &c10 seconds&f..."),
     EVENT_NOT_ENOUGH_PLAYERS("EVENTS.NOT_ENOUGH_PLAYERS", "&cThere are not enough players to start this event!"),
     EVENT_KILLED("EVENTS.KILLED", "&c<killed_name> &7has died!"),
-    EVENT_ANNOUNCE("EVENTS.ANNOUCE", Arrays.asList(" ", "&7⬛⬛⬛⬛⬛⬛⬛⬛", "&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &c&l[<event_name> Event]", "&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ ", "&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &fA &cBrackets &fevent is being hosted by &c<event_host>", "&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ &fEvent is starting in 60 seconds!", "&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &a&l[Click to Join]", "&7⬛⬛⬛⬛⬛⬛⬛⬛", "")),
+    EVENT_ANNOUNCE("EVENTS.ANNOUCE", Arrays.asList(" ", "&7⬛⬛⬛⬛⬛⬛⬛⬛", "&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &c&l[<event_name> Event]", "&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ ", "&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &fA &c<event_name> &fevent is being hosted by &c<event_host>", "&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ &fEvent is starting in 60 seconds!", "&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &a&l[Click to Join]", "&7⬛⬛⬛⬛⬛⬛⬛⬛", "")),
     EVENT_HOVER("EVENTS.HOVER", "&7Click to join <event_name> Event"),
     EVENT_WON("EVENTS.WON", Arrays.asList(" ", "&7⬛⬛⬛⬛⬛⬛⬛⬛", "&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &c&l[<event_name> Event]", "&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ ", "&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛ &c<winner> &ehas won the <event_name> Event.", "&7⬛⬛&c⬛&7⬛⬛⬛⬛⬛ &7&oGood game!", "&7⬛⬛&c⬛⬛⬛⬛&7⬛⬛", "&7⬛⬛⬛⬛⬛⬛⬛⬛", "")),
 
@@ -129,9 +129,14 @@ public enum Locale {
     KITEDITOR_RENAMED("KITEDITOR.RENAMED", "&7Successfully &crenamed &7the kit to &c<custom_name>&7!"),
 
     LEADERBOARDS_KIT_FORMAT("LEADERBOARDS.KIT_FORMAT", "&c<leaderboards_pos> &7&l| &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
-    LEADERBOARDS_KIT_HEADER("LEADERBOARDS.GLOBAL_HEADER", "&c<kit_name> &7| &fTop 10"),
+    LEADERBOARDS_KIT_HEADER("LEADERBOARDS.KIT_HEADER", "&c<kit_name> &7| &fTop 10"),
     LEADERBOARDS_GLOBAL_FORMAT("LEADERBOARDS.GLOBAL_FORMAT", "&c<leaderboards_pos> &7&l| &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
-    LEADERBOARDS_GLOBAL_HEADER("LEADERBOARDS.GLOBAL_HEADER", "&cGlobal &7| &fTop 10");
+    LEADERBOARDS_GLOBAL_HEADER("LEADERBOARDS.GLOBAL_HEADER", "&cGlobal &7| &fTop 10"),
+
+    STATS_KIT_LORE("STATS.KIT_LORE", Arrays.asList(CC.MENU_BAR, "&8 • &cELO: &f<profile_kit_elo>", "&8 • &cWins: &f<profile_kit_wins>", "&8 • &cLosses: &f<profile_kit_losses>", CC.MENU_BAR)),
+    STATS_KIT_HEADER("STATS.KIT_HEADER", "&c<kit> &7｜ &fStats"),
+    STATS_GLOBAL_HEADER("STATS.GLOBAL_HEADER", "&cGlobal &7｜ &fStats"),
+    STATS_GLOBAL_LORE("STATS.GLOBAL_LORE", Arrays.asList(CC.MENU_BAR, "&8 • &cELO: &f<profile_global_elo>", "&8 • &cWins: &f<profile_global_wins>", "&8 • &cLosses: &f<profile_global_losses>", CC.MENU_BAR, "&8 • &cLeague: &f<profile_elo_division>", "&8 • &cW/L Ratio: &f<profile_wr_ratio>", CC.MENU_BAR));
 
     @Getter private final String path;
     @Getter private String value;

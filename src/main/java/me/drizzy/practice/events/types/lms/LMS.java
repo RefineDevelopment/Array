@@ -268,13 +268,10 @@ public class LMS {
         if (winner == null) {
             Bukkit.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", "LMS"));
         } else {
-            String win = Locale.EVENT_WON.toString().replace("<winner_name>", winner.getName())
+            Locale.EVENT_WON.toList().forEach(line -> Bukkit.broadcastMessage(line
+                    .replace("<winner>", winner.getName())
                     .replace("<event_name>", "LMS")
-                    .replace("<event_prefix>", EVENT_PREFIX);
-
-            Bukkit.broadcastMessage(win);
-            Bukkit.broadcastMessage(win);
-            Bukkit.broadcastMessage(win);
+                    .replace("<event_prefix>", EVENT_PREFIX)));
         }
         
         placedBlocks.forEach(location -> location.getBlock().setType(Material.AIR));
@@ -368,9 +365,8 @@ public class LMS {
             circleLocations.remove(i);
             i++;
 
-            TaskUtil.runLater(() ->
-                    Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) ->
-                            player.getInventory().setItem(integer, itemStack)), 10L);
+            player.getInventory().setContents(kit.getKitInventory().getContents());
+            player.getInventory().setArmorContents(kit.getKitInventory().getArmor());
         }
         setEventTask(new LMSRoundStartTask(this));
     }

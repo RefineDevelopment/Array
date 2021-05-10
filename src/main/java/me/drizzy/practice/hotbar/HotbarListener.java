@@ -199,6 +199,23 @@ public class HotbarListener implements Listener {
                     Array.getInstance().getLMSManager().getActiveLMS().handleLeave(player);
                     break;
                 }
+                case PARKOUR_SPAWN: {
+                    final Parkour activeParkour = Array.getInstance().getParkourManager().getActiveParkour();
+                    if (activeParkour == null) {
+                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "parkour"));
+                        return;
+                    }
+                    if (!profile.isInParkour() || !activeParkour.getEventPlayers().containsKey(player.getUniqueId())) {
+                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "parkour"));
+                        return;
+                    }
+                    if (activeParkour.getEventPlayer(player).getLastLocation() != null) {
+                        player.teleport(activeParkour.getEventPlayer(player).getLastLocation());
+                    } else {
+                        player.teleport(Array.getInstance().getParkourManager().getParkourSpawn());
+                    }
+                    break;
+                }
                 case PARKOUR_LEAVE: {
                     final Parkour activeParkour = Array.getInstance().getParkourManager().getActiveParkour();
                     if (activeParkour == null) {
@@ -271,6 +288,10 @@ public class HotbarListener implements Listener {
                     }
                     if (profile.getSpleef() != null) {
                         profile.getSpleef().removeSpectator(player);
+                        break;
+                    }
+                    if (profile.getGulag() != null) {
+                        profile.getGulag().removeSpectator(player);
                         break;
                     }
                     break;

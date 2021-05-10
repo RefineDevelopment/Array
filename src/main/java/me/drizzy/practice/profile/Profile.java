@@ -525,6 +525,9 @@ public class Profile {
             if (!ArrayCache.getPlayerCache().containsKey(player.getName())) {
                 ArrayCache.getPlayerCache().put(player.getName(), this.getUuid());
             }
+            if (!ArrayCache.getNameCache().containsKey(player.getUniqueId())) {
+                ArrayCache.getNameCache().put(this.getUuid(), player.getName());
+            }
             this.setName(player.getName());
             this.refreshHotbar();
         });

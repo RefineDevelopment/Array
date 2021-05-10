@@ -1,6 +1,7 @@
 package me.drizzy.practice.statistics.menu;
 
 import lombok.AllArgsConstructor;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.other.SkullCreator;
@@ -49,14 +50,18 @@ public class StatsMenu extends Menu {
             List<String> lore = new ArrayList<>();
             Profile profile = Profile.getByUuid(target.getUniqueId());
             String elo = kit.getGameRules().isRanked() ? Integer.toString(profile.getStatisticsData().get(kit).getElo()) : "N/A";
-            lore.add(CC.MENU_BAR);
-            lore.add("&8 • &cELO: &f" + elo);
-            lore.add("&8 • &cWins: &f" + profile.getStatisticsData().get(kit).getWon());
-            lore.add("&8 • &cLosses: &f" + profile.getStatisticsData().get(kit).getLost());
-            lore.add(CC.MENU_BAR);
+
+            Locale.STATS_KIT_LORE.toList().forEach(line -> {
+                lore.add(line
+                        .replace("<profile_kit_elo>", elo)
+                        .replace("<profile_kit_wins>", String.valueOf(profile.getStatisticsData().get(kit).getWon()))
+                        .replace("<profile_kit_losses>", String.valueOf(profile.getStatisticsData().get(kit).getLost())));
+            });
+
+            String name = Locale.STATS_KIT_HEADER.toString().replace("<kit>", kit.getDisplayName());
 
             return new ItemBuilder(kit.getDisplayIcon())
-                    .name(kit.getDisplayName() + " &7｜ &fStats")
+                    .name(name)
                     .lore(lore)
                     .build();
         }
@@ -69,17 +74,19 @@ public class StatsMenu extends Menu {
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
             Profile profile = Profile.getByUuid(target.getUniqueId());
-            lore.add(CC.MENU_BAR);
-            lore.add("&8 • &cELO: &r" + profile.getGlobalElo());
-            lore.add("&8 • &cWins: &f" + profile.getTotalWins());
-            lore.add("&8 • &cLosses: &f" + profile.getTotalLost());
-            lore.add(CC.MENU_BAR);
-            lore.add("&8 • &cLeague: &f" + profile.getEloLeague());
-            lore.add("&8 • &cW/L Ratio: &f" + profile.getWLR());
-            lore.add(CC.MENU_BAR);
+
+            Locale.STATS_GLOBAL_LORE.toList().forEach(line -> {
+                lore.add(line
+                        .replace("<profile_global_elo>", String.valueOf(profile.getGlobalElo()))
+                        .replace("<profile_global_wins>", String.valueOf(profile.getTotalWins()))
+                        .replace("<profile_global_losses>", String.valueOf(profile.getTotalLost()))
+                        .replace("<profile_elo_division>", profile.getEloLeague())
+                        .replace("<profile_wr_ratio>", String.valueOf(profile.getWLR())));
+
+            });
 
             return new ItemBuilder(SkullCreator.itemFromUuid(target.getUniqueId()))
-                    .name("&c&lGlobal &7｜ &fStats")
+                    .name(Locale.STATS_GLOBAL_HEADER.toString())
                     .lore(lore)
                     .build();
         }
