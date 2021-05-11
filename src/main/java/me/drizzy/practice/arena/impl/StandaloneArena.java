@@ -1,10 +1,12 @@
 package me.drizzy.practice.arena.impl;
 
+import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.enums.ArenaType;
 import me.drizzy.practice.util.location.LocationUtil;
 import lombok.Getter;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 public class StandaloneArena extends Arena {
 
     private final List<Arena> duplicates = new ArrayList<>();
@@ -44,6 +47,14 @@ public class StandaloneArena extends Arena {
             configuration.set(path + ".spawn2", LocationUtil.serialize(spawn2));
         }
 
+        if (max != null) {
+            configuration.set(path + ".max", LocationUtil.serialize(max));
+        }
+
+        if (min != null) {
+            configuration.set(path + ".max", LocationUtil.serialize(min));
+        }
+
         configuration.set(path + ".kits", getKits());
 
         if (!duplicates.isEmpty()) {
@@ -54,6 +65,8 @@ public class StandaloneArena extends Arena {
 
                 configuration.set(path + ".duplicates." + i + ".spawn1", LocationUtil.serialize(duplicate.getSpawn1()));
                 configuration.set(path + ".duplicates." + i + ".spawn2", LocationUtil.serialize(duplicate.getSpawn2()));
+                configuration.set(path + ".duplicates." + i + ".max", LocationUtil.serialize(duplicate.getMax()));
+                configuration.set(path + ".duplicates." + i + ".min", LocationUtil.serialize(duplicate.getMin()));
             }
         }
 

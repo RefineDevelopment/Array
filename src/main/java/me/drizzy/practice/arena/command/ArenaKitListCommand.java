@@ -12,9 +12,9 @@ import org.bukkit.entity.Player;
 @CommandMeta(label={"arena listkits", "arena kitlist", "arena kits"}, permission="array.dev")
 public class ArenaKitListCommand {
     public void execute(Player player, @CPL("arena")Arena arena) {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&m--------&7&m" + StringUtils.repeat("-", 37) + "&c&m--------"));
+        player.sendMessage(CC.CHAT_BAR);
         player.sendMessage(CC.translate( "&cArray &7» " + arena.getName() + "'s kits"));
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&m--------&7&m" + StringUtils.repeat("-", 37) + "&c&m--------"));
+        player.sendMessage(CC.CHAT_BAR);
         for ( String string : arena.getKits() ) {
             Kit kit = Kit.getByName(string);
         if (kit == null) {
@@ -25,6 +25,6 @@ public class ArenaKitListCommand {
         }
         player.sendMessage(CC.GRAY + " • " + kit.getName());
         }
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&m--------&7&m" + StringUtils.repeat("-", 37) + "&c&m--------"));
+        player.sendMessage(CC.CHAT_BAR);
     }
 }

@@ -14,9 +14,10 @@ import me.drizzy.practice.nms.types.ravespigot.RaveSpigotRestorer;
 import me.drizzy.practice.nms.types.spigotx.SpigotX;
 import org.bukkit.Bukkit;
 
+@Getter
 public class NMSManager {
 
-    @Getter public KnockbackType knockbackType;
+    public KnockbackType knockbackType;
 
     public NMSManager() {
         preload();

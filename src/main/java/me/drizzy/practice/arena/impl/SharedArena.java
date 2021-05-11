@@ -42,6 +42,14 @@ public class SharedArena extends Arena {
             configuration.set(path + ".spawn2", LocationUtil.serialize(spawn2));
         }
 
+        if (max != null) {
+            configuration.set(path + ".max", LocationUtil.serialize(max));
+        }
+
+        if (min != null) {
+            configuration.set(path + ".max", LocationUtil.serialize(min));
+        }
+
         configuration.set(path + ".kits", getKits());
 
         try {

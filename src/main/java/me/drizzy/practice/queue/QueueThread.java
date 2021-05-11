@@ -108,6 +108,8 @@ public class QueueThread extends Thread {
 
                             if (arena.isActive()) continue;
 
+                            if (arena.getMax() == null || arena.getMin() == null || arena.getSpawn1() == null || arena.getSpawn2() == null) continue;
+
                             if (queue.getKit().getGameRules().isBuild()) arena.setActive(true);
 
                             // Remove players from queue

@@ -33,6 +33,8 @@ public class Arena {
     protected String displayName;
     protected Location spawn1;
     protected Location spawn2;
+    protected Location min;
+    protected Location max;
     protected boolean active;
     protected boolean disablePearls;
 
@@ -85,6 +87,15 @@ public class Arena {
                     arena.setSpawn2(LocationUtil.deserialize(configuration.getString(path + ".spawn2")));
                 }
 
+                if (configuration.contains(path + ".max")) {
+                    arena.setMax(LocationUtil.deserialize(configuration.getString(path + ".max")));
+                }
+
+                if (configuration.contains(path + ".min")) {
+                    arena.setMax(LocationUtil.deserialize(configuration.getString(path + ".min")));
+                }
+
+
                 if (arena instanceof TheBridgeArena && configuration.contains(path + ".redCuboid") && configuration.contains(path + ".blueCuboid")) {
                     Location location1;
                     Location location2;
@@ -123,11 +134,16 @@ public class Arena {
                     for (String duplicateId : configuration.getConfigurationSection(path + ".duplicates").getKeys(false)) {
                         Location spawn1 = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".spawn1"));
                         Location spawn2 = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".spawn2"));
+                        Location max = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".max"));
+                        Location min = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".min"));
+
 
                         Arena duplicate = new Arena(arenaName);
 
                         duplicate.setSpawn1(spawn1);
                         duplicate.setSpawn2(spawn2);
+                        duplicate.setMax(max);
+                        duplicate.setMin(min);
                         duplicate.setKits(arena.getKits());
 
                         ((StandaloneArena) arena).getDuplicates().add(duplicate);

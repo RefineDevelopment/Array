@@ -76,10 +76,10 @@ public class Essentials {
         queueLore.addAll(config.getStringList("QUEUE_LORE"));
 
         //Socials
-        socialMeta.setDiscord(config.getStringOrDefault("SCOCIAL.DISCORD", "discord.link/purge"));
-        socialMeta.setWebiste(config.getStringOrDefault("SCOCIAL.WEBSITE", "www.purgecommunity.com"));
-        socialMeta.setStore(config.getStringOrDefault("SOCIAL.STORE", "store.purgecommunity.com"));
-        socialMeta.setTwitter(config.getStringOrDefault("SOCIAL.TWITTER", "@PurgeCommunity"));
+        socialMeta.setDiscord(config.getString("SCOCIAL.DISCORD"));
+        socialMeta.setWebiste(config.getString("SCOCIAL.WEBSITE"));
+        socialMeta.setStore(config.getString("SOCIAL.STORE"));
+        socialMeta.setTwitter(config.getString("SOCIAL.TWITTER"));
 
         //Nametags
         nametagMeta.setEnabled(config.getBoolean("NAMETAGS.ENABLED"));

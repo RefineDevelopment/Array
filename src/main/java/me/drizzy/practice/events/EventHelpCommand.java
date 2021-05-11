@@ -9,15 +9,15 @@ import org.bukkit.entity.Player;
 @CommandMeta(label = {"events", "events help"}, permission = "array.dev")
 public class EventHelpCommand {
     public void execute(Player player) {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&m--------&7&m" + StringUtils.repeat("-", 37) + "&c&m--------"));
+        player.sendMessage(CC.CHAT_BAR);
         player.sendMessage(CC.translate( "&cArray &7» Event Commands"));
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&m--------&7&m" + StringUtils.repeat("-", 37) + "&c&m--------"));
-        player.sendMessage(CC.translate(" &8• &c/host &8(&7&oOpen Events Menu&8&o)"));
-        player.sendMessage(CC.translate(" &8• &c/brackets &8(&7&oView Bracket Commands&8&o)"));
-        player.sendMessage(CC.translate(" &8• &c/sumo &8(&7&oView Sumo Commands&8&o)"));
-        player.sendMessage(CC.translate(" &8• &c/lms &8(&7&oView LMS Commands&8&o)"));
-        player.sendMessage(CC.translate(" &8• &c/parkour&8(&7&oView Parkour Commands&8&o)"));
-        player.sendMessage(CC.translate(" &8• &c/gulag &8(&7&oView Gulag Commands&8&o)"));
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&m--------&7&m" + StringUtils.repeat("-", 37) + "&c&m--------"));
+        player.sendMessage(CC.CHAT_BAR);
+        player.sendMessage(CC.translate(" &8• &c/host &8(&7&oOpen Events Menu&8)"));
+        player.sendMessage(CC.translate(" &8• &c/brackets &8(&7&oView Bracket Commands&8)"));
+        player.sendMessage(CC.translate(" &8• &c/sumo &8(&7&oView Sumo Commands&8)"));
+        player.sendMessage(CC.translate(" &8• &c/lms &8(&7&oView LMS Commands&8)"));
+        player.sendMessage(CC.translate(" &8• &c/parkour&8(&7&oView Parkour Commands&8)"));
+        player.sendMessage(CC.translate(" &8• &c/gulag &8(&7&oView Gulag Commands&8)"));
+        player.sendMessage(CC.CHAT_BAR);
     }
 }

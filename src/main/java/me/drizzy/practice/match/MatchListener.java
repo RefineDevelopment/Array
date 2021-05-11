@@ -4,6 +4,7 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.Locale;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.arena.impl.TheBridgeArena;
+import me.drizzy.practice.enums.ArenaType;
 import me.drizzy.practice.enums.HotbarType;
 import me.drizzy.practice.managers.HCFManager;
 import me.drizzy.practice.hotbar.Hotbar;
@@ -17,6 +18,7 @@ import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.inventory.ItemBuilder;
 import me.drizzy.practice.util.location.BlockUtil;
+import me.drizzy.practice.util.location.Cuboid;
 import me.drizzy.practice.util.location.LocationUtils;
 import me.drizzy.practice.util.other.Cooldown;
 import me.drizzy.practice.util.other.PlayerUtil;
@@ -174,8 +176,45 @@ public class MatchListener implements Listener {
                     match2.getPlacedBlocks().add(event.getToBlock().getLocation());
                 }
             }
-
         });
+
+        final int x = event.getBlock().getX();
+        final int y = event.getBlock().getY();
+        final int z = event.getBlock().getZ();
+
+        Arena foundArena = null;
+
+        for (Arena arena : Arena.getArenas()) {
+            if (!(arena.getType() == ArenaType.STANDALONE || arena.getType() == ArenaType.DUPLICATE)) {
+                continue;
+            }
+
+            if (!arena.isActive()) {
+                continue;
+            }
+
+            Cuboid cuboid = new Cuboid(arena.getMax(), arena.getMin());
+
+            if (x >= cuboid.getX1() && x <= cuboid.getX2() && y >= cuboid.getY1() && y <= cuboid.getY2() &&
+                    z >= cuboid.getZ1() && z <= cuboid.getZ2()) {
+                foundArena = arena;
+                break;
+            }
+        }
+
+        if (foundArena == null) {
+            return;
+        }
+
+        for (Match match : Match.getMatches()) {
+            if (match.getArena().equals(foundArena)) {
+                if (match.isFighting()) {
+                    match.getPlacedBlocks().add(event.getToBlock().getLocation());
+                }
+
+                break;
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -555,30 +594,37 @@ public class MatchListener implements Listener {
             attacker = (Player) ((Projectile) event.getDamager()).getShooter();
         }
         if (attacker != null && event.getEntity() instanceof Player) {
-            final Player damaged = (Player) event.getEntity();
-            final Profile damagedProfile = Profile.getByUuid(damaged.getUniqueId());
-            final Profile attackerProfile = Profile.getByUuid(attacker.getUniqueId());
+            Player damaged = (Player) event.getEntity();
+            Profile damagedProfile = Profile.getByUuid(damaged.getUniqueId());
+            Profile attackerProfile = Profile.getByUuid(attacker.getUniqueId());
+
             if (attackerProfile.isSpectating() || damagedProfile.isSpectating()) {
                 event.setCancelled(true);
                 return;
             }
+
             if (damagedProfile.isInFight() && attackerProfile.isInFight()) {
                 final Match match = attackerProfile.getMatch();
+
                 if (!match.isHCFMatch()  && match.getKit().getGameRules().isSpleef() && !(event.getDamager() instanceof Projectile)) {
                     event.setCancelled(true);
                 }
+
                 if (!damagedProfile.getMatch().isHCFMatch() && damagedProfile.getMatch().getKit().getGameRules().isSpleef() && !(event.getDamager() instanceof Projectile)) {
                     event.setCancelled(true);
                     return;
                 }
+
                 if (!damagedProfile.getMatch().getMatchId().equals(attackerProfile.getMatch().getMatchId())) {
                     event.setCancelled(true);
                     return;
                 }
+
                 if (!match.getTeamPlayer(damaged).isAlive() || (!match.getTeamPlayer(attacker).isAlive() && !match.isFreeForAllMatch())) {
                     event.setCancelled(true);
                     return;
                 }
+
                 if (match.isSoloMatch() || match.isFreeForAllMatch() || match.isTheBridgeMatch()) {
                     attackerProfile.getMatch().getTeamPlayer(attacker).handleHit();
                     damagedProfile.getMatch().getTeamPlayer(damaged).resetCombo();
@@ -593,8 +639,9 @@ public class MatchListener implements Listener {
                         }
                     }
                 } else if (match.isTeamMatch() || match.isHCFMatch() ) {
-                    final Team attackerTeam = match.getTeam(attacker);
-                    final Team damagedTeam = match.getTeam(damaged);
+                    Team attackerTeam = match.getTeam(attacker);
+                    Team damagedTeam = match.getTeam(damaged);
+
                     if (attackerTeam == null || damagedTeam == null) {
                         event.setCancelled(true);
                     } else if (attackerTeam.equals(damagedTeam)) {

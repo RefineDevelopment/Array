@@ -26,7 +26,7 @@ public class ArenaSetBridgdeSpawnCommand {
             } else if (pos.equals("blue")) {
                 arena.setSpawn2(loc);
             }
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully updated the position of &c" + arena.getName() + "&8&o (&7&oPosition: " + pos + "&8&o)"));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully updated the position of &c" + arena.getName() + "&8&o (&7&oPosition: " + pos + "&8)"));
             arena.save();
 
         } else {

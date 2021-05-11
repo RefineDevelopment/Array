@@ -32,7 +32,6 @@ HOTBAR_ITEMS:
   PARTY_LEAVE:
     MATERIAL: INK_SACK
     DURABILITY: 1
-    DURABILITY: 1
     LORE: []
     NAME: '&cLeave Party&7 (Right-Click)'
   PARTY_SETTINGS:

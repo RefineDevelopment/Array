@@ -1,5 +1,6 @@
 package me.drizzy.practice.util.location;
 
+import lombok.Data;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
+@Data
 public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializable {
 
     private final String worldName;

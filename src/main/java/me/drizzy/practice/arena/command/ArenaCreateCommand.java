@@ -41,6 +41,8 @@ public class ArenaCreateCommand {
 
             arena.setSpawn1(loc1);
             arena.setSpawn2(loc1);
+            arena.setMax(loc1);
+            arena.setMin(loc1);
 
             StandaloneArena sarena = (StandaloneArena) duplicate;
             sarena.getDuplicates().add(arena);
@@ -63,6 +65,8 @@ public class ArenaCreateCommand {
 
             arena.setSpawn1(loc1);
             arena.setSpawn2(loc1);
+            arena.setMax(loc1);
+            arena.setMin(loc1);
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully created an Arena called &c" + name + "&7 of type &c" + type));
         }
         Arena.getArenas().add(arena);

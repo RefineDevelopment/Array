@@ -29,7 +29,7 @@ public class ArenaSetDuplicateCommand {
             else if (pos.equals(2)) {
                 darena.setSpawn2(loc2);
             }
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully updated the position of &c" + arena.getName() + "&8&o (&7&oPosition: " + pos + "&8&o) (&7&oDupe Arena #" + (number - 1) + "&8&o)"));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully updated the position of &c" + arena.getName() + "&8&o (&7&oPosition: " + pos + "&8) (&7&oDupe Arena #" + (number - 1) + "&8)"));
             arena.save();
         }
     }

@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 /**
- * @author Nick_0251 @ColdDev
+ * @author Nick_0251 @ ColdDev
  * PiracyMeta System Created By Nick
  * Redistribution of this is PROHIBITED
  */

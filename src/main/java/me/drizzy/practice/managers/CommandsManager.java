@@ -73,6 +73,8 @@ public class CommandsManager {
                 new ArenaSetCuboidCommand(),
                 new ArenaSelectionWandCommand(),
                 new ArenaSetSpawnCommand(),
+                new ArenaSetMaxCommand(),
+                new ArenaSetMinCommand(),
                 new ArenaCreateCommand(),
                 new ArenaAddNormalKitCommand(),
                 new ArenaRemoveCommand(),
@@ -232,6 +234,12 @@ public class CommandsManager {
         ))
 
         Array.getHoncho().registerCommand(command);
+
+        if (Bukkit.getPluginManager().isPluginEnabled("FastAsyncWorldEdit") && Bukkit.getPluginManager().isPluginEnabled("WorldEdit") ) {
+            Array.getHoncho().registerCommand(new ArenaGenerateCommand());
+        } else {
+            Array.logger("&cWorld Edit or FAWE not found, Arena Generating will not work!");
+        }
 
         Bukkit.getCommandMap().register("stats", new StatsCommand());
     }

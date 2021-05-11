@@ -762,9 +762,17 @@ public class Profile {
         double totalWins = this.getTotalWins();
         double totalLosses = this.getTotalLost();
 
-        double ratio = totalWins / Math.max(totalLosses, 1);
+        /*double ratio = totalWins / Math.max(totalLosses, 1);
         DecimalFormat format = new DecimalFormat("#.##");
-        return format.format(ratio);
+        return format.format(ratio);*/
+        if (totalLosses == 0) {
+            return String.valueOf(100.0);
+        } else if (totalWins == 0 && totalLosses > 0) {
+            return String.valueOf(0.0);
+        } else {
+            return String.valueOf((totalWins / (totalWins + totalLosses)) * 100);
+        }
+
     }
 
     /**
