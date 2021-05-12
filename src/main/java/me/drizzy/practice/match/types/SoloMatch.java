@@ -102,7 +102,7 @@ public class SoloMatch extends Match {
 
         if (getKit().getGameRules().isCombo()) {
             player.setMaximumNoDamageTicks(0);
-            player.setNoDamageTicks(2);
+            player.setNoDamageTicks(3);
         }
 
         if (getKit().getGameRules().isInfiniteSpeed()) {
@@ -234,16 +234,21 @@ public class SoloMatch extends Match {
 
 
         if (getQueueType() == QueueType.RANKED) {
-            int oldWinnerElo=winningTeamPlayer.getElo();
-            int oldLoserElo=losingTeamPlayer.getElo();
-            int newWinnerElo=EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
-            int newLoserElo=EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
+            int oldWinnerElo = winningTeamPlayer.getElo();
+            int oldLoserElo = losingTeamPlayer.getElo();
+
+            int newWinnerElo = EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
+            int newLoserElo = EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
+
             winningProfile.getStatisticsData().get(getKit()).setElo(newWinnerElo);
             losingProfile.getStatisticsData().get(getKit()).setElo(newLoserElo);
+
             winningProfile.getStatisticsData().get(getKit()).incrementWon();
             losingProfile.getStatisticsData().get(getKit()).incrementLost();
+
             winningProfile.calculateGlobalElo();
             winningProfile.save();
+
             losingProfile.calculateGlobalElo();
             losingProfile.save();
 
@@ -481,10 +486,6 @@ public class SoloMatch extends Match {
             return org.bukkit.ChatColor.GREEN;
         }
 
-        if (playerA.getUuid().equals(viewer.getUniqueId()) || playerB.getUuid().equals(viewer.getUniqueId())) {
-            return org.bukkit.ChatColor.RED;
-        } else {
-            return org.bukkit.ChatColor.RED;
-        }
+        return org.bukkit.ChatColor.RED;
     }
 }

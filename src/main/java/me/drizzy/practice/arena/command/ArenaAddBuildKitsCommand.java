@@ -7,7 +7,7 @@ import me.drizzy.practice.util.command.command.CPL;
 import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label="arena addbuildkits", permission="array.dev")
+@CommandMeta(label = "arena addbuildkits", permission = "array.dev")
 public class ArenaAddBuildKitsCommand {
     public void execute(Player player, @CPL("Arena") Arena arena) {
 
@@ -21,15 +21,12 @@ public class ArenaAddBuildKitsCommand {
                 player.sendMessage(CC.translate("&8[&c&lArray&8] &7There are no kits setup."));
                 return;
             }
-            if (!kit.getGameRules().isBuild()) {
-                return;
-            }
             if (kit.getGameRules().isBuild()) {
                 if (!arena.getKits().contains(kit.getName())) {
                     arena.getKits().add(kit.getName());
                 }
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully added the kit &c" + kit.getName() + "&7 to &c" + arena.getName()));
             }
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully added the kit &c" + kit.getName() + "&7 to &c" + arena.getName()));
         }
         arena.save();
 

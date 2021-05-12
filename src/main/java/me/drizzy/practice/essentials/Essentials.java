@@ -76,8 +76,8 @@ public class Essentials {
         queueLore.addAll(config.getStringList("QUEUE_LORE"));
 
         //Socials
-        socialMeta.setDiscord(config.getString("SCOCIAL.DISCORD"));
-        socialMeta.setWebiste(config.getString("SCOCIAL.WEBSITE"));
+        socialMeta.setDiscord(config.getString("SOCIAL.DISCORD"));
+        socialMeta.setWebiste(config.getString("SOCIAL.WEBSITE"));
         socialMeta.setStore(config.getString("SOCIAL.STORE"));
         socialMeta.setTwitter(config.getString("SOCIAL.TWITTER"));
 

@@ -4,6 +4,7 @@ import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.enums.ArenaType;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.location.LocationUtil;
 import lombok.Getter;
 import org.bukkit.Location;
@@ -35,6 +36,7 @@ public class StandaloneArena extends Arena {
         FileConfiguration configuration = Array.getInstance().getArenasConfig().getConfiguration();
         configuration.set(path, null);
         configuration.set(path + ".type", getType().name());
+        configuration.set(path + ".display-name", CC.untranslate(displayName));
         configuration.set(path + ".icon.material", displayIcon.getType().name());
         configuration.set(path + ".icon.durability", displayIcon.getDurability());
         configuration.set(path + ".disable-pearls", disablePearls);
@@ -52,7 +54,7 @@ public class StandaloneArena extends Arena {
         }
 
         if (min != null) {
-            configuration.set(path + ".max", LocationUtil.serialize(min));
+            configuration.set(path + ".min", LocationUtil.serialize(min));
         }
 
         configuration.set(path + ".kits", getKits());

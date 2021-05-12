@@ -8,7 +8,7 @@ import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label={"status", "match", "match status"})
+@CommandMeta(label={"status", "match", "match status", "map"})
 public class MatchStatusCommand {
     public void execute(Player player) {
         Profile profile = Profile.getByPlayer(player);
@@ -21,8 +21,8 @@ public class MatchStatusCommand {
                     player.sendMessage(CC.CHAT_BAR);
                     player.sendMessage(CC.translate("&c&l     Match Status "));
                     player.sendMessage("");
-                    player.sendMessage(CC.translate("&fPing: &c " + PlayerUtil.getPing(self.getPlayer()) + "ms &7⎜ &c" + PlayerUtil.getPing(opponent.getPlayer()) + "ms"));
-                    player.sendMessage(CC.translate("&fMap: &c " + match.getArena().getDisplayName()));
+                    player.sendMessage(CC.translate("&fPing: &c" + PlayerUtil.getPing(self.getPlayer()) + "ms &7⎜ &c" + PlayerUtil.getPing(opponent.getPlayer()) + "ms"));
+                    player.sendMessage(CC.translate("&fMap: &c" + match.getArena().getDisplayName()));
                     player.sendMessage(CC.CHAT_BAR);
                 }
                  else {

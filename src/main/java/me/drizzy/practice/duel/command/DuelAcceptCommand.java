@@ -26,16 +26,6 @@ public class DuelAcceptCommand {
             return;
         }
 
-        if (player.hasMetadata("frozen")) {
-            player.sendMessage(CC.RED + "You cannot duel a player while being frozen!");
-            return;
-        }
-
-        if (target.hasMetadata("frozen")) {
-            player.sendMessage(CC.RED + "You cannot duel a player who's frozen!");
-            return;
-        }
-
         Profile senderProfile=Profile.getByUuid(player.getUniqueId());
 
         if (senderProfile.isBusy()) {
@@ -55,7 +45,7 @@ public class DuelAcceptCommand {
             return;
         }
 
-        DuelRequest request=receiverProfile.getSentDuelRequests().get(player.getUniqueId());
+        DuelRequest request = receiverProfile.getSentDuelRequests().get(player.getUniqueId());
 
         if (request == null) {
             return;
@@ -151,7 +141,7 @@ public class DuelAcceptCommand {
                 match=new TeamMatch(teamA, teamB, request.getKit(), arena);
             }
 
-        } else if(request.getKit().getGameRules().isBridge()) {
+        } else if (request.getKit().getGameRules().isBridge()) {
             match = new TheBridgeMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,
                     QueueType.UNRANKED);
         } else {

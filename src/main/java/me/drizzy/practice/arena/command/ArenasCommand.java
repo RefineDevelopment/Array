@@ -37,9 +37,10 @@ public class ArenasCommand {
                     type = "Shared";
             }
 
-            StandaloneArena standaloneArena = (StandaloneArena) arena;
-            
+            if (arena.getType().equals(ArenaType.DUPLICATE)) continue;
+
             if (arena.getType().equals(ArenaType.STANDALONE)) {
+                StandaloneArena standaloneArena = (StandaloneArena) arena;
                 player.sendMessage(CC.DARK_GRAY + " • " + (arena.isSetup() ? CC.GREEN : CC.RED) + arena.getName() + CC.GRAY + " (" + standaloneArena.getDuplicates().size() + ") " + CC.translate((arena.isActive() ? " &8[&eIn-Match&8]" : " &8[&aFree&8]") + " &8[&7" + type + "&8]"));
             } else {
                 player.sendMessage(CC.DARK_GRAY + " • " + (arena.isSetup() ? CC.GREEN : CC.RED) + arena.getName() + CC.translate((arena.isActive() ? " &8[&eIn-Match&8]" : " &8[&aFree&8]") + " &8[&7" + type + "&8]"));

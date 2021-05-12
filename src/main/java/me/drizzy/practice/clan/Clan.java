@@ -45,12 +45,12 @@ public class Clan {
     private final List<ClanProfile> members = new ArrayList<>();
     private final List<ClanProfile> captains = new ArrayList<>();
 
+    private final String name;
+    private final UUID uuid;
     private ClanProfile leader;
-    private String name;
     private String description;
     private String password;
     private int globalElo = 1000;
-    private final UUID uuid;
     private long dateCreated;
 
     /**
@@ -126,6 +126,7 @@ public class Clan {
 
             List<String> strings = new ArrayList<>(document.getList("members", String.class));
             List<UUID> uuids =  strings.stream().map(UUID::fromString).collect(Collectors.toList());
+
             for ( UUID uuid : uuids ) {
                 ClanProfile member = new ClanProfile(uuid, clan, ClanProfileType.MEMBER);
                 clan.getMembers().add(member);
@@ -134,6 +135,7 @@ public class Clan {
 
             List<String> strings1 = new ArrayList<>(document.getList("captains", String.class));
             List<UUID> uuids1 =  strings1.stream().map(UUID::fromString).collect(Collectors.toList());
+
             for ( UUID uuid : uuids1 ) {
                 ClanProfile member = new ClanProfile(uuid, clan, ClanProfileType.CAPTAIN);
                 clan.getCaptains().add(member);
@@ -187,30 +189,32 @@ public class Clan {
 
             this.setGlobalElo(document.getInteger("globalElo"));
 
-            ClanProfile leader=new ClanProfile((UUID) document.get("leader"), this, ClanProfileType.LEADER);
+            ClanProfile leader = new ClanProfile((UUID) document.get("leader"), this, ClanProfileType.LEADER);
             this.setLeader(leader);
             this.getAllMembers().add(leader);
 
-            List<String> strings=new ArrayList<>(document.getList("members", String.class));
-            List<UUID> uuids=strings.stream().map(UUID::fromString).collect(Collectors.toList());
+            List<String> strings = new ArrayList<>(document.getList("members", String.class));
+            List<UUID> uuids = strings.stream().map(UUID::fromString).collect(Collectors.toList());
+
             for ( UUID uuid : uuids ) {
                 ClanProfile member=new ClanProfile(uuid, this, ClanProfileType.MEMBER);
                 this.getMembers().add(member);
                 this.getAllMembers().add(member);
             }
 
-            List<String> strings1=new ArrayList<>(document.getList("captains", String.class));
-            List<UUID> uuids1=strings1.stream().map(UUID::fromString).collect(Collectors.toList());
+            List<String> strings1 = new ArrayList<>(document.getList("captains", String.class));
+            List<UUID> uuids1 = strings1.stream().map(UUID::fromString).collect(Collectors.toList());
+
             for ( UUID uuid : uuids1 ) {
-                ClanProfile member=new ClanProfile(uuid, this, ClanProfileType.CAPTAIN);
+                ClanProfile member = new ClanProfile(uuid, this, ClanProfileType.CAPTAIN);
                 this.getCaptains().add(member);
                 this.getAllMembers().add(member);
             }
 
-            Document kitStatistics=(Document) document.get("kitStatistics");
+            Document kitStatistics = (Document) document.get("kitStatistics");
 
             for ( String key : kitStatistics.keySet() ) {
-                Document kitDocument=(Document) kitStatistics.get(key);
+                Document kitDocument = (Document) kitStatistics.get(key);
                 Kit kit=Kit.getByName(key);
 
                 if (kit != null) {
@@ -322,10 +326,10 @@ public class Clan {
         this.broadcast(CC.translate("&8[&cClan&8] &c" + player.getName() + " &7has been promoted to &c&lCaptain&7!"));
     }
 
+    //TODO: Complete this
     public void leader(final ClanProfile member) {
 
     }
-
 
     //TODO: Complete this
     public void demote(final ClanProfile member) {

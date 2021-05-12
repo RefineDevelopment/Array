@@ -2,9 +2,15 @@ package me.drizzy.practice.settings.meta;
 
 import lombok.Getter;
 import lombok.Setter;
+
+/**
+ * @author Drizzy
+ * Created at 4/16/2021
+ */
 @Getter
 @Setter
 public class SettingsMeta {
+
     private boolean showScoreboard=true;
     private boolean receiveDuelRequests=true;
     private boolean allowSpectators=true;
@@ -15,7 +21,5 @@ public class SettingsMeta {
     private boolean isVanillaTab=false;
     private boolean isShowPlayers=true;
     private boolean isCpsScoreboard=false;
-
-    //Party Chat
     private boolean isPartyChat=false;
 }

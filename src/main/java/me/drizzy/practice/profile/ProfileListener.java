@@ -207,27 +207,20 @@ public class ProfileListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW)
-    public void onAsyncPlayerPreLoginEvent(AsyncPlayerPreLoginEvent event) {
-        UUID uuid = event.getUniqueId();
-        Profile profile = new Profile(uuid);
-        try {
-            profile.load();
-        } catch (Exception e) {
-            e.printStackTrace();
-            event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
-            event.setKickMessage(CC.RED + "Failed to load your profile, Please contact an Administrator!");
-            return;
-        }
-        Profile.getProfiles().put(uuid, profile);
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         event.setJoinMessage(null);
         Player player = event.getPlayer();
-        Profile profile = Profile.getByPlayer(player);
-        profile.handleJoin();
+        UUID uuid = player.getUniqueId();
+        Profile profile = new Profile(uuid);
+        try {
+            profile.load();
+            Profile.getProfiles().put(uuid, profile);
+            profile.handleJoin();
+        } catch (Exception e) {
+            e.printStackTrace();
+            player.kickPlayer(CC.RED + "Failed to load your profile, Please contact an Administrator!");
+        }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -245,7 +238,7 @@ public class ProfileListener implements Listener {
                 return;
             }
         }
-        Profile profile=Profile.getProfiles().get(event.getPlayer().getUniqueId());
+        Profile profile = Profile.getProfiles().get(event.getPlayer().getUniqueId());
         profile.handleLeave();
     }
 

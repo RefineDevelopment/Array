@@ -9,17 +9,17 @@ import org.bukkit.entity.Player;
 @CommandMeta(label = {"arena remove", "arena delete"}, permission = "array.dev")
 public class ArenaRemoveCommand {
 
-    public void execute(Player player, @CPL("name") String name) {
-        if (name == null) {
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Please provide a valid name."));
-            return;
-        }
-        Arena arena = Arena.getByName(name);
+    public void execute(Player player, @CPL("Arena") Arena arena) {
 
         if (arena != null) {
+            if (arena.isActive()) {
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7That arena is currently active, please try again later!"));
+                return;
+            }
+
             arena.delete();
             Arena.getArenas().remove(arena);
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully removed the arena &c" + name));
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully removed the arena &c" + arena.getDisplayName()));
         }
     }
 

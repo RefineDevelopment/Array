@@ -1,5 +1,6 @@
 package me.drizzy.practice.party;
 
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.tournament.Tournament;
 import me.drizzy.practice.util.chat.CC;
@@ -23,8 +24,12 @@ public class PartyListener implements Listener {
         if (party != null) {
             if (chatMessage.startsWith("@") || profile.getSettings().isPartyChat()) {
                 event.setCancelled(true);
-                String message = CC.translate("&8[&cParty&8] &c" + player.getDisplayName() + ChatColor.GRAY + ": " + ChatColor.GREEN + chatMessage.replace("@", ""));
-                party.broadcast(message);
+                String chat = Locale.PARTY_CHAT_FORMAT.toString()
+                        .replace("<player_displayname>", player.getDisplayName())
+                        .replace("<player_name>", player.getDisplayName())
+                        .replace("<message>", chatMessage.replace("@", ""));
+
+                party.broadcast(chat);
             }
         }
     }

@@ -1,21 +1,25 @@
 package me.drizzy.practice.profile.meta;
 
-import me.drizzy.practice.Array;
-import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.kit.Kit;
-import me.drizzy.practice.match.types.SoloMatch;
-import me.drizzy.practice.match.team.TeamPlayer;
-import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.enums.QueueType;
-import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.chat.ChatComponentBuilder;
 import lombok.Getter;
 import lombok.Setter;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
+import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
+import me.drizzy.practice.arena.Arena;
+import me.drizzy.practice.enums.QueueType;
+import me.drizzy.practice.kit.Kit;
+import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.match.types.SoloMatch;
+import me.drizzy.practice.match.types.TheBridgeMatch;
+import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.profile.rank.RankType;
+import me.drizzy.practice.util.chat.CC;
+import me.drizzy.practice.util.chat.Clickable;
+import me.drizzy.practice.util.other.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -30,6 +34,7 @@ public class ProfileRematchData {
     private boolean sent;
     private boolean receive;
     private final long timestamp = System.currentTimeMillis();
+    public static RankType rank = Array.getInstance().getRankManager();
 
     public ProfileRematchData(UUID key, UUID sender, UUID target, Kit kit, Arena arena) {
         this.key = key;
@@ -61,17 +66,26 @@ public class ProfileRematchData {
             return;
         }
 
-        sender.sendMessage(CC.translate("&7You sent a rematch request to &c" + target.getName() + " &7with kit &c" +
-                kit.getName() + "&7."));
-        target.sendMessage(CC.translate("&c" + sender.getName() + " &7has sent you a rematch request with kit &c" +
-                kit.getName() + "&7."));
+        sender.sendMessage(Locale.DUEL_SENT.toString()
+                .replace("<target_name>", rank.getFullName(target))
+                .replace("<target_ping>", String.valueOf(PlayerUtil.getPing(target)))
+                .replace("<duel_kit>", getKit().getDisplayName())
+                .replace("<duel_arena>", getArena().getDisplayName()));
 
-        target.spigot().sendMessage(new ChatComponentBuilder("")
-                .parse("&a(Click to accept)")
-                .attachToEachPart(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentBuilder("")
-                        .parse("&aClick to accept this rematch invite.").create()))
-                .attachToEachPart(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/rematch"))
-                .create());
+        List<String> strings = new ArrayList<>();
+
+        strings.add(Locale.DUEL_RECIEVED.toString()
+                .replace("<sender_name>", rank.getFullName(sender))
+                .replace("<sender_ping>", String.valueOf(PlayerUtil.getPing(sender)))
+                .replace("<duel_kit>", getKit().getDisplayName())
+                .replace("<duel_arena>", getArena().getDisplayName()));
+
+        strings.add(Locale.DUEL_ACCEPT.toString());
+
+        for ( String string : strings ) {
+            Clickable clickable = new Clickable(string, Locale.DUEL_HOVER.toString(),"/rematch");
+            clickable.sendToPlayer(target);
+        }
 
         this.sent = true;
         targetProfile.getRematchData().receive = true;
@@ -124,7 +138,13 @@ public class ProfileRematchData {
 
         arena.setActive(true);
 
-        new SoloMatch(null, new TeamPlayer(sender), new TeamPlayer(target), kit, arena, QueueType.UNRANKED).start();
+        if (getKit().getGameRules().isBridge()) {
+            new TheBridgeMatch(null, new TeamPlayer(sender), new TeamPlayer(target), getKit(), arena,
+                    QueueType.UNRANKED);
+        } else {
+            new SoloMatch(null, new TeamPlayer(sender), new TeamPlayer(target), getKit(), arena,
+                    QueueType.UNRANKED);
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package me.drizzy.practice.duel;
 
+import lombok.RequiredArgsConstructor;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.Locale;
 import me.drizzy.practice.profile.rank.Rank;
@@ -22,20 +23,15 @@ import java.util.List;
 
 @Getter
 @Setter
+@RequiredArgsConstructor
 public class DuelProcedure {
 
-    private final boolean party;
-    private final Player sender;
     private final Player target;
+    private final Player sender;
+    private final boolean party;
     private Kit kit;
     private Arena arena;
     public static RankType rank = Array.getInstance().getRankManager();
-
-    public DuelProcedure(Player sender, Player target, boolean party) {
-        this.sender = sender;
-        this.target = target;
-        this.party = party;
-    }
 
     public void send() {
         if (!sender.isOnline() || !target.isOnline()) {

@@ -24,13 +24,17 @@ public class ArenaGenerateCommand {
             return;
         }
 
-        if (amount > 50) {
+        if (amount > 15) {
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7That amount is too high!"));
             return;
         }
 
-        StandaloneArena standaloneArena = (StandaloneArena) arena;
+        if (Arena.pasting) {
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7The grid is already pasting arenas, please wait!"));
+        }
 
+        StandaloneArena standaloneArena = (StandaloneArena) arena;
+        Arena.setPasting(true);
         TaskUtil.run(new ArenaPasteRunnable(standaloneArena, amount));
 
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Pasting, Checking console for results...."));

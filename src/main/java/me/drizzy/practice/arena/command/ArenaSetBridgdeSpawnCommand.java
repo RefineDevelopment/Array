@@ -8,7 +8,7 @@ import me.drizzy.practice.util.command.command.CommandMeta;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-@CommandMeta(label="arena setbridgespawn", permission="array.dev")
+@CommandMeta( label = "arena setbridgespawn", permission="array.dev")
 public class ArenaSetBridgdeSpawnCommand {
 
     public void execute(Player player, @CPL("arena") Arena arena, @CPL("[red|blue]") String pos) {
@@ -25,6 +25,8 @@ public class ArenaSetBridgdeSpawnCommand {
                 arena.setSpawn1(loc);
             } else if (pos.equals("blue")) {
                 arena.setSpawn2(loc);
+            } else {
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Invalid argument."));
             }
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully updated the position of &c" + arena.getName() + "&8&o (&7&oPosition: " + pos + "&8)"));
             arena.save();

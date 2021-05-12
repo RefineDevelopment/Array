@@ -5,6 +5,7 @@ import lombok.Getter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.arena.impl.StandaloneArena;
+import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.location.CustomLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -21,9 +22,11 @@ public class ArenaPasteRunnable implements Runnable {
     private final StandaloneArena copiedArena;
 
     private int times;
+    private static int amount;
 
     @Override
     public void run() {
+        amount = times;
         this.duplicateArena(this.copiedArena, 10000, 10000);
     }
 
@@ -42,37 +45,30 @@ public class ArenaPasteRunnable implements Runnable {
                 double bX = arena.getSpawn2().getX() + this.getOffsetX();
                 double bZ = arena.getSpawn2().getZ() + this.getOffsetZ();
 
-                CustomLocation min = new CustomLocation(minX, arena.getMin().getY(), minZ, arena.getMin().getYaw(), arena.getMin().getPitch());
-                CustomLocation max = new CustomLocation(maxX, arena.getMax().getY(), maxZ, arena.getMax().getYaw(), arena.getMax().getPitch());
-                CustomLocation a = new CustomLocation(aX, arena.getSpawn1().getY(), aZ, arena.getSpawn1().getYaw(), arena.getSpawn1().getPitch());
-                CustomLocation b = new CustomLocation(bX, arena.getSpawn2().getY(), bZ, arena.getSpawn2().getYaw(), arena.getSpawn2().getPitch());
+                CustomLocation min = new CustomLocation(arena.getSpawn1().getWorld(), minX, arena.getMin().getY(), minZ, arena.getMin().getYaw(), arena.getMin().getPitch());
+                CustomLocation max = new CustomLocation(arena.getSpawn1().getWorld(), maxX, arena.getMax().getY(), maxZ, arena.getMax().getYaw(), arena.getMax().getPitch());
+                CustomLocation a = new CustomLocation(arena.getSpawn1().getWorld(), aX, arena.getSpawn1().getY(), aZ, arena.getSpawn1().getYaw(), arena.getSpawn1().getPitch());
+                CustomLocation b = new CustomLocation(arena.getSpawn1().getWorld(), bX, arena.getSpawn2().getY(), bZ, arena.getSpawn2().getYaw(), arena.getSpawn2().getPitch());
 
-                StandaloneArena standaloneArena = new StandaloneArena(arena.getName() + "-#" + (arena.getDuplicates().size() + 1));
-                standaloneArena.setSpawn1(a.toBukkitLocation());
-                standaloneArena.setSpawn2(b.toBukkitLocation());
-                standaloneArena.setMax(max.toBukkitLocation());
-                standaloneArena.setMin(min.toBukkitLocation());
-                
-                arena.getDuplicates().add(standaloneArena);
-                Arena.getArenas().add(standaloneArena);
+                Arena duplicate = new Arena(arena.getName());
+                duplicate.setSpawn1(a.toBukkitLocation());
+                duplicate.setSpawn2(b.toBukkitLocation());
+                duplicate.setMax(max.toBukkitLocation());
+                duplicate.setMin(min.toBukkitLocation());
+                duplicate.setDisplayName(arena.getDisplayName());
+                arena.getDuplicates().add(duplicate);
+                Arena.getArenas().add(duplicate);
 
-                if (--ArenaPasteRunnable.this.times > 0) {
-                    Array.logger("Placed a standalone arena of " + arena.getName() + " at " + (int) minX + ", " + (int) minZ
-                            + ". " + ArenaPasteRunnable.this.times + " arenas remaining.");
-                    for (Player player : Bukkit.getOnlinePlayers()) {
-                        if (player.isOp()) {
-                            player.sendMessage("Placed a standalone arena of " + arena.getName() + " at " + (int) minX + ", " + (int) minZ
-                                    + ". " + ArenaPasteRunnable.this.times + " arenas remaining.");
-                        }
-                    }
-                    ArenaPasteRunnable.this.duplicateArena(arena, (int) Math.round(maxX), (int) Math.round(maxZ));
+                if (--times > 0) {
+                    duplicateArena(arena, (int) Math.round(maxX), (int) Math.round(maxZ));
                 } else {
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        if (player.isOp()) {
-                            player.sendMessage("Finished pasting " + ArenaPasteRunnable.this.copiedArena.getName() + "'s standalone arenas.");
+                        if (player.hasPermission("array.dev") || player.isOp()) {
+                            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Finished pasting &c" + copiedArena.getName() + "&7's " + amount + " &7duplicate arenas."));
                         }
                     }
-                    Bukkit.getLogger().info("Finished pasting " + ArenaPasteRunnable.this.copiedArena.getName() + "'s standalone arenas.");
+                    Array.logger("&7Finished pasting &c" + copiedArena.getName() + "&7's " + amount + " &7duplicate arenas.");
+                    Arena.setPasting(false);
                     Arena.getArenas().forEach(Arena::save);
                 }
             }

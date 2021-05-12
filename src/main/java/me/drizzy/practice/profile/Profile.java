@@ -80,16 +80,20 @@ import java.util.concurrent.TimeUnit;
 public class Profile {
 
     @Getter private static final Map<UUID, Profile> profiles = new HashMap<>();
-    @Getter private static MongoCollection<Document> collection = Array.getInstance().getMongoDatabase().getCollection("profiles");
-    public static Executor mongoThread = Array.getInstance().getMongoThread();
-
-
     @Getter public static final List<Player> playerList = new ArrayList<>();
     @Getter private static final List<LeaderboardsAdapter> globalEloLeaderboards = new ArrayList<>();
+
     private final Map<UUID, DuelRequest> sentDuelRequests = new HashMap<>();
     private final Map<Kit, StatisticsData> statisticsData = new LinkedHashMap<>();
     private final List<ClanInvite> clanInviteList = new ArrayList<>();
     private final List<Location> plates = new ArrayList<>();
+
+    /*
+     * Profile Mongo
+     */
+    @Getter private static MongoCollection<Document> collection = Array.getInstance().getMongoDatabase().getCollection("profiles");
+    public static Executor mongoThread = Array.getInstance().getMongoThread();
+
 
     /*
      * Part of Constructor
@@ -608,6 +612,33 @@ public class Profile {
                 } else {
                     NameTags.color(otherPlayer, getPlayer(), Array.getInstance().getEssentials().nametagMeta.getPartyColor(), false);
                 }
+                TaskUtil.runLater(profile::handleNametag, 20L);
+            } else {
+                NameTags.reset(getPlayer(), otherPlayer);
+                NameTags.reset(otherPlayer, getPlayer());
+            }
+        }
+    }
+
+    /**
+     * Update and Color a profile's Nametag
+     * along with other's as well
+     */
+    public void handleNametag() {
+        for ( Player otherPlayer : Bukkit.getOnlinePlayers() ) {
+            if (Array.getInstance().getEssentials().getNametagMeta().isEnabled()) {
+                if (party == null) {
+                    NameTags.color(getPlayer(), otherPlayer, getColor(), false);
+                } else {
+                    NameTags.color(getPlayer(), otherPlayer, Array.getInstance().getEssentials().nametagMeta.getPartyColor(), false);
+                }
+                Profile profile = Profile.getByPlayer(otherPlayer);
+
+                if (profile.getParty() == null) {
+                    NameTags.color(otherPlayer, getPlayer(), profile.getColor(), false);
+                } else {
+                    NameTags.color(otherPlayer, getPlayer(), Array.getInstance().getEssentials().nametagMeta.getPartyColor(), false);
+                }
             } else {
                 NameTags.reset(getPlayer(), otherPlayer);
                 NameTags.reset(otherPlayer, getPlayer());
@@ -762,16 +793,9 @@ public class Profile {
         double totalWins = this.getTotalWins();
         double totalLosses = this.getTotalLost();
 
-        /*double ratio = totalWins / Math.max(totalLosses, 1);
+        double ratio = totalWins / Math.max(totalLosses, 1);
         DecimalFormat format = new DecimalFormat("#.##");
-        return format.format(ratio);*/
-        if (totalLosses == 0) {
-            return String.valueOf(100.0);
-        } else if (totalWins == 0 && totalLosses > 0) {
-            return String.valueOf(0.0);
-        } else {
-            return String.valueOf((totalWins / (totalWins + totalLosses)) * 100);
-        }
+        return format.format(ratio);
 
     }
 

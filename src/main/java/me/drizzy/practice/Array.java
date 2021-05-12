@@ -73,12 +73,13 @@ import java.util.concurrent.Executors;
 @Getter
 public class Array extends JavaPlugin {
 
-    private static Array instance;
+    @Getter public static Honcho honcho;
+    @Getter public static Array instance;
 
     /*
      * All ours Configs
      */
-    private BasicConfigurationFile mainConfig, arenasConfig, kitsConfig, eventsConfig,
+    private BasicConfigurationFile mainConfig, arenasConfig, kitsConfig, eventsConfig, menuConfig,
             messagesConfig, scoreboardConfig, tablistConfig, divisionsConfig, hotbarConfig;
 
     /*
@@ -133,21 +134,21 @@ public class Array extends JavaPlugin {
     /*
      * Essential Utilities
      */
-    private Essentials essentials;
-    @Getter private static Honcho honcho;
     public static Random random;
+    private Essentials essentials;
     private EntityHider entityHider;
     private boolean disabling = false;
-
-    public static Array getInstance() {
-        return instance;
-    }
 
     @Override
     public void onEnable() {
         instance = this;
         random = new Random();
         honcho = new Honcho(this);
+
+        if (System.getProperty("file.encoding") != "UTF-8") {
+            logger("&c&lUTF-8 ENCODING WAS NOT ENABLED, PLEASE ENABLE IT FOR THE PLUGIN TO WORK PROPERLY");
+            System.setProperty("file.encoding", "UTF-8");
+        }
 
         /*
          * Async Executor Threads
@@ -168,16 +169,17 @@ public class Array extends JavaPlugin {
         tablistConfig = new BasicConfigurationFile(this, "tablist");
         scoreboardConfig = new BasicConfigurationFile(this, "scoreboard");
         divisionsConfig = new BasicConfigurationFile(this, "divisions");
+        menuConfig = new BasicConfigurationFile(this, "menus");
 
         this.loadMessages();
 
         mainConfig.getConfiguration().options().header(
-                "#######################################################################\n" +
-                "#                                                                     #\n" +
-                "#         Array Practice Core - Developed By Drizzy#0278              #\n" +
-                "#     Bought at Purge Development - https://discord.gg/VXzUMfBefZ     #\n" +
-                "#                                                                     #\n" +
-                "#######################################################################");
+                "######################################################################\n" +
+                "                                                                     #\n" +
+                "         Array Practice Core - Developed By Drizzy#0278              #\n" +
+                "     Bought at Purge Development - https://discord.gg/VXzUMfBefZ     #\n" +
+                "                                                                     #\n" +
+                "######################################################################");
         mainConfig.save();
 
         essentials = new Essentials();
@@ -190,7 +192,7 @@ public class Array extends JavaPlugin {
             logger("&cPlease check your plugin.yml and try again.");
             logger("            &cDisabling Array");
             logger(CC.CHAT_BAR);
-            Bukkit.getPluginManager().disablePlugin(this);
+            shutDown();
             return;
         }
 
@@ -201,7 +203,7 @@ public class Array extends JavaPlugin {
             logger(" &cPlease check your plugin.yml and try again.");
             logger("            &cDisabling Array");
             logger(CC.CHAT_BAR);
-            Bukkit.getPluginManager().disablePlugin(this);
+            shutDown();
             return;
         }
 
@@ -404,7 +406,6 @@ public class Array extends JavaPlugin {
         }
 
         Arrays.stream(Locale.values()).forEach(language -> {
-
             if (this.messagesConfig.getConfiguration().getString(language.getPath()) == null || this.messagesConfig.getConfiguration().getStringList(language.getPath()) == null) {
 
                 if (language.getListValue() != null) {

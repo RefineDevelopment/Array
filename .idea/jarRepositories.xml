@@ -12,9 +12,9 @@
       <option name="url" value="https://repo.maven.apache.org/maven2" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="everything" />
-      <option name="name" value="everything" />
-      <option name="url" value="http://repo.citizensnpcs.co/" />
+      <option name="id" value="fawe-repo" />
+      <option name="name" value="fawe-repo" />
+      <option name="url" value="http://ci.athion.net/job/FastAsyncWorldEdit/ws/mvn/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />

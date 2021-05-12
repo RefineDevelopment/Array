@@ -29,6 +29,8 @@ public class Arena {
     private List<String> kits = new ArrayList<>();
     public ItemStack displayIcon;
 
+    @Getter @Setter public static boolean pasting = false;
+
     protected final String name;
     protected String displayName;
     protected Location spawn1;
@@ -53,6 +55,7 @@ public class Arena {
                 String path = "arenas." + arenaName;
                 ArenaType arenaType = ArenaType.valueOf(configuration.getString(path + ".type"));
                 Arena arena;
+
                 if (arenaType == ArenaType.STANDALONE) {
                     arena = new StandaloneArena(arenaName);
                 } else if (arenaType == ArenaType.SHARED) {
@@ -139,7 +142,7 @@ public class Arena {
 
 
                         Arena duplicate = new Arena(arenaName);
-
+                        duplicate.setDisplayName(arena.getDisplayName());
                         duplicate.setSpawn1(spawn1);
                         duplicate.setSpawn2(spawn2);
                         duplicate.setMax(max);
@@ -157,15 +160,6 @@ public class Arena {
         }
 
         Array.logger("&aLoaded " + Arena.getArenas().size() + " arenas!");
-    }
-
-    public static ArenaType getTypeByName(String name) {
-        for (ArenaType arena : ArenaType.values()) {
-            if (arena.toString().equalsIgnoreCase(name)) {
-                return arena;
-            }
-        }
-        return null;
     }
 
     public static Arena getByName(String name) {
@@ -214,7 +208,7 @@ public class Arena {
     }
 
     public boolean isSetup() {
-        return spawn1 != null && spawn2 != null;
+        return spawn1 != null && spawn2 != null && max != null && min != null;
     }
 
     public int getMaxBuildHeight() {

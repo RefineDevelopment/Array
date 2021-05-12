@@ -7,6 +7,7 @@ import me.drizzy.practice.util.config.Replacement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -33,6 +34,7 @@ public enum Locale {
     PARTY_DONOTHAVE("PARTY.DO_NOT_HAVE", "&8[&c&lParty&8] &7You don't have a party!"),
     PARTY_INFO("PARTY.INFO", Arrays.asList(CC.CHAT_BAR, "&cParty Information", CC.CHAT_BAR, "&8 • &cLeader: <party_leader_name>", "&8 • &cPrivacy: <party_privacy>", "&8 • &cMembers: <party_members_formatted>", CC.CHAT_BAR)),
     PARTY_NOTLOBBY("PARTY.NOT_IN_LOBBY", "&8[&c&lParty&8] &7You are not in lobby, please finish your current task!"),
+    PARTY_CHAT_FORMAT("PARTY.CHAT_FORMAT", "&8[&cParty&8] &c<player_displayname>&7: &a<message>"),
 
     ERROR_NOTACTIVE("ERROR.NOT_ACTIVE", "&7There is no current on-going <event> event!"),
     ERROR_NOTPARTOF("ERROR.NOT_PARTOF", "&7You are not part of any on-going <event> event!"),
@@ -62,7 +64,7 @@ public enum Locale {
     MATCH_TEAM_STARTMESSAGE("MATCH.TEAM_START_MESSAGE", Arrays.asList("&c&lMatch Found!", "", "&fYou are playing on &c<arena>&f on a &cTeam Match!")),
     MATCH_SOLO_STARTMESSAGE("MATCH.SOLO_START_MESSAGE", Arrays.asList("&c&lMatch Found!", "", "&fYou are playing on &c<arena>&f with &fPlayers: &c<player1> &7vs &c<player2>")),
     MATCH_ROUND_MESSAGE("MATCH.ROUND_MESSAGE", Arrays.asList(" &c&lRound #<round_number>", "  &fYour Points: &c<your_points>", "  &fTheir Points: &c<their_points>")),
-    MATCH_DISCLAIMER("MATCH.DISCLAIMER_MESSAGE", Arrays.asList("&c&lReminder: &fButterfly clicking is &cdiscouraged &fand could result in a &cban. Use at your own risk.")),
+    MATCH_DISCLAIMER("MATCH.DISCLAIMER_MESSAGE", Collections.singletonList("&c&lReminder: &fButterfly clicking is &cdiscouraged &fand could result in a &cban. Use at your own risk.")),
     MATCH_COUNTDOWN("MATCH.COUNTDOWN", "&fStarting in &c<seconds>&f..."),
     MATCH_ROUND_COUNTDOWN("MATCH.ROUND_COUNTDOWN", "&c<seconds>&f..."),
     MATCH_STARTED("MATCH.STARTED", "&aMatch Started!"),

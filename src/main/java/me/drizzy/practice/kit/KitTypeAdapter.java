@@ -1,6 +1,5 @@
 package me.drizzy.practice.kit;
 
-import me.drizzy.practice.clan.Clan;
 import me.drizzy.practice.util.command.command.adapter.CommandTypeAdapter;
 
 import java.util.List;

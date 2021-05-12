@@ -12,13 +12,14 @@ public class ArenaCommand {
         player.sendMessage(CC.CHAT_BAR);
         player.sendMessage(CC.translate(" &8• &c/arena create &8<&7name&8> &8<&7Shared|Standalone|TheBridge&8> &8(&7&oCreate an Arena&8)"));
         player.sendMessage(CC.translate(" &8• &c/arena remove &8<&7name&8> &8(&7&oDelete an Arena&8)"));
-        player.sendMessage(CC.translate(" &8• &c/arena portalwand &8(&7&oReceive a wand to select the portal for TheBridge Arena&8)"));
+        player.sendMessage(CC.translate(" &8• &c/arena wand &8(&7&oReceive a wand to select the cuboids for Arena&8)"));
         player.sendMessage(CC.translate(" &8• &c/arena kitlist &8<&7Arena&8> &8(&7&oLists all the kits of an arena&8)"));
         player.sendMessage(CC.translate(" &8• &c/arena seticon &8<&7Arena&8> &8(&7&oSets the item your holding as Arena Icon&8)"));
         player.sendMessage(CC.translate(" &8• &c/arena setcuboid &8<&7red|blue&8> &8(&7&oSets red/blue cuboid from your selection&8)"));
         player.sendMessage(CC.translate(" &8• &c/arena setportal &8<&7red|blue&8> &8(&7&oSets red/blue portal from your selection&8)"));
         player.sendMessage(CC.translate(" &8• &c/arena setbridgespawn &8<&7red|blue&8> &8(&7&oSet red/blue spawn of arena&8)"));
-        player.sendMessage(CC.translate(" &8• &c/arena setspawn &8<&71/2&8> &8<&71/2&8> &8(&7&oSet 1/2 spawn of arena&8)"));
+        player.sendMessage(CC.translate(" &8• &c/arena setduplicatespawn &8<&7arena&8> &8<&71/2&8> &8(&7&oSet red/blue spawn of arena&8)"));
+        player.sendMessage(CC.translate(" &8• &c/arena setspawn &8<&7arena&8> &8<&71/2&8> &8<&7duplicate-id&8> &8(&7&oSet 1/2 spawn of a duplicate arena&8)"));
         player.sendMessage(CC.translate(" &8• &c/arena setmax &8(&7&oSet Max Location of a Standalone Arena&8)"));
         player.sendMessage(CC.translate(" &8• &c/arena setmin &8(&7&oSet Min Location of a Standalone Arena&8)"));
         player.sendMessage(CC.translate(" &8• &c/arena generate &8<&7Arena&8> &8<&7Amount&8> &8(&7&oCopy and paste Standalone Arenas automatically&8)"));

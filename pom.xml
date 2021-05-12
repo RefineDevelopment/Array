@@ -16,17 +16,6 @@
     <artifactId>Array</artifactId>
     <version>1.0</version>
 
-    <repositories>
-        <repository>
-            <id>sk89q-repo</id>
-            <url>http://maven.sk89q.com/repo/</url>
-        </repository>
-        <repository>
-            <id>fawe-repo</id>
-            <url>http://ci.athion.net/job/FastAsyncWorldEdit/ws/mvn/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <!--Annotations-->
         <dependency>
@@ -179,16 +168,18 @@
 
         <!--Arena Generator-->
         <dependency>
-            <groupId>com.sk89q</groupId>
-            <artifactId>worldedit</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.boydti</groupId>
             <artifactId>fawe-api</artifactId>
             <version>latest</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/FAWE.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.sk89q</groupId>
+            <artifactId>worldedit</artifactId>
+            <version>6.0.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/WorldEdit.jar</systemPath>
         </dependency>
 
     </dependencies>

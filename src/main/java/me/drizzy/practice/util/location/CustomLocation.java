@@ -39,6 +39,11 @@ public class CustomLocation {
 		this("world", x, y, z, yaw, pitch);
 	}
 
+	public CustomLocation(World world, double x, double y, double z, float yaw, float pitch) {
+		this(world.getName(), x, y, z, yaw, pitch);
+	}
+
+
 	public static CustomLocation fromBukkitLocation(Location location) {
 		return new CustomLocation(location.getWorld().getName(), location.getX(), location.getY(), location.getZ(),
 				location.getYaw(), location.getPitch());

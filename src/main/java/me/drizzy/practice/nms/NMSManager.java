@@ -14,6 +14,10 @@ import me.drizzy.practice.nms.types.ravespigot.RaveSpigotRestorer;
 import me.drizzy.practice.nms.types.spigotx.SpigotX;
 import org.bukkit.Bukkit;
 
+/**
+ * @author Drizzy
+ * Created at 4/16/2021
+ */
 @Getter
 public class NMSManager {
 

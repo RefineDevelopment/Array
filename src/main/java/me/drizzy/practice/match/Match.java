@@ -19,6 +19,7 @@ import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.ChatComponentBuilder;
+import me.drizzy.practice.util.other.NameTags;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.other.TaskUtil;
 import me.drizzy.practice.util.other.TimeUtil;
@@ -442,28 +443,29 @@ public abstract class Match {
         Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), () -> {
             if (this.isSoloMatch()) {
                 target.hidePlayer(player);
-            }
-            else if (this.isTheBridgeMatch()) {
+            } else if (this.isTheBridgeMatch()) {
                 target.hidePlayer(player);
                 this.getOpponentPlayer(target).hidePlayer(player);
-            }
-            else if (this.isTeamMatch()) {
+            } else if (this.isTeamMatch()) {
+                this.getTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
                 for ( Player targetPlayers : this.getTeam(target).getPlayers() ) {
                     targetPlayers.hidePlayer(player);
                 }
+                this.getOpponentTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
                 for ( Player targetPlayers : this.getOpponentTeam(target).getPlayers() ) {
                     targetPlayers.hidePlayer(player);
                 }
-            }
-            else if (this.isHCFMatch()) {
+            } else if (this.isHCFMatch()) {
+                this.getTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
                 for ( Player targetPlayers : this.getTeam(target).getPlayers() ) {
                     targetPlayers.hidePlayer(player);
                 }
+                this.getOpponentTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
                 for ( Player targetPlayers : this.getOpponentTeam(target).getPlayers() ) {
                     targetPlayers.hidePlayer(player);
                 }
-            }
-            else if (this.isFreeForAllMatch()) {
+            } else if (this.isFreeForAllMatch()) {
+                this.getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
                 for (  Player targetPlayers : this.getPlayers()) {
                     targetPlayers.hidePlayer(player);
                 }

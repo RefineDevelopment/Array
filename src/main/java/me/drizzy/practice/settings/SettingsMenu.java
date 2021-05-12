@@ -19,6 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Drizzy
+ * Created at 3/12/2021
+ */
 public class SettingsMenu extends Menu {
 
     @Override
