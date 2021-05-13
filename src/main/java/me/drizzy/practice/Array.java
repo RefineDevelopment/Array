@@ -12,7 +12,7 @@ import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.arena.ArenaTypeAdapter;
 import me.drizzy.practice.arena.ArenaTypeTypeAdapter;
 import me.drizzy.practice.clan.Clan;
-import me.drizzy.practice.clan.ClanProfile;
+import me.drizzy.practice.clan.meta.ClanProfile;
 import me.drizzy.practice.clan.ClanProfileTypeAdapter;
 import me.drizzy.practice.clan.ClanTypeAdapter;
 import me.drizzy.practice.essentials.Essentials;
@@ -145,10 +145,7 @@ public class Array extends JavaPlugin {
         random = new Random();
         honcho = new Honcho(this);
 
-        if (System.getProperty("file.encoding") != "UTF-8") {
-            logger("&c&lUTF-8 ENCODING WAS NOT ENABLED, PLEASE ENABLE IT FOR THE PLUGIN TO WORK PROPERLY");
-            System.setProperty("file.encoding", "UTF-8");
-        }
+        System.setProperty("file.encoding", "UTF-8");
 
         /*
          * Async Executor Threads
@@ -213,7 +210,6 @@ public class Array extends JavaPlugin {
             TaskUtil.runLater(CommandsManager::register, 5L);
 
             divisionsManager = new Divisions();
-
             sumoManager = new SumoManager();
             bracketsManager = new BracketsManager();
             LMSManager = new LMSManager();
@@ -225,7 +221,7 @@ public class Array extends JavaPlugin {
             if (essentials.getMeta().isCoreHookEnabled()) {
                 new Rank();
             } else {
-                setRankManager(new DefaultProvider());
+               rankManager = new DefaultProvider();
             }
 
             this.entityHider = EntityHider.enable();
@@ -298,6 +294,10 @@ public class Array extends JavaPlugin {
         logger("&7Loading Profiles!");
         Profile.preload();
         logger("&aLoaded Profiles!");
+
+        logger("&7Loading Clans!");
+        Clan.preload();
+        logger("&aLoaded Clans!");
 
         try {
             logger("&7Loading Kits!");

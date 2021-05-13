@@ -15,12 +15,17 @@ import java.util.*;
 @Setter
 public class TeamPlayer {
 
+    private Map<UUID, List<Long>> cpsMap = new HashMap<>();
+
     private final UUID uuid;
     private final String username;
-    Location playerSpawn;
-    Location parkourCheckpoint;
+
+    private Location playerSpawn;
+    private Location parkourCheckpoint;
+
     private boolean alive = true;
     private boolean disconnected;
+
     private int elo;
     private int potionsThrown;
     private int potionsMissed;
@@ -28,7 +33,6 @@ public class TeamPlayer {
     private int hits;
     private int combo;
     private int longestCombo;
-    private Map<UUID, List<Long>> cpsMap = new HashMap<>();
 
     public TeamPlayer(Player player) {
         this.uuid = player.getUniqueId();

@@ -19,7 +19,8 @@ public class SettingsMeta {
     private boolean isPingScoreboard=true;
     private boolean allowTournamentMessages=true;
     private boolean isVanillaTab=false;
-    private boolean isShowPlayers=true;
+    private boolean isShowPlayers=false;
     private boolean isCpsScoreboard=false;
     private boolean isPartyChat=false;
+    private boolean isClanChat=false;
 }

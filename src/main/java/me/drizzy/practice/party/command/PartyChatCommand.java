@@ -13,6 +13,10 @@ public class PartyChatCommand {
             player.sendMessage(CC.translate("&8[&c&lParty&8] &7You don't have a party."));
             return;
         }
+        if (profile.getSettings().isClanChat()) {
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Your clan chat is currently enabled, please disable it first."));
+            return;
+        }
         profile.getSettings().setPartyChat(!profile.getSettings().isPartyChat());
         player.sendMessage(CC.translate((profile.getSettings().isPartyChat() ? "&aYou are now speaking in party chat!" : "&aYou are now speaking in Global Chat")));
     }

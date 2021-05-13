@@ -54,8 +54,8 @@ public class Arena {
             for (String arenaName : configuration.getConfigurationSection("arenas").getKeys(false)) {
                 String path = "arenas." + arenaName;
                 ArenaType arenaType = ArenaType.valueOf(configuration.getString(path + ".type"));
-                Arena arena;
 
+                Arena arena;
                 if (arenaType == ArenaType.STANDALONE) {
                     arena = new StandaloneArena(arenaName);
                 } else if (arenaType == ArenaType.SHARED) {
@@ -65,9 +65,11 @@ public class Arena {
                 } else {
                     continue;
                 }
+
                 if (configuration.contains(path + ".display-name")) {
-                    arena.setDisplayName(CC.translate(path + ".display-name"));
+                    arena.setDisplayName(CC.translate(configuration.getString(path + ".display-name")));
                 }
+
                 if (configuration.contains(path + ".icon-material")) {
                     arena.setDisplayIcon(new ItemBuilder(Material.valueOf(configuration.getString(path + ".icon.material")))
                             .durability(configuration.getInt(path + ".icon.durability"))
@@ -95,7 +97,7 @@ public class Arena {
                 }
 
                 if (configuration.contains(path + ".min")) {
-                    arena.setMax(LocationUtil.deserialize(configuration.getString(path + ".min")));
+                    arena.setMin(LocationUtil.deserialize(configuration.getString(path + ".min")));
                 }
 
 

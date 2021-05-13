@@ -15,7 +15,7 @@ import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.api.ArrayCache;
 import me.drizzy.practice.clan.Clan;
-import me.drizzy.practice.clan.ClanInvite;
+import me.drizzy.practice.clan.meta.ClanInvite;
 import me.drizzy.practice.duel.DuelProcedure;
 import me.drizzy.practice.duel.DuelRequest;
 import me.drizzy.practice.enums.HotbarType;

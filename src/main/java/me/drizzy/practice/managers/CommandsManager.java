@@ -2,6 +2,9 @@ package me.drizzy.practice.managers;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.command.*;
+import me.drizzy.practice.clan.commands.ClanCommand;
+import me.drizzy.practice.clan.commands.player.ClanChatCommand;
+import me.drizzy.practice.clan.commands.player.ClanCreateCommand;
 import me.drizzy.practice.essentials.commands.ArrayCommand;
 import me.drizzy.practice.essentials.commands.*;
 import me.drizzy.practice.essentials.commands.donator.FlyCommand;
@@ -113,6 +116,11 @@ public class CommandsManager {
                 new PartyLeaderCommand(),
                 new PartyUnbanCommand(),
                 new PartyBanCommand(),
+
+                //Clan command
+                new ClanCommand(),
+                new ClanCreateCommand(),
+                new ClanChatCommand(),
 
                 //Kit command
                 new KitCreateCommand(),

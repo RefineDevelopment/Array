@@ -7,6 +7,8 @@ import com.mongodb.client.model.Sorts;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.clan.meta.ClanInvite;
+import me.drizzy.practice.clan.meta.ClanProfile;
 import me.drizzy.practice.clan.meta.ClanStatisticsData;
 import me.drizzy.practice.enums.ClanProfileType;
 import me.drizzy.practice.kit.Kit;
@@ -71,6 +73,7 @@ public class Clan {
                 this.statisticsData.put(kit, new ClanStatisticsData());
             }
         }
+        clans.add(this);
         this.calculateGlobalElo();
     }
 
@@ -99,7 +102,7 @@ public class Clan {
      * This method is called on Start
      * We use this to load our clans and setup Tasks
      */
-    public static void preLoad() {
+    public static void preload() {
         new BukkitRunnable() {
             public void run() {
                 Profile.getProfiles().values().forEach(clan -> clan.getClanInviteList().removeIf(ClanInvite::hasExpired));
@@ -113,71 +116,23 @@ public class Clan {
      */
     public static void load() {
         thread.execute(() -> {
+            if (collection.find() == null) {
+                 return;
+            }
         for ( Object o : collection.find()) {
             Document document = (Document) o;
-
             Clan clan = new Clan(document.getString("name"), (UUID) document.get("leader"), (UUID) document.get("uuid"));
-
-            clan.setGlobalElo(document.getInteger("globalElo"));
-
-            ClanProfile leader = new ClanProfile((UUID) document.get("leader"), clan, ClanProfileType.LEADER);
-            clan.setLeader(leader);
-            clan.getAllMembers().add(leader);
-
-            List<String> strings = new ArrayList<>(document.getList("members", String.class));
-            List<UUID> uuids =  strings.stream().map(UUID::fromString).collect(Collectors.toList());
-
-            for ( UUID uuid : uuids ) {
-                ClanProfile member = new ClanProfile(uuid, clan, ClanProfileType.MEMBER);
-                clan.getMembers().add(member);
-                clan.getAllMembers().add(member);
-            }
-
-            List<String> strings1 = new ArrayList<>(document.getList("captains", String.class));
-            List<UUID> uuids1 =  strings1.stream().map(UUID::fromString).collect(Collectors.toList());
-
-            for ( UUID uuid : uuids1 ) {
-                ClanProfile member = new ClanProfile(uuid, clan, ClanProfileType.CAPTAIN);
-                clan.getCaptains().add(member);
-                clan.getAllMembers().add(member);
-            }
-
-            Document kitStatistics=(Document) document.get("kitStatistics");
-
-            for ( String key : kitStatistics.keySet() ) {
-                Document kitDocument=(Document) kitStatistics.get(key);
-                Kit kit = Kit.getByName(key);
-
-                if (kit != null) {
-                    ClanStatisticsData statisticsData = new ClanStatisticsData();
-                    if (kitDocument.getInteger("elo") != null) {
-                        statisticsData.setElo(kitDocument.getInteger("elo"));
-                    } else {
-                        kitDocument.put("elo", 0);
-                    }
-                    if (kitDocument.getInteger("won") != null) {
-                        statisticsData.setWon(kitDocument.getInteger("won"));
-                    } else {
-                        kitDocument.put("won", 0);
-                    }
-                    if (kitDocument.getInteger("lost") != null) {
-                        statisticsData.setLost(kitDocument.getInteger("lost"));
-                    } else {
-                        kitDocument.put("lost", 0);
-                    }
-                    clan.statisticsData.put(kit, statisticsData);
-                }
-            }
-
-            clan.setDescription(document.getString("description"));
-            clan.setDateCreated(document.getLong("date-created"));
-
-            if (document.containsKey("description")) clan.setDescription(document.getString("description"));
-            if (document.containsKey("password")) clan.setPassword(document.getString("password"));
-
+            clan.loadClan();
             clans.add(clan);
         }
         });
+    }
+
+    /**
+     * Delete the clan from the mongo
+     */
+    public void deleteClan() {
+        collection.deleteOne(Filters.eq("uuid", uuid.toString()));
     }
 
     /**
@@ -187,6 +142,10 @@ public class Clan {
         thread.execute(() -> {
             Document document=(Document) collection.find().filter(Filters.eq("uuid", uuid.toString())).first();
 
+            if (document == null) {
+                this.saveClan();
+                return;
+            }
             this.setGlobalElo(document.getInteger("globalElo"));
 
             ClanProfile leader = new ClanProfile((UUID) document.get("leader"), this, ClanProfileType.LEADER);
@@ -317,6 +276,11 @@ public class Clan {
         });
     }
 
+    /**
+     * Promote a Clan Profile to Captain
+     *
+     * @param member The {@link ClanProfile} being promoted
+     */
     public void promote(final ClanProfile member) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(member.getUuid());
         member.setClanProfileType(ClanProfileType.CAPTAIN);
@@ -326,16 +290,46 @@ public class Clan {
         this.broadcast(CC.translate("&8[&cClan&8] &c" + player.getName() + " &7has been promoted to &c&lCaptain&7!"));
     }
 
-    //TODO: Complete this
+    /**
+     * Promote a Clan Profile to Leader
+     *
+     * @param member The {@link ClanProfile} being promoted
+     */
     public void leader(final ClanProfile member) {
+        OfflinePlayer player = Bukkit.getOfflinePlayer(member.getUuid());
+        OfflinePlayer leaderPlayer = Bukkit.getOfflinePlayer(leader.getUuid());
 
+        this.broadcast(CC.translate("&8[&cClan&8] &c" + player.getName() + " &7has been promoted to &c&lLeader&7!"));
+        this.broadcast(CC.translate("&8[&cClan&8] &c" + leaderPlayer.getName() + " &7has been demoted to &c&lCaptain&7!"));
+
+        member.setClanProfileType(ClanProfileType.LEADER);
+        leader.setClanProfileType(ClanProfileType.CAPTAIN);
+
+        this.members.remove(member);
+        this.captains.remove(member);
+        this.captains.add(leader);
+        this.leader = member;
+
+        this.saveClan();
     }
 
-    //TODO: Complete this
+    /**
+     * Demote a Clan Profile to Member
+     *
+     * @param member The {@link ClanProfile} being demoted
+     */
     public void demote(final ClanProfile member) {
+        OfflinePlayer player = Bukkit.getOfflinePlayer(member.getUuid());
+
+        member.setClanProfileType(ClanProfileType.MEMBER);
+
+        this.members.add(member);
+        this.captains.remove(member);
+
+        this.saveClan();
+        this.broadcast(CC.translate("&8[&cClan&8] &c" + player.getName() + " &7has been demoted to &c&lMember&7!"));
 
     }
-
 
     /**
      * Invite a player to the clan

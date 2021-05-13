@@ -36,7 +36,7 @@ public class StandaloneArena extends Arena {
         FileConfiguration configuration = Array.getInstance().getArenasConfig().getConfiguration();
         configuration.set(path, null);
         configuration.set(path + ".type", getType().name());
-        configuration.set(path + ".display-name", CC.untranslate(displayName));
+        configuration.set(path + ".display-name", CC.untranslate(getDisplayName()));
         configuration.set(path + ".icon.material", displayIcon.getType().name());
         configuration.set(path + ".icon.durability", displayIcon.getDurability());
         configuration.set(path + ".disable-pearls", disablePearls);

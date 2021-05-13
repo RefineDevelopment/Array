@@ -4,15 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.enums.ArenaType;
 import me.drizzy.practice.arena.cuboid.Cuboid;
+import me.drizzy.practice.enums.ArenaType;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.location.LocationUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -39,7 +37,7 @@ public class TheBridgeArena extends Arena {
         FileConfiguration configuration = Array.getInstance().getArenasConfig().getConfiguration();
         configuration.set(path, null);
         configuration.set(path + ".type", getType().name());
-        configuration.set(path + ".display-name", CC.untranslate(displayName));
+        configuration.set(path + ".display-name", CC.untranslate(getDisplayName()));
         configuration.set(path + ".icon.material", displayIcon.getType().name());
         configuration.set(path + ".icon.durability", displayIcon.getDurability());
         configuration.set(path + ".disable-pearls", disablePearls);

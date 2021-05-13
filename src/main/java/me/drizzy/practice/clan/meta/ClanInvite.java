@@ -1,8 +1,9 @@
-package me.drizzy.practice.clan;
+package me.drizzy.practice.clan.meta;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import me.drizzy.practice.clan.Clan;
 
 import java.util.UUID;
 

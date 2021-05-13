@@ -17,8 +17,8 @@ public class ArenaSetMinCommand {
             return;
         }
 
-
         arena.setMin(player.getLocation());
+        arena.save();
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully set the &cMin &7Position for the arena &c" + arena.getDisplayName() + "&7!"));
 
     }

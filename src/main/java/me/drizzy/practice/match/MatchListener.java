@@ -737,7 +737,7 @@ public class MatchListener implements Listener {
         if (event.getItem() != null && event.getAction().name().contains("LEFT")) {
             final Profile profile = Profile.getByPlayer(event.getPlayer());
 
-            if (profile.isInFight() || profile.isInEvent() || profile.isInTournament()) {
+            if (profile.isInFight()) {
                 try {
                     TeamPlayer player=profile.getMatch().getTeamPlayer(event.getPlayer());
 
