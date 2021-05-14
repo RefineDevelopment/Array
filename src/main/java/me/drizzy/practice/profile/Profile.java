@@ -303,9 +303,9 @@ public class Profile {
 
             this.globalElo = document.getInteger("globalElo");
 
-            if (document.getString("clan") != null) {
-                this.clan = Clan.getByName(document.getString("clan"));
-            }
+           // if (document.getString("clan") != null) {
+            //    this.clan = Clan.getByName(document.getString("clan"));
+           // }
 
             Document options = (Document) document.get("settings");
 
@@ -384,9 +384,9 @@ public class Profile {
             document.put("name", Bukkit.getOfflinePlayer(uuid).getName());
             document.put("globalElo", globalElo);
 
-            if (clan != null) {
-                document.put("clan", clan.getName());
-            }
+           // if (clan != null) {
+            //    document.put("clan", clan.getName());
+           // }
 
             Document optionsDocument = new Document();
             optionsDocument.put("showScoreboard", settings.isShowScoreboard());

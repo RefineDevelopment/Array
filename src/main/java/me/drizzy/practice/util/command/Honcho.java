@@ -32,7 +32,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
 
-public class Honcho implements Listener {
+public class Honcho implements Listener
+{
     private final JavaPlugin plugin;
     private final Map<Class, CommandTypeAdapter> adapters;
     private final Map<String, CommandData> commands;
@@ -76,7 +77,7 @@ public class Honcho implements Listener {
     
     @EventHandler(ignoreCancelled = true)
     public void onServerCommandEvent(final ServerCommandEvent event) {
-        if (event != null) {
+        if (event instanceof Cancellable) {
             try {
                 final Method method = event.getClass().getDeclaredMethod("setCancelled", Boolean.TYPE);
                 method.invoke(event, this.handleExecution(event.getSender(), "/" + event.getCommand()));

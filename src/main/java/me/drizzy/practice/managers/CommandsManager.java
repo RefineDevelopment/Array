@@ -117,10 +117,10 @@ public class CommandsManager {
                 new PartyUnbanCommand(),
                 new PartyBanCommand(),
 
-                //Clan command
+                /*//Clan command
                 new ClanCommand(),
                 new ClanCreateCommand(),
-                new ClanChatCommand(),
+                new ClanChatCommand(),*/
 
                 //Kit command
                 new KitCreateCommand(),

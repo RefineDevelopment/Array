@@ -64,6 +64,14 @@ public class GoldenHeads implements Listener {
 			return is;
 	}
 
+	public static ItemStack getGoldenHeadApple() {
+		ItemStack is = new ItemStack(Material.GOLDEN_APPLE);
+		ItemMeta itemMeta = is.getItemMeta();
+		itemMeta.setDisplayName(ChatColor.GOLD + "Golden Head");
+		is.setItemMeta(itemMeta);
+		return is;
+	}
+
 	public static ItemStack getBridgeApple() {
 		ItemStack is = new ItemStack(Material.GOLDEN_APPLE);
 		ItemMeta itemMeta = is.getItemMeta();

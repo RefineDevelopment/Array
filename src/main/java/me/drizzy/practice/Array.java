@@ -295,9 +295,9 @@ public class Array extends JavaPlugin {
         Profile.preload();
         logger("&aLoaded Profiles!");
 
-        logger("&7Loading Clans!");
+        /*logger("&7Loading Clans!");
         Clan.preload();
-        logger("&aLoaded Clans!");
+        logger("&aLoaded Clans!");*/
 
         try {
             logger("&7Loading Kits!");
@@ -338,8 +338,8 @@ public class Array extends JavaPlugin {
         honcho.registerTypeAdapter(ArenaType.class, new ArenaTypeTypeAdapter());
         honcho.registerTypeAdapter(Kit.class, new KitTypeAdapter());
         honcho.registerTypeAdapter(Duration.class, new DurationTypeAdapter());
-        honcho.registerTypeAdapter(Clan.class, new ClanTypeAdapter());
-        honcho.registerTypeAdapter(ClanProfile.class, new ClanProfileTypeAdapter());
+        /*honcho.registerTypeAdapter(Clan.class, new ClanTypeAdapter());
+        honcho.registerTypeAdapter(ClanProfile.class, new ClanProfileTypeAdapter());*/
     }
 
     private void registerEssentials() {
