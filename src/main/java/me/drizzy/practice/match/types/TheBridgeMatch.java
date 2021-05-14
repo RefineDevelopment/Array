@@ -238,7 +238,7 @@ public class TheBridgeMatch extends Match {
         StringBuilder builder = new StringBuilder();
 
         if (!(getSpectators().size() <= 0)) {
-            ArrayList<Player> specs = new ArrayList<>(getSpectators());
+            List<Player> specs = new ArrayList<>(getSpectators());
             int i = 0;
             for (Player spectator : getSpectators()) {
                 if (getSpectators().size() >= 1) {
@@ -278,7 +278,7 @@ public class TheBridgeMatch extends Match {
     public boolean canEnd() {
         if (getRoundsNeeded(playerA) == 0 || getRoundsNeeded(playerB) == 0)
             return true;
-        return playerA.isDisconnected() || playerB.isDisconnected();
+        return playerA.isDisconnected() || playerB.isDisconnected() || !playerA.isAlive() || !playerB.isAlive();
     }
 
     @Override

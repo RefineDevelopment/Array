@@ -5,6 +5,7 @@ import me.drizzy.practice.essentials.event.SpawnTeleportEvent;
 import me.drizzy.practice.match.MatchState;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.other.PlayerUtil;
+import me.drizzy.practice.util.other.TaskUtil;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.ItemFrame;
@@ -213,20 +214,22 @@ public class ProfileListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         Profile profile = new Profile(uuid);
-        try {
-            profile.load();
-            Profile.getProfiles().put(uuid, profile);
-            profile.handleJoin();
-        } catch (Exception e) {
-            e.printStackTrace();
-            player.kickPlayer(CC.RED + "Failed to load your profile, Please contact an Administrator!");
-        }
+        TaskUtil.runAsync(() -> {
+            try {
+                profile.load();
+                Profile.getProfiles().put(uuid, profile);
+                profile.handleJoin();
+            } catch (Exception e) {
+                e.printStackTrace();
+                player.kickPlayer(CC.RED + "Failed to load your profile, Please contact an Administrator!");
+            }
+        });
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         event.setQuitMessage(null);
-        Profile profile = Profile.getProfiles().get(event.getPlayer().getUniqueId());
+        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
         profile.handleLeave();
     }
 

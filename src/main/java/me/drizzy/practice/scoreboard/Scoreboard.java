@@ -123,7 +123,7 @@ public class Scoreboard implements BoardAdapter {
                     final TeamPlayer opponent = match.getOpponentTeamPlayer(player);
 
                     config.getStringList("SCOREBOARD.MATCH.SOLO").forEach(line -> lines.add(CC.translate(line
-                                .replace("<opponent_name>", opponent.getPlayer().getName())
+                                .replace("<opponent_name>", opponent.getUsername())
                                 .replace("<match_duration>", match.getDuration())
                                 .replace("<match_kit>", match.getKit().getDisplayName())
                                 .replace("<player_count>", String.valueOf(match.getPlayers().size()))
@@ -276,7 +276,7 @@ public class Scoreboard implements BoardAdapter {
                                 .replace("<player_count>", String.valueOf(match.getPlayers().size()))
                                 .replace("<match_type>", "Team")
                                 .replace("<teamA_leader_name>", match.getTeamA().getLeader().getUsername())
-                                .replace("<teamA_leader_name>", match.getTeamB().getLeader().getUsername())
+                                .replace("<teamB_leader_name>", match.getTeamB().getLeader().getUsername())
                                 .replace("<teamA_size>", String.valueOf(match.getTeamA().getPlayers().size()))
                                 .replace("<teamB_size>", String.valueOf(match.getTeamB().getPlayers().size()))).replace("%splitter%", "┃").replace("|", "┃")));
 
@@ -288,7 +288,7 @@ public class Scoreboard implements BoardAdapter {
                                 .replace("<player_count>", String.valueOf(match.getPlayers().size()))
                                 .replace("<match_type>", "HCF")
                                 .replace("<teamA_leader_name>", match.getTeamA().getLeader().getUsername())
-                                .replace("<teamA_leader_name>", match.getTeamB().getLeader().getUsername())
+                                .replace("<teamB_leader_name>", match.getTeamB().getLeader().getUsername())
                                 .replace("<teamA_size>", String.valueOf(match.getTeamA().getPlayers().size()))
                                 .replace("<teamB_size>", String.valueOf(match.getTeamB().getPlayers().size()))).replace("%splitter%", "┃").replace("|", "┃")));
 

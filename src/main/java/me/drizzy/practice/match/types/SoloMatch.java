@@ -308,7 +308,7 @@ public class SoloMatch extends Match {
 
     @Override
     public boolean canEnd() {
-        return !playerA.isAlive() || !playerB.isAlive();
+        return !playerA.isAlive() || !playerB.isAlive() || playerA.isDisconnected() || playerB.isDisconnected();
     }
 
     @Override

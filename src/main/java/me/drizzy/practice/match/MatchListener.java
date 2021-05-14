@@ -988,9 +988,14 @@ public class MatchListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerLeave(final PlayerQuitEvent e) {
         final Profile profile = Profile.getByUuid(e.getPlayer().getUniqueId());
+        if (profile.isInFight()) {
+            profile.getMatch().handleDeath(e.getPlayer(), null, true);
+        } else if (profile.isInMatch()) {
+            profile.getMatch().handleDeath(e.getPlayer(), null, true);
+        }
         if (profile.isSpectating()) {
             profile.getMatch().removeSpectator(e.getPlayer());
         }

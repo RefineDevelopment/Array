@@ -522,7 +522,7 @@ public class Profile {
         }
         Profile.getPlayerList().add(player);
         for ( Profile other : Profile.getProfiles().values() ) {
-            other.handleVisibility();
+            TaskUtil.run(other::handleVisibility);
         }
 
         Array.getInstance().getTaskThread().execute(() -> {
@@ -536,7 +536,7 @@ public class Profile {
             this.refreshHotbar();
         });
 
-        this.teleportToSpawn();
+        TaskUtil.run(this::teleportToSpawn);
 
         //Visibility Bug Fix
         new BukkitRunnable() {
@@ -551,19 +551,16 @@ public class Profile {
      * Execute leave tasks for the profile
      */
     public void handleLeave() {
+
+       //If they are in a queue, remove them
+        if (this.isInQueue()) {
+            this.getQueue().removePlayer(this.getQueueProfile());
+        }
+
         Array.getInstance().getTaskThread().execute(() -> {
             //Remove from the Tab PlayerList
             Profile.getPlayerList().remove(this.getPlayer());
 
-            //If they are in a match, remove them
-            if (this.getMatch() != null) {
-                this.getMatch().handleDeath(this.getPlayer(), null, true);
-            }
-
-            //If they are in a queue, remove them
-            if (this.isInQueue()) {
-                this.getQueue().removePlayer(this.getQueueProfile());
-            }
             //Save their Profile
             this.save();
 
@@ -612,7 +609,11 @@ public class Profile {
                 } else {
                     NameTags.color(otherPlayer, getPlayer(), Array.getInstance().getEssentials().nametagMeta.getPartyColor(), false);
                 }
-                TaskUtil.runLater(profile::handleNametag, 20L);
+                TaskUtil.runLater(() -> {
+                    if (otherPlayer.isOnline() && otherPlayer != null){
+                        profile.handleNametag();
+                    }
+                }, 20L);
             } else {
                 NameTags.reset(getPlayer(), otherPlayer);
                 NameTags.reset(otherPlayer, getPlayer());
