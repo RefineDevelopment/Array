@@ -7,15 +7,12 @@ import java.util.UUID;
 @Data
 public class QueueProfile {
 
-    private UUID playerUuid;
+    private final UUID uuid;
+    private long start = System.currentTimeMillis();
+
     private int elo;
     private int range = 25;
-    private long start = System.currentTimeMillis();
     private int ticked;
-
-    public QueueProfile(UUID playerUuid) {
-        this.playerUuid = playerUuid;
-    }
 
     public void tickRange() {
         ticked++;
@@ -44,11 +41,6 @@ public class QueueProfile {
         int max = this.elo + this.range;
 
         return Math.min(max, 2500);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof QueueProfile && ((QueueProfile) o).getPlayerUuid().equals(this.playerUuid);
     }
 
 }

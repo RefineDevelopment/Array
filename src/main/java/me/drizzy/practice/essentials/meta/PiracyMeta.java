@@ -20,10 +20,10 @@ import java.util.Scanner;
  */
 public class PiracyMeta {
     
-    private final Plugin plugin;
+    private final Array plugin;
     private String key;
 
-    public PiracyMeta(Plugin plugin, String key) {
+    public PiracyMeta(Array plugin, String key) {
         this.plugin = plugin;
         this.key = key;
         register();

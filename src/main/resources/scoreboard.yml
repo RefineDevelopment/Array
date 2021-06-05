@@ -12,6 +12,12 @@ SCOREBOARD:
     - "&c&lParty&7:"
     - "&c * &fLeader: &c<party_leader>"
     - "&c * &fMembers: &c<party_size>"
+  CLAN:
+    - "&7&m----------------------"
+    - "&c&lClan&7:"
+    - "&c * &fName: &c<clan_name>"
+    - "&c * &fELo: &c<clan_elo>"
+    - "&c * &fMembers: &c<clan_members_online>&7/&c<clan_members_total>"
   UNRANKED_QUEUE:
     - "&7&m----------------------"
     - "&c&l<queue_name>&7:"
@@ -61,7 +67,7 @@ SCOREBOARD:
     HCF_BARD_ADDITION:
       - "&fBard Energy: &c<your_bard_energy>"
     FFA:
-      - "&fPlayers: &c<players_alive>/<player_count>"
+      - "&fPlayers: &c<alive_count>/<total_count>"
       - "&fTime: &c<match_duration>"
     ENDING:
       - "&cMatch Status: &fEnded"

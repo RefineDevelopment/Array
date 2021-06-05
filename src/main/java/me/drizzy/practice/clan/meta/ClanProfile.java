@@ -2,7 +2,7 @@ package me.drizzy.practice.clan.meta;
 
 import lombok.*;
 import me.drizzy.practice.clan.Clan;
-import me.drizzy.practice.enums.ClanProfileType;
+import me.drizzy.practice.clan.ClanProfileType;
 
 import java.util.UUID;
 

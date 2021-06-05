@@ -29,6 +29,11 @@ public class MizuCore implements RankType {
     }
 
     @Override
+    public boolean isBusy(OfflinePlayer player) {
+        return false;
+    }
+
+    @Override
     public ChatColor getRankColor(OfflinePlayer player) {
         return ColourUtils.format(MizuAPI.getAPI().getRankColor(MizuAPI.getAPI().getRank(player.getUniqueId())));
     }

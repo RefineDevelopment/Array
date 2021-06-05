@@ -1,7 +1,6 @@
 package me.drizzy.practice.tournament;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
@@ -15,14 +14,15 @@ import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.chat.CC;
+import me.drizzy.practice.util.other.TaskUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-@Getter
-@Setter
+@Getter @Setter
 public class Tournament {
 
     @Getter public static BukkitRunnable RUNNABLE = null;
@@ -32,7 +32,7 @@ public class Tournament {
 
     private final List<Party> participants = new ArrayList<Party>() {
         @Override
-        public Iterator<Party> iterator() {
+        public @NotNull Iterator<Party> iterator() {
             filter();
             return super.iterator();
         }
@@ -45,8 +45,8 @@ public class Tournament {
 
         private void filter() {
 
-            List<Party> toRemove = Lists.newArrayList();
-            for (int i = 0; i < super.size(); i++) {
+            List<Party> toRemove = new ArrayList<>();
+            for ( int i=0; i < super.size(); i++ ) {
                 Party party = get(i);
                 if (party.isDisbanded()) {
                     toRemove.add(party);
@@ -55,14 +55,17 @@ public class Tournament {
             removeAll(toRemove);
         }
     };
-    private final List<TournamentMatch> tournamentMatches = Lists.newArrayList();
+    
+    private final List<TournamentMatch> tournamentMatches = new ArrayList<>();
     public final List<UUID> spectators = new ArrayList<>();
 
     private Kit ladder;
     private String hostType;
+    
     private int participatingCount;
     private int round;
     private int teamCount;
+    
     private boolean canceled = false;
 
 
@@ -132,6 +135,7 @@ public class Tournament {
 
     public void cancel() {
         canceled = true;
+        CURRENT_TOURNAMENT = null;
         participants.clear();
         tournamentMatches.clear();
     }
@@ -148,44 +152,42 @@ public class Tournament {
             }
         }
         Iterator<Party> iterator = participants.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             Party player = iterator.next();
-            if(!iterator.hasNext()){
+            if (!iterator.hasNext()) {
                 player.broadcast(Locale.TOURNAMENT_NOT_PICKED.toString());
                 break;
             }
+            
             Party other = iterator.next();
             Arena arena = Arena.getRandom(ladder);
-            {
-                Team teamA = new Team(new TeamPlayer(player.getLeader().getPlayer()));
-                Team teamB = new Team(new TeamPlayer(other.getLeader().getPlayer()));
-                tournamentMatch = new TournamentMatch(teamA, teamB, getLadder(), arena);
 
-                for (Player player1 : player.getPlayers()) {
-                    final Profile otherData = Profile.getByUuid(player1.getUniqueId());
+            Team teamA = new Team(new TeamPlayer(player.getLeader().getPlayer()));
+            Team teamB = new Team(new TeamPlayer(other.getLeader().getPlayer()));
+            tournamentMatch = new TournamentMatch(teamA, teamB, getLadder(), arena);
 
-                    otherData.setState(ProfileState.IN_FIGHT);
-                    otherData.setMatch(tournamentMatch);
+            for ( Player player1 : player.getPlayers() ) {
+                final Profile otherProfile = Profile.getByUuid(player1.getUniqueId());
 
-                    if (!player.isLeader(player1.getUniqueId())) {
-                        teamA.getTeamPlayers().add(new TeamPlayer(player1));
-                    }
+                otherProfile.setState(ProfileState.IN_FIGHT);
+                otherProfile.setMatch(tournamentMatch);
+
+                if (!player.isLeader(player1.getUniqueId())) {
+                    teamA.getTeamPlayers().add(new TeamPlayer(player1));
                 }
-                for (Player player1 : other.getPlayers()) {
-                    final Profile otherData = Profile.getByUuid(player1.getUniqueId());
+            }
+            for ( Player player1 : other.getPlayers() ) {
+                final Profile otherProfile = Profile.getByUuid(player1.getUniqueId());
 
-                    otherData.setState(ProfileState.IN_FIGHT);
-                    otherData.setMatch(tournamentMatch);
+                otherProfile.setState(ProfileState.IN_FIGHT);
+                otherProfile.setMatch(tournamentMatch);
 
-                    if (!other.isLeader(player1.getUniqueId())) {
-                        teamB.getTeamPlayers().add(new TeamPlayer(player1));
-                    }
+                if (!other.isLeader(player1.getUniqueId())) {
+                    teamB.getTeamPlayers().add(new TeamPlayer(player1));
                 }
             }
             tournamentMatch.start();
             tournamentMatches.add(tournamentMatch);
-
-
         }
     }
 
@@ -238,9 +240,9 @@ public class Tournament {
 
                 if (tournamentMatches.isEmpty()) {
                     if (participants.size() <= 1) {
-                        Bukkit.broadcastMessage(CC.BLUE + CC.BOLD + "");
-                        Bukkit.broadcastMessage(Locale.TOURNAMANET_WON.toString().replace("<won>", CC.translate(builder.toString())));
-                        Bukkit.broadcastMessage(CC.BLUE + CC.BOLD + "");
+                        Bukkit.broadcastMessage("");
+                        Bukkit.broadcastMessage(Locale.TOURNAMENT_WON.toString().replace("<won>", CC.translate(builder.toString())));
+                        Bukkit.broadcastMessage("");
                         if (participants.get(0) != null) {
                             if (getTeamCount() == 1) {
                                 Party winner = participants.get(0);
@@ -252,12 +254,7 @@ public class Tournament {
                         }
                         CURRENT_TOURNAMENT = null;
                     } else {
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                tournamentstart();
-                            }
-                        }.runTaskLater(Array.getInstance(), 100L);
+                        TaskUtil.runLater(Tournament.this::tournamentstart, 100L);
                     }
                 }
             }

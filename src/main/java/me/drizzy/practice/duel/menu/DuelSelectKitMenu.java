@@ -2,6 +2,7 @@ package me.drizzy.practice.duel.menu;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
+import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
@@ -21,8 +22,6 @@ import java.util.Map;
 @AllArgsConstructor
 public class DuelSelectKitMenu extends Menu {
 
-    String type;
-
     @Override
     public String getTitle(Player player) {
         return "&7Select a kit";
@@ -35,7 +34,7 @@ public class DuelSelectKitMenu extends Menu {
         boolean party = Profile.getByUuid(player.getUniqueId()).getParty() != null;
 
         if (party) {
-            if (Array.getInstance().getEssentials().getMeta().isHCFEnabled()) {
+            if (Essentials.getMeta().isHCFEnabled()) {
                 for ( Kit kit : Kit.getKits() ) {
                     if (kit.isEnabled() || kit.getName().equalsIgnoreCase("HCFTeamFight")) {
                         if (!kit.getGameRules().isTimed() && !kit.getGameRules().isBridge())
@@ -89,7 +88,6 @@ public class DuelSelectKitMenu extends Menu {
         public void clicked(Player player, ClickType clickType) {
             Profile profile = Profile.getByUuid(player.getUniqueId());
 
-            if (type.equalsIgnoreCase("normal")) {
 
                 if (profile.getDuelProcedure() == null) {
                     player.sendMessage(CC.RED + "Could not find duel procedure.");
@@ -107,34 +105,12 @@ public class DuelSelectKitMenu extends Menu {
                 // Force close inventory
                 player.closeInventory();
                 if (player.hasPermission("array.donator")) {
-                    new DuelSelectArenaMenu("normal").openMenu(player);
+                    new DuelSelectArenaMenu().openMenu(player);
                 } else {
                     profile.getDuelProcedure().send();
                 }
 
-            } else if (type.equalsIgnoreCase("rematch")) {
-                if (profile.getRematchData() == null) {
-                    player.sendMessage(CC.RED + "Could not find rematch data.");
-                    return;
-                }
 
-                Profile targetProfile = Profile.getByUuid(profile.getRematchData().getTarget());
-
-                Arena arena = Arena.getRandom(kit);
-                // Update rematch data
-                profile.getRematchData().setKit(kit);
-                profile.getRematchData().setArena(arena);
-                targetProfile.getRematchData().setKit(kit);
-                targetProfile.getRematchData().setArena(arena);
-
-                // Force close inventory
-                player.closeInventory();
-                if (player.hasPermission("array.donator")) {
-                    new DuelSelectArenaMenu("rematch").openMenu(player);
-                } else {
-                    profile.getDuelProcedure().send();
-                }
-            }
         }
 
     }

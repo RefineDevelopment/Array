@@ -3,17 +3,21 @@ package me.drizzy.practice.managers;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
-import me.drizzy.practice.util.other.TaskUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
+ * This Project is the property of Purge Community © 2021
+ * Redistribution of this Project is not allowed
+ *
  * @author Drizzy
  * Created at 4/16/2021
+ * Project: Array
  */
-@Getter
-@Setter
+
+@Getter @Setter
 public class TabManager {
 
     private final BasicConfigurationFile config = Array.getInstance().getTablistConfig();
@@ -33,13 +37,13 @@ public class TabManager {
         setMainColor(config.getStringOrDefault(key + "MAIN_COLOR", "&c").replace("%splitter%", "┃"));
         setSecondaryColor(config.getStringOrDefault(key + "SECONDARY_COLOR", "&f").replace("%splitter%", "┃"));
         setHeader(config.getStringOrDefault(key + "HEADER", "\n&c&lArray Practice\n&7&opurgecommunity.com\n").replace("%splitter%", "┃"));
-        setFooter(config.getStringOrDefault(key + "FOOTER", "\n&c&oYou can buy ranks and perks at\n&7<store>\n").replace("<store>", Array.getInstance().getEssentials().getSocialMeta().getStore()).replace("%splitter%", "┃"));
-        setLegacyHeader(config.getStringOrDefault(key + "1DOT7_HEADER", mainColor + "&lPractice &7| " + secondaryColor + "&lEU").replace("|", "┃").replace("%splitter%", "┃"));
+        setFooter(config.getStringOrDefault(key + "FOOTER", "\n&c&oYou can buy ranks and perks at\n&7<store>\n").replace("<store>",  Essentials.getSocialMeta().getStore()).replace("%splitter%", "┃"));
+        setLegacyHeader(config.getStringOrDefault(key + "1DOT7_HEADER", mainColor + "&lPractice &7┃ " + secondaryColor + "&lEU").replace("|", "┃").replace("%splitter%", "┃"));
         try {
             setDotColor(ChatColor.valueOf(config.getStringOrDefault(key + "DOT_COLOR", "RED")));
         } catch (Exception e) {
             setDotColor(ChatColor.RED);
-            Array.logger("&cInvalid Dot Color setup for Tablist, falling back to default &7(RED)");
+            Array.logger("&cInvalid Dot Color setup for TablistHandler, falling back to default &7(RED)");
         }
     }
 

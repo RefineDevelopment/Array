@@ -6,7 +6,6 @@ import me.drizzy.practice.events.types.parkour.player.ParkourPlayer;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.events.types.parkour.player.ParkourPlayerState;
 import me.drizzy.practice.util.location.BlockUtil;
-import me.drizzy.practice.util.chat.CC;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -133,7 +132,7 @@ public class ParkourListener implements Listener {
 							if (event.getClickedBlock().getType() == Material.GOLD_PLATE) {
 								if (parkour.getEventPlayer(player).getState().equals(ParkourPlayerState.WAITING)) {
 									parkour.handleWin(player);
-									parkour.broadcastMessage(Locale.EVENT_PARKROUR_WON.toString().replace("<winner>", player.getDisplayName()));
+									parkour.broadcastMessage(Locale.EVENT_PARKOUR_WON.toString().replace("<winner>", player.getDisplayName()));
 									profile.getPlates().add(event.getClickedBlock().getLocation());
 								}
 							} else if (event.getClickedBlock().getType() == Material.IRON_PLATE) {

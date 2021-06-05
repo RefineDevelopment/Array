@@ -4,10 +4,12 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.sumo.task.SumoRoundEndTask;
 import me.drizzy.practice.events.types.sumo.task.SumoRoundStartTask;
+import me.drizzy.practice.hook.SpigotHook;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
+import me.drizzy.practice.util.nametags.NameTagHandler;
 import me.drizzy.practice.util.other.*;
 import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.events.types.sumo.player.SumoPlayer;
@@ -21,8 +23,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-@Getter
-@Setter
+@Getter @Setter
 public class Sumo {
 
 	@Getter	@Setter	private static boolean enabled = true;
@@ -193,7 +194,9 @@ public class Sumo {
 					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
 					otherProfile.handleVisibility(otherPlayer, player);
 					profile.handleVisibility(player, otherPlayer);
-					NameTags.color(player, otherPlayer, plugin.getEssentials().getNametagMeta().getEventColor(), false);
+
+					NameTagHandler.reloadPlayer(player);
+                    NameTagHandler.reloadOthersFor(player);
 				}
 			}
 		}.runTaskAsynchronously(plugin);
@@ -226,7 +229,9 @@ public class Sumo {
 					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
 					otherProfile.handleVisibility(otherPlayer, player);
 					profile.handleVisibility(player, otherPlayer);
-					NameTags.reset(player, otherPlayer);
+
+                    NameTagHandler.reloadPlayer(player);
+                    NameTagHandler.reloadOthersFor(player);
 				}
 			}
 		}.runTaskAsynchronously(plugin);
@@ -330,11 +335,11 @@ public class Sumo {
 	}
 
 	public void onJoin(Player player) {
-		plugin.getNMSManager().getKnockbackType().applyKnockback(player, plugin.getSumoManager().getSumoKnockbackProfile());
+		SpigotHook.getKnockbackType().applyKnockback(player, plugin.getSumoManager().getSumoKnockbackProfile());
 	}
 
 	public void onLeave(Player player) {
-		plugin.getNMSManager().getKnockbackType().applyDefaultKnockback(player);
+		SpigotHook.getKnockbackType().applyDefaultKnockback(player);
 	}
 
 	public void onRound() {

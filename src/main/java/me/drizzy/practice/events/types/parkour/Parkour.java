@@ -13,6 +13,7 @@ import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
+import me.drizzy.practice.util.nametags.NameTagHandler;
 import me.drizzy.practice.util.other.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -23,8 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Getter @Setter
 public class Parkour {
 
 	@Getter	@Setter	private static boolean enabled = true;
@@ -196,7 +196,9 @@ public class Parkour {
 					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
 					otherProfile.handleVisibility(otherPlayer, player);
 					profile.handleVisibility(player, otherPlayer);
-					NameTags.color(player, otherPlayer, plugin.getEssentials().getNametagMeta().getEventColor(), false);
+
+					NameTagHandler.reloadPlayer(player);
+					NameTagHandler.reloadOthersFor(player);
 				}
 			}
 		}.runTaskAsynchronously(plugin);
@@ -225,7 +227,9 @@ public class Parkour {
 					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
 					otherProfile.handleVisibility(otherPlayer, player);
 					profile.handleVisibility(player, otherPlayer);
-					NameTags.reset(player, otherPlayer);
+
+					NameTagHandler.reloadPlayer(player);
+					NameTagHandler.reloadOthersFor(player);
 				}
 			}
 		}.runTaskAsynchronously(plugin);

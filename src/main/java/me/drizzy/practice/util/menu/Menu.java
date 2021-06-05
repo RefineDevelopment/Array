@@ -14,8 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
-@Setter
+@Getter @Setter
 public abstract class Menu {
 
     public static Map<String, Menu> currentlyOpenedMenus = new HashMap<>();

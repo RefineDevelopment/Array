@@ -4,25 +4,23 @@ import lombok.Getter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.Locale;
 import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.managers.HCFManager;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.hook.SpigotHook;
+import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.enums.QueueType;
-import me.drizzy.practice.util.other.NameTags;
+import me.drizzy.practice.queue.QueueType;
+import me.drizzy.practice.util.nametags.NameTagHandler;
 import me.drizzy.practice.util.other.PlayerUtil;
-import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.ChatComponentBuilder;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -67,11 +65,6 @@ public class HCFMatch extends Match {
     }
 
     @Override
-    public boolean isRobotMatch() {
-        return false;
-    }
-
-    @Override
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
@@ -88,14 +81,6 @@ public class HCFMatch extends Match {
 
         Team team = getTeam(player);
 
-        for (Player friendly : team.getPlayers()) {
-            NameTags.color(player, friendly, org.bukkit.ChatColor.GREEN, false);
-        }
-
-        for (Player enemy : getOpponentTeam(team).getPlayers()) {
-            NameTags.color(player, enemy, org.bukkit.ChatColor.RED, false);
-        }
-
         Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
 
         if (spawn.getBlock().getType() == Material.AIR) {
@@ -105,14 +90,25 @@ public class HCFMatch extends Match {
         }
         teamPlayer.setPlayerSpawn(spawn);
 
-        for (ItemStack itemStack : HCFManager.getHCFKitItems()) {
-            player.getInventory().addItem(itemStack);
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Party party = profile.getParty();
+
+        String kit = party.getKits().get(player.getUniqueId());
+
+        switch (kit) {
+            case "Bard": Kit.getByName("HCFBBARD").applyToPlayer(player);
+            case "Archer": Kit.getByName("HCFARCHER").applyToPlayer(player);
+            case "Rogue": Kit.getByName("HCFROGUE").applyToPlayer(player);
+            case "Diamond": Kit.getByName("HCFDIAMOND").applyToPlayer(player);
         }
+
+        NameTagHandler.reloadPlayer(player);
+        NameTagHandler.reloadOthersFor(player);
     }
 
     @Override
     public void onStart() {
-        getPlayers().forEach(player1 -> Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(player1, Kit.getByName("NoDebuff")));
+        getPlayers().forEach(player1 -> SpigotHook.getKnockbackType().appleKitKnockback(player1, Kit.getHCFTeamFight()));
     }
 
     @Override
@@ -159,13 +155,9 @@ public class HCFMatch extends Match {
 
                             player.setFireTicks(0);
                             player.updateInventory();
-
-                            NameTags.reset(player, firstTeamPlayer.getPlayer());
-
-                            Array.getInstance().getHCFManager().getEquippedClass(player).onUnequip(player);
-                            Array.getInstance().getHCFManager().setEquippedClass(player, null);
-                            Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
                             player.getActivePotionEffects().clear();
+
+                            SpigotHook.getKnockbackType().applyDefaultKnockback(player);
 
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
@@ -182,41 +174,9 @@ public class HCFMatch extends Match {
         Team winningTeam = getWinningTeam();
         Team losingTeam = getOpponentTeam(winningTeam);
 
-        ChatComponentBuilder winnerInventories = new ChatComponentBuilder("");
-        winnerInventories.append("Winners: ").color(ChatColor.GREEN);
+        winningTeam.getPlayers().stream().map(Profile::getByPlayer).forEach(profile -> profile.getStatisticsData().get(getKit()).incrementWon());
+        losingTeam.getPlayers().stream().map(Profile::getByPlayer).forEach(profile -> profile.getStatisticsData().get(getKit()).incrementLost());
 
-        ChatComponentBuilder loserInventories = new ChatComponentBuilder("");
-        loserInventories.append("Losers: ").color(ChatColor.RED);
-
-        for (TeamPlayer teamPlayer : winningTeam.getTeamPlayers()) {
-            winnerInventories.append(teamPlayer.getUsername()).color(ChatColor.GREEN);
-            winnerInventories.setCurrentHoverEvent(getHoverEvent(teamPlayer)).setCurrentClickEvent(getClickEvent(teamPlayer)).append(", ").color(ChatColor.RED);
-        }
-
-        for (TeamPlayer teamPlayer : losingTeam.getTeamPlayers()) {
-            loserInventories.append(teamPlayer.getUsername()).color(ChatColor.RED);
-            loserInventories.setCurrentHoverEvent(getHoverEvent(teamPlayer))
-                    .setCurrentClickEvent(getClickEvent(teamPlayer))
-                    .append(", ")
-                    .color(ChatColor.GRAY);
-        }
-
-        winnerInventories.getCurrent().setText(winnerInventories.getCurrent().getText().substring(0,
-                winnerInventories.getCurrent().getText().length() - 2));
-        loserInventories.getCurrent().setText(loserInventories.getCurrent().getText().substring(0,
-                loserInventories.getCurrent().getText().length() - 2));
-
-        List<BaseComponent[]> components = new ArrayList<>();
-        components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
-        components.add(new ChatComponentBuilder("").parse(Locale.MATCH_INVENTORY_MESSAGE_TITLE.toString()).create());
-        components.add(new ChatComponentBuilder("").parse("").create());
-        components.add(winnerInventories.create());
-        components.add(loserInventories.create());
-        components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
-
-        for (Player player : getPlayersAndSpectators()) {
-            components.forEach(components1 -> player.spigot().sendMessage(components1));
-        }
         return true;
     }
 
@@ -234,8 +194,11 @@ public class HCFMatch extends Match {
         PlayerUtil.reset(player);
 
         if (!canEnd() && !teamPlayer.isDisconnected()) {
+
+            player.teleport(getMidSpawn());
             player.setAllowFlight(true);
             player.setFlying(true);
+
             Profile profile = Profile.getByUuid(player.getUniqueId());
             profile.refreshHotbar();
             profile.setState(ProfileState.SPECTATING);
@@ -412,18 +375,48 @@ public class HCFMatch extends Match {
             return org.bukkit.ChatColor.GREEN;
         }
 
-        Team team = getTeam(target);
-        Team viewerTeam = getTeam(viewer);
+        boolean[] booleans = new boolean[]{
+                getTeamA().containsPlayer(viewer),
+                getTeamB().containsPlayer(viewer),
+                getTeamA().containsPlayer(target),
+                getTeamB().containsPlayer(target)
+        };
 
-        if (team == null || viewerTeam == null) {
+        if ((booleans[0] && booleans[3]) || (booleans[2] && booleans[1])) {
             return org.bukkit.ChatColor.RED;
-        }
-
-        if (team.equals(viewerTeam)) {
+        } else if ((booleans[0] && booleans[2]) || (booleans[1] && booleans[3])) {
             return org.bukkit.ChatColor.GREEN;
+        } else if (getSpectators().contains(viewer)) {
+            return getTeamA().containsPlayer(target) ?  org.bukkit.ChatColor.GREEN : org.bukkit.ChatColor.RED;
         } else {
-            return org.bukkit.ChatColor.RED;
+            return org.bukkit.ChatColor.AQUA;
         }
+    }
+
+    @Override
+    public List<BaseComponent[]> generateEndComponents(Player player) {
+        List<BaseComponent[]> componentsList = new ArrayList<>();
+
+        for ( String line : Locale.MATCH_INVENTORY_MESSAGE.toList() ) {
+            if (line.equalsIgnoreCase("<inventories>")) {
+
+                BaseComponent[] winners = generateInventoriesComponents(Locale.MATCH_INVENTORY_WINNERS.toString(), getWinningTeam().getTeamPlayers());
+                BaseComponent[] losers = generateInventoriesComponents(Locale.MATCH_INVENTORY_LOSERS.toString(), getOpponentTeam(getWinningTeam()).getTeamPlayers());
+
+                componentsList.add(winners);
+                componentsList.add(losers);
+
+                continue;
+            }
+
+            if (line.equalsIgnoreCase("<elo_changes>")) {
+                continue;
+            }
+
+            componentsList.add(new ChatComponentBuilder("").parse(line).create());
+        }
+
+        return componentsList;
     }
 
 }

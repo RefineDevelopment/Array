@@ -1,18 +1,13 @@
 package me.drizzy.practice.events.menu;
 
+import lombok.AllArgsConstructor;
 import me.drizzy.practice.Array;
-import me.drizzy.practice.enums.EventType;
-import me.drizzy.practice.events.types.brackets.command.BracketsJoinCommand;
-import me.drizzy.practice.events.types.gulag.command.GulagJoinCommand;
-import me.drizzy.practice.events.types.lms.command.LMSJoinCommand;
-import me.drizzy.practice.events.types.parkour.command.ParkourJoinCommand;
-import me.drizzy.practice.events.types.spleef.command.SpleefJoinCommand;
-import me.drizzy.practice.events.types.sumo.command.SumoJoinCommand;
+import me.drizzy.practice.cmds.event.*;
+import me.drizzy.practice.events.EventType;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.inventory.ItemBuilder;
 import me.drizzy.practice.util.menu.Button;
 import me.drizzy.practice.util.menu.Menu;
-import lombok.AllArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -85,26 +80,36 @@ public class ActiveEventSelectEventMenu extends Menu {
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
 
-            switch (eventType.getTitle()) {
-                case "&c&lBrackets":
-                    lore=Array.getInstance().getBracketsManager().getActiveBrackets().getLore();
+            switch(eventType.getTitle()) {
+                case "&c&lBrackets": {
+                    lore.addAll(Array.getInstance().getBracketsManager().getActiveBrackets().getLore());
                     break;
-                case "&c&lSumo":
-                    lore=Array.getInstance().getSumoManager().getActiveSumo().getLore();
+                }
+                case "&c&lSumo": {
+                    lore.addAll(Array.getInstance().getSumoManager().getActiveSumo().getLore());
                     break;
-                case "&c&lLMS":
-                    lore=Array.getInstance().getLMSManager().getActiveLMS().getLore();
+                }
+                case "&c&lLMS": {
+                    lore.addAll(Array.getInstance().getLMSManager().getActiveLMS().getLore());
                     break;
-                case "&c&lParkour":
-                    lore=Array.getInstance().getParkourManager().getActiveParkour().getLore();
+                }
+                case "&c&lParkour": {
+                    lore.addAll(Array.getInstance().getParkourManager().getActiveParkour().getLore());
                     break;
-                case "&c&lSpleef":
-                    lore=Array.getInstance().getSpleefManager().getActiveSpleef().getLore();
+                }
+                case "&c&lSpleef": {
+                    lore.addAll(Array.getInstance().getSpleefManager().getActiveSpleef().getLore());
                     break;
-                case "&c&lGulag":
-                    lore=Array.getInstance().getGulagManager().getActiveGulag().getLore();
+                }
+                case "&c&lGulag": {
+                    lore.addAll(Array.getInstance().getGulagManager().getActiveGulag().getLore());
                     break;
+                }
+                default: {
+                    lore = new ArrayList<>();
+                }
             }
+
             lore.add("&cClick to join");
             lore.add(CC.MENU_BAR);
 
@@ -120,24 +125,30 @@ public class ActiveEventSelectEventMenu extends Menu {
             Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
             player.closeInventory();
             switch (eventType.getTitle()) {
-                case "&c&lBrackets":
-                    BracketsJoinCommand.execute(player);
+                case "&c&lBrackets": {
+                    new BracketCommands().join(player);
                     break;
-                case "&c&lSumo":
-                    SumoJoinCommand.execute(player);
+                }
+                case "&c&lSumo": {
+                    new SumoCommands().join(player);
                     break;
-                case "&c&lLMS":
-                    LMSJoinCommand.execute(player);
+                }
+                case "&c&lLMS": {
+                    new LMSCommands().join(player);
                     break;
-                case "&c&lParkour":
-                    ParkourJoinCommand.execute(player);
+                }
+                case "&c&lParkour": {
+                    new ParkourCommands().join(player);
                     break;
-                case "&c&lSpleef":
-                    SpleefJoinCommand.execute(player);
+                }
+                case "&c&lSpleef": {
+                    new SpleefCommands().join(player);
                     break;
-                case "&c&lGulag":
-                    GulagJoinCommand.execute(player);
+                }
+                case "&c&lGulag": {
+                    new GulagCommands().join(player);
                     break;
+                }
             }
         }
 

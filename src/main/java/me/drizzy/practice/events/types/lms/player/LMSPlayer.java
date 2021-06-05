@@ -7,8 +7,7 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-@Getter
-@Setter
+@Getter @Setter
 public class LMSPlayer {
 
     private final UUID uuid;

@@ -7,8 +7,7 @@ import me.drizzy.practice.util.other.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-@Getter
-@Setter
+@Getter @Setter
 public class SumoPlayer {
 
 	private final UUID uuid;

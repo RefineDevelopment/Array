@@ -1,10 +1,11 @@
 package me.drizzy.practice.util.menu;
 
-import me.drizzy.practice.util.bootstrap.BootstrappedListener;
-import org.bukkit.Bukkit;
+import me.drizzy.practice.Array;
+import me.drizzy.practice.util.other.TaskUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -13,11 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 
-public class MenuListener extends BootstrappedListener {
-
-    public MenuListener(me.drizzy.practice.Array Array) {
-        super(Array);
-    }
+public class MenuListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onButtonPress(InventoryClickEvent event) {
@@ -67,7 +64,7 @@ public class MenuListener extends BootstrappedListener {
                 }
 
                 if (event.isCancelled()) {
-                    Bukkit.getScheduler().runTaskLater(Array, player::updateInventory, 1L);
+                    TaskUtil.runLater(player::updateInventory, 1L);
                 }
             } else {
                 if (event.getCurrentItem() != null) {
@@ -91,7 +88,7 @@ public class MenuListener extends BootstrappedListener {
 
             Menu.currentlyOpenedMenus.remove(player.getName());
         }
-        player.setMetadata("editorglitch", new FixedMetadataValue(Array, true));
+        player.setMetadata("editorglitch", new FixedMetadataValue(Array.getInstance(), true));
     }
 
     @EventHandler
@@ -99,7 +96,7 @@ public class MenuListener extends BootstrappedListener {
         Player player = event.getPlayer();
 
         if (player.hasMetadata("editorglitch")) {
-            player.removeMetadata("editorglitch", Array);
+            player.removeMetadata("editorglitch", Array.getInstance());
 
             for ( ItemStack it : player.getInventory().getContents()) {
                 if (it != null) {

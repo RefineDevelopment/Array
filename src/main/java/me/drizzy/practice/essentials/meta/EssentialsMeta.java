@@ -4,11 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * This Project is the property of Purge Community © 2021
+ * Redistribution of this Project is not allowed
+ *
  * @author Drizzy
  * Created at 4/16/2021
+ * Project: Array
  */
-@Getter
-@Setter
+
+@Getter @Setter
 public class EssentialsMeta {
 
     public boolean HCFEnabled = true;
@@ -18,6 +22,7 @@ public class EssentialsMeta {
     public boolean disclaimerEnabled = true;
     public boolean removeBottles = true;
     public boolean rankedEnabled = true;
+    public boolean ratingEnabled = true;
     public boolean requireKills = true;
     public boolean limitPing = true;
     public boolean bridgeClearBlocks = true;

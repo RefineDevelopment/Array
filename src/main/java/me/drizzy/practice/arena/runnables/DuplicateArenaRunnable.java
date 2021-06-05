@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.arena.impl.StandaloneArena;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,14 +19,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 public abstract class DuplicateArenaRunnable extends BukkitRunnable {
 
     private final Array plugin;
-    private final StandaloneArena copiedArena;
+    private final Arena copiedArena;
     private int offsetX;
     private int offsetZ;
     private final int incrementX;
     private final int incrementZ;
     private Map<Location, Block> paste;
 
-    public DuplicateArenaRunnable(Array plugin, StandaloneArena copiedArena, int offsetX, int offsetZ, int incrementX, int incrementZ) {
+    public DuplicateArenaRunnable(Array plugin, Arena copiedArena, int offsetX, int offsetZ, int incrementX, int incrementZ) {
         this.plugin = plugin;
         this.copiedArena = copiedArena;
         this.offsetX = offsetX;

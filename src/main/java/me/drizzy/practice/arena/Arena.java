@@ -4,7 +4,6 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.impl.SharedArena;
 import me.drizzy.practice.arena.impl.StandaloneArena;
 import me.drizzy.practice.arena.impl.TheBridgeArena;
-import me.drizzy.practice.enums.ArenaType;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.arena.cuboid.Cuboid;
 import me.drizzy.practice.util.chat.CC;
@@ -21,8 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-@Getter
-@Setter
+@Getter @Setter
 public class Arena {
 
     @Getter private static final List<Arena> arenas = new ArrayList<>();

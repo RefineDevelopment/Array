@@ -7,9 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.Locale;
-import me.drizzy.practice.api.events.*;
+import me.drizzy.practice.api.events.match.*;
 import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.enums.QueueType;
+import me.drizzy.practice.essentials.Essentials;
+import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.task.*;
 import me.drizzy.practice.match.team.Team;
@@ -19,12 +20,12 @@ import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.ChatComponentBuilder;
-import me.drizzy.practice.util.other.NameTags;
+import me.drizzy.practice.util.chat.ChatHelper;
+import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.other.TaskUtil;
 import me.drizzy.practice.util.other.TimeUtil;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.*;
 import org.bukkit.block.BlockState;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -43,27 +44,31 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-@Getter
+@Getter @Setter
 public abstract class Match {
 
-    @Setter private long startTimestamp;
-    @Setter public MatchState state = MatchState.STARTING;
     @Getter protected static List<Match> matches = new ArrayList<>();
-    private final UUID matchId = UUID.randomUUID();
-    private final Queue queue;
-    private final Kit kit;
-    public BukkitTask task;
-    private BukkitTask matchWaterCheck;
-    public Map<UUID, EnderPearl> pearlMap = new HashMap<>();
-    private final Arena arena;
-    private final QueueType queueType;
+    private final Map<UUID, EnderPearl> pearlMap = new HashMap<>();
     private final List<MatchSnapshot> snapshots = new ArrayList<>();
-    public final List<UUID> spectators = new ArrayList<>();
+    private final List<UUID> spectators = new ArrayList<>();
     private final List<Entity> entities = new ArrayList<>();
     private final List<Item> droppedItems = new ArrayList<>();
     private final List<Location> placedBlocks = new ArrayList<>();
     private final List<BlockState> changedBlocks = new ArrayList<>();
-    public final List<Player> catcher = new ArrayList<>();
+    private final List<Player> catcher = new ArrayList<>();
+
+    private final UUID matchId = UUID.randomUUID();
+    private final Queue queue;
+    private final Kit kit;
+    private final Arena arena;
+    private final QueueType queueType;
+
+    public MatchState state = MatchState.STARTING;
+    public BukkitTask task;
+    private BukkitTask matchWaterCheck;
+
+    private long startTimestamp;
+
 
     public Match(Queue queue, Kit kit, Arena arena, QueueType queueType) {
         this.queue = queue;
@@ -75,17 +80,13 @@ public abstract class Match {
     }
 
     public static void preload() {
-        new MatchPearlCooldownTask().runTaskTimerAsynchronously(Array.getInstance(), 2L, 2L);
-        new MatchSnapshotCleanupTask().runTaskTimerAsynchronously(Array.getInstance(), 20L * 5, 20L * 5);
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                for(World world : Bukkit.getWorlds()){
-                    world.setStorm(false);
-                    world.setThundering(false);
-                }
-            }
-        }.runTaskTimer(Array.getInstance() , 20 , 20);
+        TaskUtil.runTimerAsync(new MatchPearlCooldownTask(), 2L, 2L);
+        TaskUtil.runTimerAsync(new MatchSnapshotCleanupTask(), 20L * 5, 20L * 5);
+
+        TaskUtil.runTimer(() -> Bukkit.getWorlds().forEach(world -> {
+            world.setStorm(false);
+            world.setThundering(false);
+        }), 20, 20);
     }
 
     public static void cleanup() {
@@ -157,18 +158,7 @@ public abstract class Match {
         startTimestamp = -1;
         arena.setActive(true);
 
-        if (!this.isSoloMatch() || !isHCFMatch() || !this.isTheBridgeMatch()) {
-            if (this.isFreeForAllMatch() || this.isTeamMatch()) {
-                for ( String string : Locale.MATCH_TEAM_STARTMESSAGE.toList()) {
-                    this.broadcastMessage(CC.translate(this.replace(string)));
-                }
-            }
-        }
-        if (isHCFMatch()) {
-            for ( String string : Locale.MATCH_HCF_STARTMESSAGE.toList()) {
-                this.broadcastMessage(CC.translate(string));
-            }
-        }
+        this.sendStartMessage();
 
         if (getKit() != null) {
             if (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isParkour() || getKit().getGameRules().isSumo()) {
@@ -177,6 +167,7 @@ public abstract class Match {
         }
 
         task = new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
+
         for (Player shooter : getPlayers()) {
             new BukkitRunnable() {
                 @Override
@@ -203,12 +194,10 @@ public abstract class Match {
                 }
             }.runTaskTimerAsynchronously(Array.getInstance(), 0L, 5L);
         }
-        final MatchStartEvent event = new MatchStartEvent(this);
-        Bukkit.getPluginManager().callEvent(event);
+        new MatchStartEvent(this).call();
     }
 
     public void end() {
-
         if (onEnd()) {
             state = MatchState.ENDING;
         } else {
@@ -227,30 +216,52 @@ public abstract class Match {
                     MatchSnapshot.getSnapshots().put(matchInventory.getTeamPlayer().getUuid(), matchInventory);
         });
 
+        for (TeamPlayer gamePlayer : getTeamPlayers()) {
+            if (!gamePlayer.isDisconnected() && gamePlayer.getPlayer() != null) {
+                Player player = gamePlayer.getPlayer();
+                for ( BaseComponent[] components : generateEndComponents(player) ) {
+                    player.spigot().sendMessage(components);
+                }
+            }
+        }
+
+        for (Player player : getSpectators()) {
+            for (BaseComponent[] components : generateEndComponents(player)) {
+                player.spigot().sendMessage(components);
+            }
+            removeSpectator(player);
+        }
+
+        if (Essentials.getMeta().isRatingEnabled()) {
+            getPlayers().stream().map(Profile::getByPlayer).forEach(profile ->  {
+                profile.setCanIssueRating(true);
+                this.sendRatingMessage(profile.getPlayer(), this.getArena());
+            });
+        }
+
         getPlayers().forEach(this::removePearl);
 
         getPlayers().stream().map(Profile::getByPlayer).map(Profile::getPlates).forEach(List::clear);
 
-        getSpectators().forEach(this::removeSpectator);
-        entities.forEach(Entity::remove);
-        droppedItems.forEach(Entity::remove);
+        if (!isSoloMatch()) {
+            entities.forEach(Entity::remove);
+            droppedItems.forEach(Entity::remove);
+        }
 
+        arena.setActive(false);
 
         if (matchWaterCheck != null) {
             matchWaterCheck.cancel();
         }
 
-        final MatchEndEvent event = new MatchEndEvent(this);
-        Bukkit.getPluginManager().callEvent(event);
+        new MatchEndEvent(this).call();
 
         new MatchResetTask(this).runTask(Array.getInstance());
 
-        getArena().setActive(false);
-
         matches.remove(this);
 
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), () -> getPlayers().forEach(player -> ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) 0)), 2L);
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), () -> getPlayers().forEach(player -> ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) 0)), 2L);
+        TaskUtil.runLaterAsync(() -> getPlayers().forEach(player -> ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) 0)), 2L);
+        TaskUtil.runLaterAsync(() -> getPlayers().forEach(player -> ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) 0)), 2L);
     }
 
     public void handleRespawn(Player player) {
@@ -266,6 +277,35 @@ public abstract class Match {
         return input;
     }
 
+    public void sendStartMessage() {
+        if (!this.isSoloMatch() || !isHCFMatch() || !this.isTheBridgeMatch()) {
+            if (this.isFreeForAllMatch() || this.isTeamMatch()) {
+                for ( String string : Locale.MATCH_TEAM_STARTMESSAGE.toList()) {
+                    this.broadcastMessage(CC.translate(this.replace(string)));
+                }
+            }
+        }
+        if (isHCFMatch()) {
+            Locale.MATCH_HCF_STARTMESSAGE.toList().forEach(this::broadcastMessage);
+        }
+    }
+
+    public void sendRatingMessage(Player player, Arena arena) {
+        Profile.getByPlayer(player).setCanIssueRating(true);
+        String key = "&7Click to rate &c" + arena.getDisplayName();
+
+        Clickable clickable =
+        new Clickable("&c&l[1⭐]", key + " &7as &cTerrible&7.", "/rate " + arena.getName() + " Terrible");
+        clickable.add("&6&l[2⭐]", key + " &7as &6Okay&7.", "/rate " + arena.getName() + " Okay");
+        clickable.add("&e&l[3⭐]", key + " &7as &eAverage&7.", "/rate " + arena.getName() + " Average");
+        clickable.add("&3&l[4⭐]", key + " &7as &eDecent&7.", "/rate " + arena.getName() + " Decent");
+        clickable.add("&a&l[5⭐]", key + " &7as &eGood&7.", "/rate " + arena.getName() + " Good");
+
+        player.sendMessage("");
+        player.sendMessage(CC.translate("&aPlease give us feedback on the Arena, How was it?"));
+        clickable.sendToPlayer(player);
+    }
+
     public void onPearl(Player player, EnderPearl pearl) {
         this.pearlMap.put(player.getUniqueId(), pearl);
     }
@@ -277,6 +317,18 @@ public abstract class Match {
                 pearl.remove();
             }
         }
+    }
+
+    public void handleDeath(Player player) {
+        if (PlayerUtil.getLastDamager(player) instanceof CraftPlayer) {
+            Player killer = (Player) PlayerUtil.getLastDamager(player);
+            handleDeath(player, killer, false);
+        } else if (player.getKiller() != null) {
+            handleDeath(player, player.getKiller(), false);
+        } else {
+            handleDeath(player, null, false);
+        }
+        player.teleport(player.getLocation().add(0.0, 0.5, 0.0));
     }
 
     public void handleDeath(Player deadPlayer, Player killerPlayer, boolean disconnected) {
@@ -326,19 +378,23 @@ public abstract class Match {
         catcher.remove(deadPlayer);
 
         if (!isTheBridgeMatch()) {
-            final PacketContainer lightningPacket=this.createLightningPacket(deadPlayer.getLocation());
+            PacketContainer lightningPacket = this.createLightningPacket(deadPlayer.getLocation());
+
             float thunderSoundPitch = 0.8f + ThreadLocalRandom.current().nextFloat() * 0.2f;
             float explodeSoundPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
+
             for ( final Player onlinePlayer : this.getPlayers() ) {
                 Profile profile=Profile.getByPlayer(onlinePlayer);
                 //PotPvP aka Lunar Death Animation
                 PlayerUtil.animateDeath(deadPlayer);
-                if (profile.getSettings().isLightning()) {
+
                     onlinePlayer.playSound(deadPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
+
                     if (killerPlayer != null) {
                         onlinePlayer.playSound(killerPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
                         onlinePlayer.playSound(killerPlayer.getLocation(), Sound.EXPLODE, 2.0f, explodeSoundPitch);
                     }
+                if (profile.getSettings().isDeathLightning()) {
                     this.sendLightningPacket(onlinePlayer, lightningPacket);
                 }
             }
@@ -359,10 +415,10 @@ public abstract class Match {
                 for ( Player player : getPlayersAndSpectators() ) {
                     TaskUtil.runLater(() -> Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer), 7L);
                 }
-                TaskUtil.runLater(() ->  {
-                    getSpectators().forEach(spectator -> spectator.showPlayer(deadPlayer));
-                    getSpectators().forEach(deadPlayer::showPlayer);
-                }, 8L);
+                TaskUtil.runLater(() -> getSpectators().forEach(spectator -> {
+                    if (Profile.getByPlayer(spectator).getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
+                    if (Profile.getByPlayer(deadPlayer).getSettings().isShowSpectator()) deadPlayer.showPlayer(spectator);
+                }), 8L);
             }
         } else {
             if (canEnd()) {
@@ -377,18 +433,15 @@ public abstract class Match {
         lightningPacket.getIntegers().write(0, 128);
         lightningPacket.getIntegers().write(4, 1);
         lightningPacket.getIntegers().write(1, (int)(location.getX() * 32.0));
-        lightningPacket.getIntegers().write(2, ((int)(location.getY() * 32.0)));
-        lightningPacket.getIntegers().write(3, ((int)(location.getZ() * 32.0)));
+        lightningPacket.getIntegers().write(2, (int)(location.getY() * 32.0));
+        lightningPacket.getIntegers().write(3, (int)(location.getZ() * 32.0));
         return lightningPacket;
     }
 
     private void sendLightningPacket(final Player target, final PacketContainer packet) {
         try {
             ProtocolLibrary.getProtocolManager().sendServerPacket(target, packet);
-        }
-        catch (InvocationTargetException ex) {
-            //empty catch
-        }
+        } catch (InvocationTargetException ignored) {}
     }
 
     public String getDuration() {
@@ -421,24 +474,24 @@ public abstract class Match {
 
     public void addSpectator(Player player, Player target) {
         spectators.add(player.getUniqueId());
-        PlayerUtil.spectator(player);
         new MatchSpectatorJoinEvent(player, this).call();
+
+        PlayerUtil.spectator(player);
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setMatch(this);
         profile.setState(ProfileState.SPECTATING);
         profile.refreshHotbar();
-        player.setAllowFlight(true);
-        player.setFlying(true);
+
         player.teleport(this.getMidSpawn());
         player.spigot().setCollidesWithEntities(false);
+        player.updateInventory();
 
-        if (!profile.getPlayer().hasPermission("array.staff")) {
+        if (!profile.getPlayer().hasPermission("array.staff.silent")) {
             for (Player otherPlayer : getPlayers()) {
                 otherPlayer.sendMessage(Locale.MATCH_SPECTATE.toString().replace("<spectator>", player.getName()));
             }
         }
-
 
         Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), () -> {
             if (this.isSoloMatch()) {
@@ -447,35 +500,56 @@ public abstract class Match {
                 target.hidePlayer(player);
                 this.getOpponentPlayer(target).hidePlayer(player);
             } else if (this.isTeamMatch()) {
-                this.getTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
                 for ( Player targetPlayers : this.getTeam(target).getPlayers() ) {
                     targetPlayers.hidePlayer(player);
                 }
-                this.getOpponentTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
                 for ( Player targetPlayers : this.getOpponentTeam(target).getPlayers() ) {
                     targetPlayers.hidePlayer(player);
                 }
             } else if (this.isHCFMatch()) {
-                this.getTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.GREEN, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
                 for ( Player targetPlayers : this.getTeam(target).getPlayers() ) {
                     targetPlayers.hidePlayer(player);
                 }
-                this.getOpponentTeam(target).getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
                 for ( Player targetPlayers : this.getOpponentTeam(target).getPlayers() ) {
                     targetPlayers.hidePlayer(player);
                 }
             } else if (this.isFreeForAllMatch()) {
-                this.getPlayers().forEach(p -> NameTags.color(player, p, ChatColor.AQUA, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth()));
                 for (  Player targetPlayers : this.getPlayers()) {
                     targetPlayers.hidePlayer(player);
                 }
             }
+            if (profile.getSettings().isShowSpectator()) {
+                getSpectators().forEach(spectator -> {
+                    spectator.showPlayer(player);
+                    player.showPlayer(spectator);
+                });
+            }
         }, 10L);
+
+    }
+
+    public void toggleSpectators(Player player) {
+        Profile profile = Profile.getByPlayer(player);
+        profile.getSettings().setShowSpectator(!profile.getSettings().isShowSpectator());
+        profile.refreshHotbar();
+
+        if (profile.getSettings().isShowSpectator()) {
+            getSpectators().forEach(spectator -> {
+                spectator.showPlayer(player);
+                player.showPlayer(spectator);
+            });
+            player.sendMessage(CC.translate("&aShowing spectators."));
+        } else {
+            getSpectators().forEach(spectator -> {
+                spectator.hidePlayer(player);
+                player.hidePlayer(spectator);
+            });
+            player.sendMessage(CC.translate("&cHiding spectators."));
+        }
     }
 
     public void removeSpectator(Player player) {
         spectators.remove(player.getUniqueId());
-
         new MatchSpectatorLeaveEvent(player, this).call();
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -484,13 +558,15 @@ public abstract class Match {
         profile.refreshHotbar();
         profile.handleVisibility();
         profile.teleportToSpawn();
+
         player.setAllowFlight(false);
         player.setFlying(false);
         player.spigot().setCollidesWithEntities(true);
+        player.updateInventory();
 
         if (state != MatchState.ENDING) {
             for (Player otherPlayer : getPlayers()) {
-                if (!profile.getPlayer().hasPermission("array.staff")) {
+                if (!profile.getPlayer().hasPermission("array.staff.silent")) {
                     otherPlayer.sendMessage(Locale.MATCH_STOPSPEC.toString().replace("<spectator>", player.getName()));
                 }
             }
@@ -504,13 +580,25 @@ public abstract class Match {
         return allPlayers;
     }
 
-    protected HoverEvent getHoverEvent(TeamPlayer teamPlayer) {
-        return new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentBuilder("")
-                .parse(Locale.MATCH_INVENTORY_HOVER.toString().replace("<inventory_name>", teamPlayer.getUsername())).create());
+    protected static String getHoverEvent(TeamPlayer teamPlayer) {
+        return Locale.MATCH_INVENTORY_HOVER.toString().replace("<inventory_name>", teamPlayer.getUsername());
     }
 
-    protected ClickEvent getClickEvent(TeamPlayer teamPlayer) {
-        return new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/viewinv " + teamPlayer.getUuid().toString());
+    protected static String getClickEvent(TeamPlayer teamPlayer) {
+        return "/viewinv " + teamPlayer.getUuid().toString();
+    }
+
+    public Location getMidSpawn() {
+
+        Location spawn = getArena().getSpawn1();
+        Location spawn2 = getArena().getSpawn2();
+
+        Location midSpawn = getArena().getSpawn1();
+
+        midSpawn.setX(getAverage(spawn.getX(), spawn2.getX()));
+        midSpawn.setZ(getAverage(spawn.getZ(), spawn2.getZ()));
+
+        return midSpawn;
     }
 
     public double getAverage(double one, double two) {
@@ -519,25 +607,39 @@ public abstract class Match {
         return three;
     }
 
-    public Location getMidSpawn() {
+    public static BaseComponent[] generateInventoriesComponents(String prefix, TeamPlayer participant) {
+        return generateInventoriesComponents(prefix, Collections.singletonList(participant));
+    }
 
-        //Get Both Spawns
-        Location spawn = getArena().getSpawn1();
-        Location spawn2 = getArena().getSpawn2();
-        //Initialize the mid spawn
-        Location midSpawn = getArena().getSpawn1();
+    public static BaseComponent[] generateInventoriesComponents(String prefix, List<TeamPlayer> participants) {
+        ChatComponentBuilder builder = new ChatComponentBuilder(prefix);
 
-        //Get Average from both spawns to get the middle of the arena
-        midSpawn.setX(getAverage(spawn.getX(), spawn2.getX()));
-        midSpawn.setZ(getAverage(spawn.getZ(), spawn2.getZ()));
+        int totalPlayers = 0;
+        int processedPlayers = 0;
 
-        //Return it as the middle spawn
-        return midSpawn;
+        totalPlayers += participants.size();
+
+
+            for (TeamPlayer gamePlayer : participants) {
+                processedPlayers++;
+
+                ChatComponentBuilder current = new ChatComponentBuilder(gamePlayer.getUsername())
+                        .attachToEachPart(ChatHelper.hover(CC.translate(getHoverEvent(gamePlayer))))
+                        .attachToEachPart(ChatHelper.click(getClickEvent(gamePlayer)));
+
+                builder.append(current.create());
+
+                if (processedPlayers != totalPlayers) {
+                    builder.append(", ");
+                    builder.getCurrent().setClickEvent(null);
+                    builder.getCurrent().setHoverEvent(null);
+                }
+            }
+
+        return builder.create();
     }
 
     public abstract boolean isSoloMatch();
-
-    public abstract boolean isRobotMatch();
 
     public abstract boolean isTeamMatch();
 
@@ -588,6 +690,8 @@ public abstract class Match {
     public abstract TeamPlayer getOpponentTeamPlayer(Player player);
 
     public abstract Player getOpponentPlayer(Player player);
+
+    public abstract List<BaseComponent[]> generateEndComponents(Player player);
 
     public abstract ChatColor getRelationColor(Player viewer, Player target);
 }

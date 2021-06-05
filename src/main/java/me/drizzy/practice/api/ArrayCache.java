@@ -9,12 +9,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * This Project is the property of Purge Community © 2021
+ * Redistribution of this Project is not allowed
+ *
+ * @author Drizzy
+ * Created at 5/22/2021
+ * Project: Array
+ */
 public class ArrayCache {
 
-    @Getter
-    private static final Map<String, UUID> playerCache = new HashMap<>();
-    @Getter
-    private static final Map<UUID, String> nameCache = new HashMap<>();
+    @Getter private static final Map<String, UUID> playerCache = new HashMap<>();
+    @Getter private static final Map<UUID, String> nameCache = new HashMap<>();
 
     public static int getInQueues() {
         int inQueues = 0;
@@ -54,13 +60,5 @@ public class ArrayCache {
             uuid = playerCache.get(name);
         }
         return uuid;
-    }
-
-    public static String getName(UUID uuid) {
-        String name = null;
-        if (nameCache.containsKey(uuid)) {
-            name = nameCache.get(uuid);
-        }
-        return name;
     }
 }

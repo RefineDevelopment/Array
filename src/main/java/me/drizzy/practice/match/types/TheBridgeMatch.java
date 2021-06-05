@@ -5,27 +5,33 @@ import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.Locale;
 import me.drizzy.practice.arena.Arena;
+import me.drizzy.practice.essentials.Essentials;
+import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.MatchState;
+import me.drizzy.practice.match.task.BridgePlayerTask;
 import me.drizzy.practice.match.task.MatchStartTask;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.hook.SpigotHook;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.profile.meta.ProfileRematchData;
+import me.drizzy.practice.duel.RematchProcedure;
 import me.drizzy.practice.queue.Queue;
-import me.drizzy.practice.enums.QueueType;
-import me.drizzy.practice.util.other.NameTags;
-import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.elo.EloUtil;
 import me.drizzy.practice.util.chat.ChatComponentBuilder;
+import me.drizzy.practice.util.elo.EloUtil;
 import me.drizzy.practice.util.inventory.ItemBuilder;
-import net.md_5.bungee.api.ChatColor;
+import me.drizzy.practice.util.nametags.NameTagHandler;
+import me.drizzy.practice.util.other.PlayerUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
-import org.bukkit.*;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
@@ -37,15 +43,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Getter @Setter
 public class TheBridgeMatch extends Match {
+
+    private final List<Player> caughtPlayers = new ArrayList<>();
 
     private TeamPlayer playerA;
     private TeamPlayer playerB;
+
     private int round = 0;
     private BukkitTask startTask;
-    private final List<Player> caughtPlayers = new ArrayList<>();
+
+    private String eloMessage;
+    private String specMessage;
 
     public TheBridgeMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
         super(queue, kit, arena, queueType);
@@ -79,11 +89,6 @@ public class TheBridgeMatch extends Match {
     }
 
     @Override
-    public boolean isRobotMatch() {
-        return false;
-    }
-
-    @Override
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
@@ -103,7 +108,7 @@ public class TheBridgeMatch extends Match {
             player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 2));
         }
 
-        Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(player, getKit());
+        SpigotHook.getKnockbackType().appleKitKnockback(player, getKit());
 
         Location spawn = playerA.equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
 
@@ -118,7 +123,8 @@ public class TheBridgeMatch extends Match {
         player.getInventory().setContents(getKit().getKitInventory().getContents());
         giveBridgeKit(player);
 
-        NameTags.color(player, getOpponentPlayer(player), (this.getTeamPlayerA().getPlayer() == player ? org.bukkit.ChatColor.BLUE :  org.bukkit.ChatColor.RED), getKit().getGameRules().isBuild());
+        NameTagHandler.reloadPlayer(player);
+        NameTagHandler.reloadOthersFor(player);
     }
 
     @Override
@@ -163,21 +169,19 @@ public class TheBridgeMatch extends Match {
                             player.setFireTicks(0);
                             player.updateInventory();
 
-                            NameTags.reset(player, teamPlayer.getPlayer());
+                            SpigotHook.getKnockbackType().applyDefaultKnockback(player);
 
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
                             profile.refreshHotbar();
                             profile.handleVisibility();
-                            Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
+                            profile.teleportToSpawn();
 
                             if (opponent != null) {
-                                profile.setRematchData(new ProfileRematchData(rematchKey, player.getUniqueId(),
-                                        opponent.getUniqueId(), getKit(), getArena()));
+                                profile.setRematchData(new RematchProcedure(rematchKey, player.getUniqueId(), opponent.getUniqueId(), getKit(), getArena()));
                             }
 
-                            profile.teleportToSpawn();
                         }
                     }
                 }
@@ -190,50 +194,44 @@ public class TheBridgeMatch extends Match {
         TeamPlayer winningTeamPlayer = getTeamPlayer(winningPlayer);
         TeamPlayer losingTeamPlayer = getTeamPlayer(losingPlayer);
 
-
-        ChatComponentBuilder inventoriesBuilder = new ChatComponentBuilder("");
-
-        inventoriesBuilder.append("Winner: ").color(ChatColor.GREEN).append(winningPlayer.getName()).color(ChatColor.WHITE);
-        inventoriesBuilder.setCurrentHoverEvent(getHoverEvent(winningTeamPlayer)).setCurrentClickEvent(getClickEvent(winningTeamPlayer)).append(" - ").color(ChatColor.GRAY).append("Loser: ").color(ChatColor.RED).append(losingPlayer.getName()).color(ChatColor.WHITE);
-        inventoriesBuilder.setCurrentHoverEvent(getHoverEvent(losingTeamPlayer)).setCurrentClickEvent(getClickEvent(losingTeamPlayer));
-
-        List<BaseComponent[]> components = new ArrayList<>();
-        components.add(new ChatComponentBuilder("").parse(Locale.MATCH_INVENTORY_MESSAGE_TITLE.toString()).create());
-        components.add(inventoriesBuilder.create());
-
-
         Profile winningProfile = Profile.getByUuid(winningPlayer.getUniqueId());
         Profile losingProfile = Profile.getByUuid(losingPlayer.getUniqueId());
 
-            if (getQueueType() == QueueType.UNRANKED) {
-                winningProfile.getStatisticsData().get(getKit()).incrementWon();
-                losingProfile.getStatisticsData().get(getKit()).incrementLost();
-            }
+        if (getQueueType() == QueueType.UNRANKED) {
+            winningProfile.getStatisticsData().get(getKit()).incrementWon();
+            losingProfile.getStatisticsData().get(getKit()).incrementLost();
+        }
 
+        if (getQueueType() == QueueType.RANKED) {
+            int oldWinnerElo = winningTeamPlayer.getElo();
+            int oldLoserElo = losingTeamPlayer.getElo();
 
-            if (getQueueType() == QueueType.RANKED) {
-                int oldWinnerElo = winningTeamPlayer.getElo();
-                int oldLoserElo = losingTeamPlayer.getElo();
-                int newWinnerElo = EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
-                int newLoserElo = EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
-                winningProfile.getStatisticsData().get(getKit()).setElo(newWinnerElo);
-                losingProfile.getStatisticsData().get(getKit()).setElo(newLoserElo);
-                winningProfile.getStatisticsData().get(getKit()).incrementWon();
-                losingProfile.getStatisticsData().get(getKit()).incrementLost();
-                winningProfile.calculateGlobalElo();
-                winningProfile.save();
-                losingProfile.calculateGlobalElo();
-                losingProfile.save();
+            int newWinnerElo = EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
+            int newLoserElo = EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
 
-                int winnerEloChange=newWinnerElo - oldWinnerElo;
-                int loserEloChange=oldLoserElo - newLoserElo;
+            winningProfile.getStatisticsData().get(getKit()).setElo(newWinnerElo);
+            losingProfile.getStatisticsData().get(getKit()).setElo(newLoserElo);
 
-                components.add(new ChatComponentBuilder("")
-                        .parse("&a" + winningPlayer.getName() + " +" + winnerEloChange + " (" +
-                                newWinnerElo + ") &7⎜ &c" + losingPlayer.getName() + " -" + loserEloChange + " (" + newLoserElo +
-                                ")")
-                        .create());
-            }
+            winningProfile.getStatisticsData().get(getKit()).incrementWon();
+            losingProfile.getStatisticsData().get(getKit()).incrementLost();
+
+            winningProfile.calculateGlobalElo();
+            winningProfile.save();
+
+            losingProfile.calculateGlobalElo();
+            losingProfile.save();
+
+            int winnerEloChange = newWinnerElo - oldWinnerElo;
+            int loserEloChange = oldLoserElo - newLoserElo;
+
+            eloMessage = Locale.MATCH_ELO_CHANGES.toString()
+                    .replace("<winner_name>", winningPlayer.getName())
+                    .replace("<winner_elo_change>", String.valueOf(winnerEloChange))
+                    .replace("<winner_elo>", String.valueOf(newWinnerElo))
+                    .replace("<loser_name>", winningPlayer.getName())
+                    .replace("<loser_elo_change>", String.valueOf(loserEloChange))
+                    .replace("<loser_elo>", String.valueOf(newLoserElo));
+        }
 
         StringBuilder builder = new StringBuilder();
 
@@ -257,21 +255,44 @@ public class TheBridgeMatch extends Match {
                 }
             }
             if (specs.size() >= 1) {
-                components.add(new ChatComponentBuilder("").parse("&cSpectators (" + specs.size() + "): &7" + builder.substring(0, builder.length())).create());
+                specMessage = Locale.MATCH_SPEC_MESSAGE.toString()
+                        .replace("<spec_size>", String.valueOf(specs.size()))
+                        .replace("<spectators>", builder.substring(0, builder.length()));
             }
         }
 
-        List<BaseComponent[]> CHAT_BAR = new ArrayList<>();
-        CHAT_BAR.add(0, new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
-
-        for (Player player : new Player[]{winningPlayer, losingPlayer}) {
-            CHAT_BAR.forEach(components1 -> player.spigot().sendMessage(components1));
-            components.forEach(components1 -> player.spigot().sendMessage(components1));
-            CHAT_BAR.forEach(components1 -> player.spigot().sendMessage(components1));
-        }
         winningProfile.setBridgeRounds(0);
         losingProfile.setBridgeRounds(0);
+
         return true;
+    }
+
+    public void initiateDeath(Player player) {
+        PlayerUtil.reset(player);
+        for ( Player player2 : getPlayersAndSpectators() ) {
+            player2.sendMessage(Locale.MATCH_DIED.toString()
+                    .replace("<relation_color>", this.getRelationColor(player2, player).toString())
+                    .replace("<participant_name>", player.getName()));
+        }
+        Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BridgePlayerTask(this, player), 2L);
+    }
+
+    public void properDeath(Player player) {
+        PlayerUtil.reset(player);
+        for ( Player player2 : this.getPlayersAndSpectators() ) {
+            if (player.getKiller() == null) {
+                player2.sendMessage(Locale.MATCH_DIED.toString()
+                        .replace("<relation_color>", this.getRelationColor(player2, player).toString())
+                        .replace("<participant_name>", player.getName()));
+            } else {
+                player2.sendMessage(Locale.MATCH_KILLED.toString()
+                        .replace("<relation_color_dead>", this.getRelationColor(player2, player).toString())
+                        .replace("<dead_name>", player.getName())
+                        .replace("<relation_color_killer>", this.getRelationColor(player2, player.getKiller()).toString())
+                        .replace("<killer_name>", player.getKiller().getName()));
+            }
+        }
+        Bukkit.getScheduler().runTaskLater(Array.getInstance(), new BridgePlayerTask(this, player), 2L);
     }
 
     @Override
@@ -464,9 +485,9 @@ public class TheBridgeMatch extends Match {
         if (deadPlayer.isOnline()) {
             if (getRoundsNeeded(playerA) != 0 || getRoundsNeeded(playerB) != 0) {
 
-                if (getWinningPlayer().getUniqueId().toString().equals(playerA.getUuid().toString())) {
+                if (getWinningPlayer().getUniqueId().equals(playerA.getUuid())) {
                     aProfile.setBridgeRounds(aProfile.getBridgeRounds() + 1);
-                } else if (getWinningPlayer().getUniqueId().toString().equals(playerB.getUuid().toString())) {
+                } else if (getWinningPlayer().getUniqueId().equals(playerB.getUuid())) {
                     bProfile.setBridgeRounds(bProfile.getBridgeRounds() + 1);
                 }
 
@@ -499,9 +520,8 @@ public class TheBridgeMatch extends Match {
                         caughtPlayers.clear();
                     }
 
-                    if (Array.getInstance().getEssentials().getMeta().isBridgeClearBlocks()) {
-                        cleanup();
-                    }
+                    if (Essentials.getMeta().isBridgeClearBlocks()) cleanup();
+
 
                         setupPlayer(playerA.getPlayer());
                         setupPlayer(playerB.getPlayer());
@@ -558,6 +578,50 @@ public class TheBridgeMatch extends Match {
         }
     }
 
+    @Override
+    public List<BaseComponent[]> generateEndComponents(Player player) {
+        List<BaseComponent[]> componentsList = new ArrayList<>();
+
+        for ( String line : Locale.MATCH_INVENTORY_MESSAGE.toList() ) {
+            if (line.equalsIgnoreCase("<inventories>")) {
+
+                BaseComponent[] winners = generateInventoriesComponents(Locale.MATCH_INVENTORY_WINNER.toString(), getTeamPlayer(getWinningPlayer()));
+                BaseComponent[] losers = generateInventoriesComponents(Locale.MATCH_INVENTORY_LOSER.toString(), getOpponentTeamPlayer(getWinningPlayer()));
+
+                ChatComponentBuilder builder = new ChatComponentBuilder("");
+
+                for ( BaseComponent component : winners ) {
+                    builder.append((TextComponent) component);
+                }
+
+                builder.append(new ChatComponentBuilder(Locale.MATCH_INVENTORY_SPLITTER.toString()).create());
+
+                for ( BaseComponent component : losers ) {
+                    builder.append((TextComponent) component);
+                }
+
+                componentsList.add(builder.create());
+
+                continue;
+            }
+
+            if (line.equalsIgnoreCase("<elo_changes>")) {
+                if (getQueueType().equals(QueueType.RANKED)) {
+                    componentsList.add(new ChatComponentBuilder("").parse(eloMessage).create());
+                }
+                continue;
+            }
+
+            if (specMessage != null) {
+                componentsList.add(new ChatComponentBuilder("").parse(specMessage).create());
+            }
+
+            componentsList.add(new ChatComponentBuilder("").parse(line).create());
+        }
+
+        return componentsList;
+    }
+
     /**
      * Replace and color the clay blocks and leather
      * armor of the specified player to their coressponding color
@@ -571,7 +635,7 @@ public class TheBridgeMatch extends Match {
         ItemStack[] armorRed = leatherArmor(Color.RED);
         ItemStack[] armorBlue = leatherArmor(Color.BLUE);
 
-        if ( teamMatch.getTeamPlayerA().getPlayer() == player ) {
+        if (teamMatch.getTeamPlayerA().getPlayer() == player) {
             player.getInventory().setArmorContents(armorRed);
             player.getInventory().all(Material.STAINED_CLAY).forEach((key, value) -> {
                 player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(14).amount(64).build());
@@ -584,6 +648,7 @@ public class TheBridgeMatch extends Match {
                 player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(11).amount(64).build());
             });
         }
+
         player.updateInventory();
     }
 

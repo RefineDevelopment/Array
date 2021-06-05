@@ -27,6 +27,11 @@ public class ZoomCore implements RankType {
     }
 
     @Override
+    public boolean isBusy(OfflinePlayer player) {
+        return ZoomAPI.isStaffChat(player.getPlayer());
+    }
+
+    @Override
     public ChatColor getRankColor(OfflinePlayer player) {
         return ZoomAPI.getRankColor(player.getPlayer());
     }

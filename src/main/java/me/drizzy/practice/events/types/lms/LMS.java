@@ -8,11 +8,13 @@ import me.drizzy.practice.events.types.lms.player.LMSPlayer;
 import me.drizzy.practice.events.types.lms.player.LMSPlayerState;
 import me.drizzy.practice.events.types.lms.task.LMSRoundEndTask;
 import me.drizzy.practice.events.types.lms.task.LMSRoundStartTask;
+import me.drizzy.practice.hook.SpigotHook;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
 import me.drizzy.practice.util.location.Circle;
+import me.drizzy.practice.util.nametags.NameTagHandler;
 import me.drizzy.practice.util.other.*;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.Clickable;
@@ -27,8 +29,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Getter @Setter
 public class LMS {
 
     @Getter @Setter private static boolean enabled = true;
@@ -195,7 +196,9 @@ public class LMS {
                     Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
                     otherProfile.handleVisibility(otherPlayer, player);
                     profile.handleVisibility(player, otherPlayer);
-                    NameTags.color(player, otherPlayer, plugin.getEssentials().getNametagMeta().getEventColor(), getKit().getGameRules().isShowHealth() || getKit().getGameRules().isBuild());
+
+                    NameTagHandler.reloadPlayer(player);
+                    NameTagHandler.reloadOthersFor(player);
                 }
             }
         }.runTaskAsynchronously(plugin);
@@ -230,7 +233,9 @@ public class LMS {
                     Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
                     otherProfile.handleVisibility(otherPlayer, player);
                     profile.handleVisibility(player, otherPlayer);
-                    NameTags.reset(player, otherPlayer);
+
+                    NameTagHandler.reloadPlayer(player);
+                    NameTagHandler.reloadOthersFor(player);
                 }
             }
         }.runTaskAsynchronously(plugin);
@@ -341,10 +346,11 @@ public class LMS {
     }
 
     public void onJoin(Player player) {
-        plugin.getNMSManager().getKnockbackType().applyKnockback(player, plugin.getLMSManager().getLmsKnockbackProfile());
+        SpigotHook.getKnockbackType().applyKnockback(player, plugin.getLMSManager().getLmsKnockbackProfile());
     }
+
     public void onLeave(Player player) {
-        plugin.getNMSManager().getKnockbackType().applyDefaultKnockback(player);
+        SpigotHook.getKnockbackType().applyDefaultKnockback(player);
     }
 
     public void onRound() {
@@ -380,7 +386,6 @@ public class LMS {
                     .replace("<eliminator_name>", killer.getPlayer().getName()));
         }
 
-
         if (canEnd()) {
             setState(LMSState.ROUND_ENDING);
             setEventTask(new LMSRoundEndTask(this));
@@ -411,11 +416,7 @@ public class LMS {
     }
 
     public boolean isFighting(Player player) {
-        if (this.getState().equals(LMSState.ROUND_FIGHTING)) {
-            return getRemainingPlayers().contains(player);
-        } else {
-            return false;
-        }
+        return this.getState().equals(LMSState.ROUND_FIGHTING) && getRemainingPlayers().contains(player);
     }
 
     public void addSpectator(Player player) {

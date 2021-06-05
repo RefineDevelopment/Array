@@ -1,21 +1,20 @@
 package me.drizzy.practice.match.types;
 
 import me.drizzy.practice.Array;
-import me.drizzy.practice.Locale;
 import me.drizzy.practice.arena.Arena;
+import me.drizzy.practice.essentials.Essentials;
+import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.hook.SpigotHook;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.enums.QueueType;
 import me.drizzy.practice.util.location.Circle;
-import me.drizzy.practice.util.other.NameTags;
+import me.drizzy.practice.util.nametags.NameTagHandler;
 import me.drizzy.practice.util.other.PlayerUtil;
-import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.chat.ChatComponentBuilder;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -62,18 +61,13 @@ public class FFAMatch extends Match {
     }
 
     @Override
-    public boolean isRobotMatch() {
-        return false;
-    }
-
-    @Override
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
-        // If the player disconnected, skip any operations for them
         if (teamPlayer.isDisconnected()) {
             return;
         }
+
         teamPlayer.setAlive(true);
 
         PlayerUtil.reset(player);
@@ -101,15 +95,16 @@ public class FFAMatch extends Match {
             Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
         }
 
-        Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(player, getKit());
+        SpigotHook.getKnockbackType().appleKitKnockback(player, getKit());
 
         Team team = getTeam(player);
         for (Player enemy : team.getPlayers()) {
-            NameTags.color(player, enemy, org.bukkit.ChatColor.RED, getKit().getGameRules().isShowHealth());
 
             Profile enemyProfile = Profile.getByPlayer(enemy);
             enemyProfile.handleVisibility();
         }
+        NameTagHandler.reloadPlayer(player);
+        NameTagHandler.reloadOthersFor(player);
     }
 
     public double getAverage(double one, double two) {
@@ -123,12 +118,15 @@ public class FFAMatch extends Match {
         int i = 0;
         for ( Player player : getPlayers() ) {
             Location midSpawn = this.getMidSpawn();
-            List<Location> circleLocations=Circle.getCircle(midSpawn, Array.getInstance().getEssentials().getMeta().getFfaSpawnRadius(), this.getPlayers().size());
+
+            List<Location> circleLocations = Circle.getCircle(midSpawn, Essentials.getMeta().getFfaSpawnRadius(), this.getPlayers().size());
             Location center = midSpawn.clone();
             Location loc = circleLocations.get(i);
             Location target = loc.setDirection(center.subtract(loc).toVector());
+
             player.teleport(target.add(0, 0.5, 0));
             circleLocations.remove(i);
+
             i++;
         }
     }
@@ -140,7 +138,7 @@ public class FFAMatch extends Match {
                     Player player=teamPlayer.getPlayer();
 
                     if (player != null) {
-                        Profile profile=Profile.getByUuid(player.getUniqueId());
+                        Profile profile = Profile.getByUuid(player.getUniqueId());
                         profile.handleVisibility();
 
                         getSnapshots().add(new MatchSnapshot(teamPlayer));
@@ -152,69 +150,30 @@ public class FFAMatch extends Match {
             @Override
             public void run() {
                 for (TeamPlayer firstTeamPlayer : team.getTeamPlayers()) {
-                    //Check if they didn't disconnect
                     if (!firstTeamPlayer.isDisconnected()) {
                         Player player = firstTeamPlayer.getPlayer();
 
-                        //Add Their Snapshot
                         if (player != null) {
                             if (firstTeamPlayer.isAlive()) {
                                 getSnapshots().add(new MatchSnapshot(firstTeamPlayer));
                             }
 
-                            //Reset the Player
                             player.setFireTicks(0);
                             player.updateInventory();
 
-                            NameTags.reset(player, firstTeamPlayer.getPlayer());
+                            SpigotHook.getKnockbackType().appleKitKnockback(player, getKit());
 
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
                             profile.handleVisibility();
                             profile.refreshHotbar();
-                            //Reset their Knockback Profile and Teleport them to Spawn
-                            Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(player, getKit());
                             profile.teleportToSpawn();
                         }
                     }
                 }
             }
         }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
-
-        Player winningTeam = getWinningPlayer();
-
-        ChatComponentBuilder winnerInventories = new ChatComponentBuilder("");
-        winnerInventories.append("Winners: ").color(net.md_5.bungee.api.ChatColor.GREEN);
-
-        ChatComponentBuilder loserInventories = new ChatComponentBuilder("");
-        loserInventories.append("Losers: ").color(net.md_5.bungee.api.ChatColor.RED);
-
-        winnerInventories.append(winningTeam.getName()).color(net.md_5.bungee.api.ChatColor.GREEN);
-        winnerInventories.setCurrentHoverEvent(getHoverEvent(getTeamPlayer(winningTeam)))
-                .setCurrentClickEvent(getClickEvent(getTeamPlayer(winningTeam))).color(net.md_5.bungee.api.ChatColor.GREEN);
-
-        for (TeamPlayer teamPlayer : team.getTeamPlayers()) {
-            if (teamPlayer.equals(getTeamPlayer(winningTeam))) continue;
-            loserInventories.append(teamPlayer.getUsername()).color(net.md_5.bungee.api.ChatColor.RED);
-            loserInventories.setCurrentHoverEvent(getHoverEvent(teamPlayer))
-                    .setCurrentClickEvent(getClickEvent(teamPlayer))
-                    .append(", ")
-                    .color(net.md_5.bungee.api.ChatColor.GRAY);
-        }
-        loserInventories.getCurrent().setText(loserInventories.getCurrent().getText().substring(0,
-                loserInventories.getCurrent().getText().length() - 2));
-
-        List<BaseComponent[]> components = new ArrayList<>();
-        components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
-        components.add(new ChatComponentBuilder("").parse(Locale.MATCH_INVENTORY_MESSAGE_TITLE.toString()).create());
-        components.add(winnerInventories.create());
-        components.add(loserInventories.create());
-        components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
-
-        for (Player player : getPlayersAndSpectators()) {
-            components.forEach(components1 -> player.spigot().sendMessage(components1));
-        }
         return true;
     }
 
@@ -231,9 +190,11 @@ public class FFAMatch extends Match {
         PlayerUtil.reset(player);
 
         if (!canEnd() && !teamPlayer.isDisconnected()) {
+
             player.teleport(getMidSpawn());
             player.setAllowFlight(true);
             player.setFlying(true);
+
             Profile profile = Profile.getByUuid(player.getUniqueId());
             profile.refreshHotbar();
             profile.setState(ProfileState.SPECTATING);
@@ -242,7 +203,7 @@ public class FFAMatch extends Match {
 
     @Override
     public void onRespawn(Player player) {
-
+       //Nothing ;)
     }
 
     @Override
@@ -264,22 +225,22 @@ public class FFAMatch extends Match {
 
     @Override
     public Team getWinningTeam() {
-        throw new UnsupportedOperationException("Cannot getInstance winning team from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance winning team from a Brawl match");
     }
 
     @Override
     public TeamPlayer getTeamPlayerA() {
-        throw new UnsupportedOperationException("Cannot getInstance team player from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance team player from a Brawl match");
     }
 
     @Override
     public TeamPlayer getTeamPlayerB() {
-        throw new UnsupportedOperationException("Cannot getInstance team player from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance team player from a Brawl match");
     }
 
     @Override
     public List<TeamPlayer> getTeamPlayers() {
-        throw new UnsupportedOperationException("Cannot getInstance team player from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance team player from a Brawl match");
     }
 
     @Override
@@ -299,12 +260,12 @@ public class FFAMatch extends Match {
 
     @Override
     public Team getTeamA() {
-        throw new UnsupportedOperationException("Cannot getInstance team from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance team from a Brawl match");
     }
 
     @Override
     public Team getTeamB() {
-        throw new UnsupportedOperationException("Cannot getInstance team from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance team from a Brawl match");
     }
 
     @Override
@@ -325,27 +286,39 @@ public class FFAMatch extends Match {
 
     @Override
     public Team getOpponentTeam(Team team) {
-        throw new UnsupportedOperationException("Cannot getInstance opponent team from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance opponent team from a Brawl match");
     }
 
     @Override
     public Team getOpponentTeam(Player player) {
-        throw new UnsupportedOperationException("Cannot getInstance opponent team from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance opponent team from a Brawl match");
     }
 
     @Override
     public Player getOpponentPlayer(Player player) {
-        throw new IllegalStateException("Cannot getInstance opponent player in Juggernaut match");
+        throw new IllegalStateException("Cannot getInstance opponent player in Brawl match");
+    }
+
+    @Override
+    public List<BaseComponent[]> generateEndComponents(Player player) {
+        return null;
     }
 
     @Override
     public TeamPlayer getOpponentTeamPlayer(Player player) {
-        throw new UnsupportedOperationException("Cannot getInstance opponent team from a Juggernaut match");
+        throw new UnsupportedOperationException("Cannot getInstance opponent team from a Brawl match");
     }
 
     @Override
     public ChatColor getRelationColor(Player viewer, Player target) {
-        return ChatColor.RED;
+        if (viewer.equals(target)) {
+            return ChatColor.GREEN;
+        } else {
+            if (team.containsPlayer(target)) {
+                return ChatColor.RED;
+            }
+            return ChatColor.AQUA;
+        }
     }
 
 }

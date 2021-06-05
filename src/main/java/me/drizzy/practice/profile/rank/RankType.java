@@ -13,5 +13,7 @@ public interface RankType {
 
     String getFullName(OfflinePlayer player);
 
+    boolean isBusy(OfflinePlayer player);
+
     ChatColor getRankColor(OfflinePlayer player);
 }

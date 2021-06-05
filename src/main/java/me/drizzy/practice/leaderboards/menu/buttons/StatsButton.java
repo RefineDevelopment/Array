@@ -13,9 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * This Project is the property of Purge Community © 2021
+ * Redistribution of this Project is not allowed
+ *
  * @author Drizzy
  * Created at 4/13/2021
+ * Project: Array
  */
+
 public class StatsButton extends Button {
 
     @Override
@@ -35,7 +40,7 @@ public class StatsButton extends Button {
         lore.add(CC.MENU_BAR);
 
         return new ItemBuilder(SkullCreator.itemFromUuid(player.getUniqueId()))
-                .name("&c&l" + player.getName() + " | Statistics")
+                .name("&c" + player.getName() + " &7\uff5c &fStatistics")
                 .lore(lore)
                 .build();
     }

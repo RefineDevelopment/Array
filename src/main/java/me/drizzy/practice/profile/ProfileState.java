@@ -6,7 +6,7 @@ public enum ProfileState {
     IN_QUEUE,
     IN_FIGHT,
     IN_EVENT,
-    SPECTATE_TOURNAMENT,
+    IN_BRAWL,
     SPECTATING
 
 }

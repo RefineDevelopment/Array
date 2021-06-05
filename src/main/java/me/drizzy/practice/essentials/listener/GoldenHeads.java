@@ -21,13 +21,13 @@ public class GoldenHeads implements Listener {
 	public void onConsume(PlayerItemConsumeEvent event){
 		Player player = event.getPlayer();
 		if (event.getItem() == null || !event.getItem().hasItemMeta() || !event.getItem().getItemMeta().hasDisplayName()) return;
-		if(event.getItem().getItemMeta().getDisplayName().toLowerCase().replace(" ", "").contains("goldenhead")) {
+		if (event.getItem().getItemMeta().getDisplayName().toLowerCase().replace(" ", "").contains("goldenhead")) {
 			if (event.getItem().getType() == Material.GOLDEN_APPLE){
 				player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20*90, 0), true);
 				player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*9, 1), true);
 			}
 		}
-		if(event.getItem().getItemMeta().getDisplayName().toLowerCase().replace(" ", "").replace("'", "").contains("adamsapple")) {
+		if (event.getItem().getItemMeta().getDisplayName().toLowerCase().replace(" ", "").replace("'", "").contains("adamsapple")) {
 			if (event.getItem().getType() == Material.GOLDEN_APPLE){
 				player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20*90, 0), true);
 				player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*9, 0), true);
@@ -51,13 +51,13 @@ public class GoldenHeads implements Listener {
 				player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*9, 1), true);
 			}
 			if (event.getItem().getType() == Material.SKULL_ITEM) {
-				player.getInventory().remove(Material.SKULL_ITEM);
+				player.getInventory().removeAmount(Material.SKULL_ITEM, 1);
 			}
 		}
 	}
 	
 	public static ItemStack goldenHeadItem() {
-			ItemStack is = SkullCreator.itemFromUuid(UUID.fromString("57a8704d-b3f4-4c8f-bea0-64675011fe7b"));
+			ItemStack is = SkullCreator.itemFromUuid(UUID.fromString("57a8704db3f44c8fbea064675011fe7b"));
 			ItemMeta itemMeta = is.getItemMeta();
 			itemMeta.setDisplayName(ChatColor.GOLD + "Golden Head");
 			is.setItemMeta(itemMeta);

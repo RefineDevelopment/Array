@@ -5,29 +5,26 @@ import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.Locale;
 import me.drizzy.practice.duel.DuelRequest;
-import me.drizzy.practice.enums.PartyPrivacyType;
+import me.drizzy.practice.party.enums.PartyPrivacyType;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.Clickable;
-import me.drizzy.practice.util.other.NameTags;
+import me.drizzy.practice.util.nametags.NameTagHandler;
 import me.drizzy.practice.util.other.TaskUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-@Getter
-@Setter
+@Getter @Setter
 public class Party extends Team {
 
     @Getter private static List<Party> parties = new ArrayList<>();
 
+    private final Map<UUID, String> kits;
     private final List<PartyInvite> invites;
     private final List<Player> banned;
 
@@ -57,6 +54,8 @@ public class Party extends Team {
         this.privacy = PartyPrivacyType.CLOSED;
         this.invites = new ArrayList<>();
         this.banned = new ArrayList<>();
+        this.kits = new HashMap<>();
+        this.kits.put(player.getUniqueId(), getRandomClass());
 
         parties.add(this);
     }
@@ -115,7 +114,7 @@ public class Party extends Team {
     /**
      * Invite a specific player to the party
      *
-     * @param target The player being in ivited
+     * @param target The player being in invited
      */
     public void invite(Player target) {
 
@@ -130,7 +129,7 @@ public class Party extends Team {
     }
 
     /**
-     * Ban the targetted player from the party
+     * Ban the targeted player from the party
      *
      * @param target The player being banned
      */
@@ -139,11 +138,12 @@ public class Party extends Team {
     }
 
     /**
-     * Unban the targetted player form the party
+     * Unban the targeted player form the party
      *
      * @param target The player being unbanned
      */
     public void unban(final Player target) {
+        broadcast(Locale.PARTY_UNBANNED.toString().replace("<target>", target.getName()));
         this.banned.remove(target);
     }
 
@@ -159,9 +159,10 @@ public class Party extends Team {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setParty(this);
 
-        for ( Player otherPlayer : getPlayers() ) {
-            NameTags.color(player, otherPlayer, Array.getInstance().getEssentials().getNametagMeta().getPartyColor(), false);
-        }
+        this.kits.put(player.getUniqueId(), getRandomClass());
+
+        NameTagHandler.reloadPlayer(player);
+        NameTagHandler.reloadOthersFor(player);
 
         /*
          * Clear Their Invite
@@ -185,8 +186,6 @@ public class Party extends Team {
 
         for (TeamPlayer teamPlayer : this.getTeamPlayers()) {
             Player otherPlayer = teamPlayer.getPlayer();
-            NameTags.color(player, teamPlayer.getPlayer(), ChatColor.BLUE, false);
-            NameTags.color(teamPlayer.getPlayer(), player, ChatColor.BLUE, false);
             if (otherPlayer != null) {
                 Profile teamProfile = Profile.getByUuid(teamPlayer.getUuid());
                 teamProfile.handleVisibility(otherPlayer, player);
@@ -212,6 +211,7 @@ public class Party extends Team {
         profile.setParty(null);
         this.getTeamPlayers().removeIf(member -> member.getUuid().equals(player.getUniqueId()));
         this.getPlayers().removeIf(member -> member.getUniqueId().equals(player.getUniqueId()));
+        this.kits.remove(player.getUniqueId());
 
         if (kick) {
             this.broadcast(Locale.PARTY_PLAYER_KICKED.toString().replace("<leaver>", player.getName()));
@@ -220,12 +220,11 @@ public class Party extends Team {
         }
 
         if (profile.isInLobby() || profile.isInQueue()) {
+            NameTagHandler.reloadPlayer(player);
+            NameTagHandler.reloadOthersFor(player);
+
             profile.handleVisibility();
             profile.refreshHotbar();
-
-            for ( Player otherPlayer : getPlayers() ) {
-                NameTags.color(player, otherPlayer, profile.getColor(), false);
-            }
         }
 
         /*
@@ -246,7 +245,8 @@ public class Party extends Team {
                     if (secondPlayer != null) {
                         player.hidePlayer(secondPlayer);
                     }
-                    NameTags.reset(player, secondPlayer);
+                    NameTagHandler.reloadPlayer(player);
+                    NameTagHandler.reloadOthersFor(player);
                 }
             }
 
@@ -267,21 +267,23 @@ public class Party extends Team {
                 otherProfile.handleVisibility(otherPlayer, player);
             }
         }
+        NameTagHandler.reloadPlayer(player);
+        NameTagHandler.reloadOthersFor(player);
     }
 
     /**
-     * Make the targetted player, the leader of the party
+     * Make the targeted player, the leader of the party
      *
      * @param player The Original Leader of the Party
      * @param target The New Leader of the Party
      */
     public void leader(Player player, Player target) {
         Profile profile = Profile.getByUuid(player.getUniqueId());
-        Profile targetprofile = Profile.getByUuid(target.getUniqueId());
+        Profile targetProfile = Profile.getByUuid(target.getUniqueId());
 
         for (TeamPlayer teamPlayer : this.getTeamPlayers()) {
-            if (teamPlayer.getPlayer().equals(targetprofile.getPlayer())) {
-                targetprofile.getParty().setLeader(teamPlayer);
+            if (teamPlayer.getPlayer().equals(targetProfile.getPlayer())) {
+                targetProfile.getParty().setLeader(teamPlayer);
             }
         }
 
@@ -290,25 +292,19 @@ public class Party extends Team {
         if (profile.isInLobby()) {
             profile.refreshHotbar();
         }
-        if (targetprofile.isInLobby()) {
-            targetprofile.refreshHotbar();
+        if (targetProfile.isInLobby()) {
+            targetProfile.refreshHotbar();
         }
     }
 
     /**
-     * Execute tasks for disbaning the party
+     * Execute tasks for disbanding the party
      */
     public void disband() {
-        this.broadcast(Locale.PARTY_DISABANDED.toString());
+        this.broadcast(Locale.PARTY_DISBANDED.toString());
 
         Profile leaderProfile = Profile.getByUuid(this.getLeader().getUuid());
         leaderProfile.getSentDuelRequests().values().removeIf(DuelRequest::isParty);
-
-        for (Player partyps : this.getPlayers()) {
-            for ( Player player : Bukkit.getOnlinePlayers() ) {
-                NameTags.reset(partyps, player);
-            }
-        }
 
         this.getPlayers().forEach(player -> {
             Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -320,11 +316,19 @@ public class Party extends Team {
                 profile.refreshHotbar();
                 profile.handleVisibility();
                 profile.teleportToSpawn();
+                NameTagHandler.reloadPlayer(player);
+                NameTagHandler.reloadOthersFor(player);
             }
         });
 
         parties.remove(this);
         this.disbanded = true;
+
+        for (Player partyPlayer : this.getPlayers()) {
+            for ( Player player : Bukkit.getOnlinePlayers() ) {
+                NameTagHandler.reloadPlayer(partyPlayer, player);
+            }
+        }
     }
 
     /**
@@ -355,5 +359,17 @@ public class Party extends Team {
             player.sendMessage(CC.translate(main));
 
         });
+    }
+
+    public String getRandomClass() {
+        int i = Array.random.nextInt(4);
+        int armor = i + 1;
+
+        switch (armor) {
+            case 2: return "Archer";
+            case 3: return "Bard";
+            case 4: return "Rogue";
+            default: return "Diamond";
+        }
     }
 }

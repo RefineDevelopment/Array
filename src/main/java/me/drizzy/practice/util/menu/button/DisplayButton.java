@@ -10,8 +10,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 @AllArgsConstructor
-@Getter
-@Setter
+@Getter @Setter
 public class DisplayButton extends Button {
 
     private ItemStack itemStack;

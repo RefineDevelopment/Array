@@ -11,8 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-@Getter
-@Setter
+@Getter @Setter
 public class TeamPlayer {
 
     private Map<UUID, List<Long>> cpsMap = new HashMap<>();

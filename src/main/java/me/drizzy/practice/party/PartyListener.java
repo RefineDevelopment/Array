@@ -26,7 +26,7 @@ public class PartyListener implements Listener {
                 event.setCancelled(true);
                 String chat = Locale.PARTY_CHAT_FORMAT.toString()
                         .replace("<player_displayname>", player.getDisplayName())
-                        .replace("<player_name>", player.getDisplayName())
+                        .replace("<player_name>", player.getName())
                         .replace("<message>", chatMessage.replace("@", ""));
 
                 party.broadcast(chat);
@@ -36,14 +36,18 @@ public class PartyListener implements Listener {
     
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerQuit(final PlayerQuitEvent event) {
-        final Profile profile = Profile.getProfiles().get(event.getPlayer().getUniqueId());
-        if (profile != null && profile.getParty() != null) {
-            if (profile.getParty().isLeader(event.getPlayer().getUniqueId())) {
-                profile.getParty().leader(event.getPlayer(), profile.getParty().getPlayers().get(0));
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Party party = profile.getParty();
+
+        if (party != null) {
+            if (party.isLeader(player.getUniqueId())) {
+                party.leader(player, party.getPlayers().get(0));
+                party.broadcast(CC.translate("&e" + party.getLeader().getUsername() + " has been randomly promoted to leader because the previous leader left."));
             }
-            profile.getParty().leave(event.getPlayer(), false);
-            if (profile.getParty() !=null && Tournament.CURRENT_TOURNAMENT !=null && Tournament.CURRENT_TOURNAMENT.isParticipating(event.getPlayer())) {
-                Tournament.CURRENT_TOURNAMENT.leave(profile.getParty());
+            party.leave(player, false);
+            if (Tournament.CURRENT_TOURNAMENT != null && Tournament.CURRENT_TOURNAMENT.isParticipating(player)) {
+                Tournament.CURRENT_TOURNAMENT.leave(party);
             }
 
         }

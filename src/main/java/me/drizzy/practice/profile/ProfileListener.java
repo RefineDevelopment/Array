@@ -1,7 +1,7 @@
 package me.drizzy.practice.profile;
 
 import me.drizzy.practice.Array;
-import me.drizzy.practice.essentials.event.SpawnTeleportEvent;
+import me.drizzy.practice.api.events.profile.SpawnTeleportEvent;
 import me.drizzy.practice.match.MatchState;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.other.PlayerUtil;
@@ -197,7 +197,7 @@ public class ProfileListener implements Listener {
             if (profile.isInLobby() || profile.isInQueue()) {
                 event.setCancelled(true);
             }
-            if(profile.isInSumo() || profile.isInGulag()) {
+            if (profile.isInSumo() || profile.isInGulag()) {
                 event.setCancelled(true);
             }
             if (profile.isInSomeSortOfFight()) {

@@ -1,6 +1,7 @@
 package me.drizzy.practice.events.menu;
 
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.events.types.brackets.Brackets;
 import me.drizzy.practice.events.types.lms.LMS;
 import me.drizzy.practice.kit.Kit;
@@ -32,7 +33,7 @@ public class EventSelectKitMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
         for (Kit kit : Kit.getKits()) {
-            if (kit.isEnabled() && !kit.getGameRules().isNoItems() && !kit.getGameRules().isLavaKill() && !kit.getGameRules().isWaterKill() && !kit.getGameRules().isSpleef() && !kit.getGameRules().isBuild() && !kit.getGameRules().isSumo()) {
+            if (kit.isEnabled() && !kit.getGameRules().isNoItems() && !kit.getGameRules().isLavaKill() && !kit.getGameRules().isWaterKill() && !kit.getGameRules().isSpleef() && !kit.getGameRules().isSumo()) {
                 buttons.put(buttons.size(), new SelectKitButton(event, kit));
             }
         }
@@ -57,12 +58,12 @@ public class EventSelectKitMenu extends Menu {
         public void clicked(Player player, ClickType clickType) {
             if (event.equals("Brackets")) {
                 if (Array.getInstance().getBracketsManager().getActiveBrackets() != null) {
-                    player.sendMessage(CC.RED + "There is already an active Brackets Event.");
+                    player.sendMessage(Locale.EVENT_ALREADY_STARTED.toString().replace("<event>", "Brackets").replace("<event_name>", "Brackets"));
                     return;
                 }
 
                 if (!Array.getInstance().getBracketsManager().getCooldown().hasExpired()) {
-                    player.sendMessage(CC.RED + "There is an active cooldown for the Brackets Event.");
+                    player.sendMessage(Locale.EVENT_COOLDOWN_ACTIVE.toString().replace("<event>", "Brackets").replace("<event_name>", "Brackets"));
                     return;
                 }
 
@@ -73,39 +74,29 @@ public class EventSelectKitMenu extends Menu {
 
                     if (profile.isInLobby()) {
                         if (!profile.getKitEditor().isActive()) {
-                        PlayerUtil.reset(player, false);
-                        profile.refreshHotbar();
+                            PlayerUtil.reset(player);
+                            profile.refreshHotbar();
                         }
                     }
                 }
             } else {
                 if (Array.getInstance().getLMSManager().getActiveLMS() != null) {
-                    player.sendMessage(CC.RED + "There is already an active LMS Event.");
+                    player.sendMessage(Locale.EVENT_ALREADY_STARTED.toString().replace("<event>", "LMS").replace("<event_name>", "LMS"));
                     return;
                 }
 
                 if (!Array.getInstance().getLMSManager().getCooldown().hasExpired()) {
-                    player.sendMessage(CC.RED + "There is an active cooldown for the LMS Event.");
+                    player.sendMessage(Locale.EVENT_COOLDOWN_ACTIVE.toString().replace("<event>", "LMS").replace("<event_name>", "LMS"));
                     return;
                 }
 
                 Array.getInstance().getLMSManager().setActiveLMS(new LMS(player, kit));
 
-                for (Player other : Array.getInstance().getServer().getOnlinePlayers()) {
-                    Profile profile = Profile.getByUuid(other.getUniqueId());
-
-                    if (profile.isInLobby()) {
-                        if (!profile.getKitEditor().isActive()) {
-                        PlayerUtil.reset(player, false);
-                        profile.refreshHotbar();
-                        }
-                    }
-                }
+                Profile.getProfiles().values().stream().filter(profile -> !profile.getKitEditor().isActive()).filter(Profile::isInLobby).forEach(Profile::refreshHotbar);
+                Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
+                player.closeInventory();
             }
-            Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
-            player.closeInventory();
         }
-
     }
 
 }

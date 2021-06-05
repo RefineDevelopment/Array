@@ -2,7 +2,7 @@ package me.drizzy.practice.arena.impl;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.enums.ArenaType;
+import me.drizzy.practice.arena.ArenaType;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.location.LocationUtil;
 import lombok.Getter;
@@ -11,8 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.IOException;
 
-@Getter
-@Setter
+@Getter @Setter
 public class SharedArena extends Arena {
 
     public SharedArena(String name) {

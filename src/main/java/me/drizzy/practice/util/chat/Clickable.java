@@ -21,14 +21,14 @@ public class Clickable {
 	}
 
 	public Clickable(String msg, String hoverMsg, String clickString) {
-		this.add(msg, hoverMsg, clickString);
+		this.add(CC.translate(msg), CC.translate(hoverMsg), clickString);
 	}
 
 	public TextComponent add(String msg, String hoverMsg, String clickString) {
-		TextComponent message = new TextComponent(msg);
+		TextComponent message = new TextComponent(CC.translate(msg));
 
 		if (hoverMsg != null) {
-			message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hoverMsg).create()));
+			message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(CC.translate(hoverMsg)).create()));
 		}
 
 		if (clickString != null) {
@@ -41,7 +41,7 @@ public class Clickable {
 	}
 
 	public void add(String message) {
-		this.components.add(new TextComponent(message));
+		this.components.add(new TextComponent(CC.translate(message)));
 	}
 
 	public void sendToPlayer(Player player) {

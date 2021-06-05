@@ -39,6 +39,10 @@ public class BasicConfigurationFile extends AbstractConfigurationFile {
         return this.configuration.contains(path) ? this.configuration.getInt(path) : 0;
     }
 
+    public void set(String path, Object value) {
+        configuration.set(path, value);
+    }
+
     public boolean getBoolean(String path) {
         return this.configuration.contains(path) && this.configuration.getBoolean(path);
     }

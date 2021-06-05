@@ -6,9 +6,14 @@ import java.util.EnumMap;
 import java.util.Map;
 
 /**
+ * This Project is the property of Purge Community © 2021
+ * Redistribution of this Project is not allowed
+ *
  * @author Drizzy
  * Created at 4/15/2021
+ * Project: Array
  */
+
 public final class EntityUtils {
 
     private static final Map<EntityType, String> displayNames = new EnumMap<>(EntityType.class);

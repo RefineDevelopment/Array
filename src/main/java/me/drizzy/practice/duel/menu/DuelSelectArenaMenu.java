@@ -2,7 +2,7 @@ package me.drizzy.practice.duel.menu;
 
 import lombok.AllArgsConstructor;
 import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.enums.ArenaType;
+import me.drizzy.practice.arena.ArenaType;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.inventory.ItemBuilder;
 import me.drizzy.practice.util.menu.Button;
@@ -17,8 +17,6 @@ import java.util.Map;
 
 @AllArgsConstructor
 public class DuelSelectArenaMenu extends PaginatedMenu {
-
-    public String type;
 
     @Override
     public String getPrePaginatedTitle(Player player) {
@@ -36,7 +34,6 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
                 continue;
             }
 
-            if (type.equalsIgnoreCase("normal")) {
                 if (!arena.getKits().contains(profile.getDuelProcedure().getKit().getName())) {
                     continue;
                 }
@@ -52,24 +49,6 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
                 if (arena.getType() == ArenaType.DUPLICATE) {
                     continue;
                 }
-            } else if (type.equalsIgnoreCase("rematch")) {
-                if (!arena.getKits().contains(profile.getRematchData().getKit().getName())) {
-                    continue;
-                }
-
-                if (profile.getRematchData().getKit().getGameRules().isBuild() && arena.getType() == ArenaType.SHARED) {
-                    continue;
-                }
-
-                if (profile.getRematchData().getKit().getGameRules().isBridge() && arena.getType() == ArenaType.SHARED || profile.getRematchData().getKit().getGameRules().isBridge() && arena.getType() == ArenaType.STANDALONE) {
-                    continue;
-                }
-
-
-                if (arena.getType() == ArenaType.DUPLICATE) {
-                    continue;
-                }
-            }
 
             buttons.put(buttons.size(), new SelectArenaButton(arena));
         }
@@ -101,22 +80,13 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
         public void clicked(Player player, ClickType clickType) {
             Profile profile = Profile.getByUuid(player.getUniqueId());
 
-            if (type.equalsIgnoreCase("normal")) {
                 profile.getDuelProcedure().setArena(arena);
                 profile.getDuelProcedure().send();
 
                 Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
 
                 player.closeInventory();
-            } else if (type.equalsIgnoreCase("rematch")) {
-
-                Profile targetProfile = Profile.getByUuid(profile.getRematchData().getTarget());
-                targetProfile.getRematchData().setArena(arena);
-                profile.getRematchData().request();
-
-                player.closeInventory();
             }
-        }
 
     }
 

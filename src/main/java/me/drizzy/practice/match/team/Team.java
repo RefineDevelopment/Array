@@ -9,13 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Getter @Setter
 public class Team {
 
     private TeamPlayer leader;
     private final List<TeamPlayer> teamPlayers;
-    private int sumoRounds = 0;
 
     public Team(TeamPlayer leader) {
         this.leader = leader;

@@ -5,15 +5,24 @@ import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.arena.cuboid.Cuboid;
-import me.drizzy.practice.enums.ArenaType;
+import me.drizzy.practice.arena.ArenaType;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.location.LocationUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.IOException;
 
-@Getter
-@Setter
+/**
+ * This Project is the property of Purge Community © 2021
+ * Redistribution of this Project is not allowed
+ *
+ * @author Drizzy
+ * Created at 3/21/2021
+ * Project: Array
+ */
+
+
+@Getter @Setter
 public class TheBridgeArena extends Arena {
 
     private Cuboid redCuboid;
@@ -94,6 +103,11 @@ public class TheBridgeArena extends Arena {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean isSetup() {
+        return spawn1 != null && spawn2 != null && max != null && min != null && blueCuboid != null && redCuboid != null && redPortal != null && bluePortal != null;
     }
 
 }

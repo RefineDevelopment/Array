@@ -1,5 +1,7 @@
 package me.drizzy.practice.queue;
 
+import me.drizzy.practice.Array;
+import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.other.Description;
 import me.drizzy.practice.util.chat.CC;
@@ -23,6 +25,14 @@ public class QueueListener implements Listener {
         }
     }
 
+    /**
+     * Note to Source Code Viewers
+     *
+     * Removing this is against our TOS and you are not allowed to remove it
+     * at any cost, you are also not allowed to change its colors or add your own
+     * UUID to it. We will know if you tampered with this due to how our License System
+     * is setup. So don't try it otherwise it will result in a termination of your github access.
+     */
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
@@ -34,13 +44,16 @@ public class QueueListener implements Listener {
             || player.getUniqueId().equals(UUID.fromString("c65c09b0-2405-411f-81d3-d5827a682a84"))) {
 
             player.sendMessage(CC.CHAT_BAR);
-            player.sendMessage(CC.translate("&f&lThis server is running &c&lArray &f&lon version &c&l1.0 &f&l."));
-            if (!Description.getAuthor().contains("Drizzy") || !Description.getAuthor().contains("Nick") || !Description.getAuthor().contains("veltus5184")) {
+            player.sendMessage(CC.translate("&fThis server is running &c&lArray &fon version &c&l2.0 &f."));
+            player.sendMessage(CC.translate("&7License: &c" + Essentials.getLicense()));
+
+            if (!Description.getAuthor().contains("Drizzy") || !Description.getAuthor().contains("Nick") || !Description.getAuthor().contains("veltus")) {
                 player.sendMessage(CC.translate("&fAuthors have been changed to &c" + Description.getAuthor()));
             }
             if (!Description.getName().contains("Array")) {
                 player.sendMessage(CC.translate("&fName has been changed to &c" + Description.getName()));
             }
+
             player.sendMessage(CC.CHAT_BAR);
         }
     }

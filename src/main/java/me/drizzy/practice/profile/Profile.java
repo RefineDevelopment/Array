@@ -14,12 +14,18 @@ import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.api.ArrayCache;
+import me.drizzy.practice.api.events.leaderboards.GlobalLeaderboardsUpdateEvent;
+import me.drizzy.practice.api.events.profile.ProfileGlobalEloCalculateEvent;
+import me.drizzy.practice.api.events.profile.ProfileLoadEvent;
+import me.drizzy.practice.api.events.profile.ProfileSaveEvent;
+import me.drizzy.practice.brawl.Brawl;
 import me.drizzy.practice.clan.Clan;
 import me.drizzy.practice.clan.meta.ClanInvite;
+import me.drizzy.practice.clan.meta.ClanProfile;
 import me.drizzy.practice.duel.DuelProcedure;
 import me.drizzy.practice.duel.DuelRequest;
-import me.drizzy.practice.enums.HotbarType;
-import me.drizzy.practice.essentials.event.SpawnTeleportEvent;
+import me.drizzy.practice.profile.hotbar.HotbarType;
+import me.drizzy.practice.api.events.profile.SpawnTeleportEvent;
 import me.drizzy.practice.events.types.brackets.Brackets;
 import me.drizzy.practice.events.types.brackets.player.BracketsPlayer;
 import me.drizzy.practice.events.types.brackets.player.BracketsPlayerState;
@@ -29,8 +35,6 @@ import me.drizzy.practice.events.types.gulag.player.GulagPlayerState;
 import me.drizzy.practice.events.types.lms.LMS;
 import me.drizzy.practice.events.types.lms.player.LMSPlayer;
 import me.drizzy.practice.events.types.lms.player.LMSPlayerState;
-import me.drizzy.practice.events.types.oitc.OITC;
-import me.drizzy.practice.events.types.oitc.player.OITCPlayerState;
 import me.drizzy.practice.events.types.parkour.Parkour;
 import me.drizzy.practice.events.types.parkour.player.ParkourPlayer;
 import me.drizzy.practice.events.types.parkour.player.ParkourPlayerState;
@@ -40,27 +44,29 @@ import me.drizzy.practice.events.types.spleef.player.SpleefPlayerState;
 import me.drizzy.practice.events.types.sumo.Sumo;
 import me.drizzy.practice.events.types.sumo.player.SumoPlayer;
 import me.drizzy.practice.events.types.sumo.player.SumoPlayerState;
-import me.drizzy.practice.hotbar.Hotbar;
-import me.drizzy.practice.hotbar.HotbarLayout;
+import me.drizzy.practice.profile.hotbar.Hotbar;
+import me.drizzy.practice.profile.hotbar.HotbarLayout;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.kit.KitInventory;
-import me.drizzy.practice.kiteditor.KitEditor;
+import me.drizzy.practice.kit.kiteditor.KitEditor;
 import me.drizzy.practice.leaderboards.LeaderboardsAdapter;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.hook.SpigotHook;
 import me.drizzy.practice.party.Party;
-import me.drizzy.practice.profile.meta.ProfileRematchData;
+import me.drizzy.practice.duel.RematchProcedure;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueProfile;
-import me.drizzy.practice.settings.meta.SettingsMeta;
-import me.drizzy.practice.statistics.StatisticsData;
+import me.drizzy.practice.profile.settings.meta.SettingsMeta;
+import me.drizzy.practice.profile.statistics.StatisticsData;
 import me.drizzy.practice.tournament.Tournament;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.inventory.InventoryUtil;
+import me.drizzy.practice.util.nametags.NameTagHandler;
 import me.drizzy.practice.util.other.Cooldown;
-import me.drizzy.practice.util.other.NameTags;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.other.TaskUtil;
+import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -69,19 +75,21 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings(value = "all")
-@Getter
-@Setter
+@Getter @Setter
 public class Profile {
 
     @Getter private static final Map<UUID, Profile> profiles = new HashMap<>();
     @Getter public static final List<Player> playerList = new ArrayList<>();
     @Getter private static final List<LeaderboardsAdapter> globalEloLeaderboards = new ArrayList<>();
+    
+    private final Array plugin = Array.getInstance();
 
     private final Map<UUID, DuelRequest> sentDuelRequests = new HashMap<>();
     private final Map<Kit, StatisticsData> statisticsData = new LinkedHashMap<>();
@@ -116,7 +124,6 @@ public class Profile {
     private LMS lms;
     private Parkour parkour;
     private Gulag gulag;
-    private OITC OITC;
     private Spleef spleef;
 
     /*
@@ -126,14 +133,16 @@ public class Profile {
     private Party party;
     private Match match;
     private Queue queue;
+    private Brawl brawl;
     private Clan clan;
 
     /*
      * Fight Meta
      */
+    private ClanProfile clanProfile;
     private QueueProfile queueProfile;
     private DuelProcedure duelProcedure;
-    private ProfileRematchData rematchData;
+    private RematchProcedure rematchData;
 
     /*
      * Spectator Mode
@@ -151,6 +160,7 @@ public class Profile {
      */
     private final SettingsMeta settings = new SettingsMeta();
     private final KitEditor kitEditor = new KitEditor();
+    private boolean canIssueRating = false;
 
     /**
      * The main constructor for the Profile
@@ -169,7 +179,7 @@ public class Profile {
 
     public static void preload() {
         // Players might have joined before the plugin finished loading
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        for ( Player player : Bukkit.getOnlinePlayers() ) {
             Profile profile = new Profile(player.getUniqueId());
 
             try {
@@ -181,34 +191,24 @@ public class Profile {
 
             profiles.put(player.getUniqueId(), profile);
         }
-
-        // Save every minute to prevent data loss
-        new BukkitRunnable() {
-            @Override
-            public void run() {
+        if (!Array.getInstance().isDisabling()) {
+            //Save every minute to prevent data loss
+            TaskUtil.runTimerAsync(() -> {
                 Profile.getProfiles().values().forEach(Profile::save);
                 Profile.getProfiles().values().forEach(Profile::load);
-            }
-        }.runTaskTimerAsynchronously(Array.getInstance(), 36000L, 36000L);
+            }, 36000L, 36000L);
 
-        // Reload global elo leaderboards
-        new BukkitRunnable() {
-            @Override
-            public void run() {
+            //Reload Leaderboards
+            TaskUtil.runTimerAsync(() -> {
                 Kit.getKits().forEach(Kit::updateKitLeaderboards);
-                loadGlobalLeaderboards();
-            }
-        }.runTaskTimerAsynchronously(Array.getInstance(), 600L, 600L);
+                Profile.loadGlobalLeaderboards();
+            }, 600L, 600L);
 
-        // Refresh players' hotbars every 3 seconds
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Profile profile : Profile.getProfiles().values()) {
-                    profile.checkForHotbarUpdate();
-                }
-            }
-        }.runTaskTimerAsynchronously(Array.getInstance(), 40L, 40L);
+            //Refresh players' hotbars every 3 seconds
+            TaskUtil.runTimerAsync(() -> {
+                Profile.getProfiles().values().forEach(Profile::checkForHotbarUpdate);
+            }, 40L, 40L);
+        }
     }
 
     /**
@@ -253,10 +253,13 @@ public class Profile {
                 LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
                 leaderboardsAdapter.setName((String) document.get("name"));
                 leaderboardsAdapter.setElo((Integer) document.get("globalElo"));
-                globalEloLeaderboards.removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
+                if (!globalEloLeaderboards.isEmpty()) {
+                    globalEloLeaderboards.removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
+                }
                 getGlobalEloLeaderboards().add(leaderboardsAdapter);
             }
         });
+        new GlobalLeaderboardsUpdateEvent().call();
     }
 
     /**
@@ -266,11 +269,7 @@ public class Profile {
      * @return {@link ChatColor}
      */
     public ChatColor getColor() {
-        if (Array.getInstance().getEssentials().getNametagMeta().getDefaultColor().equalsIgnoreCase("<rank_color>")) {
-            return Array.getInstance().getRankManager().getRankColor(this.getPlayer());
-        } else {
-            return ChatColor.valueOf(Array.getInstance().getEssentials().getNametagMeta().getDefaultColor());
-        }
+        return plugin.getRankManager().getRankColor(this.getPlayer());
     }
 
     /**
@@ -303,21 +302,22 @@ public class Profile {
 
             this.globalElo = document.getInteger("globalElo");
 
-           // if (document.getString("clan") != null) {
-            //    this.clan = Clan.getByName(document.getString("clan"));
-           // }
+           if (document.getString("clan") != null) {
+               this.clan = Clan.getByName(document.getString("clan"));
+           }
 
             Document options = (Document) document.get("settings");
 
-            this.settings.setShowScoreboard(options.getBoolean("showScoreboard"));
+            this.settings.setScoreboardEnabled(options.getBoolean("showScoreboard"));
             this.settings.setAllowSpectators(options.getBoolean("allowSpectators"));
             this.settings.setReceiveDuelRequests(options.getBoolean("receiveDuelRequests"));
             this.settings.setUsingPingFactor(options.getBoolean("usingPingFactor"));
-            this.settings.setLightning(options.getBoolean("toggleLightning"));
+            this.settings.setDeathLightning(options.getBoolean("toggleLightning"));
             this.settings.setPingScoreboard(options.getBoolean("pingScoreboard"));
-            this.settings.setCpsScoreboard(options.getBoolean("cpsScoreboard") == null ? false : options.getBoolean("cpsScoreboard"));
+            this.settings.setCpsScoreboard(options.getBoolean("cpsScoreboard"));
             this.settings.setAllowTournamentMessages(options.getBoolean("allowTournamentMessages"));
             this.settings.setVanillaTab(options.getBoolean("usingVanillaTab"));
+            this.settings.setShowPlayers(options.getBoolean("showPlayers"));
 
             Document kitStatistics=(Document) document.get("kitStatistics");
 
@@ -372,6 +372,7 @@ public class Profile {
             this.save();
         }
         });
+        new ProfileLoadEvent(this).call();
     }
 
     /**
@@ -384,20 +385,21 @@ public class Profile {
             document.put("name", Bukkit.getOfflinePlayer(uuid).getName());
             document.put("globalElo", globalElo);
 
-           // if (clan != null) {
-            //    document.put("clan", clan.getName());
-           // }
+            if (clan != null) {
+               document.put("clan", clan.getName());
+            }
 
             Document optionsDocument = new Document();
-            optionsDocument.put("showScoreboard", settings.isShowScoreboard());
+            optionsDocument.put("showScoreboard", settings.isScoreboardEnabled());
             optionsDocument.put("allowSpectators", settings.isAllowSpectators());
             optionsDocument.put("receiveDuelRequests", settings.isReceiveDuelRequests());
             optionsDocument.put("usingPingFactor", settings.isUsingPingFactor());
-            optionsDocument.put("toggleLightning", settings.isLightning());
+            optionsDocument.put("toggleLightning", settings.isDeathLightning());
             optionsDocument.put("pingScoreboard", settings.isPingScoreboard());
             optionsDocument.put("allowTournamentMessages", settings.isAllowTournamentMessages());
             optionsDocument.put("usingVanillaTab", settings.isVanillaTab());
             optionsDocument.put("cpsScoreboard", settings.isCpsScoreboard());
+            optionsDocument.put("showPlayers", settings.isShowPlayers());
 
             document.put("settings", optionsDocument);
 
@@ -436,6 +438,7 @@ public class Profile {
 
             collection.replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
         });
+        new ProfileSaveEvent(this).call();
     }
 
     /**
@@ -451,6 +454,7 @@ public class Profile {
             }
         }
         this.globalElo = Math.round(globalElo / kitCounter);
+        new ProfileGlobalEloCalculateEvent(this).call();
     }
 
     /**
@@ -520,12 +524,13 @@ public class Profile {
                 getPlayerList().remove(players);
             }
         }
+
         Profile.getPlayerList().add(player);
         for ( Profile other : Profile.getProfiles().values() ) {
             TaskUtil.run(other::handleVisibility);
         }
 
-        Array.getInstance().getTaskThread().execute(() -> {
+        plugin.getTaskThread().execute(() -> {
             if (!ArrayCache.getPlayerCache().containsKey(player.getName())) {
                 ArrayCache.getPlayerCache().put(player.getName(), this.getUuid());
             }
@@ -536,15 +541,10 @@ public class Profile {
             this.refreshHotbar();
         });
 
-        TaskUtil.run(this::teleportToSpawn);
+        this.teleportToSpawn();
 
         //Visibility Bug Fix
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                handleVisibility();
-            }
-        }.runTaskLater(Array.getInstance(), 5L);
+        TaskUtil.runLater(this::handleVisibility, 5L);
     }
 
     /**
@@ -557,7 +557,7 @@ public class Profile {
             this.getQueue().removePlayer(this.getQueueProfile());
         }
 
-        Array.getInstance().getTaskThread().execute(() -> {
+        plugin.getTaskThread().execute(() -> {
             //Remove from the Tab PlayerList
             Profile.getPlayerList().remove(this.getPlayer());
 
@@ -566,7 +566,7 @@ public class Profile {
 
             //If there is a rematch request pending for them, remove it
             if (this.getRematchData() != null) {
-                Player target = Array.getInstance().getServer().getPlayer(this.getRematchData().getTarget());
+                Player target = plugin.getServer().getPlayer(this.getRematchData().getTarget());
                 if (target != null && target.isOnline()) {
                     Profile.getByUuid(target.getUniqueId()).checkForHotbarUpdate();
                 }
@@ -580,70 +580,19 @@ public class Profile {
     }
 
     /**
-     * Teleport the profile to spawn and update
-     * their nametag color
+     * Teleport the profile to spawn
      */
     public void teleportToSpawn() {
-        SpawnTeleportEvent event = new SpawnTeleportEvent(getPlayer(), Array.getInstance().getEssentials().getSpawn());
+        Player player = getPlayer();
+        SpawnTeleportEvent event = new SpawnTeleportEvent(getPlayer(), plugin.getEssentials().getSpawn());
         event.call();
 
         //Update their visibility
         this.handleVisibility();
+        this.refreshHotbar();
 
         if (!event.isCancelled() && event.getLocation() != null) {
             getPlayer().teleport(event.getLocation());
-        }
-
-        //Handle their nametag and update it accordingly
-        for ( Player otherPlayer : Bukkit.getOnlinePlayers() ) {
-            if (Array.getInstance().getEssentials().getNametagMeta().isEnabled()) {
-                if (party == null) {
-                    NameTags.color(getPlayer(), otherPlayer, getColor(), false);
-                } else {
-                    NameTags.color(getPlayer(), otherPlayer, Array.getInstance().getEssentials().nametagMeta.getPartyColor(), false);
-                }
-                Profile profile = Profile.getByPlayer(otherPlayer);
-
-                if (profile.getParty() == null) {
-                    NameTags.color(otherPlayer, getPlayer(), profile.getColor(), false);
-                } else {
-                    NameTags.color(otherPlayer, getPlayer(), Array.getInstance().getEssentials().nametagMeta.getPartyColor(), false);
-                }
-                TaskUtil.runLater(() -> {
-                    if (otherPlayer.isOnline() && otherPlayer != null){
-                        profile.handleNametag();
-                    }
-                }, 20L);
-            } else {
-                NameTags.reset(getPlayer(), otherPlayer);
-                NameTags.reset(otherPlayer, getPlayer());
-            }
-        }
-    }
-
-    /**
-     * Update and Color a profile's Nametag
-     * along with other's as well
-     */
-    public void handleNametag() {
-        for ( Player otherPlayer : Bukkit.getOnlinePlayers() ) {
-            if (Array.getInstance().getEssentials().getNametagMeta().isEnabled()) {
-                if (party == null) {
-                    NameTags.color(getPlayer(), otherPlayer, getColor(), false);
-                } else {
-                    NameTags.color(getPlayer(), otherPlayer, Array.getInstance().getEssentials().nametagMeta.getPartyColor(), false);
-                }
-                Profile profile = Profile.getByPlayer(otherPlayer);
-
-                if (profile.getParty() == null) {
-                    NameTags.color(otherPlayer, getPlayer(), profile.getColor(), false);
-                } else {
-                    NameTags.color(otherPlayer, getPlayer(), Array.getInstance().getEssentials().nametagMeta.getPartyColor(), false);
-                }
-            } else {
-                NameTags.reset(getPlayer(), otherPlayer);
-                NameTags.reset(otherPlayer, getPlayer());
-            }
         }
     }
 
@@ -690,13 +639,13 @@ public class Profile {
                     }
                 }
             }
-                    boolean activeEvent = (Array.getInstance().getSumoManager().getActiveSumo() != null && Array.getInstance().getSumoManager().getActiveSumo().isWaiting())
-                            || (Array.getInstance().getBracketsManager().getActiveBrackets() != null && Array.getInstance().getBracketsManager().getActiveBrackets().isWaiting())
-                            || (Array.getInstance().getLMSManager().getActiveLMS() != null && Array.getInstance().getLMSManager().getActiveLMS().isWaiting())
-                            || (Array.getInstance().getParkourManager().getActiveParkour() != null && Array.getInstance().getParkourManager().getActiveParkour().isWaiting())
-                            || (Array.getInstance().getGulagManager().getActiveGulag() != null && Array.getInstance().getGulagManager().getActiveGulag().isWaiting())
-                            || (Array.getInstance().getOITCManager().getActiveOITC() != null && Array.getInstance().getOITCManager().getActiveOITC().isWaiting())
-                            || (Array.getInstance().getSpleefManager().getActiveSpleef() != null && Array.getInstance().getSpleefManager().getActiveSpleef().isWaiting());
+                    boolean activeEvent =
+                            (plugin.getSumoManager().getActiveSumo() != null && plugin.getSumoManager().getActiveSumo().isWaiting())
+                            || (plugin.getBracketsManager().getActiveBrackets() != null && plugin.getBracketsManager().getActiveBrackets().isWaiting())
+                            || (plugin.getLMSManager().getActiveLMS() != null && plugin.getLMSManager().getActiveLMS().isWaiting())
+                            || (plugin.getParkourManager().getActiveParkour() != null && plugin.getParkourManager().getActiveParkour().isWaiting())
+                            || (plugin.getGulagManager().getActiveGulag() != null && plugin.getGulagManager().getActiveGulag().isWaiting())
+                            || (plugin.getSpleefManager().getActiveSpleef() != null && plugin.getSpleefManager().getActiveSpleef().isWaiting());
                     int eventSlot=player.getInventory().first(Hotbar.getItems().get(HotbarType.EVENT_JOIN));
 
                     if (eventSlot == -1 && activeEvent) {
@@ -712,7 +661,7 @@ public class Profile {
                     public void run() {
                         refreshHotbar();
                     }
-                }.runTask(Array.getInstance());
+                }.runTask(plugin);
             }
         }
     }
@@ -724,55 +673,48 @@ public class Profile {
         Player player = getPlayer();
 
         if (player != null) {
-            PlayerUtil.reset(player, false);
+            PlayerUtil.reset(player);
 
             if (isInLobby()) {
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.LOBBY, this));
             } else if (isInQueue()) {
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.QUEUE, this));
             } else if (isSpectating()) {
-                PlayerUtil.spectator(player);
-                TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this)), 2L);
+                TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
             } else if (isInSumo()) {
                 if (getSumo().getEventPlayer(player).getState().equals(SumoPlayerState.ELIMINATED)) {
-                    PlayerUtil.spectator(player);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SUMO_SPECTATE, this)), 2L);
+                    TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SUMO_SPECTATE, this)), 3L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SUMO_SPECTATE, this));
             } else if (isInBrackets()) {
                 if (getBrackets().getEventPlayer(player).getState().equals(BracketsPlayerState.ELIMINATED)) {
-                    PlayerUtil.spectator(player);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.BRACKETS_SPECTATE, this)), 2L);
+                    TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.BRACKETS_SPECTATE, this)), 3L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.BRACKETS_SPECTATE, this));
             } else if (isInLMS()) {
                 if (getLms().getEventPlayer(player).getState().equals(LMSPlayerState.ELIMINATED)) {
-                    PlayerUtil.spectator(player);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.LMS_SPECTATE, this)), 2L);
+                    TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.LMS_SPECTATE, this)), 3L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.LMS_SPECTATE, this));
             } else if (isInParkour()) {
                 if (getParkour().getEventPlayer(player).getState().equals(ParkourPlayerState.ELIMINATED)) {
-                    PlayerUtil.spectator(player);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.PARKOUR_SPECTATE, this)), 2L);
+                    TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.PARKOUR_SPECTATE, this)), 3L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.PARKOUR_SPECTATE, this));
             } else if (isInSpleef()) {
                 if (getSpleef().getEventPlayer(player).getState().equals(SpleefPlayerState.ELIMINATED)) {
-                    PlayerUtil.spectator(player);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SPLEEF_SPECTATE, this)), 2L);
+                    TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SPLEEF_SPECTATE, this)), 3L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SPLEEF_SPECTATE, this));
-            } else if (isInOITC()) {
-                if (getOITC().getEventPlayer(player).getState().equals(OITCPlayerState.ELIMINATED)) {
-                    PlayerUtil.spectator(player);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.OITC_SPECTATE, this)), 2L);
-                }
-                player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.OITC_SPECTATE, this));
             } else if(isInGulag()) {
                 if (getGulag().getEventPlayer(player).getState().equals(GulagPlayerState.ELIMINATED)) {
-                    PlayerUtil.spectator(player);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.GULAG_SPECTATE, this)), 2L);
+                    TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.GULAG_SPECTATE, this)), 3L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.GULAG_SPECTATE, this));
             } else if (isInFight()) {
@@ -811,16 +753,22 @@ public class Profile {
         boolean hide = true;
         if (state == ProfileState.IN_LOBBY || state == ProfileState.IN_QUEUE) {
             if (this.getSettings().isShowPlayers()) {
-                hide=false;
+                hide = false;
             }
             if (party != null && party.containsPlayer(otherPlayer)) {
                 hide = false;
+            }
+            if (plugin.getEssentials().getNametagMeta().isEnabled()) {
+                TaskUtil.runAsync(() -> NameTagHandler.reloadPlayer(player, otherPlayer));
             }
         } else if (isInFight()) {
             TeamPlayer teamPlayer = match.getTeamPlayer(otherPlayer);
 
             if (teamPlayer != null && teamPlayer.isAlive()) {
                 hide = false;
+            }
+            if (plugin.getEssentials().getNametagMeta().isEnabled()) {
+                TaskUtil.runAsync(() -> NameTagHandler.reloadPlayer(player, otherPlayer));
             }
         } else if (isSpectating()) {
             if (sumo != null) {
@@ -859,6 +807,9 @@ public class Profile {
                     hide = false;
                 }
             }
+            if (plugin.getEssentials().getNametagMeta().isEnabled()) {
+                TaskUtil.runAsync(() -> NameTagHandler.reloadPlayer(player, otherPlayer));
+            }
         } else if (isInEvent()) {
             if (sumo != null) {
                 if (!sumo.getSpectators().contains(otherPlayer.getUniqueId())) {
@@ -893,6 +844,9 @@ public class Profile {
                     hide = false;
                 }
             }
+            if (plugin.getEssentials().getNametagMeta().isEnabled()) {
+                TaskUtil.runAsync(() -> NameTagHandler.reloadPlayer(player, otherPlayer));
+            }
         }
 
         if (hide) {
@@ -901,14 +855,14 @@ public class Profile {
                 public void run() {
                     player.hidePlayer(otherPlayer);
                 }
-            }.runTask(Array.getInstance());
+            }.runTask(plugin);
         } else {
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     player.showPlayer(otherPlayer);
                 }
-            }.runTask(Array.getInstance());
+            }.runTask(plugin);
         }
     }
 
@@ -926,7 +880,7 @@ public class Profile {
                         handleVisibility(player, otherPlayer);
                     }
                 }
-            }.runTaskAsynchronously(Array.getInstance());
+            }.runTaskAsynchronously(plugin);
         }
     }
 
@@ -938,7 +892,7 @@ public class Profile {
      * @param kb The knockback profile name in {@link String} format
      */
     public static void setKb(Player player, String kb) {
-       TaskUtil.runAsync(() -> Array.getInstance().getNMSManager().getKnockbackType().applyKnockback(player, kb));
+       TaskUtil.runAsync(() -> SpigotHook.getKnockbackType().applyKnockback(player, kb));
     }
 
     /**
@@ -982,7 +936,7 @@ public class Profile {
     }
 
     public String getEloLeague() {
-        return Array.getInstance().getDivisionsManager().getDivision(this);
+        return plugin.getDivisionsManager().getDivision(this);
     }
 
     public Integer getTotalWins() {
@@ -1016,9 +970,8 @@ public class Profile {
     public boolean isSpectating() {
         return state == ProfileState.SPECTATING && (
                 match != null || sumo != null ||
-                        brackets != null || lms != null ||
-                        parkour != null || gulag !=null ||
-                        OITC !=null || spleef != null);
+                brackets != null || lms != null ||
+                parkour != null || gulag !=null || spleef != null);
     }
 
     public boolean isInEvent() {
@@ -1057,15 +1010,44 @@ public class Profile {
         return state == ProfileState.IN_EVENT && gulag !=null;
     }
 
-    public boolean isInOITC() {
-        return state == ProfileState.IN_EVENT && OITC != null;
+    public boolean isInBrawl() {
+        return state == ProfileState.IN_BRAWL && brawl != null;
     }
-
+    
     public boolean isInSomeSortOfFight() {
-        return (state == ProfileState.IN_FIGHT && match != null) || (state == ProfileState.IN_EVENT);
+        return (state == ProfileState.IN_FIGHT && match != null) || (state == ProfileState.IN_EVENT) || (state == ProfileState.IN_BRAWL);
     }
 
     public boolean isBusy() {
-        return isInQueue() || isInFight() || isInEvent() || isSpectating() || isInTournament();
+        return isInQueue() || isInFight() || isInEvent() || isSpectating() || isInTournament() || isInBrawl();
+    }
+
+    private Field team_name;
+    private Field team_display;
+    private Field team_players;
+    private Field team_mode;
+    private Field team_color;
+
+    {
+        try {
+            team_name = PacketPlayOutScoreboardTeam.class.getDeclaredField("a");
+            team_name.setAccessible(true);
+            team_display = PacketPlayOutScoreboardTeam.class.getDeclaredField("b");
+            team_display.setAccessible(true);
+            Field team_prefix = PacketPlayOutScoreboardTeam.class.getDeclaredField("c");
+            team_prefix.setAccessible(true);
+            Field team_suffix = PacketPlayOutScoreboardTeam.class.getDeclaredField("d");
+            team_suffix.setAccessible(true);
+            team_players = PacketPlayOutScoreboardTeam.class.getDeclaredField("g");
+            team_players.setAccessible(true);
+            team_color = PacketPlayOutScoreboardTeam.class.getDeclaredField("f");
+            team_color.setAccessible(true);
+            team_mode = PacketPlayOutScoreboardTeam.class.getDeclaredField("h");
+            team_mode.setAccessible(true);
+            Field team_nametag = PacketPlayOutScoreboardTeam.class.getDeclaredField("e");
+            team_nametag.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
     }
 }

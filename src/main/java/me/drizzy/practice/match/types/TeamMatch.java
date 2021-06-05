@@ -4,21 +4,21 @@ import lombok.Getter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.Locale;
 import me.drizzy.practice.arena.Arena;
+import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.MatchState;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.hook.SpigotHook;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.enums.QueueType;
-import me.drizzy.practice.util.other.NameTags;
-import me.drizzy.practice.util.other.PlayerUtil;
-import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.ChatComponentBuilder;
-import net.md_5.bungee.api.ChatColor;
+import me.drizzy.practice.util.nametags.NameTagHandler;
+import me.drizzy.practice.util.other.PlayerUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -67,11 +67,6 @@ public class TeamMatch extends Match {
     }
 
     @Override
-    public boolean isRobotMatch() {
-        return false;
-    }
-
-    @Override
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
@@ -109,18 +104,12 @@ public class TeamMatch extends Match {
             profile.getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
         }
 
-        Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(player, getKit());
+        SpigotHook.getKnockbackType().appleKitKnockback(player, getKit());
+
+        NameTagHandler.reloadPlayer(player);
+        NameTagHandler.reloadOthersFor(player);
 
         Team team = getTeam(player);
-
-        for (Player friendly : team.getPlayers()) {
-            NameTags.color(player, friendly, org.bukkit.ChatColor.GREEN, getKit().getGameRules().isShowHealth());
-        }
-
-        for (Player enemy : getOpponentTeam(team).getPlayers()) {
-            NameTags.color(player, enemy, org.bukkit.ChatColor.RED, getKit().getGameRules().isShowHealth());
-        }
-
 
         Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
 
@@ -157,7 +146,7 @@ public class TeamMatch extends Match {
     public boolean onEnd() {
             for ( TeamPlayer teamPlayer : getTeamPlayers() ) {
                 if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
-                    Player player=teamPlayer.getPlayer();
+                    Player player = teamPlayer.getPlayer();
 
                     if (player != null) {
                         Profile profile=Profile.getByUuid(player.getUniqueId());
@@ -199,14 +188,13 @@ public class TeamMatch extends Match {
                             player.setFireTicks(0);
                             player.updateInventory();
 
-                            NameTags.reset(player, firstTeamPlayer.getPlayer());
+                            SpigotHook.getKnockbackType().applyDefaultKnockback(player);
 
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
                             profile.refreshHotbar();
                             profile.handleVisibility();
-                            Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
                             profile.teleportToSpawn();
                         }
                     }
@@ -217,41 +205,9 @@ public class TeamMatch extends Match {
         Team winningTeam = getWinningTeam();
         Team losingTeam = getOpponentTeam(winningTeam);
 
-        ChatComponentBuilder winnerInventories = new ChatComponentBuilder("");
-        winnerInventories.append("Winners: ").color(ChatColor.GREEN);
+        winningTeam.getPlayers().stream().map(Profile::getByPlayer).forEach(profile -> profile.getStatisticsData().get(getKit()).incrementWon());
+        losingTeam.getPlayers().stream().map(Profile::getByPlayer).forEach(profile -> profile.getStatisticsData().get(getKit()).incrementLost());
 
-        ChatComponentBuilder loserInventories = new ChatComponentBuilder("");
-        loserInventories.append("Losers: ").color(ChatColor.RED);
-
-        for (TeamPlayer teamPlayer : winningTeam.getTeamPlayers()) {
-            winnerInventories.append(teamPlayer.getUsername()).color(ChatColor.WHITE);
-            winnerInventories.setCurrentHoverEvent(getHoverEvent(teamPlayer)).setCurrentClickEvent(getClickEvent(teamPlayer)).append(", ").color(ChatColor.RED);
-        }
-
-        for (TeamPlayer teamPlayer : losingTeam.getTeamPlayers()) {
-            loserInventories.append(teamPlayer.getUsername()).color(ChatColor.WHITE);
-            loserInventories.setCurrentHoverEvent(getHoverEvent(teamPlayer))
-                    .setCurrentClickEvent(getClickEvent(teamPlayer))
-                    .append(", ")
-                    .color(ChatColor.GRAY);
-        }
-
-        winnerInventories.getCurrent().setText(winnerInventories.getCurrent().getText().substring(0,
-                winnerInventories.getCurrent().getText().length() - 2));
-        loserInventories.getCurrent().setText(loserInventories.getCurrent().getText().substring(0,
-                loserInventories.getCurrent().getText().length() - 2));
-
-        List<BaseComponent[]> components = new ArrayList<>();
-        components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
-        components.add(new ChatComponentBuilder("").parse(Locale.MATCH_INVENTORY_MESSAGE_TITLE.toString()).create());
-        components.add(new ChatComponentBuilder("").create());
-        components.add(winnerInventories.create());
-        components.add(loserInventories.create());
-        components.add(new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
-
-        for (Player player : getPlayersAndSpectators()) {
-            components.forEach(components1 -> player.spigot().sendMessage(components1));
-        }
         return true;
     }
 
@@ -270,11 +226,11 @@ public class TeamMatch extends Match {
         PlayerUtil.reset(player);
 
         if (!canEnd() && !teamPlayer.isDisconnected()) {
-            Team team = getTeam(player);
-            Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
-            player.teleport(spawn);
+
+            player.teleport(getMidSpawn());
             player.setAllowFlight(true);
             player.setFlying(true);
+
             Profile profile = Profile.getByUuid(player.getUniqueId());
             profile.refreshHotbar();
             profile.setState(ProfileState.SPECTATING);
@@ -496,18 +452,48 @@ public class TeamMatch extends Match {
             return org.bukkit.ChatColor.GREEN;
         }
 
-        Team team = getTeam(target);
-        Team viewerTeam = getTeam(viewer);
+        boolean[] booleans = new boolean[]{
+                getTeamA().containsPlayer(viewer),
+                getTeamB().containsPlayer(viewer),
+                getTeamA().containsPlayer(target),
+                getTeamB().containsPlayer(target)
+        };
 
-        if (team == null || viewerTeam == null) {
+        if ((booleans[0] && booleans[3]) || (booleans[2] && booleans[1])) {
             return org.bukkit.ChatColor.RED;
-        }
-
-        if (team.equals(viewerTeam)) {
+        } else if ((booleans[0] && booleans[2]) || (booleans[1] && booleans[3])) {
             return org.bukkit.ChatColor.GREEN;
+        } else if (getSpectators().contains(viewer)) {
+            return getTeamA().containsPlayer(target) ?  org.bukkit.ChatColor.GREEN : org.bukkit.ChatColor.RED;
         } else {
-            return org.bukkit.ChatColor.RED;
+            return ChatColor.AQUA;
         }
+    }
+
+    @Override
+    public List<BaseComponent[]> generateEndComponents(Player player) {
+        List<BaseComponent[]> componentsList = new ArrayList<>();
+
+        for ( String line : Locale.MATCH_INVENTORY_MESSAGE.toList() ) {
+            if (line.equalsIgnoreCase("<inventories>")) {
+
+                BaseComponent[] winners = generateInventoriesComponents(Locale.MATCH_INVENTORY_WINNERS.toString(), getWinningTeam().getTeamPlayers());
+                BaseComponent[] losers = generateInventoriesComponents(Locale.MATCH_INVENTORY_LOSERS.toString(), getOpponentTeam(getWinningTeam()).getTeamPlayers());
+
+                componentsList.add(winners);
+                componentsList.add(losers);
+
+                continue;
+            }
+
+            if (line.equalsIgnoreCase("<elo_changes>")) {
+                continue;
+            }
+
+            componentsList.add(new ChatComponentBuilder("").parse(line).create());
+        }
+
+        return componentsList;
     }
 
 }

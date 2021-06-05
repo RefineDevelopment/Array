@@ -1,5 +1,6 @@
 package me.drizzy.practice.duel;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.kit.Kit;
@@ -8,9 +9,7 @@ import lombok.Setter;
 
 import java.util.UUID;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 public class DuelRequest {
 
     private final UUID sender;

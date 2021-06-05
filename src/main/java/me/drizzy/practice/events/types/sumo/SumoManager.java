@@ -11,8 +11,7 @@ import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
-@Getter
-@Setter
+@Getter @Setter
 public class SumoManager {
 
 	private Sumo activeSumo;

@@ -24,6 +24,7 @@ ESSENTIAL:
   HCF_ENABLED: true
   TAB_ENABLED: true
   VOIDSPAWN_YLEVEL: 45
+  ARENA_RATING: true
   BRIDGE_CLEARBLOCKS: true
   FFA_CIRCLE_RADIUS: 10
   REMOVE_BOTTLES: true
@@ -37,6 +38,25 @@ ESSENTIAL:
     - "&7Purchase Array at &chttps://discord.gg/BpZEnwsQgY&7."
     - "&7Engage with our community at &cdiscord.link/purge&7."
     - ""
+  QUEUE_LORE:
+    - "&7&m----------------------"
+    - "&7In Queue: &c<in_queue>"
+    - "&7In Fight: &c<in_fight>"
+    - ""
+    - "&7Click to join queue."
+    - "&7&m----------------------"
+DEFAULT_SETTINGS:
+  PLAYER_HIDER: true
+  SCOREBOARD_ENABLED: true
+  DUEL_REQUESTST: true
+  ALLOW_SPECTATORS: true
+  DEATH_LIGHNING: true
+  PING_FACTOR: false
+  SCOREBOARDR_PING: true
+  SCOREBOARDR_DURATION: true
+  SCOREBOARDR_CPS: false
+  VANILLA_TAB: false
+  DROP_PROTECT: false
 SOCIAL:
   DISCORD: discord.link/purge
   STORE: store.purgecommunity.com
@@ -47,16 +67,9 @@ RANKED:
   REQUIREKILLS: true
   REQUIREDKILLS: 10
   LIMIT_PING: true
-  PING-LIMIT: 0
+  PING-LIMIT: 300
 NAMETAGS:
   ENABLED: true
   DEFAULT: <rank_color>
   PARTY: BLUE
   EVENT: AQUA
-QUEUE_LORE:
-  - "&7&m----------------------"
-  - "&7In Queue: &c{in_queue}"
-  - "&7In Fight: &c{in_fight}"
-  - ""
-  - "&7Click to join queue."
-  - "&7&m----------------------"

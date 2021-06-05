@@ -8,8 +8,7 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-@Getter
-@Setter
+@Getter @Setter
 public class ParkourPlayer {
 
 	private final UUID uuid;

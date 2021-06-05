@@ -5,6 +5,7 @@ import me.drizzy.practice.events.types.brackets.player.BracketsPlayer;
 import me.drizzy.practice.events.types.brackets.player.BracketsPlayerState;
 import me.drizzy.practice.events.types.brackets.task.BracketsRoundEndTask;
 import me.drizzy.practice.events.types.brackets.task.BracketsRoundStartTask;
+import me.drizzy.practice.hook.SpigotHook;
 import me.drizzy.practice.profile.ProfileState;
 import me.drizzy.practice.Array;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import lombok.Setter;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
+import me.drizzy.practice.util.nametags.NameTagHandler;
 import me.drizzy.practice.util.other.*;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.Clickable;
@@ -23,8 +25,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-@Getter
-@Setter
+@Getter @Setter
 public class Brackets {
 
 	@Getter @Setter private static boolean enabled = true;
@@ -198,7 +199,6 @@ public class Brackets {
 					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
 					otherProfile.handleVisibility(otherPlayer, player);
 					profile.handleVisibility(player, otherPlayer);
-					NameTags.color(player, otherPlayer, plugin.getEssentials().getNametagMeta().getEventColor(), getKit().getGameRules().isShowHealth() || getKit().getGameRules().isBuild());
 				}
 			}
 		}.runTaskAsynchronously(plugin);
@@ -232,7 +232,6 @@ public class Brackets {
 					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
 					otherProfile.handleVisibility(otherPlayer, player);
 					profile.handleVisibility(player, otherPlayer);
-					NameTags.reset(player, otherPlayer);
 				}
 			}
 		}.runTaskAsynchronously(plugin);
@@ -281,6 +280,9 @@ public class Brackets {
 				profile.setBrackets(null);
 				profile.refreshHotbar();
 				profile.teleportToSpawn();
+
+				NameTagHandler.reloadPlayer(player);
+				NameTagHandler.reloadOthersFor(player);
 			}
 		}
 
@@ -337,10 +339,10 @@ public class Brackets {
 	}
 
 	public void onJoin(Player player) {
-		plugin.getNMSManager().getKnockbackType().applyKnockback(player, plugin.getBracketsManager().getBracketsKnockbackProfile());
+		SpigotHook.getKnockbackType().applyKnockback(player, plugin.getBracketsManager().getBracketsKnockbackProfile());
 	}
 	public void onLeave(Player player) {
-		plugin.getNMSManager().getKnockbackType().applyDefaultKnockback(player);
+		SpigotHook.getKnockbackType().applyDefaultKnockback(player);
 	}
 
 	public void onRound() {

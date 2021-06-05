@@ -32,6 +32,12 @@ public class AquaCore implements RankType {
     }
 
     @Override
+    public boolean isBusy(OfflinePlayer player) {
+        PlayerData data = AquaCoreAPI.INSTANCE.getPlayerData(player.getUniqueId());
+        return data != null && (data.isVanished() || data.isInStaffMode());
+    }
+
+    @Override
     public ChatColor getRankColor(OfflinePlayer player) {
         PlayerData data = AquaCoreAPI.INSTANCE.getPlayerData(player.getUniqueId());
         return (data == null) ? ChatColor.GREEN : data.getHighestRank().getColor();

@@ -52,17 +52,16 @@ public class MatchDetailsMenu extends Menu {
             }
         }
 
-        int pos=46;
 
-        buttons.put(pos++, new HealthButton(snapshot.getHealth()));
-        buttons.put(pos++, new HungerButton(snapshot.getHunger()));
-        buttons.put(pos++, new EffectsButton(snapshot.getEffects()));
+        buttons.put(48, new HealthButton(snapshot.getHealth()));
+        buttons.put(49, new HungerButton(snapshot.getHunger()));
+        buttons.put(50, new EffectsButton(snapshot.getEffects()));
 
         if (snapshot.shouldDisplayRemainingPotions()) {
-            buttons.put(pos++, new PotionsButton(snapshot.getTeamPlayer().getUsername(), snapshot.getRemainingPotions()));
+            buttons.put(51, new PotionsButton(snapshot.getTeamPlayer().getUsername(), snapshot.getRemainingPotions()));
         }
 
-        buttons.put(pos, new StatisticsButton(snapshot.getTeamPlayer()));
+        buttons.put(47, new StatisticsButton(snapshot.getTeamPlayer()));
 
         if (this.snapshot.getSwitchTo() != null || this.opponent != null) {
             buttons.put(45, new SwitchInventoryButton(this.snapshot.getSwitchTo()));

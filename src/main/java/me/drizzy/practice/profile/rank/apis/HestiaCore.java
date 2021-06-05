@@ -28,6 +28,11 @@ public class HestiaCore implements RankType {
     }
 
     @Override
+    public boolean isBusy(OfflinePlayer player) {
+        return HestiaAPI.instance.isVanished(player.getUniqueId());
+    }
+
+    @Override
     public ChatColor getRankColor(OfflinePlayer player) {
         return HestiaAPI.instance.getRankColor(player.getUniqueId());
     }

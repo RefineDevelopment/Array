@@ -1,12 +1,15 @@
 main: me.drizzy.practice.Array
 name: Array
-version: 1.0
-authors: ["Nick", "Joeleoli", "Drizzy", "veltus5184", "Tinuy"]
+version: 2.0
+authors: ["Nick", "Joeleoli", "Drizzy", "veltus", "Tinuy"]
+description: "Most Modern and Support Friendly Practice Plugin"
 depend:
   - ProtocolLib
 softdepend:
   - HolographicDisplays
   - PlaceholderAPI
+  - ViaVersion
+  - ProtocolSupport
   - MizuCore
   - ZoomCore
   - AquaCore

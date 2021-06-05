@@ -26,6 +26,10 @@ public class TaskUtil {
         Array.getInstance().getServer().getScheduler().runTaskLater(Array.getInstance(), runnable, delay);
     }
 
+    public static void runLaterAsync(Runnable runnable, long delay) {
+        Array.getInstance().getServer().getScheduler().runTaskLaterAsynchronously(Array.getInstance(), runnable, delay);
+    }
+
     public static void runSync(Runnable runnable) {
         if (Bukkit.isPrimaryThread())
             runnable.run();

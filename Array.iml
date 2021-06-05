@@ -10,15 +10,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library name="Maven: org.projectlombok:lombok:1.18.8">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/Lombok.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.18.20" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-text:1.8" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.5" level="project" />
@@ -61,18 +53,18 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: me.allen.ziggurat:Ziggurat:1.0">
+      <library name="Maven: us.myles.ViaVersion:ViaVersion:3.2.1">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/ziggurat.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/tab/ViaVersion.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: us.myles:viaversion:2.2.3">
+      <library name="Maven: protocolsupport:ProtocolSupport:4.6">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/api/ViaAPI.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/tab/ProtocolSupport.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -132,11 +124,10 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Maven: org.jetbrains:annotations:20.1.0" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: com.boydti:fawe-api:latest">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/FAWE.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/api/FAWE.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -145,11 +136,12 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sk89q:worldedit:6.0.0-SNAPSHOT">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/WorldEdit.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/api/WorldEdit.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Maven: org.jetbrains:annotations:21.0.0" level="project" />
   </component>
 </module>

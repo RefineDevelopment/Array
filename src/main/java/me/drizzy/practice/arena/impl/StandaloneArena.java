@@ -3,19 +3,17 @@ package me.drizzy.practice.arena.impl;
 import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.enums.ArenaType;
+import me.drizzy.practice.arena.ArenaType;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.location.LocationUtil;
 import lombok.Getter;
-import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@Getter @Setter
 public class StandaloneArena extends Arena {
 
     private final List<Arena> duplicates = new ArrayList<>();

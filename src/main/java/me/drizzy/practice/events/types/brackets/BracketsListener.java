@@ -1,20 +1,11 @@
 package me.drizzy.practice.events.types.brackets;
 
 import me.drizzy.practice.Locale;
-import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.arena.impl.TheBridgeArena;
-import me.drizzy.practice.hotbar.Hotbar;
-import me.drizzy.practice.enums.HotbarType;
-import me.drizzy.practice.Array;
-import me.drizzy.practice.kit.KitInventory;
-import me.drizzy.practice.match.Match;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.inventory.ItemBuilder;
-import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.other.Cooldown;
 import me.drizzy.practice.util.other.TimeUtil;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Player;

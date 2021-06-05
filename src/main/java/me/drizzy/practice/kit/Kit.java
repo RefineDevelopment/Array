@@ -4,77 +4,103 @@ import com.mongodb.client.model.Sorts;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
-import me.drizzy.practice.kiteditor.KitEditRules;
+import me.drizzy.practice.api.events.leaderboards.KitLeaderboardsUpdateEvent;
+import me.drizzy.practice.queue.QueueType;
+import me.drizzy.practice.leaderboards.LeaderboardsAdapter;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.queue.Queue;
-import me.drizzy.practice.enums.QueueType;
-import me.drizzy.practice.leaderboards.LeaderboardsAdapter;
 import me.drizzy.practice.util.chat.CC;
-import me.drizzy.practice.util.inventory.InventoryUtil;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
+import me.drizzy.practice.util.inventory.InventoryUtil;
 import me.drizzy.practice.util.inventory.ItemBuilder;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
-public class Kit {
+/**
+ * This Project is the property of Purge Community © 2021
+ * Redistribution of this Project is not allowed
+ *
+ * @author Drizzy
+ * Created at 5/21/2021
+ * Project: Array
+ */
 
+
+@Getter @Setter
+public class Kit {
+    
     @Getter private static final List<Kit> kits = new ArrayList<>();
+    
+    private static final Array plugin = Array.getInstance();
+    @Getter @Setter private static Kit HCFTeamFight;
+
     private final List<LeaderboardsAdapter> rankedEloLeaderboards = new ArrayList<>();
     private final List<LeaderboardsAdapter> winLeaderboards = new ArrayList<>();
     private final List<LeaderboardsAdapter> killsLeaderboards = new ArrayList<>();
+    private final List<ItemStack> editorItems = new ArrayList<>();
 
-    private final String name;
-    private final KitInventory kitInventory= new KitInventory();
-    private final KitEditRules editRules = new KitEditRules();
+    private final KitInventory kitInventory = new KitInventory();
     private final KitGameRules gameRules = new KitGameRules();
 
-    private Queue unrankedQueue;
-    private Queue rankedQueue;
+    private final String name;
     private boolean enabled;
     private String knockbackProfile;
     private ItemStack displayIcon;
     private String displayName;
+    private Queue unrankedQueue;
+    private Queue rankedQueue;
+    private Queue clanQueue;
 
     public Kit(String name) {
         this.name = name;
         this.displayName = CC.RED + name;
         this.displayIcon = new ItemStack(Material.DIAMOND_CHESTPLATE);
         this.knockbackProfile = "default";
+
+        kits.add(this);
     }
 
     public void delete() {
         kits.remove(this);
+
         Queue.getQueues().remove(rankedQueue);
-        Queue.getQueues().remove(unrankedQueue);
-        Array.getInstance().getKitsConfig().getConfiguration().set("kits." + getName(), null);
-        try {
-            Array.getInstance().getKitsConfig().getConfiguration().save(Array.getInstance().getKitsConfig().getFile());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        if (rankedQueue != null )Queue.getQueues().remove(unrankedQueue);
+        if (clanQueue != null) Queue.getQueues().remove(clanQueue);
+
+        plugin.getKitsConfig().getConfiguration().set("kits." + getName(), null);
+        plugin.getKitsConfig().save();
+        
     }
 
     public static void preload() {
-        FileConfiguration config = Array.getInstance().getKitsConfig().getConfiguration();
+        FileConfiguration config = plugin.getKitsConfig().getConfiguration();
+
+        if (plugin.getEssentials().getMeta().isHCFEnabled()) {
+            HCFTeamFight = new Kit("HCFTeamFight");
+            HCFTeamFight.setDisplayIcon(new ItemBuilder(Material.BEACON).clearEnchantments().clearFlags().build());
+            HCFTeamFight.save();
+        }
+
         for (String key : config.getConfigurationSection("kits").getKeys(false)) {
             String path = "kits." + key;
 
             Kit kit = new Kit(key);
+
             kit.setDisplayName(CC.RED + kit.getName());
             kit.setEnabled(config.getBoolean(path + ".enabled"));
+
             if (config.contains(path + ".display-name")) {
                 kit.setDisplayName(CC.translate(config.getString(path + ".display-name")));
             }
+
             kit.setKnockbackProfile(config.getString(path + ".knockback-profile"));
 
             kit.setDisplayIcon(new ItemBuilder(Material.valueOf(config.getString(path + ".icon.material")))
@@ -94,44 +120,42 @@ public class Kit {
             }
 
             kit.getGameRules().setRanked(config.getBoolean(path + ".game-rules.ranked"));
-            kit.getGameRules().setDisablePartyFFA(config.getBoolean(path + ".game-rules.disablePartyFFA"));
-            kit.getGameRules().setDisablePartySplit(config.getBoolean(path + ".game-rules.disablePartySplit"));
+            kit.getGameRules().setClan(config.getBoolean(path + ".game-rules.clan"));
+            kit.getGameRules().setDisablePartyFFA(!config.getBoolean(path + ".game-rules.party-ffa"));
+            kit.getGameRules().setDisablePartySplit(!config.getBoolean(path + ".game-rules.party-split"));
             kit.getGameRules().setEditable(config.getBoolean(path + ".game-rules.editable"));
-            kit.getGameRules().setAntiFoodLoss(config.getBoolean(path + ".game-rules.antiFoodLoss"));
+            kit.getGameRules().setAntiFoodLoss(!config.getBoolean(path + ".game-rules.hunger"));
             kit.getGameRules().setNoItems(config.getBoolean(path + ".game-rules.noItems"));
             kit.getGameRules().setBuild(config.getBoolean(path + ".game-rules.build"));
             kit.getGameRules().setBridge(config.getBoolean(path + ".game-rules.bridge"));
             kit.getGameRules().setSpleef(config.getBoolean(path + ".game-rules.spleef"));
             kit.getGameRules().setParkour(config.getBoolean(path + ".game-rules.parkour"));
             kit.getGameRules().setCombo(config.getBoolean(path + ".game-rules.combo"));
-            kit.getGameRules().setStickSpawn(config.getBoolean(path + ".game-rules.stickSpawn"));
-            kit.getGameRules().setVoidSpawn(config.getBoolean(path + ".game-rules.voidSpawn"));
-            kit.getGameRules().setDisableFallDamage(config.getBoolean(path + ".game-rules.disable-fall-damage"));
+            kit.getGameRules().setStickSpawn(config.getBoolean(path + ".game-rules.stickspawn"));
+            kit.getGameRules().setVoidSpawn(config.getBoolean(path + ".game-rules.voidspawn"));
+            kit.getGameRules().setDisableFallDamage(!config.getBoolean(path + ".game-rules.fall-damage"));
             kit.getGameRules().setSumo(config.getBoolean(path + ".game-rules.sumo"));
-            kit.getGameRules().setMlgRush(config.getBoolean(path + ".game-rules.mlgRush"));
-            kit.getGameRules().setBoxUHC(config.getBoolean(path + ".game-rules.boxUHC"));
+            kit.getGameRules().setMlgRush(config.getBoolean(path + ".game-rules.mlgrush"));
+            kit.getGameRules().setBoxUHC(config.getBoolean(path + ".game-rules.boxuhc"));
             kit.getGameRules().setTimed(config.getBoolean(path + ".game-rules.timed"));
             kit.getGameRules().setWaterKill(config.getBoolean(path + ".game-rules.water-kill"));
             kit.getGameRules().setLavaKill(config.getBoolean(path + ".game-rules.lava-kill"));
-            kit.getGameRules().setHealthRegeneration(config.getBoolean(path + ".game-rules.health-regeneration"));
-            kit.getGameRules().setInfiniteSpeed(config.getBoolean(path + ".game-rules.infinite-speed"));
-            kit.getGameRules().setInfiniteStrength(config.getBoolean(path + ".game-rules.infinite-strength"));
+            kit.getGameRules().setHealthRegeneration(config.getBoolean(path + ".game-rules.health-regen"));
+            kit.getGameRules().setInfiniteSpeed(config.getBoolean(path + ".game-rules.speed"));
+            kit.getGameRules().setInfiniteStrength(config.getBoolean(path + ".game-rules.strength"));
             kit.getGameRules().setShowHealth(config.getBoolean(path + ".game-rules.show-health"));
             kit.getGameRules().setBowHP(config.getBoolean(path + ".game-rules.bow-hp"));
             kit.getGameRules().setHitDelay(config.getInt(path + ".game-rules.hit-delay"));
-            kit.getEditRules().setAllowPotionFill(config.getBoolean(".edit-rules.allow-potion-fill"));
 
             if (config.getConfigurationSection(path + ".edit-rules.items") != null) {
                 for (String itemKey : config.getConfigurationSection(path + ".edit-rules.items").getKeys(false)) {
-                    kit.getEditRules().getEditorItems().add(
+                    kit.getEditorItems().add(
                             new ItemBuilder(Material.valueOf(config.getString(path + ".edit-rules.items." + itemKey + ".material")))
                                     .durability(config.getInt(path + ".edit-rules.items." + itemKey + ".durability"))
                                     .amount(config.getInt(path + ".edit-rules.items." + itemKey + ".amount"))
                                     .build());
                 }
             }
-
-            kits.add(kit);
         }
 
         kits.forEach(kit -> {
@@ -140,19 +164,17 @@ public class Kit {
                 if (kit.getGameRules().isRanked()) {
                     kit.setRankedQueue(new Queue(kit, QueueType.RANKED));
                 }
+                if (kit.getGameRules().isClan()) {
+                    kit.setClanQueue(new Queue(kit, QueueType.CLAN));
+                }
             }
         });
 
         try {
             Kit.getKits().forEach(Kit::updateKitLeaderboards);
         } catch (Exception e) {
-            Array.logger(CC.CHAT_BAR);
-            Array.logger("            &4&lMongo Internal Error");
-            Array.logger("      &cKit Leaderboards could not be loaded!");
-            Array.logger("       &cPlease check your mongo and try again.");
-            Array.logger("             &4&lDisabling Array");
-            Array.logger(CC.CHAT_BAR);
-            Bukkit.getPluginManager().disablePlugin(Array.getInstance());
+            Array.logger("&cThere was an error loading Leaderboards, Disabling Array!");
+            Array.getInstance().shutDown();
         }
     }
 
@@ -173,7 +195,7 @@ public class Kit {
     public void save() {
         String path = "kits." + name;
 
-        BasicConfigurationFile configFile = Array.getInstance().getKitsConfig();
+        BasicConfigurationFile configFile = plugin.getKitsConfig();
         configFile.getConfiguration().set(path + ".enabled", enabled);
         configFile.getConfiguration().set(path + ".display-name", displayName);
         configFile.getConfiguration().set(path + ".knockback-profile", knockbackProfile);
@@ -183,32 +205,32 @@ public class Kit {
         configFile.getConfiguration().set(path + ".loadout.contents", InventoryUtil.serializeInventory(kitInventory.getContents()));
         configFile.getConfiguration().set(path + ".loadout.effects", InventoryUtil.serializeEffects(kitInventory.getEffects()));
         configFile.getConfiguration().set(path + ".game-rules.ranked", gameRules.isRanked());
-        configFile.getConfiguration().set(path + ".game-rules.disablePartyFFA", gameRules.isDisablePartyFFA());
-        configFile.getConfiguration().set(path + ".game-rules.disablePartySplit", gameRules.isDisablePartySplit());
+        configFile.getConfiguration().set(path + ".game-rules.clan", gameRules.isClan());
+        configFile.getConfiguration().set(path + ".game-rules.party-ffa", !gameRules.isDisablePartyFFA());
+        configFile.getConfiguration().set(path + ".game-rules.party-split", !gameRules.isDisablePartySplit());
         configFile.getConfiguration().set(path + ".game-rules.editable", gameRules.isEditable());
-        configFile.getConfiguration().set(path + ".game-rules.antiFoodLoss", gameRules.isAntiFoodLoss());
-        configFile.getConfiguration().set(path + ".game-rules.noItems", gameRules.isNoItems());
+        configFile.getConfiguration().set(path + ".game-rules.hunger", !gameRules.isAntiFoodLoss());
+        configFile.getConfiguration().set(path + ".game-rules.noitems", gameRules.isNoItems());
         configFile.getConfiguration().set(path + ".game-rules.build", gameRules.isBuild());
         configFile.getConfiguration().set(path + ".game-rules.bridge", gameRules.isBridge());
         configFile.getConfiguration().set(path + ".game-rules.spleef", gameRules.isSpleef());
         configFile.getConfiguration().set(path + ".game-rules.parkour", gameRules.isParkour());
-        configFile.getConfiguration().set(path + ".game-rules.disable-fall-damage", gameRules.isDisableFallDamage());
-        configFile.getConfiguration().set(path + ".game-rules.stickSpawn", gameRules.isStickSpawn());
-        configFile.getConfiguration().set(path + ".game-rules.voidSpawn", gameRules.isVoidSpawn());
+        configFile.getConfiguration().set(path + ".game-rules.fall-damage", !gameRules.isDisableFallDamage());
+        configFile.getConfiguration().set(path + ".game-rules.stickspawn", gameRules.isStickSpawn());
+        configFile.getConfiguration().set(path + ".game-rules.voidspawn", gameRules.isVoidSpawn());
         configFile.getConfiguration().set(path + ".game-rules.mlgrush", gameRules.isMlgRush());
         configFile.getConfiguration().set(path + ".game-rules.combo", gameRules.isCombo());
         configFile.getConfiguration().set(path + ".game-rules.sumo", gameRules.isSumo());
-        configFile.getConfiguration().set(path + ".game-rules.boxUHC", gameRules.isBoxUHC());
+        configFile.getConfiguration().set(path + ".game-rules.boxuhc", gameRules.isBoxUHC());
         configFile.getConfiguration().set(path + ".game-rules.timed", gameRules.isTimed());
         configFile.getConfiguration().set(path + ".game-rules.water-kill", gameRules.isWaterKill());
         configFile.getConfiguration().set(path + ".game-rules.lava-kill", gameRules.isLavaKill());
         configFile.getConfiguration().set(path + ".game-rules.health-regeneration", gameRules.isHealthRegeneration());
-        configFile.getConfiguration().set(path + ".game-rules.infinite-speed", gameRules.isInfiniteSpeed());
-        configFile.getConfiguration().set(path + ".game-rules.infinite-strength", gameRules.isInfiniteStrength());
+        configFile.getConfiguration().set(path + ".game-rules.speed", gameRules.isInfiniteSpeed());
+        configFile.getConfiguration().set(path + ".game-rules.strength", gameRules.isInfiniteStrength());
         configFile.getConfiguration().set(path + ".game-rules.show-health", gameRules.isShowHealth());
         configFile.getConfiguration().set(path + ".game-rules.hit-delay", gameRules.getHitDelay());
         configFile.getConfiguration().set(path + ".game-rules.bow-hp", gameRules.isBowHP());
-        configFile.getConfiguration().set(path + ".edit-rules.allow-potion-fill", editRules.isAllowPotionFill());
 
         try {
             configFile.getConfiguration().save(configFile.getFile());
@@ -220,7 +242,7 @@ public class Kit {
     public void updateKitLeaderboards() {
         if (!this.getRankedEloLeaderboards().isEmpty()) this.getRankedEloLeaderboards().clear();
         if (!this.getWinLeaderboards().isEmpty()) this.getWinLeaderboards().clear();
-        Array.getInstance().getMongoThread().execute(() -> {
+        plugin.getMongoThread().execute(() -> {
             for (Document document : Profile.getCollection().find().sort(Sorts.descending("kitStatistics." + getName() + ".elo")).limit(10).into(new ArrayList<>())) {
                 Document kitStatistics = (Document) document.get("kitStatistics");
                 if (kitStatistics.containsKey(getName())) {
@@ -228,7 +250,9 @@ public class Kit {
                     LeaderboardsAdapter leaderboardsAdapter= new LeaderboardsAdapter();
                     leaderboardsAdapter.setName((String) document.get("name"));
                     leaderboardsAdapter.setElo((Integer) kitDocument.get("elo"));
-                    rankedEloLeaderboards.removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
+                    if (!getRankedEloLeaderboards().isEmpty()) {
+                        getRankedEloLeaderboards().removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
+                    }
                     this.getRankedEloLeaderboards().add(leaderboardsAdapter);
                 }
             }
@@ -236,29 +260,26 @@ public class Kit {
                 Document kitStatistics = (Document) document.get("kitStatistics");
                 if (kitStatistics.containsKey(getName())) {
                     Document kitDocument = (Document) kitStatistics.get(getName());
-                    LeaderboardsAdapter leaderboardsAdapter= new LeaderboardsAdapter();
+                    LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
                     leaderboardsAdapter.setName((String) document.get("name"));
                     leaderboardsAdapter.setElo((Integer) kitDocument.get("won"));
-                    winLeaderboards.removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
+                    if (!getWinLeaderboards().isEmpty()) {
+                        getWinLeaderboards().removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
+                    }
                     this.getWinLeaderboards().add(leaderboardsAdapter);
                 }
             }
             });
+        new KitLeaderboardsUpdateEvent().call();
     }
 
     public boolean isParty() {
-        if (!gameRules.isDisablePartyFFA() && !gameRules.isParkour() && !gameRules.isBridge() && !gameRules.isDisablePartySplit() && isEnabled()) {
-            return true;
-        } else {
-            return false;
-        }
+        return (!gameRules.isDisablePartyFFA() && !gameRules.isParkour() && !gameRules.isBridge() && !gameRules.isDisablePartySplit() && isEnabled());
     }
 
-    /*public void applyToRobot(Robot robot) {
-        robot.getPlayer().getInventory().setContents(getKitInventory().getContents());
-        robot.getPlayer().getInventory().setArmorContents(getKitInventory().getArmor());
-        robot.getPlayer().updateInventory();
-        Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(robot.getPlayer(), this);
-    }*/
-
+    public void applyToPlayer(Player player) {
+        player.getInventory().setArmorContents(getKitInventory().getArmor());
+        player.getInventory().setContents(getKitInventory().getContents());
+        player.updateInventory();
+    }
 }

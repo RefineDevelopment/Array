@@ -6,10 +6,6 @@ import org.bukkit.Bukkit;
 
 public class Rank {
 
-    public Rank() {
-     preLoad();
-    }
-
     public static void preLoad() {
         if (Bukkit.getPluginManager().getPlugin("AquaCore") != null) {
             Array.getInstance().setRankManager(new AquaCore());

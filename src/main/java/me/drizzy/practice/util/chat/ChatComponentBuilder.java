@@ -138,11 +138,9 @@ public class ChatComponentBuilder extends ComponentBuilder {
         return this;
     }
 
-    public ChatComponentBuilder append(String text, BaseComponent[] hover) {
-        this.append(text);
-
-        if (hover != null) {
-            this.getCurrent().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover));
+    public ChatComponentBuilder append(BaseComponent[] components) {
+        for (BaseComponent component : components) {
+            append((TextComponent) component);
         }
 
         return this;

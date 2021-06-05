@@ -2,6 +2,7 @@ package me.drizzy.practice.match.task;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.Locale;
+import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchState;
 import me.drizzy.practice.util.chat.CC;
@@ -35,11 +36,9 @@ public class MatchStartTask extends BukkitRunnable {
                 match.setState(MatchState.FIGHTING);
                 match.setStartTimestamp(System.currentTimeMillis());
                 match.broadcastMessage(Locale.MATCH_STARTED.toString());
-                if (Array.getInstance().getEssentials().getMeta().isDisclaimerEnabled()) {
+                if (Essentials.getMeta().isDisclaimerEnabled()) {
                     match.broadcastMessage("");
-                    for ( String string : Locale.MATCH_DISCLAIMER.toList()) {
-                        match.broadcastMessage(CC.translate(string));
-                    }
+                    Locale.MATCH_DISCLAIMER.toList().forEach(match::broadcastMessage);
                 }
                 match.broadcastSound(Sound.LEVEL_UP);
                 cancel();
@@ -76,7 +75,7 @@ public class MatchStartTask extends BukkitRunnable {
                     match.setState(MatchState.FIGHTING);
                     match.setStartTimestamp(System.currentTimeMillis());
                     match.broadcastMessage(Locale.MATCH_STARTED.toString());
-                    if (Array.getInstance().getEssentials().getMeta().isDisclaimerEnabled()) {
+                    if (Essentials.getMeta().isDisclaimerEnabled()) {
                         match.broadcastMessage("");
                         for ( String string : Locale.MATCH_DISCLAIMER.toList()) {
                             match.broadcastMessage(CC.translate(string));

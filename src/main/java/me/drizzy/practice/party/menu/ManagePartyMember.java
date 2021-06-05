@@ -1,6 +1,6 @@
 package me.drizzy.practice.party.menu;
 
-import me.drizzy.practice.enums.PartyManageType;
+import me.drizzy.practice.party.enums.PartyManageType;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.profile.Profile;
 import org.bukkit.event.inventory.ClickType;

@@ -16,9 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * This Project is the property of Purge Community © 2021
+ * Redistribution of this Project is not allowed
+ *
  * @author Drizzy
  * Created at 4/13/2021
+ * Project: Array
  */
+
 public class GlobalLeaderboardsButton extends Button {
 
     @Override

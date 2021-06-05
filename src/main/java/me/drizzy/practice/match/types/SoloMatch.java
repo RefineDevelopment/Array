@@ -4,27 +4,30 @@ import lombok.Getter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.Locale;
 import me.drizzy.practice.arena.Arena;
+import me.drizzy.practice.clan.Clan;
+import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.MatchState;
 import me.drizzy.practice.match.team.Team;
 import me.drizzy.practice.match.team.TeamPlayer;
+import me.drizzy.practice.hook.SpigotHook;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
-import me.drizzy.practice.profile.meta.ProfileRematchData;
+import me.drizzy.practice.duel.RematchProcedure;
 import me.drizzy.practice.queue.Queue;
-import me.drizzy.practice.enums.QueueType;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.chat.ChatComponentBuilder;
 import me.drizzy.practice.util.elo.EloUtil;
-import me.drizzy.practice.util.other.NameTags;
+import me.drizzy.practice.util.nametags.NameTagHandler;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.other.TaskUtil;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -39,6 +42,9 @@ public class SoloMatch extends Match {
 
     private final TeamPlayer playerA;
     private final TeamPlayer playerB;
+
+    private String eloMessage;
+    private String specMessage;
 
     public SoloMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
         super(queue, kit, arena, queueType);
@@ -69,11 +75,6 @@ public class SoloMatch extends Match {
 
     @Override
     public boolean isTheBridgeMatch() {
-        return false;
-    }
-
-    @Override
-    public boolean isRobotMatch() {
         return false;
     }
 
@@ -112,7 +113,7 @@ public class SoloMatch extends Match {
             player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 1));
         }
 
-        Array.getInstance().getNMSManager().getKnockbackType().appleKitKnockback(player, getKit());
+        SpigotHook.getKnockbackType().appleKitKnockback(player, getKit());
 
         Location spawn = playerA.equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
 
@@ -127,7 +128,9 @@ public class SoloMatch extends Match {
             teamPlayer.setParkourCheckpoint(spawn);
         }
 
-        NameTags.color(player, this.getOpponentPlayer(player), org.bukkit.ChatColor.RED, this.getKit().getGameRules().isBuild() || this.getKit().getGameRules().isShowHealth());
+        NameTagHandler.reloadPlayer(player);
+        NameTagHandler.reloadOthersFor(player);
+
     }
 
     @Override
@@ -187,42 +190,32 @@ public class SoloMatch extends Match {
                             player.setFireTicks(0);
                             player.updateInventory();
 
-                            NameTags.reset(player, opponent);
+                            SpigotHook.getKnockbackType().applyDefaultKnockback(player);
 
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
                             profile.refreshHotbar();
                             profile.handleVisibility();
-                            Array.getInstance().getNMSManager().getKnockbackType().applyDefaultKnockback(player);
-                            if (opponent != null) {
-                                profile.setRematchData(new ProfileRematchData(rematchKey, player.getUniqueId(),
-                                opponent.getUniqueId(), getKit(), getArena()));
-                            }
                             profile.teleportToSpawn();
+
+                            getEntities().forEach(Entity::remove);
+                            getDroppedItems().forEach(Entity::remove);
+
+                            if (opponent != null) {
+                                profile.setRematchData(new RematchProcedure(rematchKey, player.getUniqueId(), opponent.getUniqueId(), getKit(), getArena()));
+                            }
                         }
                     }
                 }
             }
-        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : 70L);
+        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isSumo() || getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : 70L);
 
         Player winningPlayer = getWinningPlayer();
         Player losingPlayer = getOpponentPlayer(winningPlayer);
 
         TeamPlayer winningTeamPlayer = getTeamPlayer(winningPlayer);
         TeamPlayer losingTeamPlayer = getTeamPlayer(losingPlayer);
-
-
-        ChatComponentBuilder inventoriesBuilder = new ChatComponentBuilder("");
-
-        inventoriesBuilder.append("Winner: ").color(ChatColor.GREEN).append(winningPlayer.getName()).color(ChatColor.WHITE);
-        inventoriesBuilder.setCurrentHoverEvent(getHoverEvent(winningTeamPlayer)).setCurrentClickEvent(getClickEvent(winningTeamPlayer)).append(" - ").color(ChatColor.GRAY).append("Loser: ").color(ChatColor.RED).append(losingPlayer.getName()).color(ChatColor.WHITE);
-        inventoriesBuilder.setCurrentHoverEvent(getHoverEvent(losingTeamPlayer)).setCurrentClickEvent(getClickEvent(losingTeamPlayer));
-
-        List<BaseComponent[]> components = new ArrayList<>();
-        components.add(new ChatComponentBuilder("").parse(Locale.MATCH_INVENTORY_MESSAGE_TITLE.toString()).create());
-        components.add(inventoriesBuilder.create());
-
 
         Profile winningProfile = Profile.getByUuid(winningPlayer.getUniqueId());
         Profile losingProfile = Profile.getByUuid(losingPlayer.getUniqueId());
@@ -231,7 +224,6 @@ public class SoloMatch extends Match {
             winningProfile.getStatisticsData().get(getKit()).incrementWon();
             losingProfile.getStatisticsData().get(getKit()).incrementLost();
         }
-
 
         if (getQueueType() == QueueType.RANKED) {
             int oldWinnerElo = winningTeamPlayer.getElo();
@@ -247,19 +239,51 @@ public class SoloMatch extends Match {
             losingProfile.getStatisticsData().get(getKit()).incrementLost();
 
             winningProfile.calculateGlobalElo();
-            winningProfile.save();
+            TaskUtil.runAsync(winningProfile::save);
 
             losingProfile.calculateGlobalElo();
-            losingProfile.save();
+            TaskUtil.runAsync(losingProfile::save);
 
-            int winnerEloChange=newWinnerElo - oldWinnerElo;
-            int loserEloChange=oldLoserElo - newLoserElo;
+            int winnerEloChange = newWinnerElo - oldWinnerElo;
+            int loserEloChange = oldLoserElo - newLoserElo;
 
-            components.add(new ChatComponentBuilder("")
-                    .parse("&a" + winningPlayer.getName() + " +" + winnerEloChange + " (" +
-                            newWinnerElo + ") &7⎜ &c" + losingPlayer.getName() + " -" + loserEloChange + " (" + newLoserElo +
-                            ")")
-                    .create());
+            eloMessage = Locale.MATCH_ELO_CHANGES.toString()
+                    .replace("<winner_name>", winningPlayer.getName())
+                    .replace("<winner_elo_change>", String.valueOf(winnerEloChange))
+                    .replace("<winner_elo>", String.valueOf(newWinnerElo))
+                    .replace("<loser_name>", winningPlayer.getName())
+                    .replace("<loser_elo_change>", String.valueOf(loserEloChange))
+                    .replace("<loser_elo>", String.valueOf(newLoserElo));
+        }
+
+        if (getQueueType() == QueueType.CLAN) {
+            Clan winningClan = winningProfile.getClan();
+            Clan losingClan = losingProfile.getClan();
+
+            int oldWinnerElo = winningClan.getElo();
+            int oldLoserElo = losingClan.getElo();
+
+            int newWinnerElo = EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
+            int newLoserElo = EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
+
+            winningClan.setElo(newWinnerElo);
+            losingClan.setElo(newLoserElo);
+
+            winningClan.setWins(winningClan.getWins() + 1);
+            winningClan.setWinStreak(winningClan.getWinStreak() + 1);
+            losingClan.setLosses(losingClan.getLosses() + 1);
+            losingClan.setWinStreak(0);
+
+            int winnerEloChange = newWinnerElo - oldWinnerElo;
+            int loserEloChange = oldLoserElo - newLoserElo;
+
+            eloMessage = Locale.MATCH_ELO_CHANGES.toString()
+                    .replace("<winner_name>", winningPlayer.getName())
+                    .replace("<winner_elo_change>", String.valueOf(winnerEloChange))
+                    .replace("<winner_elo>", String.valueOf(newWinnerElo))
+                    .replace("<loser_name>", winningPlayer.getName())
+                    .replace("<loser_elo_change>", String.valueOf(loserEloChange))
+                    .replace("<loser_elo>", String.valueOf(newLoserElo));
         }
 
         StringBuilder builder = new StringBuilder();
@@ -279,28 +303,15 @@ public class SoloMatch extends Match {
                         } else {
                             builder.append(CC.GRAY).append(spectator.getName()).append(CC.GRAY).append(", ");
                         }
-
                     }
                 }
             }
+
             if (specs.size() >= 1) {
-                components.add(new ChatComponentBuilder("").parse("&cSpectators (" + specs.size() + "): &7" + builder.substring(0, builder.length())).create());
+                specMessage = Locale.MATCH_SPEC_MESSAGE.toString()
+                        .replace("<spec_size>", String.valueOf(specs.size()))
+                        .replace("<spectators>", builder.substring(0, builder.length()));
             }
-        }
-
-        List<BaseComponent[]> CHAT_BAR = new ArrayList<>();
-        CHAT_BAR.add(0, new ChatComponentBuilder("").parse(CC.GRAY + CC.STRIKE_THROUGH + "------------------------------------------------").create());
-
-        for (Player player : new Player[]{winningPlayer, losingPlayer}) {
-            CHAT_BAR.forEach(components1 -> player.spigot().sendMessage(components1));
-            components.forEach(components1 -> player.spigot().sendMessage(components1));
-            CHAT_BAR.forEach(components1 -> player.spigot().sendMessage(components1));
-        }
-
-        for (Player player : this.getSpectators()) {
-            CHAT_BAR.forEach(components1 -> player.spigot().sendMessage(components1));
-            components.forEach(components1 -> player.spigot().sendMessage(components1));
-            CHAT_BAR.forEach(components1 -> player.spigot().sendMessage(components1));
         }
 
         return true;
@@ -471,7 +482,7 @@ public class SoloMatch extends Match {
 
             for (Player otherPlayer : getPlayersAndSpectators()) {
                 Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
-                TaskUtil.runLater(() -> profile.handleVisibility(otherPlayer, deadPlayer), 10L);
+                TaskUtil.runLater(() -> profile.handleVisibility(otherPlayer, deadPlayer), 3L);
             }
     }
 
@@ -486,6 +497,65 @@ public class SoloMatch extends Match {
             return org.bukkit.ChatColor.GREEN;
         }
 
-        return org.bukkit.ChatColor.RED;
+        boolean[] booleans = new boolean[]{
+                getTeamPlayerA().getUuid().equals(viewer.getUniqueId()),
+                getTeamPlayerB().getUuid().equals(viewer.getUniqueId()),
+                getTeamPlayerA().getUuid().equals(target.getUniqueId()),
+                getTeamPlayerB().getUuid().equals(target.getUniqueId())
+        };
+
+        if ((booleans[0] && booleans[3]) || (booleans[2] && booleans[1])) {
+            return org.bukkit.ChatColor.RED;
+        } else if ((booleans[0] && booleans[2]) || (booleans[1] && booleans[3])) {
+            return org.bukkit.ChatColor.GREEN;
+        } else if (getSpectators().contains(viewer)) {
+            return getTeamPlayerA().getUuid().equals(target.getUniqueId()) ? org.bukkit.ChatColor.GREEN : org.bukkit.ChatColor.RED;
+        } else {
+            return org.bukkit.ChatColor.AQUA;
+        }
+    }
+
+    @Override
+    public List<BaseComponent[]> generateEndComponents(Player player) {
+        List<BaseComponent[]> componentsList = new ArrayList<>();
+
+        for ( String line : Locale.MATCH_INVENTORY_MESSAGE.toList() ) {
+            if (line.equalsIgnoreCase("<inventories>")) {
+
+                BaseComponent[] winners = generateInventoriesComponents(Locale.MATCH_INVENTORY_WINNER.toString(), getTeamPlayer(getWinningPlayer()));
+                BaseComponent[] losers = generateInventoriesComponents(Locale.MATCH_INVENTORY_LOSER.toString(), getOpponentTeamPlayer(getWinningPlayer()));
+
+                ChatComponentBuilder builder = new ChatComponentBuilder("");
+
+                for ( BaseComponent component : winners ) {
+                    builder.append((TextComponent) component);
+                }
+
+                builder.append(new ChatComponentBuilder(Locale.MATCH_INVENTORY_SPLITTER.toString()).create());
+
+                for ( BaseComponent component : losers ) {
+                    builder.append((TextComponent) component);
+                }
+
+                componentsList.add(builder.create());
+
+                continue;
+            }
+
+            if (line.equalsIgnoreCase("<elo_changes>")) {
+                if (getQueueType().equals(QueueType.RANKED)) {
+                    componentsList.add(new ChatComponentBuilder("").parse(eloMessage).create());
+                }
+                continue;
+            }
+
+            if (specMessage != null) {
+                componentsList.add(new ChatComponentBuilder("").parse(specMessage).create());
+            }
+
+            componentsList.add(new ChatComponentBuilder("").parse(line).create());
+        }
+
+        return componentsList;
     }
 }

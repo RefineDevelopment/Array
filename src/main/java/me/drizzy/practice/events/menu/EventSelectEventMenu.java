@@ -2,14 +2,9 @@ package me.drizzy.practice.events.menu;
 
 import lombok.AllArgsConstructor;
 import me.drizzy.practice.Locale;
-import me.drizzy.practice.enums.EventType;
-import me.drizzy.practice.events.types.gulag.command.GulagHostCommand;
+import me.drizzy.practice.cmds.event.*;
+import me.drizzy.practice.events.EventType;
 import org.bukkit.Material;
-import me.drizzy.practice.events.types.brackets.command.BracketsHostCommand;
-import me.drizzy.practice.events.types.lms.command.LMSHostCommand;
-import me.drizzy.practice.events.types.parkour.command.ParkourHostCommand;
-import me.drizzy.practice.events.types.spleef.command.SpleefHostCommand;
-import me.drizzy.practice.events.types.sumo.command.SumoHostCommand;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.inventory.ItemBuilder;
 import me.drizzy.practice.util.menu.Button;
@@ -33,6 +28,8 @@ public class EventSelectEventMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
+
+        //TODO: Recode this
         final List<Integer> occupied = new ArrayList<>();
         final int[] taken = {11,12,13,14,15,20,21,22,23,24,29,30,31,32,33};
         for ( int take : taken ) {
@@ -43,6 +40,7 @@ public class EventSelectEventMenu extends Menu {
                 buttons.put(glassslots, new GlassButton());
             }
         }
+
         buttons.put(31, new SelectEventButton(EventType.LMS));
         buttons.put(13, new SelectEventButton(EventType.BRACKETS));
         buttons.put(12, new SelectEventButton(EventType.SUMO));
@@ -62,62 +60,70 @@ public class EventSelectEventMenu extends Menu {
             List<String> lore=new ArrayList<>();
             lore.add(CC.MENU_BAR);
             switch (eventType.getTitle()) {
-                case "&c&lBrackets":
+                case "&c&lBrackets" : {
                     lore.add(CC.GRAY + "Fight through rounds and");
                     lore.add(CC.GRAY + "beat your opponent in 1v1");
                     lore.add(CC.GRAY + "duels. The last player wins!");
                     lore.add("");
                     lore.add("&cClick to host...");
                     break;
-                case "&c&lSumo":
+                }
+                case "&c&lSumo" : {
                     lore.add(CC.GRAY + "Knockback everyone off the");
                     lore.add(CC.GRAY + "platform until your are");
                     lore.add(CC.GRAY + "the last player alive");
                     lore.add("");
                     lore.add("&cClick to host...");
                     break;
-                case "&c&lLMS":
+                }
+                case "&c&lLMS" : {
                     lore.add(CC.GRAY + "Fight for your life");
                     lore.add(CC.GRAY + "and kill everyone to");
                     lore.add(CC.GRAY + "be the last man standing");
                     lore.add("");
                     lore.add("&cClick to host...");
                     break;
-                case "&c&lParkour":
+                }
+                case "&c&lParkour" : {
                     lore.add(CC.GRAY + "Make your way through the");
                     lore.add(CC.GRAY + "course and beat the others!");
                     lore.add(CC.GRAY + "The player to reach the goal wins");
                     lore.add("");
                     lore.add("&cClick to host...");
                     break;
-                case "&c&lSpleef":
+                }
+                case "&c&lSpleef" : {
                     lore.add(CC.GRAY + "Break the snow blocks");
                     lore.add(CC.GRAY + "and avoid falling into");
                     lore.add(CC.GRAY + "water, the last player wins!");
                     lore.add("");
                     lore.add("&cClick to host...");
                     break;
-                case "&c&lGulag":
+                }
+                case "&c&lGulag" : {
                     lore.add(CC.GRAY + "Fight for your life and");
                     lore.add(CC.GRAY + "beat your opponent in");
                     lore.add(CC.GRAY + "1v1 Duels with guns!");
                     lore.add("");
                     lore.add("&cClick to host...");
                     break;
-                case "&c&lKoTH":
+                }
+                case "&c&lKoTH" : {
                     lore.add(CC.GRAY + "Capture the koth point");
                     lore.add(CC.GRAY + "with your team, the last");
                     lore.add(CC.GRAY + "team standing until timer wins!");
                     lore.add("");
                     lore.add("&c&lThis event is in development!");
                     break;
-                case "&c&lOITC":
+                }
+                case "&c&lOITC" : {
                     lore.add(CC.GRAY + "Run for your life and");
                     lore.add(CC.GRAY + "beat your opponents in a");
-                    lore.add(CC.GRAY + "FFA with a One Hit Bow!");
+                    lore.add(CC.GRAY + "Brawl with a One Hit Bow!");
                     lore.add("");
                     lore.add("&c&lThis event is in development!");
                     break;
+                }
             }
             lore.add(CC.MENU_BAR);
 
@@ -140,42 +146,42 @@ public class EventSelectEventMenu extends Menu {
             switch (eventType.getTitle()) {
                 case "&c&lBrackets":
                     if (player.hasPermission("array.host.brackets")) {
-                        BracketsHostCommand.execute(player);
+                        new BracketCommands().host(player);
                     } else {
                         Locale.EVENT_NO_PERMISSION.toList().forEach(player::sendMessage);
                     }
                     break;
                 case "&c&lSumo":
                     if (player.hasPermission("array.host.sumo")) {
-                        SumoHostCommand.execute(player);
+                        new SumoCommands().host(player);
                     } else {
                         Locale.EVENT_NO_PERMISSION.toList().forEach(player::sendMessage);
                     }
                     break;
                 case "&c&lLMS":
                     if (player.hasPermission("array.host.lms")) {
-                        LMSHostCommand.execute(player);
+                        new LMSCommands().host(player);
                     } else {
                         Locale.EVENT_NO_PERMISSION.toList().forEach(player::sendMessage);
                     }
                     break;
                 case "&c&lParkour":
                     if (player.hasPermission("array.host.parkour")) {
-                        ParkourHostCommand.execute(player);
+                        new ParkourCommands().host(player);
                     } else {
                         Locale.EVENT_NO_PERMISSION.toList().forEach(player::sendMessage);
                     }
                     break;
                 case "&c&lSpleef":
                     if (player.hasPermission("array.host.spleef")) {
-                        SpleefHostCommand.execute(player);
+                        new SpleefCommands().host(player);
                     } else {
                         Locale.EVENT_NO_PERMISSION.toList().forEach(player::sendMessage);
                     }
                     break;
                 case "&c&lGulag":
                     if (player.hasPermission("array.host.gulag")) {
-                        GulagHostCommand.execute(player);
+                        new GulagCommands().host(player);
                     } else {
                         Locale.EVENT_NO_PERMISSION.toList().forEach(player::sendMessage);
                     }

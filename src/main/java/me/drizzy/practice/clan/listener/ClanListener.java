@@ -22,6 +22,7 @@ public class ClanListener implements Listener {
             event.setCancelled(true);
             String message = CC.translate("&8[&cClan&8] " + Array.getInstance().getRankManager().getFullName(player) + CC.GRAY + " » " + CC.WHITE + chatMessage.replace("$", "").replace(".", ""));
             clansProfile.getClan().broadcast(message);
+
         }
 
     }

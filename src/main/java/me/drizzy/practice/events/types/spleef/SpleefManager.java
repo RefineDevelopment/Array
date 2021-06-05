@@ -11,8 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.IOException;
 
-@Getter
-@Setter
+@Getter @Setter
 public class SpleefManager {
 
 	private Spleef activeSpleef;

@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Getter @Setter
 public class GulagPlayer {
 
 	private final UUID uuid;

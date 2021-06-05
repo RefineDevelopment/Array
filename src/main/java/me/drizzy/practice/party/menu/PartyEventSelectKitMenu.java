@@ -2,7 +2,7 @@ package me.drizzy.practice.party.menu;
 
 import lombok.AllArgsConstructor;
 import me.drizzy.practice.arena.Arena;
-import me.drizzy.practice.enums.PartyEventType;
+import me.drizzy.practice.party.enums.PartyEventType;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.team.Team;
