@@ -36,12 +36,12 @@ public class SettingsMenu extends Menu {
 
     @Override
     public String getTitle(Player player) {
-        return config.getString("SETTINGS.TITLE");
+        return config.getString("MENUS.SETTINGS.TITLE");
     }
 
     @Override
     public int getSize() {
-        return config.getInteger("SETTINGS.SIZE");
+        return config.getInteger("MENUS.SETTINGS.SIZE");
     }
 
     @Override
@@ -73,7 +73,7 @@ public class SettingsMenu extends Menu {
             String key;
             switch (type) {
                 case TOGGLESCOREBOARD:
-                    key = "SETTINGS.BUTTONS.TOGGLESCOREBOARD";
+                    key = "MENUS.SETTINGS.BUTTONS.TOGGLESCOREBOARD";
                     for ( String text : config.getStringList(key + ".LORE" )) {
                         if (text.contains("<option>")) {
                             lines.add((profile.getSettings().isScoreboardEnabled() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
@@ -84,7 +84,7 @@ public class SettingsMenu extends Menu {
                     }
                     break;
                 case TOGGLEDUELREQUESTS:
-                    key = "SETTINGS.BUTTONS.TOGGLEDUELREQUESTS";
+                    key = "MENUS.SETTINGS.BUTTONS.TOGGLEDUELREQUESTS";
                     for ( String text : config.getStringList(key + ".LORE" )) {
                         if (text.contains("<option>")) {
                             lines.add((profile.getSettings().isReceiveDuelRequests() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
@@ -95,7 +95,7 @@ public class SettingsMenu extends Menu {
                     }
                     break;
                 case TOGGLEPINGFACTOR:
-                    key = "SETTINGS.BUTTONS.TOGGLEDUELREQUESTS";
+                    key = "MENUS.SETTINGS.BUTTONS.TOGGLEDUELREQUESTS";
                     if (player.hasPermission("array.profile.pingfactor")) {
                         for ( String text : config.getStringList(key + ".LORE_PERMISSION" )) {
                             if (text.contains("<option>")) {
@@ -110,7 +110,7 @@ public class SettingsMenu extends Menu {
                     }
                     break;
                 case TOGGLESPECTATORS:
-                    key = "SETTINGS.BUTTONS.TOGGLESPECTATORS";
+                    key = "MENUS.SETTINGS.BUTTONS.TOGGLESPECTATORS";
                     for ( String text : config.getStringList(key + ".LORE" )) {
                         if (text.contains("<option>")) {
                             lines.add((profile.getSettings().isAllowSpectators() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
@@ -121,7 +121,7 @@ public class SettingsMenu extends Menu {
                     }
                     break;
                 case TOGGLELIGHTNING:
-                    key = "SETTINGS.BUTTONS.TOGGLELIGHTNING";
+                    key = "MENUS.SETTINGS.BUTTONS.TOGGLELIGHTNING";
                     if (player.hasPermission("array.profile.pingfactor")) {
                         for ( String text : config.getStringList(key + ".LORE_PERMISSION" )) {
                             if (text.contains("<option>")) {
@@ -136,7 +136,7 @@ public class SettingsMenu extends Menu {
                     }
                     break;
                 case TOGGLEPINGONSCOREBOARD:
-                    key = "SETTINGS.BUTTONS.TOGGLEPINGONSCOREBOARD";
+                    key = "MENUS.SETTINGS.BUTTONS.TOGGLEPINGONSCOREBOARD";
                     for ( String text : config.getStringList(key + ".LORE" )) {
                         if (text.contains("<option>")) {
                             lines.add((profile.getSettings().isPingScoreboard() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
@@ -147,7 +147,7 @@ public class SettingsMenu extends Menu {
                     }
                     break;
                 case TOGGLECPSONSCOREBOARD:
-                    key = "SETTINGS.BUTTONS.TOGGLECPSONSCOREBOARD";
+                    key = "MENUS.SETTINGS.BUTTONS.TOGGLECPSONSCOREBOARD";
                     for ( String text : config.getStringList(key + ".LORE" )) {
                         if (text.contains("<option>")) {
                             lines.add((profile.getSettings().isCpsScoreboard() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
@@ -158,7 +158,7 @@ public class SettingsMenu extends Menu {
                     }
                     break;
                 case TOGGLETOURNAMENTMESSAGES:
-                    key = "SETTINGS.BUTTONS.TOGGLETOURNAMENTMESSAGES";
+                    key = "MENUS.SETTINGS.BUTTONS.TOGGLETOURNAMENTMESSAGES";
                     for ( String text : config.getStringList(key + ".LORE" )) {
                         if (text.contains("<option>")) {
                             lines.add((profile.getSettings().isAllowTournamentMessages() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
@@ -169,7 +169,7 @@ public class SettingsMenu extends Menu {
                     }
                     break;
                 case TOGGLETABSTYLE:
-                    key = "SETTINGS.BUTTONS.TOGGLETABSTYLE";
+                    key = "MENUS.SETTINGS.BUTTONS.TOGGLETABSTYLE";
                     for ( String text : config.getStringList(key + ".LORE" )) {
                         if (text.contains("<option>")) {
                             lines.add((profile.getSettings().isVanillaTab() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
@@ -180,7 +180,7 @@ public class SettingsMenu extends Menu {
                     }
                     break;
                 case TOGGLESHOWPLAYERS:
-                    key = "SETTINGS.BUTTONS.TOGGLESHOWPLAYERS";
+                    key = "MENUS.SETTINGS.BUTTONS.TOGGLESHOWPLAYERS";
                     for ( String text : config.getStringList(key + ".LORE" )) {
                         if (text.contains("<option>")) {
                             lines.add((profile.getSettings().isShowPlayers() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
@@ -191,7 +191,7 @@ public class SettingsMenu extends Menu {
                     }
                     break;
                 case TOGGLEDROPPROTECT:
-                    key = "SETTINGS.BUTTONS.TOGGLEDROPPROTECT";
+                    key = "MENUS.SETTINGS.BUTTONS.TOGGLEDROPPROTECT";
                     if (player.hasPermission("array.profile.dropprotect")) {
                         for ( String text : config.getStringList(key + ".LORE_PERMISSION" )) {
                             if (text.contains("<option>")) {
@@ -206,7 +206,7 @@ public class SettingsMenu extends Menu {
                     }
             }
             lines.add(CC.MENU_BAR);
-            return new ItemBuilder(Material.valueOf(config.getString("SETTINGS.BUTTONS." + type.name().toUpperCase() + "MATERIAL"))).name(config.getString("SETTINGS.BUTTONS." + type.name().toUpperCase() + "NAME")).lore(lines).build();
+            return new ItemBuilder(Material.valueOf(config.getString("MENUS.SETTINGS.BUTTONS." + type.name().toUpperCase() + ".MATERIAL"))).name(config.getString("MENUS.SETTINGS.BUTTONS." + type.name().toUpperCase() + ".NAME")).lore(lines).build();
         }
 
         @Override

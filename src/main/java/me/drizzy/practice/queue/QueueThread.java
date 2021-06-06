@@ -1,8 +1,6 @@
 package me.drizzy.practice.queue;
 
-import me.drizzy.practice.Array;
 import me.drizzy.practice.Locale;
-import me.drizzy.practice.api.ArrayCache;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.clan.Clan;
 import me.drizzy.practice.kit.Kit;
@@ -11,7 +9,7 @@ import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.match.types.SoloMatch;
 import me.drizzy.practice.match.types.TheBridgeMatch;
 import me.drizzy.practice.profile.Profile;
-import me.drizzy.practice.profile.rank.RankType;
+import me.drizzy.practice.profile.rank.Rank;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.other.PlayerUtil;
 import me.drizzy.practice.util.other.TaskUtil;
@@ -20,8 +18,6 @@ import org.bukkit.entity.Player;
 
 @SuppressWarnings("all")
 public class QueueThread extends Thread {
-
-    private final static RankType rank = Array.getInstance().getRankManager();
 
     private Arena arena;
     private Kit kit;
@@ -125,7 +121,7 @@ public class QueueThread extends Thread {
                             this.match = match;
 
                             for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList() ) {
-                                String opponentMessages = this.formatMessages(firstPlayer, secondPlayer, string, rank.getFullName(firstPlayer), rank.getFullName(secondPlayer), firstProfile.getStatisticsData().get(kit).getElo(), secondProfile.getStatisticsData().get(kit).getElo(), queue.getType());
+                                String opponentMessages = this.formatMessages(firstPlayer, secondPlayer, string, Rank.getRankType().getFullName(firstPlayer), Rank.getRankType().getFullName(secondPlayer), firstProfile.getStatisticsData().get(kit).getElo(), secondProfile.getStatisticsData().get(kit).getElo(), queue.getType());
                                 firstPlayer.sendMessage(replaceOpponent(opponentMessages, firstPlayer));
                                 secondPlayer.sendMessage(replaceOpponent(opponentMessages, secondPlayer));
                             }

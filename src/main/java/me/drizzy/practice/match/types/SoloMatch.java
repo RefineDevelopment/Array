@@ -97,14 +97,6 @@ public class SoloMatch extends Match {
         if (!getKit().getGameRules().isNoItems() || !getKit().getGameRules().isSumo()) {
             TaskUtil.runLater(() -> Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
         }
-        if (!getKit().getGameRules().isCombo()) {
-            player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
-        }
-
-        if (getKit().getGameRules().isCombo()) {
-            player.setMaximumNoDamageTicks(0);
-            player.setNoDamageTicks(3);
-        }
 
         if (getKit().getGameRules().isInfiniteSpeed()) {
             player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 2));
@@ -114,6 +106,7 @@ public class SoloMatch extends Match {
         }
 
         SpigotHook.getKnockbackType().appleKitKnockback(player, getKit());
+        player.setNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         Location spawn = playerA.equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
 

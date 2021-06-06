@@ -56,6 +56,7 @@ public class CMDManager {
         drink.register(new AbortMatchCommand(), "cancelmatch", "forfeitmatch", "abortmatch");
         drink.register(new SettingsCommand(), "settings", "preferences", "practicesettings", "pracsettings");
         drink.register(new MapCommand(), "map");
+        drink.register(new RateCommand(), "rate");
         drink.register(new FlyCommand(), "fly", "flight");
         drink.register(new LeaderboardsCommand(), "leaderboards", "lb", "leaderboard");
         //drink.register(new SecretCommand(), "arraysecretcommand", "drizzyisgay", "tinuyfish", "thisisit", "veltusman123");

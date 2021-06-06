@@ -2,6 +2,7 @@ package me.drizzy.practice.clan.listener;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.profile.rank.Rank;
 import me.drizzy.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,9 +19,9 @@ public class ClanListener implements Listener {
 
         Profile clansProfile = Profile.getByPlayer(player);
 
-        if ((clansProfile.getSettings().isClanChat() || chatMessage.startsWith(".") || chatMessage.startsWith("$")) && clansProfile.hasClan()) {
+        if ((clansProfile.getSettings().isClanChat() || chatMessage.startsWith("$")) && clansProfile.hasClan()) {
             event.setCancelled(true);
-            String message = CC.translate("&8[&cClan&8] " + Array.getInstance().getRankManager().getFullName(player) + CC.GRAY + " » " + CC.WHITE + chatMessage.replace("$", "").replace(".", ""));
+            String message = CC.translate("&8[&cClan&8] " + Rank.getRankType().getFullName(player) + CC.GRAY + " » " + CC.WHITE + chatMessage.replace("$", "").replace(".", ""));
             clansProfile.getClan().broadcast(message);
 
         }

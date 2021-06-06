@@ -321,6 +321,16 @@ public class HotbarListener implements Listener {
                     }
                     profile.getMatch().toggleSpectators(player);
                 }
+                case SPECTATOR_HIDE: {
+                    if (!profile.isInMatch()) {
+                        player.sendMessage(CC.translate("&7You are not in any match."));
+                        break;
+                    }
+                    if (!profile.isSpectating()) {
+                        player.sendMessage(CC.translate("&7You are not spectating any match."));
+                    }
+                    profile.getMatch().toggleSpectators(player);
+                }
                 case REMATCH_REQUEST:
                 case REMATCH_ACCEPT: {
                     if (profile.getRematchData() == null) {

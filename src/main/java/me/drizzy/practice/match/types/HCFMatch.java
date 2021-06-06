@@ -5,6 +5,7 @@ import me.drizzy.practice.Array;
 import me.drizzy.practice.Locale;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.kit.Kit;
+import me.drizzy.practice.managers.ClassManager;
 import me.drizzy.practice.match.Match;
 import me.drizzy.practice.match.MatchSnapshot;
 import me.drizzy.practice.match.team.Team;
@@ -25,6 +26,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 public class HCFMatch extends Match {
@@ -83,11 +85,8 @@ public class HCFMatch extends Match {
 
         Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
 
-        if (spawn.getBlock().getType() == Material.AIR) {
-            player.teleport(spawn);
-        } else {
-            player.teleport(spawn.add(0, 2, 0));
-        }
+        player.teleport(spawn.add(0, 4, 0));
+
         teamPlayer.setPlayerSpawn(spawn);
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -96,10 +95,18 @@ public class HCFMatch extends Match {
         String kit = party.getKits().get(player.getUniqueId());
 
         switch (kit) {
-            case "Bard": Kit.getByName("HCFBBARD").applyToPlayer(player);
-            case "Archer": Kit.getByName("HCFARCHER").applyToPlayer(player);
-            case "Rogue": Kit.getByName("HCFROGUE").applyToPlayer(player);
-            case "Diamond": Kit.getByName("HCFDIAMOND").applyToPlayer(player);
+            case "Bard":
+                ClassManager.giveBardKit(player);
+                break;
+            case "Archer":
+                ClassManager.giveArcherKit(player);
+                break;
+            case "Rogue":
+                ClassManager.giveRogueKit(player);
+                break;
+            case "Diamond":
+                ClassManager.giveDiamondKit(player);
+                break;
         }
 
         NameTagHandler.reloadPlayer(player);
@@ -174,8 +181,14 @@ public class HCFMatch extends Match {
         Team winningTeam = getWinningTeam();
         Team losingTeam = getOpponentTeam(winningTeam);
 
-        winningTeam.getPlayers().stream().map(Profile::getByPlayer).forEach(profile -> profile.getStatisticsData().get(getKit()).incrementWon());
-        losingTeam.getPlayers().stream().map(Profile::getByPlayer).forEach(profile -> profile.getStatisticsData().get(getKit()).incrementLost());
+        winningTeam.getPlayers().stream().map(Profile::getByPlayer).forEach(profile -> {
+            profile.getStatisticsData().get(getKit()).incrementWon();
+            profile.save();
+        });
+        losingTeam.getPlayers().stream().map(Profile::getByPlayer).forEach(profile -> {
+            profile.getStatisticsData().get(getKit()).incrementLost();
+            profile.save();
+        });
 
         return true;
     }

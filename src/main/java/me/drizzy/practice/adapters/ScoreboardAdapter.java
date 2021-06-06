@@ -100,6 +100,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                         .replace("<clan_members_online>", String.valueOf(clan.getOnlineMembers().size()))
                         .replace("<clan_members_total>", String.valueOf(clan.getAllMembers().size()))
                         .replace("<clan_elo>",String.valueOf(clan.getElo()))
+                        .replace("<clan_name>", clan.getName())
                         .replace("%splitter%", "┃").replace("|", "┃"))));
 
             }

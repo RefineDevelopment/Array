@@ -13,6 +13,7 @@ import me.drizzy.practice.match.types.TeamMatch;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileState;
+import me.drizzy.practice.profile.rank.Rank;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.other.TaskUtil;
 import org.bukkit.Bukkit;
@@ -214,12 +215,12 @@ public class Tournament {
                 StringBuilder builder = new StringBuilder();
 
                 for (TeamPlayer matchPlayer : winningTeam.getTeamPlayers()) {
-                    builder.append(Array.getInstance().getRankManager().getFullName(matchPlayer.getPlayer()));
+                    builder.append(Rank.getRankType().getFullName(matchPlayer.getPlayer()));
                     builder.append("&7, ");
                 }
                 StringBuilder builders = new StringBuilder();
                 for (TeamPlayer matchPlayer : losingTeam.getTeamPlayers()) {
-                    builders.append(Array.getInstance().getRankManager().getFullName(matchPlayer.getPlayer()));
+                    builders.append(Rank.getRankType().getFullName(matchPlayer.getPlayer()));
                     builders.append("&7, ");
                 }
                 if (builders.length() > 0) {

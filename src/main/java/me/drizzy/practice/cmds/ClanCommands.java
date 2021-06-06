@@ -2,12 +2,14 @@ package me.drizzy.practice.cmds;
 
 import com.mongodb.client.model.Filters;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.api.ArrayCache;
 import me.drizzy.practice.clan.Clan;
 import me.drizzy.practice.clan.ClanProfileType;
 import me.drizzy.practice.clan.meta.ClanInvite;
 import me.drizzy.practice.clan.meta.ClanProfile;
 import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.profile.rank.Rank;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.command.annotation.Command;
 import me.drizzy.practice.util.command.annotation.OptArg;
@@ -32,57 +34,41 @@ public class ClanCommands {
 
     @Command(name = "", desc = "View Clan Commands")
     public void clan(@Sender CommandSender player) {
-        player.sendMessage(CC.CHAT_BAR);
-        player.sendMessage(CC.translate("&cArray &7» Clan Commands"));
-        player.sendMessage(CC.CHAT_BAR);
-        player.sendMessage(CC.translate(" &8• &c/clan create &8<&7name&8> &8(&7&oCreate a Clan&8)"));
-        player.sendMessage(CC.translate(" &8• &c/clan disband &8(&7&oDisband your Clan&8)"));
-        player.sendMessage(CC.translate(" &8• &c/clan chat &8(&7&oToggle your Clan Chat Mode&8)"));
-        player.sendMessage(CC.translate(" &8• &c/clan accept &8<&7leader&8> &8(&7&oAccept a Clan Invitation&8)"));
-        player.sendMessage(CC.translate(" &8• &c/clan leave &8(&7&oLeave your Current Clan&8)"));
-        player.sendMessage(CC.translate(" &8• &c/clan info &8(&7&oView information about your Clan&8)"));
-        player.sendMessage(CC.translate(" &8• &c/clan invite &8<&7profile&8> &8(&7&oInvite a Profile to your Clan&8)"));
-        player.sendMessage(CC.translate(" &8• &c/clan kick &8<&7profile&8> &8(&7&oKick a Profile from your Clan&8)"));
-        player.sendMessage(CC.translate(" &8• &c/clan ban &8<&7profile&8> &8(&7&oBan a Profile from your Clan&8)"));
-        player.sendMessage(CC.translate(" &8• &c/clan promote &8<&7profile&8> &8(&7&oPromote a Profile to Captain&8)"));
-        player.sendMessage(CC.translate(" &8• &c/clan demote &8<&7profile&8> &8(&7&oDemote a Profile to Member&8)"));
-        player.sendMessage(CC.translate(" &8• &c/clan leader &8<&7profile&8> &8(&7&oPromote a Profile to Leader&8)"));
-        player.sendMessage(CC.translate(" &8• &c/clan description &8<&7text&8> &8(&7&oSet your Clan's Description&8)"));
-        player.sendMessage(CC.CHAT_BAR);
+        Locale.CLAN_HELP.toList().forEach(player::sendMessage);
     }
 
     @Command(name = "create", aliases = "form", desc = "Create a Clan using a name", usage = "<name>")
     public void create(@Sender Player player, String name) {
         if (name.length() < 2) {
-            player.sendMessage(CC.RED + "Clan names must be greater than or equal to 2 characters long.");
+            player.sendMessage(Locale.CLAN_NAME_LENGTH.toString());
             return;
         }
 
         if (!StringUtils.isAlpha(name)) {
-            player.sendMessage(CC.RED + "Clan names must only contain alpha characters (letters only).");
+            player.sendMessage(Locale.CLAN_NAME_LETTER.toString());
             return;
         }
 
         if (name.length() > 8) {
-            player.sendMessage(CC.RED + "Clan names must be less than or equal to 8 characters long.");
+            player.sendMessage(Locale.CLAN_NAME_LENGTH.toString());
             return;
         }
 
         Profile profile = Profile.getByPlayer(player);
         if (profile.hasClan()) {
-            player.sendMessage(CC.translate("&cYou are already a part of " + profile.getClan().getName() + " Clan!"));
+            player.sendMessage(Locale.CLAN_ALREADY_PARTOF.toString().replace("<clan_name>", profile.getClan().getName()));
             return;
         }
 
         Clan clan = Clan.getByName(name);
 
         if (clan != null) {
-            player.sendMessage(CC.RED + "A clan with that name already exists!");
+            player.sendMessage(Locale.CLAN_NAME_ALREADYEXIST.toString().replace("<name>", name));
             return;
         }
 
         clan = new Clan(name, player.getUniqueId(), UUID.randomUUID());
-        player.sendMessage(CC.translate("&aSuccessfully created a Clan with the name '" + name + "'&7."));
+        player.sendMessage(Locale.CLAN_CREATED.toString().replace("<name>", name));
     }
 
 
@@ -91,18 +77,18 @@ public class ClanCommands {
         Profile profile = Profile.getByPlayer(player);
         Clan clan;
 
-        if (profile.getClan() != null) {
-            player.sendMessage(CC.translate("&7You already have a clan."));
+        if (profile.hasClan()) {
+            player.sendMessage(Locale.CLAN_ALREADY_PARTOF.toString().replace("<clan_name>", profile.getClan().getName()));
             return;
         }
 
         if (ArrayCache.getUUID(text) == null && Clan.getByName(text) == null) {
-            player.sendMessage(CC.translate("&7That Clan does not exist."));
+            player.sendMessage(Locale.CLAN_DOESNT_EXIST.toString());
             return;
         }
 
         if (Clan.getByLeader(ArrayCache.getUUID(text)) == null || Clan.getByName(text) == null) {
-            player.sendMessage(CC.translate("&7That Clan does not exist."));
+            player.sendMessage(Locale.CLAN_DOESNT_EXIST.toString());
             return;
         }
 
@@ -115,13 +101,12 @@ public class ClanCommands {
         ClanInvite clanInvite = clan.getInvite(player);
 
         if (clanInvite == null && clan.getPassword() != null && password.equals("none")) {
-            player.sendMessage(CC.RED + "You need the password or an invitation to join this clan.");
-            player.sendMessage(CC.GRAY + "To join with a password, use " + CC.RED + "/clan join " + clan.getName() + " <password>");
+            player.sendMessage(Locale.CLAN_PASSWORD_REQURED.toString().replace("<clan_name>", clan.getName()));
             return;
         }
 
         if (!password.equals("none") && !clan.getPassword().equalsIgnoreCase(password)) {
-            player.sendMessage(CC.RED + "The password you have entered is incorrect.");
+            player.sendMessage(Locale.CLAN_INCORRECT_PASS.toString());
             return;
         }
 
@@ -136,27 +121,27 @@ public class ClanCommands {
         Clan clan = profile.getClan();
 
         if (clan == null || !clan.getLeader().getUuid().equals(player.getUniqueId())) {
-            player.sendMessage(CC.translate("&7You are not the leader of a clan!"));
+            player.sendMessage(Locale.CLAN_NOT_LEADER.toString());
             return;
         }
 
         if (target == player) {
-            player.sendMessage(CC.RED + "Yoy may not invite yourself to a clan!");
+            player.sendMessage(Locale.CLAN_INVITE_SELF.toString());
             return;
         }
 
         if (targetProfile.hasClan()) {
-            player.sendMessage(CC.translate("&7That player already has a clan!"));
+            player.sendMessage(Locale.CLAN_ALREADYHAVE.toString());
             return;
         }
 
         if (clan.getInvite(target) != null) {
-            player.sendMessage(target.getDisplayName() + CC.RED + " has already been invited to the clan within the last 60 seconds.");
+            player.sendMessage(Locale.CLAN_ALREADYINVITED.toString());
             return;
         }
 
         clan.invite(target);
-        clan.broadcast(CC.translate("&8[&c&lClan&8] &c" + target.getName() + " &7has been invited to the clan!"));
+        clan.broadcast(Locale.CLAN_INVITED_BROADCAST.toString().replace("<invited>", Rank.getRankType().getFullName(target)));
     }
 
 
@@ -165,7 +150,7 @@ public class ClanCommands {
         Profile profile = Profile.getByPlayer(player);
 
         if (profile.getClan() == null) {
-            player.sendMessage(CC.RED + "You are not in a clan!");
+            player.sendMessage(Locale.CLAN_DONOTHAVE.toString());
             return;
         }
 
@@ -185,19 +170,14 @@ public class ClanCommands {
        Clan clan = profile.getClan();
 
        if (profile.getClan() == null) {
-           player.sendMessage(CC.translate("&7You are not in a Clan!"));
+           player.sendMessage(Locale.CLAN_DONOTHAVE.toString());
            return;
        }
 
-       if (profile.hasClan() && !clan.getLeader().equals(clanProfile)) {
-           player.sendMessage(CC.translate("&7You are not the leader of your clan!"));
+       if (profile.hasClan() && !clan.getLeader().getUuid().equals(player.getUniqueId())) {
+           player.sendMessage(Locale.CLAN_NOT_LEADER.toString());
            return;
        }
-
-       player.sendMessage(CC.RED + CC.BOLD + "You have successfully disbanded your clan!");
-
-       Clan.getClans().remove(clan);
-       Clan.getCollection().deleteOne(Filters.eq("_id", clan.getUuid()));
 
        clan.getAllMembers().forEach(member -> {
            Profile playerProfile = Profile.getByUuid(member.getUuid());
@@ -209,11 +189,58 @@ public class ClanCommands {
                if (playerProfile.isInLobby()) {
                    playerProfile.refreshHotbar();
                }
-               playerProfile.getPlayer().sendMessage(CC.translate("&cYour clan was disbanded!"));
+               playerProfile.getPlayer().sendMessage(Locale.CLAN_DISBANDED.toString());
            }
        });
 
+       //Completely wipe the Clan
+       Clan.getClans().remove(clan);
+       Clan.getCollection().deleteOne(Filters.eq("_id", clan.getUuid()));
+       clan.getMembers().clear();
+       clan.getCaptains().clear();
+
        Clan.getClans().forEach(Clan::save);
+    }
+
+    @Command(name = "information", aliases = "info", desc = "View information about your Clan")
+    public void information(@Sender Player player) {
+        Profile profile = Profile.getByPlayer(player);
+        Clan clan = profile.getClan();
+
+        if (clan == null) {
+            player.sendMessage(Locale.CLAN_DONOTHAVE.toString());
+            return;
+        }
+
+        clan.information(player);
+    }
+
+    public void kick() {
+
+    }
+
+    public void ban() {
+
+    }
+
+    public void password() {
+
+    }
+
+    public void description() {
+
+    }
+
+    public void promote() {
+
+    }
+
+    public void demote() {
+
+    }
+
+    public void leader() {
+
     }
 
 

@@ -30,16 +30,6 @@ public class MainMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        final List<Integer> occupied = new ArrayList<>();
-        final int[] taken = {11,12,13,14,15};
-        for ( int take : taken ) {
-            occupied.add(take);
-        }
-        for ( int glassslots = 0; glassslots < 27; ++glassslots ) {
-            if (!occupied.contains(glassslots)) {
-                buttons.put(glassslots, new GlassButton());
-            }
-        }
 
         buttons.put(11, new LeaderBoardsButton());
         buttons.put(12, new StatisticsButton());
@@ -47,6 +37,9 @@ public class MainMenu extends Menu {
         buttons.put(14, new EventButton());
         buttons.put(15, new KitEditorButton());
 
+        for ( int i = 0; i < 27; i++ ) {
+            buttons.putIfAbsent(i, new GlassButton());
+        }
         return buttons;
     }
 
@@ -178,7 +171,7 @@ public class MainMenu extends Menu {
 
         @Override
         public ItemStack getButtonItem(Player player) {
-            return new ItemBuilder(Material.STAINED_GLASS_PANE).name("").durability(3).build();
+            return new ItemBuilder(Material.STAINED_GLASS_PANE).name("").durability(8).build();
         }
     }
 

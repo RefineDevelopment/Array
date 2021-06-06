@@ -4,6 +4,7 @@ import me.drizzy.practice.api.ArrayCache;
 import me.drizzy.practice.util.command.argument.CommandArg;
 import me.drizzy.practice.util.command.exception.CommandExitMessage;
 import me.drizzy.practice.util.command.parametric.DrinkProvider;
+import org.bukkit.entity.HumanEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,6 +53,7 @@ public class ProfileProvider extends DrinkProvider<Profile> {
 
     @Override
     public List<String> getSuggestions(@NotNull String prefix) {
-        return Profile.getProfiles().values().stream().map(Profile::getName).collect(Collectors.toList());
+        final String finalPrefix = prefix;
+        return Profile.getProfiles().values().stream().map(Profile::getName).filter(s -> finalPrefix.length() == 0 || s.startsWith(finalPrefix)).collect(Collectors.toList());
     }
 }

@@ -40,9 +40,10 @@ public class KitCommands {
         player.sendMessage(CC.translate(" &8• &c/kit toggle &8<&7kit&8> &8(&7&oEnable or Disable a Kit&8)"));
         player.sendMessage(CC.translate(" &8• &c/kit list &8(&7&oLists All Kits&8)"));
         player.sendMessage(CC.translate(" &8• &c/kit save &8(&7&oSave All the Kits&8)"));
+        player.sendMessage(CC.translate(" &8• &c/kit gamerules &8(&7&oView gamerules for a Kit&8)"));
         player.sendMessage(CC.translate(" &8• &c/kit setkb &8<&7kit&8> &8<&7knockback&8> &8(&7&oSet a Kit's Knockback Profile&8)"));
         player.sendMessage(CC.translate(" &8• &c/kit hitdelay &8<&7kit&8> &8<&71-20&8> &8&o(&7&oSet a Kit's Hit delay&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule &8(&7&oView and set gamerules for a Kit&8)"));
+        player.sendMessage(CC.translate(" &8• &c/kit gamerule &8<&7kit&8> &8<&7gamerule&8> &8(&7&oSet gamerules for a Kit&8)"));
         player.sendMessage(CC.translate(" &8• &c/kit seteditinv &8(&7&oSets the Edit inventory of the kit as your inventory&8)"));
         player.sendMessage(CC.translate(" &8• &c/kit getinv &8(&7&oGet the inventory of the kit&8)"));
         player.sendMessage(CC.CHAT_BAR);
@@ -200,13 +201,12 @@ public class KitCommands {
         if (kit.isEnabled()) {
             if (kit.getUnrankedQueue() == null) kit.setUnrankedQueue(new Queue(kit, QueueType.UNRANKED));
             if (kit.getRankedQueue() == null) kit.setRankedQueue(new Queue(kit, QueueType.RANKED));
-            sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &aenabled &7the kit &c" + kit));
+            sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &aenabled &7the kit &c" + kit.getDisplayName()));
         } else {
             if (kit.getUnrankedQueue() != null) Queue.getQueues().remove(kit.getUnrankedQueue());
             if (kit.getRankedQueue() != null) Queue.getQueues().remove(kit.getRankedQueue());
-            sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &cdisabled &7the kit &c" + kit));
+            sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &cdisabled &7the kit &c" + kit.getDisplayName()));
         }
-
     }
 
     @Command(name = "hitdelay", aliases = "sethitdelay", usage = "<kit> <amount>", desc = "Set a Kit's Hit Delay")
@@ -216,126 +216,127 @@ public class KitCommands {
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Updated &c" + kit.getName() + " &7hit delay set to &c" + integ));
     }
 
-    @Command(name = "gamerule", aliases = "gamerules", desc = "Toggle a Gamerule for the Kit", usage = "<kit>")
+    @Command(name = "gamerule", desc = "Toggle a Gamerule for the Kit", usage = "<kit> <gamerule>")
     @Require("array.kit.setup")
-    public void gameRuleToggle(@Sender CommandSender player, String gamerule, Kit kit) {
+    public void gameRuleToggle(@Sender CommandSender player, Kit kit, String gamerule) {
         switch (gamerule) {
             case "elo":
             case "ranked": {
                 kit.getGameRules().setRanked(!kit.getGameRules().isRanked());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isRanked() ? "&aenabled" : "&cdisabled") + "&7ranked for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isRanked() ? "&aenabled " : "&cdisabled ") + "&7ranked or &c" + kit.getDisplayName()));
                 break;
             }
             case "build": {
                 kit.getGameRules().setBuild(!kit.getGameRules().isBuild());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isBuild() ? "&aenabled" : "&cdisabled") + "&7build for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isBuild() ? "&aenabled " : "&cdisabled ") + "&7build or &c" + kit.getDisplayName()));
                 break;
             }
             case "bridge": {
                 kit.getGameRules().setBridge(!kit.getGameRules().isBridge());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isBridge() ? "&aenabled" : "&cdisabled") + "&7bridge for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isBridge() ? "&aenabled " : "&cdisabled ") + "&7bridge or &c" + kit.getDisplayName()));
                 break;
             }
             case "combo": {
                 kit.getGameRules().setCombo(!kit.getGameRules().isCombo());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isCombo() ? "&aenabled" : "&cdisabled") + "&7combo for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isCombo() ? "&aenabled " : "&cdisabled ") + "&7combo or &c" + kit.getDisplayName()));
                 break;
             }
             case "editable": {
                 kit.getGameRules().setEditable(!kit.getGameRules().isEditable());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isEditable() ? "&aenabled" : "&cdisabled") + "&7editable for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isEditable() ? "&aenabled " : "&cdisabled ") + "&7editable or &c" + kit.getDisplayName()));
                 break;
             }
             case "lavakill": {
                 kit.getGameRules().setLavaKill(!kit.getGameRules().isLavaKill());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isLavaKill() ? "&aenabled" : "&cdisabled") + "&7lava-kill for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isLavaKill() ? "&aenabled " : "&cdisabled ") + "&7lava-kill or &c" + kit.getDisplayName()));
                 break;
             }
             case "parkour": {
                 kit.getGameRules().setParkour(!kit.getGameRules().isParkour());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isParkour() ? "&aenabled" : "&cdisabled") + "&7parkour for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isParkour() ? "&aenabled " : "&cdisabled ") + "&7parkour or &c" + kit.getDisplayName()));
                 break;
             }
             case "clan": {
                 kit.getGameRules().setClan(!kit.getGameRules().isClan());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isClan() ? "&aenabled" : "&cdisabled") + "&7clan mode for &c" + kit));
+                if (kit.getClanQueue() == null && kit.getGameRules().isClan()) new Queue(kit, QueueType.CLAN);
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isClan() ? "&aenabled " : "&cdisabled ") + "&7clan mode or &c" + kit.getDisplayName()));
                 break;
             }
             case "partyffa": {
                 kit.getGameRules().setDisablePartyFFA(!kit.getGameRules().isDisablePartyFFA());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (!kit.getGameRules().isDisablePartyFFA() ? "&aenabled" : "&cdisabled") + "&7party-brawl for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (!kit.getGameRules().isDisablePartyFFA() ? "&aenabled " : "&cdisabled ") + "&7party-brawl or &c" + kit.getDisplayName()));
                 break;
             }
             case "partysplit": {
                 kit.getGameRules().setDisablePartySplit(!kit.getGameRules().isDisablePartySplit());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (!kit.getGameRules().isDisablePartySplit() ? "&aenabled" : "&cdisabled") + "&7party-split for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (!kit.getGameRules().isDisablePartySplit() ? "&aenabled " : "&cdisabled ") + "&7party-split or &c" + kit.getDisplayName()));
                 break;
             }
             case "hunger":
             case "food": {
                 kit.getGameRules().setAntiFoodLoss(!kit.getGameRules().isAntiFoodLoss());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (!kit.getGameRules().isAntiFoodLoss() ? "&aenabled" : "&cdisabled") + "&7hunger for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (!kit.getGameRules().isAntiFoodLoss() ? "&aenabled " : "&cdisabled ") + "&7hunger or &c" + kit.getDisplayName()));
                 break;
             }
             case "showhealth": {
                 kit.getGameRules().setShowHealth(!kit.getGameRules().isShowHealth());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isShowHealth() ? "&aenabled" : "&cdisabled") + "&7show-health for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isShowHealth() ? "&aenabled " : "&cdisabled ") + "&7show-health or &c" + kit.getDisplayName()));
                 break;
             }
             case "healthregeneration":
             case "healthregen": {
                 kit.getGameRules().setHealthRegeneration(!kit.getGameRules().isHealthRegeneration());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isHealthRegeneration() ? "&aenabled" : "&cdisabled") + "&7health-regen for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isHealthRegeneration() ? "&aenabled " : "&cdisabled ") + "&7health-regen or &c" + kit.getDisplayName()));
                 break;
             }
             case "speed": {
                 kit.getGameRules().setInfiniteSpeed(!kit.getGameRules().isInfiniteSpeed());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isInfiniteSpeed() ? "&aenabled" : "&cdisabled") + "&7speed for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isInfiniteSpeed() ? "&aenabled " : "&cdisabled ") + "&7speed or &c" + kit.getDisplayName()));
                 break;
             }
             case "strength": {
                 kit.getGameRules().setInfiniteStrength(!kit.getGameRules().isInfiniteStrength());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isInfiniteStrength() ? "&aenabled" : "&cdisabled") + "&7strength for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isInfiniteStrength() ? "&aenabled " : "&cdisabled ") + "&7strength or &c" + kit.getDisplayName()));
                 break;
             }
             case "noitems": {
                 kit.getGameRules().setNoItems(!kit.getGameRules().isNoItems());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isNoItems() ? "&aenabled" : "&cdisabled") + "&7no-items for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isNoItems() ? "&aenabled " : "&cdisabled ") + "&7no-items or &c" + kit.getDisplayName()));
                 break;
             }
             case "bowhp": {
                 kit.getGameRules().setBowHP(!kit.getGameRules().isBowHP());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isBowHP() ? "&aenabled" : "&cdisabled") + "&7bow-hp for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isBowHP() ? "&aenabled " : "&cdisabled ") + "&7bow-hp or &c" + kit.getDisplayName()));
                 break;
             }
             case "stickspawn": {
                 kit.getGameRules().setStickSpawn(!kit.getGameRules().isStickSpawn());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isStickSpawn() ? "&aenabled" : "&cdisabled") + "&7stick-spawn for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isStickSpawn() ? "&aenabled " : "&cdisabled ") + "&7stick-spawn or &c" + kit.getDisplayName()));
                 break;
             }
             case "boxuhc": {
                 kit.getGameRules().setBoxUHC(!kit.getGameRules().isBoxUHC());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isBoxUHC() ? "&aenabled" : "&cdisabled") + "&7box-uhc for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isBoxUHC() ? "&aenabled " : "&cdisabled ") + "&7box-uhc or &c" + kit.getDisplayName()));
                 break;
             }
             case "falldamage": {
                 kit.getGameRules().setDisableFallDamage(!kit.getGameRules().isDisableFallDamage());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (!kit.getGameRules().isDisableFallDamage() ? "&aenabled" : "&cdisabled") + "&7fall damage for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (!kit.getGameRules().isDisableFallDamage() ? "&aenabled " : "&cdisabled ") + "&7fall damage or &c" + kit.getDisplayName()));
                 break;
             }
             case "spleef": {
                 kit.getGameRules().setSpleef(!kit.getGameRules().isSpleef());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isSpleef() ? "&aenabled" : "&cdisabled") + "&7spleef for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isSpleef() ? "&aenabled " : "&cdisabled ") + "&7spleef or &c" + kit.getDisplayName()));
                 break;
             }
             case "sumo": {
                 kit.getGameRules().setSumo(!kit.getGameRules().isSumo());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isSumo() ? "&aenabled" : "&cdisabled") + "&7sumo for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isSumo() ? "&aenabled " : "&cdisabled ") + "&7sumo or &c" + kit.getDisplayName()));
                 break;
             }
             case "voidspawn": {
                 kit.getGameRules().setVoidSpawn(!kit.getGameRules().isVoidSpawn());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isVoidSpawn() ? "&aenabled" : "&cdisabled") + "&7voidspawn for &c" + kit));
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isVoidSpawn() ? "&aenabled " : "&cdisabled ") + "&7voidspawn for &c" + kit.getDisplayName()));
                 break;
             }
             default: {
@@ -344,14 +345,14 @@ public class KitCommands {
         }
     }
 
-
-    @Command(name = "gamerule", aliases = "gamerules", desc = "View kit gamerules")
+    @Command(name = "gamerules", desc = "View kit gamerules")
     @Require("array.kit.setup")
     public void kitGameRule(@Sender CommandSender player) {
         player.sendMessage(CC.CHAT_BAR);
         player.sendMessage(CC.translate( "&cArray &7» Kit GameRules "));
         player.sendMessage(CC.CHAT_BAR);
         player.sendMessage(CC.translate(" &8• &c/kit gamerule ranked &8<&7kit&8> &8(&7&oToggle ranked mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &8• &c/kit gamerule clan &8<&7kit&8> &8(&7&oToggle clan mode for a Kit&8)"));
         player.sendMessage(CC.translate(" &8• &c/kit gamerule build &8<&7kit&8> &8(&7&oToggle build mode for a Kit&8)"));
         player.sendMessage(CC.translate(" &8• &c/kit gamerule sumo &8<&7kit&8> &8(&7&oToggle sumo mode for a Kit&8)"));
         player.sendMessage(CC.translate(" &8• &c/kit gamerule bridge &8<&7kit&8> &8(&7&oToggle bridge mode for a Kit&8)"));

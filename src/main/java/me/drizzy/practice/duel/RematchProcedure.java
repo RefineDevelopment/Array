@@ -6,6 +6,7 @@ import me.drizzy.practice.Locale;
 import me.drizzy.practice.api.ArrayCache;
 import me.drizzy.practice.arena.Arena;
 import me.drizzy.practice.match.Match;
+import me.drizzy.practice.profile.rank.Rank;
 import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.match.team.TeamPlayer;
@@ -25,7 +26,7 @@ import java.util.UUID;
 public class RematchProcedure {
 
     private final long timestamp = System.currentTimeMillis();
-    public static RankType rank = Array.getInstance().getRankManager();
+    public static RankType rank = Rank.getRankType();
 
     private final UUID key;
     private final UUID sender;

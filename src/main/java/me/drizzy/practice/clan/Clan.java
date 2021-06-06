@@ -7,9 +7,9 @@ import com.mongodb.client.model.Sorts;
 import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
+import me.drizzy.practice.Locale;
 import me.drizzy.practice.clan.meta.ClanInvite;
 import me.drizzy.practice.clan.meta.ClanProfile;
-import me.drizzy.practice.kit.Kit;
 import me.drizzy.practice.leaderboards.LeaderboardsAdapter;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.chat.CC;
@@ -47,6 +47,7 @@ public class Clan {
     public static final Executor thread = Array.getInstance().getMongoThread();
     private final List<ClanProfile> members = new ArrayList<>();
     private final List<ClanProfile> captains = new ArrayList<>();
+    private final List<UUID> bannedPlayers = new ArrayList<>();
 
     private final String name;
     private final UUID uuid;
@@ -114,7 +115,8 @@ public class Clan {
      * This method is called on Start
      * We use this to load our clans and setup Tasks
      */
-    public static void preload() {
+    public static void  preload() {
+        Array.logger("&7Loading Clans!");
         //First of all Load up the Leaderboards
         updateClanLeaderboards();
 
@@ -126,6 +128,7 @@ public class Clan {
         //Then register a Task that will update the leaderboards frequently
         TaskUtil.runTimerAsync(Clan::updateClanLeaderboards, 600L, 600L);
         fetchClans();
+        Array.logger("&aLoaded Clans!");
     }
 
     /**
@@ -138,7 +141,7 @@ public class Clan {
             }
             for ( Object o : collection.find() ) {
                 Document document = (Document) o;
-                Clan clan = new Clan(document.getString("name"), (UUID) document.get("leader"), (UUID) document.get("_id"));
+                Clan clan = new Clan(document.getString("name"), UUID.fromString(document.getString("leader")), UUID.fromString(document.getString("_id")));
                 clan.load();
             }
         });
@@ -168,7 +171,7 @@ public class Clan {
             this.setWinStreak(document.getInteger("winstreak"));
             this.setHighestWinStreak(document.getInteger("highestwinstreak"));
 
-            ClanProfile leader = new ClanProfile((UUID) document.get("leader"), this, ClanProfileType.LEADER);
+            ClanProfile leader = new ClanProfile(UUID.fromString(document.getString("leader")), this, ClanProfileType.LEADER);
             this.setLeader(leader);
 
             //Listen I know this is straight up trash code but just bare with me while I learn mongo XD
@@ -212,7 +215,7 @@ public class Clan {
             clanDocument.put("name", this.getName());
             clanDocument.put("_id", this.getUuid().toString());
 
-            clanDocument.put("leader", this.getLeader().getUuid());
+            clanDocument.put("leader", this.getLeader().getUuid().toString());
             clanDocument.put("members", this.getMembers().stream().map(ClanProfile::getUuid).collect(Collectors.toList()));
             clanDocument.put("captains", this.getCaptains().stream().map(ClanProfile::getUuid).collect(Collectors.toList()));
 
@@ -370,6 +373,26 @@ public class Clan {
         });
     }
 
+    /**
+     * Kick a Player from the Clan
+     *
+     * @param player The player getting kicked from the Clan
+     */
+    public void kick(Player player) {
+
+
+    }
+
+    /**
+     * Ban a Player from the Clan
+     *
+     * @param player The player getting banned from the Clan
+     */
+    public void ban(Player player) {
+
+
+    }
+
 
     /**
      * Load our Clan Leaderboards
@@ -411,19 +434,23 @@ public class Clan {
      * @param clan The Clan whose information is being sent
      */
     public void information(Player player) {
-        Clan clan = this;
-        clan.getAllMembers().sort(Comparator.comparing(cm -> cm.getClanProfileType().getWeight()));
+        this.getAllMembers().sort(Comparator.comparing(cm -> cm.getClanProfileType().getWeight()));
 
         List<String> playerNames = new ArrayList<>();
-        clan.getAllMembers().forEach(cm -> playerNames.add((clan.getLeader().getUuid().equals(cm.getUuid()) ? CC.DARK_GREEN + "***" : clan.getCaptains().contains(cm.getUuid()) ? CC.DARK_GREEN + "*" : "") + colorName(cm.getUuid())));
+        this.getAllMembers().forEach(cm -> playerNames.add((this.getLeader().getUuid().equals(cm.getUuid()) ? CC.DARK_GREEN + "***" : this.getCaptains().contains(cm.getUuid()) ? CC.DARK_GREEN + "*" : "") + colorName(cm.getUuid())));
 
-        player.sendMessage(CC.CHAT_BAR);
-        player.sendMessage(CC.BLUE + CC.BOLD + clan.getName() + CC.GRAY + " [" + clan.getAllMembers().size() + "/20]");
-        player.sendMessage(CC.YELLOW + "Description: " + CC.PINK + clan.getDescription());
-        player.sendMessage(CC.YELLOW + "Members: " + Strings.join(playerNames, CC.GRAY + ", "));
-        player.sendMessage(CC.YELLOW + "Elo: " + CC.BLUE + (clan.getElo() == 0 ? "[N/A]" : clan.getElo()));
-        player.sendMessage(CC.YELLOW + "Date Created: " + CC.GREEN + clan.getDateCreated());
-        player.sendMessage(CC.CHAT_BAR);
+        Locale.CLAN_INFO.toList().forEach(line -> {
+            line = line
+                    .replace("<clan_description>", this.getDescription())
+                    .replace("<clan_elo>", String.valueOf(this.getElo() == 0 ? "[N/A]" : this.getElo()))
+                    .replace("<clan_created>", this.getDateCreated())
+                    .replace("<clan_members>", Strings.join(playerNames, CC.GRAY + ", "))
+                    .replace("<clan_winstreak>", String.valueOf(this.getWinStreak()))
+                    .replace("<clan_highest_winstreak>", String.valueOf(this.getHighestWinStreak()))
+                    .replace("<clan_members_size>", String.valueOf(this.getAllMembers().size()));
+
+            player.sendMessage(line);
+        });
     }
 
     /**

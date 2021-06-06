@@ -10,6 +10,7 @@ import me.drizzy.practice.pvpclasses.classes.Bard;
 import me.drizzy.practice.pvpclasses.classes.Rogue;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.util.events.ArmorEquipEvent;
+import me.drizzy.practice.util.inventory.InventoryUtil;
 import me.drizzy.practice.util.inventory.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -244,6 +245,15 @@ public class ClassManager implements Listener {
             }
             player.getInventory().addItem(pots);
         }
+        player.updateInventory();
+
+        Array.getInstance().getClassManager().attemptEquip(player);
+    }
+
+    public static void giveRogueKit(Player player) {
+
+        player.getInventory().setArmorContents(InventoryUtil.deserializeInventory("t@305:e@0@1:e@2@4:e@34@3;t@304:e@0@1:e@34@3;t@303:e@0@1:e@34@3;t@302:e@0@1:e@34@3;"));
+        player.getInventory().setContents(InventoryUtil.deserializeInventory("t@276:e@16@1:e@34@3;t@368:a@16;t@283;t@283;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@353:a@64;t@393:a@64;t@283;t@283;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@283;t@283;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@283;t@283;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@288:a@64;"));
         player.updateInventory();
 
         Array.getInstance().getClassManager().attemptEquip(player);

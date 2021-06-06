@@ -328,7 +328,7 @@ public abstract class Match {
         } else {
             handleDeath(player, null, false);
         }
-        player.teleport(player.getLocation().add(0.0, 0.5, 0.0));
+        player.teleport(player.getLocation().add(0.0, 1.0, 0.0));
     }
 
     public void handleDeath(Player deadPlayer, Player killerPlayer, boolean disconnected) {
@@ -387,14 +387,14 @@ public abstract class Match {
                 Profile profile=Profile.getByPlayer(onlinePlayer);
                 //PotPvP aka Lunar Death Animation
                 PlayerUtil.animateDeath(deadPlayer);
-
+                if (profile.getSettings().isDeathLightning()) {
                     onlinePlayer.playSound(deadPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
 
                     if (killerPlayer != null) {
                         onlinePlayer.playSound(killerPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
                         onlinePlayer.playSound(killerPlayer.getLocation(), Sound.EXPLODE, 2.0f, explodeSoundPitch);
                     }
-                if (profile.getSettings().isDeathLightning()) {
+
                     this.sendLightningPacket(onlinePlayer, lightningPacket);
                 }
             }

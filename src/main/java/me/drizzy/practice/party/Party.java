@@ -63,7 +63,7 @@ public class Party extends Team {
     /**
      * Start the essential party tasks
      */
-    public static void preload() {
+    public static void preLoad() {
         TaskUtil.runTimerAsync(() -> parties.forEach(party -> party.getInvites().removeIf(PartyInvite::hasExpired)), 100L, 100L);
         TaskUtil.runTimerAsync(() -> {
             for (final Party party : Party.getParties()) {

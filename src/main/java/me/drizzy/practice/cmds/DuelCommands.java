@@ -39,7 +39,6 @@ import org.bukkit.entity.Player;
 
 public class DuelCommands {
 
-    private RankType rank = Array.getInstance().getRankManager();
     private Match match;
     private Arena arena;
     private Kit kit;
@@ -133,13 +132,13 @@ public class DuelCommands {
 
         if (arena.isActive()) {
             if (arena.getType().equals(ArenaType.STANDALONE)) {
-                StandaloneArena sarena=(StandaloneArena) arena;
+                StandaloneArena sarena = (StandaloneArena) arena;
                 if (sarena.getDuplicates() != null) {
-                    boolean foundarena=false;
+                    boolean foundarena = false;
                     for ( Arena darena : sarena.getDuplicates() ) {
                         if (!darena.isActive()) {
-                            arena=darena;
-                            foundarena=true;
+                            arena = darena;
+                            foundarena = true;
                             break;
                         }
                     }
@@ -171,7 +170,7 @@ public class DuelCommands {
                     }
                 }
 
-                Team teamB=new Team(new TeamPlayer(target));
+                Team teamB = new Team(new TeamPlayer(target));
 
                 for ( Player partyMember : receiverProfile.getParty().getPlayers() ) {
                     if (!partyMember.getPlayer().equals(target)) {
@@ -187,7 +186,7 @@ public class DuelCommands {
                     }
                 }
 
-                Team teamB=new Team(new TeamPlayer(target));
+                Team teamB = new Team(new TeamPlayer(target));
 
                 for ( Player partyMember : receiverProfile.getParty().getPlayers() ) {
                     if (!partyMember.getPlayer().equals(target)) {
@@ -206,7 +205,7 @@ public class DuelCommands {
         }
         if (!request.isParty()) {
             for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList() ) {
-                String opponentMessages = this.formatMessages(target, player, string, rank.getFullName(player), rank.getFullName(target), senderProfile.getStatisticsData().get(request.getKit()).getElo(), receiverProfile.getStatisticsData().get(request.getKit()).getElo(), QueueType.UNRANKED);
+                String opponentMessages = this.formatMessages(target, player, string, Rank.getRankType().getFullName(player), Rank.getRankType().getFullName(target), senderProfile.getStatisticsData().get(request.getKit()).getElo(), receiverProfile.getStatisticsData().get(request.getKit()).getElo(), QueueType.UNRANKED);
                 player.sendMessage(replaceOpponent(opponentMessages, player));
                 target.sendMessage(replaceOpponent(opponentMessages, target));
             }
@@ -216,9 +215,9 @@ public class DuelCommands {
 
     private String formatMessages(Player player1P, Player player2P, String string, String player1, String player2, int player1Elo, int player2Elo, QueueType type) {
         return string
+                .replace("<player1_ping>", String.valueOf(PlayerUtil.getPing(player1P)))
+                .replace("<player2_ping>", String.valueOf(PlayerUtil.getPing(player2P)))
                 .replace("<player1>", type == QueueType.RANKED ? player1 + CC.GRAY + " (" + player1Elo + ")" : player1)
-                .replace("<player1_ping>", String.valueOf(PlayerUtil.getPing(Bukkit.getPlayer(ArrayCache.getUUID(player1)))))
-                .replace("<player2_ping>", String.valueOf(PlayerUtil.getPing(Bukkit.getPlayer(ArrayCache.getUUID(player2)))))
                 .replace("<player2>", type == QueueType.RANKED ? player2 + CC.GRAY + " (" + player2Elo + ")" : player2);
     }
 

@@ -45,6 +45,7 @@ public class Arena {
     }
 
     public static void preload() {
+        Array.logger("&7Loading Arenas!");
         FileConfiguration configuration = Array.getInstance().getArenasConfig().getConfiguration();
 
         if (configuration.contains("arenas")) {

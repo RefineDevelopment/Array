@@ -3,6 +3,7 @@ package me.drizzy.practice.duel;
 import lombok.Data;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.Locale;
+import me.drizzy.practice.profile.rank.Rank;
 import me.drizzy.practice.profile.rank.RankType;
 import me.drizzy.practice.util.chat.Clickable;
 import me.drizzy.practice.util.other.PlayerUtil;
@@ -14,12 +15,14 @@ import org.bukkit.entity.Player;
 @Data
 public class DuelProcedure {
 
+    public static RankType rank = Rank.getRankType();
+
     private final Player sender;
     private final Player target;
     private final boolean party;
+
     private Kit kit;
     private Arena arena;
-    public static RankType rank = Array.getInstance().getRankManager();
 
     public void send() {
         if (!sender.isOnline() || !target.isOnline()) {

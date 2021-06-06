@@ -5,16 +5,16 @@ import lombok.Getter;
 import lombok.Setter;
 import me.drizzy.practice.Array;
 import me.drizzy.practice.api.events.leaderboards.KitLeaderboardsUpdateEvent;
-import me.drizzy.practice.queue.QueueType;
+import me.drizzy.practice.essentials.Essentials;
 import me.drizzy.practice.leaderboards.LeaderboardsAdapter;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.queue.Queue;
+import me.drizzy.practice.queue.QueueType;
 import me.drizzy.practice.util.chat.CC;
 import me.drizzy.practice.util.config.BasicConfigurationFile;
 import me.drizzy.practice.util.inventory.InventoryUtil;
 import me.drizzy.practice.util.inventory.ItemBuilder;
 import org.bson.Document;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -81,9 +81,11 @@ public class Kit {
     }
 
     public static void preload() {
+        Array.logger("&7Loading Kits!");
         FileConfiguration config = plugin.getKitsConfig().getConfiguration();
 
-        if (plugin.getEssentials().getMeta().isHCFEnabled()) {
+        try {
+        if (Essentials.getMeta().isHCFEnabled()) {
             HCFTeamFight = new Kit("HCFTeamFight");
             HCFTeamFight.setDisplayIcon(new ItemBuilder(Material.BEACON).clearEnchantments().clearFlags().build());
             HCFTeamFight.save();
@@ -174,7 +176,13 @@ public class Kit {
             Kit.getKits().forEach(Kit::updateKitLeaderboards);
         } catch (Exception e) {
             Array.logger("&cThere was an error loading Leaderboards, Disabling Array!");
-            Array.getInstance().shutDown();
+            Array.shutDown();
+        }
+
+        Array.logger("&aLoaded Kits!");
+        } catch (Exception e) {
+            Array.logger("&cAn Error occured while loading Kits, please check kits.yml and try again.");
+            Array.shutDown();
         }
     }
 
@@ -194,6 +202,8 @@ public class Kit {
 
     public void save() {
         String path = "kits." + name;
+
+        if (name.equals("HCFTeamFight")) return;
 
         BasicConfigurationFile configFile = plugin.getKitsConfig();
         configFile.getConfiguration().set(path + ".enabled", enabled);

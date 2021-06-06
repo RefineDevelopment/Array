@@ -39,8 +39,6 @@ import me.drizzy.practice.party.Party;
 import me.drizzy.practice.profile.Profile;
 import me.drizzy.practice.profile.ProfileProvider;
 import me.drizzy.practice.profile.rank.Rank;
-import me.drizzy.practice.profile.rank.RankType;
-import me.drizzy.practice.profile.rank.apis.DefaultProvider;
 import me.drizzy.practice.queue.Queue;
 
 import me.drizzy.practice.managers.TabManager;
@@ -56,7 +54,6 @@ import me.drizzy.practice.util.scoreboard.AssembleStyle;
 import me.drizzy.practice.util.tablist.TablistHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.yaml.snakeyaml.error.YAMLException;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -92,12 +89,6 @@ public class Array extends JavaPlugin {
     public Executor mainThread;
     public Executor taskThread;
     public Executor mongoThread;
-
-    /*
-     * Manager for ranks from APIs
-     */
-    private RankType rankManager;
-    private Hotbar hotbar;
 
     /*
      * Mongo Database
@@ -176,15 +167,6 @@ public class Array extends JavaPlugin {
 
         this.loadMessages();
 
-        mainConfig.getConfiguration().options().header(
-                "######################################################################\n" +
-                "                                                                     #\n" +
-                "          Array Practice Core - Developed By Drizzy#0278             #\n" +
-                "     Bought at Purge Development - https://discord.gg/VXzUMfBefZ     #\n" +
-                "                                                                     #\n" +
-                "######################################################################");
-        mainConfig.save();
-
         essentials = new Essentials();
         tabManager = new TabManager();
 
@@ -217,12 +199,6 @@ public class Array extends JavaPlugin {
         ListenersManager listenersManager = new ListenersManager();
         listenersManager.registerListeners();
 
-        if (essentials.getMeta().isCoreHookEnabled()) {
-            Rank.preLoad();
-        } else {
-            rankManager = new DefaultProvider();
-        }
-
         this.entityHider = EntityHider.enable();
         this.effectRestorer = new EffectRestorer(this);
         this.ClassManager= new ClassManager(this);
@@ -231,68 +207,45 @@ public class Array extends JavaPlugin {
 
     @Override
     public void onDisable() {
+
         //Stop all matches and Remove the placed Block
         Match.cleanup();
+
         //Save Everything before disabling to prevent data loss
         Kit.getKits().forEach(Kit::save);
         Arena.getArenas().forEach(Arena::save);
         Profile.getProfiles().values().forEach(Profile::save);
         Clan.getClans().forEach(Clan::save);
         getClassManager().onDisable();
+
         //Save our Values to Config
         getTabManager().save();
         getEssentials().save();
+
         //Save our Event Setup
         getBracketsManager().save();
         getLMSManager().save();
         getSumoManager().save();
         getParkourManager().save();
         getGulagManager().save();
+
         //Clear out the PlayerList for Vanilla Tab
         Profile.getPlayerList().clear();
-        disabling=true;
+        disabling = true;
     }
 
     private void preload() {
-        try {
-            preLoadMongo();
-        } catch (Exception e) {
-            logger("&cAn Error occured while loading Mongo, please check your mongo configuration and try again.");
-            this.shutDown();
-            return;
-        }
 
-        logger("&7Loading Profiles!");
+        //Amazing Static Abuse by Joeleoli XD
+        preLoadMongo();
         Profile.preload();
-        logger("&aLoaded Profiles!");
-
-        logger("&7Loading Clans!");
         Clan.preload();
-        logger("&aLoaded Clans!");
-
-        try {
-            logger("&7Loading Kits!");
-            Kit.preload();
-            logger("&aLoaded Kits!");
-        } catch (YAMLException e) {
-            logger("&cAn Error occured while loading Kits, please check kits.yml and try again.");
-            this.shutDown();
-            return;
-        }
-
-        try {
-            logger("&7Loading Arenas!");
-            Arena.preload();
-        } catch (YAMLException e) {
-            logger("&cAn Error occured while loading Arenas, please check arenas.yml and try again.");
-            this.shutDown();
-            return;
-        }
-
+        Kit.preload();
         Hotbar.preload();
         Match.preload();
-        Party.preload();
+        Party.preLoad();
         Queue.preLoad();
+        Rank.preLoad();
         SpigotHook.preload();
 
         drink.bind(Arena.class).toProvider(new ArenaProvider());
@@ -350,6 +303,14 @@ public class Array extends JavaPlugin {
     }
 
     public void loadMessages() {
+        mainConfig.getConfiguration().options().header(
+                "######################################################################\n" +
+                        "                                                                     #\n" +
+                        "          Array Practice Core - Developed By Drizzy#0278             #\n" +
+                        "     Bought at Purge Development - https://discord.gg/VXzUMfBefZ     #\n" +
+                        "                                                                     #\n" +
+                        "######################################################################");
+        mainConfig.save();
         if (this.messagesConfig == null) {
             return;
         }
@@ -370,10 +331,10 @@ public class Array extends JavaPlugin {
         messagesConfig.save();
     }
 
-    public void shutDown() {
+    public static void shutDown() {
         logger("Shutting down Array!");
-        Bukkit.getScheduler().cancelTasks(this);
-        Bukkit.getPluginManager().disablePlugin(this);
+        Bukkit.getScheduler().cancelTasks(Array.getPlugin(Array.class));
+        Bukkit.getPluginManager().disablePlugin(Array.getPlugin(Array.class));
     }
 
     public static void logger(String message) {

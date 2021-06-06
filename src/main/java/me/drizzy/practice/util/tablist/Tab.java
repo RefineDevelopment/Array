@@ -372,7 +372,7 @@ public class Tab implements ZigguratAdapter {
                 }
                 Player player1 = Profile.getPlayerList().get(pl).getPlayer();
                 ++pl;
-                elements.add(new BufferedTabObject().skin(new SkinTexture(Skin.getPlayer(player1).getProperty().getValue(), Skin.getPlayer(player1).getProperty().getSignature())).text(Array.getInstance().getRankManager().getRankColor(player1) + player1.getName()).slot(added4).ping(player1.spigot().getPing()));
+                elements.add(new BufferedTabObject().skin(new SkinTexture(Skin.getPlayer(player1).getProperty().getValue(), Skin.getPlayer(player1).getProperty().getSignature())).text(Rank.getRankType().getRankColor(player1) + player1.getName()).slot(added4).ping(player1.spigot().getPing()));
             }
         }
     }

@@ -2,6 +2,7 @@ package me.drizzy.practice.api;
 
 import me.drizzy.practice.Array;
 import me.drizzy.practice.profile.Profile;
+import me.drizzy.practice.profile.rank.Rank;
 import org.bukkit.entity.Player;
 
 /**
@@ -56,7 +57,7 @@ public class ArrayAPI implements API {
 
     @Override
     public String getDisplayName(Player player) {
-        return Array.getInstance().getRankManager().getFullName(player);
+        return Rank.getRankType().getFullName(player);
     }
 
     @Override

@@ -55,6 +55,7 @@ import me.drizzy.practice.match.team.TeamPlayer;
 import me.drizzy.practice.hook.SpigotHook;
 import me.drizzy.practice.party.Party;
 import me.drizzy.practice.duel.RematchProcedure;
+import me.drizzy.practice.profile.rank.Rank;
 import me.drizzy.practice.queue.Queue;
 import me.drizzy.practice.queue.QueueProfile;
 import me.drizzy.practice.profile.settings.meta.SettingsMeta;
@@ -178,6 +179,7 @@ public class Profile {
     }
 
     public static void preload() {
+        Array.logger("&7Loading Profiles!");
         // Players might have joined before the plugin finished loading
         for ( Player player : Bukkit.getOnlinePlayers() ) {
             Profile profile = new Profile(player.getUniqueId());
@@ -209,6 +211,7 @@ public class Profile {
                 Profile.getProfiles().values().forEach(Profile::checkForHotbarUpdate);
             }, 40L, 40L);
         }
+        Array.logger("&aLoaded Profiles!");
     }
 
     /**
@@ -269,7 +272,7 @@ public class Profile {
      * @return {@link ChatColor}
      */
     public ChatColor getColor() {
-        return plugin.getRankManager().getRankColor(this.getPlayer());
+        return Rank.getRankType().getRankColor(this.getPlayer());
     }
 
     /**
