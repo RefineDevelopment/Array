@@ -215,12 +215,48 @@ public class ClanCommands {
         clan.information(player);
     }
 
-    public void kick() {
+    @Command(name = "kick", desc = "Kick a player out of the clan", usage = "<target>")
+    public void kick(@Sender Player player, Player target) {
+        if (target == null) {
+            player.sendMessage(CC.translate("That player does not exist!"));
+            return;
+        }
 
+        Profile sender = Profile.getByUuid(player.getUniqueId());
+        Profile profile = Profile.getByUuid(target.getUniqueId());
+
+        Clan senderClan = sender.getClan();
+        Clan targetClan = profile.getClan();
+
+        if (!targetClan.getName().equals(senderClan.getName())) {
+            player.sendMessage(CC.translate("&cThis player is not in your clan!"));
+            return;
+        }
+
+        targetClan.broadcast("&c" + profile.getName() + " has been kicked from the clan!");
+        targetClan.kick(target.getUniqueId());
     }
 
-    public void ban() {
+    @Command(name = "ban", desc = "Bans a player from the clan", usage = "<target>")
+    public void ban(@Sender Player player, Player target) {
+        if (target == null) {
+            player.sendMessage(CC.translate("That player does not exist!"));
+            return;
+        }
 
+        Profile sender = Profile.getByUuid(player.getUniqueId());
+        Profile profile = Profile.getByUuid(target.getUniqueId());
+
+        Clan senderClan = sender.getClan();
+        Clan targetClan = profile.getClan();
+
+        if (!targetClan.getName().equals(senderClan.getName())) {
+            player.sendMessage(CC.translate("&cThat player is not in your clan!"));
+            return;
+        }
+
+        targetClan.broadcast("&c" + profile.getName() + " has been banned from the clan!");
+        targetClan.ban(target.getUniqueId());
     }
 
     public void password() {

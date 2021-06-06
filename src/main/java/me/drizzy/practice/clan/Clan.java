@@ -378,9 +378,15 @@ public class Clan {
      *
      * @param player The player getting kicked from the Clan
      */
-    public void kick(Player player) {
+    public void kick(UUID uuid) {
+        Profile profile = Profile.getByUuid(uuid);
+        ClanProfile clanProfile = profile.getClanProfile();
 
+        if (this.captains.contains(clanProfile)) this.captains.remove(clanProfile);
 
+        this.members.remove(clanProfile);
+        clanProfile.setClan(null);
+        profile.setClan(null);
     }
 
     /**
@@ -388,9 +394,18 @@ public class Clan {
      *
      * @param player The player getting banned from the Clan
      */
-    public void ban(Player player) {
+    public void ban(UUID uuid) {
+        Profile profile = Profile.getByUuid(uuid);
+        ClanProfile clanProfile = profile.getClanProfile();
 
+        if (this.captains.contains(clanProfile)) this.captains.remove(clanProfile);
 
+        if (this.members.contains(clanProfile)) {
+            this.members.remove(clanProfile);
+            clanProfile.setClan(null);
+            profile.setClan(null);
+        }
+        this.bannedPlayers.add(uuid);
     }
 
 
