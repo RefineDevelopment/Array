@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>Array</name>
-    <url>https://discord.link/purge</url>
+    <url>https://dsc.gg/refine</url>
     <description>Most Modern and Support Friendly Practice Plugin</description>
 
     <organization>
-        <name>Purge Development</name>
-        <url>https://discord.link/purge</url>
+        <name>Refine Development</name>
+        <url>https://dsc.gg/refine</url>
     </organization>
 
     <groupId>me.drizzy.practice</groupId>
@@ -60,11 +60,10 @@
 
         <!-- Spigot Support for Knockback & HCF -->
         <dependency>
-            <groupId>me.drizzy.nms</groupId>
+            <groupId>xyz.refinedev.addon</groupId>
             <artifactId>SpigotSupport</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/SpigotSupport.jar</systemPath>
+            <version>1.3</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- Mongo Driver -->
@@ -81,16 +80,6 @@
             <version>4.4</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/ProtocolLib.jar</systemPath>
-        </dependency>
-
-        <!--Robot Handler-->
-        <dependency>
-            <groupId>net.citizensnpcs</groupId>
-            <artifactId>citizensapi</artifactId>
-            <version>2.0.18-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Citizens.jar</systemPath>
         </dependency>
 
         <!--Via Version for Tablist-->

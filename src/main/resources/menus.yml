@@ -34,8 +34,10 @@ MENUS:
     Editor:
   SETTINGS:
     TITLE: "&7Profile Settings"
+    SIZE: 27
     BUTTONS:
       TOGGLESCOREBOARD:
+        SLOT: 0
         NAME: "&c&lToggle Scoreboard"
         MATERIAL: PAINTING
         LORE:
@@ -50,6 +52,7 @@ MENUS:
           SELECTED: "&a&l■ &fDon't Show scoreboard"
           NOT_SELECTED: "&8&l■ &fDon't Show scoreboard"
       TOGGLEPINGONSCOREBOARD:
+        SLOT: 1
         NAME: "&c&lToggle Ping on Scoreboard"
         MATERIAL: STRING
         LORE:
@@ -64,6 +67,7 @@ MENUS:
           SELECTED: "&a&l■ &fDon't Show Ping on Scoreboard"
           NOT_SELECTED: "&8&l■ &fDon't Show Ping on Scoreboard"
       TOGGLECPSONSCOREBOARD:
+        SLOT: 2
         NAME: "&c&lToggle CPS on Scoreboard"
         MATERIAL: BEACON
         LORE:
@@ -78,6 +82,7 @@ MENUS:
           SELECTED: "&a&l■ &fDon't Show CPS on Scoreboard"
           NOT_SELECTED: "&8&l■ &fDon't Show CPS on Scoreboard"
       TOGGLESPECTATORS:
+        SLOT: 3
         NAME: "&c&lToggle Spectators"
         MATERIAL: ENDER_PEARL
         LORE:
@@ -92,6 +97,7 @@ MENUS:
           SELECTED: "&a&l■ &fDon't Allow Spectators"
           NOT_SELECTED: "&8&l■ &fDon't Allow Spectators"
       TOGGLESHOWPLAYERS:
+        SLOT: 4
         NAME: "&c&lToggle Player Visibility"
         MATERIAL: LEVER
         LORE:
@@ -106,6 +112,7 @@ MENUS:
           SELECTED: "&a&l■ &fDon't Players at Lobby"
           NOT_SELECTED: "&8&l■ &fDon't Players at Lobby"
       TOGGLEDUELREQUESTS:
+        SLOT: 5
         NAME: "&c&lToggle Duel Requests"
         MATERIAL: DIAMOND_SWORD
         LORE:
@@ -120,6 +127,7 @@ MENUS:
           SELECTED: "&a&l■ &fDon't Allow Duels from others"
           NOT_SELECTED: "&8&l■ &fDon't Allow Duels from others"
       TOGGLETOURNAMENTMESSAGES:
+        SLOT: 6
         NAME: "&c&lToggle Tournament Messages"
         MATERIAL: PAPER
         LORE:
@@ -134,6 +142,7 @@ MENUS:
           SELECTED: "&a&l■ &fDon't Show Tournament Messages"
           NOT_SELECTED: "&8&l■ &fDon't Show Tournament Messages"
       TOGGLETABSTYLE:
+        SLOT: 7
         NAME: "&lToggle Tablist Style"
         MATERIAL: REDSTONE_COMPARATOR
         LORE:
@@ -148,6 +157,7 @@ MENUS:
           SELECTED: "&a&l■ &fDon't Show scoreboard"
           NOT_SELECTED: "&8&l■ &fDon't Show scoreboard"
       TOGGLEPINGFACTOR:
+        SLOT: 8
         NAME: "&c&lToggle Ping Factor"
         MATERIAL: BOOK
         LORE_NO_PERM:
@@ -168,6 +178,7 @@ MENUS:
           SELECTED: "&a&l■ &fDon't Use Ping Factor"
           NOT_SELECTED: "&8&l■ &fDon't Use Ping Factor"
       TOGGLELIGHTNING:
+        SLOT: 9
         NAME: "&c&lToggle Lightning"
         MATERIAL: BLAZE_ROD
         LORE_NO_PERM:
@@ -188,6 +199,7 @@ MENUS:
           SELECTED: "&a&l■ &fDisable Lightning Death Effect"
           NOT_SELECTED: "&8&l■ &fDisable Lightning Death Effect"
       TOGGLEDROPPROTECT:
+        SLOT: 10
         NAME: "&c&lToggle Drop Protect"
         MATERIAL: GOLD_SWORD
         LORE_NO_PERM:
