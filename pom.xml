@@ -29,6 +29,7 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
             <version>4.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -82,7 +83,7 @@
             <systemPath>${project.basedir}/lib/ProtocolLib.jar</systemPath>
         </dependency>
 
-        <!--Via Version for Tablist-->
+        <!--Via Version for TablistHandler-->
         <dependency>
             <groupId>us.myles.ViaVersion</groupId>
             <artifactId>ViaVersion</artifactId>
@@ -91,7 +92,7 @@
             <systemPath>${project.basedir}/lib/tab/ViaVersion.jar</systemPath>
         </dependency>
 
-        <!--ProtocolSupport for Tablist-->
+        <!--ProtocolSupport for TablistHandler-->
         <dependency>
             <groupId>protocolsupport</groupId>
             <artifactId>ProtocolSupport</artifactId>

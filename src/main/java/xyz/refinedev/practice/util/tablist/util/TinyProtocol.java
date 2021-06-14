@@ -31,21 +31,21 @@ public abstract class TinyProtocol {
 	private static final AtomicInteger ID = new AtomicInteger(0);
 
 	// Used in order to lookup a channel
-	private static final Reflection.MethodInvoker getPlayerHandle = Reflection.getMethod("{obc}.entity.CraftPlayer", "getHandle");
-	private static final Reflection.FieldAccessor<Object> getConnection = Reflection.getField("{nms}.EntityPlayer", "playerConnection", Object.class);
-	private static final Reflection.FieldAccessor<Object> getManager = Reflection.getField("{nms}.PlayerConnection", "networkManager", Object.class);
-	private static final Reflection.FieldAccessor<Channel> getChannel = Reflection.getField("{nms}.NetworkManager", Channel.class, 0);
+	private static final xyz.refinedev.practice.util.tablist.util.Reflection.MethodInvoker getPlayerHandle = xyz.refinedev.practice.util.tablist.util.Reflection.getMethod("{obc}.entity.CraftPlayer", "getHandle");
+	private static final xyz.refinedev.practice.util.tablist.util.Reflection.FieldAccessor<Object> getConnection = xyz.refinedev.practice.util.tablist.util.Reflection.getField("{nms}.EntityPlayer", "playerConnection", Object.class);
+	private static final xyz.refinedev.practice.util.tablist.util.Reflection.FieldAccessor<Object> getManager = xyz.refinedev.practice.util.tablist.util.Reflection.getField("{nms}.PlayerConnection", "networkManager", Object.class);
+	private static final xyz.refinedev.practice.util.tablist.util.Reflection.FieldAccessor<Channel> getChannel = xyz.refinedev.practice.util.tablist.util.Reflection.getField("{nms}.NetworkManager", Channel.class, 0);
 
 	// Looking up ServerConnection
-	private static final Class<Object> minecraftServerClass = Reflection.getUntypedClass("{nms}.MinecraftServer");
-	private static final Class<Object> serverConnectionClass = Reflection.getUntypedClass("{nms}.ServerConnection");
-	private static final Reflection.FieldAccessor<Object> getMinecraftServer = Reflection.getField("{obc}.CraftServer", minecraftServerClass, 0);
-	private static final Reflection.FieldAccessor<Object> getServerConnection = Reflection.getField(minecraftServerClass, serverConnectionClass, 0);
-	private static final Reflection.MethodInvoker getNetworkMarkers = Reflection.getTypedMethod(serverConnectionClass, null, List.class, serverConnectionClass);
+	private static final Class<Object> minecraftServerClass = xyz.refinedev.practice.util.tablist.util.Reflection.getUntypedClass("{nms}.MinecraftServer");
+	private static final Class<Object> serverConnectionClass = xyz.refinedev.practice.util.tablist.util.Reflection.getUntypedClass("{nms}.ServerConnection");
+	private static final xyz.refinedev.practice.util.tablist.util.Reflection.FieldAccessor<Object> getMinecraftServer = xyz.refinedev.practice.util.tablist.util.Reflection.getField("{obc}.CraftServer", minecraftServerClass, 0);
+	private static final xyz.refinedev.practice.util.tablist.util.Reflection.FieldAccessor<Object> getServerConnection = xyz.refinedev.practice.util.tablist.util.Reflection.getField(minecraftServerClass, serverConnectionClass, 0);
+	private static final xyz.refinedev.practice.util.tablist.util.Reflection.MethodInvoker getNetworkMarkers = xyz.refinedev.practice.util.tablist.util.Reflection.getTypedMethod(serverConnectionClass, null, List.class, serverConnectionClass);
 
 	// Packets we have to intercept
-	private static final Class<?> PACKET_LOGIN_IN_START = Reflection.getMinecraftClass("PacketLoginInStart");
-	private static final Reflection.FieldAccessor<GameProfile> getGameProfile = Reflection.getField(PACKET_LOGIN_IN_START, GameProfile.class, 0);
+	private static final Class<?> PACKET_LOGIN_IN_START = xyz.refinedev.practice.util.tablist.util.Reflection.getMinecraftClass("PacketLoginInStart");
+	private static final xyz.refinedev.practice.util.tablist.util.Reflection.FieldAccessor<GameProfile> getGameProfile = xyz.refinedev.practice.util.tablist.util.Reflection.getField(PACKET_LOGIN_IN_START, GameProfile.class, 0);
 
 	// Speedup channel lookup
 	private final Map<String, Channel> channelLookup = new MapMaker().weakValues().makeMap();
@@ -191,7 +191,7 @@ public abstract class TinyProtocol {
 
 		// Find the correct list, or implicitly throw an exception
 		for (int i = 0; looking; i++) {
-			List<Object> list = Reflection.getField(serverConnection.getClass(), List.class, i).get(serverConnection);
+			List<Object> list = xyz.refinedev.practice.util.tablist.util.Reflection.getField(serverConnection.getClass(), List.class, i).get(serverConnection);
 
 			for (Object item : list) {
 				if (!(item instanceof ChannelFuture))

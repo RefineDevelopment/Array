@@ -3,7 +3,7 @@ package xyz.refinedev.practice.profile.settings.meta;
 import lombok.Data;
 
 /**
- * This Project is the property of Purge Community © 2021
+ * This Project is the property of Refine Development © 2021
  * Redistribution of this Project is not allowed
  *
  * @author Drizzy

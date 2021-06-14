@@ -5,10 +5,10 @@ import com.google.common.collect.Maps;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import lombok.Getter;
-import xyz.refinedev.practice.util.tablist.TablistHandler;
 import net.minecraft.server.v1_8_R3.*;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent.ChatSerializer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
+import xyz.refinedev.practice.util.tablist.TablistHandler;
 import xyz.refinedev.practice.util.tablist.entry.TabEntry;
 import xyz.refinedev.practice.util.tablist.skin.Skin;
 import xyz.refinedev.practice.util.tablist.util.Reflection;
@@ -28,7 +28,8 @@ public class TabLayout {
 	private final Map<Integer, GameProfile> profileMapping = Maps.newHashMap();
 	private final Map<Integer, Skin> skinMapping = Maps.newHashMap();
 
-	@Getter private static final Map<UUID, TabLayout> layoutMapping = Maps.newHashMap();
+	@Getter
+	private static final Map<UUID, TabLayout> layoutMapping = Maps.newHashMap();
 
 	private final MinecraftServer minecraftServer = MinecraftServer.getServer();
 	private final WorldServer worldServer = minecraftServer.getWorldServer(0);
@@ -148,12 +149,12 @@ public class TabLayout {
 	private void fetchSkin(int index, GameProfile gameProfile, Skin skin) {
 		boolean continueAt = false;
 		if(Bukkit.getPluginManager().getPlugin("ProtocolSupport") != null) {
-			if (ProtocolSupportAPI.getProtocolVersion(player).getId() >= 47) {
+			if(ProtocolSupportAPI.getProtocolVersion(player).getId() >= 47) {
 				continueAt = true;
 			}
 		}
 
-		if (Bukkit.getPluginManager().getPlugin("ViaVersion") != null) {
+		if(Bukkit.getPluginManager().getPlugin("ViaVersion") != null) {
 			if(ViaVersionPlugin.getInstance().getApi().getPlayerVersion(player) >= 47) {
 				continueAt = true;
 			}
@@ -188,12 +189,12 @@ public class TabLayout {
 	}
 
 	public void create() {
-		PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
+		PacketPlayOutScoreboardTeam packet;
 		PacketPlayOutPlayerInfo packetInfo = new PacketPlayOutPlayerInfo();
 
 		Reflection.getField(packetInfo.getClass(), "a", Object.class).set(packetInfo, EnumPlayerInfoAction.ADD_PLAYER);
 
-		List<PacketPlayOutPlayerInfo.PlayerInfoData> dataList = (List<PacketPlayOutPlayerInfo.PlayerInfoData>) Reflection.getField(packetInfo.getClass(), "b", Object.class).get(packetInfo);
+		List<PacketPlayOutPlayerInfo.PlayerInfoData> infoDatas = (List<PacketPlayOutPlayerInfo.PlayerInfoData>) Reflection.getField(packetInfo.getClass(), "b", Object.class).get(packetInfo);
 
 		GameProfile gameProfile;
 
@@ -208,7 +209,7 @@ public class TabLayout {
 				gameProfile = new GameProfile(UUID.randomUUID(), getTeamAt(row, column));
 				gameProfile.getProperties().put(Skin.TEXTURE_KEY, property);
 
-				dataList.add(packetInfo.new PlayerInfoData(gameProfile, 0, WorldSettings.EnumGamemode.SURVIVAL, null));
+				infoDatas.add(packetInfo.new PlayerInfoData(gameProfile, 0, WorldSettings.EnumGamemode.SURVIVAL, null));
 
 				pingMapping.put(index, 0);
 				profileMapping.put(index, gameProfile);
@@ -224,17 +225,15 @@ public class TabLayout {
 			gameProfile = new GameProfile(UUID.randomUUID(), getTeamAt(index));
 			gameProfile.getProperties().put(Skin.TEXTURE_KEY, property);
 
-			dataList.add(packetInfo.new PlayerInfoData(gameProfile, 0, WorldSettings.EnumGamemode.SURVIVAL, null));
+			infoDatas.add(packetInfo.new PlayerInfoData(gameProfile, 0, WorldSettings.EnumGamemode.SURVIVAL, null));
 
 			pingMapping.put(index, 0);
 			profileMapping.put(index, gameProfile);
 		}
 
-//		Bukkit.getLogger().info("Send info datas");
 		entityPlayer.playerConnection.sendPacket(packetInfo);
 
 		packet = new PacketPlayOutScoreboardTeam();
-
 		Reflection.getField(packet.getClass(), "a", String.class).set(packet, "tab");
 		Reflection.getField(packet.getClass(), "b", String.class).set(packet, "tab");
 

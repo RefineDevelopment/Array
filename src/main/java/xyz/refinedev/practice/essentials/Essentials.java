@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This Project is the property of Purge Community © 2021
+ * This Project is the property of Refine Development © 2021
  * Redistribution of this Project is not allowed
  *
  * @author Drizzy
@@ -44,21 +44,11 @@ public class Essentials {
     @Getter public static String license = config.getStringOrDefault("LICENSE", "XXXX-XXXX-XXXX");
 
     public Essentials() {
-        new PiracyMeta(Array.getInstance(), license);
+        //new PiracyMeta(Array.getInstance(), license);
+        Essentials.setupEssentials();
     }
 
     public static void setupEssentials() {
-        Array.getInstance().preload();
-        Array.getInstance().preloadAdapters();
-
-        Array.logger("&7Registering Commands...");
-        CMDManager CMDManager = new CMDManager();
-        CMDManager.registerCommands();
-
-        Array.logger("&7Registering Listeners....");
-        ListenersManager listenersManager = new ListenersManager();
-        listenersManager.registerListeners();
-
         Arrays.asList(
                 Material.WORKBENCH,
                 Material.STICK,

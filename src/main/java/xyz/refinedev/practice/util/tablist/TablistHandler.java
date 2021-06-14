@@ -23,6 +23,6 @@ public class TablistHandler {
 		new TabPacket(plugin);
 				
 		Bukkit.getServer().getPluginManager().registerEvents(new TabListener(this), plugin);
-		Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new TabRunnable(adapter), 60L, time);
+		Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new TabRunnable(adapter), 60L, time); //TODO: async to run 1 millis
 	}
 }

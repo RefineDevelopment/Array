@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.*;
 
 /**
- * This Project is the property of Purge Community © 2021
+ * This Project is the property of Refine Development © 2021
  * Redistribution of this Project is not allowed
  *
  * @author Drizzy

@@ -17,6 +17,8 @@ import xyz.refinedev.practice.arena.ArenaProvider;
 import xyz.refinedev.practice.arena.ArenaTypeProvider;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.essentials.Essentials;
+import xyz.refinedev.practice.managers.CMDManager;
+import xyz.refinedev.practice.managers.ListenersManager;
 import xyz.refinedev.practice.profile.divisions.Divisions;
 import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.events.types.brackets.BracketsManager;
@@ -60,7 +62,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 /**
- * This Project is the property of Purge Community © 2021
+ * This Project is the property of Refine Development © 2021
  * Redistribution of this Project is not allowed
  *
  * @author Drizzy
@@ -168,15 +170,17 @@ public class Array extends JavaPlugin {
         essentials = new Essentials();
         tabManager = new TabManager();
 
-        if (!Description.getAuthor().contains("Drizzy") || !Description.getName().contains("Array")) {
+        if (!Description.getAuthor().contains("RefineDevelopment") || !Description.getName().contains("Array")) {
             logger(CC.CHAT_BAR);
-            logger("&cYou edited the plugin.yml, haha get caught in 4k");
-            logger("&cPlease check your plugin.yml and try again.");
-            logger("            &cDisabling Array");
+            logger("  &cYou edited the plugin.yml, haha get caught in 4k");
+            logger("  &cPlease check your plugin.yml and try again.");
+            logger("                 &cDisabling Array");
             logger(CC.CHAT_BAR);
             shutDown();
             return;
         }
+
+        this.preload();
 
         divisionsManager = new Divisions();
         sumoManager = new SumoManager();
@@ -186,9 +190,18 @@ public class Array extends JavaPlugin {
         spleefManager = new SpleefManager();
         gulagManager = new GulagManager();
 
+        Array.logger("&7Registering Commands...");
+        CMDManager CMDManager = new CMDManager();
+        CMDManager.registerCommands();
+
+        Array.logger("&7Registering Listeners....");
+        ListenersManager listenersManager = new ListenersManager();
+        listenersManager.registerListeners();
+
         this.entityHider = EntityHider.enable();
         this.effectRestorer = new EffectRestorer(this);
         this.ClassManager= new ClassManager(this);
+        this.preloadAdapters();
     }
 
     @Override
@@ -321,8 +334,7 @@ public class Array extends JavaPlugin {
 
     public static void shutDown() {
         logger("Shutting down Array!");
-        Bukkit.getScheduler().cancelTasks(Array.getPlugin(Array.class));
-        Bukkit.getPluginManager().disablePlugin(Array.getPlugin(Array.class));
+        Bukkit.shutdown();
     }
 
     public static void logger(String message) {

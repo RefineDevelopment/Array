@@ -143,7 +143,7 @@ MENUS:
           NOT_SELECTED: "&8&l■ &fDon't Show Tournament Messages"
       TOGGLETABSTYLE:
         SLOT: 7
-        NAME: "&lToggle Tablist Style"
+        NAME: "&lToggle TablistHandler Style"
         MATERIAL: REDSTONE_COMPARATOR
         LORE:
           - "&7Enable or Disable Scoreboard"
