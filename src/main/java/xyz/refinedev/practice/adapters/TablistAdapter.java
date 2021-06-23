@@ -1,7 +1,9 @@
 package xyz.refinedev.practice.adapters;
 
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.managers.TabManager;
+import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.util.chat.CC;
+import xyz.refinedev.practice.util.config.BasicConfigurationFile;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.tablist.adapter.TabAdapter;
 import xyz.refinedev.practice.util.tablist.entry.TabEntry;
@@ -23,8 +25,8 @@ import java.util.List;
 
 public class TablistAdapter implements TabAdapter {
 
-    private final TabManager manager = Array.getInstance().getTabManager();
     private final Array plugin = Array.getInstance();
+    private final BasicConfigurationFile config = plugin.getTablistConfig();
 
     /**
      * Get the tab header for a player
@@ -34,7 +36,7 @@ public class TablistAdapter implements TabAdapter {
      */
     @Override
     public String getHeader(Player player) {
-        return manager.getHeader();
+        return config.getString("TABLIST.HEADER");
     }
 
     /**
@@ -45,7 +47,7 @@ public class TablistAdapter implements TabAdapter {
      */
     @Override
     public String getFooter(Player player) {
-        return manager.getFooter();
+        return config.getString("TABLIST.FOOTER");
     }
 
     /**
@@ -57,12 +59,87 @@ public class TablistAdapter implements TabAdapter {
     @Override
     public List<TabEntry> getLines(Player player) {
         List<TabEntry> entries = new ArrayList<>();
-        for (int i = 0; i < 80; i++) {
-            final int x = i % 4;
-            final int y = i / 4;
+        Profile profile = Profile.getByPlayer(player); 
+        
+        if (profile.isInLobby() && profile.getParty() == null) {
+            for ( int i = 0; i < 20; i++ ) {
+                String string = config.getString("LOBBY.LEFT." + i + 1);
+                TabEntry entry = new TabEntry(3, i, CC.translate(replaceLobby(string)));
 
-            entries.add(new TabEntry(x, y, ChatColor.GREEN + "Slot: " + ChatColor.GRAY + x + ", " + y, PlayerUtil.getPing(player), Skin.getPlayer(player)));
+                if (hasDot(string)) entry.setSkin(getDot(string));
+                if (hasSkin(string)) entry.setSkin(getSkin(player, string));
+
+                entries.add(entry);
+            }
+            for ( int i = 0; i < 20; i++ ) {
+                String string = config.getString("LOBBY.MIDDLE." + i + 1);
+                TabEntry entry = new TabEntry(3, i, CC.translate(replaceLobby(string)));
+
+                if (hasDot(string)) entry.setSkin(getDot(string));
+                if (hasSkin(string)) entry.setSkin(getSkin(player, string));
+
+                entries.add(entry);
+            }
+            for ( int i = 0; i < 20; i++ ) {
+                String string = config.getString("LOBBY.RIGHT." + i + 1);
+                TabEntry entry = new TabEntry(3, i, CC.translate(replaceLobby(string)));
+
+                if (hasDot(string)) entry.setSkin(getDot(string));
+                if (hasSkin(string)) entry.setSkin(getSkin(player, string));
+
+                entries.add(entry);
+            }
+            for ( int i = 0; i < 20; i++ ) {
+                String string = config.getString("LOBBY.FAR-RIGHT." + i + 1);
+                TabEntry entry = new TabEntry(3, i, CC.translate(replaceLobby(string)));
+
+                if (hasDot(string)) entry.setSkin(getDot(string));
+                if (hasSkin(string)) entry.setSkin(getSkin(player, string));
+
+                entries.add(entry);
+            }
         }
         return entries;
+    }
+    
+    public String replaceLobby(String toReplace) {
+        toReplace = toReplace
+                .replace("", "");
+        
+        return toReplace;
+    }
+
+    public boolean hasDot(String text) {
+        return text.contains("<dot");
+    }
+
+    public Skin getDot(String text) {
+        for ( ChatColor value : ChatColor.values() ) {
+            if (text.contains("<dot_" + value.name().toLowerCase())) {
+                return Skin.getDot(value);
+            }
+        }
+        return Skin.DEFAULT_SKIN;
+    }
+    
+    public boolean hasSkin(String text) {
+        return text.contains("<your_player>") || text.contains("<opponent_player>") || text.contains("<skin_");
+    }
+
+    public Skin getSkin(Player player, String text) {
+        if (text.contains("<your_player>"))  return Skin.getPlayer(player);
+        if (text.contains("<skin_twitter>")) return Skin.TWITTER_SKIN;
+        if (text.contains("<skin_website>")) return Skin.WEBSITE_SKIN;
+        if (text.contains("<skin_discord>")) return Skin.DISCORD_SKIN;
+        if (text.contains("<skin_youtube>")) return Skin.YOUTUBE_SKIN;
+
+        if (text.contains("<opponent_player>")) {
+            Profile profile = Profile.getByPlayer(player);
+            if (profile.getMatch() != null) {
+                return Skin.getPlayer(profile.getMatch().getOpponentPlayer(player));
+            }
+        }
+
+        return Skin.DEFAULT_SKIN;
     }
 }

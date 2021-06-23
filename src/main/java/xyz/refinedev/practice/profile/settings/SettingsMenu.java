@@ -77,7 +77,7 @@ public class SettingsMenu extends Menu {
                 case TOGGLESCOREBOARD:
                     key = "MENUS.SETTINGS.BUTTONS.TOGGLESCOREBOARD";
                     for ( String text : config.getStringList(key + ".LORE" )) {
-                        if (text.contains("<option>")) {
+                        if (text.contains("<options>")) {
                             lines.add((profile.getSettings().isScoreboardEnabled() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
                             lines.add((!profile.getSettings().isScoreboardEnabled() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
                             continue;
@@ -88,7 +88,7 @@ public class SettingsMenu extends Menu {
                 case TOGGLEDUELREQUESTS:
                     key = "MENUS.SETTINGS.BUTTONS.TOGGLEDUELREQUESTS";
                     for ( String text : config.getStringList(key + ".LORE" )) {
-                        if (text.contains("<option>")) {
+                        if (text.contains("<options>")) {
                             lines.add((profile.getSettings().isReceiveDuelRequests() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
                             lines.add((!profile.getSettings().isReceiveDuelRequests() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
                             continue;
@@ -100,7 +100,7 @@ public class SettingsMenu extends Menu {
                     key = "MENUS.SETTINGS.BUTTONS.TOGGLEPINGFACTOR";
                     if (player.hasPermission("array.profile.pingfactor")) {
                         for ( String text : config.getStringList(key + ".LORE_PERMISSION" )) {
-                            if (text.contains("<option>")) {
+                            if (text.contains("<options>")) {
                                 lines.add((profile.getSettings().isUsingPingFactor() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
                                 lines.add((!profile.getSettings().isUsingPingFactor() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
                                 continue;
@@ -114,7 +114,7 @@ public class SettingsMenu extends Menu {
                 case TOGGLESPECTATORS:
                     key = "MENUS.SETTINGS.BUTTONS.TOGGLESPECTATORS";
                     for ( String text : config.getStringList(key + ".LORE" )) {
-                        if (text.contains("<option>")) {
+                        if (text.contains("<options>")) {
                             lines.add((profile.getSettings().isAllowSpectators() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
                             lines.add((!profile.getSettings().isAllowSpectators() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
                             continue;
@@ -126,7 +126,7 @@ public class SettingsMenu extends Menu {
                     key = "MENUS.SETTINGS.BUTTONS.TOGGLELIGHTNING";
                     if (player.hasPermission("array.profile.lightning")) {
                         for ( String text : config.getStringList(key + ".LORE_PERMISSION" )) {
-                            if (text.contains("<option>")) {
+                            if (text.contains("<options>")) {
                                 lines.add((profile.getSettings().isDeathLightning() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
                                 lines.add((!profile.getSettings().isDeathLightning() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
                                 continue;
@@ -140,7 +140,7 @@ public class SettingsMenu extends Menu {
                 case TOGGLEPINGONSCOREBOARD:
                     key = "MENUS.SETTINGS.BUTTONS.TOGGLEPINGONSCOREBOARD";
                     for ( String text : config.getStringList(key + ".LORE" )) {
-                        if (text.contains("<option>")) {
+                        if (text.contains("<options>")) {
                             lines.add((profile.getSettings().isPingScoreboard() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
                             lines.add((!profile.getSettings().isPingScoreboard() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
                             continue;
@@ -151,7 +151,7 @@ public class SettingsMenu extends Menu {
                 case TOGGLECPSONSCOREBOARD:
                     key = "MENUS.SETTINGS.BUTTONS.TOGGLECPSONSCOREBOARD";
                     for ( String text : config.getStringList(key + ".LORE" )) {
-                        if (text.contains("<option>")) {
+                        if (text.contains("<options>")) {
                             lines.add((profile.getSettings().isCpsScoreboard() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
                             lines.add((!profile.getSettings().isCpsScoreboard() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
                             continue;
@@ -162,7 +162,7 @@ public class SettingsMenu extends Menu {
                 case TOGGLETOURNAMENTMESSAGES:
                     key = "MENUS.SETTINGS.BUTTONS.TOGGLETOURNAMENTMESSAGES";
                     for ( String text : config.getStringList(key + ".LORE" )) {
-                        if (text.contains("<option>")) {
+                        if (text.contains("<options>")) {
                             lines.add((profile.getSettings().isAllowTournamentMessages() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
                             lines.add((!profile.getSettings().isAllowTournamentMessages() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
                             continue;
@@ -173,7 +173,7 @@ public class SettingsMenu extends Menu {
                 case TOGGLETABSTYLE:
                     key = "MENUS.SETTINGS.BUTTONS.TOGGLETABSTYLE";
                     for ( String text : config.getStringList(key + ".LORE" )) {
-                        if (text.contains("<option>")) {
+                        if (text.contains("<options>")) {
                             lines.add((profile.getSettings().isVanillaTab() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
                             lines.add((!profile.getSettings().isVanillaTab() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
                             continue;
@@ -184,7 +184,7 @@ public class SettingsMenu extends Menu {
                 case TOGGLESHOWPLAYERS:
                     key = "MENUS.SETTINGS.BUTTONS.TOGGLESHOWPLAYERS";
                     for ( String text : config.getStringList(key + ".LORE" )) {
-                        if (text.contains("<option>")) {
+                        if (text.contains("<options>")) {
                             lines.add((profile.getSettings().isShowPlayers() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
                             lines.add((!profile.getSettings().isShowPlayers() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
                             continue;
@@ -196,7 +196,7 @@ public class SettingsMenu extends Menu {
                     key = "MENUS.SETTINGS.BUTTONS.TOGGLEDROPPROTECT";
                     if (player.hasPermission("array.profile.dropprotect")) {
                         for ( String text : config.getStringList(key + ".LORE_PERMISSION" )) {
-                            if (text.contains("<option>")) {
+                            if (text.contains("<options>")) {
                                 lines.add((profile.getSettings().isPreventSword() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
                                 lines.add((!profile.getSettings().isPreventSword() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
                                 continue;
