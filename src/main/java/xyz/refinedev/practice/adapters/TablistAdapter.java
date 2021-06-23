@@ -1,15 +1,14 @@
 package xyz.refinedev.practice.adapters;
 
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.BasicConfigurationFile;
-import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.tablist.adapter.TabAdapter;
 import xyz.refinedev.practice.util.tablist.entry.TabEntry;
 import xyz.refinedev.practice.util.tablist.skin.Skin;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;

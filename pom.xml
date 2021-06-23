@@ -178,9 +178,9 @@
 
 
     <!--Maven Compiler (Deprecated)-->
-    <!--Use Artifact to compile please!-->
 
     <build>
+        <finalName>${project.name}-${project.version}</finalName>
         <defaultGoal>clean install</defaultGoal>
         <resources>
             <resource>
