@@ -64,82 +64,92 @@ public class TablistAdapter implements TabAdapter {
         if (profile.isInLobby() && profile.getParty() == null) {
             for ( int i = 0; i < 20; i++ ) {
                 String string = config.getString("LOBBY.LEFT." + i + 1);
-                TabEntry entry = new TabEntry(3, i, CC.translate(replaceLobby(string)));
 
-                if (hasDot(string)) entry.setSkin(getDot(string));
-                if (hasSkin(string)) entry.setSkin(getSkin(player, string));
+                TabEntry rawEntry = new TabEntry(0, i, CC.translate(replaceLobby(player, string)));
+                TabEntry entry = checkSkin(player, rawEntry);
+                TabEntry finalEntry = checkDot(entry);
 
-                entries.add(entry);
+                entries.add(finalEntry);
             }
             for ( int i = 0; i < 20; i++ ) {
                 String string = config.getString("LOBBY.MIDDLE." + i + 1);
-                TabEntry entry = new TabEntry(3, i, CC.translate(replaceLobby(string)));
 
-                if (hasDot(string)) entry.setSkin(getDot(string));
-                if (hasSkin(string)) entry.setSkin(getSkin(player, string));
+                TabEntry rawEntry = new TabEntry(1, i, CC.translate(replaceLobby(player, string)));
+                TabEntry entry = checkSkin(player, rawEntry);
+                TabEntry finalEntry = checkDot(entry);
 
-                entries.add(entry);
+                entries.add(finalEntry);
             }
             for ( int i = 0; i < 20; i++ ) {
                 String string = config.getString("LOBBY.RIGHT." + i + 1);
-                TabEntry entry = new TabEntry(3, i, CC.translate(replaceLobby(string)));
 
-                if (hasDot(string)) entry.setSkin(getDot(string));
-                if (hasSkin(string)) entry.setSkin(getSkin(player, string));
+                TabEntry rawEntry = new TabEntry(2, i, CC.translate(replaceLobby(player, string)));
+                TabEntry entry = checkSkin(player, rawEntry);
+                TabEntry finalEntry = checkDot(entry);
 
-                entries.add(entry);
+                entries.add(finalEntry);
             }
             for ( int i = 0; i < 20; i++ ) {
                 String string = config.getString("LOBBY.FAR-RIGHT." + i + 1);
-                TabEntry entry = new TabEntry(3, i, CC.translate(replaceLobby(string)));
 
-                if (hasDot(string)) entry.setSkin(getDot(string));
-                if (hasSkin(string)) entry.setSkin(getSkin(player, string));
+                TabEntry rawEntry = new TabEntry(3, i, CC.translate(replaceLobby(player, string)));
+                TabEntry entry = checkSkin(player, rawEntry);
+                TabEntry finalEntry = checkDot(entry);
 
-                entries.add(entry);
+                entries.add(finalEntry);
             }
         }
         return entries;
     }
     
-    public String replaceLobby(String toReplace) {
+    public String replaceLobby(Player player, String toReplace) {
         toReplace = toReplace
                 .replace("", "");
         
         return toReplace;
     }
-
-    public boolean hasDot(String text) {
-        return text.contains("<dot");
-    }
-
-    public Skin getDot(String text) {
-        for ( ChatColor value : ChatColor.values() ) {
-            if (text.contains("<dot_" + value.name().toLowerCase())) {
-                return Skin.getDot(value);
-            }
-        }
-        return Skin.DEFAULT_SKIN;
-    }
     
-    public boolean hasSkin(String text) {
-        return text.contains("<your_player>") || text.contains("<opponent_player>") || text.contains("<skin_");
-    }
-
-    public Skin getSkin(Player player, String text) {
-        if (text.contains("<your_player>"))  return Skin.getPlayer(player);
-        if (text.contains("<skin_twitter>")) return Skin.TWITTER_SKIN;
-        if (text.contains("<skin_website>")) return Skin.WEBSITE_SKIN;
-        if (text.contains("<skin_discord>")) return Skin.DISCORD_SKIN;
-        if (text.contains("<skin_youtube>")) return Skin.YOUTUBE_SKIN;
+    public TabEntry checkSkin(Player player, TabEntry entry) {
+        String text = entry.getText();
 
         if (text.contains("<opponent_player>")) {
             Profile profile = Profile.getByPlayer(player);
             if (profile.getMatch() != null) {
-                return Skin.getPlayer(profile.getMatch().getOpponentPlayer(player));
+                entry.setSkin(Skin.getPlayer(profile.getMatch().getOpponentPlayer(player)));
             }
         }
+        if (text.contains("<your_player>")) {
+            entry.setSkin(Skin.getPlayer(player));
+        }
+        if (text.contains("<skin_twitter>")) {
+            entry.setSkin(Skin.TWITTER_SKIN);
+            text = text.replace("<skin_twitter>", "");
+        }
+        if (text.contains("<skin_website>")) {
+            entry.setSkin(Skin.WEBSITE_SKIN);
+            text = text.replace("<skin_website>", "");
+        }
+        if (text.contains("<skin_discord>")) {
+            entry.setSkin(Skin.DISCORD_SKIN);
+            text = text.replace("<skin_discord>", "");
+        }
+        if (text.contains("<skin_youtube>")) {
+            entry.setSkin(Skin.YOUTUBE_SKIN);
+            text = text.replace("<skin_youtube>", "");
+        }
+        entry.setText(text);
+        return entry;
+    }
 
-        return Skin.DEFAULT_SKIN;
+    public TabEntry checkDot(TabEntry entry) {
+        String text = entry.getText();
+        for ( ChatColor value : ChatColor.values() ) {
+            if (text.contains("<dot_" + value.name().toLowerCase())) {
+                entry.setSkin(Skin.getDot(value));
+                text = text.replace("<dot_" + value.name().toLowerCase(), "");
+            }
+        }
+        entry.setText(text);
+        return entry;
     }
 }
