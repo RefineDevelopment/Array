@@ -80,12 +80,12 @@ public class EventSelectKitMenu extends Menu {
                 }
             } else {
                 if (Array.getInstance().getLMSManager().getActiveLMS() != null) {
-                    player.sendMessage(Locale.EVENT_ALREADY_STARTED.toString().replace("<event>", "LMS").replace("<event_name>", "LMS"));
+                    player.sendMessage(Locale.EVENT_ALREADY_STARTED.toString().replace("<event>", "LMSEvent").replace("<event_name>", "LMSEvent"));
                     return;
                 }
 
                 if (!Array.getInstance().getLMSManager().getCooldown().hasExpired()) {
-                    player.sendMessage(Locale.EVENT_COOLDOWN_ACTIVE.toString().replace("<event>", "LMS").replace("<event_name>", "LMS"));
+                    player.sendMessage(Locale.EVENT_COOLDOWN_ACTIVE.toString().replace("<event>", "LMSEvent").replace("<event_name>", "LMSEvent"));
                     return;
                 }
 

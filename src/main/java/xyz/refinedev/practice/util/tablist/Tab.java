@@ -8,7 +8,7 @@ import ArrayCache;
 import Essentials;
 import Brackets;
 import Gulag;
-import LMS;
+import LMSEvent;
 import Parkour;
 import Spleef;
 import Sumo;
@@ -260,7 +260,7 @@ public class Tab implements ZigguratAdapter {
             }
         }
         else if (profile.isInLMS()) {
-            final LMS brawl = profile.getLms();
+            final LMSEvent brawl = profile.getLms();
             elements.add(new BufferedTabObject().text(tabManager.getMainColor() + "&lLMS").slot(23));
             int pl = 0;
             for (int added4 = 4; added4 < 60; ++added4) {

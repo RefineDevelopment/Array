@@ -14,7 +14,7 @@ public class LMSRoundStartTask extends LMSTask {
     @Override
     public void onRun() {
         if (getTicks() >= 3) {
-            this.getLMS().broadcastMessage(Locale.EVENT_STARTED.toString().replace("<event_name>", "LMS"));
+            this.getLMS().broadcastMessage(Locale.EVENT_STARTED.toString().replace("<event_name>", "LMSEvent"));
             this.getLMS().setEventTask(null);
             this.getLMS().setState(LMSState.ROUND_FIGHTING);
             this.getLMS().setRoundStart(System.currentTimeMillis());

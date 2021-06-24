@@ -204,11 +204,11 @@ public class HotbarListener implements Listener {
                 case LMS_LEAVE: {
                     final LMS activeLMS = Array.getInstance().getLMSManager().getActiveLMS();
                     if (activeLMS == null) {
-                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "LMS"));
+                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "LMSEvent"));
                         return;
                     }
                     if (!profile.isInLMS() || !activeLMS.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "LMS"));
+                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "LMSEvent"));
                         return;
                     }
                     Array.getInstance().getLMSManager().getActiveLMS().handleLeave(player);

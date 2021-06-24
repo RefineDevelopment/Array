@@ -21,13 +21,13 @@ public class LMSStartTask extends LMSTask {
 
         if (this.getLMS().getPlayers().size() <= 1 && this.getLMS().getCooldown() != null) {
             this.getLMS().setCooldown(null);
-            this.getLMS().broadcastMessage(Locale.EVENT_NOT_ENOUGH_PLAYERS.toString().replace("<event_name>", "LMS"));
+            this.getLMS().broadcastMessage(Locale.EVENT_NOT_ENOUGH_PLAYERS.toString().replace("<event_name>", "LMSEvent"));
         }
 
         if (this.getLMS().getPlayers().size() == LMS.getMaxPlayers() || (getTicks() >= 30 && this.getLMS().getPlayers().size() >= 2)) {
             if (this.getLMS().getCooldown() == null) {
                 this.getLMS().setCooldown(new Cooldown(11_000));
-                this.getLMS().broadcastMessage(Locale.EVENT_STARTING.toString().replace("<event_name>", "LMS"));
+                this.getLMS().broadcastMessage(Locale.EVENT_STARTING.toString().replace("<event_name>", "LMSEvent"));
             } else {
                 if (this.getLMS().getCooldown().hasExpired()) {
                     this.getLMS().setState(LMSState.ROUND_STARTING);

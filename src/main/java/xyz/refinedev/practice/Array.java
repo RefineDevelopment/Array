@@ -17,6 +17,7 @@ import xyz.refinedev.practice.arena.ArenaProvider;
 import xyz.refinedev.practice.arena.ArenaTypeProvider;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.essentials.Essentials;
+import xyz.refinedev.practice.events.EventManager;
 import xyz.refinedev.practice.managers.CMDManager;
 import xyz.refinedev.practice.managers.ListenersManager;
 import xyz.refinedev.practice.profile.divisions.Divisions;
@@ -41,7 +42,6 @@ import xyz.refinedev.practice.profile.ProfileProvider;
 import xyz.refinedev.practice.profile.rank.Rank;
 import xyz.refinedev.practice.queue.Queue;
 
-import xyz.refinedev.practice.managers.TabManager;
 import xyz.refinedev.practice.util.command.CommandService;
 import xyz.refinedev.practice.util.command.Drink;
 import xyz.refinedev.practice.util.nametags.NameTagHandler;
@@ -105,6 +105,7 @@ public class Array extends JavaPlugin {
     /*
      * All Event Managers
      */
+    private EventManager eventManager;
     private SumoManager sumoManager;
     private BracketsManager bracketsManager;
     private LMSManager LMSManager;
@@ -120,7 +121,6 @@ public class Array extends JavaPlugin {
     /*
      * Miscellaneous Managers
      */
-    private TabManager tabManager;
     private ClassManager ClassManager;
     private EffectRestorer effectRestorer;
 
@@ -168,9 +168,9 @@ public class Array extends JavaPlugin {
         this.loadMessages();
 
         essentials = new Essentials();
-        tabManager = new TabManager();
 
-        if (!Description.getAuthor().contains("RefineDevelopment") || !Description.getName().contains("Array")) {
+        if (!Description.getAuthor().contains("RefineDevelopment") || !Description.getName().contains("Array") 
+            ||!Description.getAuthor().contains("Nick_0251") || !Description.getWebsite().equalsIgnoreCase("https://dsc.gg/refine")) {
             logger(CC.CHAT_BAR);
             logger("  &cYou edited the plugin.yml, haha get caught in 4k");
             logger("  &cPlease check your plugin.yml and try again.");
@@ -218,7 +218,6 @@ public class Array extends JavaPlugin {
         getClassManager().onDisable();
 
         //Save our Values to Config
-        getTabManager().save();
         getEssentials().save();
 
         //Save our Event Setup

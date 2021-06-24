@@ -24,6 +24,7 @@ import xyz.refinedev.practice.clan.meta.ClanInvite;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
 import xyz.refinedev.practice.duel.DuelProcedure;
 import xyz.refinedev.practice.duel.DuelRequest;
+import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
 import xyz.refinedev.practice.api.events.profile.SpawnTeleportEvent;
 import xyz.refinedev.practice.events.types.brackets.Brackets;
@@ -136,6 +137,7 @@ public class Profile {
     private Queue queue;
     private Brawl brawl;
     private Clan clan;
+    private Event event;
 
     /*
      * Fight Meta

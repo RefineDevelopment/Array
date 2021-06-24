@@ -38,7 +38,7 @@ import java.util.UUID;
 public class LMS {
 
     @Getter @Setter private static boolean enabled = true;
-    protected static String EVENT_PREFIX = Locale.EVENT_PREFIX.toString().replace("<event_name>", "LMS");
+    protected static String EVENT_PREFIX = Locale.EVENT_PREFIX.toString().replace("<event_name>", "LMSEvent");
     private static BasicConfigurationFile config = Array.getInstance().getScoreboardConfig();
 
     private static Array plugin = Array.getInstance();
@@ -76,7 +76,7 @@ public class LMS {
             String status;
             if (lms.getCooldown() == null) {
 
-                status = CC.translate(config.getString("SCOREBOARD.EVENT.LMS.STATUS_WAITING")
+                status = CC.translate(config.getString("SCOREBOARD.EVENT.LMSEvent.STATUS_WAITING")
                         .replace("<lms_host_name>", lms.getName())
                         .replace("<lms_player_count>", String.valueOf(lms.getEventPlayers().size()))
                         .replace("<lms_max_players>", String.valueOf(LMS.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
@@ -88,7 +88,7 @@ public class LMS {
                 }
                 String finalRemaining = remaining;
 
-                status = CC.translate(config.getString("SCOREBOARD.EVENT.LMS.STATUS_COUNTING")
+                status = CC.translate(config.getString("SCOREBOARD.EVENT.LMSEvent.STATUS_COUNTING")
                         .replace("<lms_host_name>", lms.getName())
                         .replace("<remaining>", finalRemaining)
                         .replace("<lms_player_count>", String.valueOf(lms.getEventPlayers().size()))
@@ -96,7 +96,7 @@ public class LMS {
 
             }
 
-            config.getStringList("SCOREBOARD.EVENT.LMS.WAITING").forEach(line -> toReturn.add(CC.translate(line
+            config.getStringList("SCOREBOARD.EVENT.LMSEvent.WAITING").forEach(line -> toReturn.add(CC.translate(line
                     .replace("<lms_host_name>", lms.getName())
                     .replace("<status>", status)
                     .replace("<lms_player_count>", String.valueOf(lms.getEventPlayers().size()))
@@ -104,7 +104,7 @@ public class LMS {
 
         } else {
 
-            config.getStringList("SCOREBOARD.EVENT.LMS.FIGHTING").forEach(line -> toReturn.add(CC.translate(line
+            config.getStringList("SCOREBOARD.EVENT.LMSEvent.FIGHTING").forEach(line -> toReturn.add(CC.translate(line
                     .replace("<lms_host_name>", lms.getName())
                     .replace("<lms_duration>", lms.getRoundDuration())
                     .replace("<lms_players_alive>", String.valueOf(lms.getRemainingPlayers().size()))
@@ -179,12 +179,12 @@ public class LMS {
         eventPlayers.put(player.getUniqueId(), new LMSPlayer(player));
 
         broadcastMessage(Locale.EVENT_JOIN.toString()
-                .replace("<event_name>", "LMS")
+                .replace("<event_name>", "LMSEvent")
                 .replace("<joined>", player.getName())
                 .replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
                 .replace("<event_max_players>", String.valueOf(getMaxPlayers())));
 
-        player.sendMessage(Locale.EVENT_PLAYER_JOIN.toString().replace("<event_name>", "LMS"));
+        player.sendMessage(Locale.EVENT_PLAYER_JOIN.toString().replace("<event_name>", "LMSEvent"));
         onJoin(player);
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -217,12 +217,12 @@ public class LMS {
 
         if (state == LMSState.WAITING) {
             broadcastMessage(Locale.EVENT_LEAVE.toString()
-                    .replace("<event_name>", "LMS")
+                    .replace("<event_name>", "LMSEvent")
                     .replace("<left>", player.getName())
                     .replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
                     .replace("<event_max_players>", String.valueOf(getMaxPlayers())));
         }
-        player.sendMessage(Locale.EVENT_PLAYER_LEAVE.toString().replace("<event_name>", "LMS"));
+        player.sendMessage(Locale.EVENT_PLAYER_LEAVE.toString().replace("<event_name>", "LMSEvent"));
 
         onLeave(player);
 
@@ -273,11 +273,11 @@ public class LMS {
         Player winner = this.getWinner();
 
         if (winner == null) {
-            Bukkit.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", "LMS"));
+            Bukkit.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", "LMSEvent"));
         } else {
             Locale.EVENT_WON.toList().forEach(line -> Bukkit.broadcastMessage(line
                     .replace("<winner>", winner.getName())
-                    .replace("<event_name>", "LMS")
+                    .replace("<event_name>", "LMSEvent")
                     .replace("<event_prefix>", EVENT_PREFIX)));
         }
         
@@ -327,11 +327,11 @@ public class LMS {
     public void announce() {
         for ( String string : Locale.EVENT_ANNOUNCE.toList() ) {
             String main = string
-                    .replace("<event_name>", "LMS")
+                    .replace("<event_name>", "LMSEvent")
                     .replace("<event_host>", this.getHost().getUsername())
                     .replace("<event_prefix>", EVENT_PREFIX);
 
-            Clickable message = new Clickable(main, Locale.EVENT_HOVER.toString().replace("<event_name>", "LMS"), "/lms join");
+            Clickable message = new Clickable(main, Locale.EVENT_HOVER.toString().replace("<event_name>", "LMSEvent"), "/lms join");
 
             for ( Player player : Bukkit.getOnlinePlayers() ) {
                 if (!eventPlayers.containsKey(player.getUniqueId())) {

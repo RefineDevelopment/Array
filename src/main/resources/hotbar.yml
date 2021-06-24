@@ -103,7 +103,7 @@ HOTBAR_ITEMS:
     MATERIAL: INK_SACK
     DURABILITY: 1
     LORE: []
-    NAME: '&cLeave LMS &7(Right-Click)'
+    NAME: '&cLeave LMSEvent &7(Right-Click)'
   PARKOUR_LEAVE:
     MATERIAL: INK_SACK
     DURABILITY: 1

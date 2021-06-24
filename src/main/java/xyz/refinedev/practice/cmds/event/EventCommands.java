@@ -31,7 +31,7 @@ public class EventCommands {
         player.sendMessage(CC.translate(" &8• &c/event &8(&7&oOpen Events Menu&8)"));
         player.sendMessage(CC.translate(" &8• &c/brackets &8(&7&oView Bracket Commands&8)"));
         player.sendMessage(CC.translate(" &8• &c/sumo &8(&7&oView Sumo Commands&8)"));
-        player.sendMessage(CC.translate(" &8• &c/lms &8(&7&oView LMS Commands&8)"));
+        player.sendMessage(CC.translate(" &8• &c/lms &8(&7&oView LMSEvent Commands&8)"));
         player.sendMessage(CC.translate(" &8• &c/parkour &8(&7&oView Parkour Commands&8)"));
         player.sendMessage(CC.translate(" &8• &c/gulag &8(&7&oView Gulag Commands&8)"));
         player.sendMessage(CC.CHAT_BAR);
