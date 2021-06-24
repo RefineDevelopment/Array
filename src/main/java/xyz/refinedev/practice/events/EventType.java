@@ -1,33 +1,25 @@
 package xyz.refinedev.practice.events;
 
-import lombok.Setter;
-import xyz.refinedev.practice.Array;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import xyz.refinedev.practice.events.types.gulag.Gulag;
-import org.bukkit.Material;
-import xyz.refinedev.practice.events.types.brackets.Brackets;
-import xyz.refinedev.practice.events.types.parkour.Parkour;
-import xyz.refinedev.practice.events.types.spleef.Spleef;
-import xyz.refinedev.practice.events.types.sumo.Sumo;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
 @Getter
+@RequiredArgsConstructor
 public enum EventType {
-    BRACKETS(Array.getInstance().getBracketsManager().getActiveBrackets(), "&c&lBrackets", Material.IRON_SWORD, Brackets.isEnabled(), Brackets.getMaxPlayers()),
-    SUMO(Array.getInstance().getSumoManager().getActiveSumo(), "&c&lSumo", Material.LEASH, Sumo.isEnabled(), Sumo.getMaxPlayers()),
-    LMS(Array.getInstance().getLMSManager().getActiveLMS(), "&c&lLMS", Material.DIAMOND_SWORD, xyz.refinedev.practice.events.types.lms.LMS.isEnabled(), xyz.refinedev.practice.events.types.lms.LMS.getMaxPlayers()),
-    PARKOUR(Array.getInstance().getParkourManager().getActiveParkour(), "&c&lParkour", Material.FEATHER, Parkour.isEnabled(), Parkour.getMaxPlayers()),
-    GULAG(Array.getInstance().getGulagManager().getActiveGulag(), "&c&lGulag", Material.IRON_FENCE, Gulag.isEnabled(), Gulag.getMaxPlayers()),
-    SPLEEF(Array.getInstance().getSpleefManager().getActiveSpleef(), "&c&lSpleef", Material.SNOW_BALL, Spleef.isEnabled(), Spleef.getMaxPlayers()),
-    OITC(null, "&c&lOITC", Material.BOW, false, 0),
-    KOTH(null, "&c&lKoTH", Material.IRON_BOOTS, false, 0);
+    
+    BRACKETS_SOLO("Brackets"),
+    SUMO_SOLO("Sumo"),
+    BRACKETS_TEAM("Brackets"),
+    SUMO_TEAM("Sumo"),
+    GULAG_SOLO("Gulag"),
+    GULAG_TEAM("Gulag"),
+    LMS("LMS"),
+    PARKOUR("Parkour"),
+    SPLEEF("Spleef"),
+    OITC("OITC"),
+    //KOTH("KoTH"),
+    //PAINTBALL,
+    OMA("OMA");
 
-    private final Object object;
-    private final String title;
-    private final Material material;
-    @Setter
-    private boolean enabled;
-    private final int limit;
-
+    private final String readable;
 }

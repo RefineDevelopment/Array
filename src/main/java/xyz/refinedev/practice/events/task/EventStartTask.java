@@ -4,7 +4,7 @@ import me.joeleoli.nucleus.cooldown.Cooldown;
 import me.joeleoli.nucleus.util.Style;
 import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.events.EventState;
-import xyz.refinedev.practice.events.EventTask;
+import xyz.refinedev.practice.events.meta.EventTask;
 
 public class EventStartTask extends EventTask {
 

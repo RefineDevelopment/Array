@@ -7,6 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.events.meta.EventTask;
+import xyz.refinedev.practice.events.meta.player.EventPlayer;
+import xyz.refinedev.practice.events.meta.player.EventPlayerState;
 import xyz.refinedev.practice.events.task.EventStartTask;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
@@ -29,6 +32,7 @@ public abstract class Event {
 	private final List<UUID> spectators = new ArrayList<>();
 	private final Array plugin = Array.getInstance();
 	private final EventState state = EventState.WAITING;
+	private final EventManager eventManager = plugin.getEventManager();
 
 	private final String name;
 	private final PlayerSnapshot host;
@@ -103,6 +107,7 @@ public abstract class Event {
 				.replace("<joined>", player.getName())
 				.replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
 				.replace("<event_max_players>", String.valueOf(getMaxPlayers())));
+
 		this.onJoin(player);
 
 		final Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -111,7 +116,11 @@ public abstract class Event {
 		profile.setState(ProfileState.IN_EVENT);
 		profile.refreshHotbar();
 
-		player.teleport(Array.getInstance().getEventManager().getSpawn1(this));
+		if (isFreeForAll()) {
+			player.teleport(eventManager.getSpawn(this));
+		} else {
+			player.teleport(eventManager.getSpectator(this));
+		}
 
 		TaskUtil.runAsync(() -> {
 			for (Player otherPlayer : getPlayers()) {

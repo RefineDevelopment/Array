@@ -17,6 +17,7 @@ import xyz.refinedev.practice.arena.ArenaProvider;
 import xyz.refinedev.practice.arena.ArenaTypeProvider;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.essentials.Essentials;
+import xyz.refinedev.practice.events.EventHandler;
 import xyz.refinedev.practice.events.EventManager;
 import xyz.refinedev.practice.managers.CMDManager;
 import xyz.refinedev.practice.managers.ListenersManager;
@@ -106,12 +107,6 @@ public class Array extends JavaPlugin {
      * All Event Managers
      */
     private EventManager eventManager;
-    private SumoManager sumoManager;
-    private BracketsManager bracketsManager;
-    private LMSManager LMSManager;
-    private ParkourManager parkourManager;
-    private SpleefManager spleefManager;
-    private GulagManager gulagManager;
 
     /*
      * Custom Divisions Handler
@@ -121,7 +116,7 @@ public class Array extends JavaPlugin {
     /*
      * Miscellaneous Managers
      */
-    private ClassManager ClassManager;
+    private ClassManager classManager;
     private EffectRestorer effectRestorer;
 
     /*
@@ -183,12 +178,7 @@ public class Array extends JavaPlugin {
         this.preload();
 
         divisionsManager = new Divisions();
-        sumoManager = new SumoManager();
-        bracketsManager = new BracketsManager();
-        LMSManager = new LMSManager();
-        parkourManager = new ParkourManager();
-        spleefManager = new SpleefManager();
-        gulagManager = new GulagManager();
+        eventManager = new EventManager();
 
         Array.logger("&7Registering Commands...");
         CMDManager CMDManager = new CMDManager();
@@ -200,13 +190,12 @@ public class Array extends JavaPlugin {
 
         this.entityHider = EntityHider.enable();
         this.effectRestorer = new EffectRestorer(this);
-        this.ClassManager= new ClassManager(this);
+        this.classManager = new ClassManager(this);
         this.preloadAdapters();
     }
 
     @Override
     public void onDisable() {
-
         //Stop all matches and Remove the placed Block
         Match.cleanup();
 
@@ -215,17 +204,11 @@ public class Array extends JavaPlugin {
         Arena.getArenas().forEach(Arena::save);
         Profile.getProfiles().values().forEach(Profile::save);
         Clan.getClans().forEach(Clan::save);
-        getClassManager().onDisable();
 
         //Save our Values to Config
-        getEssentials().save();
-
-        //Save our Event Setup
-        getBracketsManager().save();
-        getLMSManager().save();
-        getSumoManager().save();
-        getParkourManager().save();
-        getGulagManager().save();
+        essentials.save();
+        eventManager.save();
+        classManager.onDisable();
 
         //Clear out the PlayerList for Vanilla Tab
         Profile.getPlayerList().clear();
@@ -233,7 +216,6 @@ public class Array extends JavaPlugin {
     }
 
     public void preload() {
-
         //Static Abuse be like, but i aint using managers rn
         //cuz praxi was always static af
         preLoadMongo();
@@ -307,7 +289,7 @@ public class Array extends JavaPlugin {
                 "######################################################################\n" +
                         "                                                                     #\n" +
                         "          Array Practice Core - Developed By Drizzy#0278             #\n" +
-                        "     Bought at Purge Development - https://discord.gg/VXzUMfBefZ     #\n" +
+                        "       Bought at Refine Development - https://dsc.gg/refine          #\n" +
                         "                                                                     #\n" +
                         "######################################################################");
         mainConfig.save();

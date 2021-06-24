@@ -48,7 +48,11 @@ public class KitLeaderboardsButton extends Button {
         }
         lore.add(CC.MENU_BAR);
 
-        return new ItemBuilder(this.kit.getDisplayIcon()).name(Locale.LEADERBOARDS_KIT_HEADER.toString().replace("<kit_name>", this.kit.getDisplayName())).lore(lore).build();
+        return new ItemBuilder(this.kit.getDisplayIcon())
+                .clearFlags()
+                .name(Locale.LEADERBOARDS_KIT_HEADER.toString().replace("<kit_name>", this.kit.getDisplayName()))
+                .lore(lore)
+                .build();
     }
 }
 

@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.adapters;
 
+import com.google.common.base.Preconditions;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.util.scoreboard.AssembleAdapter;
 import xyz.refinedev.practice.Array;
@@ -52,7 +53,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
      */
     @Override
     public String getTitle(Player player) {
-        return config.getStringOrDefault("SCOREBOARD.HEADER", CC.translate("&c&lPurge &7&l%splitter% &fTest Server")).replace("%splitter%", "┃").replace("|", "┃");
+        return config.getStringOrDefault("SCOREBOARD.HEADER", CC.translate("&c&lRefine &7&l%splitter% &fPractice")).replace("%splitter%", "┃").replace("|", "┃");
     }
 
     /**
@@ -882,26 +883,24 @@ public class ScoreboardAdapter implements AssembleAdapter {
             }
         }
         lines.add("");
-        lines.add(config.getStringOrDefault("SCOREBOARD.FOOTER", "&7&opurgecommunity.com"));
+        lines.add(config.getStringOrDefault("SCOREBOARD.FOOTER", "&7&odemo.refinedev.xyz"));
         lines.add(config.getStringOrDefault("SCOREOBARD.LINES", CC.SB_BAR));
         return lines;
     }
 
 
-    @SuppressWarnings(value = "all")
     public String getFormattedPoints(Player player) {
-        Profile profile=Profile.getByPlayer(player);
-        if (profile != null) {
-            int points = profile.getBridgeRounds();
+        Profile profile = Profile.getByPlayer(player);
+        Preconditions.checkNotNull(profile, "Profile is null!");
+        int points = profile.getBridgeRounds();
 
-            switch (points) {
-                case 3:
-                    return CC.translate("&a■&a■&a■");
-                case 2:
-                    return CC.translate("&a■&a■&7■");
-                case 1:
-                    return CC.translate("&a■&7■■");
-            }
+        switch (points) {
+            case 3:
+                return CC.translate("&a\u2b24&a\u2b24&a\u2b24");
+            case 2:
+                return CC.translate("&a\u2b24&a\u2b24&7\u2b24");
+            case 1:
+                return CC.translate("&a\u2b24&7\u2b24\u2b24");
         }
         return CC.translate("&7■■■");
     }

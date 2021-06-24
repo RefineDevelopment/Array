@@ -4,7 +4,7 @@ import me.joeleoli.nucleus.util.PlayerUtil;
 import me.joeleoli.nucleus.util.Style;
 import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.events.EventState;
-import xyz.refinedev.practice.events.EventTask;
+import xyz.refinedev.practice.events.meta.EventTask;
 import xyz.refinedev.practice.events.impl.SumoEvent;
 import org.bukkit.entity.Player;
 

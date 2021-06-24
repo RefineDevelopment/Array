@@ -29,6 +29,7 @@ public class GlobalLeaderboardsButton extends Button {
     @Override
     public ItemStack getButtonItem(final Player player) {
         final List<String> lore = new ArrayList<>();
+
         int position = 1;
         lore.add(CC.MENU_BAR);
         for ( LeaderboardsAdapter leaderboardsAdapter : Profile.getGlobalEloLeaderboards()) {
@@ -41,6 +42,11 @@ public class GlobalLeaderboardsButton extends Button {
             ++position;
         }
         lore.add(CC.MENU_BAR);
-        return new ItemBuilder(Material.SUGAR).name(Locale.LEADERBOARDS_GLOBAL_HEADER.toString()).lore(lore).build();
+
+        return new ItemBuilder(Material.SUGAR)
+                .name(Locale.LEADERBOARDS_GLOBAL_HEADER.toString())
+                .clearFlags()
+                .lore(lore)
+                .build();
     }
 }

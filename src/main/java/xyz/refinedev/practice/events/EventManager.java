@@ -2,10 +2,15 @@ package xyz.refinedev.practice.events;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.config.BasicConfigurationFile;
+import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.other.Cooldown;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,15 +21,15 @@ public class EventManager {
 	private Event activeEvent;
 	private Cooldown eventCooldown = new Cooldown(0);
 
-	//Locations for each event, I'm going to probably redo this in the future
-	private Location sumoSpectator, sumoSpawn1, sumoSpawn2,
-			         bracketsSpectator, bracketsSpawn1, bracketsSpawn2,
-	                 gulagSpectator, gulagSpawn1, gulagSpawn2,
-	                 spleefSpawn,
-	                 lmsSpawn;
+	protected Location sumoSpawn1, sumoSpawn2, sumoSpectator;
+	protected Location bracketsSpawn1, bracketsSpawn2, bracketsSpectator;
+	protected Location gulagSpawn1, gulagSpawn2, gulagSpectator;
+	protected Location lmsSpawn, parkourSpawn, spleefSpawn, omaSpawn;
 
-	//Kit based events will get their knockback profiles the kits
-	private String sumoKbProfile, gulagKbProfile, spleefKbProfile;
+	private String sumoKB, gulagKB, omaKB, spleefKB;
+
+	protected List<Location> oitcSpawns = new ArrayList<>();
+	protected Location oitcSpectator;
 
 	public void setActiveEvent(Event event) {
 		if (this.activeEvent != null) {
@@ -42,19 +47,77 @@ public class EventManager {
 	}
 
 	public void load() {
-
+		String key = "EVENTS.";
+		
+		this.sumoSpawn1 = LocationUtil.deserialize(config.getString(key + "SUMO.SPAWN1"));
+		this.sumoSpawn2 = LocationUtil.deserialize(config.getString(key + "SUMO.SPAWN2"));
+		this.sumoSpectator = LocationUtil.deserialize(config.getString(key + "SUMO.SPECTATOR"));
+		
 	}
 
 	public void save() {
-
 	}
 
 	public Location getSpawn1(Event event) {
-		switch (event.getName()) {
-			case "Sumo": {
-
-			}
+		switch (event.getType()) {
+			case SUMO_SOLO:
+			case SUMO_TEAM:
+				return sumoSpawn1;
+			case BRACKETS_SOLO:
+			case BRACKETS_TEAM:
+				return bracketsSpawn1;
+			case GULAG_SOLO:
+			case GULAG_TEAM:
+				return gulagSpawn1;
 		}
+		return null;
 	}
+
+	public Location getSpawn2(Event event) {
+		switch (event.getType()) {
+			case SUMO_SOLO:
+			case SUMO_TEAM:
+				return sumoSpawn2;
+			case BRACKETS_SOLO:
+			case BRACKETS_TEAM:
+				return bracketsSpawn2;
+			case GULAG_SOLO:
+			case GULAG_TEAM:
+				return gulagSpawn2;
+		}
+		return null;
+	}
+
+	public Location getSpawn(Event event) {
+		switch (event.getType()) {
+			case SPLEEF:
+				return spleefSpawn;
+			case PARKOUR:
+				return parkourSpawn;
+			case LMS:
+				return lmsSpawn;
+			case OMA:
+				return omaSpawn;
+		}
+		return null;
+	}
+
+	public Location getSpectator(Event event) {
+		switch (event.getType()) {
+			case SUMO_SOLO:
+			case SUMO_TEAM:
+				return sumoSpectator;
+			case BRACKETS_SOLO:
+			case BRACKETS_TEAM:
+				return bracketsSpectator;
+			case GULAG_SOLO:
+			case GULAG_TEAM:
+				return gulagSpectator;
+			case OITC:
+				return oitcSpectator;
+		}
+		return null;
+	}
+
 
 }

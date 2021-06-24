@@ -42,6 +42,7 @@ public class StatsButton extends Button {
         return new ItemBuilder(SkullCreator.itemFromUuid(player.getUniqueId()))
                 .name("&c" + player.getName() + " &7\uff5c &fStatistics")
                 .lore(lore)
+                .clearFlags()
                 .build();
     }
 }

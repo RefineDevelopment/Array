@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.events;
+package xyz.refinedev.practice.events.meta.player;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +10,6 @@ public enum EventPlayerState {
 	WAITING("Waiting"),
 	ELIMINATED("Eliminated");
 
-	private String readable;
+	private final String readable;
 
 }
