@@ -1,5 +1,7 @@
 package xyz.refinedev.practice;
 
+import com.lunarclient.bukkitapi.cooldown.LCCooldown;
+import com.lunarclient.bukkitapi.cooldown.LunarClientAPICooldown;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.MongoCredential;
@@ -7,6 +9,7 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Material;
 import xyz.refinedev.practice.adapters.NameTagAdapter;
 import xyz.refinedev.practice.adapters.ScoreboardAdapter;
 import xyz.refinedev.practice.adapters.TablistAdapter;
@@ -17,7 +20,6 @@ import xyz.refinedev.practice.arena.ArenaProvider;
 import xyz.refinedev.practice.arena.ArenaTypeProvider;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.essentials.Essentials;
-import xyz.refinedev.practice.events.EventHandler;
 import xyz.refinedev.practice.events.EventManager;
 import xyz.refinedev.practice.managers.CMDManager;
 import xyz.refinedev.practice.managers.ListenersManager;
@@ -28,7 +30,6 @@ import xyz.refinedev.practice.events.types.gulag.GulagManager;
 import xyz.refinedev.practice.events.types.lms.LMSManager;
 import xyz.refinedev.practice.events.types.parkour.ParkourManager;
 import xyz.refinedev.practice.events.types.spleef.SpleefManager;
-import xyz.refinedev.practice.events.types.sumo.SumoManager;
 import xyz.refinedev.practice.kit.KitProvider;
 import xyz.refinedev.practice.managers.ClassManager;
 import xyz.refinedev.practice.pvpclasses.bard.EffectRestorer;
@@ -61,6 +62,7 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -258,6 +260,12 @@ public class Array extends JavaPlugin {
             logger("&7Found PlaceholderAPI, Registering Expansions....");
         } else {
             logger("&cPlaceholderAPI was NOT found, Holograms will NOT work!");
+        }
+
+        if (Bukkit.getPluginManager().isPluginEnabled("LunarClient-API")) {
+            logger("&7Found LunarClient-API, Registering Cooldowns....");
+            LunarClientAPICooldown.registerCooldown(new LCCooldown("Enderpearl", 10, TimeUnit.SECONDS, Material.ENDER_PEARL));
+            LunarClientAPICooldown.registerCooldown(new LCCooldown("Bow", 15, TimeUnit.SECONDS, Material.BOW));
         }
     }
 

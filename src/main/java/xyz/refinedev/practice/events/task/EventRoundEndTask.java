@@ -12,13 +12,6 @@ public class EventRoundEndTask extends EventTask {
 
 	@Override
 	public void onRun() {
-		if (this.getTicks() >= 3) {
-			if (this.getEvent().canEnd()) {
-				this.getEvent().end();
-			} else {
-				this.getEvent().onRound();
-			}
-		}
-	}
 
+	}
 }

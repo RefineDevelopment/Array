@@ -15,10 +15,7 @@ import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.util.chat.Clickable;
 import xyz.refinedev.practice.util.nametags.NameTagHandler;
-import xyz.refinedev.practice.util.other.Cooldown;
-import xyz.refinedev.practice.util.other.PlayerSnapshot;
-import xyz.refinedev.practice.util.other.PlayerUtil;
-import xyz.refinedev.practice.util.other.TaskUtil;
+import xyz.refinedev.practice.util.other.*;
 
 import java.util.*;
 
@@ -31,7 +28,6 @@ public abstract class Event {
 	private final Map<UUID, EventPlayer> eventPlayers = new HashMap<>();
 	private final List<UUID> spectators = new ArrayList<>();
 	private final Array plugin = Array.getInstance();
-	private final EventState state = EventState.WAITING;
 	private final EventManager eventManager = plugin.getEventManager();
 
 	private final String name;
@@ -41,6 +37,10 @@ public abstract class Event {
 
 	private EventTask eventTask;
 	private Cooldown cooldown;
+	private EventState state = EventState.WAITING;
+
+	private int totalPlayers;
+	private long roundStart;
 
 	public void setEventTask(EventTask task) {
 		if (this.eventTask != null) {
@@ -93,10 +93,6 @@ public abstract class Event {
 		}
 
 		return players;
-	}
-
-	public void handleStart() {
-		this.setEventTask(new EventStartTask(this));
 	}
 
 	public void handleJoin(Player player) {
@@ -260,6 +256,45 @@ public abstract class Event {
 		return PlayerUtil.convertUUIDListToPlayerList(spectators);
 	}
 
+	public String getDuration() {
+		switch (getState()) {
+			case ROUND_STARTING:
+				return "00:00";
+			case ROUND_FIGHTING:
+				return TimeUtil.millisToTimer(System.currentTimeMillis() - roundStart);
+			default:
+				return "Ending";
+		}
+	}
+
+	public void addSpectator(Player player) {
+		this.getSpectators().add(player.getUniqueId());
+
+		Profile profile = Profile.getByUuid(player.getUniqueId());
+		profile.setEvent(this);
+		profile.setState(ProfileState.SPECTATING);
+		profile.refreshHotbar();
+		profile.handleVisibility();
+
+		if (isFreeForAll()) {
+			player.teleport(getEventManager().getSpawn(this));
+		} else {
+			player.teleport(getEventManager().getSpectator(this));
+		}
+	}
+
+	public void removeSpectator(Player player) {
+		this.getSpectators().remove(player.getUniqueId());
+		this.getEventPlayers().remove(player.getUniqueId());
+
+		Profile profile = Profile.getByUuid(player.getUniqueId());
+		profile.setEvent(null);
+		profile.setState(ProfileState.IN_LOBBY);
+		profile.refreshHotbar();
+		profile.handleVisibility();
+		profile.teleportToSpawn();
+	}
+
 	public abstract boolean isSumo();
 
 	public abstract boolean isBrackets();
@@ -274,8 +309,6 @@ public abstract class Event {
 
 	public abstract boolean isFreeForAll();
 
-	public abstract boolean isEnabled();
-
 	public abstract void onJoin(Player player);
 
 	public abstract void onLeave(Player player);
@@ -284,16 +317,12 @@ public abstract class Event {
 
 	public abstract void onDeath(Player player);
 
-	public abstract String getRoundDuration();
+	public abstract void handleStart();
 
 	public abstract EventPlayer getRoundPlayerA();
 
 	public abstract EventPlayer getRoundPlayerB();
 
 	public abstract boolean isFighting(UUID uuid);
-
-	public abstract void addSpectator(Player player);
-
-	public abstract void removeSpectator(Player player);
 
 }

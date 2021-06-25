@@ -64,7 +64,7 @@ public class BracketsListener implements Listener {
 						shooter.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 1));
 						event.setCancelled(true);
 					} else {
-						profile.setEnderpearlCooldown(new Cooldown(16_000));
+						profile.setEnderpearlCooldown(new Cooldown(TimeUtil.parseTime("15s")));
 					}
 				}
 			}

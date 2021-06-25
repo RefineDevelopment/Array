@@ -26,7 +26,7 @@ public class EventManager {
 	protected Location gulagSpawn1, gulagSpawn2, gulagSpectator;
 	protected Location lmsSpawn, parkourSpawn, spleefSpawn, omaSpawn;
 
-	private String sumoKB, gulagKB, omaKB, spleefKB;
+	private String sumoKB = "Default", gulagKB = "Default", omaKB = "Default", spleefKB = "Default";
 
 	protected List<Location> oitcSpawns = new ArrayList<>();
 	protected Location oitcSpectator;
@@ -48,14 +48,51 @@ public class EventManager {
 
 	public void load() {
 		String key = "EVENTS.";
-		
-		this.sumoSpawn1 = LocationUtil.deserialize(config.getString(key + "SUMO.SPAWN1"));
-		this.sumoSpawn2 = LocationUtil.deserialize(config.getString(key + "SUMO.SPAWN2"));
-		this.sumoSpectator = LocationUtil.deserialize(config.getString(key + "SUMO.SPECTATOR"));
-		
+
+		if (config.getString(key + "SUMO.SPAWN1") != null) this.sumoSpawn1 = LocationUtil.deserialize(config.getString(key + "SUMO.SPAWN1"));
+		if (config.getString(key + "SUMO.SPAWN2") != null) this.sumoSpawn2 = LocationUtil.deserialize(config.getString(key + "SUMO.SPAWN2"));
+		if (config.getString(key + "SUMO.SPECTATOR") != null) this.sumoSpectator = LocationUtil.deserialize(config.getString(key + "SUMO.SPECTATOR"));
+		if (config.getString(key + "SUMO.KNOCKBACK") != null) this.sumoKB = config.getString(key + "SUMO.KNOCKBACK");
+
+		if (config.getString(key + "BRACKETS.SPAWN1") != null) this.bracketsSpawn1 = LocationUtil.deserialize(config.getString(key + "BRACKETS.SPAWN1"));
+		if (config.getString(key + "BRACKETS.SPAWN2") != null) this.bracketsSpawn2 = LocationUtil.deserialize(config.getString(key + "BRACKETS.SPAWN2"));
+		if (config.getString(key + "BRACKETS.SPECTATOR") != null) this.bracketsSpectator = LocationUtil.deserialize(config.getString(key + "BRACKETS.SPECTATOR"));
+
+
+		if (config.getString(key + "GULAG.SPAWN1") != null) this.gulagSpawn1 = LocationUtil.deserialize(config.getString(key + "GULAG.SPAWN1"));
+		if (config.getString(key + "GULAG.SPAWN2") != null) this.gulagSpawn2 = LocationUtil.deserialize(config.getString(key + "GULAG.SPAWN2"));
+		if (config.getString(key + "GULAG.SPECTATOR") != null) this.gulagSpectator = LocationUtil.deserialize(config.getString(key + "GULAG.SPECTATOR"));
+		if (config.getString(key + "GULAG.KNOCKBACK") != null) this.gulagKB = config.getString(key + "GULAG.KNOCKBACK");
+
+		if (config.getString(key + "LMS.SPAWN") != null) this.lmsSpawn = LocationUtil.deserialize(config.getString(key + "LMS.SPAWN"));
+		if (config.getString(key + "PARKOUR.SPAWN") != null) this.parkourSpawn = LocationUtil.deserialize(config.getString(key + "PARKOUR.SPAWN"));
+		if (config.getString(key + "SPLEEF.SPAWN") != null) this.spleefSpawn = LocationUtil.deserialize(config.getString(key + "SPLEEF.SPAWN"));
+		if (config.getString(key + "SPLEEF.KNOCKBACK") != null) this.spleefKB = config.getString(key + "SPLEEF.KNOCKBACK");
+
+
+		config.save();
 	}
 
 	public void save() {
+		String key = "EVENTS.";
+
+		if (sumoSpawn1 != null) config.set(key + "SUMO.SPAWN1", LocationUtil.serialize(sumoSpawn1));
+		if (sumoSpawn2 != null) config.set(key + "SUMO.SPAWN2", LocationUtil.serialize(sumoSpawn2));
+		if (sumoSpectator != null) config.set(key + "SUMO.SPECTATOR", LocationUtil.serialize(sumoSpectator));
+
+		if (bracketsSpawn1 != null) config.set(key + "BRACKETS.SPAWN1", LocationUtil.serialize(bracketsSpawn1));
+		if (bracketsSpawn2 != null) config.set(key + "BRACKETS.SPAWN2", LocationUtil.serialize(bracketsSpawn2));
+		if (bracketsSpectator != null) config.set(key + "BRACKETS.SPECTATOR", LocationUtil.serialize(bracketsSpectator));
+
+		if (gulagSpawn1 != null) config.set(key + "GULAG.SPAWN1", LocationUtil.serialize(gulagSpawn1));
+		if (gulagSpawn2 != null) config.set(key + "GULAG.SPAWN2", LocationUtil.serialize(gulagSpawn1));
+		if (gulagSpectator != null) config.set(key + "GULAG.SPECTATOR", LocationUtil.serialize(gulagSpectator));
+
+		if (lmsSpawn != null) config.set(key + "LMS.SPAWN", LocationUtil.serialize(lmsSpawn));
+		if (parkourSpawn != null) config.set(key + "PARKOUR.SPAWN", LocationUtil.serialize(parkourSpawn));
+		if (spleefSpawn != null) config.set(key + "SPLEEF.SPAWN", LocationUtil.serialize(spleefSpawn));
+
+		config.save();
 	}
 
 	public Location getSpawn1(Event event) {

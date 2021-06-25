@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.lunarclient.bukkitapi.cooldown.LCCooldown;
 import com.lunarclient.bukkitapi.cooldown.LunarClientAPICooldown;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
@@ -12,55 +11,44 @@ import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.Sorts;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
+import org.bson.Document;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.api.events.leaderboards.GlobalLeaderboardsUpdateEvent;
 import xyz.refinedev.practice.api.events.profile.ProfileGlobalEloCalculateEvent;
 import xyz.refinedev.practice.api.events.profile.ProfileLoadEvent;
 import xyz.refinedev.practice.api.events.profile.ProfileSaveEvent;
+import xyz.refinedev.practice.api.events.profile.SpawnTeleportEvent;
 import xyz.refinedev.practice.brawl.Brawl;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.clan.meta.ClanInvite;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
 import xyz.refinedev.practice.duel.DuelProcedure;
 import xyz.refinedev.practice.duel.DuelRequest;
+import xyz.refinedev.practice.duel.RematchProcedure;
 import xyz.refinedev.practice.events.Event;
-import xyz.refinedev.practice.profile.hotbar.HotbarType;
-import xyz.refinedev.practice.api.events.profile.SpawnTeleportEvent;
-import xyz.refinedev.practice.events.types.brackets.Brackets;
-import xyz.refinedev.practice.events.types.brackets.player.BracketsPlayer;
-import xyz.refinedev.practice.events.types.brackets.player.BracketsPlayerState;
-import xyz.refinedev.practice.events.types.gulag.Gulag;
-import xyz.refinedev.practice.events.types.gulag.player.GulagPlayer;
-import xyz.refinedev.practice.events.types.gulag.player.GulagPlayerState;
-import xyz.refinedev.practice.events.types.lms.LMS;
-import xyz.refinedev.practice.events.types.lms.player.LMSPlayer;
-import xyz.refinedev.practice.events.types.lms.player.LMSPlayerState;
-import xyz.refinedev.practice.events.types.parkour.Parkour;
-import xyz.refinedev.practice.events.types.parkour.player.ParkourPlayer;
-import xyz.refinedev.practice.events.types.parkour.player.ParkourPlayerState;
-import xyz.refinedev.practice.events.types.spleef.Spleef;
-import xyz.refinedev.practice.events.types.spleef.player.SpleefPlayer;
-import xyz.refinedev.practice.events.types.spleef.player.SpleefPlayerState;
-import xyz.refinedev.practice.events.types.sumo.Sumo;
-import xyz.refinedev.practice.events.types.sumo.player.SumoPlayer;
-import xyz.refinedev.practice.events.types.sumo.player.SumoPlayerState;
-import xyz.refinedev.practice.profile.hotbar.Hotbar;
-import xyz.refinedev.practice.profile.hotbar.HotbarLayout;
+import xyz.refinedev.practice.hook.SpigotHook;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.kit.kiteditor.KitEditor;
 import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
-import xyz.refinedev.practice.hook.SpigotHook;
 import xyz.refinedev.practice.party.Party;
-import xyz.refinedev.practice.duel.RematchProcedure;
+import xyz.refinedev.practice.profile.hotbar.Hotbar;
+import xyz.refinedev.practice.profile.hotbar.HotbarLayout;
+import xyz.refinedev.practice.profile.hotbar.HotbarType;
 import xyz.refinedev.practice.profile.rank.Rank;
-import xyz.refinedev.practice.queue.Queue;
-import xyz.refinedev.practice.queue.QueueProfile;
 import xyz.refinedev.practice.profile.settings.meta.SettingsMeta;
 import xyz.refinedev.practice.profile.statistics.StatisticsData;
+import xyz.refinedev.practice.queue.Queue;
+import xyz.refinedev.practice.queue.QueueProfile;
 import xyz.refinedev.practice.tournament.Tournament;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.InventoryUtil;
@@ -68,20 +56,11 @@ import xyz.refinedev.practice.util.nametags.NameTagHandler;
 import xyz.refinedev.practice.util.other.Cooldown;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
-import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
-import org.bson.Document;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings(value = "all")
 @Getter @Setter
@@ -111,7 +90,6 @@ public class Profile {
     private String name;
     private final UUID uuid;
 
-
     /*
      * Integer Values
      */
@@ -119,17 +97,7 @@ public class Profile {
     int bridgeRounds = 0;
 
     /*
-     * Events
-     */
-    private Sumo sumo;
-    private Brackets brackets;
-    private LMS lms;
-    private Parkour parkour;
-    private Gulag gulag;
-    private Spleef spleef;
-
-    /*
-     * Objects
+     * Profile Meta
      */
     private ProfileState state;
     private Party party;
@@ -644,7 +612,7 @@ public class Profile {
                     }
                 }
             }
-                    boolean activeEvent =
+                    /*boolean activeEvent =
                             (plugin.getSumoManager().getActiveSumo() != null && plugin.getSumoManager().getActiveSumo().isWaiting())
                             || (plugin.getBracketsManager().getActiveBrackets() != null && plugin.getBracketsManager().getActiveBrackets().isWaiting())
                             || (plugin.getLMSManager().getActiveLMS() != null && plugin.getLMSManager().getActiveLMS().isWaiting())
@@ -657,7 +625,7 @@ public class Profile {
                         update = true;
                     } else if (eventSlot != -1 && !activeEvent) {
                         update = true;
-                    }
+                    }*/
 
 
             if (update) {
@@ -686,7 +654,7 @@ public class Profile {
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.QUEUE, this));
             } else if (isSpectating()) {
                 TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
-            } else if (isInSumo()) {
+            }/* else if (isInSumo()) {
                 if (getSumo().getEventPlayer(player).getState().equals(SumoPlayerState.ELIMINATED)) {
                     TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
                     TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SUMO_SPECTATE, this)), 3L);
@@ -722,7 +690,7 @@ public class Profile {
                     TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.GULAG_SPECTATE, this)), 3L);
                 }
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.GULAG_SPECTATE, this));
-            } else if (isInFight()) {
+            }*/ else if (isInFight()) {
                 if (!match.getTeamPlayer(player).isAlive()) {
                     player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this));
                 }
@@ -776,7 +744,7 @@ public class Profile {
                 TaskUtil.runAsync(() -> NameTagHandler.reloadPlayer(player, otherPlayer));
             }
         } else if (isSpectating()) {
-            if (sumo != null) {
+            /*if (sumo != null) {
                 SumoPlayer sumoPlayer = sumo.getEventPlayer(otherPlayer);
                 if (sumoPlayer != null && sumoPlayer.getState() == SumoPlayerState.WAITING) {
                     hide = false;
@@ -806,17 +774,17 @@ public class Profile {
                 if (spleefPlayer != null && spleefPlayer.getState() == SpleefPlayerState.WAITING) {
                     hide = false;
                 }
-            } else {
+            } else {*/
                 TeamPlayer teamPlayer = match.getTeamPlayer(otherPlayer);
                 if (teamPlayer != null && teamPlayer.isAlive()) {
                     hide = false;
                 }
-            }
+            //}
             if (plugin.getEssentials().getNametagMeta().isEnabled()) {
                 TaskUtil.runAsync(() -> NameTagHandler.reloadPlayer(player, otherPlayer));
             }
         } else if (isInEvent()) {
-            if (sumo != null) {
+            /*if (sumo != null) {
                 if (!sumo.getSpectators().contains(otherPlayer.getUniqueId())) {
                     SumoPlayer sumoPlayer = sumo.getEventPlayer(otherPlayer);
                     if (sumoPlayer != null && sumoPlayer.getState() == SumoPlayerState.WAITING) {
@@ -848,7 +816,7 @@ public class Profile {
                 if (spleefPlayer != null && spleefPlayer.getState() == SpleefPlayerState.WAITING) {
                     hide = false;
                 }
-            }
+            }*/
             if (plugin.getEssentials().getNametagMeta().isEnabled()) {
                 TaskUtil.runAsync(() -> NameTagHandler.reloadPlayer(player, otherPlayer));
             }
@@ -912,7 +880,6 @@ public class Profile {
         try {
             final Player player = this.getPlayer();
             if (player != null) {
-                LunarClientAPICooldown.registerCooldown(new LCCooldown("EnderPearl", Integer.parseInt(cooldown.getTimeLeft()), TimeUnit.MILLISECONDS, Material.ENDER_PEARL));
                 LunarClientAPICooldown.sendCooldown(player, "Enderpearl");
             }
         } catch (Exception e) {
@@ -932,7 +899,6 @@ public class Profile {
         try {
             final Player player = this.getPlayer();
             if (player != null) {
-                LunarClientAPICooldown.registerCooldown(new LCCooldown("Bow", Integer.parseInt(cooldown.getTimeLeft()), TimeUnit.MILLISECONDS, Material.BOW));
                 LunarClientAPICooldown.sendCooldown(player, "Bow");
             }
         } catch (Exception e) {
@@ -980,7 +946,7 @@ public class Profile {
     }
 
     public boolean isInEvent() {
-        return state == ProfileState.IN_EVENT;
+        return event != null;
     }
 
     public boolean isInTournament() {
@@ -989,30 +955,6 @@ public class Profile {
         } else {
             return false;
         }
-    }
-
-    public boolean isInSumo() {
-        return state == ProfileState.IN_EVENT && sumo != null;
-    }
-
-    public boolean isInBrackets() {
-        return state == ProfileState.IN_EVENT && brackets != null;
-    }
-
-    public boolean isInLMS() {
-        return state == ProfileState.IN_EVENT && lms != null;
-    }
-
-    public boolean isInParkour() {
-        return state == ProfileState.IN_EVENT && parkour != null;
-    }
-
-    public boolean isInSpleef() {
-        return state == ProfileState.IN_EVENT && spleef != null;
-    }
-
-    public boolean isInGulag() {
-        return state == ProfileState.IN_EVENT && gulag !=null;
     }
 
     public boolean isInBrawl() {
