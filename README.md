@@ -49,4 +49,4 @@ You Need Intelli J to compile, This does NOT support Eclipse
 
 ## Credits
 
-Drizzy, Tinuy, Nick, Joeloeli, Veltus
+Purge Development
