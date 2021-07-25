@@ -29,7 +29,6 @@ public class Tournament {
     @Getter public static Tournament CURRENT_TOURNAMENT = null;
     @Getter public static TournamentMatch tournamentMatch;
 
-
     private final List<Party> participants = new ArrayList<Party>() {
         @Override
         public @NotNull Iterator<Party> iterator() {
@@ -57,7 +56,7 @@ public class Tournament {
     };
     
     private final List<TournamentMatch> tournamentMatches = new ArrayList<>();
-    public final List<UUID> spectators = new ArrayList<>();
+    private final List<UUID> spectators = new ArrayList<>();
 
     private Kit ladder;
     private String hostType;
@@ -147,43 +146,43 @@ public class Tournament {
             participatingCount = participants.size();
         }
         for ( Player player : Bukkit.getOnlinePlayers() ) {
-            if (Profile.getByPlayer(player).getSettings().isAllowTournamentMessages()) {
+            if (Profile.getByPlayer(player).getSettings().isTmessagesEnabled()) {
                 player.sendMessage(Locale.TOURNAMENT_ROUND.toString().replace("<round>", String.valueOf(round)));
             }
         }
         Iterator<Party> iterator = participants.iterator();
         while (iterator.hasNext()) {
-            Party player = iterator.next();
+            Party party = iterator.next();
             if (!iterator.hasNext()) {
-                player.broadcast(Locale.TOURNAMENT_NOT_PICKED.toString());
+                party.broadcast(Locale.TOURNAMENT_NOT_PICKED.toString());
                 break;
             }
             
             Party other = iterator.next();
             Arena arena = Arena.getRandom(ladder);
 
-            Team teamA = new Team(new TeamPlayer(player.getLeader().getPlayer()));
+            Team teamA = new Team(new TeamPlayer(party.getLeader().getPlayer()));
             Team teamB = new Team(new TeamPlayer(other.getLeader().getPlayer()));
             tournamentMatch = new TournamentMatch(teamA, teamB, getLadder(), arena);
 
-            for ( Player player1 : player.getPlayers() ) {
-                final Profile otherProfile = Profile.getByUuid(player1.getUniqueId());
+            for ( Player player : party.getPlayers() ) {
+                final Profile otherProfile = Profile.getByUuid(player.getUniqueId());
 
                 otherProfile.setState(ProfileState.IN_FIGHT);
                 otherProfile.setMatch(tournamentMatch);
 
-                if (!player.isLeader(player1.getUniqueId())) {
-                    teamA.getTeamPlayers().add(new TeamPlayer(player1));
+                if (!party.isLeader(player.getUniqueId())) {
+                    teamA.getTeamPlayers().add(new TeamPlayer(player));
                 }
             }
-            for ( Player player1 : other.getPlayers() ) {
-                final Profile otherProfile = Profile.getByUuid(player1.getUniqueId());
+            for ( Player player : other.getPlayers() ) {
+                final Profile otherProfile = Profile.getByUuid(player.getUniqueId());
 
                 otherProfile.setState(ProfileState.IN_FIGHT);
                 otherProfile.setMatch(tournamentMatch);
 
-                if (!other.isLeader(player1.getUniqueId())) {
-                    teamB.getTeamPlayers().add(new TeamPlayer(player1));
+                if (!other.isLeader(player.getUniqueId())) {
+                    teamB.getTeamPlayers().add(new TeamPlayer(player));
                 }
             }
             tournamentMatch.start();
@@ -225,12 +224,10 @@ public class Tournament {
                 if (builders.length() > 0) {
                     builders.setLength(builders.length() - 2);
                 }
-                if (builder.length() > 0) {
-                    builder.setLength(builder.length() - 2);
-                }
 
                 for ( Player player : Bukkit.getOnlinePlayers() ) {
-                    if (Profile.getByPlayer(player).getSettings().isAllowTournamentMessages()) {
+                    Profile profile = Profile.getByPlayer(player);
+                    if (profile.getSettings().isTmessagesEnabled()) {
                         player.sendMessage(CC.translate(Locale.TOURNAMENT_ELIMINATED.toString())
                                 .replace("<eliminated>", CC.translate(builders.toString()))
                                 .replace("<participants_size>", String.valueOf(participants.size()))
@@ -240,9 +237,7 @@ public class Tournament {
 
                 if (tournamentMatches.isEmpty()) {
                     if (participants.size() <= 1) {
-                        Bukkit.broadcastMessage("");
                         Bukkit.broadcastMessage(Locale.TOURNAMENT_WON.toString().replace("<won>", CC.translate(builder.toString())));
-                        Bukkit.broadcastMessage("");
                         if (participants.get(0) != null) {
                             if (getTeamCount() == 1) {
                                 Party winner = participants.get(0);

@@ -26,7 +26,7 @@ public interface CommandService {
     /**
      * Register a Drink command into the Drink Command Service
      * @param handler Object that has the {@link Command} annotated methods
-     * @param name The name of the command to registerCommands.
+     * @param name The name of the command to init.
      *             The names of methods within the handler object will be sub-cmds to this name.
      *             If you want to create a default command (just /name), set the name here and in the
      * {@link Command} annotation set name = ""
@@ -38,9 +38,9 @@ public interface CommandService {
     /**
      * Register a sub-command into the specified root command container
      *
-     * @param root    The {@link DrinkCommandContainer} super-command to registerCommands your sub-cmds into
+     * @param root    The {@link DrinkCommandContainer} super-command to init your sub-cmds into
      * @param handler The object that has the {@link Command}
-     *                annotated methods to registerCommands
+     *                annotated methods to init
      * @return The {@link DrinkCommandContainer} containing the command you registered (same as the root passed in)
      */
     DrinkCommandContainer registerSub(@Nonnull DrinkCommandContainer root, @Nonnull Object handler);

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import lombok.Data;
 import lombok.NonNull;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.arena.cuboid.Cuboid;
+import xyz.refinedev.practice.arena.meta.cuboid.Cuboid;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import org.bukkit.Location;
 import org.bukkit.Material;

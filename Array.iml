@@ -16,7 +16,7 @@
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.3.2" level="project" />
     <orderEntry type="module-library">
-      <library name="Maven: pt.foxspigot.jar:FoxSpigot:0.5-SNAPSHOT">
+      <library name="Maven: org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/spigot.jar!/" />
         </CLASSES>
@@ -25,34 +25,10 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="Maven: xyz.refinedev.addon:SpigotSupport:1.3" level="project" />
-    <orderEntry type="library" name="Maven: org.mongodb:mongo-java-driver:3.9.1" level="project" />
-    <orderEntry type="module-library">
-      <library name="Maven: com.comphenix:ProtocolLib:4.4">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/ProtocolLib.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: us.myles.ViaVersion:ViaVersion:3.2.1">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/tab/ViaVersion.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: protocolsupport:ProtocolSupport:4.6">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/tab/ProtocolSupport.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" name="Maven: org.mongodb:mongo-java-driver:3.12.9" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.comphenix.protocol:ProtocolLib:4.6.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: net.bytebuddy:byte-buddy:1.10.16" level="project" />
+    <orderEntry type="library" name="Maven: xyz.refinedev.tablist:TablistAPI:1.2" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: com.moonsworth:LunarClient-API:LATEST">
         <CLASSES>

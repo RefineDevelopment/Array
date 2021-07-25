@@ -33,6 +33,7 @@ import java.util.Map;
 public class SettingsMenu extends Menu {
 
     private final static BasicConfigurationFile config = Array.getInstance().getMenuConfig();
+    private static String key;
 
     @Override
     public String getTitle(Player player) {
@@ -69,10 +70,9 @@ public class SettingsMenu extends Menu {
 
         @Override
         public ItemStack getButtonItem(final Player player) {
-            final Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = Profile.getByUuid(player.getUniqueId());
             List<String> lines = new ArrayList<>();
             lines.add(CC.MENU_BAR);
-            String key;
             switch (type) {
                 case TOGGLESCOREBOARD:
                     key = "MENUS.SETTINGS.BUTTONS.TOGGLESCOREBOARD";
@@ -101,8 +101,8 @@ public class SettingsMenu extends Menu {
                     if (player.hasPermission("array.profile.pingfactor")) {
                         for ( String text : config.getStringList(key + ".LORE_PERMISSION" )) {
                             if (text.contains("<options>")) {
-                                lines.add((profile.getSettings().isUsingPingFactor() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
-                                lines.add((!profile.getSettings().isUsingPingFactor() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
+                                lines.add((profile.getSettings().isPingFactor() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
+                                lines.add((!profile.getSettings().isPingFactor() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
                                 continue;
                             }
                             lines.add(CC.translate(text));
@@ -163,8 +163,8 @@ public class SettingsMenu extends Menu {
                     key = "MENUS.SETTINGS.BUTTONS.TOGGLETOURNAMENTMESSAGES";
                     for ( String text : config.getStringList(key + ".LORE" )) {
                         if (text.contains("<options>")) {
-                            lines.add((profile.getSettings().isAllowTournamentMessages() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
-                            lines.add((!profile.getSettings().isAllowTournamentMessages() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
+                            lines.add((profile.getSettings().isTmessagesEnabled() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
+                            lines.add((!profile.getSettings().isTmessagesEnabled() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
                             continue;
                         }
                         lines.add(CC.translate(text));
@@ -206,9 +206,18 @@ public class SettingsMenu extends Menu {
                     } else {
                         config.getStringList(key + ".LORE_NO_PERM" ).forEach(text -> lines.add(CC.translate(text.replace("<store>", Essentials.getSocialMeta().getStore()))));
                     }
+                    break;
             }
             lines.add(CC.MENU_BAR);
-            return new ItemBuilder(Material.valueOf(config.getString("MENUS.SETTINGS.BUTTONS." + type.name().toUpperCase() + ".MATERIAL"))).name(config.getString("MENUS.SETTINGS.BUTTONS." + type.name().toUpperCase() + ".NAME")).lore(lines).build();
+            if (lines.isEmpty() || lines == null) {
+                return new ItemBuilder(Material.valueOf(config.getString(key + ".MATERIAL")))
+                        .name(config.getString(key + ".NAME"))
+                        .build();
+            }
+            return new ItemBuilder(Material.valueOf(config.getString(key + ".MATERIAL")))
+                    .name(config.getString(key + ".NAME"))
+                    .lore(lines)
+                    .build();
         }
 
         @Override
@@ -226,7 +235,7 @@ public class SettingsMenu extends Menu {
                 case TOGGLEPINGFACTOR:
                     if (player.hasPermission("array.profile.pingfactor")) {
                         Button.playSuccess(player);
-                        profile.getSettings().setUsingPingFactor(!profile.getSettings().isUsingPingFactor());
+                        profile.getSettings().setPingFactor(!profile.getSettings().isPingFactor());
                     } else {
                         Button.playFail(player);
                         player.closeInventory();
@@ -257,7 +266,7 @@ public class SettingsMenu extends Menu {
                     break;
                 case TOGGLETOURNAMENTMESSAGES:
                     Button.playSuccess(player);
-                    profile.getSettings().setAllowTournamentMessages(!profile.getSettings().isAllowTournamentMessages());
+                    profile.getSettings().setTmessagesEnabled(!profile.getSettings().isTmessagesEnabled());
                     break;
                 case TOGGLETABSTYLE:
                     Button.playSuccess(player);

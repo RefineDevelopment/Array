@@ -45,7 +45,6 @@ public class SpigotHook {
         } else if (check("com.ngxdev.knockback.KnockbackProfile")) {
             knockbackType = new nSpigot();
             Bukkit.getPluginManager().registerEvents(new nSpigotRestorer(), plugin);
-            knockbackType = new iSpigot();
         } else if (check("spg.lgdev.iSpigot")) {
             knockbackType = new iSpigot();
             Bukkit.getPluginManager().registerEvents(new iSpigotRestorer(), plugin);

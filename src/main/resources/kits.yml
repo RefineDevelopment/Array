@@ -2,6 +2,11 @@ kits:
   NoDebuff:
     enabled: true
     knockback-profile: default
+    description:
+      - " &fThe most popular gamemode"
+      - " &fthat involves strategy"
+      - " &fas well as skill in order"
+      - " &fto overcome your opponent"
     icon:
       material: POTION
       durability: 16421
@@ -25,7 +30,6 @@ kits:
         show-health: false
         hit-delay: 20
         bow-hp: false
-        netheruhc: false
         stickspawn: false
         voidspawn: false
         boxuhc: false

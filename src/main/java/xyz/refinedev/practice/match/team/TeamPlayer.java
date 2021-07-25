@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.match.team;
 
+import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -123,6 +124,14 @@ public class TeamPlayer {
 
     public void resetCombo() {
         combo = 0;
+    }
+
+    public Profile getProfile() {
+        return Profile.getByUuid(uuid);
+    }
+
+    public int getRounds() {
+        return getProfile().getBridgeRounds();
     }
 
 }

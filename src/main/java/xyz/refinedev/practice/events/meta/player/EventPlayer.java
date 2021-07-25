@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.events.meta.player.EventPlayerState;
 import xyz.refinedev.practice.util.other.PlayerSnapshot;
+import xyz.refinedev.practice.util.other.PlayerUtil;
 
 @Getter
 @Setter
@@ -21,4 +22,7 @@ public class EventPlayer extends PlayerSnapshot {
 		this.roundWins++;
 	}
 
+	public int getPing() {
+		return PlayerUtil.getPing(getPlayer());
+	}
 }

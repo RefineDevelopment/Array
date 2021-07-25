@@ -45,17 +45,20 @@ public class Clan {
     @Getter private static final List<LeaderboardsAdapter> clanLeaderboards = new ArrayList<>();
 
     public static final Executor thread = Array.getInstance().getMongoThread();
-    private final List<ClanProfile> members = new ArrayList<>();
-    private final List<ClanProfile> captains = new ArrayList<>();
-    private final List<UUID> bannedPlayers = new ArrayList<>();
+
+    private final List<ClanProfile> members;
+    private final List<ClanProfile> captains;
+    private final List<UUID> bannedPlayers;
 
     private final String name;
     private final UUID uuid;
 
     private ClanProfile leader;
-    private String description;
+    private String description = "This is the default Description, use /clan setdesc <text> to setup the description for your clan.";
     private String password;
     private String dateCreated;
+
+    private int maxMembers;
 
     private int elo = 1000;
     private int wins = 0;
@@ -71,12 +74,21 @@ public class Clan {
      */
     public Clan(String name, UUID leader, UUID uuid) {
         this.name = name;
-        this.leader = new ClanProfile(leader, this, ClanProfileType.LEADER);
         this.uuid = uuid;
+        this.members = new ArrayList<>();
+        this.captains = new ArrayList<>();
+        this.bannedPlayers = new ArrayList<>();
+        this.leader = new ClanProfile(leader, this, ClanProfileType.LEADER);
         this.dateCreated = DateUtil.getFormattedDate(System.currentTimeMillis());
-        Profile.getByUuid(leader).setClan(this);
 
-        clans.add(this);
+        this.maxMembers  = 25;
+
+        Profile profile = Profile.getByUuid(leader);
+        if (profile != null) {
+            profile.setClan(this);
+        }
+
+        this.clans.add(this);
         this.save();
     }
 
@@ -118,8 +130,7 @@ public class Clan {
     public static void  preload() {
         Array.logger("&7Loading Clans!");
         //First of all Load up the Leaderboards
-        updateClanLeaderboards();
-
+        Clan.updateClanLeaderboards();
         //Register a Task that will clear the expired Invites
         TaskUtil.runTimerAsync(() -> {
             Profile.getProfiles().values().forEach(clan -> clan.getClanInviteList().removeIf(ClanInvite::hasExpired));
@@ -127,7 +138,7 @@ public class Clan {
 
         //Then register a Task that will update the leaderboards frequently
         TaskUtil.runTimerAsync(Clan::updateClanLeaderboards, 600L, 600L);
-        fetchClans();
+        Clan.fetchClans();
         Array.logger("&aLoaded Clans!");
     }
 
@@ -136,12 +147,17 @@ public class Clan {
      */
     public static void fetchClans() {
         thread.execute(() -> {
-            if (collection.find() == null) {
-                return;
-            }
-            for ( Object o : collection.find() ) {
-                Document document = (Document) o;
-                Clan clan = new Clan(document.getString("name"), UUID.fromString(document.getString("leader")), UUID.fromString(document.getString("_id")));
+            for ( Document document : collection.find() ) {
+
+                if (document == null) return;
+
+                UUID uuid =  UUID.fromString(document.getString("_id"));
+                UUID leader = UUID.fromString(document.getString("leader"));
+                String name = document.getString("name");
+
+                if (uuid == null || name == null || leader == null) continue;
+
+                Clan clan = new Clan(name, leader, uuid);
                 clan.load();
             }
         });
@@ -151,7 +167,6 @@ public class Clan {
      * Delete the clan from the mongo
      */
     public void deleteClan() {
-
         //Reset the Profile's clans and shit
         this.getAllMembers().forEach(member -> {
             Profile playerProfile = Profile.getByUuid(member.getUuid());
@@ -168,9 +183,10 @@ public class Clan {
         });
 
         //Then clear it up from the Main Data
-        clans.remove(this);
-        getMembers().clear();
-        getCaptains().clear();
+        this.clans.remove(this);
+        this.members.clear();
+        this.captains.clear();
+
         collection.deleteOne(Filters.eq("_id", uuid.toString()));
     }
 
@@ -179,41 +195,41 @@ public class Clan {
      */
     public void load() {
         thread.execute(() -> {
-            Document document=(Document) collection.find().filter(Filters.eq("_id", uuid.toString())).first();
+            Document document = (Document) collection.find().filter(Filters.eq("_id", uuid.toString())).first();
 
             if (document == null) {
                 this.save();
                 return;
             }
+
             this.setElo(document.getInteger("elo"));
             this.setWins(document.getInteger("wins"));
             this.setLosses(document.getInteger("losses"));
             this.setWinStreak(document.getInteger("winstreak"));
             this.setHighestWinStreak(document.getInteger("highestwinstreak"));
 
-            ClanProfile leader = new ClanProfile(UUID.fromString(document.getString("leader")), this, ClanProfileType.LEADER);
-            this.setLeader(leader);
+            if (!document.getList("members", String.class).isEmpty()) {
+                for ( String memberUUID : document.getList("members", String.class) ) {
+                    UUID uuid = Array.GSON.fromJson(memberUUID, UUID.class);
+                    ClanProfile member = new ClanProfile(uuid, this, ClanProfileType.MEMBER);
 
-            //Listen I know this is straight up trash code but just bare with me while I learn mongo XD
-            List<String> strings = new ArrayList<>(document.getList("members", String.class));
-            List<UUID> uuids = strings.stream().map(UUID::fromString).collect(Collectors.toList());
+                    Profile profile = Profile.getByUuid(uuid);
+                    profile.setClanProfile(member);
 
-            for ( UUID uuid : uuids ) {
-                ClanProfile member = new ClanProfile(uuid, this, ClanProfileType.MEMBER);
-                Profile profile = Profile.getByUuid(uuid);
-                profile.setClanProfile(member);
-                this.getMembers().add(member);
+                    this.getMembers().add(member);
+                }
             }
 
-            //Same here, trash mongo code XD
-            List<String> strings1 = new ArrayList<>(document.getList("captains", String.class));
-            List<UUID> uuids1 = strings1.stream().map(UUID::fromString).collect(Collectors.toList());
+            if (!document.getList("captains", String.class).isEmpty()) {
+                for ( String captainUUID : document.getList("captains", String.class) ) {
+                    UUID uuid = Array.GSON.fromJson(captainUUID, UUID.class);
+                    ClanProfile captain = new ClanProfile(uuid, this, ClanProfileType.CAPTAIN);
 
-            for ( UUID uuid : uuids1 ) {
-                ClanProfile member = new ClanProfile(uuid, this, ClanProfileType.CAPTAIN);
-                Profile profile = Profile.getByUuid(uuid);
-                profile.setClanProfile(member);
-                this.getCaptains().add(member);
+                    Profile profile = Profile.getByUuid(uuid);
+                    profile.setClanProfile(captain);
+
+                    this.getCaptains().add(captain);
+                }
             }
 
             this.bannedPlayers.addAll(document.getList("banned", String.class).stream().map(UUID::fromString).collect(Collectors.toList()));
@@ -233,14 +249,22 @@ public class Clan {
      */
     public void save() {
         thread.execute(() -> {
+            List<String> members = new ArrayList<>();
+            List<String> captains = new ArrayList<>();
+            List<String> banned = new ArrayList<>();
+
+            if (!this.members.isEmpty()) this.members.forEach(member -> members.add(Array.GSON.toJson(member)));
+            if (!this.captains.isEmpty()) this.captains.forEach(captain -> captains.add(Array.GSON.toJson(captain)));
+            if (!this.bannedPlayers.isEmpty()) this.bannedPlayers.forEach(player -> banned.add(Array.GSON.toJson(player)));
+
             Document clanDocument = new Document();
             clanDocument.put("name", this.getName());
             clanDocument.put("_id", this.getUuid().toString());
 
             clanDocument.put("leader", this.getLeader().getUuid().toString());
-            clanDocument.put("members", this.getMembers().stream().map(ClanProfile::getUuid).map(UUID::toString).collect(Collectors.toList()));
-            clanDocument.put("captains", this.getCaptains().stream().map(ClanProfile::getUuid).map(UUID::toString).collect(Collectors.toList()));
-            clanDocument.put("banned", this.getBannedPlayers().stream().map(UUID::toString).collect(Collectors.toList()));
+            clanDocument.put("members", members);
+            clanDocument.put("captains", captains);
+            clanDocument.put("banned", banned);
 
             clanDocument.put("description", this.getDescription());
             clanDocument.put("date-created", this.getDateCreated());
@@ -265,11 +289,11 @@ public class Clan {
      */
     public void promote(final ClanProfile member) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(member.getUuid());
-        member.setClanProfileType(ClanProfileType.CAPTAIN);
+        member.setType(ClanProfileType.CAPTAIN);
         this.members.remove(member);
         this.captains.add(member);
         this.save();
-        this.broadcast(CC.translate("&8[&cClan&8] &c" + player.getName() + " &7has been promoted to &c&lCaptain&7!"));
+        this.broadcast(Locale.CLAN_PROMOTE.toString().replace("<player>", player.getName()).replace("<role>", "Captain"));
     }
 
     /**
@@ -281,11 +305,11 @@ public class Clan {
         OfflinePlayer player = Bukkit.getOfflinePlayer(member.getUuid());
         OfflinePlayer leaderPlayer = Bukkit.getOfflinePlayer(leader.getUuid());
 
-        this.broadcast(CC.translate("&8[&cClan&8] &c" + player.getName() + " &7has been promoted to &c&lLeader&7!"));
-        this.broadcast(CC.translate("&8[&cClan&8] &c" + leaderPlayer.getName() + " &7has been demoted to &c&lCaptain&7!"));
+        this.broadcast(Locale.CLAN_PROMOTE.toString().replace("<player>", player.getName()).replace("<role>", "Leader"));
+        this.broadcast(Locale.CLAN_DEMOTE.toString().replace("<player>", leaderPlayer.getName()).replace("<role>", "Captain"));
 
-        member.setClanProfileType(ClanProfileType.LEADER);
-        leader.setClanProfileType(ClanProfileType.CAPTAIN);
+        member.setType(ClanProfileType.LEADER);
+        leader.setType(ClanProfileType.CAPTAIN);
 
         this.members.remove(member);
         this.captains.remove(member);
@@ -303,13 +327,13 @@ public class Clan {
     public void demote(final ClanProfile member) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(member.getUuid());
 
-        member.setClanProfileType(ClanProfileType.MEMBER);
+        member.setType(ClanProfileType.MEMBER);
 
         this.members.add(member);
         this.captains.remove(member);
 
         this.save();
-        this.broadcast(CC.translate("&8[&cClan&8] &c" + player.getName() + " &7has been demoted to &c&lMember&7!"));
+        this.broadcast(Locale.CLAN_DEMOTE.toString().replace("<player>", player.getName()).replace("<role>", "Member"));
 
     }
 
@@ -347,12 +371,17 @@ public class Clan {
             return;
         }
 
+        if (this.getAllMembers().size() >= this.maxMembers) {
+            joiner.sendMessage(CC.translate("&7This clan has exceeded the max member limit, you are unable to join currently!"));
+            return;
+        }
+
         ClanProfile clanProfile = new ClanProfile(joiner.getUniqueId(), this, ClanProfileType.MEMBER);
 
         this.getMembers().add(clanProfile);
 
         if (clanInvite != null) profile.getClanInviteList().remove(clanInvite);
-        this.broadcast(CC.RED + joiner.getDisplayName() + CC.GRAY + " has joined the clan!");
+        this.broadcast(Locale.CLAN_JOIN.toString().replace("<player>", joiner.getName()));
         this.save();
 
         profile.setClan(this);
@@ -368,32 +397,20 @@ public class Clan {
      */
     public void leave(final Player leaver) {
         Profile profile = Profile.getByPlayer(leaver);
+        ClanProfile clanProfile = profile.getClanProfile();
 
-        this.thread.execute(() -> {
-            ClanProfile clanProfile = profile.getClanProfile();
-            switch (clanProfile.getClanProfileType()) {
-                case MEMBER:
-                    this.getMembers().remove(clanProfile);
-                    profile.setClan(null);
-                    profile.setClanProfile(null);
-                    profile.save();
-                    profile.refreshHotbar();
-                    this.save();
-                    this.broadcast(CC.RED + leaver.getDisplayName() + CC.GRAY + " has left the clan!");
-                    break;
-                case CAPTAIN:
-                    this.getCaptains().remove(clanProfile);
-                    profile.setClan(null);
-                    profile.setClanProfile(null);
-                    profile.save();
-                    profile.refreshHotbar();
-                    this.save();
-                    this.broadcast(CC.RED + leaver.getDisplayName() + CC.GRAY + " has left the clan!");
-                    break;
-                case LEADER:
-                    throw new IllegalArgumentException("Leader can not leave the clan!");
-            }
-        });
+        if (clanProfile.getType() == ClanProfileType.LEADER) {
+            throw new IllegalArgumentException("Leader can not leave the clan!");
+        }
+
+        if (clanProfile.getType() == ClanProfileType.CAPTAIN) this.captains.remove(clanProfile);
+        else this.members.remove(clanProfile);
+        profile.setClan(null);
+        profile.setClanProfile(null);
+        profile.save();
+        profile.refreshHotbar();
+        this.save();
+        this.broadcast(Locale.CLAN_LEFT.toString().replace("<player>", leaver.getName()));
     }
 
     /**
@@ -406,28 +423,18 @@ public class Clan {
         ClanProfile clanProfile = profile.getClanProfile();
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
 
-        switch (clanProfile.getClanProfileType()) {
-            case MEMBER:
-                this.getMembers().remove(clanProfile);
-                profile.setClan(null);
-                profile.setClanProfile(null);
-                profile.save();
-                if (player.isOnline()) profile.refreshHotbar();
-                this.save();
-                this.broadcast(Locale.CLAN_KICKED.toString().replace("<kicked>", player.getName()));
-                break;
-            case CAPTAIN:
-                this.getCaptains().remove(clanProfile);
-                profile.setClan(null);
-                profile.setClanProfile(null);
-                profile.save();
-                if (player.isOnline()) profile.refreshHotbar();
-                this.save();
-                this.broadcast(Locale.CLAN_KICKED.toString().replace("<kicked>", player.getName()));
-                break;
-            case LEADER:
-                throw new IllegalArgumentException("Leader can not leave the clan!");
+        if (clanProfile.getType() == ClanProfileType.LEADER) {
+            throw new IllegalArgumentException("Leader can not leave the clan!");
         }
+
+        if (clanProfile.getType() == ClanProfileType.CAPTAIN) this.captains.remove(clanProfile);
+        else this.members.remove(clanProfile);
+        profile.setClan(null);
+        profile.setClanProfile(null);
+        profile.save();
+        if (player.isOnline()) profile.refreshHotbar();
+        this.save();
+        this.broadcast(Locale.CLAN_KICKED.toString().replace("<player>", player.getName()));
     }
 
     /**
@@ -440,28 +447,18 @@ public class Clan {
         ClanProfile clanProfile = profile.getClanProfile();
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
 
-        switch (clanProfile.getClanProfileType()) {
-            case MEMBER:
-                this.getMembers().remove(clanProfile);
-                profile.setClan(null);
-                profile.setClanProfile(null);
-                profile.save();
-                if (player.isOnline()) profile.refreshHotbar();
-                this.save();
-                this.broadcast(Locale.CLAN_BANNED.toString().replace("<banned>", player.getName()));
-                break;
-            case CAPTAIN:
-                this.getCaptains().remove(clanProfile);
-                profile.setClan(null);
-                profile.setClanProfile(null);
-                profile.save();
-                if (player.isOnline()) profile.refreshHotbar();
-                this.save();
-                this.broadcast(Locale.CLAN_BANNED.toString().replace("<banned>", player.getName()));
-                break;
-            case LEADER:
-                throw new IllegalArgumentException("Leader can not leave the clan!");
+        if (clanProfile.getType() == ClanProfileType.LEADER) {
+            throw new IllegalArgumentException("Leader can not leave the clan!");
         }
+
+        if (clanProfile.getType() == ClanProfileType.CAPTAIN) this.captains.remove(clanProfile);
+        else this.members.remove(clanProfile);
+        profile.setClan(null);
+        profile.setClanProfile(null);
+        profile.save();
+        if (player.isOnline()) profile.refreshHotbar();
+        this.save();
+        this.broadcast(Locale.CLAN_BANNED.toString().replace("<player>", player.getName()));
         this.bannedPlayers.add(uuid);
     }
 
@@ -474,8 +471,8 @@ public class Clan {
         thread.execute(() -> {
             for ( Document document : collection.find().sort(Sorts.descending("elo")).limit(10).into(new ArrayList<>()) ) {
                 LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
-                leaderboardsAdapter.setName((String) document.get("name"));
-                leaderboardsAdapter.setElo((Integer) document.get("elo"));
+                leaderboardsAdapter.setName(document.getString("name"));
+                leaderboardsAdapter.setElo(document.getInteger("elo"));
                 getClanLeaderboards().add(leaderboardsAdapter);
             }
         });
@@ -496,7 +493,8 @@ public class Clan {
     }
 
     public List<Player> getOnlineMembers() {
-        return getAllMembers().stream().map(ClanProfile::getUuid).map(Bukkit::getPlayer).filter(Objects::nonNull).collect(Collectors.toList());
+        return getAllMembers().stream().map(ClanProfile::getUuid).map(Bukkit::getPlayer)
+               .filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     /**
@@ -506,18 +504,21 @@ public class Clan {
      * @param clan The Clan whose information is being sent
      */
     public void information(Player player) {
-        this.getAllMembers().sort(Comparator.comparing(cm -> cm.getClanProfileType().getWeight()));
+        this.getAllMembers().sort(Comparator.comparing(cm -> cm.getType().getWeight()));
 
         List<String> playerNames = new ArrayList<>();
-        this.getAllMembers().forEach(cm -> playerNames.add((this.getLeader().getUuid().equals(cm.getUuid()) ? CC.DARK_GREEN + "***" : this.getCaptains().contains(cm.getUuid()) ? CC.DARK_GREEN + "*" : "") + colorName(cm.getUuid())));
+        this.getAllMembers().forEach(cm -> playerNames.add((this.getLeader().getUuid().equals(cm.getUuid()) ? CC.RED + "***" : this.getCaptains().contains(cm.getUuid()) ? CC.RED + "*" : "") + colorName(cm.getUuid())));
 
         Locale.CLAN_INFO.toList().forEach(line -> {
             line = line
+                    .replace("<clan_name>", this.getName())
                     .replace("<clan_description>", this.getDescription())
                     .replace("<clan_elo>", String.valueOf(this.getElo() == 0 ? "[N/A]" : this.getElo()))
                     .replace("<clan_created>", this.getDateCreated())
+                    .replace("<clan_members_limit>", String.valueOf(this.maxMembers))
                     .replace("<clan_members>", Strings.join(playerNames, CC.GRAY + ", "))
                     .replace("<clan_winstreak>", String.valueOf(this.getWinStreak()))
+                    .replace("<clan_leader>", Profile.getByUuid(this.getLeader().getUuid()).getName())
                     .replace("<clan_highest_winstreak>", String.valueOf(this.getHighestWinStreak()))
                     .replace("<clan_members_size>", String.valueOf(this.getAllMembers().size()));
 
@@ -555,4 +556,11 @@ public class Clan {
         return null;
     }
 
+    public boolean isLeader(UUID uuid) {
+        return this.getLeader().getUuid().equals(uuid);
+    }
+
+    public boolean isCaptain(UUID uuid) {
+        return this.getCaptains().stream().map(ClanProfile::getUuid).anyMatch(unique -> unique.equals(uuid));
+    }
 }

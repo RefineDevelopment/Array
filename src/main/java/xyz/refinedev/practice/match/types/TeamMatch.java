@@ -1,29 +1,31 @@
 package xyz.refinedev.practice.match.types;
 
 import lombok.Getter;
+import net.md_5.bungee.api.chat.BaseComponent;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.queue.QueueType;
+import xyz.refinedev.practice.essentials.Essentials;
+import xyz.refinedev.practice.hook.SpigotHook;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.MatchSnapshot;
 import xyz.refinedev.practice.match.MatchState;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
-import xyz.refinedev.practice.hook.SpigotHook;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
+import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
 import xyz.refinedev.practice.util.nametags.NameTagHandler;
 import xyz.refinedev.practice.util.other.PlayerUtil;
-import net.md_5.bungee.api.chat.BaseComponent;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.util.other.TaskUtil;
+import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,62 +72,37 @@ public class TeamMatch extends Match {
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
-        // If the player disconnected, skip any operations for them
-        if (teamPlayer.isDisconnected()) {
-            return;
-        }
+        if (teamPlayer.isDisconnected()) return;
 
         teamPlayer.setAlive(true);
 
         PlayerUtil.reset(player);
 
-        if (getKit().getGameRules().isStickSpawn() || getKit().getGameRules().isSumo()) {
-            PlayerUtil.denyMovement(player);
-        }
+        if (getKit().getGameRules().isStickSpawn() || getKit().getGameRules().isSumo() || getKit().getGameRules().isParkour()) PlayerUtil.denyMovement(player);
 
-        if (!getKit().getGameRules().isCombo()) {
-            player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
-        }
+        if (!getKit().getGameRules().isNoItems() || !getKit().getGameRules().isSumo()) TaskUtil.runLater(() -> Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
 
-        if (getKit().getGameRules().isCombo()) {
-            player.setMaximumNoDamageTicks(0);
-            player.setNoDamageTicks(3);
-        }
+        if (getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
 
-        if (getKit().getGameRules().isInfiniteSpeed()) {
-            player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 2));
-        }
-        if (getKit().getGameRules().isInfiniteStrength()) {
-            player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 2));
-        }
-
-        if (!getKit().getGameRules().isNoItems()) {
-            Profile profile = Profile.getByPlayer(player);
-            profile.getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
-        }
+        if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
         SpigotHook.getKnockbackType().appleKitKnockback(player, getKit());
-
-        NameTagHandler.reloadPlayer(player);
-        NameTagHandler.reloadOthersFor(player);
+        player.setNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         Team team = getTeam(player);
 
         Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
+        player.teleport(spawn.add(0, Essentials.getMeta().getMatchSpawnLevel(), 0));
 
-        if (spawn.getBlock().getType() == Material.AIR) {
-            player.teleport(spawn);
-        } else {
-            player.teleport(spawn.add(0, 2, 0));
-        }
         teamPlayer.setPlayerSpawn(spawn);
+
+        NameTagHandler.reloadPlayer(player);
+        NameTagHandler.reloadOthersFor(player);
     }
 
     @Override
     public void onStart() {
-        if (getPlayers().size() < 1) {
-            return;
-        }
+        if (getPlayers().size() < 1) return;
 
         if (getKit().getGameRules().isTimed())
             new BukkitRunnable() {
@@ -149,7 +126,7 @@ public class TeamMatch extends Match {
                     Player player = teamPlayer.getPlayer();
 
                     if (player != null) {
-                        Profile profile=Profile.getByUuid(player.getUniqueId());
+                        Profile profile = Profile.getByUuid(player.getUniqueId());
                         profile.handleVisibility();
 
                         getSnapshots().add(new MatchSnapshot(teamPlayer));
@@ -200,13 +177,19 @@ public class TeamMatch extends Match {
                     }
                 }
             }
-        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : 70L);
+        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L :  4 * 20L);
 
         Team winningTeam = getWinningTeam();
         Team losingTeam = getOpponentTeam(winningTeam);
 
-        winningTeam.getPlayers().stream().map(Profile::getByPlayer).forEach(profile -> profile.getStatisticsData().get(getKit()).incrementWon());
-        losingTeam.getPlayers().stream().map(Profile::getByPlayer).forEach(profile -> profile.getStatisticsData().get(getKit()).incrementLost());
+        winningTeam.getPlayers().stream().map(Profile::getByPlayer).forEach(profile -> {
+            profile.getStatisticsData().get(getKit()).incrementWon();
+            TaskUtil.runAsync(profile::save);
+        });
+        losingTeam.getPlayers().stream().map(Profile::getByPlayer).forEach(profile -> {
+            profile.getStatisticsData().get(getKit()).incrementLost();
+            TaskUtil.runAsync(profile::save);
+        });
 
         return true;
     }
@@ -226,7 +209,6 @@ public class TeamMatch extends Match {
         PlayerUtil.reset(player);
 
         if (!canEnd() && !teamPlayer.isDisconnected()) {
-
             player.teleport(getMidSpawn());
             player.setAllowFlight(true);
             player.setFlying(true);
@@ -275,31 +257,13 @@ public class TeamMatch extends Match {
 
     @Override
     public Team getWinningTeam() {
-        if (getKit().getGameRules().isTimed()) {
-            if (teamA.getAliveTeamPlayers().isEmpty()) {
-                return teamB;
-            } else if (teamB.getAliveTeamPlayers().isEmpty()) {
-                return teamA;
-            } else if (teamA.getTotalHits() > teamB.getTotalHits()) {
-                return teamA;
-            } else {
-                return teamB;
-            }
-        } else if (getKit().getGameRules().isParkour()) {
-            if (teamA.getDeadCount() > 0) {
-                return teamA;
-            } else {
-                return teamB;
-            }
-        } else {
-            if (teamA.getAliveTeamPlayers().isEmpty()) {
-                return teamB;
-            } else if (teamB.getAliveTeamPlayers().isEmpty()) {
-                return teamA;
-            } else {
-                return null;
-            }
+        if (this.teamA.getAliveCount() == 0) {
+            return this.teamB;
         }
+        if (this.teamB.getAliveCount() == 0) {
+            return this.teamA;
+        }
+        return null;
     }
 
     @Override

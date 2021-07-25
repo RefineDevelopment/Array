@@ -37,7 +37,7 @@ public class SumoSoloListener implements Listener {
     public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
         Player player = event.getPlayer();
-        if (profile.isInEvent() && profile.getEvent().isSumo()) {
+        if (profile.isInEvent() && profile.getEvent().isSumoSolo()) {
             if (!profile.getEvent().isFighting(player.getUniqueId())) {
                 event.setCancelled(true);
             }
@@ -50,8 +50,8 @@ public class SumoSoloListener implements Listener {
     public void onBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
-        if (profile.isInEvent() && profile.getEvent().isSumo() || (profile.getEvent() != null && profile.getEvent().getSpectators().contains(event.getPlayer().getUniqueId()))) {
-            if (profile.isInEvent() && profile.getEvent().isSumo()) {
+        if (profile.isInEvent() && profile.getEvent().isSumoSolo() || (profile.getEvent() != null && profile.getEvent().getSpectators().contains(event.getPlayer().getUniqueId()))) {
+            if (profile.isInEvent() && profile.getEvent().isSumoSolo()) {
                 if (!profile.getEvent().isFighting(player.getUniqueId())) {
                     event.setCancelled(true);
                 }
@@ -66,7 +66,7 @@ public class SumoSoloListener implements Listener {
         if (event.getEntity() instanceof Player && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
             Player player = ((Player) event.getEntity()).getPlayer();
             Profile profile = Profile.getByUuid(player.getUniqueId());
-            if (profile.isInEvent() && profile.getEvent().isSumo()) {
+            if (profile.isInEvent() && profile.getEvent().isSumoSolo()) {
                 if (!profile.getEvent().isFighting(player.getUniqueId())) {
                     event.setCancelled(true);
                 }
@@ -83,7 +83,7 @@ public class SumoSoloListener implements Listener {
             Profile profile = Profile.getByUuid(player.getUniqueId());
             Event sumo = profile.getEvent();
             
-            if (profile.isInEvent() && profile.getEvent().isSumo()) {
+            if (profile.isInEvent() && profile.getEvent().isSumoSolo()) {
                 if (event.getCause() == EntityDamageEvent.DamageCause.VOID || event.getCause() == EntityDamageEvent.DamageCause.LAVA) {
                     event.setCancelled(true);
                     event.getEntity().setFireTicks(0);
@@ -141,7 +141,7 @@ public class SumoSoloListener implements Listener {
             Profile damagedProfile = Profile.getByUuid(damaged.getUniqueId());
             Profile attackerProfile = Profile.getByUuid(attacker.getUniqueId());
 
-            if (damagedProfile.isInEvent() && damagedProfile.getEvent().isSumo() && attackerProfile.isInEvent() && attackerProfile.getEvent().isSumo()) {
+            if (damagedProfile.isInEvent() && damagedProfile.getEvent().isSumoSolo() && attackerProfile.isInEvent() && attackerProfile.getEvent().isSumoSolo()) {
                 Event sumo = damagedProfile.getEvent();
 
                 if (!sumo.isFighting() || !sumo.isFighting(damaged.getUniqueId()) || !sumo.isFighting(attacker.getUniqueId())) {
@@ -155,34 +155,8 @@ public class SumoSoloListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
-        if (profile.isInEvent() && profile.getEvent().isSumo()) {
+        if (profile.isInEvent() && profile.getEvent().isSumoSolo()) {
             profile.getEvent().handleLeave(event.getPlayer());
         }
-    }
-
-    @EventHandler
-    public void playerMoveEvent(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        Location to = event.getTo();
-        Location from = event.getFrom();
-        Profile profile = Profile.getByPlayer(player);
-        Event profileEvent = profile.getEvent();
-
-       if (profile.isInEvent()) {
-            if (profileEvent.getState() == EventState.ROUND_FIGHTING) {
-                if (BlockUtil.isOnLiquid(to, 0) || BlockUtil.isOnLiquid(to, 1)) {
-                    profileEvent.handleDeath(player);
-                    ((CraftPlayer) player).getHandle().playerConnection.checkMovement=false;
-                }
-            }
-
-            if (to.getX() != from.getX() || to.getZ() != from.getZ()) {
-                if (profileEvent.getState() == EventState.ROUND_STARTING && profileEvent.getRoundPlayerA().getPlayer() == player || profileEvent.getState() == EventState.ROUND_STARTING && profileEvent.getRoundPlayerB().getPlayer() == player) {
-                    player.teleport(from);
-                    ((CraftPlayer) player).getHandle().playerConnection.checkMovement=false;
-                }
-            }
-        }
-
     }
 }

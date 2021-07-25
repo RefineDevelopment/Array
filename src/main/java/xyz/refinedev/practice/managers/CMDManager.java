@@ -3,10 +3,12 @@ package xyz.refinedev.practice.managers;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.cmds.*;
 import xyz.refinedev.practice.cmds.event.*;
+import xyz.refinedev.practice.cmds.settings.*;
 import xyz.refinedev.practice.cmds.standalone.*;
 import xyz.refinedev.practice.cmds.*;
 import xyz.refinedev.practice.cmds.event.*;
 import xyz.refinedev.practice.cmds.standalone.*;
+import xyz.refinedev.practice.essentials.Essentials;
 import xyz.refinedev.practice.util.command.CommandService;
 
 /**
@@ -27,29 +29,22 @@ public class CMDManager {
      * by the name "Drink". Its original author is Jonah Seguin.
      *
      * @see https://github.com/jonahseguin/drink
-     *
-     * Huge props to Jonah for this amazing Command API
      */
 
     public final CommandService drink = Array.getDrink();
 
-    public void registerCommands() {
+    public void init() {
+        Array.logger("&7Registering Commands...");
         //These are the cmds which have proper sub cmds in them
+        drink.register(new ArrayCommands(), "array", "practice");
         drink.register(new ArenaCommands(), "arena", "arenas");
         drink.register(new KitCommands(), "kit", "kits");
         drink.register(new DuelCommands(), "duel");
         drink.register(new RematchCommand(), "rematch");
         drink.register(new PartyCommands(), "party", "p");
+        drink.register(new ClanCommands(), "clan", "c");
         drink.register(new EventCommands(), "event", "events");
-        drink.register(new BracketCommands(), "brackets", "bracket");
-        drink.register(new GulagCommands(), "gulag");
-        drink.register(new LMSCommands(), "lms");
-        drink.register(new ParkourCommands(), "parkour");
-        drink.register(new SpleefCommands(), "spleef");
-        drink.register(new ClanCommands(), "clan");
         drink.register(new SumoCommands(), "sumo");
-        drink.register(new ArrayCommands(), "array", "practice");
-        drink.register(new TournamentCommands(), "tournament", "tourney");
 
         //These are standalone cmds which cannot have sub cmds
         drink.register(new ViewInvCommand(), "viewinv", "viewinventory", "inventory");
@@ -59,9 +54,22 @@ public class CMDManager {
         drink.register(new AbortMatchCommand(), "cancelmatch", "forfeitmatch", "abortmatch");
         drink.register(new SettingsCommand(), "settings", "preferences", "practicesettings", "pracsettings");
         drink.register(new MapCommand(), "map");
-        drink.register(new RateCommand(), "rate");
+        if (Essentials.getMeta().isRatingEnabled()) drink.register(new RateCommand(), "rate");
         drink.register(new FlyCommand(), "fly", "flight");
         drink.register(new LeaderboardsCommand(), "leaderboards", "lb", "leaderboard");
+        drink.register(new StatsCommand(), "stats", "elo", "statistics");
+
+        //Settings Commands
+        drink.register(new ToggleScoreboardCMD(), "tsb", "togglescoreboard");
+        drink.register(new ToggleDuelCMD(), "tdr", "toggleduels", "toggledr", "toggleduelrequests");
+        drink.register(new TogglePingFactorCMD(), "tpf", "togglepf", "togglepingfactor");
+        drink.register(new ToggleSpectatorsCMD(), "tsp", "togglesp", "togglespec", "togglespectators");
+        drink.register(new ToggleTournamentMessagesCMD(), "ttm", "toggletm", "toggletourneymessages", "toggletournamentmessages");
+        drink.register(new TogglePlayersCMD(), "tpv", "toggleplayers", "toggleps", "togglevisibility", "togglehider");
+        drink.register(new ToggleDropProtectCMD(), "tdp", "toggledropprotect", "toggledropp", "toggledprotect", "toggledp");
+        drink.register(new TogglePingScoreboardCMD(), "tpsb", "togglepingsb", "togglepingscoreboard");
+        drink.register(new ToggleCPSScoreboardCMD(), "tcpssb", "togglecpssb", "togglecps", "togglecpsscoreboard");
+
         drink.registerCommands();
     }
 }

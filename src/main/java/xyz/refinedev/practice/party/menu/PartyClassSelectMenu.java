@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.party.menu;
 
 import lombok.AllArgsConstructor;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
@@ -30,7 +31,6 @@ public class PartyClassSelectMenu extends PaginatedMenu {
 
     public PartyClassSelectMenu() {
         this.setAutoUpdate(true);
-        this.setPlaceholder(true);
     }
 
     @Override
@@ -40,10 +40,9 @@ public class PartyClassSelectMenu extends PaginatedMenu {
 
     @Override
     public Map<Integer, Button> getAllPagesButtons(Player player) {
-        Profile profile = Profile.getByUuid(player.getUniqueId());
-
         Map<Integer, Button> buttons = new HashMap<>();
 
+        Profile profile = Profile.getByUuid(player.getUniqueId());
         Party party = profile.getParty();
 
         for (UUID uuid : new ArrayList<>(party.getKits().keySet())) {
@@ -63,12 +62,10 @@ public class PartyClassSelectMenu extends PaginatedMenu {
 
         private final UUID uuid;
 
-
         @Override
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
-
-
+            
             Player partyPlayer = Bukkit.getPlayer(uuid);
 
             lore.add(CC.MENU_BAR);
@@ -97,36 +94,41 @@ public class PartyClassSelectMenu extends PaginatedMenu {
             if (party != null) {
                 if (party.getLeader().getUuid().equals(player.getUniqueId())) {
                     Button.playSuccess(player);
-                    Player target = Bukkit.getPlayer(ChatColor.stripColor(getButtonItem(player).getItemMeta().getDisplayName()));
-                    String pvpClass = party.getKits().get(target.getUniqueId());
+                    String pvpClass = party.getKits().get(uuid);
+
+                    if (pvpClass == null) {
+                        Array.logger("&cParty Class is null!");
+                        return;
+                    }
 
                     switch (pvpClass) {
-                        case "Diamond": {
-                            party.getKits().remove(target.getUniqueId());
-                            party.getKits().put(target.getUniqueId(), "Bard");
+                        case "Diamond":
+                        case "diamond": {
+                            party.getKits().remove(uuid);
+                            party.getKits().put(uuid, "Bard");
                             party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Bard"));
-                            return;
+                            break;
                         }
-                        case "Bard": {
-                            party.getKits().remove(target.getUniqueId());
-                            party.getKits().put(target.getUniqueId(), "Archer");
+                        case "Bard":
+                        case "bard": {
+                            party.getKits().remove(uuid);
+                            party.getKits().put(uuid, "Archer");
                             party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Archer"));
-                            return;
+                            break;
                         }
-                        case "Archer": {
-                            party.getKits().remove(target.getUniqueId());
-                            party.getKits().put(target.getUniqueId(), "Rogue");
+                        case "Archer":
+                        case "archer": {
+                            party.getKits().remove(uuid);
+                            party.getKits().put(uuid, "Rogue");
                             party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Rogue"));
-                            return;
+                            break;
                         }
-                        case "Rogue": {
-                            party.getKits().remove(target.getUniqueId());
-                            party.getKits().put(target.getUniqueId(), "Diamond");
+                        case "Rogue":
+                        case "rogue": {
+                            party.getKits().remove(uuid);
+                            party.getKits().put(uuid, "Diamond");
                             party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Diamond"));
-                            return;
-                        }
-                        default: {
-                            party.getKits().remove(target.getUniqueId());
+                            break;
                         }
                     }
                 } else {

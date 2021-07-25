@@ -197,7 +197,13 @@ public class ProfileListener implements Listener {
             if (profile.isInLobby() || profile.isInQueue()) {
                 event.setCancelled(true);
             }
-            if (profile.isInSumo() || profile.isInGulag()) {
+            if (profile.isInEvent() &&
+                    (profile.getEvent().isSumoSolo()
+                    || profile.getEvent().isSumoTeam()
+                    || profile.getEvent().isGulagSolo()
+                    || profile.getEvent().isGulagTeam()
+                    || profile.getEvent().isSpleef()
+                    || profile.getEvent().isParkour())) {
                 event.setCancelled(true);
             }
             if (profile.isInSomeSortOfFight()) {

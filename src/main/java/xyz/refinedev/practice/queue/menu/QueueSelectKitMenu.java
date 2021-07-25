@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class QueueSelectKitMenu extends Menu {
@@ -52,7 +53,7 @@ public class QueueSelectKitMenu extends Menu {
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
             
-            Essentials.getQueueLore().forEach(lines -> lore.add(CC.translate(this.replace(Profile.getByPlayer(player), lines))));
+            this.getLore().forEach(lines -> lore.add(CC.translate(this.replace(Profile.getByPlayer(player), lines))));
             return new ItemBuilder(queue.getKit().getDisplayIcon()).name(queue.getKit().getDisplayName()).lore(lore).clearFlags().build();
         }
 
@@ -87,6 +88,19 @@ public class QueueSelectKitMenu extends Menu {
                          .replace("<queue_elo>", String.valueOf(queueType == QueueType.RANKED ? profile.getStatisticsData().get(this.queue.getKit()).getElo() : queueType == QueueType.CLAN ? profile.getClan().getElo() : "None"))
                          .replace("<in_fight>", String.valueOf(Match.getInFights(this.queue)));
             return input;
+        }
+
+        public List<String> getLore() {
+            List<String> lore = new ArrayList<>();
+
+           for ( String line : Essentials.getQueueLore()) {
+               if (line.contains("<description>")) {
+                   line = line.replace("<description>", "");
+                   lore.addAll(this.queue.getKit().getKitDescription().stream().map(CC::translate).collect(Collectors.toList()));
+               }
+               lore.add(CC.translate(line));
+           }
+           return lore;
         }
     }
 }

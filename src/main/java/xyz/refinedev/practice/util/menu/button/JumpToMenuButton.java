@@ -1,10 +1,10 @@
-package club.hydrogenpvp.core.util.menu.button;
+package xyz.refinedev.practice.util.menu.button;
 
-import club.hydrogenpvp.core.util.menu.Button;
-import club.hydrogenpvp.core.util.menu.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.Menu;
 
 public class JumpToMenuButton extends Button {
 

@@ -1,5 +1,6 @@
 package xyz.refinedev.practice;
 
+import com.google.gson.Gson;
 import com.lunarclient.bukkitapi.cooldown.LCCooldown;
 import com.lunarclient.bukkitapi.cooldown.LunarClientAPICooldown;
 import com.mongodb.MongoClient;
@@ -18,18 +19,18 @@ import xyz.refinedev.practice.api.ArrayAPI;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.ArenaProvider;
 import xyz.refinedev.practice.arena.ArenaTypeProvider;
+import xyz.refinedev.practice.arena.meta.RatingType;
+import xyz.refinedev.practice.arena.meta.RatingTypeProvider;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.essentials.Essentials;
 import xyz.refinedev.practice.events.EventManager;
+import xyz.refinedev.practice.events.EventProvider;
+import xyz.refinedev.practice.events.EventType;
 import xyz.refinedev.practice.managers.CMDManager;
 import xyz.refinedev.practice.managers.ListenersManager;
+import xyz.refinedev.practice.managers.RatingsManager;
 import xyz.refinedev.practice.profile.divisions.Divisions;
 import xyz.refinedev.practice.arena.ArenaType;
-import xyz.refinedev.practice.events.types.brackets.BracketsManager;
-import xyz.refinedev.practice.events.types.gulag.GulagManager;
-import xyz.refinedev.practice.events.types.lms.LMSManager;
-import xyz.refinedev.practice.events.types.parkour.ParkourManager;
-import xyz.refinedev.practice.events.types.spleef.SpleefManager;
 import xyz.refinedev.practice.kit.KitProvider;
 import xyz.refinedev.practice.managers.ClassManager;
 import xyz.refinedev.practice.pvpclasses.bard.EffectRestorer;
@@ -53,9 +54,9 @@ import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.BasicConfigurationFile;
 import xyz.refinedev.practice.util.scoreboard.Assemble;
 import xyz.refinedev.practice.util.scoreboard.AssembleStyle;
-import xyz.refinedev.practice.util.tablist.TablistHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.refinedev.tablist.TablistHandler;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -76,9 +77,11 @@ import java.util.concurrent.TimeUnit;
 @Getter @Setter
 public class Array extends JavaPlugin {
 
-    @Getter public static CommandService drink;
-    @Getter public static Array instance;
-    @Getter public static API api;
+    @Getter private static CommandService drink;
+    @Getter private static Array instance;
+    @Getter private static API api;
+
+    public static Gson GSON = new Gson();
 
     /*
      * All ours Configs
@@ -106,18 +109,13 @@ public class Array extends JavaPlugin {
     private NameTagHandler nameTagHandler;
 
     /*
-     * All Event Managers
+     * All Managers
      */
     private EventManager eventManager;
-
-    /*
-     * Custom Divisions Handler
-     */
+    private ListenersManager listenersManager;
+    private CMDManager cmdManager;
     private Divisions divisionsManager;
-
-    /*
-     * Miscellaneous Managers
-     */
+    private RatingsManager ratingsManager;
     private ClassManager classManager;
     private EffectRestorer effectRestorer;
 
@@ -136,7 +134,6 @@ public class Array extends JavaPlugin {
         api = new ArrayAPI();
         drink = Drink.get(this);
 
-        //Experimenting
         System.setProperty("file.encoding", "UTF-8");
 
         /*
@@ -162,12 +159,8 @@ public class Array extends JavaPlugin {
         rateConfig = new BasicConfigurationFile(this, "ratings");
         //brawlConfig = new BasicConfigurationFile(this, "brawl");
 
-        this.loadMessages();
-
-        essentials = new Essentials();
-
-        if (!Description.getAuthor().contains("RefineDevelopment") || !Description.getName().contains("Array") 
-            ||!Description.getAuthor().contains("Nick_0251") || !Description.getWebsite().equalsIgnoreCase("https://dsc.gg/refine")) {
+        if (!Description.getAuthor().contains("RefineDevelopment") || !Description.getName().contains("Array")
+                || !Description.getAuthor().contains("Nick_0251") || !Description.getWebsite().equalsIgnoreCase("https://dsc.gg/refine")) {
             logger(CC.CHAT_BAR);
             logger("  &cYou edited the plugin.yml, haha get caught in 4k");
             logger("  &cPlease check your plugin.yml and try again.");
@@ -177,22 +170,35 @@ public class Array extends JavaPlugin {
             return;
         }
 
+        this.loadMessages();
+
+        this.essentials = new Essentials();
+        this.essentials.init();
+
         this.preload();
 
-        divisionsManager = new Divisions();
-        eventManager = new EventManager();
+        this.divisionsManager = new Divisions();
+        this.eventManager = new EventManager();
+        this.eventManager.load();
 
-        Array.logger("&7Registering Commands...");
-        CMDManager CMDManager = new CMDManager();
-        CMDManager.registerCommands();
+        if (this.essentials.getMeta().isRatingEnabled()) {
+            this.ratingsManager = new RatingsManager();
+            this.ratingsManager.init();
+        }
 
-        Array.logger("&7Registering Listeners....");
-        ListenersManager listenersManager = new ListenersManager();
-        listenersManager.registerListeners();
+        this.cmdManager = new CMDManager();
+        this.cmdManager.init();
+
+        this.listenersManager = new ListenersManager();
+        this.listenersManager.init();
+
+        this.classManager = new ClassManager();
+        this.classManager.init();
+
+        this.effectRestorer = new EffectRestorer();
+        this.effectRestorer.init();
 
         this.entityHider = EntityHider.enable();
-        this.effectRestorer = new EffectRestorer(this);
-        this.classManager = new ClassManager(this);
         this.preloadAdapters();
     }
 
@@ -208,23 +214,23 @@ public class Array extends JavaPlugin {
         Clan.getClans().forEach(Clan::save);
 
         //Save our Values to Config
-        essentials.save();
-        eventManager.save();
-        classManager.onDisable();
+        this.essentials.save();
+        this.eventManager.save();
+        this.classManager.onDisable();
 
         //Clear out the PlayerList for Vanilla Tab
         Profile.getPlayerList().clear();
-        disabling = true;
+        this.disabling = true;
     }
 
     public void preload() {
         //Static Abuse be like, but i aint using managers rn
         //cuz praxi was always static af
-        preLoadMongo();
+        this.preLoadMongo();
+        Kit.preload();
         Profile.preload();
         Clan.preload();
         Arena.preload();
-        Kit.preload();
         Hotbar.preload();
         Match.preload();
         Party.preLoad();
@@ -236,6 +242,8 @@ public class Array extends JavaPlugin {
         drink.bind(ArenaType.class).toProvider(new ArenaTypeProvider());
         drink.bind(Kit.class).toProvider(new KitProvider());
         drink.bind(Profile.class).toProvider(new ProfileProvider());
+        drink.bind(EventType.class).toProvider(new EventProvider());
+        drink.bind(RatingType.class).toProvider(new RatingTypeProvider());
     }
 
     public void preloadAdapters() {
@@ -251,7 +259,7 @@ public class Array extends JavaPlugin {
         this.nameTagHandler.registerProvider(new NameTagAdapter());
 
         if (Essentials.getMeta().isTabEnabled()) {
-            logger("&7Setting up TablistAdapter");
+            logger("&7Setting up Tablist");
             this.tablistHandler = new TablistHandler(new TablistAdapter(), this, 20);
         }
 
@@ -264,8 +272,8 @@ public class Array extends JavaPlugin {
 
         if (Bukkit.getPluginManager().isPluginEnabled("LunarClient-API")) {
             logger("&7Found LunarClient-API, Registering Cooldowns....");
-            LunarClientAPICooldown.registerCooldown(new LCCooldown("Enderpearl", 10, TimeUnit.SECONDS, Material.ENDER_PEARL));
-            LunarClientAPICooldown.registerCooldown(new LCCooldown("Bow", 15, TimeUnit.SECONDS, Material.BOW));
+            LunarClientAPICooldown.registerCooldown(new LCCooldown("Enderpearl", Essentials.getMeta().getEnderpearlCooldown(), TimeUnit.SECONDS, Material.ENDER_PEARL));
+            LunarClientAPICooldown.registerCooldown(new LCCooldown("Bow", Essentials.getMeta().getBowCooldown(), TimeUnit.SECONDS, Material.BOW));
         }
     }
 
@@ -295,15 +303,14 @@ public class Array extends JavaPlugin {
     public void loadMessages() {
         mainConfig.getConfiguration().options().header(
                 "######################################################################\n" +
-                        "                                                                     #\n" +
-                        "          Array Practice Core - Developed By Drizzy#0278             #\n" +
-                        "       Bought at Refine Development - https://dsc.gg/refine          #\n" +
-                        "                                                                     #\n" +
-                        "######################################################################");
+                "                                                                     #\n" +
+                "          Array Practice Core - Developed By Drizzy#0278             #\n" +
+                "       Bought at Refine Development - https://dsc.gg/refine          #\n" +
+                "                                                                     #\n" +
+                "######################################################################");
         mainConfig.save();
-        if (this.messagesConfig == null) {
-            return;
-        }
+
+        if (this.messagesConfig == null) return;
 
         Arrays.stream(Locale.values()).forEach(language -> {
             if (this.messagesConfig.getConfiguration().getString(language.getPath()) == null || this.messagesConfig.getConfiguration().getStringList(language.getPath()) == null) {

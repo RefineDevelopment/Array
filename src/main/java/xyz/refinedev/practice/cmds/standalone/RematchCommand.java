@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.cmds.standalone;
 
+import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.duel.RematchProcedure;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
@@ -23,16 +24,10 @@ public class RematchCommand {
         Profile profile = Profile.getByUuid(player.getUniqueId());
 
         if (profile.getRematchData() == null) {
-            player.sendMessage(CC.RED + "You do not have anyone to rematch.");
+            player.sendMessage(Locale.ERROR_NOREMATCH.toString());
             return;
         }
-
         profile.checkForHotbarUpdate();
-
-        if (profile.getRematchData() == null) {
-            player.sendMessage(CC.RED + "That player is no longer available.");
-            return;
-        }
 
         RematchProcedure rematchProcedure = profile.getRematchData();
 
@@ -40,7 +35,7 @@ public class RematchCommand {
             rematchProcedure.accept();
         } else {
             if (rematchProcedure.isSent()) {
-                player.sendMessage(CC.RED + "You have already sent a rematch request to that player.");
+                player.sendMessage(Locale.ERROR_EXPIREREMATCH.toString());
                 return;
             }
             rematchProcedure.request();

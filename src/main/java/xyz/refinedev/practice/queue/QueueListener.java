@@ -44,12 +44,12 @@ public class QueueListener implements Listener {
 
             player.sendMessage(CC.CHAT_BAR);
             player.sendMessage(CC.translate("&fThis server is running &c&lArray &fon version &c&l2.0 &f."));
-            player.sendMessage(CC.translate("&7License: &c" + Essentials.getLicense()));
+            player.sendMessage(CC.translate("&fLicense: &c" + Essentials.getLicense()));
 
-            if (!Description.getAuthor().contains("Drizzy") || !Description.getAuthor().contains("Nick") || !Description.getAuthor().contains("veltus")) {
+            if (!Description.getAuthor().contains("RefineDevelopment") || !Description.getAuthor().contains("Nick_0251")) {
                 player.sendMessage(CC.translate("&fAuthors have been changed to &c" + Description.getAuthor()));
             }
-            if (!Description.getName().contains("Array")) {
+            if (!Description.getName().equals("Array")) {
                 player.sendMessage(CC.translate("&fName has been changed to &c" + Description.getName()));
             }
 

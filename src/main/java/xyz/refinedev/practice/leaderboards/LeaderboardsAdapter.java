@@ -1,9 +1,8 @@
 package xyz.refinedev.practice.leaderboards;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter @Setter
+@Data
 public class LeaderboardsAdapter {
 
     private String name;

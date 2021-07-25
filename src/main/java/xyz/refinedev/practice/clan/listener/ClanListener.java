@@ -1,12 +1,12 @@
 package xyz.refinedev.practice.clan.listener;
 
-import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.rank.Rank;
-import xyz.refinedev.practice.util.chat.CC;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.profile.rank.Rank;
+import xyz.refinedev.practice.util.chat.CC;
 
 
 public class ClanListener implements Listener {

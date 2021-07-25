@@ -34,7 +34,7 @@ public class SpectateCommand {
 
         Profile targetProfile = Profile.getByUuid(target.getUniqueId());
 
-        if (!targetProfile.getSettings().isAllowSpectators() && !player.hasPermission("array.staff.silent")) {
+        if (!targetProfile.getSettings().isAllowSpectators() && !player.hasPermission("array.profile.silent")) {
             player.sendMessage(Locale.ERROR_NOSPEC.toString());
             return;
         }
@@ -45,7 +45,7 @@ public class SpectateCommand {
                 if (inMatchPlayer != null) {
                     Profile inMatchProfile = Profile.getByUuid(inMatchPlayer.getUniqueId());
 
-                    if (!inMatchProfile.getSettings().isAllowSpectators() && !player.hasPermission("array.staff.silent")) {
+                    if (!inMatchProfile.getSettings().isAllowSpectators() && !player.hasPermission("array.profile.silent")) {
                         player.sendMessage(Locale.ERROR_MATCHNOSPEC.toString());
                         return;
                     }
@@ -55,16 +55,8 @@ public class SpectateCommand {
 
         if (targetProfile.isInFight() || targetProfile.isInTournament()) {
             targetProfile.getMatch().addSpectator(player, target);
-        } else if (targetProfile.isInSumo()) {
-            targetProfile.getSumo().addSpectator(player);
-        } else if (targetProfile.isInBrackets()) {
-            targetProfile.getBrackets().addSpectator(player);
-        } else if (targetProfile.isInLMS()) {
-            targetProfile.getLms().addSpectator(player);
-        } else if (targetProfile.isInParkour()) {
-            targetProfile.getParkour().addSpectator(player);
-        } else if (targetProfile.isInSpleef()) {
-            targetProfile.getSpleef().addSpectator(player);
+        } else if (targetProfile.isInEvent()) {
+            targetProfile.getEvent().addSpectator(player);
         } else {
             player.sendMessage(Locale.ERROR_FREE.toString());
         }

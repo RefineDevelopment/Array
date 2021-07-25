@@ -115,13 +115,13 @@ public class DrinkCommandService implements CommandService {
         try {
             Map<String, DrinkCommand> extractCommands = extractor.extractCommands(handler);
             if (extractCommands.isEmpty()) {
-                throw new CommandRegistrationException("There were no cmds to registerCommands in the " + handler.getClass().getSimpleName() + " class (" + extractCommands.size() + ")");
+                throw new CommandRegistrationException("There were no cmds to init in the " + handler.getClass().getSimpleName() + " class (" + extractCommands.size() + ")");
             }
             DrinkCommandContainer container = new DrinkCommandContainer(this, handler, name, aliasesSet, extractCommands);
             commands.put(getCommandKey(name), container);
             return container;
         } catch (MissingProviderException | CommandStructureException ex) {
-            throw new CommandRegistrationException("Could not registerCommands command '" + name + "': " + ex.getMessage(), ex);
+            throw new CommandRegistrationException("Could not init command '" + name + "': " + ex.getMessage(), ex);
         }
     }
 
@@ -134,7 +134,7 @@ public class DrinkCommandService implements CommandService {
             extractCommands.forEach((s, d) -> root.getCommands().put(s, d));
             return root;
         } catch (MissingProviderException | CommandStructureException ex) {
-            throw new CommandRegistrationException("Could not registerCommands sub-command in root '" + root + "' with handler '" + handler.getClass().getSimpleName() + "': " + ex.getMessage(), ex);
+            throw new CommandRegistrationException("Could not init sub-command in root '" + root + "' with handler '" + handler.getClass().getSimpleName() + "': " + ex.getMessage(), ex);
         }
     }
 

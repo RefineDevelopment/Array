@@ -6,9 +6,7 @@ import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.events.EventState;
 import xyz.refinedev.practice.events.impl.sumo.solo.SumoSolo;
-import xyz.refinedev.practice.events.task.EventRoundEndTask;
 import xyz.refinedev.practice.events.task.EventRoundStartTask;
-import xyz.refinedev.practice.events.types.sumo.SumoState;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 
 /**
@@ -46,7 +44,7 @@ public class SumoSoloRoundStartTask extends EventRoundStartTask {
                 PlayerUtil.allowMovement(playerB);
             }
 
-            ((SumoSolo)this.getEvent()).setRoundStart(System.currentTimeMillis());
+            this.getEvent().setRoundStart(System.currentTimeMillis());
         } else {
             int seconds = getSeconds();
             Player playerA = this.getEvent().getRoundPlayerA().getPlayer();

@@ -4,20 +4,24 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import com.lunarclient.bukkitapi.cooldown.LunarClientAPICooldown;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.Sorts;
+
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
+
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.api.events.leaderboards.GlobalLeaderboardsUpdateEvent;
@@ -33,7 +37,10 @@ import xyz.refinedev.practice.duel.DuelProcedure;
 import xyz.refinedev.practice.duel.DuelRequest;
 import xyz.refinedev.practice.duel.RematchProcedure;
 import xyz.refinedev.practice.events.Event;
-import xyz.refinedev.practice.hook.SpigotHook;
+import xyz.refinedev.practice.events.EventState;
+import xyz.refinedev.practice.events.EventType;
+import xyz.refinedev.practice.events.meta.player.EventPlayer;
+import xyz.refinedev.practice.events.meta.player.EventPlayerState;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.kit.kiteditor.KitEditor;
@@ -57,7 +64,6 @@ import xyz.refinedev.practice.util.other.Cooldown;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
-import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.Executor;
@@ -224,8 +230,8 @@ public class Profile {
             mongoThread.execute(() -> {
             for ( Document document : Profile.getCollection().find().sort(Sorts.descending("globalElo")).limit(10).into(new ArrayList<>()) ) {
                 LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
-                leaderboardsAdapter.setName((String) document.get("name"));
-                leaderboardsAdapter.setElo((Integer) document.get("globalElo"));
+                leaderboardsAdapter.setName(document.getString("name"));
+                leaderboardsAdapter.setElo(document.getInteger("globalElo"));
                 if (!globalEloLeaderboards.isEmpty()) {
                     globalEloLeaderboards.removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
                 }
@@ -246,20 +252,6 @@ public class Profile {
     }
 
     /**
-     * Does the profile have a clan
-     * or is he a part of the clan
-     *
-     * @return {@link Boolean}
-     */
-    public boolean hasClan() {
-        if (clan == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
      * Load the profile from the mongo database
      */
     public void load() {
@@ -275,20 +267,18 @@ public class Profile {
 
                 this.globalElo = document.getInteger("globalElo");
 
-                if (document.getString("clan") !=  null) {
-                    this.clan = Clan.getByName(document.getString("clan"));
-                }
+                if (document.getString("clan") != null) this.clan = Clan.getByName(document.getString("clan"));
 
                 Document options = (Document) document.get("settings");
 
                 this.settings.setScoreboardEnabled(options.getBoolean("showScoreboard"));
                 this.settings.setAllowSpectators(options.getBoolean("allowSpectators"));
                 this.settings.setReceiveDuelRequests(options.getBoolean("receiveDuelRequests"));
-                this.settings.setUsingPingFactor(options.getBoolean("usingPingFactor"));
+                this.settings.setPingFactor(options.getBoolean("pingFactor"));
                 this.settings.setDeathLightning(options.getBoolean("toggleLightning"));
                 this.settings.setPingScoreboard(options.getBoolean("pingScoreboard"));
                 this.settings.setCpsScoreboard(options.getBoolean("cpsScoreboard"));
-                this.settings.setAllowTournamentMessages(options.getBoolean("allowTournamentMessages"));
+                this.settings.setTmessagesEnabled(options.getBoolean("tmessagesEnabled"));
                 this.settings.setVanillaTab(options.getBoolean("usingVanillaTab"));
                 this.settings.setShowPlayers(options.getBoolean("showPlayers"));
 
@@ -358,18 +348,16 @@ public class Profile {
             document.put("name", Bukkit.getOfflinePlayer(uuid).getName());
             document.put("globalElo", globalElo);
 
-            if (clan != null) {
-               document.put("clan", clan.getName());
-            }
+            if (clan != null) document.put("clan", clan.getName());
 
             Document optionsDocument = new Document();
             optionsDocument.put("showScoreboard", settings.isScoreboardEnabled());
             optionsDocument.put("allowSpectators", settings.isAllowSpectators());
             optionsDocument.put("receiveDuelRequests", settings.isReceiveDuelRequests());
-            optionsDocument.put("usingPingFactor", settings.isUsingPingFactor());
+            optionsDocument.put("pingFactor", settings.isPingFactor());
             optionsDocument.put("toggleLightning", settings.isDeathLightning());
             optionsDocument.put("pingScoreboard", settings.isPingScoreboard());
-            optionsDocument.put("allowTournamentMessages", settings.isAllowTournamentMessages());
+            optionsDocument.put("tmessagesEnabled", settings.isTmessagesEnabled());
             optionsDocument.put("usingVanillaTab", settings.isVanillaTab());
             optionsDocument.put("cpsScoreboard", settings.isCpsScoreboard());
             optionsDocument.put("showPlayers", settings.isShowPlayers());
@@ -456,13 +444,11 @@ public class Profile {
         }
 
         DuelRequest request = sentDuelRequests.get(player.getUniqueId());
-
         if (request.isExpired()) {
             sentDuelRequests.remove(player.getUniqueId());
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -481,9 +467,8 @@ public class Profile {
         if (request.isExpired()) {
             sentDuelRequests.remove(player.getUniqueId());
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**
@@ -499,17 +484,11 @@ public class Profile {
         }
 
         Profile.getPlayerList().add(player);
-        for ( Profile other : Profile.getProfiles().values() ) {
-            TaskUtil.run(other::handleVisibility);
-        }
+        Profile.getProfiles().values().forEach(Profile::handleVisibility);
 
         plugin.getTaskThread().execute(() -> {
-            if (!ArrayCache.getPlayerCache().containsKey(player.getName())) {
-                ArrayCache.getPlayerCache().put(player.getName(), this.getUuid());
-            }
-            if (!ArrayCache.getNameCache().containsKey(player.getUniqueId())) {
-                ArrayCache.getNameCache().put(this.getUuid(), player.getName());
-            }
+            ArrayCache.getPlayerCache().putIfAbsent(player.getName(), this.getUuid());
+
             this.setName(player.getName());
             this.refreshHotbar();
         });
@@ -524,19 +503,14 @@ public class Profile {
      * Execute leave tasks for the profile
      */
     public void handleLeave() {
-
        //If they are in a queue, remove them
-        if (this.isInQueue()) {
-            this.getQueue().removePlayer(this.getQueueProfile());
-        }
+        if (this.isInQueue()) this.getQueue().removePlayer(this.getQueueProfile());
 
         plugin.getTaskThread().execute(() -> {
             //Remove from the Tab PlayerList
             Profile.getPlayerList().remove(this.getPlayer());
-
             //Save their Profile
             this.save();
-
             //If there is a rematch request pending for them, remove it
             if (this.getRematchData() != null) {
                 Player target = plugin.getServer().getPlayer(this.getRematchData().getTarget());
@@ -544,7 +518,6 @@ public class Profile {
                     Profile.getByUuid(target.getUniqueId()).checkForHotbarUpdate();
                 }
             }
-
             //Bug fix for tournament party leave
             if (this.getParty() !=null && Tournament.CURRENT_TOURNAMENT !=null && Tournament.CURRENT_TOURNAMENT.isParticipating(this.getPlayer())) {
                 Tournament.CURRENT_TOURNAMENT.leave(this.getParty());
@@ -575,9 +548,7 @@ public class Profile {
     public void checkForHotbarUpdate() {
         Player player = getPlayer();
 
-        if (player == null) {
-            return;
-        }
+        if (player == null) return;
 
         if (isInLobby() && !kitEditor.isActive()) {
             boolean update = false;
@@ -612,31 +583,23 @@ public class Profile {
                     }
                 }
             }
-                    /*boolean activeEvent =
-                            (plugin.getSumoManager().getActiveSumo() != null && plugin.getSumoManager().getActiveSumo().isWaiting())
-                            || (plugin.getBracketsManager().getActiveBrackets() != null && plugin.getBracketsManager().getActiveBrackets().isWaiting())
-                            || (plugin.getLMSManager().getActiveLMS() != null && plugin.getLMSManager().getActiveLMS().isWaiting())
-                            || (plugin.getParkourManager().getActiveParkour() != null && plugin.getParkourManager().getActiveParkour().isWaiting())
-                            || (plugin.getGulagManager().getActiveGulag() != null && plugin.getGulagManager().getActiveGulag().isWaiting())
-                            || (plugin.getSpleefManager().getActiveSpleef() != null && plugin.getSpleefManager().getActiveSpleef().isWaiting());
-                    int eventSlot=player.getInventory().first(Hotbar.getItems().get(HotbarType.EVENT_JOIN));
 
-                    if (eventSlot == -1 && activeEvent) {
-                        update = true;
-                    } else if (eventSlot != -1 && !activeEvent) {
-                        update = true;
-                    }*/
+            boolean activeEvent = plugin.getEventManager().getActiveEvent() != null && plugin.getEventManager().getActiveEvent().isWaiting();
+            int eventSlot = player.getInventory().first(Hotbar.getItems().get(HotbarType.EVENT_JOIN));
 
-
-            if (update) {
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        refreshHotbar();
-                    }
-                }.runTask(plugin);
+            if (eventSlot == -1 && activeEvent) {
+                update = true;
+            } else if (eventSlot != -1 && !activeEvent) {
+                update = true;
             }
+
+            if (update) TaskUtil.run(this::refreshHotbar);
         }
+    }
+
+
+    public void reset() {
+        PlayerUtil.reset(getPlayer());
     }
 
     /**
@@ -654,43 +617,17 @@ public class Profile {
                 player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.QUEUE, this));
             } else if (isSpectating()) {
                 TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
-            }/* else if (isInSumo()) {
-                if (getSumo().getEventPlayer(player).getState().equals(SumoPlayerState.ELIMINATED)) {
+            } else if (isInEvent()) {
+                if (getEvent().getEventPlayer(uuid).getState().equals(EventPlayerState.ELIMINATED)) {
                     TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SUMO_SPECTATE, this)), 3L);
+                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.EVENT_SPECTATE, this)), 3L);
                 }
-                player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SUMO_SPECTATE, this));
-            } else if (isInBrackets()) {
-                if (getBrackets().getEventPlayer(player).getState().equals(BracketsPlayerState.ELIMINATED)) {
-                    TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.BRACKETS_SPECTATE, this)), 3L);
+                if (event.isTeam()) {
+                    player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.EVENT_WAITING, this));
+                } else {
+                    player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.EVENT_SPECTATE, this));
                 }
-                player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.BRACKETS_SPECTATE, this));
-            } else if (isInLMS()) {
-                if (getLms().getEventPlayer(player).getState().equals(LMSPlayerState.ELIMINATED)) {
-                    TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.LMS_SPECTATE, this)), 3L);
-                }
-                player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.LMS_SPECTATE, this));
-            } else if (isInParkour()) {
-                if (getParkour().getEventPlayer(player).getState().equals(ParkourPlayerState.ELIMINATED)) {
-                    TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.PARKOUR_SPECTATE, this)), 3L);
-                }
-                player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.PARKOUR_SPECTATE, this));
-            } else if (isInSpleef()) {
-                if (getSpleef().getEventPlayer(player).getState().equals(SpleefPlayerState.ELIMINATED)) {
-                    TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SPLEEF_SPECTATE, this)), 3L);
-                }
-                player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.SPLEEF_SPECTATE, this));
-            } else if(isInGulag()) {
-                if (getGulag().getEventPlayer(player).getState().equals(GulagPlayerState.ELIMINATED)) {
-                    TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.GULAG_SPECTATE, this)), 3L);
-                }
-                player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.GULAG_SPECTATE, this));
-            }*/ else if (isInFight()) {
+            } else if (isInFight()) {
                 if (!match.getTeamPlayer(player).isAlive()) {
                     player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this));
                 }
@@ -744,79 +681,29 @@ public class Profile {
                 TaskUtil.runAsync(() -> NameTagHandler.reloadPlayer(player, otherPlayer));
             }
         } else if (isSpectating()) {
-            /*if (sumo != null) {
-                SumoPlayer sumoPlayer = sumo.getEventPlayer(otherPlayer);
-                if (sumoPlayer != null && sumoPlayer.getState() == SumoPlayerState.WAITING) {
+            if (event != null) {
+                EventPlayer eventPlayer = event.getEventPlayer(otherPlayer.getUniqueId());
+                if (eventPlayer != null && eventPlayer.getState() == EventPlayerState.WAITING) {
                     hide = false;
                 }
-            } else if (brackets != null) {
-                BracketsPlayer bracketsPlayer = brackets.getEventPlayer(otherPlayer);
-                if (bracketsPlayer != null && bracketsPlayer.getState() == BracketsPlayerState.WAITING) {
-                    hide = false;
-                }
-            } else if (gulag != null) {
-                GulagPlayer gulagPlayer= gulag.getEventPlayer(otherPlayer);
-                if (gulagPlayer != null && gulagPlayer.getState() == GulagPlayerState.WAITING) {
-                    hide = false;
-                }
-            } else if (lms != null) {
-                LMSPlayer LMSPlayer = lms.getEventPlayer(otherPlayer);
-                if (LMSPlayer != null && LMSPlayer.getState() == LMSPlayerState.WAITING) {
-                    hide = false;
-                }
-            } else if (parkour != null) {
-                ParkourPlayer parkourPlayer = parkour.getEventPlayer(otherPlayer);
-                if (parkourPlayer != null && parkourPlayer.getState() == ParkourPlayerState.WAITING) {
-                    hide = false;
-                }
-            } else if (spleef != null) {
-                SpleefPlayer spleefPlayer = spleef.getEventPlayer(otherPlayer);
-                if (spleefPlayer != null && spleefPlayer.getState() == SpleefPlayerState.WAITING) {
-                    hide = false;
-                }
-            } else {*/
+            }  else {
                 TeamPlayer teamPlayer = match.getTeamPlayer(otherPlayer);
                 if (teamPlayer != null && teamPlayer.isAlive()) {
                     hide = false;
                 }
-            //}
+            }
             if (plugin.getEssentials().getNametagMeta().isEnabled()) {
                 TaskUtil.runAsync(() -> NameTagHandler.reloadPlayer(player, otherPlayer));
             }
         } else if (isInEvent()) {
-            /*if (sumo != null) {
-                if (!sumo.getSpectators().contains(otherPlayer.getUniqueId())) {
-                    SumoPlayer sumoPlayer = sumo.getEventPlayer(otherPlayer);
-                    if (sumoPlayer != null && sumoPlayer.getState() == SumoPlayerState.WAITING) {
+            if (event != null) {
+                if (!event.getSpectators().contains(otherPlayer.getUniqueId())) {
+                    EventPlayer eventPlayer = event.getEventPlayer(otherPlayer.getUniqueId());
+                    if (eventPlayer != null && eventPlayer.getState() == EventPlayerState.WAITING) {
                         hide = false;
                     }
                 }
-            } else if (brackets != null) {
-                BracketsPlayer bracketsPlayer = brackets.getEventPlayer(otherPlayer);
-                if (bracketsPlayer != null && bracketsPlayer.getState() == BracketsPlayerState.WAITING) {
-                    hide = false;
-                }
-            } else if (gulag != null) {
-                GulagPlayer gulagPlayer= gulag.getEventPlayer(otherPlayer);
-                if (gulagPlayer != null && gulagPlayer.getState() == GulagPlayerState.WAITING) {
-                    hide = false;
-                }
-            } else if (lms != null) {
-                LMSPlayer LMSPlayer = lms.getEventPlayer(otherPlayer);
-                if (LMSPlayer != null && LMSPlayer.getState() == LMSPlayerState.WAITING) {
-                    hide = false;
-                }
-            } else if (parkour != null) {
-                ParkourPlayer parkourPlayer = parkour.getEventPlayer(otherPlayer);
-                if (parkourPlayer != null && parkourPlayer.getState() == ParkourPlayerState.WAITING) {
-                    hide = false;
-                }
-            } else if (spleef != null) {
-                SpleefPlayer spleefPlayer = spleef.getEventPlayer(otherPlayer);
-                if (spleefPlayer != null && spleefPlayer.getState() == SpleefPlayerState.WAITING) {
-                    hide = false;
-                }
-            }*/
+            }
             if (plugin.getEssentials().getNametagMeta().isEnabled()) {
                 TaskUtil.runAsync(() -> NameTagHandler.reloadPlayer(player, otherPlayer));
             }
@@ -858,17 +745,6 @@ public class Profile {
     }
 
     /**
-     * Set the profile's knockback profile to
-     * the specified knockback profile
-     *
-     * @param player The player whose knockback is being changed
-     * @param kb The knockback profile name in {@link String} format
-     */
-    public static void setKb(Player player, String kb) {
-       TaskUtil.runAsync(() -> SpigotHook.getKnockbackType().applyKnockback(player, kb));
-    }
-
-    /**
      * Apply the Enderpearl cooldown to the profile
      * and send it to LunarAPI if they are on Lunar
      *
@@ -877,14 +753,8 @@ public class Profile {
     public void setEnderpearlCooldown(Cooldown cooldown) {
         this.enderpearlCooldown = cooldown;
 
-        try {
-            final Player player = this.getPlayer();
-            if (player != null) {
-                LunarClientAPICooldown.sendCooldown(player, "Enderpearl");
-            }
-        } catch (Exception e) {
-            Array.logger("&cCould not send LC-Cooldown!");
-        }
+        final Player player = this.getPlayer();
+        if (Bukkit.getPluginManager().isPluginEnabled("LunarClient-API")) LunarClientAPICooldown.sendCooldown(player, "Enderpearl");
     }
 
     /**
@@ -896,14 +766,8 @@ public class Profile {
     public void setBowCooldown(Cooldown cooldown) {
         this.bowCooldown = cooldown;
 
-        try {
-            final Player player = this.getPlayer();
-            if (player != null) {
-                LunarClientAPICooldown.sendCooldown(player, "Bow");
-            }
-        } catch (Exception e) {
-            Array.logger("&cCould not send LC-Cooldown!");
-        }
+        final Player player = this.getPlayer();
+        if (Bukkit.getPluginManager().isPluginEnabled("LunarClient-API")) LunarClientAPICooldown.sendCooldown(player, "Bow");
     }
 
     public String getEloLeague() {
@@ -939,22 +803,22 @@ public class Profile {
     }
 
     public boolean isSpectating() {
-        return state == ProfileState.SPECTATING && (
-                match != null || sumo != null ||
-                brackets != null || lms != null ||
-                parkour != null || gulag !=null || spleef != null);
+        return state == ProfileState.SPECTATING && (match != null || event != null);
     }
 
     public boolean isInEvent() {
         return event != null;
     }
 
+    public boolean isInBrackets() {
+        return isInEvent() && (event.getType().equals(EventType.BRACKETS_SOLO) || event.getType().equals(EventType.BRACKETS_TEAM));
+    }
+
     public boolean isInTournament() {
         if (Tournament.CURRENT_TOURNAMENT != null) {
             return Tournament.CURRENT_TOURNAMENT.isParticipating(getPlayer());
-        } else {
-            return false;
         }
+        return false;
     }
 
     public boolean isInBrawl() {
@@ -969,32 +833,11 @@ public class Profile {
         return isInQueue() || isInFight() || isInEvent() || isSpectating() || isInTournament() || isInBrawl();
     }
 
-    private Field team_name;
-    private Field team_display;
-    private Field team_players;
-    private Field team_mode;
-    private Field team_color;
+    public boolean hasClan() {
+        return clan != null;
+    }
 
-    {
-        try {
-            team_name = PacketPlayOutScoreboardTeam.class.getDeclaredField("a");
-            team_name.setAccessible(true);
-            team_display = PacketPlayOutScoreboardTeam.class.getDeclaredField("b");
-            team_display.setAccessible(true);
-            Field team_prefix = PacketPlayOutScoreboardTeam.class.getDeclaredField("c");
-            team_prefix.setAccessible(true);
-            Field team_suffix = PacketPlayOutScoreboardTeam.class.getDeclaredField("d");
-            team_suffix.setAccessible(true);
-            team_players = PacketPlayOutScoreboardTeam.class.getDeclaredField("g");
-            team_players.setAccessible(true);
-            team_color = PacketPlayOutScoreboardTeam.class.getDeclaredField("f");
-            team_color.setAccessible(true);
-            team_mode = PacketPlayOutScoreboardTeam.class.getDeclaredField("h");
-            team_mode.setAccessible(true);
-            Field team_nametag = PacketPlayOutScoreboardTeam.class.getDeclaredField("e");
-            team_nametag.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
+    public boolean hasParty() {
+        return party != null;
     }
 }

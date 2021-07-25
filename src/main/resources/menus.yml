@@ -18,20 +18,6 @@ MENUS:
       - "&8 \u2022 &cLeague: &f<profile_elo_division>"
       - "&8 \u2022 &cW/L Ratio: &f<profile_wr_ratio>"
       - "&c&m-------&7&m---------&c&m--------"
-  Leaderboards:
-  Events:
-    Host:
-    Active:
-  Party:
-    Settings:
-    OtherParties:
-    Events:
-  MainMenu:
-  RankedQueue:
-  UnrankedQueue:
-  KitEditor:
-    Management:
-    Editor:
   SETTINGS:
     TITLE: "&7Profile Settings"
     SIZE: 27
@@ -143,11 +129,11 @@ MENUS:
           NOT_SELECTED: "&8&l■ &fDon't Show Tournament Messages"
       TOGGLETABSTYLE:
         SLOT: 7
-        NAME: "&lToggle TablistHandler Style"
+        NAME: "&c&lToggle Tablist Style"
         MATERIAL: REDSTONE_COMPARATOR
         LORE:
-          - "&7Enable or Disable Scoreboard"
-          - "&7Display for your Profile"
+          - "&7Enable or Disable different"
+          - "&7types of tablist for your Profile"
           - ""
           - "<options>"
         ENABLED:

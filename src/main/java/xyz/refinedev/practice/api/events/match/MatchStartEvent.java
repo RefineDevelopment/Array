@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.api.events.match;
 
-import xyz.refinedev.practice.match.Match;
 import lombok.Getter;
+import xyz.refinedev.practice.match.Match;
 
 @Getter
 public class MatchStartEvent extends MatchEvent {

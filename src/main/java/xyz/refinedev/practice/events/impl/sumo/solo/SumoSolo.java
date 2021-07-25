@@ -3,6 +3,8 @@ package xyz.refinedev.practice.events.impl.sumo.solo;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.events.EventState;
@@ -10,13 +12,16 @@ import xyz.refinedev.practice.events.EventType;
 import xyz.refinedev.practice.events.impl.sumo.solo.task.SumoSoloRoundEndTask;
 import xyz.refinedev.practice.events.impl.sumo.solo.task.SumoSoloRoundStartTask;
 import xyz.refinedev.practice.events.impl.sumo.solo.task.SumoSoloStartTask;
+import xyz.refinedev.practice.events.meta.group.EventGroup;
 import xyz.refinedev.practice.events.meta.player.EventPlayer;
 import xyz.refinedev.practice.events.meta.player.EventPlayerState;
+import xyz.refinedev.practice.events.task.EventWaterTask;
 import xyz.refinedev.practice.hook.SpigotHook;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.other.PlayerSnapshot;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -32,45 +37,24 @@ import java.util.UUID;
 @Setter
 public class SumoSolo extends Event {
 
+    private BukkitRunnable waterTask;
+
     private EventPlayer roundPlayerA;
     private EventPlayer roundPlayerB;
 
-    public SumoSolo(PlayerSnapshot host, int maxPlayers) {
-        super("Sumo", host, maxPlayers, EventType.SUMO_SOLO);
-    }
+    public SumoSolo(Player host, int maxPlayers) {
+        super("Sumo", new PlayerSnapshot(host.getUniqueId(), host.getName()), maxPlayers, EventType.SUMO_SOLO);
 
-    @Override
-    public boolean isSumo() {
-        return true;
-    }
-
-    @Override
-    public boolean isBrackets() {
-        return false;
-    }
-
-    @Override
-    public boolean isLMS() {
-        return false;
-    }
-
-    @Override
-    public boolean isGulag() {
-        return false;
-    }
-
-    @Override
-    public boolean isSpleef() {
-        return false;
-    }
-
-    @Override
-    public boolean isParkour() {
-        return false;
+        this.setEVENT_PREFIX(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
     }
 
     @Override
     public boolean isFreeForAll() {
+        return false;
+    }
+
+    @Override
+    public boolean isTeam() {
         return false;
     }
 
@@ -86,7 +70,7 @@ public class SumoSolo extends Event {
 
     @Override
     public void onRound() {
-        setState(EventState.ROUND_STARTING);
+        this.setState(EventState.ROUND_STARTING);
 
         if (roundPlayerA != null) {
             Player player = roundPlayerA.getPlayer();
@@ -96,7 +80,7 @@ public class SumoSolo extends Event {
 
                 Profile profile = Profile.getByUuid(player.getUniqueId());
 
-                if (profile.isInEvent() && profile.getEvent().isSumo()) {
+                if (profile.isInEvent() && profile.getEvent().isSumoSolo()) {
                     profile.refreshHotbar();
                 }
             }
@@ -112,7 +96,7 @@ public class SumoSolo extends Event {
 
                 Profile profile = Profile.getByUuid(player.getUniqueId());
 
-                if (profile.isInEvent() && profile.getEvent().isSumo()) {
+                if (profile.isInEvent() && profile.getEvent().isSumoSolo()) {
                     profile.refreshHotbar();
                 }
             }
@@ -178,14 +162,28 @@ public class SumoSolo extends Event {
                 .replace("<eliminated_name>", player.getName())
                 .replace("<eliminator_name>", winner.getPlayer().getName()));
 
-        setState(EventState.ROUND_ENDING);
-        setEventTask(new SumoSoloRoundEndTask(this));
+        this.setState(EventState.ROUND_ENDING);
+        this.setEventTask(new SumoSoloRoundEndTask(this));
     }
 
     @Override
     public void handleStart() {
         this.setEventTask(new SumoSoloStartTask(this));
+        waterTask = new EventWaterTask(this);
+        waterTask.runTaskTimer(Array.getInstance(), 20L, 20L);
     }
+
+    @Override
+    public void end() {
+        if (waterTask != null) waterTask.cancel();
+        super.end();
+    }
+
+    @Override
+    public boolean isFighting(UUID uuid) {
+        return (roundPlayerA != null && roundPlayerA.getUuid().equals(uuid)) || (roundPlayerB != null && roundPlayerB.getUuid().equals(uuid));
+    }
+
 
     @Override
     public EventPlayer getRoundPlayerA() {
@@ -198,7 +196,27 @@ public class SumoSolo extends Event {
     }
 
     @Override
-    public boolean isFighting(UUID uuid) {
-        return (roundPlayerA != null && roundPlayerA.getUuid().equals(uuid)) || (roundPlayerB != null && roundPlayerB.getUuid().equals(uuid));
+    public EventGroup getWinningTeam() {
+        throw new IllegalArgumentException("You can't get a team from a solo event");
+    }
+
+    @Override
+    public List<EventGroup> getTeams() {
+        throw new IllegalArgumentException("You can't get a list of event groups from a solo event");
+    }
+
+    @Override
+    public EventGroup getRoundTeamA() {
+        throw new IllegalArgumentException("You can't get a team from a solo event");
+    }
+
+    @Override
+    public EventGroup getRoundTeamB() {
+        throw new IllegalArgumentException("You can't get a team from a solo event");
+    }
+
+    @Override
+    public boolean isFighting(EventGroup group) {
+        throw new IllegalArgumentException("You can't get a team from a solo event");
     }
 }

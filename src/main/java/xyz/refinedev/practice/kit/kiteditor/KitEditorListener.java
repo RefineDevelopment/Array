@@ -1,9 +1,5 @@
 package xyz.refinedev.practice.kit.kiteditor;
 
-import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.kit.kiteditor.menu.KitManagementMenu;
-import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.util.chat.CC;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -15,6 +11,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
+import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.kit.kiteditor.menu.KitManagementMenu;
+import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.util.chat.CC;
 
 public class KitEditorListener implements Listener {
 
@@ -53,6 +53,7 @@ public class KitEditorListener implements Listener {
     public void onInventoryClickEvent(InventoryClickEvent event) {
         if (event.getWhoClicked() instanceof Player) {
             Player player = (Player) event.getWhoClicked();
+            Profile profile = Profile.getByUuid(player.getUniqueId());
 
             if (event.getClickedInventory() != null && event.getClickedInventory() instanceof CraftingInventory) {
                 if (player.getGameMode() != GameMode.CREATIVE) {
@@ -61,37 +62,28 @@ public class KitEditorListener implements Listener {
                 }
             }
 
-            Profile profile = Profile.getByUuid(player.getUniqueId());
-
             if (!profile.isInSomeSortOfFight() && player.getGameMode() == GameMode.SURVIVAL) {
-                if (!profile.isInBrackets() && !profile.isInLMS()) {
+                if (!profile.isInEvent()) {
                     Inventory clicked = event.getClickedInventory();
 
                     if (profile.getKitEditor().isActive()) {
-
                         if (clicked == null) {
                             event.setCancelled(true);
-                            event.setCursor(null);
                             player.updateInventory();
 
                         } else if (clicked.equals(player.getOpenInventory().getTopInventory())) {
-
                             if (event.getCursor().getType() != Material.AIR &&
                                 event.getCurrentItem().getType() == Material.AIR ||
                                 event.getCursor().getType() != Material.AIR &&
                                 event.getCurrentItem().getType() != Material.AIR) {
                                 event.setCancelled(true);
-                                event.setCursor(null);
                                 player.updateInventory();
                             }
-
                         }
                     } else {
-
                         if (clicked != null && clicked.equals(player.getInventory())) {
                             event.setCancelled(true);
                         }
-
                     }
                 }
             }

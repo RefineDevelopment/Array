@@ -4,13 +4,15 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.events.meta.EventTask;
+import xyz.refinedev.practice.events.meta.group.EventGroup;
+import xyz.refinedev.practice.events.meta.group.EventTeamPlayer;
 import xyz.refinedev.practice.events.meta.player.EventPlayer;
 import xyz.refinedev.practice.events.meta.player.EventPlayerState;
-import xyz.refinedev.practice.events.task.EventStartTask;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.util.chat.Clickable;
@@ -23,10 +25,12 @@ import java.util.*;
 @RequiredArgsConstructor
 public abstract class Event {
 
-	protected final String EVENT_PREFIX = Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName());
+	protected String EVENT_PREFIX;
 
 	private final Map<UUID, EventPlayer> eventPlayers = new HashMap<>();
+	private final Map<UUID, EventTeamPlayer> eventTeamPlayers = new HashMap<>();
 	private final List<UUID> spectators = new ArrayList<>();
+	private final List<Entity> entities = new ArrayList<>();
 	private final Array plugin = Array.getInstance();
 	private final EventManager eventManager = plugin.getEventManager();
 
@@ -63,13 +67,14 @@ public abstract class Event {
 	}
 
 	public EventPlayer getEventPlayer(UUID uuid) {
+		if (isTeam()) return eventTeamPlayers.get(uuid);
 		return this.eventPlayers.get(uuid);
 	}
 
 	public List<Player> getPlayers() {
 		List<Player> players = new ArrayList<>();
 
-		for (EventPlayer eventPlayer : this.eventPlayers.values()) {
+		for (EventPlayer eventPlayer : this.isTeam() ? this.eventTeamPlayers.values() : this.eventPlayers.values()) {
 			final Player player = eventPlayer.getPlayer();
 
 			if (player != null) {
@@ -83,7 +88,7 @@ public abstract class Event {
 	public List<Player> getRemainingPlayers() {
 		List<Player> players = new ArrayList<>();
 
-		for ( EventPlayer eventPlayer : eventPlayers.values()) {
+		for ( EventPlayer eventPlayer : this.isTeam() ? this.eventTeamPlayers.values() : this.eventPlayers.values()) {
 			if (eventPlayer.getState() == EventPlayerState.WAITING) {
 				Player player = eventPlayer.getPlayer();
 				if (player != null) {
@@ -96,10 +101,14 @@ public abstract class Event {
 	}
 
 	public void handleJoin(Player player) {
-		this.eventPlayers.put(player.getUniqueId(), new EventPlayer(player));
+		if (isTeam()) {
+			this.eventTeamPlayers.put(player.getUniqueId(), new EventTeamPlayer(player));
+		} else {
+			this.eventPlayers.put(player.getUniqueId(), new EventPlayer(player));
+		}
 
 		this.broadcastMessage(Locale.EVENT_JOIN.toString()
-				.replace("<event_name>", getName())
+				.replace("<event_name>", this.getName())
 				.replace("<joined>", player.getName())
 				.replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
 				.replace("<event_max_players>", String.valueOf(getMaxPlayers())));
@@ -141,7 +150,12 @@ public abstract class Event {
 			this.handleDeath(player);
 		}
 
-		this.eventPlayers.remove(player.getUniqueId());
+		if (this.isTeam()) {
+			this.eventTeamPlayers.remove(player.getUniqueId());
+		} else {
+			this.eventPlayers.remove(player.getUniqueId());
+		}
+
 		this.onLeave(player);
 
 		Profile profile = Profile.getByPlayer(player);
@@ -191,13 +205,13 @@ public abstract class Event {
 					.replace("<event_prefix>", EVENT_PREFIX)));
 		}
 
-		for (EventPlayer eventPlayer : this.eventPlayers.values()) {
+		for (EventPlayer eventPlayer : this.isTeam() ? this.eventTeamPlayers.values() : this.isTeam() ? this.eventTeamPlayers.values() : this.eventPlayers.values()) {
 			final Player player = eventPlayer.getPlayer();
 
 			if (player != null) {
 				Profile profile = Profile.getByUuid(player.getUniqueId());
 				profile.setState(ProfileState.IN_LOBBY);
-				profile.setSumo(null);
+				profile.setEvent(null);
 				profile.refreshHotbar();
 				profile.teleportToSpawn();
 			}
@@ -210,7 +224,7 @@ public abstract class Event {
 	public boolean canEnd() {
 		int remaining = 0;
 
-		for (EventPlayer eventPlayer : this.eventPlayers.values()) {
+		for (EventPlayer eventPlayer :  this.isTeam() ? this.eventTeamPlayers.values() : this.isTeam() ? this.eventTeamPlayers.values() : this.eventPlayers.values()) {
 			if (eventPlayer.getState() == EventPlayerState.WAITING) {
 				remaining++;
 			}
@@ -220,7 +234,9 @@ public abstract class Event {
 	}
 
 	public Player getWinner() {
-		for (EventPlayer eventPlayer : this.eventPlayers.values()) {
+		if (isTeam()) throw new IllegalArgumentException("You can't get a single winner from a Team Event!");
+		
+		for (EventPlayer eventPlayer : this.isTeam() ? this.eventTeamPlayers.values() : this.eventPlayers.values()) {
 			if (eventPlayer.getState() != EventPlayerState.ELIMINATED) {
 				return eventPlayer.getPlayer();
 			}
@@ -239,7 +255,7 @@ public abstract class Event {
 			Clickable message = new Clickable(main, Locale.EVENT_HOVER.toString().replace("<event_name>", this.getName()), "/event join");
 
 			for ( Player player : Bukkit.getOnlinePlayers() ) {
-				if (!eventPlayers.containsKey(player.getUniqueId())) {
+				if ((isTeam() && !eventTeamPlayers.containsKey(player.getUniqueId())) || (!isTeam() && !eventPlayers.containsKey(player.getUniqueId()))) {
 					message.sendToPlayer(player);
 				}
 			}
@@ -285,7 +301,11 @@ public abstract class Event {
 
 	public void removeSpectator(Player player) {
 		this.getSpectators().remove(player.getUniqueId());
-		this.getEventPlayers().remove(player.getUniqueId());
+		if (isTeam()) {
+			this.getEventTeamPlayers().remove(player.getUniqueId());
+		} else {
+			this.getEventPlayers().remove(player.getUniqueId());
+		}
 
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setEvent(null);
@@ -295,19 +315,45 @@ public abstract class Event {
 		profile.teleportToSpawn();
 	}
 
-	public abstract boolean isSumo();
+	public boolean isSumoSolo() {
+		return this.getType().equals(EventType.SUMO_SOLO);
+	}
 
-	public abstract boolean isBrackets();
+	public boolean isSumoTeam() {
+		return this.getType().equals(EventType.SUMO_TEAM);
+	}
 
-	public abstract boolean isLMS();
+	public boolean isBracketsSolo() {
+		return this.getType().equals(EventType.BRACKETS_SOLO);
+	}
 
-	public abstract boolean isGulag();
+	public boolean isBracketsTeam() {
+		return this.getType().equals(EventType.BRACKETS_TEAM);
+	}
 
-	public abstract boolean isSpleef();
+	public boolean isLMS() {
+		return this.getType().equals(EventType.LMS);
+	}
 
-	public abstract boolean isParkour();
+	public boolean isGulagSolo() {
+		return this.getType().equals(EventType.GULAG_SOLO);
+	}
+
+	public boolean isGulagTeam() {
+		return this.getType().equals(EventType.GULAG_TEAM);
+	}
+
+	public boolean isSpleef() {
+		return this.getType().equals(EventType.SPLEEF);
+	}
+
+	public boolean isParkour() {
+		return this.getType().equals(EventType.PARKOUR);
+	}
 
 	public abstract boolean isFreeForAll();
+
+	public abstract boolean isTeam();
 
 	public abstract void onJoin(Player player);
 
@@ -318,11 +364,21 @@ public abstract class Event {
 	public abstract void onDeath(Player player);
 
 	public abstract void handleStart();
+	
+	public abstract EventGroup getWinningTeam();
+
+	public abstract List<EventGroup> getTeams();
 
 	public abstract EventPlayer getRoundPlayerA();
 
 	public abstract EventPlayer getRoundPlayerB();
 
+	public abstract EventGroup getRoundTeamA();
+
+	public abstract EventGroup getRoundTeamB();
+
 	public abstract boolean isFighting(UUID uuid);
+	
+	public abstract boolean isFighting(EventGroup group);
 
 }

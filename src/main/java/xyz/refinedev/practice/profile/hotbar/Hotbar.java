@@ -23,19 +23,17 @@ public class Hotbar {
             try {
                 String path = "HOTBAR_ITEMS." + hotbarItem.name() + ".";
 
-                //if (!config.getBoolean(path + "ENABLED")) return;
+                if (!config.getBoolean(path + "ENABLED")) continue;
 
                 ItemBuilder builder = new ItemBuilder(Material.valueOf(config.getString(path + "MATERIAL")));
-
-                try {
-                    builder.durability(config.getInteger(path + "DURABILITY"));
-                } catch (Exception ignored) {}
-
                 builder.name(CC.translate(config.getString(path + "NAME")));
 
                 try {
+                    builder.durability(config.getInteger(path + "DURABILITY"));
                     builder.lore(config.getStringList(path + "LORE"));
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+
+                }
 
                 items.put(hotbarItem, builder.build());
             } catch (Exception ignored) {}
@@ -52,19 +50,7 @@ public class Hotbar {
             case LOBBY: {
                 if (profile.getParty() == null) {
 
-                    boolean activeEvent = (
-                            (Array.getInstance().getSumoManager().getActiveSumo() != null
-                            && Array.getInstance().getSumoManager().getActiveSumo().isWaiting())
-                            || (Array.getInstance().getBracketsManager().getActiveBrackets() != null
-                            && Array.getInstance().getBracketsManager().getActiveBrackets().isWaiting())
-                            || (Array.getInstance().getLMSManager().getActiveLMS() != null
-                            && Array.getInstance().getLMSManager().getActiveLMS().isWaiting())
-                            || (Array.getInstance().getParkourManager().getActiveParkour() != null
-                            && Array.getInstance().getParkourManager().getActiveParkour().isWaiting())
-                            || (Array.getInstance().getGulagManager().getActiveGulag() != null
-                            && Array.getInstance().getGulagManager().getActiveGulag().isWaiting())
-                            || (Array.getInstance().getSpleefManager().getActiveSpleef() != null
-                            && Array.getInstance().getSpleefManager().getActiveSpleef().isWaiting()));
+                    boolean activeEvent = Array.getInstance().getEventManager().getActiveEvent() != null;
 
                     toReturn[0] = items.get(HotbarType.QUEUE_JOIN_UNRANKED);
                     toReturn[1] = items.get(HotbarType.QUEUE_JOIN_RANKED);
@@ -99,9 +85,7 @@ public class Hotbar {
                 if (profile.getParty().isLeader(profile.getUuid())) {
                     toReturn[0] = items.get(HotbarType.PARTY_EVENTS);
                     toReturn[1] = items.get(HotbarType.PARTY_INFO);
-                    if (profile.getParty().getPlayers().size() > 3) {
-                        toReturn[2] = items.get(HotbarType.PARTY_CLASSES);
-                    }
+                    toReturn[2] = items.get(HotbarType.PARTY_CLASSES);
                     toReturn[4] = items.get(HotbarType.OTHER_PARTIES);
                     toReturn[6] = items.get(HotbarType.KIT_EDITOR);
                     toReturn[7] = items.get(HotbarType.PARTY_SETTINGS);
@@ -118,29 +102,13 @@ public class Hotbar {
                 toReturn[0] = items.get(HotbarType.QUEUE_LEAVE);
                 break;
             }
-            case SUMO_SPECTATE: {
-                toReturn[0] = items.get(HotbarType.SUMO_LEAVE);
+            case EVENT_WAITING: {
+                toReturn[0] = items.get(HotbarType.EVENT_TEAM);
+                toReturn[8] = items.get(HotbarType.EVENT_LEAVE);
                 break;
             }
-            case BRACKETS_SPECTATE: {
-                toReturn[0] = items.get(HotbarType.BRACKETS_LEAVE);
-                break;
-            }
-            case GULAG_SPECTATE: {
-                toReturn[0] = items.get(HotbarType.GULAG_LEAVE);
-                break;
-            }
-            case LMS_SPECTATE: {
-                toReturn[0] = items.get(HotbarType.LMS_LEAVE);
-                break;
-            }
-            case PARKOUR_SPECTATE: {
-                toReturn[0] = items.get(HotbarType.PARKOUR_SPAWN);
-                toReturn[8] = items.get(HotbarType.PARKOUR_LEAVE);
-                break;
-            }
-            case SPLEEF_SPECTATE: {
-                toReturn[0] = items.get(HotbarType.SPLEEF_LEAVE);
+            case EVENT_SPECTATE: {
+                toReturn[0] = items.get(HotbarType.EVENT_LEAVE);
                 break;
             }
             case MATCH_SPECTATE: {

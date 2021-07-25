@@ -2,19 +2,17 @@ package xyz.refinedev.practice.essentials;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.*;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.essentials.meta.EssentialsMeta;
-import xyz.refinedev.practice.essentials.meta.PiracyMeta;
-import xyz.refinedev.practice.essentials.meta.NametagMeta;
-import xyz.refinedev.practice.essentials.meta.SocialMeta;
-import xyz.refinedev.practice.managers.CMDManager;
-import xyz.refinedev.practice.managers.ListenersManager;
+import xyz.refinedev.practice.essentials.meta.*;
 import xyz.refinedev.practice.util.config.BasicConfigurationFile;
 import xyz.refinedev.practice.util.inventory.InventoryUtil;
 import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.menu.MenuUpdateTask;
+import xyz.refinedev.practice.util.other.Description;
+import xyz.refinedev.practice.util.other.PiracyTask;
 import xyz.refinedev.practice.util.other.TaskUtil;
-import org.bukkit.*;
+import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,19 +31,23 @@ public class Essentials {
 
     public static BasicConfigurationFile config = Array.getInstance().getMainConfig();
 
-    @Getter @Setter public static Location spawn;
+    @Getter @Setter private static Location spawn;
 
-    @Getter public static final List<String> motd = new ArrayList<>();
-    @Getter public static final List<String> queueLore = new ArrayList<>();
-    @Getter public static final EssentialsMeta meta = new EssentialsMeta();
-    @Getter public static final SocialMeta socialMeta = new SocialMeta();
-    @Getter public static final NametagMeta nametagMeta = new NametagMeta();
+    @Getter private static final List<String> motd = new ArrayList<>();
+    @Getter private static final List<String> queueLore = new ArrayList<>();
+    @Getter private static final EssentialsMeta meta = new EssentialsMeta();
+    @Getter private static final DefaultMeta defaultMeta = new DefaultMeta();
+    @Getter private static final SocialMeta socialMeta = new SocialMeta();
+    @Getter private static final NametagMeta nametagMeta = new NametagMeta();
+
+    @Getter @Setter private static boolean isOutdated = false;
+    @Getter @Setter private static String newVersion = Description.getVersion();
 
     @Getter public static String license = config.getStringOrDefault("LICENSE", "XXXX-XXXX-XXXX");
 
-    public Essentials() {
-        //new PiracyMeta(Array.getInstance(), license);
-        Essentials.setupEssentials();
+    public void init() {
+        PiracyMeta piracyMeta = new PiracyMeta(Array.getInstance(), license);
+        piracyMeta.verify();
     }
 
     public static void setupEssentials() {
@@ -80,8 +82,13 @@ public class Essentials {
         meta.setRankedEnabled(config.getBoolean(key + "ARENA_RATING"));
         meta.setVoidSpawnLevel(config.getInteger(key + "VOIDSPAWN_YLEVEL"));
         meta.setFfaSpawnRadius(config.getInteger(key + "FFA_CIRCLE_RADIUS"));
+        meta.setTeleportDelay(config.getInteger(key + "TELEPORT_DELAY"));
+        meta.setMatchSpawnLevel(config.getInteger(key + "MATCH_YLEVEL_SPAWN_ADD"));
         meta.setBridgeClearBlocks(config.getBoolean(key + "BRIDGE_CLEARBLOCKS"));
         meta.setDisclaimerEnabled(config.getBoolean(key + "DISCLAIMER_MESSAGE_ENABLED"));
+        meta.setRemoveBottles(config.getBoolean(key + "REMOVE_BOTTLES"));
+
+        meta.setUpdateNotification(config.getBoolean("UPDATE_NOTIFICATION"));
 
         meta.setMotdEnabled(config.getBoolean(key + "JOIN_MESSAGE_ENABLED"));
         motd.addAll(config.getStringList(key + "JOIN_MESSAGE"));
@@ -94,6 +101,9 @@ public class Essentials {
         meta.setLimitPing(config.getBoolean("RANKED.LIMIT_PING"));
         meta.setPingLimit(config.getInteger("RANKED.PING-LIMIT"));
 
+        meta.setEnderpearlCooldown(config.getInteger("COOLDOWNS.ENDER_PEARL"));
+        meta.setBowCooldown(config.getInteger("COOLDOWNS.BOW"));
+
         //Socials
         socialMeta.setDiscord(config.getString("SOCIAL.DISCORD"));
         socialMeta.setWebiste(config.getString("SOCIAL.WEBSITE"));
@@ -102,7 +112,9 @@ public class Essentials {
 
         //NameTags
         nametagMeta.setEnabled(config.getBoolean("NAMETAGS.ENABLED"));
+
         Essentials.loadNametags();
+        Essentials.loadDefaultOptions();
     }
 
 
@@ -116,8 +128,11 @@ public class Essentials {
         config.set(key + "TAB_ENABLED", meta.isTabEnabled());
         config.set(key + "ARENA_RATING", meta.isRatingEnabled());
         config.set(key + "VOIDSPAWN_YLEVEL", meta.getVoidSpawnLevel());
+        config.set(key + "MATCH_YLEVEL_SPAWN_ADD", meta.getMatchSpawnLevel());
         config.set(key + "FFA_CIRCLE_RADIUS", meta.getFfaSpawnRadius());
+        config.set(key + "TELEPORT_DELAY", meta.getTeleportDelay());
         config.set(key + "BRIDGE_CLEARBLOCKS", meta.isBridgeClearBlocks());
+        config.set(key + "REMOVE_BOTTLES", meta.isRemoveBottles());
         config.set(key + "DISCLAIMER_MESSAGE_ENABLED", meta.isDisclaimerEnabled());
         config.set(key + "JOIN_MESSAGE_ENABLED", meta.isMotdEnabled());
         config.set(key + "JOIN_MESSAGE", motd);
@@ -129,6 +144,9 @@ public class Essentials {
         config.set("RANKED.REQUIREDKILLS", meta.getRequiredKills());
         config.set("RANKED.LIMIT_PING", meta.isLimitPing());
         config.set("RANKED.PING-LIMIT", meta.getPingLimit());
+
+        config.set("COOLDOWNS.ENDER_PEARL", meta.getEnderpearlCooldown());
+        config.set("COOLDOWNS.BOW", meta.getBowCooldown());
 
         //Socials
         config.set("SOCIAL.DISCORD", socialMeta.getDiscord());
@@ -161,5 +179,21 @@ public class Essentials {
             nametagMeta.setEventColor(ChatColor.BLUE);
             Array.logger("&cInvalid Color setup for Party NameTags, retreating to default party color (Blue)");
         }
+    }
+
+    public static void loadDefaultOptions() {
+        String key = "DEFAULT_SETTINGS.";
+
+        defaultMeta.setScoreboardEnabled(config.getBoolean(key + "SCOREBOARD_ENABLED"));
+        defaultMeta.setAllowSpectators(config.getBoolean(key + "ALLOW_SPECTATORS"));
+        defaultMeta.setReceiveDuelRequests(config.getBoolean(key + "DUEL_REQUESTS"));
+        defaultMeta.setCpsScoreboard(config.getBoolean(key + "SCOREBOARD_CPS"));
+        defaultMeta.setPingScoreboard(config.getBoolean(key + "SCOREBOARD_PING"));
+        defaultMeta.setDurationScoreboard(config.getBoolean(key + "SCOREBOARD_DURATION"));
+        defaultMeta.setPingFactor(config.getBoolean(key + "PING_FACTOR"));
+        defaultMeta.setPreventSword(config.getBoolean(key + "DROP_PROTECT"));
+        defaultMeta.setShowPlayers(config.getBoolean(key + "PLAYER_VISIBILITY"));
+        defaultMeta.setVanillaTab(config.getBoolean(key + "VANILLA_TAB"));
+        defaultMeta.setTmessagesEnabled(config.getBoolean(key + "TOURNEY_MESSAGES"));
     }
 }

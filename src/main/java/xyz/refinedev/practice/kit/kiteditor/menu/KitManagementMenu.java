@@ -1,19 +1,19 @@
 package xyz.refinedev.practice.kit.kiteditor.menu;
 
-import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.kit.KitInventory;
-import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
-import xyz.refinedev.practice.util.menu.Button;
-import xyz.refinedev.practice.util.menu.Menu;
-import xyz.refinedev.practice.util.menu.button.BackButton;
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.kit.KitInventory;
+import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.util.chat.CC;
+import xyz.refinedev.practice.util.inventory.ItemBuilder;
+import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.Menu;
+import xyz.refinedev.practice.util.menu.button.BackButton;
 
 import java.util.Arrays;
 import java.util.HashMap;

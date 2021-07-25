@@ -17,7 +17,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Divisions {
 
-    private DivisionMeta divisionMeta;
+    private final DivisionMeta divisionMeta;
 
     public Divisions() {
         this.divisionMeta = new DivisionMeta();

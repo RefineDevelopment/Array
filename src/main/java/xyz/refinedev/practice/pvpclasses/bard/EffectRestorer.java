@@ -2,6 +2,7 @@ package xyz.refinedev.practice.pvpclasses.bard;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import org.bukkit.Bukkit;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.pvpclasses.classes.Bard;
 import xyz.refinedev.practice.pvpclasses.events.ArmorClassUnequipEvent;
@@ -20,8 +21,8 @@ public class EffectRestorer implements Listener {
 
     public static final Table<UUID, PotionEffectType, PotionEffect> restores = HashBasedTable.create();
 
-    public EffectRestorer(Array plugin) {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    public void init() {
+        Bukkit.getPluginManager().registerEvents(this, Array.getInstance());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

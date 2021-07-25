@@ -9,6 +9,7 @@ import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Require;
 import xyz.refinedev.practice.util.command.annotation.Sender;
+import xyz.refinedev.practice.util.command.annotation.Text;
 import xyz.refinedev.practice.util.other.TaskUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -16,7 +17,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -68,6 +71,14 @@ public class KitCommands {
         }
 
         player.sendMessage(CC.CHAT_BAR);
+    }
+
+    @Command(name = "setdesc", usage = "<kit> <description>",  aliases = {"desc", "setdescription"}, desc = "Set a kit's description")
+    public void kitDescription(@Sender Player player, Kit kit, @Text String description) {
+        kit.setKitDescription(Arrays.stream(description.split(", ")).map(s -> s.replace("#%&$", ",")).collect(Collectors.toList()));
+        kit.save();
+
+        player.sendMessage(CC.translate("&aSuccessfully updated kit's description!"));
     }
 
     @Command(name = "save", aliases = "export", desc = "Export all Kits to Config")
@@ -285,18 +296,18 @@ public class KitCommands {
             }
             case "healthregeneration":
             case "healthregen": {
-                kit.getGameRules().setHealthRegeneration(!kit.getGameRules().isHealthRegeneration());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isHealthRegeneration() ? "&aenabled " : "&cdisabled ") + "&7health-regen for &c" + kit.getDisplayName()));
+                kit.getGameRules().setRegen(!kit.getGameRules().isRegen());
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isRegen() ? "&aenabled " : "&cdisabled ") + "&7health-regen for &c" + kit.getDisplayName()));
                 break;
             }
             case "speed": {
-                kit.getGameRules().setInfiniteSpeed(!kit.getGameRules().isInfiniteSpeed());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isInfiniteSpeed() ? "&aenabled " : "&cdisabled ") + "&7speed for &c" + kit.getDisplayName()));
+                kit.getGameRules().setSpeed(!kit.getGameRules().isSpeed());
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isSpeed() ? "&aenabled " : "&cdisabled ") + "&7speed for &c" + kit.getDisplayName()));
                 break;
             }
             case "strength": {
-                kit.getGameRules().setInfiniteStrength(!kit.getGameRules().isInfiniteStrength());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isInfiniteStrength() ? "&aenabled " : "&cdisabled ") + "&7strength for &c" + kit.getDisplayName()));
+                kit.getGameRules().setStrength(!kit.getGameRules().isStrength());
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isStrength() ? "&aenabled " : "&cdisabled ") + "&7strength for &c" + kit.getDisplayName()));
                 break;
             }
             case "noitems": {
@@ -315,8 +326,8 @@ public class KitCommands {
                 break;
             }
             case "boxuhc": {
-                kit.getGameRules().setBoxUHC(!kit.getGameRules().isBoxUHC());
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isBoxUHC() ? "&aenabled " : "&cdisabled ") + "&7box-uhc for &c" + kit.getDisplayName()));
+                kit.getGameRules().setBoxuhc(!kit.getGameRules().isBoxuhc());
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isBoxuhc() ? "&aenabled " : "&cdisabled ") + "&7box-uhc for &c" + kit.getDisplayName()));
                 break;
             }
             case "falldamage": {

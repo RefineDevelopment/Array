@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.util.location;
 
 import xyz.refinedev.practice.arena.impl.TheBridgeArena;
-import xyz.refinedev.practice.match.types.TheBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.BridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -43,7 +43,7 @@ public class LocationUtils {
 
     public static boolean isTeamPortal(Player player) {
         Profile profile = Profile.getByUuid(player.getUniqueId());
-        TheBridgeMatch match = (TheBridgeMatch) profile.getMatch();
+        BridgeMatch match = (BridgeMatch) profile.getMatch();
 
         TheBridgeArena arena = (TheBridgeArena) match.getArena();
 

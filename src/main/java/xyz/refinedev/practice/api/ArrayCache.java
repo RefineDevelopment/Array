@@ -1,10 +1,9 @@
 package xyz.refinedev.practice.api;
 
-import lombok.Getter;
-import xyz.refinedev.practice.profile.Profile;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
+import xyz.refinedev.practice.profile.Profile;
+import lombok.Getter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -20,7 +19,6 @@ import java.util.UUID;
 public class ArrayCache {
 
     @Getter private static final Map<String, UUID> playerCache = new HashMap<>();
-    @Getter private static final Map<UUID, String> nameCache = new HashMap<>();
 
     public static int getInQueues() {
         int inQueues = 0;
@@ -58,6 +56,8 @@ public class ArrayCache {
         UUID uuid = null;
         if (playerCache.containsKey(name)) {
             uuid = playerCache.get(name);
+        } else if (Bukkit.getOfflinePlayer(name) != null) {
+            return Bukkit.getOfflinePlayer(name).getUniqueId();
         }
         return uuid;
     }

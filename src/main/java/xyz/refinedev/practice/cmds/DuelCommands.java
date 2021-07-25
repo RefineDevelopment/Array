@@ -16,7 +16,7 @@ import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.HCFMatch;
 import xyz.refinedev.practice.match.types.SoloMatch;
 import xyz.refinedev.practice.match.types.TeamMatch;
-import xyz.refinedev.practice.match.types.TheBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.BridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
@@ -193,7 +193,7 @@ public class DuelCommands {
             }
 
         } else if (request.getKit().getGameRules().isBridge()) {
-            match = new TheBridgeMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,
+            match = new BridgeMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,
                     QueueType.UNRANKED);
         } else {
             match = new SoloMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,

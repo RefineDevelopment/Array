@@ -7,7 +7,7 @@ import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.SoloMatch;
-import xyz.refinedev.practice.match.types.TheBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.BridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.rank.Rank;
 import xyz.refinedev.practice.util.chat.CC;
@@ -55,7 +55,7 @@ public class QueueThread extends Thread {
                                 continue;
                             }
 
-                            if (firstProfile.getSettings().isUsingPingFactor() || secondProfile.getSettings().isUsingPingFactor()) {
+                            if (firstProfile.getSettings().isPingFactor() || secondProfile.getSettings().isPingFactor()) {
                                 if (PlayerUtil.getPing(firstPlayer) >= PlayerUtil.getPing(secondPlayer)) {
                                     if (PlayerUtil.getPing(firstPlayer) - PlayerUtil.getPing(secondPlayer) >= 50) {
                                         continue;
@@ -114,7 +114,7 @@ public class QueueThread extends Thread {
                             // Create match
                             Match match;
                             if (queue.getKit().getGameRules().isBuild() && queue.getKit().getGameRules().isBridge()) {
-                                match = new TheBridgeMatch(queue, firstMatchPlayer, secondMatchPlayer, queue.getKit(), arena, queue.getType());
+                                match = new BridgeMatch(queue, firstMatchPlayer, secondMatchPlayer, queue.getKit(), arena, queue.getType());
                             } else {
                                 match = new SoloMatch(queue, firstMatchPlayer, secondMatchPlayer, queue.getKit(), arena, queue.getType());
                             }

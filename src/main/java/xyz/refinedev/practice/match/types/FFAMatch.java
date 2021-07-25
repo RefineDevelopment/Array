@@ -21,6 +21,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.util.other.TaskUtil;
+import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,45 +74,26 @@ public class FFAMatch extends Match {
 
         PlayerUtil.reset(player);
 
-        if (!getKit().getGameRules().isCombo()) {
-            player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
-        }
-        if (getKit().getGameRules().isCombo()) {
-            player.setMaximumNoDamageTicks(0);
-            player.setNoDamageTicks(3);
-        }
+        if (getKit().getGameRules().isStickSpawn() || getKit().getGameRules().isSumo() || getKit().getGameRules().isParkour()) PlayerUtil.denyMovement(player);
 
-        if (getKit().getGameRules().isStickSpawn()) {
-            PlayerUtil.denyMovement(player);
-        }
+        if (!getKit().getGameRules().isNoItems() || !getKit().getGameRules().isSumo()) TaskUtil.runLater(() -> Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
 
-        if (getKit().getGameRules().isInfiniteSpeed()) {
-            player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 2));
-        }
-        if (getKit().getGameRules().isInfiniteStrength()) {
-            player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 2));
-        }
+        if (getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
 
-        if (!getKit().getGameRules().isNoItems()) {
-            Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack));
-        }
+        if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
         SpigotHook.getKnockbackType().appleKitKnockback(player, getKit());
+        player.setNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         Team team = getTeam(player);
-        for (Player enemy : team.getPlayers()) {
 
+        for (Player enemy : team.getPlayers()) {
             Profile enemyProfile = Profile.getByPlayer(enemy);
             enemyProfile.handleVisibility();
         }
+
         NameTagHandler.reloadPlayer(player);
         NameTagHandler.reloadOthersFor(player);
-    }
-
-    public double getAverage(double one, double two) {
-        double three = one + two;
-        three = three / 2;
-        return three;
     }
 
     @Override
@@ -126,7 +109,6 @@ public class FFAMatch extends Match {
 
             player.teleport(target.add(0, 0.5, 0));
             circleLocations.remove(i);
-
             i++;
         }
     }
@@ -173,7 +155,7 @@ public class FFAMatch extends Match {
                     }
                 }
             }
-        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : 40L);
+        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : 4 * 20L);
         return true;
     }
 
@@ -190,7 +172,6 @@ public class FFAMatch extends Match {
         PlayerUtil.reset(player);
 
         if (!canEnd() && !teamPlayer.isDisconnected()) {
-
             player.teleport(getMidSpawn());
             player.setAllowFlight(true);
             player.setFlying(true);
@@ -203,7 +184,7 @@ public class FFAMatch extends Match {
 
     @Override
     public void onRespawn(Player player) {
-       //Nothing ;)
+        player.teleport(player.getLocation().clone().add(0, 3, 0));
     }
 
     @Override
@@ -225,22 +206,22 @@ public class FFAMatch extends Match {
 
     @Override
     public Team getWinningTeam() {
-        throw new UnsupportedOperationException("Cannot getInstance winning team from a Brawl match");
+        throw new UnsupportedOperationException("Cannot getInstance winning team from a FFA match");
     }
 
     @Override
     public TeamPlayer getTeamPlayerA() {
-        throw new UnsupportedOperationException("Cannot getInstance team player from a Brawl match");
+        throw new UnsupportedOperationException("Cannot getInstance team player from a FFA match");
     }
 
     @Override
     public TeamPlayer getTeamPlayerB() {
-        throw new UnsupportedOperationException("Cannot getInstance team player from a Brawl match");
+        throw new UnsupportedOperationException("Cannot getInstance team player from a FFA match");
     }
 
     @Override
     public List<TeamPlayer> getTeamPlayers() {
-        throw new UnsupportedOperationException("Cannot getInstance team player from a Brawl match");
+        return team.getTeamPlayers();
     }
 
     @Override
@@ -260,12 +241,12 @@ public class FFAMatch extends Match {
 
     @Override
     public Team getTeamA() {
-        throw new UnsupportedOperationException("Cannot getInstance team from a Brawl match");
+        throw new UnsupportedOperationException("Cannot getInstance team from a FFA match");
     }
 
     @Override
     public Team getTeamB() {
-        throw new UnsupportedOperationException("Cannot getInstance team from a Brawl match");
+        throw new UnsupportedOperationException("Cannot getInstance team from a FFA match");
     }
 
     @Override
@@ -286,17 +267,17 @@ public class FFAMatch extends Match {
 
     @Override
     public Team getOpponentTeam(Team team) {
-        throw new UnsupportedOperationException("Cannot getInstance opponent team from a Brawl match");
+        throw new UnsupportedOperationException("Cannot getInstance opponent team from a FFA match");
     }
 
     @Override
     public Team getOpponentTeam(Player player) {
-        throw new UnsupportedOperationException("Cannot getInstance opponent team from a Brawl match");
+        throw new UnsupportedOperationException("Cannot getInstance opponent team from a FFA match");
     }
 
     @Override
     public Player getOpponentPlayer(Player player) {
-        throw new IllegalStateException("Cannot getInstance opponent player in Brawl match");
+        throw new IllegalStateException("Cannot getInstance opponent player in FFA match");
     }
 
     @Override
@@ -306,7 +287,7 @@ public class FFAMatch extends Match {
 
     @Override
     public TeamPlayer getOpponentTeamPlayer(Player player) {
-        throw new UnsupportedOperationException("Cannot getInstance opponent team from a Brawl match");
+        throw new UnsupportedOperationException("Cannot getInstance opponent team from a FFA match");
     }
 
     @Override

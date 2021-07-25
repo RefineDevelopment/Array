@@ -1,12 +1,12 @@
 package xyz.refinedev.practice.api.events.profile;
 
-import lombok.RequiredArgsConstructor;
-import xyz.refinedev.practice.util.events.BaseEvent;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import xyz.refinedev.practice.util.events.BaseEvent;
 
 
 @Getter @Setter

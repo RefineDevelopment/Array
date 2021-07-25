@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.profile.settings.meta;
 
 import lombok.Data;
+import xyz.refinedev.practice.essentials.Essentials;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -15,7 +16,27 @@ import lombok.Data;
 public class SettingsMeta {
 
     private boolean
-            scoreboardEnabled = true, receiveDuelRequests = true, allowSpectators = true, deathLightning = true, usingPingFactor = false,
-            pingScoreboard = true, durationScoreboard = true, allowTournamentMessages = true, vanillaTab = false, showPlayers = false, cpsScoreboard = false,
-            showSpectator = true, partyChat = false, clanChat = false, preventSword = false;
+
+    scoreboardEnabled = Essentials.getDefaultMeta().isScoreboardEnabled(),
+    receiveDuelRequests = Essentials.getDefaultMeta().isReceiveDuelRequests(),
+    allowSpectators = Essentials.getDefaultMeta().isAllowSpectators(),
+
+    //Donator
+    deathLightning = true,
+    pingFactor = false,
+    rankedPingFactor,
+    unrankedPingFactor,
+
+    pingScoreboard = Essentials.getDefaultMeta().isPingScoreboard(),
+    cpsScoreboard = Essentials.getDefaultMeta().isCpsScoreboard(),
+    durationScoreboard = Essentials.getDefaultMeta().isDurationScoreboard(),
+    tmessagesEnabled = Essentials.getDefaultMeta().isTmessagesEnabled(),
+    vanillaTab = Essentials.getDefaultMeta().isVanillaTab(),
+    showPlayers = Essentials.getDefaultMeta().isShowPlayers(),
+    preventSword = Essentials.getDefaultMeta().isPreventSword(),
+
+    //Automatic settings for Profile
+    showSpectator = true,
+    partyChat = false,
+    clanChat = false;
 }

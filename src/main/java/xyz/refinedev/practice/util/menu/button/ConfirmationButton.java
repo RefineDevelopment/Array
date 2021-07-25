@@ -1,9 +1,5 @@
-package club.hydrogenpvp.core.util.menu.button;
+package xyz.refinedev.practice.util.menu.button;
 
-import club.hydrogenpvp.core.util.InventoryUtil;
-import club.hydrogenpvp.core.util.callback.TypeCallback;
-import club.hydrogenpvp.core.util.menu.Button;
-import club.hydrogenpvp.core.util.menu.Menu;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -11,17 +7,28 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import lombok.AllArgsConstructor;
+import org.bukkit.inventory.meta.ItemMeta;
+import xyz.refinedev.practice.util.chat.CC;
+import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.Menu;
+import xyz.refinedev.practice.util.menu.TypeCallback;
 
 @AllArgsConstructor
 public class ConfirmationButton extends Button {
 
-	private boolean confirm;
-	private TypeCallback<Boolean> callback;
-	private boolean closeAfterResponse;
+	private final boolean confirm;
+	private final TypeCallback<Boolean> callback;
+	private final boolean closeAfterResponse;
 
 	@Override
 	public ItemStack getButtonItem(Player player) {
-		return InventoryUtil.makeItem(Material.WOOL, (this.confirm ? "&aConfirm" : "&cCancel"), null, (short) (this.confirm ? 5 : 14));
+		ItemStack itemStack = new ItemStack(Material.WOOL, 1, this.confirm ? ((byte) 5) : ((byte) 14));
+		ItemMeta itemMeta = itemStack.getItemMeta();
+
+		itemMeta.setDisplayName(this.confirm ? CC.GREEN + "Confirm" : CC.RED + "Cancel");
+		itemStack.setItemMeta(itemMeta);
+
+		return itemStack;
 	}
 
 	@Override

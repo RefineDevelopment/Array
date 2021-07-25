@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.arena.cuboid.Cuboid;
+import xyz.refinedev.practice.arena.meta.cuboid.Cuboid;
 import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.location.LocationUtil;

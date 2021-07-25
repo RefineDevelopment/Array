@@ -3,6 +3,11 @@ package xyz.refinedev.practice.kit;
 import com.mongodb.client.model.Sorts;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.Document;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.events.leaderboards.KitLeaderboardsUpdateEvent;
 import xyz.refinedev.practice.essentials.Essentials;
@@ -14,11 +19,6 @@ import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.BasicConfigurationFile;
 import xyz.refinedev.practice.util.inventory.InventoryUtil;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
-import org.bson.Document;
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,6 +53,7 @@ public class Kit {
     private final String name;
     private boolean enabled;
     private String knockbackProfile;
+    private List<String> kitDescription;
     private ItemStack displayIcon;
     private String displayName;
     private Queue unrankedQueue;
@@ -64,6 +65,7 @@ public class Kit {
         this.displayName = CC.RED + name;
         this.displayIcon = new ItemStack(Material.DIAMOND_CHESTPLATE);
         this.knockbackProfile = "default";
+        this.kitDescription = new ArrayList<>();
 
         kits.add(this);
     }
@@ -105,6 +107,10 @@ public class Kit {
 
             kit.setKnockbackProfile(config.getString(path + ".knockback-profile"));
 
+            if (config.getStringList(path + ".description") != null) {
+                kit.getKitDescription().addAll(config.getStringList(path + ".description"));
+            }
+
             kit.setDisplayIcon(new ItemBuilder(Material.valueOf(config.getString(path + ".icon.material")))
                     .durability(config.getInt(path + ".icon.durability"))
                     .build());
@@ -138,13 +144,13 @@ public class Kit {
             kit.getGameRules().setDisableFallDamage(!config.getBoolean(path + ".game-rules.fall-damage"));
             kit.getGameRules().setSumo(config.getBoolean(path + ".game-rules.sumo"));
             kit.getGameRules().setMlgRush(config.getBoolean(path + ".game-rules.mlgrush"));
-            kit.getGameRules().setBoxUHC(config.getBoolean(path + ".game-rules.boxuhc"));
+            kit.getGameRules().setBoxuhc(config.getBoolean(path + ".game-rules.boxuhc"));
             kit.getGameRules().setTimed(config.getBoolean(path + ".game-rules.timed"));
             kit.getGameRules().setWaterKill(config.getBoolean(path + ".game-rules.water-kill"));
             kit.getGameRules().setLavaKill(config.getBoolean(path + ".game-rules.lava-kill"));
-            kit.getGameRules().setHealthRegeneration(config.getBoolean(path + ".game-rules.health-regen"));
-            kit.getGameRules().setInfiniteSpeed(config.getBoolean(path + ".game-rules.speed"));
-            kit.getGameRules().setInfiniteStrength(config.getBoolean(path + ".game-rules.strength"));
+            kit.getGameRules().setRegen(config.getBoolean(path + ".game-rules.health-regen"));
+            kit.getGameRules().setSpeed(config.getBoolean(path + ".game-rules.speed"));
+            kit.getGameRules().setStrength(config.getBoolean(path + ".game-rules.strength"));
             kit.getGameRules().setShowHealth(config.getBoolean(path + ".game-rules.show-health"));
             kit.getGameRules().setBowHP(config.getBoolean(path + ".game-rules.bow-hp"));
             kit.getGameRules().setHitDelay(config.getInt(path + ".game-rules.hit-delay"));
@@ -209,6 +215,7 @@ public class Kit {
         configFile.getConfiguration().set(path + ".enabled", enabled);
         configFile.getConfiguration().set(path + ".display-name", displayName);
         configFile.getConfiguration().set(path + ".knockback-profile", knockbackProfile);
+        configFile.getConfiguration().set(path + ".description", kitDescription);
         configFile.getConfiguration().set(path + ".icon.material", displayIcon.getType().name());
         configFile.getConfiguration().set(path + ".icon.durability", displayIcon.getDurability());
         configFile.getConfiguration().set(path + ".loadout.armor", InventoryUtil.serializeInventory(kitInventory.getArmor()));
@@ -231,13 +238,13 @@ public class Kit {
         configFile.getConfiguration().set(path + ".game-rules.mlgrush", gameRules.isMlgRush());
         configFile.getConfiguration().set(path + ".game-rules.combo", gameRules.isCombo());
         configFile.getConfiguration().set(path + ".game-rules.sumo", gameRules.isSumo());
-        configFile.getConfiguration().set(path + ".game-rules.boxuhc", gameRules.isBoxUHC());
+        configFile.getConfiguration().set(path + ".game-rules.boxuhc", gameRules.isBoxuhc());
         configFile.getConfiguration().set(path + ".game-rules.timed", gameRules.isTimed());
         configFile.getConfiguration().set(path + ".game-rules.water-kill", gameRules.isWaterKill());
         configFile.getConfiguration().set(path + ".game-rules.lava-kill", gameRules.isLavaKill());
-        configFile.getConfiguration().set(path + ".game-rules.health-regeneration", gameRules.isHealthRegeneration());
-        configFile.getConfiguration().set(path + ".game-rules.speed", gameRules.isInfiniteSpeed());
-        configFile.getConfiguration().set(path + ".game-rules.strength", gameRules.isInfiniteStrength());
+        configFile.getConfiguration().set(path + ".game-rules.health-regeneration", gameRules.isRegen());
+        configFile.getConfiguration().set(path + ".game-rules.speed", gameRules.isSpeed());
+        configFile.getConfiguration().set(path + ".game-rules.strength", gameRules.isStrength());
         configFile.getConfiguration().set(path + ".game-rules.show-health", gameRules.isShowHealth());
         configFile.getConfiguration().set(path + ".game-rules.hit-delay", gameRules.getHitDelay());
         configFile.getConfiguration().set(path + ".game-rules.bow-hp", gameRules.isBowHP());
@@ -257,7 +264,7 @@ public class Kit {
                 Document kitStatistics = (Document) document.get("kitStatistics");
                 if (kitStatistics.containsKey(getName())) {
                     Document kitDocument = (Document) kitStatistics.get(getName());
-                    LeaderboardsAdapter leaderboardsAdapter= new LeaderboardsAdapter();
+                    LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
                     leaderboardsAdapter.setName((String) document.get("name"));
                     leaderboardsAdapter.setElo((Integer) kitDocument.get("elo"));
                     if (!getRankedEloLeaderboards().isEmpty()) {

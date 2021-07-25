@@ -15,20 +15,33 @@ import lombok.Setter;
 @Getter @Setter
 public class EssentialsMeta {
 
-    public boolean HCFEnabled = true;
-    public boolean tabEnabled = true;
-    public boolean coreHookEnabled = true;
-    public boolean motdEnabled = true;
-    public boolean disclaimerEnabled = true;
-    public boolean removeBottles = true;
-    public boolean rankedEnabled = true;
-    public boolean ratingEnabled = true;
-    public boolean requireKills = true;
-    public boolean limitPing = true;
-    public boolean bridgeClearBlocks = true;
+    private boolean
 
-    public int pingLimit = 300;
-    public int requiredKills = 10;
-    public int ffaSpawnRadius = 7;
-    public int voidSpawnLevel = 45;
+    HCFEnabled = true,
+    tabEnabled = true,
+    coreHookEnabled = true,
+    motdEnabled = true,
+    disclaimerEnabled = true,
+    removeBottles = true,
+    rankedEnabled = true,
+    ratingEnabled = true,
+    requireKills = true,
+    updateNotification = true,
+    limitPing = true,
+    bridgeClearBlocks = true;
+
+    private int
+
+    pingLimit = 300,
+    requiredKills = 10,
+    ffaSpawnRadius = 7,
+    voidSpawnLevel = 45,
+    matchSpawnLevel = 6;
+    
+    private int
+
+    countdown = 3,
+    enderpearlCooldown = 15,
+    bowCooldown = 15,
+    teleportDelay = 4;
 }

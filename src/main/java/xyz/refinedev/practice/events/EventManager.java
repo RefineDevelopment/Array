@@ -12,8 +12,7 @@ import xyz.refinedev.practice.util.other.Cooldown;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@Getter @Setter
 public class EventManager {
 
 	private final BasicConfigurationFile config = Array.getInstance().getEventsConfig();
@@ -43,7 +42,6 @@ public class EventManager {
 
 		this.activeEvent = event;
 		this.activeEvent.handleStart();
-		this.activeEvent.handleJoin(event.getHost().getPlayer());
 	}
 
 	public void load() {
@@ -58,14 +56,15 @@ public class EventManager {
 		if (config.getString(key + "BRACKETS.SPAWN2") != null) this.bracketsSpawn2 = LocationUtil.deserialize(config.getString(key + "BRACKETS.SPAWN2"));
 		if (config.getString(key + "BRACKETS.SPECTATOR") != null) this.bracketsSpectator = LocationUtil.deserialize(config.getString(key + "BRACKETS.SPECTATOR"));
 
-
 		if (config.getString(key + "GULAG.SPAWN1") != null) this.gulagSpawn1 = LocationUtil.deserialize(config.getString(key + "GULAG.SPAWN1"));
 		if (config.getString(key + "GULAG.SPAWN2") != null) this.gulagSpawn2 = LocationUtil.deserialize(config.getString(key + "GULAG.SPAWN2"));
 		if (config.getString(key + "GULAG.SPECTATOR") != null) this.gulagSpectator = LocationUtil.deserialize(config.getString(key + "GULAG.SPECTATOR"));
 		if (config.getString(key + "GULAG.KNOCKBACK") != null) this.gulagKB = config.getString(key + "GULAG.KNOCKBACK");
 
 		if (config.getString(key + "LMS.SPAWN") != null) this.lmsSpawn = LocationUtil.deserialize(config.getString(key + "LMS.SPAWN"));
+
 		if (config.getString(key + "PARKOUR.SPAWN") != null) this.parkourSpawn = LocationUtil.deserialize(config.getString(key + "PARKOUR.SPAWN"));
+
 		if (config.getString(key + "SPLEEF.SPAWN") != null) this.spleefSpawn = LocationUtil.deserialize(config.getString(key + "SPLEEF.SPAWN"));
 		if (config.getString(key + "SPLEEF.KNOCKBACK") != null) this.spleefKB = config.getString(key + "SPLEEF.KNOCKBACK");
 
@@ -154,6 +153,14 @@ public class EventManager {
 				return oitcSpectator;
 		}
 		return null;
+	}
+
+	public boolean isUnfinished(Event event) {
+		if (event.isFreeForAll()) {
+			return this.getSpawn(event) == null;
+		} else {
+			return this.getSpawn1(event) == null || this.getSpawn2(event) == null || this.getSpectator(event) == null;
+		}
 	}
 
 

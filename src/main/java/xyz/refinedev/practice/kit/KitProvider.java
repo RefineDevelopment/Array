@@ -1,10 +1,10 @@
 package xyz.refinedev.practice.kit;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -52,7 +52,7 @@ public class KitProvider extends DrinkProvider<Kit> {
 
     @Override
     public List<String> getSuggestions(@NotNull String prefix) {
-        return Kit.getKits().stream().map(Kit::getName).filter(Objects::nonNull).collect(Collectors.toList());
+        return Kit.getKits().stream().map(Kit::getName).filter(Objects::nonNull).filter(s -> prefix.length() == 0 || s.startsWith(prefix)).collect(Collectors.toList());
     }
 
 }

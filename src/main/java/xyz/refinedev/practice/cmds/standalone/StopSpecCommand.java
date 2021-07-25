@@ -26,16 +26,8 @@ public class StopSpecCommand {
 
             if (profile.getMatch() != null) {
                 profile.getMatch().removeSpectator(player);
-            } else if (profile.getSumo() != null) {
-                profile.getSumo().removeSpectator(player);
-            } else if (profile.getBrackets() != null) {
-                profile.getBrackets().removeSpectator(player);
-            } else if (profile.getLms() != null) {
-                profile.getLms().removeSpectator(player);
-            } else if (profile.getParkour() != null) {
-                profile.getParkour().removeSpectator(player);
-            } else if (profile.getSpleef() != null) {
-                profile.getSpleef().removeSpectator(player);
+            } else if (profile.isInEvent()) {
+                profile.getEvent().removeSpectator(player);
             }
         } else {
             player.sendMessage(Locale.ERROR_FREE.toString());

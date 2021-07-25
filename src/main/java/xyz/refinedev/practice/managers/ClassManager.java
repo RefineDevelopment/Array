@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.managers;
 
+import org.bukkit.plugin.java.JavaPlugin;
 import xyz.refinedev.practice.pvpclasses.PvPClass;
 import xyz.refinedev.practice.pvpclasses.events.ArmorClassEquipEvent;
 import xyz.refinedev.practice.pvpclasses.events.ArmorClassUnequipEvent;
@@ -22,19 +23,20 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.*;
 
 public class ClassManager implements Listener {
 
+    private final Array plugin = Array.getInstance();
+
     // Mapping to get the PVP Class a player has equipped.
-    private Map<UUID, PvPClass> equippedClassMap = new HashMap<>();
+    private final List<PvPClass> pvpClasses = new ArrayList<>();
+    private final Map<UUID, PvPClass> equippedClassMap = new HashMap<>();
+    protected final Map<UUID, PvPClass> classWarmups = new HashMap<>();
 
-    protected Map<UUID, PvPClass> classWarmups = new HashMap<>();
-
-    private List<PvPClass> pvpClasses = new ArrayList<>();
-
-    public ClassManager(Array plugin) {
+    public void init() {
         pvpClasses.add(new Bard(plugin));
         pvpClasses.add(new Archer(plugin));
         pvpClasses.add(new Rogue(plugin));
@@ -45,20 +47,17 @@ public class ClassManager implements Listener {
                 plugin.getServer().getPluginManager().registerEvents((Listener) pvpClass, plugin);
             }
         }
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                for(Player player : Bukkit.getOnlinePlayers()){
-                    Profile profile = Profile.getByUuid(player.getUniqueId());
-                    Match match = profile.getMatch();
-                    if (match != null && match.isHCFMatch()) {
-                        Bukkit.getScheduler().runTask(Array.getInstance(), () -> {
-                            attemptEquip(player);
-                        });
-                    }
+        TaskUtil.runTimer(() -> {
+            for(Player player : Bukkit.getOnlinePlayers()){
+                Profile profile = Profile.getByUuid(player.getUniqueId());
+                Match match = profile.getMatch();
+                if (match != null && match.isHCFMatch()) {
+                    Bukkit.getScheduler().runTask(Array.getInstance(), () -> {
+                        attemptEquip(player);
+                    });
                 }
             }
-        }.runTaskTimer(plugin , 1 , 1);
+        }, 1 , 1);
     }
 
     public void onDisable() {

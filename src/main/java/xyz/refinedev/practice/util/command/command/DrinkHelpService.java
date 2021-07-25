@@ -19,16 +19,18 @@ public class DrinkHelpService {
     public DrinkHelpService(DrinkCommandService commandService) {
         this.commandService = commandService;
         this.helpFormatter = (sender, container) -> {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(CC.translate("&cCommand Help is only available for Players."));
-                return;
-            }
             sender.sendMessage(CC.CHAT_BAR);
             sender.sendMessage(CC.translate( "&cArray &7» &c" + container.getName().toUpperCase() + "'s &7Commands"));
             sender.sendMessage(CC.CHAT_BAR);
+            if (!(sender instanceof Player)) {
+                for (DrinkCommand c : container.getCommands().values()) {
+                    sender.sendMessage(CC.translate(" &8• &c/" + container.getName() + (c.getName().length() > 0 ? " &c" + c.getName() : "") + " &8<&7" + c.getMostApplicableUsage() + "&8> &8(&7&o" + c.getDescription() + "&8)"));
+                }
+                return;
+            }
             for (DrinkCommand c : container.getCommands().values()) {
                 TextComponent msg = new TextComponent(net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&',
-                        " &8• &c/" + container.getName() + (c.getName().length() > 0 ? " &c" + c.getName() : "") + " &8<&7" + c.getMostApplicableUsage() + "&8> &8(&7&o" + c.getShortDescription() + "&8)"));
+                        " &8• &c/" + container.getName() + (c.getName().length() > 0 ? " &c" + c.getName() : "") + " &8<&7" + c.getMostApplicableUsage() + "&8> &8(&7&o" + c.getDescription() + "&8)"));
                 msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.GRAY + "/" + container.getName() + " " + c.getName() + " - " + ChatColor.WHITE + c.getDescription())));
                 msg.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + container.getName() + " " + c.getName()));
 

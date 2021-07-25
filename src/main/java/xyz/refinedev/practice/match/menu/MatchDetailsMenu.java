@@ -99,9 +99,9 @@ public class MatchDetailsMenu extends Menu {
                 MatchSnapshot cachedInventory;
 
                 try {
-                    cachedInventory=MatchSnapshot.getByUuid(UUID.fromString(switchTo.getUuid().toString()));
+                    cachedInventory = MatchSnapshot.getByUuid(UUID.fromString(switchTo.getUuid().toString()));
                 } catch (Exception e) {
-                    cachedInventory=MatchSnapshot.getByName(switchTo.getUuid().toString());
+                    cachedInventory = MatchSnapshot.getByName(switchTo.getUuid().toString());
                 }
 
                 if (cachedInventory == null) {
@@ -161,7 +161,7 @@ public class MatchDetailsMenu extends Menu {
 
                 effects.forEach(effect -> {
                     String name = PotionUtil.getName(effect.getType()) + " " + (effect.getAmplifier() + 1);
-                    String duration = " (" + TimeUtil.millisToTimer((effect.getDuration() / 20) * 1000) + ")";
+                    String duration = " (" + TimeUtil.millisToTimer((effect.getDuration() / 20) * 1000L) + ")";
                     lore.add("&c" + name + "&f" + duration);
                 });
 
@@ -199,13 +199,13 @@ public class MatchDetailsMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(Material.PAPER)
-                    .name("&cStatistics")
+                    .name("&aStatistics")
                     .lore(Arrays.asList(
-                            "&fTotal Hits: &c" + teamPlayer.getHits(),
-                            "&fLongest Combo: &c" + teamPlayer.getLongestCombo(),
-                            "&fPotions Thrown: &c" + teamPlayer.getPotionsThrown(),
-                            "&fPotions Missed: &c" + teamPlayer.getPotionsMissed(),
-                            "&fPotion Accuracy: &c" + teamPlayer.getPotionAccuracy() + "%"
+                            "&fTotal Hits: &a" + teamPlayer.getHits(),
+                            "&fLongest Combo: &a" + teamPlayer.getLongestCombo(),
+                            "&fPotions Thrown: &a" + teamPlayer.getPotionsThrown(),
+                            "&fPotions Missed: &a" + teamPlayer.getPotionsMissed(),
+                            "&fPotion Accuracy: &a" + teamPlayer.getPotionAccuracy() + "%"
                     ))
                     .build();
         }

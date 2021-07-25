@@ -1,7 +1,7 @@
 #######################################################################
 #                                                                     #
-#         Array Practice Core - Developed By Drizzy#0278              #
-#     Bought at Purge Development - https://discord.gg/VXzUMfBefZ     #
+#          Array Practice Core - Developed By Drizzy#0278             #
+#       Bought at Refine Development - https://dsc.gg/refine          #
 #                                                                     #
 #######################################################################
 LICENSE: ""
@@ -24,9 +24,11 @@ ESSENTIAL:
   HCF_ENABLED: true
   TAB_ENABLED: true
   VOIDSPAWN_YLEVEL: 45
+  MATCH_YLEVEL_SPAWN_ADD: 6
+  FFA_CIRCLE_RADIUS: 10
+  TELEPORT_DELAY: 4
   ARENA_RATING: true
   BRIDGE_CLEARBLOCKS: true
-  FFA_CIRCLE_RADIUS: 10
   REMOVE_BOTTLES: true
   JOIN_MESSAGE_ENABLED: true
   DISCLAIMER_MESSAGE_ENABLED: true
@@ -35,41 +37,55 @@ ESSENTIAL:
     - "&c&lArray &7&l| &fPractice &7(EU)"
     - "&7Welcome to the &cTest Server &7of &cArray Practice&7."
     - ""
-    - "&7Purchase Array at &chttps://discord.gg/BpZEnwsQgY&7."
+    - "&7Purchase Array at &chttps://dsc.gg/refine&7."
     - "&7Engage with our community at &cdiscord.link/purge&7."
     - ""
   QUEUE_LORE:
-    - "&7&m----------------------"
+    - "&c&lQueue"
     - "&7In Queue: &c<in_queue>"
     - "&7In Fight: &c<in_fight>"
     - ""
+    - "&c&lDescription"
+    - "<description>"
+    - ""
     - "&7Click to join queue."
-    - "&7&m----------------------"
+    - ""
 DEFAULT_SETTINGS:
-  PLAYER_HIDER: true
+  PLAYER_VISIBILITY: true
   SCOREBOARD_ENABLED: true
-  DUEL_REQUESTST: true
+  DUEL_REQUESTS: true
   ALLOW_SPECTATORS: true
   DEATH_LIGHNING: true
   PING_FACTOR: false
-  SCOREBOARDR_PING: true
-  SCOREBOARDR_DURATION: true
-  SCOREBOARDR_CPS: false
+  SCOREBOARD_PING: true
+  SCOREBOARD_DURATION: true
+  SCOREBOARD_CPS: false
   VANILLA_TAB: false
+  TOURNEY_MESSAGES: true
   DROP_PROTECT: false
+
+#In Seconds
+COOLDOWNS:
+  ENDER_PEARL: 15
+  BOW: 10
+
 SOCIAL:
   DISCORD: discord.link/purge
   STORE: store.purgecommunity.com
   WEBSITE: www.purgecommunity.com
   TWITTER: '@PurgeCommunity'
+
 RANKED:
   ENABLED: true
   REQUIREKILLS: true
   REQUIREDKILLS: 10
   LIMIT_PING: true
   PING-LIMIT: 300
+
 NAMETAGS:
   ENABLED: true
   DEFAULT: <rank_color>
   PARTY: BLUE
   EVENT: AQUA
+
+UPDATE_NOTIFICATION: true

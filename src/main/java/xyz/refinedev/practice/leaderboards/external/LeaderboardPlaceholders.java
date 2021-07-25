@@ -28,31 +28,22 @@ public class LeaderboardPlaceholders extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
-        if (player == null) {
-            return "&7";
-        }
-
-        /*
-         * Originally coded by Nick and improved by Drizzy.
-         * Note: The Player Cache in profile should not be null for it to work!
-         *
-         * GlobalLeaderboards - array_global_<position>
-         */
+        if (player == null) return "&7";
 
         if (identifier.contains("global")) {
             String[] splitstring = identifier.split("_");
-            int number = Integer.parseInt(splitstring[1]) - 1;
-            LeaderboardsAdapter leaderboardsAdapter;
 
+            //We subtract 1 because of lists being in whole numbers instead of natural numbers
+            int number = Integer.parseInt(splitstring[1]) - 1;
+
+            LeaderboardsAdapter leaderboardsAdapter;
             try {
                 leaderboardsAdapter = Profile.getGlobalEloLeaderboards().get(number);
             } catch (Exception e) {
                 return "&7";
             }
 
-            if (leaderboardsAdapter == null) {
-                return "&7";
-            }
+            if (leaderboardsAdapter == null) return "&7";
 
             Profile profile = Profile.getByUuid(ArrayCache.getUUID(leaderboardsAdapter.getName()));
 
@@ -63,17 +54,13 @@ public class LeaderboardPlaceholders extends PlaceholderExpansion {
                     .replace("<leaderboards_division>", ChatColor.stripColor(profile.getEloLeague()));
         }
 
-        /*
-         * Originally coded by Nick and improved by Drizzy.
-         * Note: The Player Cache in profile should not be null for it to work!
-         *
-         * LeaderboardsAdapter - array_leaderboards_<Kit>_<position>
-         */
         if (identifier.contains("leaderboards")) {
             String[] splitstring = identifier.split("_");
-            String kitString = splitstring[1];
+
+            //We subtract 1 because of lists being in whole numbers instead of natural numbers
+            String kitname = splitstring[1];
             int number = Integer.parseInt(splitstring[2]) - 1;
-            Kit kit = Kit.getByName(kitString);
+            Kit kit = Kit.getByName(kitname);
 
             if (kit == null) return "&7Error, That kit does not exist!";
 
@@ -85,9 +72,7 @@ public class LeaderboardPlaceholders extends PlaceholderExpansion {
                 return "&7";
             }
 
-            if (leaderboardsAdapter == null) {
-                return "&7";
-            }
+            if (leaderboardsAdapter == null) return "&7";
 
             Profile profile = Profile.getByUuid(ArrayCache.getUUID(leaderboardsAdapter.getName()));
 

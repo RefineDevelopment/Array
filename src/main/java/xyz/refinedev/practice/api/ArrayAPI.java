@@ -1,8 +1,8 @@
 package xyz.refinedev.practice.api;
 
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.rank.Rank;
-import org.bukkit.entity.Player;
 
 /**
  * This Project is the property of Refine Development © 2021

@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.match.task;
 
 import lombok.AllArgsConstructor;
-import xyz.refinedev.practice.match.types.TheBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.BridgeMatch;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -9,7 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 @AllArgsConstructor
 public class BridgePlayerTask extends BukkitRunnable {
 
-    TheBridgeMatch bridgeMatch;
+    BridgeMatch bridgeMatch;
     Player player;
 
     @Override

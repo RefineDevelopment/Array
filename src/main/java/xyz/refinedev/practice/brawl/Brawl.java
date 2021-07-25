@@ -36,7 +36,6 @@ public class Brawl {
 
     private boolean enabled;
 
-
     /**
      * The Main construct for a Brawl
      *

@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentMap;
  * Drink can be shaded or used as a plugin
  * This class provides the plugin functionality
  * As well, this class can be used to get an instance of a
- * {@link CommandService} for your plugin to registerCommands cmds via.
+ * {@link CommandService} for your plugin to init cmds via.
  *
  * @author jonahseguin
  */
@@ -22,7 +22,7 @@ public class Drink {
     private static final ConcurrentMap<String, CommandService> services = new ConcurrentHashMap<>();
 
     /**
-     * Get a {@link CommandService} instance to registerCommands cmds via
+     * Get a {@link CommandService} instance to init cmds via
      * - JavaPlugin specific (one per plugin instance)
      *
      * @param javaPlugin {@link Nonnull} your {@link JavaPlugin} instance

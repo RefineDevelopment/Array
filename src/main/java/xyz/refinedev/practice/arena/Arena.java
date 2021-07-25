@@ -4,8 +4,10 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.impl.SharedArena;
 import xyz.refinedev.practice.arena.impl.StandaloneArena;
 import xyz.refinedev.practice.arena.impl.TheBridgeArena;
+import xyz.refinedev.practice.arena.meta.Rating;
+import xyz.refinedev.practice.arena.meta.RatingType;
 import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.arena.cuboid.Cuboid;
+import xyz.refinedev.practice.arena.meta.cuboid.Cuboid;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.location.LocationUtil;
@@ -18,28 +20,26 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Getter @Setter
 public class Arena {
 
     @Getter private static final List<Arena> arenas = new ArrayList<>();
-    private List<String> kits = new ArrayList<>();
-    public ItemStack displayIcon;
-
     @Getter @Setter public static boolean pasting = false;
 
+    private List<String> kits = new ArrayList<>();
+
     protected final String name;
+    protected Rating rating;
     protected String displayName;
-    protected Location spawn1;
-    protected Location spawn2;
-    protected Location min;
-    protected Location max;
-    protected boolean active;
-    protected boolean disablePearls;
+    protected ItemStack displayIcon;
+    protected Location spawn1, spawn2, min, max;
+    protected boolean active, disablePearls;
 
     public Arena(String name) {
         this.name = name;
+        this.rating = new Rating(this);
         this.displayName = CC.RED + name;
         this.displayIcon = new ItemStack(Material.PAPER);
     }
@@ -70,6 +70,7 @@ public class Arena {
                     }
                     case THEBRIDGE: {
                         arena = new TheBridgeArena(arenaName);
+                        break;
                     }
                     default: {
                         continue;
@@ -175,10 +176,7 @@ public class Arena {
 
     public static Arena getByName(String name) {
         for (Arena arena : arenas) {
-            if (arena.getType() != ArenaType.DUPLICATE && arena.getName() != null &&
-                    arena.getName().equalsIgnoreCase(name)) {
-                return arena;
-            }
+            if (arena.getType() != ArenaType.DUPLICATE && arena.getName() != null && arena.getName().equalsIgnoreCase(name)) return arena;
         }
 
         return null;
@@ -192,9 +190,7 @@ public class Arena {
         List<Arena> _arenas = new ArrayList<>();
 
         for (Arena arena : arenas) {
-            if (!arena.isSetup()) continue;
-
-            if (!arena.getKits().contains(kit.getName())) continue;
+            if (!arena.isSetup() || !arena.getKits().contains(kit.getName())) continue;
 
             if ((arena.getType() == ArenaType.STANDALONE || arena.getType() == ArenaType.DUPLICATE || arena.getType() == ArenaType.SHARED) && kit.getGameRules().isBridge()) continue;
 
@@ -211,7 +207,7 @@ public class Arena {
             return null;
         }
 
-        return _arenas.get(ThreadLocalRandom.current().nextInt(_arenas.size()));
+        return _arenas.get(Array.random.nextInt(_arenas.size()));
     }
 
     public ArenaType getType() {
@@ -228,32 +224,29 @@ public class Arena {
     }
 
     public Location getSpawn1() {
-        if (spawn1 == null) {
-            return null;
-        }
+        if (spawn1 == null) return null;
 
         return spawn1.clone();
     }
 
     public Location getSpawn2() {
-        if (spawn2 == null) {
-            return null;
-        }
+        if (spawn2 == null) return null;
 
         return spawn2.clone();
     }
 
 
     public void setActive(boolean active) {
-        if (getType() != ArenaType.SHARED) {
-            this.active = active;
-        }
+        if (getType() != ArenaType.SHARED) this.active = active;
     }
 
     public void save() {
+        //This are overrided in the types and are not use for Duplicate Arenas which is the default type of
+        //arena in the main class
     }
 
     public void delete() {
+        //This are overrided in the types and are not use for Duplicate Arenas which is the default type of
+        //arena in the main class
     }
-
 }

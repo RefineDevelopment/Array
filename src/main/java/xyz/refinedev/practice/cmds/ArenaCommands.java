@@ -1,9 +1,11 @@
 package xyz.refinedev.practice.cmds;
 
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.impl.SharedArena;
 import xyz.refinedev.practice.arena.impl.StandaloneArena;
 import xyz.refinedev.practice.arena.impl.TheBridgeArena;
+import xyz.refinedev.practice.arena.meta.Rating;
 import xyz.refinedev.practice.arena.runnables.StandalonePasteRunnable;
 import xyz.refinedev.practice.arena.runnables.BridgePasteRunnable;
 import xyz.refinedev.practice.arena.selection.Selection;
@@ -85,6 +87,11 @@ public class ArenaCommands {
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7Saved a duplicate arena from &c" + name + "&8(&7#&c" + sarena.getDuplicates().size() + "&8)"));
             player.sendMessage(CC.translate("&8[&cTIP&8] &7Please note the &cDuplicate ID&7 of the arena for later use to setup its spawn points. " + "&8(&7#&c" + sarena.getDuplicates().size() + "&8)"));
         } else {
+            if (Arena.getArenas().contains(duplicate)) {
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7An arena with that name already exists!"));
+                return;
+            }
+
             switch (type) {
                 case SHARED:
                     arena = new SharedArena(name);
@@ -104,16 +111,13 @@ public class ArenaCommands {
     @Command(name = "save", aliases = "export", desc = "Save Arenas to Config")
     @Require("array.arena.admin")
     public void arenaSave(@Sender CommandSender sender) {
-        for ( Arena arena : Arena.getArenas() ) {
-            arena.save();
-        }
+        Arena.getArenas().forEach(Arena::save);
         sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully saved &c" + Arena.getArenas().size() + " &7arenas!"));
     }
 
     @Command(name = "remove", aliases = "delete", desc = "Remove an Arena", usage = "<arena>")
     @Require("array.arena.admin")
     public void arenaRemove(@Sender CommandSender player, Arena arena) {
-
         if (arena != null) {
             if (arena.isActive()) {
                 player.sendMessage(CC.translate("&8[&c&lArray&8] &7That arena is currently active, please try again later!"));
@@ -135,11 +139,7 @@ public class ArenaCommands {
             return;
         }
 
-        if (arena == null) {
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7An arena with that name does not exist."));
-            return;
-        }
-
+        
         if (amount > 15) {
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7That amount is too high, you can only place &c15 &7arenas at a time due to performance issues."));
             return;
@@ -192,10 +192,12 @@ public class ArenaCommands {
             player.sendMessage("");
             player.sendMessage(CC.GRAY + CC.ITALIC + "There are no arenas setup.");
             player.sendMessage("");
+            player.sendMessage(CC.CHAT_BAR);
             return;
         }
 
-        for (final Arena arena : Arena.getArenas()) {
+        for (Arena arena : Arena.getArenas()) {
+
             String type;
             switch (arena.getType()) {
                 case STANDALONE:
@@ -223,26 +225,44 @@ public class ArenaCommands {
     @Command(name = "disablepearls", aliases = "pearls", desc = "Disable pearling in an arena", usage = "<arena>")
     @Require("array.arena.admin")
     public void arenaDisablePearls(@Sender CommandSender player, Arena arena) {
-        if (arena == null) {
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That arena does not exist."));
-            return;
-        }
-        if (arena.isDisablePearls()) {
-            arena.setDisablePearls(false);
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &cenabled &7pearls in the arena &c" + arena.getName()));
-        } else {
-            arena.setDisablePearls(true);
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &cdisabled &7pearls in the arena &c" + arena.getName()));
-        }
+        arena.setDisablePearls(!arena.isDisablePearls());
+        player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (arena.isDisablePearls() ?  "&cdisabled" : "&aenabled") + " &7pearls in the arena &c" + arena.getName() + "&7."));
     }
 
     @Command(name = "tp", aliases = "teleport", desc = "Teleport to an Arena", usage = "<arena>")
     @Require("array.arena.admin")
     public void arenaTeleport(@Sender Player player, Arena arena) {
-        if (arena != null) {
-            player.teleport(arena.getSpawn1());
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &cteleported &7to the arena &c" + arena.getName() + "&7!"));
-        }
+        player.teleport(arena.getSpawn1());
+        player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &cteleported &7to the arena &c" + arena.getName() + "&7!"));
+
+    }
+
+    @Command(name = "rating", aliases = "poll", desc = "View Ratings of an Arena from Survey", usage = "<arena>")
+    @Require("array.arena.admin")
+    public void arenaRating(@Sender CommandSender sender, Arena arena) {
+        Rating rating = arena.getRating();
+        int total = rating.getAverage() + rating.getGood() + rating.getDecent() + rating.getOkay() + rating.getAverage() + rating.getTerrible();
+
+        String terrible = Array.getInstance().getRatingsManager().getBar(rating.getTerrible(), total);
+        String average = Array.getInstance().getRatingsManager().getBar(rating.getAverage(), total);
+        String okay = Array.getInstance().getRatingsManager().getBar(rating.getOkay(), total);
+        String decent = Array.getInstance().getRatingsManager().getBar(rating.getDecent(), total);
+        String good = Array.getInstance().getRatingsManager().getBar(rating.getGood(), total);
+
+        sender.sendMessage(CC.CHAT_BAR);
+        sender.sendMessage(CC.translate("&cArray &7» " + arena.getDisplayName() + "'s Ratings"));
+        sender.sendMessage(CC.CHAT_BAR);
+        sender.sendMessage("");
+        sender.sendMessage(CC.translate("&7There have been &c" + total + " &7ratings of arena &c" + arena.getDisplayName() + "&7."));
+        sender.sendMessage(CC.translate("&7These are small survey graph bars of our ratings analysis, these can help you decide which"));
+        sender.sendMessage(CC.translate("&7arena was favoured by your community and playerbase in general."));
+        sender.sendMessage("");
+        sender.sendMessage(CC.translate("&4Terrible: &8[&r" + terrible + "&8]"));
+        sender.sendMessage(CC.translate("&6Okay: &8[&r" + okay + "&8]"));
+        sender.sendMessage(CC.translate("&eAverage: &8[&r" + average + "&8]"));
+        sender.sendMessage(CC.translate("&2Decent: &8[&r" + decent + "&8]"));
+        sender.sendMessage(CC.translate("&aGood: &8[&r" + good + "&8]"));
+        sender.sendMessage(CC.CHAT_BAR);
     }
 
 
@@ -263,18 +283,17 @@ public class ArenaCommands {
     @Command(name = "setspawn", desc = "Set an arena's spawn", usage = "<arena> <1/2>")
     @Require("array.arena.setup")
     public void arenaSpawn(@Sender Player player, Arena arena, int pos) {
-        if (arena == null) {
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7An arena with that name does not exist."));
-            return;
-        }
-
+        
         if (arena.getType() != ArenaType.THEBRIDGE) {
-            Location loc = player.getLocation().clone();
+            Location loc=player.getLocation().clone();
 
             if (pos == 1) {
                 arena.setSpawn1(loc);
             } else if (pos == 2) {
                 arena.setSpawn2(loc);
+            } else {
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Invalid Position."));
+                return;
             }
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully updated the position of &c" + arena.getName() + "&8&o (&7&oPosition: " + pos + "&8)"));
             arena.save();
@@ -287,11 +306,7 @@ public class ArenaCommands {
     @Command(name = "setbridgespawn", desc = "Set a bridge arena's spawn", usage = "<arena> <red/blue>")
     @Require("array.arena.setup")
     public void arenaBridgeSpawn(@Sender Player player, Arena arena, String pos) {
-        if (arena == null) {
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7An arena with that name does not exist."));
-            return;
-        }
-
+        
         if (arena.getType() == ArenaType.THEBRIDGE) {
             Location loc = player.getLocation().clone();
 
@@ -314,11 +329,7 @@ public class ArenaCommands {
     @Command(name = "setduplicatespawn", usage = "<arena> <1/2> <duplicate-id>", desc = "Set a duplicate arena's spawn")
     @Require("array.arena.setup")
     public void arenaDuplicateSpawn(@Sender Player player, Arena arena, int pos, int number) {
-        if (arena == null) {
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7An arena with that name does not exist."));
-            return;
-        }
-        final Arena darena = ((StandaloneArena)arena).getDuplicates().get(number - 2);
+                final Arena darena = ((StandaloneArena)arena).getDuplicates().get(number - 2);
         if (darena != null) {
             Location loc = player.getLocation().clone();
             if (pos == 1) {
@@ -472,11 +483,7 @@ public class ArenaCommands {
     @Require("array.arena.kit")
     public void arenaBuildKit(@Sender CommandSender player, Arena arena) {
 
-        if (arena == null) {
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7An arena with that name does not exist."));
-            return;
-        }
-
+        
         for ( Kit kit : Kit.getKits() ) {
             if (kit == null) {
                 player.sendMessage(CC.translate("&8[&c&lArray&8] &7There are no kits setup."));
@@ -506,7 +513,7 @@ public class ArenaCommands {
                 player.sendMessage(CC.translate("&8[&c&lArray&8] &7There are no kits."));
                 return;
             }
-            if (kit.getGameRules().isBuild() || kit.getGameRules().isBoxUHC() || kit.getGameRules().isSpleef() || kit.getGameRules().isSumo() || kit.getGameRules().isParkour() || kit.getGameRules().isWaterKill()) {
+            if (kit.getGameRules().isBuild() || kit.getGameRules().isBoxuhc() || kit.getGameRules().isSpleef() || kit.getGameRules().isSumo() || kit.getGameRules().isParkour() || kit.getGameRules().isWaterKill()) {
                 return;
             }
 

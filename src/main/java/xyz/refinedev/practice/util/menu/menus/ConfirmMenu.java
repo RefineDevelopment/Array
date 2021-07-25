@@ -1,14 +1,14 @@
-package club.hydrogenpvp.core.util.menu.menus;
+package xyz.refinedev.practice.util.menu.menus;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import club.hydrogenpvp.core.util.callback.TypeCallback;
-import club.hydrogenpvp.core.util.menu.Button;
-import club.hydrogenpvp.core.util.menu.Menu;
 import org.bukkit.entity.Player;
 
-import club.hydrogenpvp.core.util.menu.button.ConfirmationButton;
+import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.Menu;
+import xyz.refinedev.practice.util.menu.TypeCallback;
+import xyz.refinedev.practice.util.menu.button.ConfirmationButton;
 
 public class ConfirmMenu extends Menu {
 

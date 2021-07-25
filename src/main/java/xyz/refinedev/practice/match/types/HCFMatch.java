@@ -4,6 +4,7 @@ import lombok.Getter;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
+import xyz.refinedev.practice.essentials.Essentials;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.managers.ClassManager;
 import xyz.refinedev.practice.match.Match;
@@ -22,6 +23,8 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.util.other.TaskUtil;
+import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,28 +71,23 @@ public class HCFMatch extends Match {
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
-        // If the player disconnected, skip any operations for them
-        if (teamPlayer.isDisconnected()) {
-            return;
-        }
+        if (teamPlayer.isDisconnected()) return;
 
         teamPlayer.setAlive(true);
 
         PlayerUtil.reset(player);
 
-        player.setMaximumNoDamageTicks(20);
+        player.setNoDamageTicks(Kit.getHCFTeamFight().getGameRules().getHitDelay());
 
         Team team = getTeam(player);
 
         Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
-
-        player.teleport(spawn.add(0, 4, 0));
+        player.teleport(spawn.add(0, Essentials.getMeta().getMatchSpawnLevel(), 0));
 
         teamPlayer.setPlayerSpawn(spawn);
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         Party party = profile.getParty();
-
         String kit = party.getKits().get(player.getUniqueId());
 
         switch (kit) {
@@ -102,7 +100,7 @@ public class HCFMatch extends Match {
             case "Rogue":
                 ClassManager.giveRogueKit(player);
                 break;
-            case "Diamond":
+            default:
                 ClassManager.giveDiamondKit(player);
                 break;
         }
@@ -174,18 +172,18 @@ public class HCFMatch extends Match {
                     }
                 }
             }
-        }.runTaskLater(Array.getInstance(), 40L);
+        }.runTaskLater(Array.getInstance(), TimeUtil.parseTime(Essentials.getMeta().getTeleportDelay()  + "s"));
 
         Team winningTeam = getWinningTeam();
         Team losingTeam = getOpponentTeam(winningTeam);
 
         winningTeam.getPlayers().stream().map(Profile::getByPlayer).forEach(profile -> {
             profile.getStatisticsData().get(getKit()).incrementWon();
-            profile.save();
+            TaskUtil.runAsync(profile::save);
         });
         losingTeam.getPlayers().stream().map(Profile::getByPlayer).forEach(profile -> {
             profile.getStatisticsData().get(getKit()).incrementLost();
-            profile.save();
+            TaskUtil.runAsync(profile::save);
         });
 
         return true;
@@ -227,13 +225,13 @@ public class HCFMatch extends Match {
 
     @Override
     public Team getWinningTeam() {
-        if (teamA.getAliveTeamPlayers().isEmpty()) {
-            return teamB;
-        } else if (teamB.getAliveTeamPlayers().isEmpty()) {
-            return teamA;
-        } else {
-            return null;
+        if (this.teamA.getAliveCount() == 0) {
+            return this.teamB;
         }
+        if (this.teamB.getAliveCount() == 0) {
+            return this.teamA;
+        }
+        return null;
     }
 
     @Override

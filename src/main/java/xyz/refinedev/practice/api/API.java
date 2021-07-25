@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.api;
 
-import xyz.refinedev.practice.profile.Profile;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.profile.Profile;
 
 /**
  * This Project is the property of Refine Development © 2021

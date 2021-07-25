@@ -81,6 +81,7 @@ public class PlayerUtil {
     }
 
     public static int getPing(Player player) {
+        if (player == null) return 0;
         return ((CraftPlayer)player).getHandle() != null ? ((CraftPlayer)player).getHandle().ping : 0;
     }
 

@@ -10,6 +10,7 @@ import xyz.refinedev.practice.kit.kiteditor.menu.KitEditorSelectKitMenu;
 import xyz.refinedev.practice.profile.settings.SettingsMenu;
 import xyz.refinedev.practice.leaderboards.menu.LeaderboardsMenu;
 import xyz.refinedev.practice.profile.statistics.menu.StatsMenu;
+import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
@@ -137,7 +138,7 @@ public class MainMenu extends Menu {
         @Override
         public void clicked(Player player, ClickType clickType) {
             player.closeInventory();
-            new EventCommands().menu(player);
+            player.sendMessage(CC.translate("&cEvents are currently in development!"));
         }
 
     }

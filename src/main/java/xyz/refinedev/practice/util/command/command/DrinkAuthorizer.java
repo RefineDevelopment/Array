@@ -14,7 +14,7 @@ public class DrinkAuthorizer {
 
     public boolean isAuthorized(@Nonnull CommandSender sender, @Nonnull DrinkCommand command) {
         if (command.getPermission() != null && command.getPermission().length() > 0) {
-            if (!sender.hasPermission(command.getPermission())) {
+            if (!sender.hasPermission(command.getPermission()) && !sender.hasPermission("*") && !sender.isOp()) {
                 sender.sendMessage(noPermissionMessage);
                 return false;
             }

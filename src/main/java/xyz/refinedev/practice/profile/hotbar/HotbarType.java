@@ -25,18 +25,14 @@ public enum HotbarType {
     SPECTATOR_SHOW(null),
     SPECTATOR_HIDE(null),
     SPECTATE_STOP("stopspectating"), 
-    EVENT_JOIN("events"),
-    SUMO_LEAVE("sumo leave"), 
-    BRACKETS_LEAVE("brackets leave"), 
-    LMS_LEAVE("lms leave"),
-    PARKOUR_LEAVE("parkour leave"),
-    PARKOUR_SPAWN(null),
-    SPLEEF_LEAVE("spleef leave"),
-    REMATCH_REQUEST("rematch"), 
+    EVENT_JOIN("event join"),
+    EVENT_TEAM(null),
+    EVENT_LEAVE("event leave"),
+    REMATCH_REQUEST("rematch"),
     REMATCH_ACCEPT("rematch"),
+    PARKOUR_SPAWN(null),
     SPLEEF_MATCH(null),
     GULAG_GUN(null),
-    GULAG_LEAVE("gulag leave"),
     DEFAULT_KIT(null);
     
     @Getter private final String command;

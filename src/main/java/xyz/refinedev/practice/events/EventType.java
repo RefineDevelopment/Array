@@ -7,18 +7,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum EventType {
     
-    BRACKETS_SOLO("Brackets"),
-    SUMO_SOLO("Sumo"),
-    BRACKETS_TEAM("Brackets"),
-    SUMO_TEAM("Sumo"),
-    GULAG_SOLO("Gulag"),
-    GULAG_TEAM("Gulag"),
+    BRACKETS_SOLO("BracketsSolo"),
+    BRACKETS_TEAM("BracketsTeam"),
+    SUMO_SOLO("SumoSolo"),
+    SUMO_TEAM("SumoTeam"),
+    GULAG_SOLO("GulagSolo"),
+    GULAG_TEAM("GulagTeam"),
     LMS("LMS"),
     PARKOUR("Parkour"),
     SPLEEF("Spleef"),
     OITC("OITC"),
-    //KOTH("KoTH"),
-    //PAINTBALL,
+    KOTH("KoTH"),
+    PAINTBALL("Paintball"),
     OMA("OMA");
 
     private final String readable;

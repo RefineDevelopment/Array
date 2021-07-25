@@ -33,8 +33,8 @@ public class PartyListener implements Listener {
         }
     }
     
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerQuit(final PlayerQuitEvent event) {
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         Profile profile = Profile.getByUuid(player.getUniqueId());
         Party party = profile.getParty();

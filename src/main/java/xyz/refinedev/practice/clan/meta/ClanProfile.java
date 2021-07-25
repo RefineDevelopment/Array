@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.clan.meta;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.clan.ClanProfileType;
 
@@ -13,5 +14,5 @@ public class ClanProfile {
 
     private UUID uuid;
     private Clan clan;
-    private ClanProfileType clanProfileType;
+    private ClanProfileType type;
 }

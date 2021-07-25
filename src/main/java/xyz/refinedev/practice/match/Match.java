@@ -10,6 +10,7 @@ import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.api.events.match.*;
 import xyz.refinedev.practice.api.events.match.*;
 import xyz.refinedev.practice.arena.Arena;
+import xyz.refinedev.practice.arena.meta.RatingType;
 import xyz.refinedev.practice.essentials.Essentials;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.kit.Kit;
@@ -252,24 +253,14 @@ public abstract class Match {
 
         arena.setActive(false);
 
-        if (matchWaterCheck != null) {
-            matchWaterCheck.cancel();
-        }
+        if (matchWaterCheck != null) matchWaterCheck.cancel();
 
         new MatchEndEvent(this).call();
-
         new MatchResetTask(this).runTask(Array.getInstance());
 
         matches.remove(this);
 
         TaskUtil.runLaterAsync(() -> getPlayers().forEach(player -> ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) 0)), 2L);
-        TaskUtil.runLaterAsync(() -> getPlayers().forEach(player -> ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) 0)), 2L);
-    }
-
-    public void handleRespawn(Player player) {
-        player.setVelocity(new Vector());
-
-        onRespawn(player);
     }
 
     public String replace(String input) {
@@ -297,11 +288,11 @@ public abstract class Match {
         String key = "&7Click to rate &c" + arena.getDisplayName();
 
         Clickable clickable =
-        new Clickable("&c&l[1⭐]", key + " &7as &cTerrible&7.", "/rate " + arena.getName() + " Terrible");
-        clickable.add("&6&l[2⭐]", key + " &7as &6Okay&7.", "/rate " + arena.getName() + " Okay");
-        clickable.add("&e&l[3⭐]", key + " &7as &eAverage&7.", "/rate " + arena.getName() + " Average");
-        clickable.add("&3&l[4⭐]", key + " &7as &eDecent&7.", "/rate " + arena.getName() + " Decent");
-        clickable.add("&a&l[5⭐]", key + " &7as &eGood&7.", "/rate " + arena.getName() + " Good");
+        new Clickable("&c&l[1⭐]", key + " &7as &cTerrible&7.", "/rate " + arena.getName() + " " + RatingType.TERRIBLE.name());
+        clickable.add("&6&l[2⭐]", key + " &7as &6Okay&7.", "/rate " + arena.getName() + " " + RatingType.OKAY.name());
+        clickable.add("&e&l[3⭐]", key + " &7as &eAverage&7.", "/rate " + arena.getName() + " " + RatingType.AVERAGE.name());
+        clickable.add("&2&l[4⭐]", key + " &7as &2Decent&7.", "/rate " + arena.getName() + " " + RatingType.DECENT.name());
+        clickable.add("&a&l[5⭐]", key + " &7as &aGood&7.", "/rate " + arena.getName() + " " + RatingType.GOOD.name());
 
         player.sendMessage("");
         player.sendMessage(CC.translate("&aPlease give us feedback on the Arena, How was it?"));
@@ -414,9 +405,8 @@ public abstract class Match {
                 end();
             } else {
                 PlayerUtil.spectator(deadPlayer);
-                for ( Player player : getPlayersAndSpectators() ) {
-                    TaskUtil.runLater(() -> Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer), 7L);
-                }
+                TaskUtil.runLater(() -> getPlayersAndSpectators().forEach(player -> Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer)), 7L);
+
                 TaskUtil.runLater(() -> getSpectators().forEach(spectator -> {
                     if (Profile.getByPlayer(spectator).getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
                     if (Profile.getByPlayer(deadPlayer).getSettings().isShowSpectator()) deadPlayer.showPlayer(spectator);
@@ -447,12 +437,13 @@ public abstract class Match {
     }
 
     public String getDuration() {
-        if (isStarting()) {
-            return "Starting";
-        } else if (isEnding()) {
-            return "Ending";
-        } else {
-            return TimeUtil.millisToTimer(getElapsedDuration());
+        switch (state) {
+            case STARTING:
+                return "Starting";
+            case ENDING:
+                return "Ending";
+            default:
+                return TimeUtil.millisToTimer(getElapsedDuration());
         }
     }
 
@@ -489,7 +480,7 @@ public abstract class Match {
         player.spigot().setCollidesWithEntities(false);
         player.updateInventory();
 
-        if (!profile.getPlayer().hasPermission("array.staff.silent")) {
+        if (!profile.getPlayer().hasPermission("array.profile.silent")) {
             for (Player otherPlayer : getPlayers()) {
                 otherPlayer.sendMessage(Locale.MATCH_SPECTATE.toString().replace("<spectator>", player.getName()));
             }
@@ -568,7 +559,7 @@ public abstract class Match {
 
         if (state != MatchState.ENDING) {
             for (Player otherPlayer : getPlayers()) {
-                if (!profile.getPlayer().hasPermission("array.staff.silent")) {
+                if (!profile.getPlayer().hasPermission("array.profile.silent")) {
                     otherPlayer.sendMessage(Locale.MATCH_STOPSPEC.toString().replace("<spectator>", player.getName()));
                 }
             }

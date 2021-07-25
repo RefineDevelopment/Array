@@ -3,14 +3,9 @@ package xyz.refinedev.practice.profile.hotbar;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.essentials.Essentials;
+import xyz.refinedev.practice.events.Event;
+import xyz.refinedev.practice.events.menu.EventTeamMenu;
 import xyz.refinedev.practice.queue.QueueType;
-import xyz.refinedev.practice.events.menu.ActiveEventSelectEventMenu;
-import xyz.refinedev.practice.events.types.brackets.Brackets;
-import xyz.refinedev.practice.events.types.gulag.Gulag;
-import xyz.refinedev.practice.events.types.lms.LMS;
-import xyz.refinedev.practice.events.types.parkour.Parkour;
-import xyz.refinedev.practice.events.types.spleef.Spleef;
-import xyz.refinedev.practice.events.types.sumo.Sumo;
 import xyz.refinedev.practice.kit.kiteditor.menu.KitEditorSelectKitMenu;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.party.menu.ManagePartySettings;
@@ -172,102 +167,33 @@ public class HotbarListener implements Listener {
                     break;
                 }
                 case EVENT_JOIN: {
-                 new ActiveEventSelectEventMenu().openMenu(player);
+                 player.chat("/event join");
                  break;
                 }
-                case SUMO_LEAVE: {
-                    final Sumo activeSumo = Array.getInstance().getSumoManager().getActiveSumo();
-                    if (activeSumo == null) {
-                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "sumo"));
+                case EVENT_TEAM: {
+                    final Event activeEvent = Array.getInstance().getEventManager().getActiveEvent();
+                    if (activeEvent == null) {
+                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString());
                         return;
                     }
-                    if (!profile.isInSumo() || !activeSumo.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "sumo"));
+                    if (!profile.isInEvent() || !activeEvent.getPlayers().contains(player)) {
+                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString());
                         return;
                     }
-                    Array.getInstance().getSumoManager().getActiveSumo().handleLeave(player);
+                    new EventTeamMenu(activeEvent).openMenu(player);
                     break;
                 }
-                case BRACKETS_LEAVE: {
-                    final Brackets activeBrackets=Array.getInstance().getBracketsManager().getActiveBrackets();
-                    if (activeBrackets == null) {
-                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "brackets"));
+                case EVENT_LEAVE: {
+                    final Event activeEvent = Array.getInstance().getEventManager().getActiveEvent();
+                    if (activeEvent == null) {
+                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString());
                         return;
                     }
-                    if (!profile.isInBrackets() || !activeBrackets.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "brackets"));
+                    if (!profile.isInEvent() || !activeEvent.getPlayers().contains(player)) {
+                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString());
                         return;
                     }
-                    Array.getInstance().getBracketsManager().getActiveBrackets().handleLeave(player);
-                    break;
-                }
-                case LMS_LEAVE: {
-                    final LMS activeLMS = Array.getInstance().getLMSManager().getActiveLMS();
-                    if (activeLMS == null) {
-                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "LMSEvent"));
-                        return;
-                    }
-                    if (!profile.isInLMS() || !activeLMS.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "LMSEvent"));
-                        return;
-                    }
-                    Array.getInstance().getLMSManager().getActiveLMS().handleLeave(player);
-                    break;
-                }
-                case PARKOUR_SPAWN: {
-                    final Parkour activeParkour = Array.getInstance().getParkourManager().getActiveParkour();
-                    if (activeParkour == null) {
-                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "parkour"));
-                        return;
-                    }
-                    if (!profile.isInParkour() || !activeParkour.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "parkour"));
-                        return;
-                    }
-                    if (activeParkour.getEventPlayer(player).getLastLocation() != null) {
-                        player.teleport(activeParkour.getEventPlayer(player).getLastLocation());
-                    } else {
-                        player.teleport(Array.getInstance().getParkourManager().getParkourSpawn());
-                    }
-                    break;
-                }
-                case PARKOUR_LEAVE: {
-                    final Parkour activeParkour = Array.getInstance().getParkourManager().getActiveParkour();
-                    if (activeParkour == null) {
-                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "parkour"));
-                        return;
-                    }
-                    if (!profile.isInParkour() || !activeParkour.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "parkour"));
-                        return;
-                    }
-                    Array.getInstance().getParkourManager().getActiveParkour().handleLeave(player);
-                    break;
-                }
-                case GULAG_LEAVE: {
-                    final Gulag activeGulag = Array.getInstance().getGulagManager().getActiveGulag();
-                    if (activeGulag == null) {
-                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "gulag"));
-                        return;
-                    }
-                    if (!profile.isInGulag() || !activeGulag.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "gulag"));
-                        return;
-                    }
-                    Array.getInstance().getGulagManager().getActiveGulag().handleLeave(player);
-                    break;
-                }
-                case SPLEEF_LEAVE: {
-                    final Spleef activeSpleef = Array.getInstance().getSpleefManager().getActiveSpleef();
-                    if (activeSpleef == null) {
-                        player.sendMessage(Locale.ERROR_NOTACTIVE.toString().replace("<event>", "spleef"));
-                        return;
-                    }
-                    if (!profile.isInSpleef() || !activeSpleef.getEventPlayers().containsKey(player.getUniqueId())) {
-                        player.sendMessage(Locale.ERROR_NOTPARTOF.toString().replace("<event>", "spleef"));
-                        return;
-                    }
-                    Array.getInstance().getSpleefManager().getActiveSpleef().handleLeave(player);
+                    activeEvent.handleLeave(player);
                     break;
                 }
                 case SPECTATE_STOP: {
@@ -285,28 +211,8 @@ public class HotbarListener implements Listener {
                         profile.getMatch().removeSpectator(player);
                         break;
                     }
-                    if (profile.getSumo() != null) {
-                        profile.getSumo().removeSpectator(player);
-                        break;
-                    }
-                    if (profile.getBrackets() != null) {
-                        profile.getBrackets().removeSpectator(player);
-                        break;
-                    }
-                    if (profile.getLms() != null) {
-                        profile.getLms().removeSpectator(player);
-                        break;
-                    }
-                    if (profile.getParkour() != null) {
-                        profile.getParkour().removeSpectator(player);
-                        break;
-                    }
-                    if (profile.getSpleef() != null) {
-                        profile.getSpleef().removeSpectator(player);
-                        break;
-                    }
-                    if (profile.getGulag() != null) {
-                        profile.getGulag().removeSpectator(player);
+                    if (profile.getEvent() != null) {
+                        profile.getEvent().removeSpectator(player);
                         break;
                     }
                     break;

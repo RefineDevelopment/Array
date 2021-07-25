@@ -7,6 +7,8 @@ import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.duel.DuelRequest;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
+import xyz.refinedev.practice.party.task.PartyInviteExpireTask;
+import xyz.refinedev.practice.party.task.PartyPublicTask;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.util.chat.CC;
@@ -60,33 +62,17 @@ public class Party extends Team {
      * Start the essential party tasks
      */
     public static void preLoad() {
-        TaskUtil.runTimerAsync(() -> parties.forEach(party -> party.getInvites().removeIf(PartyInvite::hasExpired)), 100L, 100L);
-        TaskUtil.runTimerAsync(() -> {
-            for (final Party party : Party.getParties()) {
-                if (party == null || party.isDisbanded() || party.getPlayers().isEmpty() || party.getLeader() == null ) {
-                    return;
-                }
-                if (party.isPublic()) {
-                    Bukkit.getServer().getOnlinePlayers().forEach(player -> {
-                        List<String> toSend = new ArrayList<>();
-                        toSend.add(Locale.PARTY_PUBLIC.toString().replace("<host>", party.getLeader().getUsername()));
-                        toSend.add(Locale.PARTY_CLICK_TO_JOIN.toString());
-                        for ( String string : toSend ) {
-                            new Clickable(string, Locale.PARTY_INVITE_HOVER.toString(), "/party join " + party.getLeader().getUsername()).sendToPlayer(player);
-                        }
-                    });
-                }
-            }
-        }, 1000L, 1000L);
+        TaskUtil.runTimerAsync(new PartyInviteExpireTask(), 100L, 100L);
+        TaskUtil.runTimerAsync(new PartyPublicTask(), 1000L, 1000L);
     }
 
     /**
      * Update the party's privacy type
      *
-     * @param bool True or false
+     * @param privacy True or false
      */
-    public void setPublic(boolean bool) {
-        this.isPublic = bool;
+    public void setPublic(boolean privacy) {
+        this.isPublic = privacy;
         this.broadcast(Locale.PARTY_PRIVACY.toString().replace("<privacy>", (isPublic ? "&aOpen" : "&eClose")));
     }
 
@@ -117,12 +103,13 @@ public class Party extends Team {
      * @param target The player being in invited
      */
     public void invite(Player target) {
-
         invites.add(new PartyInvite(target.getUniqueId()));
 
         List<String> strings = new ArrayList<>();
+
         strings.add(Locale.PARTY_INVITED.toString().replace("<leader>", getLeader().getUsername()));
         strings.add(Locale.PARTY_CLICK_TO_JOIN.toString());
+
         strings.forEach(string -> new Clickable(string, Locale.PARTY_INVITE_HOVER.toString(), "/party join " + getLeader().getUsername()).sendToPlayer(target));
 
         this.broadcast(Locale.PARTY_PLAYER_INVITED.toString().replace("<invited>", target.getName()));
@@ -179,10 +166,12 @@ public class Party extends Team {
          */
         this.broadcast(Locale.PARTY_PLAYER_JOINED.toString().replace("<joiner>", player.getName()));
 
-        if (profile.isInLobby() || profile.isInQueue()) {
-            profile.refreshHotbar();
-            profile.handleVisibility();
-        }
+        this.getPlayers().stream().map(Profile::getByPlayer).forEach(pp -> {
+            if (pp.isInLobby() || pp.isInQueue()) {
+                pp.refreshHotbar();
+                pp.handleVisibility();
+            }
+        });
 
         for (TeamPlayer teamPlayer : this.getTeamPlayers()) {
             Player otherPlayer = teamPlayer.getPlayer();
@@ -289,7 +278,7 @@ public class Party extends Team {
 
         this.broadcast(Locale.PARTY_PROMOTED.toString().replace("<promoted>", target.getName()));
 
-        if (profile.isInLobby()) {
+        if (player.isOnline() && profile.isInLobby()) {
             profile.refreshHotbar();
         }
         if (targetProfile.isInLobby()) {
@@ -308,11 +297,11 @@ public class Party extends Team {
 
         this.getPlayers().forEach(player -> {
             Profile profile = Profile.getByUuid(player.getUniqueId());
-            if ( profile.isInFight() ) {
-                profile.getMatch().handleDeath(player, this.getLeader().getPlayer(), true);
-            }
             profile.setParty(null);
-            if ( profile.isInLobby() || profile.isInQueue() ) {
+
+            if (profile.isInFight()) profile.getMatch().handleDeath(player, this.getLeader().getPlayer(), true);
+
+            if (profile.isInLobby() || profile.isInQueue()) {
                 profile.refreshHotbar();
                 profile.handleVisibility();
                 profile.teleportToSpawn();
@@ -351,25 +340,22 @@ public class Party extends Team {
         }
 
         Locale.PARTY_INFO.toList().forEach(string -> {
-
             String main = string.replace("<party_leader_name>", this.getLeader().getUsername())
                                 .replace("<party_privacy>", getPrivacy())
                                 .replace("<party_members_formatted>", CC.GRAY + "(" + (this.getTeamPlayers().size() - 1) + ") " + builder.substring(0, builder.length() - 2))
                                 .replace("<party_members>", String.valueOf(getTeamPlayers().size()));
             player.sendMessage(CC.translate(main));
-
         });
     }
 
     public String getRandomClass() {
-        int i = Array.random.nextInt(4);
-        int armor = i + 1;
-
-        switch (armor) {
-            case 2: return "Archer";
-            case 3: return "Bard";
-            case 4: return "Rogue";
-            default: return "Diamond";
-        }
+        List<String> classes = Arrays.asList(
+                "Diamond",
+                "Bard",
+                "Archer",
+                "Rogue"
+        );
+        Collections.shuffle(classes);
+        return classes.get(0);
     }
 }
