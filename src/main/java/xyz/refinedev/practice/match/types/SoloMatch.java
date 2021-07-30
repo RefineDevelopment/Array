@@ -13,8 +13,6 @@ import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.duel.RematchProcedure;
-import xyz.refinedev.practice.essentials.Essentials;
-import xyz.refinedev.practice.hook.SpigotHook;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.MatchSnapshot;
@@ -28,7 +26,6 @@ import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
 import xyz.refinedev.practice.util.elo.EloUtil;
-import xyz.refinedev.practice.util.nametags.NameTagHandler;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
@@ -39,6 +36,8 @@ import java.util.UUID;
 
 @Getter
 public class SoloMatch extends Match {
+
+    private final Array plugin = Array.getInstance();
 
     private final TeamPlayer playerA;
     private final TeamPlayer playerB;
@@ -97,22 +96,23 @@ public class SoloMatch extends Match {
 
         if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
-        SpigotHook.getKnockbackType().appleKitKnockback(player, getKit());
+        plugin.getKnockbackManager().kitKnockback(player, getKit());
         player.setNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         Location spawn = playerA.equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
+
         if (getKit().getGameRules().isSumo()) {
             player.teleport(spawn);
         } else {
-            player.teleport(spawn.add(0, Essentials.getMeta().getMatchSpawnLevel(), 0));
+            player.teleport(spawn.add(0, plugin.getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
         }
 
         teamPlayer.setPlayerSpawn(spawn);
 
         if (getKit().getGameRules().isParkour()) teamPlayer.setParkourCheckpoint(spawn);
 
-        NameTagHandler.reloadPlayer(player);
-        NameTagHandler.reloadOthersFor(player);
+        plugin.getNameTagHandler().reloadPlayer(player);
+        plugin.getNameTagHandler().reloadOthersFor(player);
     }
 
     @Override
@@ -172,14 +172,13 @@ public class SoloMatch extends Match {
                             player.setFireTicks(0);
                             player.updateInventory();
 
-                            SpigotHook.getKnockbackType().applyDefaultKnockback(player);
+                            plugin.getKnockbackManager().resetKnockback(player);
 
 
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
                             profile.handleVisibility();
-                            profile.teleportToSpawn();
 
                             if (opponent != null && opponent.isOnline()) {
                                 profile.setRematchData(new RematchProcedure(rematchKey, player.getUniqueId(), opponent.getUniqueId(), getKit(), getArena()));
@@ -189,11 +188,12 @@ public class SoloMatch extends Match {
                             getDroppedItems().forEach(Entity::remove);
 
                             profile.refreshHotbar();
+                            profile.teleportToSpawn();
                         }
                     }
                 }
             }
-        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isSumo() || getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : 4 * 20L);
+        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isSumo() || getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : plugin.getConfigHandler().getTELEPORT_DELAY() * 20L);
 
         Player winningPlayer = getWinningPlayer();
         Player losingPlayer = getOpponentPlayer(winningPlayer);

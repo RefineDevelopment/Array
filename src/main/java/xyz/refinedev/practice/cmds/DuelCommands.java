@@ -50,7 +50,7 @@ public class DuelCommands {
         }
 
         if (senderProfile.isBusy()) {
-            player.sendMessage(Locale.ERROR_UNAVAILABLE.toString());
+            player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
         }
         if (receiverProfile.isBusy()) {
@@ -81,12 +81,12 @@ public class DuelCommands {
         Profile receiverProfile = Profile.getByUuid(target.getUniqueId());
 
         if (senderProfile.isBusy()) {
-            player.sendMessage(Locale.ERROR_UNAVAILABLE.toString());
+            player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
         }
 
         if (!receiverProfile.isPendingDuelRequest(player)) {
-            player.sendMessage(CC.RED + "You do not have a pending duel request from " + target.getName() + CC.RED + ".");
+            player.sendMessage(Locale.DUEL_NOT_PENDING.toString());
             return;
         }
 
@@ -98,8 +98,10 @@ public class DuelCommands {
         DuelRequest request = receiverProfile.getSentDuelRequests().get(player.getUniqueId());
 
         if (request == null) {
+            player.sendMessage(Locale.DUEL_NOT_PENDING.toString());
             return;
         }
+
 
         if (request.isParty()) {
             if (senderProfile.getParty() == null) {
@@ -119,7 +121,7 @@ public class DuelCommands {
             }
         }
 
-        Arena arena=request.getArena();
+        Arena arena = request.getArena();
 
         if (arena == null) {
             player.sendMessage(CC.RED + "Tried to start a match but the arena was invalid.");
@@ -157,7 +159,7 @@ public class DuelCommands {
         this.arena = arena;
 
         if (request.isParty()) {
-            Team teamA=new Team(new TeamPlayer(player));
+            Team teamA = new Team(new TeamPlayer(player));
             if (request.getKit().getName().equals("HCFTeamFight")) {
 
                 for ( Player partyMember : senderProfile.getParty().getPlayers() ) {
@@ -174,7 +176,7 @@ public class DuelCommands {
                     }
                 }
 
-                match=new HCFMatch(teamA, teamB, arena);
+                match = new HCFMatch(teamA, teamB, arena);
             } else {
                 for ( Player partyMember : senderProfile.getParty().getPlayers() ) {
                     if (!partyMember.getPlayer().equals(player)) {
@@ -189,7 +191,7 @@ public class DuelCommands {
                         teamB.getTeamPlayers().add(new TeamPlayer(partyMember));
                     }
                 }
-                match=new TeamMatch(teamA, teamB, request.getKit(), arena);
+                match = new TeamMatch(teamA, teamB, request.getKit(), arena);
             }
 
         } else if (request.getKit().getGameRules().isBridge()) {

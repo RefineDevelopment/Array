@@ -1,7 +1,10 @@
 package xyz.refinedev.practice.party.enums;
 
-import java.beans.ConstructorProperties;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Getter
+@RequiredArgsConstructor
 public enum PartyManageType {
     LIMIT("Increase or Decrease Limit"),
     PUBLIC("Open or Close Party"),
@@ -11,13 +14,4 @@ public enum PartyManageType {
     MANAGE("Manage Members");
     
     private final String name;
-    
-    @ConstructorProperties({ "name" })
-    PartyManageType(final String name) {
-        this.name = name;
-    }
-    
-    public String getName() {
-        return this.name;
-    }
 }

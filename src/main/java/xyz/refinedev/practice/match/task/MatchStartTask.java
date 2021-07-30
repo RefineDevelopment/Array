@@ -1,8 +1,8 @@
 package xyz.refinedev.practice.match.task;
 
 import lombok.RequiredArgsConstructor;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.essentials.Essentials;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.MatchState;
 import xyz.refinedev.practice.util.chat.CC;
@@ -16,6 +16,7 @@ import xyz.refinedev.practice.util.other.TitleAPI;
 @RequiredArgsConstructor
 public class MatchStartTask extends BukkitRunnable {
 
+    private final Array plugin = Array.getInstance();
     private final Match match;
     private int ticks;
 
@@ -35,7 +36,7 @@ public class MatchStartTask extends BukkitRunnable {
                 match.setState(MatchState.FIGHTING);
                 match.setStartTimestamp(System.currentTimeMillis());
                 match.broadcastMessage(Locale.MATCH_STARTED.toString());
-                if (Essentials.getMeta().isDisclaimerEnabled()) {
+                if (plugin.getConfigHandler().isDISCLAIMER_ENABLED()) {
                     match.broadcastMessage("");
                     Locale.MATCH_DISCLAIMER.toList().forEach(match::broadcastMessage);
                 }
@@ -80,11 +81,9 @@ public class MatchStartTask extends BukkitRunnable {
                 match.setState(MatchState.FIGHTING);
                 match.setStartTimestamp(System.currentTimeMillis());
                 match.broadcastMessage(Locale.MATCH_STARTED.toString());
-                if (Essentials.getMeta().isDisclaimerEnabled()) {
+                if (plugin.getConfigHandler().isDISCLAIMER_ENABLED()) {
                     match.broadcastMessage("");
-                    for ( String string : Locale.MATCH_DISCLAIMER.toList() ) {
-                        match.broadcastMessage(CC.translate(string));
-                    }
+                    Locale.MATCH_DISCLAIMER.toList().forEach(match::broadcastMessage);
                 }
                 match.getPlayers().forEach(TitleAPI::clearTitle);
                 match.getPlayers().forEach(player -> TitleAPI.sendTitle(player, 5, 20, 5, CC.translate("&aMatch Started"), null));

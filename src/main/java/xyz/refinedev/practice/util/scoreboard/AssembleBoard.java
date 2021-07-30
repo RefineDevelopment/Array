@@ -15,7 +15,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public class AssembleBoard {
 
-	@Getter private Assemble assemble;
+	@Getter private ScoreboardHandler scoreboardHandler;
 
 	@Getter private final List<AssembleBoardEntry> entries = new ArrayList<>();
 	@Getter private final List<String> identifiers = new ArrayList<>();
@@ -23,14 +23,14 @@ public class AssembleBoard {
 	@Getter private final UUID uuid;
 
 	/**
-	 * Assemble Board.
+	 * ScoreboardHandler Board.
 	 *
 	 * @param player that the board belongs to.
-	 * @param assemble instance.
+	 * @param scoreboardHandler instance.
 	 */
-	public AssembleBoard(Player player, Assemble assemble) {
+	public AssembleBoard(Player player, ScoreboardHandler scoreboardHandler) {
 		this.uuid = player.getUniqueId();
-		this.assemble = assemble;
+		this.scoreboardHandler=scoreboardHandler;
 		this.setup(player);
 	}
 
@@ -41,7 +41,7 @@ public class AssembleBoard {
 	 */
 	public Scoreboard getScoreboard() {
 		Player player = Bukkit.getPlayer(getUuid());
-		if (getAssemble().isHook() || player.getScoreboard() != Bukkit.getScoreboardManager().getMainScoreboard()) {
+		if (getScoreboardHandler().isHook() || player.getScoreboard() != Bukkit.getScoreboardManager().getMainScoreboard()) {
 			return player.getScoreboard();
 		} else {
 			return Bukkit.getScoreboardManager().getNewScoreboard();
@@ -58,7 +58,7 @@ public class AssembleBoard {
 		if (scoreboard.getObjective("Assemble") == null) {
 			Objective objective = scoreboard.registerNewObjective("Assemble", "dummy");
 			objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-			objective.setDisplayName(getAssemble().getAdapter().getTitle(Bukkit.getPlayer(getUuid())));
+			objective.setDisplayName(getScoreboardHandler().getAdapter().getTitle(Bukkit.getPlayer(getUuid())));
 			return objective;
 		} else {
 			return scoreboard.getObjective("Assemble");

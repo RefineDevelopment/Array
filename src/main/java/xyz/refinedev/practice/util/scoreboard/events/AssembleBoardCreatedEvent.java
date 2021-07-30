@@ -15,7 +15,7 @@ public class AssembleBoardCreatedEvent extends Event {
     private final AssembleBoard board;
 
     /**
-     * Assemble Board Created Event.
+     * ScoreboardHandler Board Created Event.
      *
      * @param board of player.
      */

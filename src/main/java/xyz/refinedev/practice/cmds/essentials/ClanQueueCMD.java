@@ -23,9 +23,11 @@ public class ClanQueueCMD {
     public void queue(@Sender Player player) {
         Profile profile = Profile.getByPlayer(player);
         if (!profile.hasClan()) {
-            player.sendMessage(Locale.CLAN_NOT_IN.toString());
+            player.sendMessage(Locale.CLAN_DONOTHAVE.toString());
             return;
         }
-        new QueueSelectKitMenu(QueueType.CLAN).openMenu(player);
+        if (!profile.isBusy()) {
+            new QueueSelectKitMenu(QueueType.CLAN).openMenu(player);
+        }
     }
 }

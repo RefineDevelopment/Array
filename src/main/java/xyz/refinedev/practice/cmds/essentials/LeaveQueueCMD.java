@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.cmds.essentials;
 
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.queue.QueueProfile;
 import xyz.refinedev.practice.util.chat.CC;
@@ -24,7 +25,7 @@ public class LeaveQueueCMD {
         QueueProfile queueProfile = profile.getQueueProfile();
 
         if (!profile.isInQueue()) {
-            player.sendMessage(CC.translate("&7You are not part of any queue."));
+            player.sendMessage(Locale.ERROR_NOT_IN_QUEUE.toString());
             return;
         }
 

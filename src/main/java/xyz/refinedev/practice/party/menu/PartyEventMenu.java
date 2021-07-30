@@ -1,9 +1,9 @@
 package xyz.refinedev.practice.party.menu;
 
 import lombok.AllArgsConstructor;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.essentials.Essentials;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
@@ -22,7 +22,9 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public class PartyEventSelectEventMenu extends Menu {
+public class PartyEventMenu extends Menu {
+
+    private final Array plugin = Array.getInstance();
 
     @Override
     public String getTitle(final Player player) {
@@ -32,7 +34,7 @@ public class PartyEventSelectEventMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(final Player player) {
         final Map<Integer, Button> buttons = new HashMap<>();
-        if (Essentials.getMeta().isHCFEnabled()) {
+        if (plugin.getConfigHandler().isHCF_ENABLED()) {
             buttons.put(2, new SelectEventButton(PartyEventType.SPLIT));
             buttons.put(4, new SelectEventButton(PartyEventType.FFA));
             buttons.put(6, new SelectEventButton(PartyEventType.HCF));
@@ -95,7 +97,7 @@ public class PartyEventSelectEventMenu extends Menu {
 
             if (this.partyEventType == PartyEventType.FFA || this.partyEventType == PartyEventType.SPLIT) {
                 Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
-                new PartyEventSelectKitMenu(this.partyEventType).openMenu(player);
+                new PartySelectKitMenu(this.partyEventType).openMenu(player);
             } else {
                 player.closeInventory();
 

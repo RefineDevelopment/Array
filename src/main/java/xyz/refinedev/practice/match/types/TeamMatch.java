@@ -10,8 +10,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.essentials.Essentials;
-import xyz.refinedev.practice.hook.SpigotHook;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.MatchSnapshot;
@@ -25,13 +23,14 @@ import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
 import xyz.refinedev.practice.util.nametags.NameTagHandler;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
-import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 public class TeamMatch extends Match {
+
+    private final Array plugin = Array.getInstance();
 
     private final Team teamA;
     private final Team teamB;
@@ -86,18 +85,18 @@ public class TeamMatch extends Match {
 
         if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
-        SpigotHook.getKnockbackType().appleKitKnockback(player, getKit());
+        plugin.getKnockbackManager().kitKnockback(player, getKit());
         player.setNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         Team team = getTeam(player);
 
         Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
-        player.teleport(spawn.add(0, Essentials.getMeta().getMatchSpawnLevel(), 0));
+        player.teleport(spawn.add(0, plugin.getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
 
         teamPlayer.setPlayerSpawn(spawn);
 
-        NameTagHandler.reloadPlayer(player);
-        NameTagHandler.reloadOthersFor(player);
+        plugin.getNameTagHandler().reloadPlayer(player);
+        plugin.getNameTagHandler().reloadOthersFor(player);
     }
 
     @Override
@@ -143,11 +142,7 @@ public class TeamMatch extends Match {
 
                         if (player != null) {
                             for (TeamPlayer secondTeamPlayer : getTeamPlayers()) {
-                                if (secondTeamPlayer.isDisconnected()) {
-                                    continue;
-                                }
-
-                                if (secondTeamPlayer.getUuid().equals(player.getUniqueId())) {
+                                if (secondTeamPlayer.isDisconnected() || secondTeamPlayer.getUuid().equals(player.getUniqueId())) {
                                     continue;
                                 }
 
@@ -165,7 +160,7 @@ public class TeamMatch extends Match {
                             player.setFireTicks(0);
                             player.updateInventory();
 
-                            SpigotHook.getKnockbackType().applyDefaultKnockback(player);
+                            plugin.getKnockbackManager().resetKnockback(player);
 
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
@@ -177,7 +172,7 @@ public class TeamMatch extends Match {
                     }
                 }
             }
-        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L :  4 * 20L);
+        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L :  plugin.getConfigHandler().getTELEPORT_DELAY() * 20L);
 
         Team winningTeam = getWinningTeam();
         Team losingTeam = getOpponentTeam(winningTeam);
@@ -186,6 +181,7 @@ public class TeamMatch extends Match {
             profile.getStatisticsData().get(getKit()).incrementWon();
             TaskUtil.runAsync(profile::save);
         });
+
         losingTeam.getPlayers().stream().map(Profile::getByPlayer).forEach(profile -> {
             profile.getStatisticsData().get(getKit()).incrementLost();
             TaskUtil.runAsync(profile::save);

@@ -16,7 +16,7 @@ package xyz.refinedev.practice.managers;
     private final Array plugin = Array.getInstance();
     private final BasicConfigurationFile config = plugin.getBrawlConfig();
 
-    public void load() {
+    public void init() {
         FileConfiguration config = plugin.getBrawlConfig().getConfiguration();
 
         if (config.contains("ARENAS")) {

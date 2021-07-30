@@ -1,7 +1,6 @@
 package xyz.refinedev.practice.util.nametags.listener;
 
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.essentials.Essentials;
 import xyz.refinedev.practice.util.nametags.NameTagHandler;
 import xyz.refinedev.practice.util.other.TaskUtil;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
@@ -19,11 +18,13 @@ import java.util.Collections;
 
 public final class NameTagListener implements Listener {
 
+    private final Array plugin = Array.getInstance();
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.getPlayer().setMetadata("Test-LoggedIn", new FixedMetadataValue(Array.getInstance(), true));
 
-        if (Essentials.getNametagMeta().isEnabled()) {
+        if (plugin.getConfigHandler().isNAMETAGS_ENABLED()) {
             try {
                 PacketPlayOutScoreboardTeam a = new PacketPlayOutScoreboardTeam();
                 team_mode.set(a, 3);
@@ -40,15 +41,15 @@ public final class NameTagListener implements Listener {
             }
         }
 
-        NameTagHandler.initiatePlayer(event.getPlayer());
-        NameTagHandler.reloadPlayer(event.getPlayer());
-        NameTagHandler.reloadOthersFor(event.getPlayer());
+        plugin.getNameTagHandler().initiatePlayer(event.getPlayer());
+        plugin.getNameTagHandler().reloadPlayer(event.getPlayer());
+        plugin.getNameTagHandler().reloadOthersFor(event.getPlayer());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         event.getPlayer().removeMetadata("Test-LoggedIn", Array.getInstance());
-        NameTagHandler.getTeamMap().remove(event.getPlayer().getName());
+        plugin.getNameTagHandler().getTeamMap().remove(event.getPlayer().getName());
     }
 
 

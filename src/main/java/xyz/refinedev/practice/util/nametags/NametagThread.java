@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.util.nametags;
 
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.nametags.construct.NametagUpdate;
 import lombok.Getter;
 
@@ -7,9 +8,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Getter
 public class NametagThread extends Thread {
 
-    @Getter private static final Map<NametagUpdate, Boolean> pendingUpdates = new ConcurrentHashMap<>();
+    private final Map<NametagUpdate, Boolean> pendingUpdates = new ConcurrentHashMap<>();
 
     public NametagThread() {
         super("Array - Nametags Thread");
@@ -24,7 +26,7 @@ public class NametagThread extends Thread {
                 NametagUpdate pendingUpdate = pendingUpdatesIterator.next();
 
                 try {
-                    NameTagHandler.applyUpdate(pendingUpdate);
+                    Array.getInstance().getNameTagHandler().applyUpdate(pendingUpdate);
                     pendingUpdatesIterator.remove();
                 } catch (Exception e) {
                     e.printStackTrace();

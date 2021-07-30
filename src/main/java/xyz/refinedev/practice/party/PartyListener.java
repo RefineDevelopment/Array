@@ -11,6 +11,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class PartyListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -40,15 +43,16 @@ public class PartyListener implements Listener {
         Party party = profile.getParty();
 
         if (party != null) {
+            List<Player> partyPlayers = party.getPlayers().stream().filter(p -> !p.getUniqueId().equals(player.getUniqueId())).collect(Collectors.toList());
             if (party.isLeader(player.getUniqueId())) {
-                party.leader(player, party.getPlayers().get(0));
+                party.leader(player, partyPlayers.get(0));
                 party.broadcast(CC.translate("&e" + party.getLeader().getUsername() + " has been randomly promoted to leader because the previous leader left."));
             }
             party.leave(player, false);
+
             if (Tournament.CURRENT_TOURNAMENT != null && Tournament.CURRENT_TOURNAMENT.isParticipating(player)) {
                 Tournament.CURRENT_TOURNAMENT.leave(party);
             }
-
         }
     }
 }

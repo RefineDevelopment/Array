@@ -1,7 +1,6 @@
 package xyz.refinedev.practice.profile.settings.meta;
 
 import lombok.Data;
-import xyz.refinedev.practice.essentials.Essentials;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -17,9 +16,9 @@ public class SettingsMeta {
 
     private boolean
 
-    scoreboardEnabled = Essentials.getDefaultMeta().isScoreboardEnabled(),
-    receiveDuelRequests = Essentials.getDefaultMeta().isReceiveDuelRequests(),
-    allowSpectators = Essentials.getDefaultMeta().isAllowSpectators(),
+    scoreboardEnabled = true,
+    receiveDuelRequests = true,
+    allowSpectators = true,
 
     //Donator
     deathLightning = true,
@@ -27,13 +26,13 @@ public class SettingsMeta {
     rankedPingFactor,
     unrankedPingFactor,
 
-    pingScoreboard = Essentials.getDefaultMeta().isPingScoreboard(),
-    cpsScoreboard = Essentials.getDefaultMeta().isCpsScoreboard(),
-    durationScoreboard = Essentials.getDefaultMeta().isDurationScoreboard(),
-    tmessagesEnabled = Essentials.getDefaultMeta().isTmessagesEnabled(),
-    vanillaTab = Essentials.getDefaultMeta().isVanillaTab(),
-    showPlayers = Essentials.getDefaultMeta().isShowPlayers(),
-    preventSword = Essentials.getDefaultMeta().isPreventSword(),
+    pingScoreboard = true,
+    cpsScoreboard = false,
+    durationScoreboard = true,
+    tmessagesEnabled = true,
+    vanillaTab = false,
+    showPlayers = false,
+    preventSword = false,
 
     //Automatic settings for Profile
     showSpectator = true,

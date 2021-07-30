@@ -3,7 +3,6 @@ package xyz.refinedev.practice;
 import lombok.Getter;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.BasicConfigurationFile;
-import xyz.refinedev.practice.util.config.Replacement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,10 +18,8 @@ import java.util.List;
  * Project: Array
  */
 
+@Getter
 public enum Locale {
-
-    CHAT_BAR("CHAT_BAR", "&c&m--------&7&m-------------------------------------&c&m--------"),
-    MENU_BAR("MENU_BAR", "&c&m-------&7&m---------&c&m--------"),
 
     PARTY_INVITED("PARTY.INVITED", "&8[&c&lParty&8] &7You have been invited to join &c<leader>'s &7party."),
     PARTY_CLICK_TO_JOIN("PARTY.CLICK_TO_JOIN", "&8[&c&lParty&8] &c(Click to accept)"),
@@ -37,11 +34,10 @@ public enum Locale {
     PARTY_PRIVACY("PARTY.PRIVACY", "&8[&c&lParty&8] &7Your party privacy has been changed to &c<privacy>"),
     PARTY_PROMOTED("PARTY.PROMOTED", "&8[&c&lParty&8] &c<promoted> &ahas been promoted to Leader in your party."),
     PARTY_DONOTHAVE("PARTY.DO_NOT_HAVE", "&8[&c&lParty&8] &7You don't have a party!"),
-    PARTY_NOTLOBBY("PARTY.NOT_IN_LOBBY", "&8[&c&lParty&8] &7You are not in lobby, please finish your current task!"),
     PARTY_CHAT_FORMAT("PARTY.CHAT_FORMAT", "&8[&cParty&8] &c<player_displayname>&7: &a<message>"),
     PARTY_ALREADYINVITED("PARTY.ALREADY_INVITED", "&8[&cParty&8] &7That player has already been invited to your party."),
     PARTY_WRONG_LEADER("PARTY.DONT_HAVE_PARTY", "&8[&cParty&8] &7That player does not have a party."),
-    PARTY_HCF_UPDATED("PARTY.HCF_CLASS_CHANGE", "&c<target>'s &7HCF Class was changed to &c<class>&7."),
+    PARTY_HCF_UPDATED("PARTY.HCF_CLASS_CHANGE", "&8[&cParty&8] &c<target>'s &7HCF Class was changed to &c<class>&7."),
     PARTY_NOT_INVITED("PARTY.NOT_INVITED", "&8[&cParty&8] &7You are not invited to this party."),
     PARTY_TOURNAMENT("PARTY.IN_TOURNAMENT", "&8[&cParty&8] &7That party is currently in a tournament."),
     PARTY_FULL("PARTY.FULL", "&8[&cParty&8] &7That party is currently full!"),
@@ -62,9 +58,36 @@ public enum Locale {
     PARTY_ALREADYBANNED("PARTY.ALREADY_BANNED", "&8[&cParty&8] &7That player is already banned from your party."),
     PARTY_CHAT("PARTY.ENABLED_CHAT", "&aYou are now speaking in party chat!"),
     PARTY_GLOBAL("PARY.DISABLED_CHAT", "&aYou are now speaking in global chat!"),
-    PARTY_INFO("PARTY.INFO", Arrays.asList("&c&m--------&7&m-------------------------------------&c&m--------", "&cParty Information", "&c&m--------&7&m-------------------------------------&c&m--------", "&8 \u2022 &cLeader: <party_leader_name>", "&8 \u2022 &cPrivacy: <party_privacy>", "&8 \u2022 &cMembers: <party_members_formatted>", "&c&m--------&7&m-------------------------------------&c&m--------")),
-    PARTY_DONATOR("PARTY.DONATOR_MESSAGE", Arrays.asList("&7You do not have permission to use Party Settings.", "&7&oPlease upgrade your Rank at &c&ostore.purgemc.club &7")),
-    PARTY_HELP("PARTY.HELP_MESSAGE", Arrays.asList("&c&m--------&7&m-------------------------------------&c&m--------", "&cParty Commands", "&c&m--------&7&m-------------------------------------&c&m--------", " &8\u2022 &c/party help &8(&7&oDisplays the help message&8)", " &8\u2022 &c/party create &8(&7&oCreates a party instance&8)", " &8\u2022 &c/party leave &8(&7&oLeave your current party&8)", " &8\u2022 &c/party info &8(&7&oDisplays your party information&8)", " &8\u2022 &c/party join &8<&7leader&8> &8(&7&oJoin a party&8)", " &8\u2022 &c/party chat &8(&7&oToggle party chat&8)", " &8\u2022 &c/party open &8(&7&oOpen your party for others to join&8)", " &8\u2022 &c/party close &8(&7&oClose your party for others to join&8)", " &8\u2022 &c/party invite &8<&7profile&8> &8(&7&oInvites a profile to your party&8)", " &8\u2022 &c/party kick &8<&7profile&8> &8(&7&oKicks a profile from your party&8)", " &8\u2022 &c/party ban &8<&7profile&8> &8(&7&oBans a profile from your party&8)", " &8\u2022 &c/party unban &8<&7profile&8> &8(&7&oUnbans a profile from your party&8)", " &8\u2022 &c/party promote &8<&7profile&8> &8(&7&oTransfers Ownership of your party&8)", "&c&m--------&7&m-------------------------------------&c&m--------")),
+    PARTY_INFO("PARTY.INFO", Arrays.asList(
+            "&c&m--------&7&m-------------------------------------&c&m--------",
+            "&cParty Information", "&c&m--------&7&m-------------------------------------&c&m--------",
+            "&8 \u2022 &cLeader: <party_leader_name>",
+            "&8 \u2022 &cPrivacy: <party_privacy>",
+            "&8 \u2022 &cMembers: <party_members_formatted>",
+            "&c&m--------&7&m-------------------------------------&c&m--------")),
+    PARTY_DONATOR("PARTY.DONATOR_MESSAGE", Arrays.asList(
+            "&7You do not have permission to use Party Settings.",
+            "&7&oPlease upgrade your rank at &c&o<store>&7")),
+    PARTY_HELP("PARTY.HELP_MESSAGE", Arrays.asList(
+            "&c&m--------&7&m-------------------------------------&c&m--------",
+            "&cParty Commands",
+            "&c&m--------&7&m-------------------------------------&c&m--------",
+            " &8\u2022 &c/party help &8(&7&oDisplays the help message&8)",
+            " &8\u2022 &c/party create &8(&7&oCreates a party instance&8)",
+            " &8\u2022 &c/party leave &8(&7&oLeave your current party&8)",
+            " &8\u2022 &c/party info &8(&7&oDisplays your party information&8)",
+            " &8\u2022 &c/party join &8<&7leader&8> &8(&7&oJoin a party&8)",
+            " &8\u2022 &c/party chat &8(&7&oToggle party chat&8)",
+            " &8\u2022 &c/party events &8(&7&oOpen Party Events Menu&8)",
+            " &8\u2022 &c/party settings &8(&7&oOpen Party Settings Menu&8)",
+            " &8\u2022 &c/party open &8(&7&oOpen your party for others to join&8)",
+            " &8\u2022 &c/party close &8(&7&oClose your party for others to join&8)",
+            " &8\u2022 &c/party invite &8<&7profile&8> &8(&7&oInvites a profile to your party&8)",
+            " &8\u2022 &c/party kick &8<&7profile&8> &8(&7&oKicks a profile from your party&8)",
+            " &8\u2022 &c/party ban &8<&7profile&8> &8(&7&oBans a profile from your party&8)",
+            " &8\u2022 &c/party unban &8<&7profile&8> &8(&7&oUnbans a profile from your party&8)",
+            " &8\u2022 &c/party promote &8<&7profile&8> &8(&7&oTransfers Ownership of your party&8)",
+            "&c&m--------&7&m-------------------------------------&c&m--------")),
 
     CLAN_NAME_LENGTH("CLAN.NAME_LENGTH", "&8[&cClan&8] &7Clan names must be greater than or equal to 2 characters long and less than or equal to 8 characters long."),
     CLAN_NAME_LETTER("CLAN.NAME_LETTER", "&8[&cClan&8] &7Clan names must only contain alpha characters (letters only)."),
@@ -75,11 +98,11 @@ public enum Locale {
     CLAN_PASSWORD_REQURED("CLAN.PASSWORD_REQUIRED", "&8[&cClan&8] &7You need the password or an invitation to join this clan.\nTo join with a password, use &c/clan join <clan_name> <password> &7."),
     CLAN_INCORRECT_PASS("CLAN.INCORRECT_PASSWORD", "&8[&cClan&8] &7Incorrect Password!"),
     CLAN_NOT_LEADER("CLAN.NOT_LEADER", "&8[&cClan&8] &7You are not the leader of any Clan!"),
-    CLAN_NOT_IN("CLAN.NOT_IN", "&8[&cClan&8] &7You are not in a Clan!"),
     CLAN_NOT_PARTOF("CLAN.NOT_PART_OF", "&8[&cClan&8] &7That player is not a part of your Clan!"),
     CLAN_DISBANDED("CLAN.DISBANDED", "&8[&cClan&8] &cYour clan has been disbanded by the Leader!"),
     CLAN_INVITE_SELF("CLAN.INVITE_SELF", "&8[&cClan&8] &7You can not invite yourself!"),
     CLAN_DONOTHAVE("CLAN.DO_NOT_HAVE", "&8[&cClan&8] &7You are not part of any clan!"),
+    CLAN_DOESNOTHAVE("CLAN.DOES_NOT_HAVE", "&8[&cClan&8] &7That player is not part of any clan!"),
     CLAN_ALREADYHAVE("CLAN.ALREADY_HAVE", "&8[&cClan&8] &7That player already has a Clan!"),
     CLAN_ALREADYINVITED("CLAN.ALREADY_INVITED", "&8[&cClan&8] &7That player has already been invited!"),
     CLAN_INVITED_BROADCAST("CLAN.INVITE_BROADCAST", "&8[&c&lClan&8] &c<invited> &7has been invited to the clan!"),
@@ -112,17 +135,18 @@ public enum Locale {
     ERROR_NOTACTIVE("ERROR.NOT_ACTIVE", "&7There is no current on-going event!"),
     ERROR_NOTPARTOF("ERROR.NOT_PARTOF", "&7You are not part of any on-going <event> event!"),
     ERROR_NOTSPECTATING("ERROR.NOT_SPECTATING", "&7You are not spectating!"),
-    ERROR_UNAVAILABLE("ERROR.UNAVAILABLE", "&7You are currently busy, please finish your task and then try again."),
     ERROR_NOREMATCH("ERROR.NO_REMATCH", "&7You don't have anyone to rematch with!"),
     ERROR_EXPIREREMATCH("ERROR.REMATCH_EXPIRED", "&7Your rematch time has been expired!"),
     ERROR_PEARLSDISABLED("ERROR.PEARLS_DISABLED", "&cYou can't enderpearl in this arena!"),
     ERROR_REMATCHSENT("ERROR.REMATCH_SENT", "&7You have already sent the rematch request!"),
     ERROR_PARTY("ERROR.IN_PARTY", "&7Please leave your party to execute this task."),
     ERROR_NOSPEC("ERROR.NO_SPEC", "&7That player is not allowing spectators currently."),
+    ERROR_NOT_IN_QUEUE("ERROR.NOT_IN_QUEUE", "&7You are not in a queue!"),
     ERROR_MATCHNOSPEC("ERROR.MATCH_NOSPEC", "&7This match contains a player that is not allowing spectators currently."),
     ERROR_FREE("ERROR.FREE", "&7That player is not in any match or any events."),
     ERROR_NOTMATCH("ERROR.NOT_IN_MATCH", "&7You are not in any match."),
-    ERROR_NOTABLE("ERROR.NOT_ABLE", "&7You are not able to execute this task currently."),
+    ERROR_NOTABLE("ERROR.NOT_ABLE", "&7You can not do this right now."),
+    ERROR_PING_TOO_HIGH("ERROR.PING_TOO_HIGH", "&7Your ping is too high!"),
     ERROR_PLAYERNOTFOUND("ERROR.PLAYER_NOT_FOUND", "&7That player does not exist or is not currently online."),
     ERROR_SETTING_NOPERM("ERROR.SETTINGS_NO_PERM", Arrays.asList("&7You don't have permission to use this setting", "&7&oyou can upgrade your rank at &c&ostore.purgecommunity.com&7&o.")),
 
@@ -154,10 +178,10 @@ public enum Locale {
     MATCH_ROUND("MATCH.ROUND_STARTED", "&aThe Round has Started!"),
     MATCH_SPECTATE("MATCH.SPECTATE_JOIN", "&c<spectator> &eis now spectating your match!"),
     MATCH_STOPSPEC("MATCH.SPECTATE_LEAVE", "&c<spectator> &eis no longer spectating your match!"),
-    MATCH_CHECKPOINT("MATCH.CHECKPOINT_ACCQUIRED", "&8[&cParkour&8] &cCheckpoint Accquired!"),
+    MATCH_CHECKPOINT("MATCH.CHECKPOINT_ACCQUIRED", "&aCheckpoint Accquired!"),
     MATCH_DISCONNECTED("MATCH.PARTICIPANT_DISCONNECTED", "<relation_color><participant_name> &7has disconnected."),
     MATCH_WON("MATCH.PARTICIPANT_WON", "<relation_color><participant_name> &ahas won!"),
-    MATCH_EPEARL_EXPIRE("MATCH.EPEAR_EXPIRE", "&aYou may pearl again."),
+    MATCH_EPEARL_EXPIRE("MATCH.EPEARL_EXPIRE", "&aYou may pearl again."),
     MATCH_DIED("MATCH.PARTICIPANT_DIED", "<relation_color><participant_name> &7has died!"),
     MATCH_KILLED("MATCH.PARTICIPANT_KILLED", "<relation_color_dead><dead_name> &7was killed by <relation_color_killer><killer_name>&7."),
     MATCH_MAX_BUILD("MATCH.MAX_BUILD_LIMIT", "&cYou have reached the build height limit!"),
@@ -180,6 +204,7 @@ public enum Locale {
     MATCH_SWORD_DROP("MATCH.SWORD_DROP", "&7You can't drop that while holding it in slot 1."),
     MATCH_BUILD_OUTSIDE("MATCH.BUILD_OUTSIDE", "&7You cannot build outside of the arena!"),
     MATCH_RATING("MATCH.RATING", "&aThanks for rating the map! We have recorded your rating."),
+    MATCH_NOT_IN("MATCH.NOT_IN_FIGHT", "&7That player is currently not in a match!"),
 
     TOURNAMENT_ROUND("TOURNAMENT.ROUND_MESSAGE", "&8[&9&lRound&8] &c<round> &7has started!"),
     TOURNAMENT_BROADCAST("TOURNAMENT.BROADCAST", "&8[&c&lTournament&8] &c<host_name> &fis hosting a &c<kit> &7Tournament! &7(<tournament_type>)"),
@@ -206,13 +231,13 @@ public enum Locale {
     EVENT_ALREADY_STARTED("EVENTS.ALREADY_STARTED", "&7This event has already!"),
     EVENT_ELIMINATED("EVENTS.ELIMINATED", "&c<eliminated_name> &7was eliminated by &c<eliminator_name>&7!"),
     EVENT_DIED("EVENTS.DIED", "&c<eliminated_name> &7has died&7!"),
-    EVENT_NO_PERMISSION("EVENTS.NO_PERM", Arrays.asList("&7You do not have permission to use this.", "&7&oPlease upgrade your Rank at &c&<store> &7")),
     EVENT_CANCELLED("EVENTS.CANCELLED", "&cThe <event_name> Event has been cancelled!"),
     EVENT_START_COUNTDOWN("EVENTS.START_COUNTDOWN", "&c<seconds>&f..."),
     EVENT_NOT_SETUP("EVENTS.NOT_SETUP", "&7The event you are trying to join is not correctly setup!"),
     EVENT_PARKOUR_WON("EVENTS.PARKOUR_WON", "&c<winner> &ehas reached the end!"),
     EVENT_ROUND_STARTED("EVENTS.ROUND_STARTED", "&cThe round has started!"),
     EVENT_STARTED("EVENTS.STARTED", "&cThe event has started!"),
+    EVENT_NOT_TEAM("EVENTS.NOT_TEAM", "&7This event is not a team event!"),
     EVENT_FULL("EVENTS.FULL", "&cThis event is full on its player capacity!"),
     EVENT_FORCESTART("EVENTS.FORCESTART", "&7Successfully force started the &c<event_name> Event&7!"),
     EVENT_KNOCKBACK("EVENTS.KNOCKBACK", "&7Successfully updated the knockback profile to &c<knockback>"),
@@ -221,10 +246,56 @@ public enum Locale {
     EVENT_STARTING("EVENTS.STARTING", "&fThe &c<event_name> &fEvent will start in &c10 seconds&f..."),
     EVENT_NOT_ENOUGH_PLAYERS("EVENTS.NOT_ENOUGH_PLAYERS", "&cThere are not enough players to start this event!"),
     EVENT_KILLED("EVENTS.KILLED", "&c<killed_name> &7has died!"),
-    EVENT_ANNOUNCE("EVENTS.ANNOUCE", Arrays.asList(" ", "&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b", "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &c&l[<event_name> Event]", "&7\u2b1b\u2b1b&c\u2b1b&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b ", "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &fA &c<event_name> &fevent is being hosted by &c<event_host>", "&7\u2b1b\u2b1b&c\u2b1b&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b &fEvent is starting in 60 seconds!", "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &a&l[Click to Join]", "&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b", "")),
+    EVENT_NO_PERMISSION("EVENTS.NO_PERM", Arrays.asList(
+            "&7You do not have permission to use this.",
+            "&7&oPlease upgrade your Rank at &c&<store> &7")),
+    EVENT_ANNOUNCE("EVENTS.ANNOUCE", Arrays.asList(" ",
+            "&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b",
+            "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &c&l[<event_name> Event]",
+            "&7\u2b1b\u2b1b&c\u2b1b&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b ",
+            "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &fA &c<event_name> &fevent is being hosted by &c<event_host>",
+            "&7\u2b1b\u2b1b&c\u2b1b&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b &fEvent is starting in 60 seconds!",
+            "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &a&l[Click to Join]",
+            "&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b", "")),
     EVENT_HOVER("EVENTS.HOVER", "&7Click to join <event_name> Event"),
-    EVENT_TEAM_WON("EVENTS.TEAM_WON", Arrays.asList(" ", "&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b", "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &c&l[<event_name> Event]", "&7\u2b1b\u2b1b&c\u2b1b&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b ", "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &c<winner> &ehas won the <event_name> Event.", "&7\u2b1b\u2b1b&c\u2b1b&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b &7&oThe team consisted of the following players", "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &7<players>", "&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b", "")),
-    EVENT_WON("EVENTS.WON", Arrays.asList(" ", "&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b", "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &c&l[<event_name> Event]", "&7\u2b1b\u2b1b&c\u2b1b&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b ", "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &c<winner> &ehas won the <event_name> Event.", "&7\u2b1b\u2b1b&c\u2b1b&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b &7&oGood game!", "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b", "&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b", "")),
+    EVENT_TEAM_WON("EVENTS.TEAM_WON", Arrays.asList(" ",
+            "&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b",
+            "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &c&l[<event_name> Event]",
+            "&7\u2b1b\u2b1b&c\u2b1b&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b ",
+            "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &c<winner> &ehas won the <event_name> Event.",
+            "&7\u2b1b\u2b1b&c\u2b1b&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b &7&oThe team consisted of the following players",
+            "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &7<players>",
+            "&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b",
+            "")),
+    EVENT_WON("EVENTS.WON", Arrays.asList(" ",
+            "&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b",
+            "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &c&l[<event_name> Event]",
+            "&7\u2b1b\u2b1b&c\u2b1b&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b ",
+            "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &c<winner> &ehas won the <event_name> Event.",
+            "&7\u2b1b\u2b1b&c\u2b1b&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b &7&oGood game!", "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b",
+            "&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b",
+            "")),
+    EVENT_HELP("EVENTS.HELP", Arrays.asList(
+            "&c&m--------&7&m-------------------------------------&c&m--------",
+            "&cArray &7» Event Commands",
+            "&c&m--------&7&m-------------------------------------&c&m--------",
+            " &8• &c/event &8(&7&oView this message&8)",
+            " &8• &c/event host <event> &8(&7&oHost an Event&8)",
+            " &8• &c/event forcestart &8(&7&oForcestart an active event&8)",
+            " &8• &c/event stop &8(&7&oStop an active event&8)",
+            " &8• &c/event join &8(&7&oJoin an active event&8)",
+            " &8• &c/event leave &8(&7&oLeave an active event&8)",
+            " &8• &c/event teamselect &8(&7&oView Team Selection Menu&8)",
+            "&c&m--------&7&m-------------------------------------&c&m--------")),
+    EVENT_INFO("EVENTS.INFO", Arrays.asList(
+            "&c&m--------&7&m-------------------------------------&c&m--------",
+            "&c<event_name> &7» Information",
+            "&c&m--------&7&m-------------------------------------&c&m--------",
+            " &8• &cState: &f<event_state>",
+            " &8• &cHost: &f<event_host>",
+            " &8• &cPlayers: &f<event_alive_players>&7/&f<event_max_players>",
+            "&c&m--------&7&m-------------------------------------&c&m--------"
+    )),
 
     QUEUE_JOIN_UNRANKED("QUEUE.JOIN_UNRANKED", "&7You have been added to the &c<queue_name> &7queue."),
     QUEUE_JOIN_RANKED("QUEUE.JOIN_RANKED", "&7You have been added to the &c<queue_name> &7queue. &c[<queue_elo>]"),
@@ -235,6 +306,9 @@ public enum Locale {
     DUEL_RECEIVED("DUEL.RECEIVED", "&8[&c&lDuel&8] &c<sender_name> &7(<sender_ping>&7) &fhas sent you a duel request with kit &c<duel_kit> &fon the arena &c<duel_arena>"),
     DUEL_HOVER("DUEL.INVITE_HOVER", "&7Click to accept this duel."),
     DUEL_ACCEPT("DUEL.CLICK_TO_ACCEPT", "&a(Click to Accept)"),
+    DUEL_ALREADYSENT("DUEL.ALREADY_SENT", "&8[&c&lDuel&8] &7You have already sent a duel to them!"),
+    DUEL_DISBANDED("DUEL.DISBANDED", "&8[&c&lDuel&8] &7The party you were trying to duel has been disbanded!"),
+    DUEL_NOT_PENDING("DUEL.NOT_PENDING", "&8[&c&lDuel&8] &7You don't have any pending requests from that player!"),
 
     KITEDITOR_LONG("KITEDITOR.TOO_LONG", "&7A name cannot be longer than &c16 &7characters!"),
     KITEDITOR_RENAMED("KITEDITOR.RENAMED", "&7Successfully &crenamed &7the kit to &c<custom_name>&7!"),
@@ -245,9 +319,9 @@ public enum Locale {
     LEADERBOARDS_GLOBAL_FORMAT("LEADERBOARDS.GLOBAL_FORMAT", "&c<leaderboards_pos> &7&l\uff5c &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
     LEADERBOARDS_GLOBAL_HEADER("LEADERBOARDS.GLOBAL_HEADER", "&cGlobal &7\uff5c &fTop 10");
 
-    @Getter private final String path;
-    @Getter private String value;
-    @Getter private List<String> listValue;
+    private final String path;
+    private String value;
+    private List<String> listValue;
 
     private final BasicConfigurationFile configFile = Array.getInstance().getMessagesConfig();
 
@@ -262,14 +336,13 @@ public enum Locale {
     }
 
     public String toString() {
-        Replacement replacement = new Replacement(CC.translate(configFile.getConfiguration().getString(this.path)));
-        return replacement.toString().replace("{0}", "\n").replace("\uff5c", "┃");
+        return CC.translate(configFile.getConfiguration().getString(this.path)).replace("\uff5c", "┃");
     }
 
     public List<String> toList() {
         List<String> toReturn = new ArrayList<>();
         for ( String strings : configFile.getConfiguration().getStringList(this.path)) {
-            toReturn.add(CC.translate(strings).replace("{0}", "\n"));
+            toReturn.add(CC.translate(strings).replace("\uff5c", "┃"));
         }
         return toReturn;
     }

@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.duel.menu;
 
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.essentials.Essentials;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
@@ -33,7 +33,7 @@ public class DuelSelectKitMenu extends Menu {
         boolean party = Profile.getByUuid(player.getUniqueId()).getParty() != null;
 
         if (party) {
-            if (Essentials.getMeta().isHCFEnabled()) {
+            if (Array.getInstance().getConfigHandler().isHCF_ENABLED()) {
                 for ( Kit kit : Kit.getKits() ) {
                     if (kit.isEnabled() || kit.getName().equalsIgnoreCase("HCFTeamFight")) {
                         if (!kit.getGameRules().isTimed() && !kit.getGameRules().isBridge())
@@ -68,7 +68,7 @@ public class DuelSelectKitMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private class SelectKitButton extends Button {
+    private static class SelectKitButton extends Button {
 
         private final Kit kit;
 
@@ -108,8 +108,6 @@ public class DuelSelectKitMenu extends Menu {
                 } else {
                     profile.getDuelProcedure().send();
                 }
-
-
         }
 
     }

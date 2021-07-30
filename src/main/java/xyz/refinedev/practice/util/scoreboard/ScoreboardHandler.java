@@ -14,7 +14,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter @Setter
-public class Assemble {
+public class ScoreboardHandler {
 
 	private JavaPlugin plugin;
 
@@ -29,14 +29,14 @@ public class Assemble {
 	private boolean hook = false, debugMode = true;
 
 	/**
-	 * Assemble.
+	 * ScoreboardHandler.
 	 *
 	 * @param plugin instance.
 	 * @param adapter
 	 */
-	public Assemble(JavaPlugin plugin, AssembleAdapter adapter) {
+	public ScoreboardHandler(JavaPlugin plugin, AssembleAdapter adapter) {
 		if (plugin == null) {
-			throw new RuntimeException("Assemble can not be instantiated without a plugin instance!");
+			throw new RuntimeException("ScoreboardHandler can not be instantiated without a plugin instance!");
 		}
 
 		this.plugin = plugin;
@@ -47,7 +47,7 @@ public class Assemble {
 	}
 
 	/**
-	 * Setup Assemble.
+	 * Setup ScoreboardHandler.
 	 */
 	public void setup() {
 		// Register Events.

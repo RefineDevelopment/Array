@@ -1,8 +1,8 @@
 package xyz.refinedev.practice.queue.menu;
 
 import lombok.AllArgsConstructor;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.essentials.Essentials;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.match.Match;
@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class QueueSelectKitMenu extends Menu {
 
+    private final Array plugin = Array.getInstance();
     private final QueueType queueType;
 
     @Override
@@ -63,7 +64,7 @@ public class QueueSelectKitMenu extends Menu {
 
             player.closeInventory();
             if (profile.isBusy()) {
-                player.sendMessage(Locale.ERROR_UNAVAILABLE.toString());
+                player.sendMessage(Locale.ERROR_NOTABLE.toString());
                 return;
             }
 
@@ -93,7 +94,7 @@ public class QueueSelectKitMenu extends Menu {
         public List<String> getLore() {
             List<String> lore = new ArrayList<>();
 
-           for ( String line : Essentials.getQueueLore()) {
+           for ( String line : plugin.getConfigHandler().getQUEUE_LORE()) {
                if (line.contains("<description>")) {
                    line = line.replace("<description>", "");
                    lore.addAll(this.queue.getKit().getKitDescription().stream().map(CC::translate).collect(Collectors.toList()));

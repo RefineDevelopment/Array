@@ -4,13 +4,13 @@ import com.mongodb.client.model.Sorts;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.events.leaderboards.KitLeaderboardsUpdateEvent;
-import xyz.refinedev.practice.essentials.Essentials;
 import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.queue.Queue;
@@ -83,11 +83,10 @@ public class Kit {
     }
 
     public static void preload() {
-        Array.logger("&7Loading Kits!");
         FileConfiguration config = plugin.getKitsConfig().getConfiguration();
 
         try {
-        if (Essentials.getMeta().isHCFEnabled()) {
+        if (plugin.getConfigHandler().isHCF_ENABLED()) {
             HCFTeamFight = new Kit("HCFTeamFight");
             HCFTeamFight.setDisplayIcon(new ItemBuilder(Material.BEACON).clearEnchantments().clearFlags().build());
             HCFTeamFight.save();
@@ -169,6 +168,7 @@ public class Kit {
         kits.forEach(kit -> {
             if (kit.isEnabled()) {
                 kit.setUnrankedQueue(new Queue(kit, QueueType.UNRANKED));
+
                 if (kit.getGameRules().isRanked()) {
                     kit.setRankedQueue(new Queue(kit, QueueType.RANKED));
                 }
@@ -181,14 +181,13 @@ public class Kit {
         try {
             Kit.getKits().forEach(Kit::updateKitLeaderboards);
         } catch (Exception e) {
-            Array.logger("&cThere was an error loading Leaderboards, Disabling Array!");
-            Array.shutDown();
+            plugin.logger("&cThere was an error loading Leaderboards, Disabling Array!");
+            Bukkit.shutdown();
         }
 
-        Array.logger("&aLoaded Kits!");
         } catch (Exception e) {
-            Array.logger("&cAn Error occured while loading Kits, please check kits.yml and try again.");
-            Array.shutDown();
+            plugin.logger("&cAn Error occured while loading Kits, please check kits.yml and try again.");
+            Bukkit.shutdown();
         }
     }
 

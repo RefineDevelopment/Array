@@ -16,11 +16,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.bson.Document;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.ArrayCache;
@@ -29,6 +29,7 @@ import xyz.refinedev.practice.api.events.profile.ProfileGlobalEloCalculateEvent;
 import xyz.refinedev.practice.api.events.profile.ProfileLoadEvent;
 import xyz.refinedev.practice.api.events.profile.ProfileSaveEvent;
 import xyz.refinedev.practice.api.events.profile.SpawnTeleportEvent;
+import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.brawl.Brawl;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.clan.meta.ClanInvite;
@@ -37,7 +38,6 @@ import xyz.refinedev.practice.duel.DuelProcedure;
 import xyz.refinedev.practice.duel.DuelRequest;
 import xyz.refinedev.practice.duel.RematchProcedure;
 import xyz.refinedev.practice.events.Event;
-import xyz.refinedev.practice.events.EventState;
 import xyz.refinedev.practice.events.EventType;
 import xyz.refinedev.practice.events.meta.player.EventPlayer;
 import xyz.refinedev.practice.events.meta.player.EventPlayerState;
@@ -48,7 +48,6 @@ import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.party.Party;
-import xyz.refinedev.practice.profile.hotbar.Hotbar;
 import xyz.refinedev.practice.profile.hotbar.HotbarLayout;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
 import xyz.refinedev.practice.profile.rank.Rank;
@@ -59,7 +58,6 @@ import xyz.refinedev.practice.queue.QueueProfile;
 import xyz.refinedev.practice.tournament.Tournament;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.InventoryUtil;
-import xyz.refinedev.practice.util.nametags.NameTagHandler;
 import xyz.refinedev.practice.util.other.Cooldown;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
@@ -68,14 +66,14 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.Executor;
 
-@SuppressWarnings(value = "all")
+@SuppressWarnings("all")
 @Getter @Setter
 public class Profile {
 
     @Getter private static final Map<UUID, Profile> profiles = new HashMap<>();
-    @Getter public static final List<Player> playerList = new ArrayList<>();
     @Getter private static final List<LeaderboardsAdapter> globalEloLeaderboards = new ArrayList<>();
-    
+    @Getter public static final List<Player> playerList = new ArrayList<>();
+
     private final Array plugin = Array.getInstance();
 
     private final Map<UUID, DuelRequest> sentDuelRequests = new HashMap<>();
@@ -87,7 +85,7 @@ public class Profile {
      * Profile Mongo
      */
     @Getter private static MongoCollection<Document> collection = Array.getInstance().getMongoDatabase().getCollection("profiles");
-    public static Executor mongoThread = Array.getInstance().getMongoThread();
+    private Executor mongoThread = plugin.getMongoThread();
 
 
     /*
@@ -138,6 +136,7 @@ public class Profile {
     private final SettingsMeta settings = new SettingsMeta();
     private final KitEditor kitEditor = new KitEditor();
     private boolean canIssueRating = false;
+    private Arena ratingArena;
 
     /**
      * The main constructor for the Profile
@@ -155,7 +154,6 @@ public class Profile {
     }
 
     public static void preload() {
-        Array.logger("&7Loading Profiles!");
         // Players might have joined before the plugin finished loading
         for ( Player player : Bukkit.getOnlinePlayers() ) {
             Profile profile = new Profile(player.getUniqueId());
@@ -170,7 +168,7 @@ public class Profile {
             profiles.put(player.getUniqueId(), profile);
         }
         if (!Array.getInstance().isDisabling()) {
-            //Save every minute to prevent data loss
+            //Save prevent data loss
             TaskUtil.runTimerAsync(() -> {
                 Profile.getProfiles().values().forEach(Profile::save);
                 Profile.getProfiles().values().forEach(Profile::load);
@@ -178,16 +176,14 @@ public class Profile {
 
             //Reload Leaderboards
             TaskUtil.runTimerAsync(() -> {
+                Profile.loadUUIDCache();
                 Kit.getKits().forEach(Kit::updateKitLeaderboards);
                 Profile.loadGlobalLeaderboards();
-            }, 600L, 600L);
+            }, 180 * 20L, 180 * 20L);
 
-            //Refresh players' hotbars every 3 seconds
-            TaskUtil.runTimerAsync(() -> {
-                Profile.getProfiles().values().forEach(Profile::checkForHotbarUpdate);
-            }, 40L, 40L);
+            //Refresh players' hotbeds every 3 seconds
+            TaskUtil.runTimerAsync(() -> Profile.getProfiles().values().forEach(Profile::checkForHotbarUpdate), 40L, 40L);
         }
-        Array.logger("&aLoaded Profiles!");
     }
 
     /**
@@ -227,7 +223,7 @@ public class Profile {
      */
     public static void loadGlobalLeaderboards() {
         if (!getGlobalEloLeaderboards().isEmpty()) getGlobalEloLeaderboards().clear();
-            mongoThread.execute(() -> {
+            Array.getInstance().getMongoThread().execute(() -> {
             for ( Document document : Profile.getCollection().find().sort(Sorts.descending("globalElo")).limit(10).into(new ArrayList<>()) ) {
                 LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
                 leaderboardsAdapter.setName(document.getString("name"));
@@ -239,6 +235,18 @@ public class Profile {
             }
         });
         new GlobalLeaderboardsUpdateEvent().call();
+    }
+
+    public static void loadUUIDCache() {
+        ArrayCache.getPlayerCache().clear();
+        for (Document document : Profile.getCollection().find()) {
+            if (document == null) return;
+
+            String name = document.getString("name");
+            UUID uuid = UUID.fromString(document.getString("uuid"));
+
+            ArrayCache.getPlayerCache().put(name, uuid);
+        }
     }
 
     /**
@@ -419,19 +427,6 @@ public class Profile {
     }
 
     /**
-     * Update the profile's elo in the mongo
-     */
-    public void updateElo() {
-        Document document = collection.find(Filters.eq("uuid", uuid.toString())).first();
-        Document kitStatistics = (Document) document.get("kitStatistics");
-
-        for (Kit kit : Kit.getKits()) {
-            Document kitDocument = (Document) kitStatistics.get(kit.getName());
-            this.getStatisticsData().get(kit).setElo(kitDocument.getInteger("elo"));
-        }
-    }
-
-    /**
      * Can the profile send a duel request
      * to another player
      *
@@ -477,11 +472,7 @@ public class Profile {
     public void handleJoin() {
         Player player = getPlayer();
 
-        for ( Player players : getPlayerList() ) {
-            if (players.getName().equalsIgnoreCase(player.getName())) {
-                getPlayerList().remove(players);
-            }
-        }
+        getPlayerList().removeIf(players -> players.getName().equalsIgnoreCase(player.getName()));
 
         Profile.getPlayerList().add(player);
         Profile.getProfiles().values().forEach(Profile::handleVisibility);
@@ -529,8 +520,8 @@ public class Profile {
      * Teleport the profile to spawn
      */
     public void teleportToSpawn() {
-        Player player = getPlayer();
-        SpawnTeleportEvent event = new SpawnTeleportEvent(getPlayer(), plugin.getEssentials().getSpawn());
+        final Player player = getPlayer();
+        SpawnTeleportEvent event = new SpawnTeleportEvent(player, plugin.getConfigHandler().getSpawn());
         event.call();
 
         //Update their visibility
@@ -538,7 +529,7 @@ public class Profile {
         this.refreshHotbar();
 
         if (!event.isCancelled() && event.getLocation() != null) {
-            getPlayer().teleport(event.getLocation());
+            player.teleport(event.getLocation());
         }
     }
 
@@ -546,7 +537,7 @@ public class Profile {
      * See if the profile's hotbar needs to be updated
      */
     public void checkForHotbarUpdate() {
-        Player player = getPlayer();
+        final Player player = getPlayer();
 
         if (player == null) return;
 
@@ -554,7 +545,7 @@ public class Profile {
             boolean update = false;
 
             if (rematchData != null) {
-                Player target = Bukkit.getPlayer(rematchData.getTarget());
+                final Player target = Bukkit.getPlayer(rematchData.getTarget());
 
                 if (System.currentTimeMillis() - rematchData.getTimestamp() >= 30_000) {
                     rematchData = null;
@@ -575,7 +566,7 @@ public class Profile {
                         rematchData = null;
                         update = true;
                     } else if (rematchData.isReceive()) {
-                        int requestSlot = player.getInventory().first(Hotbar.getItems().get(HotbarType.REMATCH_REQUEST));
+                        int requestSlot = player.getInventory().first(plugin.getHotbarManager().getHotbarItem(HotbarType.REMATCH_REQUEST).getItem());
 
                         if (requestSlot != -1) {
                             update = true;
@@ -585,7 +576,7 @@ public class Profile {
             }
 
             boolean activeEvent = plugin.getEventManager().getActiveEvent() != null && plugin.getEventManager().getActiveEvent().isWaiting();
-            int eventSlot = player.getInventory().first(Hotbar.getItems().get(HotbarType.EVENT_JOIN));
+            int eventSlot = player.getInventory().first(plugin.getHotbarManager().getHotbarItem(HotbarType.EVENT_JOIN).getItem());
 
             if (eventSlot == -1 && activeEvent) {
                 update = true;
@@ -611,28 +602,26 @@ public class Profile {
         if (player != null) {
             PlayerUtil.reset(player);
 
-            if (isInLobby()) {
-                player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.LOBBY, this));
+            if (isInLobby() && !kitEditor.isActive()) {
+                if (hasParty()) {
+                    player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.PARTY, this));
+                } else {
+                    player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.LOBBY, this));
+                }
             } else if (isInQueue()) {
-                player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.QUEUE, this));
+                player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.QUEUE, this));
             } else if (isSpectating()) {
-                TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
+                TaskUtil.runLater(() -> PlayerUtil.spectator(player), 2L);
             } else if (isInEvent()) {
                 if (getEvent().getEventPlayer(uuid).getState().equals(EventPlayerState.ELIMINATED)) {
-                    TaskUtil.runLater(() -> PlayerUtil.spectator(player), 3L);
-                    TaskUtil.runLater(() -> player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.EVENT_SPECTATE, this)), 3L);
+                    TaskUtil.runLater(() -> PlayerUtil.spectator(player), 2L);
                 }
-                if (event.isTeam()) {
-                    player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.EVENT_WAITING, this));
-                } else {
-                    player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.EVENT_SPECTATE, this));
-                }
+                player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.EVENT, this));
             } else if (isInFight()) {
                 if (!match.getTeamPlayer(player).isAlive()) {
-                    player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, this));
+                    player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.MATCH_SPECTATE, this));
                 }
             }
-
             player.updateInventory();
         }
     }
@@ -649,7 +638,6 @@ public class Profile {
         double ratio = totalWins / Math.max(totalLosses, 1);
         DecimalFormat format = new DecimalFormat("#.##");
         return format.format(ratio);
-
     }
 
     /**
@@ -668,8 +656,8 @@ public class Profile {
             if (party != null && party.containsPlayer(otherPlayer)) {
                 hide = false;
             }
-            if (plugin.getEssentials().getNametagMeta().isEnabled()) {
-                TaskUtil.runAsync(() -> NameTagHandler.reloadPlayer(player, otherPlayer));
+            if (plugin.getConfigHandler().isNAMETAGS_ENABLED()) {
+                TaskUtil.runAsync(() -> plugin.getNameTagHandler().reloadPlayer(player, otherPlayer));
             }
         } else if (isInFight()) {
             TeamPlayer teamPlayer = match.getTeamPlayer(otherPlayer);
@@ -677,8 +665,8 @@ public class Profile {
             if (teamPlayer != null && teamPlayer.isAlive()) {
                 hide = false;
             }
-            if (plugin.getEssentials().getNametagMeta().isEnabled()) {
-                TaskUtil.runAsync(() -> NameTagHandler.reloadPlayer(player, otherPlayer));
+            if (plugin.getConfigHandler().isNAMETAGS_ENABLED()) {
+                TaskUtil.runAsync(() -> plugin.getNameTagHandler().reloadPlayer(player, otherPlayer));
             }
         } else if (isSpectating()) {
             if (event != null) {
@@ -692,8 +680,8 @@ public class Profile {
                     hide = false;
                 }
             }
-            if (plugin.getEssentials().getNametagMeta().isEnabled()) {
-                TaskUtil.runAsync(() -> NameTagHandler.reloadPlayer(player, otherPlayer));
+            if (plugin.getConfigHandler().isNAMETAGS_ENABLED()) {
+                TaskUtil.runAsync(() -> plugin.getNameTagHandler().reloadPlayer(player, otherPlayer));
             }
         } else if (isInEvent()) {
             if (event != null) {
@@ -704,25 +692,15 @@ public class Profile {
                     }
                 }
             }
-            if (plugin.getEssentials().getNametagMeta().isEnabled()) {
-                TaskUtil.runAsync(() -> NameTagHandler.reloadPlayer(player, otherPlayer));
+            if (plugin.getConfigHandler().isNAMETAGS_ENABLED()) {
+                TaskUtil.runAsync(() -> plugin.getNameTagHandler().reloadPlayer(player, otherPlayer));
             }
         }
 
         if (hide) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    player.hidePlayer(otherPlayer);
-                }
-            }.runTask(plugin);
+            TaskUtil.run(() -> player.hidePlayer(otherPlayer));
         } else {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    player.showPlayer(otherPlayer);
-                }
-            }.runTask(plugin);
+            TaskUtil.run(() -> player.showPlayer(otherPlayer));
         }
     }
 
@@ -733,14 +711,11 @@ public class Profile {
     public void handleVisibility() {
         Player player = getPlayer();
         if (player != null) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
-                        handleVisibility(player, otherPlayer);
-                    }
+            TaskUtil.runAsync(() -> {
+                for ( Player otherPlayer : Bukkit.getOnlinePlayers() ) {
+                    this.handleVisibility(player, otherPlayer);
                 }
-            }.runTaskAsynchronously(plugin);
+            });
         }
     }
 
@@ -754,7 +729,7 @@ public class Profile {
         this.enderpearlCooldown = cooldown;
 
         final Player player = this.getPlayer();
-        if (Bukkit.getPluginManager().isPluginEnabled("LunarClient-API")) LunarClientAPICooldown.sendCooldown(player, "Enderpearl");
+        if (plugin.getServer().getPluginManager().isPluginEnabled("LunarClient-API")) LunarClientAPICooldown.sendCooldown(player, "Enderpearl");
     }
 
     /**
@@ -767,7 +742,7 @@ public class Profile {
         this.bowCooldown = cooldown;
 
         final Player player = this.getPlayer();
-        if (Bukkit.getPluginManager().isPluginEnabled("LunarClient-API")) LunarClientAPICooldown.sendCooldown(player, "Bow");
+        if (plugin.getServer().getPluginManager().isPluginEnabled("LunarClient-API")) LunarClientAPICooldown.sendCooldown(player, "Bow");
     }
 
     public String getEloLeague() {

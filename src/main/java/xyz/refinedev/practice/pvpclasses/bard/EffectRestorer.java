@@ -2,6 +2,7 @@ package xyz.refinedev.practice.pvpclasses.bard;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.pvpclasses.classes.Bard;
@@ -17,12 +18,14 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.Collection;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 public class EffectRestorer implements Listener {
 
+    private final Array plugin;
     public static final Table<UUID, PotionEffectType, PotionEffect> restores = HashBasedTable.create();
 
     public void init() {
-        Bukkit.getPluginManager().registerEvents(this, Array.getInstance());
+        this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

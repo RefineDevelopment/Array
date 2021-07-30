@@ -6,7 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.ArrayCache;
-import xyz.refinedev.practice.essentials.Essentials;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
@@ -729,9 +728,9 @@ public class TablistAdapter implements TabAdapter {
 
     public String replaceMedia(String text) {
         return text
-                .replace("<website>", Essentials.getSocialMeta().getWebiste())
-                .replace("<twitter>", Essentials.getSocialMeta().getTwitter())
-                .replace("<discord>", Essentials.getSocialMeta().getDiscord())
-                .replace("<store>", Essentials.getSocialMeta().getStore());
+                .replace("<website>", plugin.getConfigHandler().getWEBSITE())
+                .replace("<twitter>", plugin.getConfigHandler().getTWITTER())
+                .replace("<discord>", plugin.getConfigHandler().getDISCORD())
+                .replace("<store>", plugin.getConfigHandler().getSTORE());
     }
 }

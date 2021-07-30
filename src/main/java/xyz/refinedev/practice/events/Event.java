@@ -133,8 +133,8 @@ public abstract class Event {
 				otherProfile.handleVisibility(otherPlayer, player);
 				profile.handleVisibility(player, otherPlayer);
 
-				NameTagHandler.reloadPlayer(player);
-				NameTagHandler.reloadOthersFor(player);
+				plugin.getNameTagHandler().reloadPlayer(player);
+				plugin.getNameTagHandler().reloadOthersFor(player);
 			}
 		});
 	}
@@ -166,8 +166,8 @@ public abstract class Event {
 					otherProfile.handleVisibility(otherPlayer, player);
 					profile.handleVisibility(player, otherPlayer);
 
-					NameTagHandler.reloadPlayer(player);
-					NameTagHandler.reloadOthersFor(player);
+					plugin.getNameTagHandler().reloadPlayer(player);
+					plugin.getNameTagHandler().reloadOthersFor(player);
 				}
 		});
 

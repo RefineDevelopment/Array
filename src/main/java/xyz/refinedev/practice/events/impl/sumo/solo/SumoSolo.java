@@ -16,7 +16,6 @@ import xyz.refinedev.practice.events.meta.group.EventGroup;
 import xyz.refinedev.practice.events.meta.player.EventPlayer;
 import xyz.refinedev.practice.events.meta.player.EventPlayerState;
 import xyz.refinedev.practice.events.task.EventWaterTask;
-import xyz.refinedev.practice.hook.SpigotHook;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.other.PlayerSnapshot;
 import xyz.refinedev.practice.util.other.PlayerUtil;
@@ -60,12 +59,12 @@ public class SumoSolo extends Event {
 
     @Override
     public void onJoin(Player player) {
-        SpigotHook.getKnockbackType().applyKnockback(player, this.getEventManager().getSumoKB());
+        this.getPlugin().getKnockbackManager().knockback(player, this.getEventManager().getSumoKB());
     }
 
     @Override
     public void onLeave(Player player) {
-        SpigotHook.getKnockbackType().applyDefaultKnockback(player);
+        this.getPlugin().getKnockbackManager().resetKnockback(player);
     }
 
     @Override

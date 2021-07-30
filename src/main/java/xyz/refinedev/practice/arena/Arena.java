@@ -45,7 +45,6 @@ public class Arena {
     }
 
     public static void preload() {
-        Array.logger("&7Loading Arenas!");
         FileConfiguration configuration = Array.getInstance().getArenasConfig().getConfiguration();
 
         if (configuration.contains("arenas")) {
@@ -118,22 +117,22 @@ public class Arena {
                     //Declare the arena as type TheBridge
                     TheBridgeArena standaloneArena = (TheBridgeArena) arena;
 
-                    //If "redCuboid" location exist then load it
+                    //If "redCuboid" location exist then init it
                     location1 = LocationUtil.deserialize(configuration.getString(path + ".redCuboid.location1"));
                     location2 = LocationUtil.deserialize(configuration.getString(path + ".redCuboid.location2"));
                     standaloneArena.setRedCuboid(new Cuboid(location1, location2));
 
-                    //If "blueCuboid" location exist then load it
+                    //If "blueCuboid" location exist then init it
                     location1 = LocationUtil.deserialize(configuration.getString(path + ".blueCuboid.location1"));
                     location2 = LocationUtil.deserialize(configuration.getString(path + ".blueCuboid.location2"));
                     standaloneArena.setBlueCuboid(new Cuboid(location1, location2));
 
-                    //If "bluePortal" location exist then load it
+                    //If "bluePortal" location exist then init it
                     location1 = LocationUtil.deserialize(configuration.getString(path + ".bluePortal.location1"));
                     location2 = LocationUtil.deserialize(configuration.getString(path + ".bluePortal.location2"));
                     standaloneArena.setBluePortal(new Cuboid(location1, location2));
 
-                    //If "redPortal" location exist then load it
+                    //If "redPortal" location exist then init it
                     location1 = LocationUtil.deserialize(configuration.getString(path + ".redPortal.location1"));
                     location2 = LocationUtil.deserialize(configuration.getString(path + ".redPortal.location2"));
                     standaloneArena.setRedPortal(new Cuboid(location1, location2));
@@ -167,11 +166,9 @@ public class Arena {
                         arenas.add(duplicate);
                     }
                 }
-
                 arenas.add(arena);
             }
         }
-        Array.logger("&aLoaded " + Arena.getArenas().size() + " arenas!");
     }
 
     public static Arena getByName(String name) {

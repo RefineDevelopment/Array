@@ -1,40 +1,46 @@
 package xyz.refinedev.practice.profile.hotbar;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-
-@AllArgsConstructor
+@Getter
+@RequiredArgsConstructor
 public enum HotbarType {
 
-    QUEUE_JOIN_RANKED(null), 
-    QUEUE_JOIN_UNRANKED(null),
-    QUEUE_JOIN_CLAN(null),
-    QUEUE_LEAVE(null),
-    PARTY_EVENTS(null), 
-    PARTY_CREATE("party create"), 
-    PARTY_DISBAND("party disband"), 
-    PARTY_LEAVE("party leave"),
-    PARTY_INFORMATION("party info"),
-    PARTY_CLASSES(null),
-    PARTY_SETTINGS(null), 
-    OTHER_PARTIES(null), 
-    PARTY_INFO(null),
-    KIT_EDITOR(null),
-    MAIN_MENU(null),
-    SPECTATOR_SHOW(null),
-    SPECTATOR_HIDE(null),
-    SPECTATE_STOP("stopspectating"), 
-    EVENT_JOIN("event join"),
-    EVENT_TEAM(null),
-    EVENT_LEAVE("event leave"),
-    REMATCH_REQUEST("rematch"),
-    REMATCH_ACCEPT("rematch"),
-    PARKOUR_SPAWN(null),
-    SPLEEF_MATCH(null),
-    GULAG_GUN(null),
-    DEFAULT_KIT(null);
+    QUEUE_JOIN_RANKED,
+    QUEUE_JOIN_UNRANKED,
+    QUEUE_JOIN_CLAN,
+    QUEUE_LEAVE,
     
-    @Getter private final String command;
+    PARTY_EVENTS, 
+    PARTY_CREATE, 
+    PARTY_DISBAND, 
+    PARTY_LEAVE,
+    PARTY_INFO,
+    PARTY_CLASSES,
+    PARTY_SETTINGS,
+    OTHER_PARTIES,
+
+    KIT_EDITOR,
+    MAIN_MENU,
     
+    SPECTATOR_SHOW,
+    SPECTATOR_HIDE,
+    SPECTATE_STOP, 
+    
+    EVENT_JOIN,
+    EVENT_TEAM,
+    EVENT_LEAVE,
+    
+    REMATCH_REQUEST,
+    REMATCH_ACCEPT,
+    
+    PARKOUR_SPAWN,
+    SPLEEF_MATCH,
+    GULAG_GUN,
+    
+    DEFAULT_KIT,
+
+    CUSTOM;
+
 }

@@ -150,7 +150,7 @@ public class ArenaCommands {
             return;
         }
 
-        if (arena.getType() == ArenaType.SHARED || arena.getType() == ArenaType.DUPLICATE) {
+        if (arena.getType() == ArenaType.SHARED || arena.getType() == ArenaType.DUPLICATE || arena.getType() == ArenaType.THEBRIDGE) {
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7You can't paste that type of Arena!"));
             return;
         }

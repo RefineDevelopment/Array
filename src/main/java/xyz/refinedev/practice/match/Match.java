@@ -11,7 +11,6 @@ import xyz.refinedev.practice.api.events.match.*;
 import xyz.refinedev.practice.api.events.match.*;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.meta.RatingType;
-import xyz.refinedev.practice.essentials.Essentials;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.task.*;
@@ -51,6 +50,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public abstract class Match {
 
     @Getter protected static List<Match> matches = new ArrayList<>();
+
     private final Map<UUID, EnderPearl> pearlMap = new HashMap<>();
     private final List<MatchSnapshot> snapshots = new ArrayList<>();
     private final List<UUID> spectators = new ArrayList<>();
@@ -71,7 +71,6 @@ public abstract class Match {
     private BukkitTask matchWaterCheck;
 
     private long startTimestamp;
-
 
     public Match(Queue queue, Kit kit, Arena arena, QueueType queueType) {
         this.queue = queue;
@@ -104,13 +103,11 @@ public abstract class Match {
         int i = 0;
 
         for (Match match : matches) {
-            if (match.getQueue() != null && (match.isFighting() || match.isStarting())) {
-                if (match.getQueue() != null && match.getQueue().equals(queue)) {
-                    i = i + match.getTeamPlayers().size();
-                }
-            }
-        }
+            if (match.getQueue() == null || !match.getQueue().equals(queue)) return i;
+            if (!match.isFighting() && !match.isStarting()) return i;
 
+            i += match.getTeamPlayers().size();
+        }
         return i;
     }
 
@@ -137,18 +134,17 @@ public abstract class Match {
                 profile.handleVisibility(player, otherPlayer);
             }
 
-            if (!getArena().getSpawn1().getChunk().isLoaded() || !getArena().getSpawn2().getChunk().isLoaded()) {
-                getArena().getSpawn1().getChunk().load();
-                getArena().getSpawn2().getChunk().load();
+            if (!this.arena.getSpawn1().getChunk().isLoaded() || !this.arena.getSpawn2().getChunk().isLoaded()) {
+                this.arena.getSpawn1().getChunk().load();
+                this.arena.getSpawn2().getChunk().load();
             }
 
             new MatchPlayerSetupEvent(player, this).call();
 
-            setupPlayer(player);
-
+            this.setupPlayer(player);
         }
 
-        onStart();
+        this.onStart();
 
         for (Player player : this.getPlayers()) {
             Profile profile = Profile.getByPlayer(player);
@@ -157,19 +153,19 @@ public abstract class Match {
             }
         }
 
-        state = MatchState.STARTING;
-        startTimestamp = -1;
-        arena.setActive(true);
+        this.state = MatchState.STARTING;
+        this.startTimestamp = -1;
+        this.arena.setActive(true);
 
         this.sendStartMessage();
 
         if (getKit() != null) {
             if (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isParkour() || getKit().getGameRules().isSumo()) {
-                matchWaterCheck = new MatchWaterCheckTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
+                this.matchWaterCheck = new MatchWaterCheckTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
             }
         }
 
-        task = new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
+        this.task = new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
 
         for (Player shooter : getPlayers()) {
             new BukkitRunnable() {
@@ -235,16 +231,17 @@ public abstract class Match {
             removeSpectator(player);
         }
 
-        if (Essentials.getMeta().isRatingEnabled()) {
-            getPlayers().stream().map(Profile::getByPlayer).forEach(profile ->  {
+        if (Array.getInstance().getConfigHandler().isRATINGS_ENABLED()) {
+            this.getPlayers().stream().map(Profile::getByPlayer).forEach(profile ->  {
                 profile.setCanIssueRating(true);
+                profile.setRatingArena(arena);
                 this.sendRatingMessage(profile.getPlayer(), this.getArena());
             });
         }
 
-        getPlayers().forEach(this::removePearl);
+        this.getPlayers().forEach(this::removePearl);
 
-        getPlayers().stream().map(Profile::getByPlayer).map(Profile::getPlates).forEach(List::clear);
+        this.getPlayers().stream().map(Profile::getByPlayer).map(Profile::getPlates).forEach(List::clear);
 
         if (!isSoloMatch()) {
             entities.forEach(Entity::remove);
@@ -285,7 +282,7 @@ public abstract class Match {
 
     public void sendRatingMessage(Player player, Arena arena) {
         Profile.getByPlayer(player).setCanIssueRating(true);
-        String key = "&7Click to rate &c" + arena.getDisplayName();
+        String key = "&7Click to rate &a" + arena.getDisplayName();
 
         Clickable clickable =
         new Clickable("&c&l[1⭐]", key + " &7as &cTerrible&7.", "/rate " + arena.getName() + " " + RatingType.TERRIBLE.name());
@@ -377,7 +374,7 @@ public abstract class Match {
             float explodeSoundPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
 
             for ( final Player onlinePlayer : this.getPlayers() ) {
-                Profile profile=Profile.getByPlayer(onlinePlayer);
+                Profile profile = Profile.getByPlayer(onlinePlayer);
                 //PotPvP aka Lunar Death Animation
                 PlayerUtil.animateDeath(deadPlayer);
                 if (profile.getSettings().isDeathLightning()) {
@@ -393,16 +390,16 @@ public abstract class Match {
             }
         }
 
-        onDeath(deadPlayer, killerPlayer);
+        this.onDeath(deadPlayer, killerPlayer);
 
-        if (isTheBridgeMatch() && disconnected) {
-            end();
+        if (this.isTheBridgeMatch() && disconnected) {
+            this.end();
             return;
         }
 
-        if (!isTheBridgeMatch()) {
-            if (canEnd()) {
-                end();
+        if (!this.isTheBridgeMatch()) {
+            if (this.canEnd()) {
+                this.end();
             } else {
                 PlayerUtil.spectator(deadPlayer);
                 TaskUtil.runLater(() -> getPlayersAndSpectators().forEach(player -> Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer)), 7L);
@@ -413,8 +410,8 @@ public abstract class Match {
                 }), 8L);
             }
         } else {
-            if (canEnd()) {
-                end();
+            if (this.canEnd()) {
+                this.end();
             }
         }
     }

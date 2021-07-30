@@ -21,6 +21,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.refinedev.practice.util.other.Description;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -36,44 +37,49 @@ public class ArrayCommands {
     private static final Array plugin = Array.getInstance();
 
     @Command(name = "", aliases = "help", desc = "View Array Commands")
-    public void help(@Sender CommandSender player) {
-        if (player.hasPermission("array.essentials.admin")) {
-            player.sendMessage(CC.CHAT_BAR);
-            player.sendMessage(CC.translate("&cArray &7» Essential Commands"));
-            player.sendMessage(CC.CHAT_BAR);
-            player.sendMessage(CC.translate(" &8• &c/array setlobby &8(&7&oSets the lobby to player's location&8)"));
-            player.sendMessage(CC.translate(" &8• &c/array reload &8(&7&oReload All Configurations&8)"));
-            player.sendMessage(CC.translate(" &8• &c/array goldenhead &8(&7&oReceive a pre-made G-Head&8)"));
-            player.sendMessage(CC.translate(" &8• &c/array refill &8(&7&oRefill your Inventory with potions or soup&8)"));
-            player.sendMessage(CC.translate(" &8• &c/array update &8(&7&oSave and Update all leaderboards&8)"));
-            player.sendMessage(CC.translate(" &8• &c/array hcf &8(&7&oHelp on how to setup HCF&8)"));
-            player.sendMessage(CC.translate(" &8• &c/array worlds &8(&7&oShow a Worlds Menu&8)"));
-            player.sendMessage(CC.translate(" &8• &c/array resetstats &8<&7name&8> &8(&7&oResets a profile&8)"));
-            player.sendMessage(CC.translate(" &8• &c/array clearloadouts &8<&7kit|all&8> &8<&7global|name&8> &8(&7&oResets a profile&8)"));
-            player.sendMessage(CC.translate(" &8• &c/array rename &8<&7name&8> &8(&7&oRenames item in hand&8)"));
-            player.sendMessage(CC.translate(" &8• &c/array spawn &8(&7&oRefresh Profile & Teleport to spawn&8)"));
-            player.sendMessage(CC.CHAT_BAR);
+    public void help(@Sender CommandSender sender) {
+        if (sender.hasPermission("array.essentials.admin")) {
+            sender.sendMessage(CC.CHAT_BAR);
+            sender.sendMessage(CC.translate("&cArray &7» Essential Commands"));
+            sender.sendMessage(CC.CHAT_BAR);
+            sender.sendMessage(CC.translate(" &8• &c/array setlobby &8(&7&oSets the lobby to player's location&8)"));
+            sender.sendMessage(CC.translate(" &8• &c/array reload &8(&7&oReload All Configurations&8)"));
+            sender.sendMessage(CC.translate(" &8• &c/array goldenhead &8(&7&oReceive a pre-made G-Head&8)"));
+            sender.sendMessage(CC.translate(" &8• &c/array refill &8(&7&oRefill your Inventory with potions or soup&8)"));
+            sender.sendMessage(CC.translate(" &8• &c/array update &8(&7&oSave and Update all leaderboards&8)"));
+            sender.sendMessage(CC.translate(" &8• &c/array hcf &8(&7&oHelp on how to setup HCF&8)"));
+            sender.sendMessage(CC.translate(" &8• &c/array worlds &8(&7&oShow a Worlds Menu&8)"));
+            sender.sendMessage(CC.translate(" &8• &c/array resetstats &8<&7name&8> &8(&7&oResets a profile&8)"));
+            sender.sendMessage(CC.translate(" &8• &c/array clearloadouts &8<&7kit|all&8> &8<&7global|name&8> &8(&7&oResets a profile&8)"));
+            sender.sendMessage(CC.translate(" &8• &c/array rename &8<&7name&8> &8(&7&oRenames item in hand&8)"));
+            sender.sendMessage(CC.translate(" &8• &c/array spawn &8(&7&oRefresh Profile & Teleport to spawn&8)"));
+            sender.sendMessage(CC.CHAT_BAR);
         } else {
-            player.sendMessage(CC.CHAT_BAR);
-            player.sendMessage(CC.translate("&7This server is running &cArray &8[&72.0&8]"));
-            player.sendMessage(CC.translate("&7Array is made By &c&lDrizzy &7and &cVeltus"));
-            player.sendMessage(CC.translate("&7Base for &cArray &7provided by &cNick & Joeleoli"));
-            player.sendMessage(CC.CHAT_BAR);
+            sender.sendMessage(CC.CHAT_BAR);
+            sender.sendMessage(CC.translate("&fThis server is currently running &cArray &fv&c" + Description.getVersion()));
+            sender.sendMessage(CC.translate("&fDeveloped By &cRefine Development Team&7."));
+            sender.sendMessage("");
+            sender.sendMessage(CC.translate("&7 * &cDiscord: &fhttps://dsc.gg/refine"));
+            sender.sendMessage(CC.translate("&7 * &cTwitter: &fhttps://twitter.com/RefineDev"));
+            sender.sendMessage(CC.translate("&7 * &cWebsite: &fhttps://www.refinedev.xyz"));
+            sender.sendMessage(CC.translate("&7 * &cContact: &frefinedevelopment@gmail.com"));
+            sender.sendMessage("");
+            sender.sendMessage(CC.translate("&7&oYou can buy our products and issue commisions in our discord."));
+            sender.sendMessage(CC.CHAT_BAR);
         }
     }
     
     @Command(name = "hcf", aliases = {"teamfight","pvpclasses"}, desc = "View Help on how to setup HCF")
     @Require("array.essentials.admin")
     public void HCF(@Sender CommandSender player) {
-        if (plugin.getEssentials().getMeta().isHCFEnabled()) {
-            player.sendMessage(CC.CHAT_BAR);
-            player.sendMessage(CC.translate("             &c&lHow to Setup HCF "));
-            player.sendMessage(CC.CHAT_BAR);
-            player.sendMessage(CC.translate("&7In order to setup HCF, first of all create a Kit"));
-            player.sendMessage(CC.translate("&7named &cHCFTeamFight &7, normal this kit will automatically"));
+        if (plugin.getConfigHandler().isHCF_ENABLED()) {
+            player.sendMessage(CC.translate("&c&lHow to Setup HCF "));
+            player.sendMessage("");
+            player.sendMessage(CC.translate("&7In order to setup HCF, first of make sure a Kit"));
+            player.sendMessage(CC.translate("&7named &cHCFTeamFight &7is created, normal this kit will automatically"));
             player.sendMessage(CC.translate("&7create itself but if it doesn't make sure to use that correct"));
-            player.sendMessage(CC.translate("&7capitalization. To setup arenas for HCF, make a shared arena or standalone"));
-            player.sendMessage(CC.translate("&7and add the kit HCFTeamFight to it. The PvP Classes are Built-In to the plugin,"));
+            player.sendMessage(CC.translate("&7capitalization to create it. To setup arenas for HCF, make a shared or standalone"));
+            player.sendMessage(CC.translate("&7arena and add the kit HCFTeamFight to it. The PvP Classes are Built-In to the plugin,"));
             player.sendMessage(CC.translate("&7So you don't need to worry about setting them up as they will be automatically provided"));
             player.sendMessage(CC.CHAT_BAR);
         } else {
@@ -132,19 +138,25 @@ public class ArrayCommands {
     public void spawn(@Sender Player player) {
         Profile profile = Profile.getByPlayer(player);
         if (profile.isBusy()) {
-            player.sendMessage(Locale.ERROR_UNAVAILABLE.toString());
+            player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
         }
         profile.teleportToSpawn();
     }
 
     @Command(name = "version", aliases = "ver", desc = "View Array's Build Version")
-    public void version(@Sender CommandSender player) {
-        player.sendMessage(CC.CHAT_BAR);
-        player.sendMessage(CC.translate("&7This server is running &cArray &8[&72.0&8]"));
-        player.sendMessage(CC.translate("&7Array is made By &c&lDrizzy &7and &cVeltus"));
-        player.sendMessage(CC.translate("&7Base for &cArray &7provided by &cNick & Joeleoli"));
-        player.sendMessage(CC.CHAT_BAR);
+    public void version(@Sender CommandSender sender) {
+        sender.sendMessage(CC.CHAT_BAR);
+        sender.sendMessage(CC.translate("&fThis server is currently running &cArray &fv&c" + Description.getVersion()));
+        sender.sendMessage(CC.translate("&fDeveloped By &cRefine Development Team&7."));
+        sender.sendMessage("");
+        sender.sendMessage(CC.translate("&7 * &cDiscord: &fhttps://dsc.gg/refine"));
+        sender.sendMessage(CC.translate("&7 * &cTwitter: &fhttps://twitter.com/RefineDev"));
+        sender.sendMessage(CC.translate("&7 * &cWebsite: &fhttps://www.refinedev.xyz"));
+        sender.sendMessage(CC.translate("&7 * &cContact: &frefinedevelopment@gmail.com"));
+        sender.sendMessage("");
+        sender.sendMessage(CC.translate("&7&oYou can buy our products and issue commisions in our discord."));
+        sender.sendMessage(CC.CHAT_BAR);
     }
 
     @Command(name = "worlds", aliases = "world", desc = "Open a Worlds GUI to Teleport to Different Worlds")
@@ -186,25 +198,29 @@ public class ArrayCommands {
                     player.getInventory().addItem(this.getSoup());
                 }
             }
+            player.sendMessage(CC.translate("&7Refilled ;)"));
         }
     }
 
     @Command(name = "resetstats", aliases = "clearstats", usage = "<target>", desc = "Reset a player's statistics")
     public void resetStats(@Sender Player player, Profile profile) {
         profile.getStatisticsData().values().forEach(stats -> {
-        stats.setElo(1000);
-        stats.setWon(0);
-        stats.setLost(0);});
+            stats.setElo(1000);
+            stats.setWon(0);
+            stats.setLost(0);
+        });
         profile.setGlobalElo(1000);
         profile.save();
 
         player.sendMessage(CC.translate("&aSuccessfully wiped statistics of " + profile.getName() + "."));
-        profile.getPlayer().kickPlayer(CC.RED + "You were kicked because your profile was reset by an Admin!");
+        if (profile != null) {
+            profile.getPlayer().kickPlayer(CC.RED + "You were kicked because your profile was reset by an Admin!");
+        }
     }
 
     @Command(name = "setlobby", aliases = "setspawn", desc = "Set your current location as the Lobby Spawn")
     public void setLobby(@Sender Player player) {
-        Array.getInstance().getEssentials().setSpawn(player.getLocation());
+        plugin.getConfigHandler().setSpawn(player.getLocation());
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7You have set the &cnew &7lobby &cspawn &7!"));
     }
 

@@ -6,15 +6,12 @@ import xyz.refinedev.practice.api.events.match.MatchPlayerSetupEvent;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.impl.TheBridgeArena;
 import xyz.refinedev.practice.arena.ArenaType;
-import xyz.refinedev.practice.essentials.Essentials;
 import xyz.refinedev.practice.kit.KitInventory;
-import xyz.refinedev.practice.match.task.BridgePlayerTask;
+import xyz.refinedev.practice.match.task.MatchBridgePlayerTask;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.kit.BridgeMatch;
-import xyz.refinedev.practice.hook.SpigotHook;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.hotbar.Hotbar;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
@@ -130,7 +127,7 @@ public class MatchListener implements Listener {
 
                         //If it is your own Portal then teleport you back and do nothing
                         if (LocationUtils.isTeamPortal(player)) {
-                            new BridgePlayerTask(match, player).run();
+                            new MatchBridgePlayerTask(match, player).run();
                             player.sendMessage(Locale.MATCH_BRIDGE_WRONG_PORTAL.toString());
                             return;
                         }
@@ -310,7 +307,7 @@ public class MatchListener implements Listener {
         //Don't let players drop swords, axes, and bows in the first slot
         if (profile.getSettings().isPreventSword()) {
             if (!PlayerUtil.hasOtherInventoryOpen(player) && heldSlot == 0 && (itemTypeName.contains("sword") || itemTypeName.contains("axe") || itemType == Material.BOW)) {
-                Locale.MATCH_SWORD_DROP.toString();
+                player.sendMessage(Locale.MATCH_SWORD_DROP.toString());
                 event.setCancelled(true);
             }
         }
@@ -341,7 +338,7 @@ public class MatchListener implements Listener {
             //Reset the Player's damage ticks and knockback profile
             player.setMaximumNoDamageTicks(20);
             player.setNoDamageTicks(20);
-            SpigotHook.getKnockbackType().applyDefaultKnockback(player);
+            plugin.getKnockbackManager().resetKnockback(player);
 
             //Handle the fooking drops breh
             List<Item> entities = new ArrayList<>();
@@ -368,20 +365,19 @@ public class MatchListener implements Listener {
     @EventHandler
     public void onStart(MatchPlayerSetupEvent event) {
         if (event.getMatch() == null || event.getMatch().getKit() == null) return;
-        if (event.getMatch().getKit().getGameRules().isBuild() || event.getMatch().getKit().getGameRules().isShowHealth()) {
-            for ( TeamPlayer otherPlayerTeam : event.getMatch().getTeamPlayers() ) {
-                Player otherPlayer=otherPlayerTeam.getPlayer();
-                Scoreboard scoreboard=event.getPlayer().getScoreboard();
-                Objective objective=scoreboard.getObjective(DisplaySlot.BELOW_NAME);
+        if (!event.getMatch().getKit().getGameRules().isBuild() && !event.getMatch().getKit().getGameRules().isShowHealth()) return;
+        for ( TeamPlayer otherPlayerTeam : event.getMatch().getTeamPlayers() ) {
+            Player otherPlayer = otherPlayerTeam.getPlayer();
+            Scoreboard scoreboard = event.getPlayer().getScoreboard();
+            Objective objective = scoreboard.getObjective(DisplaySlot.BELOW_NAME);
 
-                if (objective == null) {
-                    objective=scoreboard.registerNewObjective("showhealth", "health");
-                }
-
-                objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
-                objective.setDisplayName(ChatColor.RED + org.apache.commons.lang.StringEscapeUtils.unescapeJava("\u2764"));
-                objective.getScore(otherPlayer.getName()).setScore((int) Math.floor(otherPlayer.getHealth() / 2));
+            if (objective == null) {
+                objective = scoreboard.registerNewObjective("showhealth", "health");
             }
+
+            objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
+            objective.setDisplayName(ChatColor.RED + org.apache.commons.lang.StringEscapeUtils.unescapeJava("\u2764"));
+            objective.getScore(otherPlayer.getName()).setScore((int) Math.floor(otherPlayer.getHealth() / 2));
         }
     }
 
@@ -504,7 +500,7 @@ public class MatchListener implements Listener {
         Profile profile = Profile.getByPlayer(player);
         Match match = profile.getMatch();
         if (profile.isInFight()) {
-            if (player.getLocation().getBlockY() <= plugin.getEssentials().getMeta().getVoidSpawnLevel()) {
+            if (player.getLocation().getBlockY() <= plugin.getConfigHandler().getVOID_SPAWN_YLEVEL()) {
                 //Return if the Player is already Detected
                 if (!match.getCatcher().contains(player)) match.getCatcher().add(player);
                 else return;
@@ -611,9 +607,11 @@ public class MatchListener implements Listener {
 
     @EventHandler
     public void onPlayerItemConsumeEvent(PlayerItemConsumeEvent event) {
-        if ((event.getItem().getType().equals(Material.POTION) || event.getItem().getType().equals(Material.GLASS_BOTTLE)) && plugin.getEssentials().getMeta().isRemoveBottles()) {
-            TaskUtil.runLaterAsync(() -> event.getPlayer().setItemInHand(new ItemStack(Material.AIR)), 1L);
-        }
+        if (!event.getItem().getType().equals(Material.POTION)) return;
+        if (!event.getItem().getType().equals(Material.GLASS_BOTTLE)) return;
+        if (!plugin.getConfigHandler().isREMOVED_BOTTLES()) return;
+
+        TaskUtil.runLaterAsync(() -> event.getPlayer().setItemInHand(new ItemStack(Material.AIR)), 1L);
     }
 
     @EventHandler
@@ -743,7 +741,7 @@ public class MatchListener implements Listener {
 
                         event.setCancelled(true);
                     } else {
-                        profile.setBowCooldown(new Cooldown(TimeUtil.parseTime(Essentials.getMeta().getBowCooldown() + "s")));
+                        profile.setBowCooldown(new Cooldown(TimeUtil.parseTime(plugin.getConfigHandler().getBOW_COOLDOWN() + "s")));
                     }
                 }
             }
@@ -773,7 +771,7 @@ public class MatchListener implements Listener {
             if (event.getItem() != null && event.getAction().name().contains("RIGHT")) {
 
             if (event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasDisplayName()) {
-                if (event.getItem().equals(Hotbar.getItems().get(HotbarType.DEFAULT_KIT))) {
+                if (event.getItem().isSimilar(plugin.getHotbarManager().getHotbarItem(HotbarType.DEFAULT_KIT).getItem())) {
                     KitInventory kitLoadout = profile.getMatch().getKit().getKitInventory();
                     event.getPlayer().getInventory().setArmorContents(kitLoadout.getArmor());
                     event.getPlayer().getInventory().setContents(kitLoadout.getContents());

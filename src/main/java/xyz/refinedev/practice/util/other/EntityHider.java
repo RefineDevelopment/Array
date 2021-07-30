@@ -22,6 +22,7 @@ import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.refinedev.practice.Array;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -30,25 +31,25 @@ import java.lang.reflect.Method;
 import static com.comphenix.protocol.PacketType.Play.Server.*;
 
 
-@SuppressWarnings(value = "deprecation")
-public class EntityHider extends PacketAdapter implements Listener{
+public class EntityHider extends PacketAdapter implements Listener {
+
     public static final PluginConflictResolution PLUGIN_CONFLICT_RESOLUTION = PluginConflictResolution.OVERRIDE;
     private final String VERSION;
 
-    private final Method METHOD_CRAFTITEMSTACK_AS_NMS_COPY;
-    private final Method METHOD_CRAFTWORLD_GET_HANDLE;
-    private final Method METHOD_CRAFTENTITY_GET_HANDLE;
-    private final Method METHOD_ENTITY_GET_BUKKIT_ENTITY;
-    private final Method METHOD_WORLD_ADD_ENTITY;
-    private final Method METHOD_WORLD_GET_ENTITY_BY_ID;
+    private Method METHOD_CRAFTITEMSTACK_AS_NMS_COPY;
+    private Method METHOD_CRAFTWORLD_GET_HANDLE;
+    private Method METHOD_CRAFTENTITY_GET_HANDLE;
+    private Method METHOD_ENTITY_GET_BUKKIT_ENTITY;
+    private Method METHOD_WORLD_ADD_ENTITY;
+    private Method METHOD_WORLD_GET_ENTITY_BY_ID;
 
-    private final Field FIELD_ENTITYITEM_THROWER;
+    private Field FIELD_ENTITYITEM_THROWER;
 
     private Constructor<?> CONSTRUCTOR_ENTITY_ITEM;
 
     private final boolean PRE18;
 
-    private EntityHider(JavaPlugin plugin) throws ReflectiveOperationException {
+    public EntityHider(Array plugin) {
         super(plugin , ENTITY_EQUIPMENT, BED, ANIMATION, NAMED_ENTITY_SPAWN,
                 COLLECT, SPAWN_ENTITY, SPAWN_ENTITY_LIVING, SPAWN_ENTITY_PAINTING, SPAWN_ENTITY_EXPERIENCE_ORB,
                 ENTITY_VELOCITY, REL_ENTITY_MOVE, ENTITY_LOOK, ENTITY_MOVE_LOOK, ENTITY_MOVE_LOOK,
@@ -56,6 +57,10 @@ public class EntityHider extends PacketAdapter implements Listener{
                 ENTITY_EFFECT, REMOVE_ENTITY_EFFECT, BLOCK_BREAK_ANIMATION,
                 WORLD_EVENT,
                 NAMED_SOUND_EFFECT);
+
+        ProtocolLibrary.getProtocolManager().addPacketListener(this);
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
+
         String b = Bukkit.getServer().getClass().getPackage().getName();
         VERSION = b.substring(b.lastIndexOf('.') + 1);
 
@@ -66,43 +71,27 @@ public class EntityHider extends PacketAdapter implements Listener{
         Class<?> minecraftEntityItemClazz = net.minecraft.server.v1_8_R3.EntityItem.class;
         Class<?> minecraftEntityClazz = net.minecraft.server.v1_8_R3.Entity.class;
         Class<?> minecraftWorldClazz = net.minecraft.server.v1_8_R3.World.class;
-        Class<?> minecraftWorldServerClazz = WorldServer.class;
-
         Class<?> minecraftItemStackClazz = net.minecraft.server.v1_8_R3.ItemStack.class;
 
         PRE18 = VERSION.startsWith("v1_7");
 
-        METHOD_CRAFTITEMSTACK_AS_NMS_COPY = craftItemstackClazz.getDeclaredMethod("asNMSCopy" , ItemStack.class);
-        METHOD_CRAFTENTITY_GET_HANDLE = craftEntityClazz.getDeclaredMethod("getHandle");
-        METHOD_ENTITY_GET_BUKKIT_ENTITY = minecraftEntityClazz.getDeclaredMethod("getBukkitEntity");
-        METHOD_WORLD_ADD_ENTITY = minecraftWorldClazz.getDeclaredMethod("addEntity" , minecraftEntityClazz);
-        METHOD_CRAFTWORLD_GET_HANDLE = craftWorldClazz.getDeclaredMethod("getHandle");
-
-        if(PRE18) {
-            METHOD_WORLD_GET_ENTITY_BY_ID = minecraftWorldServerClazz.getDeclaredMethod("getEntity", int.class);
-        }else {
-            METHOD_WORLD_GET_ENTITY_BY_ID = minecraftWorldClazz.getDeclaredMethod("a", int.class);
-        }
-
-        FIELD_ENTITYITEM_THROWER = minecraftEntityItemClazz.getDeclaredField("f");
-        FIELD_ENTITYITEM_THROWER.setAccessible(true);
-
-        CONSTRUCTOR_ENTITY_ITEM = minecraftEntityItemClazz.getDeclaredConstructor(minecraftWorldClazz , double.class , double.class , double.class , minecraftItemStackClazz);
-
-
-    }
-
-    public static EntityHider enable(){
         try {
-            JavaPlugin plugin = JavaPlugin.getProvidingPlugin(EntityHider.class);
-            EntityHider entityhider = new EntityHider(plugin);
-            ProtocolLibrary.getProtocolManager().addPacketListener(entityhider);
-            Bukkit.getServer().getPluginManager().registerEvents(entityhider, plugin);
-            return entityhider;
-        }catch (ReflectiveOperationException e) {
+            METHOD_CRAFTITEMSTACK_AS_NMS_COPY=craftItemstackClazz.getDeclaredMethod("asNMSCopy", ItemStack.class);
+            METHOD_CRAFTENTITY_GET_HANDLE=craftEntityClazz.getDeclaredMethod("getHandle");
+            METHOD_ENTITY_GET_BUKKIT_ENTITY=minecraftEntityClazz.getDeclaredMethod("getBukkitEntity");
+            METHOD_WORLD_ADD_ENTITY=minecraftWorldClazz.getDeclaredMethod("addEntity", minecraftEntityClazz);
+            METHOD_CRAFTWORLD_GET_HANDLE=craftWorldClazz.getDeclaredMethod("getHandle");
+            METHOD_WORLD_GET_ENTITY_BY_ID=minecraftWorldClazz.getDeclaredMethod("a", int.class);
+
+
+            FIELD_ENTITYITEM_THROWER=minecraftEntityItemClazz.getDeclaredField("f");
+            FIELD_ENTITYITEM_THROWER.setAccessible(true);
+
+            CONSTRUCTOR_ENTITY_ITEM=minecraftEntityItemClazz.getDeclaredConstructor(minecraftWorldClazz, double.class, double.class, double.class, minecraftItemStackClazz);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+
     }
 
     @Override
@@ -121,7 +110,7 @@ public class EntityHider extends PacketAdapter implements Listener{
                     x = event.getPacket().getIntegers().read(2);
                     y = event.getPacket().getIntegers().read(3);
                     z = event.getPacket().getIntegers().read(4);
-                }else {
+                } else {
                     BlockPosition position = event.getPacket().getBlockPositionModifier().read(0);
                     x = position.getX();
                     y = position.getY();
@@ -374,11 +363,11 @@ public class EntityHider extends PacketAdapter implements Listener{
 
     }
 
-    public static enum PluginConflictResolution{
+    public enum PluginConflictResolution{
         OVERRIDE , WARN , IGNORE;
     }
 
-    public static class PluginConflictException extends RuntimeException{
+    public static class PluginConflictException extends RuntimeException {
         private static final long serialVersionUID = 1L;
 
         public PluginConflictException() {

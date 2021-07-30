@@ -22,7 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 @AllArgsConstructor
-public class PartyEventSelectKitMenu extends Menu {
+public class PartySelectKitMenu extends Menu {
 
     private final PartyEventType partyEventType;
 

@@ -13,7 +13,6 @@ import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.Clickable;
-import xyz.refinedev.practice.util.nametags.NameTagHandler;
 import xyz.refinedev.practice.util.other.TaskUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -22,6 +21,8 @@ import java.util.*;
 
 @Getter @Setter
 public class Party extends Team {
+
+    private final Array plugin = Array.getInstance();
 
     @Getter private static List<Party> parties = new ArrayList<>();
 
@@ -148,8 +149,8 @@ public class Party extends Team {
 
         this.kits.put(player.getUniqueId(), getRandomClass());
 
-        NameTagHandler.reloadPlayer(player);
-        NameTagHandler.reloadOthersFor(player);
+        plugin.getNameTagHandler().reloadPlayer(player);
+        plugin.getNameTagHandler().reloadOthersFor(player);
 
         /*
          * Clear Their Invite
@@ -209,8 +210,8 @@ public class Party extends Team {
         }
 
         if (profile.isInLobby() || profile.isInQueue()) {
-            NameTagHandler.reloadPlayer(player);
-            NameTagHandler.reloadOthersFor(player);
+            plugin.getNameTagHandler().reloadPlayer(player);
+            plugin.getNameTagHandler().reloadOthersFor(player);
 
             profile.handleVisibility();
             profile.refreshHotbar();
@@ -234,8 +235,8 @@ public class Party extends Team {
                     if (secondPlayer != null) {
                         player.hidePlayer(secondPlayer);
                     }
-                    NameTagHandler.reloadPlayer(player);
-                    NameTagHandler.reloadOthersFor(player);
+                    plugin.getNameTagHandler().reloadPlayer(player);
+                    plugin.getNameTagHandler().reloadOthersFor(player);
                 }
             }
 
@@ -249,15 +250,15 @@ public class Party extends Team {
             profile.teleportToSpawn();
         }
 
-        for (final TeamPlayer teamPlayer : this.getTeamPlayers()) {
-            final Player otherPlayer = teamPlayer.getPlayer();
+        for (TeamPlayer teamPlayer : this.getTeamPlayers()) {
+            Player otherPlayer = teamPlayer.getPlayer();
             if (otherPlayer != null) {
-                final Profile otherProfile = Profile.getByUuid(teamPlayer.getUuid());
+                Profile otherProfile = Profile.getByUuid(teamPlayer.getUuid());
                 otherProfile.handleVisibility(otherPlayer, player);
             }
         }
-        NameTagHandler.reloadPlayer(player);
-        NameTagHandler.reloadOthersFor(player);
+        plugin.getNameTagHandler().reloadPlayer(player);
+        plugin.getNameTagHandler().reloadOthersFor(player);
     }
 
     /**
@@ -305,8 +306,8 @@ public class Party extends Team {
                 profile.refreshHotbar();
                 profile.handleVisibility();
                 profile.teleportToSpawn();
-                NameTagHandler.reloadPlayer(player);
-                NameTagHandler.reloadOthersFor(player);
+                plugin.getNameTagHandler().reloadPlayer(player);
+                plugin.getNameTagHandler().reloadOthersFor(player);
             }
         });
 
@@ -315,7 +316,7 @@ public class Party extends Team {
 
         for (Player partyPlayer : this.getPlayers()) {
             for ( Player player : Bukkit.getOnlinePlayers() ) {
-                NameTagHandler.reloadPlayer(partyPlayer, player);
+                plugin.getNameTagHandler().reloadPlayer(partyPlayer, player);
             }
         }
     }
@@ -346,6 +347,14 @@ public class Party extends Team {
                                 .replace("<party_members>", String.valueOf(getTeamPlayers().size()));
             player.sendMessage(CC.translate(main));
         });
+    }
+
+    public boolean isFighting() {
+        return this.getPlayers().stream().map(Profile::getByPlayer).anyMatch(profile -> profile.isInFight() || profile.isInTournament());
+    }
+
+    public boolean isMember(UUID uuid) {
+       return this.getPlayers().stream().map(Player::getUniqueId).anyMatch(id -> id.equals(uuid));
     }
 
     public String getRandomClass() {

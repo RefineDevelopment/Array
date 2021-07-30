@@ -29,9 +29,9 @@ public class CC {
     public static final String DARK_GREEN = ChatColor.DARK_GREEN.toString();
     public static final String DARK_PURPLE = ChatColor.DARK_PURPLE.toString();
     public static final String PINK = ChatColor.LIGHT_PURPLE.toString();
-    public static final String MENU_BAR = Locale.MENU_BAR.toString();
-    public static final String CHAT_BAR = Locale.CHAT_BAR.toString();
-    public static final String SB_BAR = ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() + "----------------------";
+    public static final String MENU_BAR = ChatColor.GRAY + ChatColor.STRIKETHROUGH.toString() + "------------------------";
+    public static final String CHAT_BAR = ChatColor.GRAY + ChatColor.STRIKETHROUGH.toString() + "------------------------------------------------";
+    public static final String SB_BAR = ChatColor.GRAY + ChatColor.STRIKETHROUGH.toString() + "----------------------";
 
     public static String translate(String in) {
         return ChatColor.translateAlternateColorCodes('&', in);

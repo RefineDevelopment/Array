@@ -3,7 +3,6 @@ package xyz.refinedev.practice.profile.settings;
 import lombok.AllArgsConstructor;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.essentials.Essentials;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.BasicConfigurationFile;
@@ -32,8 +31,9 @@ import java.util.Map;
 
 public class SettingsMenu extends Menu {
 
-    private final static BasicConfigurationFile config = Array.getInstance().getMenuConfig();
-    private static String key;
+    private final Array plugin = Array.getInstance();
+    private final BasicConfigurationFile config = plugin.getMenuConfig();
+    private String key;
 
     @Override
     public String getTitle(Player player) {
@@ -64,7 +64,7 @@ public class SettingsMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private static class SettingsButton extends Button {
+    private class SettingsButton extends Button {
 
         private final SettingsType type;
 
@@ -108,7 +108,7 @@ public class SettingsMenu extends Menu {
                             lines.add(CC.translate(text));
                         }
                     } else {
-                        config.getStringList(key + ".LORE_NO_PERM" ).forEach(text -> lines.add(CC.translate(text.replace("<store>", Essentials.getSocialMeta().getStore()))));
+                        config.getStringList(key + ".LORE_NO_PERM" ).forEach(text -> lines.add(CC.translate(text.replace("<store>", plugin.getConfigHandler().getSTORE()))));
                     }
                     break;
                 case TOGGLESPECTATORS:
@@ -134,7 +134,7 @@ public class SettingsMenu extends Menu {
                             lines.add(CC.translate(text));
                         }
                     } else {
-                        config.getStringList(key + ".LORE_NO_PERM" ).forEach(text -> lines.add(CC.translate(text.replace("<store>", Essentials.getSocialMeta().getStore()))));
+                        config.getStringList(key + ".LORE_NO_PERM" ).forEach(text -> lines.add(CC.translate(text.replace("<store>", plugin.getConfigHandler().getSTORE()))));
                     }
                     break;
                 case TOGGLEPINGONSCOREBOARD:
@@ -204,12 +204,12 @@ public class SettingsMenu extends Menu {
                             lines.add(CC.translate(text));
                         }
                     } else {
-                        config.getStringList(key + ".LORE_NO_PERM" ).forEach(text -> lines.add(CC.translate(text.replace("<store>", Essentials.getSocialMeta().getStore()))));
+                        config.getStringList(key + ".LORE_NO_PERM" ).forEach(text -> lines.add(CC.translate(text.replace("<store>", plugin.getConfigHandler().getSTORE()))));
                     }
                     break;
             }
             lines.add(CC.MENU_BAR);
-            if (lines.isEmpty() || lines == null) {
+            if (lines.isEmpty()) {
                 return new ItemBuilder(Material.valueOf(config.getString(key + ".MATERIAL")))
                         .name(config.getString(key + ".NAME"))
                         .build();

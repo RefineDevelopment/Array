@@ -10,52 +10,45 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import xyz.refinedev.practice.adapters.NameTagAdapter;
+import org.bukkit.plugin.java.JavaPlugin;
 import xyz.refinedev.practice.adapters.ScoreboardAdapter;
 import xyz.refinedev.practice.adapters.TablistAdapter;
 import xyz.refinedev.practice.api.API;
 import xyz.refinedev.practice.api.ArrayAPI;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.ArenaProvider;
+import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.arena.ArenaTypeProvider;
 import xyz.refinedev.practice.arena.meta.RatingType;
 import xyz.refinedev.practice.arena.meta.RatingTypeProvider;
 import xyz.refinedev.practice.clan.Clan;
-import xyz.refinedev.practice.essentials.Essentials;
+import xyz.refinedev.practice.config.ConfigHandler;
 import xyz.refinedev.practice.events.EventManager;
 import xyz.refinedev.practice.events.EventProvider;
 import xyz.refinedev.practice.events.EventType;
-import xyz.refinedev.practice.managers.CMDManager;
-import xyz.refinedev.practice.managers.ListenersManager;
-import xyz.refinedev.practice.managers.RatingsManager;
-import xyz.refinedev.practice.profile.divisions.Divisions;
-import xyz.refinedev.practice.arena.ArenaType;
-import xyz.refinedev.practice.kit.KitProvider;
-import xyz.refinedev.practice.managers.ClassManager;
-import xyz.refinedev.practice.pvpclasses.bard.EffectRestorer;
-import xyz.refinedev.practice.leaderboards.external.LeaderboardPlaceholders;
-import xyz.refinedev.practice.profile.hotbar.Hotbar;
 import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.hook.SpigotHook;
+import xyz.refinedev.practice.kit.KitProvider;
+import xyz.refinedev.practice.leaderboards.external.LeaderboardPlaceholders;
+import xyz.refinedev.practice.managers.*;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileProvider;
+import xyz.refinedev.practice.profile.divisions.Divisions;
 import xyz.refinedev.practice.profile.rank.Rank;
+import xyz.refinedev.practice.pvpclasses.bard.EffectRestorer;
 import xyz.refinedev.practice.queue.Queue;
-
+import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.CommandService;
 import xyz.refinedev.practice.util.command.Drink;
+import xyz.refinedev.practice.util.config.BasicConfigurationFile;
 import xyz.refinedev.practice.util.nametags.NameTagHandler;
 import xyz.refinedev.practice.util.other.Description;
 import xyz.refinedev.practice.util.other.EntityHider;
-import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.config.BasicConfigurationFile;
-import xyz.refinedev.practice.util.scoreboard.Assemble;
+import xyz.refinedev.practice.util.scoreboard.ScoreboardHandler;
 import xyz.refinedev.practice.util.scoreboard.AssembleStyle;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 import xyz.refinedev.tablist.TablistHandler;
 
 import java.util.Arrays;
@@ -92,9 +85,9 @@ public class Array extends JavaPlugin {
     /*
      * All ours Async Threads
      */
-    public Executor mainThread;
-    public Executor taskThread;
-    public Executor mongoThread;
+    private Executor mainThread;
+    private Executor taskThread;
+    private Executor mongoThread;
 
     /*
      * Mongo Database
@@ -102,9 +95,10 @@ public class Array extends JavaPlugin {
     private MongoDatabase mongoDatabase;
 
     /*
-     * Tab and Scoreboard Adapters
+     * Handlers
      */
-    private Assemble scoreboardHandler;
+    private ScoreboardHandler scoreboardHandler;
+    private ConfigHandler configHandler;
     private TablistHandler tablistHandler;
     private NameTagHandler nameTagHandler;
 
@@ -112,8 +106,10 @@ public class Array extends JavaPlugin {
      * All Managers
      */
     private EventManager eventManager;
+    private HotbarManager hotbarManager;
     private ListenersManager listenersManager;
     private CMDManager cmdManager;
+    private KnockbackManager knockbackManager;
     private Divisions divisionsManager;
     private RatingsManager ratingsManager;
     private ClassManager classManager;
@@ -123,9 +119,25 @@ public class Array extends JavaPlugin {
      * Essential Utilities
      */
     public static Random random;
-    private Essentials essentials;
     private EntityHider entityHider;
     private boolean disabling = false;
+
+    @Override
+    public void onLoad() {
+        mainConfig = new BasicConfigurationFile(this, "config");
+        arenasConfig = new BasicConfigurationFile(this, "arenas");
+        kitsConfig = new BasicConfigurationFile(this, "kits");
+        eventsConfig = new BasicConfigurationFile(this, "events");
+        hotbarConfig = new BasicConfigurationFile(this, "hotbar");
+        messagesConfig = new BasicConfigurationFile(this, "lang");
+        tablistConfig = new BasicConfigurationFile(this, "tablist");
+        scoreboardConfig = new BasicConfigurationFile(this, "scoreboard");
+        divisionsConfig = new BasicConfigurationFile(this, "divisions");
+        menuConfig = new BasicConfigurationFile(this, "menus");
+        rateConfig = new BasicConfigurationFile(this, "ratings");
+        //brawlConfig = new BasicConfigurationFile(this, "brawl");
+
+    }
 
     @Override
     public void onEnable() {
@@ -143,21 +155,11 @@ public class Array extends JavaPlugin {
         this.mongoThread = Executors.newSingleThreadExecutor();
         this.taskThread = Executors.newSingleThreadExecutor();
 
-        /*
-         * Main Configs
-         */
-        mainConfig = new BasicConfigurationFile(this, "config");
-        arenasConfig = new BasicConfigurationFile(this, "arenas");
-        kitsConfig = new BasicConfigurationFile(this, "kits");
-        eventsConfig = new BasicConfigurationFile(this, "events");
-        hotbarConfig = new BasicConfigurationFile(this, "hotbar");
-        messagesConfig = new BasicConfigurationFile(this, "lang");
-        tablistConfig = new BasicConfigurationFile(this, "tablist");
-        scoreboardConfig = new BasicConfigurationFile(this, "scoreboard");
-        divisionsConfig = new BasicConfigurationFile(this, "divisions");
-        menuConfig = new BasicConfigurationFile(this, "menus");
-        rateConfig = new BasicConfigurationFile(this, "ratings");
-        //brawlConfig = new BasicConfigurationFile(this, "brawl");
+        this.configHandler = new ConfigHandler(this);
+        this.configHandler.init();
+
+        this.loadMessages();
+        this.preload();
 
         if (!Description.getAuthor().contains("RefineDevelopment") || !Description.getName().contains("Array")
                 || !Description.getAuthor().contains("Nick_0251") || !Description.getWebsite().equalsIgnoreCase("https://dsc.gg/refine")) {
@@ -166,55 +168,53 @@ public class Array extends JavaPlugin {
             logger("  &cPlease check your plugin.yml and try again.");
             logger("                 &cDisabling Array");
             logger(CC.CHAT_BAR);
-            shutDown();
+            Bukkit.shutdown();
             return;
         }
 
-        this.loadMessages();
-
-        this.essentials = new Essentials();
-        this.essentials.init();
-
-        this.preload();
-
         this.divisionsManager = new Divisions();
-        this.eventManager = new EventManager();
-        this.eventManager.load();
 
-        if (this.essentials.getMeta().isRatingEnabled()) {
-            this.ratingsManager = new RatingsManager();
-            this.ratingsManager.init();
-        }
+        this.eventManager = new EventManager(this);
+        this.eventManager.init();
 
-        this.cmdManager = new CMDManager();
+        this.hotbarManager = new HotbarManager(this);
+        this.hotbarManager.init();
+
+        this.ratingsManager = new RatingsManager(this);
+        this.ratingsManager.init();
+
+        this.knockbackManager = new KnockbackManager(this);
+        this.knockbackManager.init();
+
+        this.cmdManager = new CMDManager(this, drink);
         this.cmdManager.init();
 
-        this.listenersManager = new ListenersManager();
+        this.listenersManager = new ListenersManager(this);
         this.listenersManager.init();
 
-        this.classManager = new ClassManager();
+        this.classManager = new ClassManager(this);
         this.classManager.init();
 
-        this.effectRestorer = new EffectRestorer();
+        this.effectRestorer = new EffectRestorer(this);
         this.effectRestorer.init();
 
-        this.entityHider = EntityHider.enable();
+        this.entityHider = new EntityHider(this);
         this.preloadAdapters();
     }
 
     @Override
     public void onDisable() {
-        //Stop all matches and Remove the placed Block
+        //Stop all matches and remove the placed Blocks
         Match.cleanup();
 
-        //Save Everything before disabling to prevent data loss
+        //Save everything before disabling to prevent data loss
         Kit.getKits().forEach(Kit::save);
         Arena.getArenas().forEach(Arena::save);
         Profile.getProfiles().values().forEach(Profile::save);
         Clan.getClans().forEach(Clan::save);
 
         //Save our Values to Config
-        this.essentials.save();
+        this.configHandler.save();
         this.eventManager.save();
         this.classManager.onDisable();
 
@@ -231,12 +231,10 @@ public class Array extends JavaPlugin {
         Profile.preload();
         Clan.preload();
         Arena.preload();
-        Hotbar.preload();
         Match.preload();
         Party.preLoad();
         Queue.preLoad();
         Rank.preLoad();
-        SpigotHook.preload();
 
         drink.bind(Arena.class).toProvider(new ArenaProvider());
         drink.bind(ArenaType.class).toProvider(new ArenaTypeProvider());
@@ -247,33 +245,28 @@ public class Array extends JavaPlugin {
     }
 
     public void preloadAdapters() {
-
-        logger("&7Setting up Scoreboard");
-        this.scoreboardHandler = new Assemble(this, new ScoreboardAdapter());
+        this.scoreboardHandler = new ScoreboardHandler(this, new ScoreboardAdapter());
         this.scoreboardHandler.setAssembleStyle(AssembleStyle.MODERN);
         this.scoreboardHandler.setTicks(2);
 
-        logger("&7Setting up NameTags");
-        this.nameTagHandler = new NameTagHandler();
-        this.nameTagHandler.hook();
-        this.nameTagHandler.registerProvider(new NameTagAdapter());
+        this.nameTagHandler = new NameTagHandler(this);
+        this.nameTagHandler.init();
 
-        if (Essentials.getMeta().isTabEnabled()) {
-            logger("&7Setting up Tablist");
+        if (this.configHandler.isTAB_ENABLED()) {
             this.tablistHandler = new TablistHandler(new TablistAdapter(), this, 20);
         }
 
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+        if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new LeaderboardPlaceholders().register();
-            logger("&7Found PlaceholderAPI, Registering Expansions....");
+            this.logger("&7Found PlaceholderAPI, Registering Expansions....");
         } else {
-            logger("&cPlaceholderAPI was NOT found, Holograms will NOT work!");
+            this.logger("&cPlaceholderAPI was NOT found, Holograms will NOT work!");
         }
 
-        if (Bukkit.getPluginManager().isPluginEnabled("LunarClient-API")) {
-            logger("&7Found LunarClient-API, Registering Cooldowns....");
-            LunarClientAPICooldown.registerCooldown(new LCCooldown("Enderpearl", Essentials.getMeta().getEnderpearlCooldown(), TimeUnit.SECONDS, Material.ENDER_PEARL));
-            LunarClientAPICooldown.registerCooldown(new LCCooldown("Bow", Essentials.getMeta().getBowCooldown(), TimeUnit.SECONDS, Material.BOW));
+        if (this.getServer().getPluginManager().isPluginEnabled("LunarClient-API")) {
+            this.logger("&7Found LunarClient-API, Registering Cooldowns....");
+            LunarClientAPICooldown.registerCooldown(new LCCooldown("Enderpearl", this.configHandler.getENDERPEARL_COOLDOWN(), TimeUnit.SECONDS, Material.ENDER_PEARL));
+            LunarClientAPICooldown.registerCooldown(new LCCooldown("Bow", this.configHandler.getBOW_COOLDOWN(), TimeUnit.SECONDS, Material.BOW));
         }
     }
 
@@ -302,12 +295,12 @@ public class Array extends JavaPlugin {
 
     public void loadMessages() {
         mainConfig.getConfiguration().options().header(
-                "######################################################################\n" +
+                "#####################################################################\n" +
                 "                                                                     #\n" +
                 "          Array Practice Core - Developed By Drizzy#0278             #\n" +
                 "       Bought at Refine Development - https://dsc.gg/refine          #\n" +
                 "                                                                     #\n" +
-                "######################################################################");
+                "#####################################################################");
         mainConfig.save();
 
         if (this.messagesConfig == null) return;
@@ -328,12 +321,7 @@ public class Array extends JavaPlugin {
         messagesConfig.save();
     }
 
-    public static void shutDown() {
-        logger("Shutting down Array!");
-        Bukkit.shutdown();
-    }
-
-    public static void logger(String message) {
+    public void logger(String message) {
         String msg = CC.translate("&8[&cArray&8] &r" + message);
         Bukkit.getConsoleSender().sendMessage(msg);
     }

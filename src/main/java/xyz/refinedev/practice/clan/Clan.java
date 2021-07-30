@@ -125,10 +125,9 @@ public class Clan {
 
     /**
      * This method is called on Start
-     * We use this to load our clans and setup Tasks
+     * We use this to init our clans and setup Tasks
      */
     public static void  preload() {
-        Array.logger("&7Loading Clans!");
         //First of all Load up the Leaderboards
         Clan.updateClanLeaderboards();
         //Register a Task that will clear the expired Invites
@@ -138,8 +137,8 @@ public class Clan {
 
         //Then register a Task that will update the leaderboards frequently
         TaskUtil.runTimerAsync(Clan::updateClanLeaderboards, 600L, 600L);
+        //Fetch clans directly from mongo
         Clan.fetchClans();
-        Array.logger("&aLoaded Clans!");
     }
 
     /**
@@ -386,8 +385,8 @@ public class Clan {
 
         profile.setClan(this);
         profile.setClanProfile(clanProfile);
-        profile.save();
         profile.refreshHotbar();
+        profile.save();
     }
 
     /**

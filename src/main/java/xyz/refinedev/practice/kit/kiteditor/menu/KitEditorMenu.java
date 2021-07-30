@@ -18,6 +18,7 @@ import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.menu.button.DisplayButton;
 import xyz.refinedev.practice.util.other.BukkitReflection;
 import xyz.refinedev.practice.util.other.PlayerUtil;
+import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -59,7 +60,7 @@ public class KitEditorMenu extends Menu {
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         Kit kit = profile.getKitEditor().getSelectedKit();
-        KitInventory kitInventory= profile.getKitEditor().getSelectedKitInventory();
+        KitInventory kitInventory = profile.getKitEditor().getSelectedKitInventory();
 
         buttons.put(18, new ArmorDisplayButton(kitInventory.getArmor()[3]));
         buttons.put(27, new ArmorDisplayButton(kitInventory.getArmor()[2]));
@@ -99,13 +100,7 @@ public class KitEditorMenu extends Menu {
         profile.getKitEditor().setActive(false);
 
         if (!profile.isInFight()) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    PlayerUtil.reset(player);
-                    profile.refreshHotbar();
-                }
-            }.runTask(Array.getInstance());
+            profile.refreshHotbar();
         }
     }
 
@@ -180,7 +175,7 @@ public class KitEditorMenu extends Menu {
                     .durability(7)
                     .name(CC.RED + CC.BOLD + "&cLoad default kit")
                     .lore(Arrays.asList(
-                            CC.RED + "&7Click this to load the default kit",
+                            CC.RED + "&7Click this to init the default kit",
                             CC.RED + "&7into the kit editing menu."
                     ))
                     .build();

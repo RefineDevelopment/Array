@@ -13,7 +13,7 @@ public enum AssembleStyle {
     private int startNumber;
 
     /**
-     * Assemble Style.
+     * ScoreboardHandler Style.
      *
      * @param descending whether the positions are going down or up.
      * @param startNumber from where to loop from.

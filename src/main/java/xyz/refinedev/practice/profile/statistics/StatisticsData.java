@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.profile.statistics;
 
 import lombok.Data;
-import xyz.refinedev.practice.profile.hotbar.Hotbar;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
 import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.util.chat.CC;
@@ -46,17 +46,18 @@ public class StatisticsData {
     }
 
     public HashMap<Integer, ItemStack> getKitItems() {
-        final HashMap<Integer, ItemStack> toReturn = new HashMap<>();
+        HashMap<Integer, ItemStack> toReturn = new HashMap<>();
 
         List<KitInventory> reversedLoadouts = new ArrayList<>(Arrays.asList(this.loadouts));
 
         Collections.reverse(reversedLoadouts);
 
         for (int i = 0; i < this.loadouts.length; i++) {
-            for (final KitInventory loadout : reversedLoadouts) {
+            for (KitInventory loadout : reversedLoadouts) {
                 if (loadout != null) {
                     final ItemStack itemStack = new ItemStack(Material.ENCHANTED_BOOK);
                     final ItemMeta itemMeta = itemStack.getItemMeta();
+
                     itemMeta.setDisplayName(CC.translate(loadout.getCustomName() + CC.GRAY + " (Right-Click)"));
                     itemMeta.setLore(Arrays.asList(ChatColor.GRAY + "Right click this book", ChatColor.GRAY + "to receive the kit."));
                     itemStack.setItemMeta(itemMeta);
@@ -69,11 +70,12 @@ public class StatisticsData {
             }
         }
 
+        ItemStack defaultKit = Array.getInstance().getHotbarManager().getHotbarItem(HotbarType.DEFAULT_KIT).getItem();
+
         if (toReturn.size() == 0) {
-            toReturn.put(0, Hotbar.getItems().get(HotbarType.DEFAULT_KIT));
-        }
-        else {
-            toReturn.put(8, Hotbar.getItems().get(HotbarType.DEFAULT_KIT));
+            toReturn.put(0, defaultKit);
+        } else {
+            toReturn.put(8, defaultKit);
         }
 
         return toReturn;

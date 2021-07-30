@@ -16,13 +16,11 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.duel.RematchProcedure;
-import xyz.refinedev.practice.essentials.Essentials;
-import xyz.refinedev.practice.hook.SpigotHook;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.MatchSnapshot;
 import xyz.refinedev.practice.match.MatchState;
-import xyz.refinedev.practice.match.task.BridgePlayerTask;
+import xyz.refinedev.practice.match.task.MatchBridgePlayerTask;
 import xyz.refinedev.practice.match.task.MatchStartTask;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
@@ -46,6 +44,7 @@ import java.util.UUID;
 @Getter @Setter
 public class BridgeMatch extends Match {
 
+    private final Array plugin = Array.getInstance();
     private final List<Player> caughtPlayers = new ArrayList<>();
 
     private TeamPlayer playerA;
@@ -104,11 +103,11 @@ public class BridgeMatch extends Match {
 
         if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
-        SpigotHook.getKnockbackType().appleKitKnockback(player, getKit());
+        plugin.getKnockbackManager().kitKnockback(player, getKit());
         player.setNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         Location spawn = playerA.equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
-        player.teleport(spawn.add(0, Essentials.getMeta().getMatchSpawnLevel(), 0));
+        player.teleport(spawn.add(0, plugin.getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
 
         teamPlayer.setPlayerSpawn(spawn);
 
@@ -116,8 +115,8 @@ public class BridgeMatch extends Match {
         player.getInventory().setContents(getKit().getKitInventory().getContents());
         giveBridgeKit(player);
 
-        NameTagHandler.reloadPlayer(player);
-        NameTagHandler.reloadOthersFor(player);
+        plugin.getNameTagHandler().reloadPlayer(player);
+        plugin.getNameTagHandler().reloadOthersFor(player);
     }
 
     @Override
@@ -127,17 +126,14 @@ public class BridgeMatch extends Match {
 
     @Override
     public boolean onEnd() {
-        UUID rematchKey=UUID.randomUUID();
+        UUID rematchKey = UUID.randomUUID();
 
             for ( TeamPlayer teamPlayer : new TeamPlayer[]{getTeamPlayerA(), getTeamPlayerB()} ) {
                 if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
-                    Player player=teamPlayer.getPlayer();
-
-                    if (player != null) {
-                        if (teamPlayer.isAlive()) {
-                            MatchSnapshot snapshot=new MatchSnapshot(teamPlayer, getOpponentTeamPlayer(player));
-                            getSnapshots().add(snapshot);
-                        }
+                    Player player = teamPlayer.getPlayer();
+                    if (player != null && teamPlayer.isAlive()) {
+                        MatchSnapshot snapshot=new MatchSnapshot(teamPlayer, getOpponentTeamPlayer(player));
+                        getSnapshots().add(snapshot);
                     }
                 }
             }
@@ -162,24 +158,24 @@ public class BridgeMatch extends Match {
                             player.setFireTicks(0);
                             player.updateInventory();
 
-                            SpigotHook.getKnockbackType().applyDefaultKnockback(player);
+                            plugin.getKnockbackManager().resetKnockback(player);
 
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
                             profile.setMatch(null);
-                            profile.refreshHotbar();
                             profile.handleVisibility();
-                            profile.teleportToSpawn();
 
                             if (opponent != null) {
                                 profile.setRematchData(new RematchProcedure(rematchKey, player.getUniqueId(), opponent.getUniqueId(), getKit(), getArena()));
                             }
 
+                            profile.refreshHotbar();
+                            profile.teleportToSpawn();
                         }
                     }
                 }
             }
-        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isSumo() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : 4 * 20L);
+        }.runTaskLater(plugin, (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isSumo() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : plugin.getConfigHandler().getTELEPORT_DELAY() * 20L);
 
         Player winningPlayer = getWinningPlayer();
         Player losingPlayer = getOpponentPlayer(winningPlayer);
@@ -268,7 +264,7 @@ public class BridgeMatch extends Match {
                     .replace("<relation_color>", this.getRelationColor(players, player).toString())
                     .replace("<participant_name>", player.getName()));
         }
-       TaskUtil.runLater(new BridgePlayerTask(this, player), 2L);
+       TaskUtil.runLater(new MatchBridgePlayerTask(this, player), 2L);
     }
 
     public void properDeath(Player player) {
@@ -286,7 +282,7 @@ public class BridgeMatch extends Match {
                         .replace("<killer_name>", player.getKiller().getName()));
             }
         }
-        TaskUtil.runLater(new BridgePlayerTask(this, player), 2L);
+        TaskUtil.runLater(new MatchBridgePlayerTask(this, player), 2L);
     }
 
     @Override
@@ -501,7 +497,7 @@ public class BridgeMatch extends Match {
                 } else {
 
                     if (caughtPlayers != null) caughtPlayers.clear();
-                    if (Essentials.getMeta().isBridgeClearBlocks()) cleanup();
+                    if (plugin.getConfigHandler().isBRIDGE_CLEAR_BLOCKS()) cleanup();
 
                     this.setupPlayer(playerA.getPlayer());
                     this.setupPlayer(playerB.getPlayer());

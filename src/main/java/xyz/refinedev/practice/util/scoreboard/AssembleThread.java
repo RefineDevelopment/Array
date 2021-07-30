@@ -10,15 +10,15 @@ import java.util.List;
 
 public class AssembleThread extends Thread {
 
-    private Assemble assemble;
+    private ScoreboardHandler scoreboardHandler;
 
     /**
-     * Assemble Thread.
+     * ScoreboardHandler Thread.
      *
-     * @param assemble instance.
+     * @param scoreboardHandler instance.
      */
-    AssembleThread(Assemble assemble) {
-        this.assemble = assemble;
+    AssembleThread(ScoreboardHandler scoreboardHandler) {
+        this.scoreboardHandler=scoreboardHandler;
         this.start();
     }
 
@@ -27,7 +27,7 @@ public class AssembleThread extends Thread {
         while(true) {
             try {
                 tick();
-                sleep(assemble.getTicks() * 50);
+                sleep(scoreboardHandler.getTicks() * 50);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -38,9 +38,9 @@ public class AssembleThread extends Thread {
      * Tick logic for thread.
      */
     private void tick() {
-        for (Player player : this.assemble.getPlugin().getServer().getOnlinePlayers()) {
+        for (Player player : this.scoreboardHandler.getPlugin().getServer().getOnlinePlayers()) {
             try {
-                AssembleBoard board = this.assemble.getBoards().get(player.getUniqueId());
+                AssembleBoard board = this.scoreboardHandler.getBoards().get(player.getUniqueId());
 
                 // This shouldn't happen, but just in case.
                 if (board == null) {
@@ -56,14 +56,14 @@ public class AssembleThread extends Thread {
 
                 // Just make a variable so we don't have to
                 // process the same thing twice.
-                String title = ChatColor.translateAlternateColorCodes('&', this.assemble.getAdapter().getTitle(player));
+                String title = ChatColor.translateAlternateColorCodes('&', this.scoreboardHandler.getAdapter().getTitle(player));
 
                 // Update the title if needed.
                 if (!objective.getDisplayName().equals(title)) {
                     objective.setDisplayName(title);
                 }
 
-                List<String> newLines = this.assemble.getAdapter().getLines(player);
+                List<String> newLines = this.scoreboardHandler.getAdapter().getLines(player);
 
                 // Allow adapter to return null/empty list to display nothing.
                 if (newLines == null || newLines.isEmpty()) {
@@ -71,11 +71,11 @@ public class AssembleThread extends Thread {
                     board.getEntries().clear();
                 } else {
                     if (newLines.size() > 15) {
-                        newLines = this.assemble.getAdapter().getLines(player).subList(0, 15);
+                        newLines = this.scoreboardHandler.getAdapter().getLines(player).subList(0, 15);
                     }
 
                     // Reverse the lines because scoreboard scores are in descending order.
-                    if (!this.assemble.getAssembleStyle().isDescending()) {
+                    if (!this.scoreboardHandler.getAssembleStyle().isDescending()) {
                         Collections.reverse(newLines);
                     }
 
@@ -91,7 +91,7 @@ public class AssembleThread extends Thread {
                     }
 
                     // Update existing entries / add new entries.
-                    int cache = this.assemble.getAssembleStyle().getStartNumber();
+                    int cache = this.scoreboardHandler.getAssembleStyle().getStartNumber();
                     for (int i = 0; i < newLines.size(); i++) {
                         AssembleBoardEntry entry = board.getEntryAtPosition(i);
 
@@ -109,12 +109,12 @@ public class AssembleThread extends Thread {
                         entry.setText(line);
                         entry.setup();
                         entry.send(
-                                this.assemble.getAssembleStyle().isDescending() ? cache-- : cache++
+                                this.scoreboardHandler.getAssembleStyle().isDescending() ? cache-- : cache++
                         );
                     }
                 }
 
-                if (player.getScoreboard() != scoreboard && !assemble.isHook()) {
+                if (player.getScoreboard() != scoreboard && !scoreboardHandler.isHook()) {
                     player.setScoreboard(scoreboard);
                 }
             } catch(Exception e) {

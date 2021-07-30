@@ -62,7 +62,7 @@ public class PartyListMenu extends Menu {
                 player.sendMessage(CC.RED + "That player left your party!");
                 return;
             }
-            new ManagePartyMember(this.pplayer).openMenu(player);
+            new PartyMemberMenu(this.pplayer).openMenu(player);
         }
     }
 }

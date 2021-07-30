@@ -4,14 +4,13 @@ import lombok.Getter;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.essentials.Essentials;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.managers.ClassManager;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.MatchSnapshot;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
-import xyz.refinedev.practice.hook.SpigotHook;
+import xyz.refinedev.practice.hook.SpigotType;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
@@ -31,6 +30,8 @@ import java.util.List;
 
 @Getter
 public class HCFMatch extends Match {
+
+    private final Array plugin = Array.getInstance();
 
     private final Team teamA;
     private final Team teamB;
@@ -82,7 +83,7 @@ public class HCFMatch extends Match {
         Team team = getTeam(player);
 
         Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
-        player.teleport(spawn.add(0, Essentials.getMeta().getMatchSpawnLevel(), 0));
+        player.teleport(spawn.add(0, plugin.getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
 
         teamPlayer.setPlayerSpawn(spawn);
 
@@ -91,12 +92,15 @@ public class HCFMatch extends Match {
         String kit = party.getKits().get(player.getUniqueId());
 
         switch (kit) {
+            case "bard":
             case "Bard":
                 ClassManager.giveBardKit(player);
                 break;
+            case "archer":
             case "Archer":
                 ClassManager.giveArcherKit(player);
                 break;
+            case "rogue":
             case "Rogue":
                 ClassManager.giveRogueKit(player);
                 break;
@@ -105,13 +109,13 @@ public class HCFMatch extends Match {
                 break;
         }
 
-        NameTagHandler.reloadPlayer(player);
-        NameTagHandler.reloadOthersFor(player);
+        plugin.getNameTagHandler().reloadPlayer(player);
+        plugin.getNameTagHandler().reloadOthersFor(player);
     }
 
     @Override
     public void onStart() {
-        getPlayers().forEach(player1 -> SpigotHook.getKnockbackType().appleKitKnockback(player1, Kit.getHCFTeamFight()));
+        getPlayers().forEach(player1 -> plugin.getKnockbackManager().kitKnockback(player1, Kit.getHCFTeamFight()));
     }
 
     @Override
@@ -160,7 +164,7 @@ public class HCFMatch extends Match {
                             player.updateInventory();
                             player.getActivePotionEffects().clear();
 
-                            SpigotHook.getKnockbackType().applyDefaultKnockback(player);
+                            plugin.getKnockbackManager().resetKnockback(player);
 
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
@@ -172,7 +176,7 @@ public class HCFMatch extends Match {
                     }
                 }
             }
-        }.runTaskLater(Array.getInstance(), TimeUtil.parseTime(Essentials.getMeta().getTeleportDelay()  + "s"));
+        }.runTaskLater(plugin, TimeUtil.parseTime(plugin.getConfigHandler().getTELEPORT_DELAY()  + "s"));
 
         Team winningTeam = getWinningTeam();
         Team losingTeam = getOpponentTeam(winningTeam);

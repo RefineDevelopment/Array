@@ -17,16 +17,17 @@ import java.util.Map;
 @Getter @Setter
 public abstract class Menu {
 
-    public static Map<String, Menu> currentlyOpenedMenus = new HashMap<>();
+    private final Array array = Array.getInstance();
 
-    @Getter
-    protected Array array = Array.getInstance();
+    public static Map<String, Menu> currentlyOpenedMenus = new HashMap<>();
     private Map<Integer, Button> buttons = new HashMap<>();
+
     private boolean autoUpdate = false;
     private boolean updateAfterClick = true;
     private boolean closedByMenu = false;
     private boolean placeholder = false;
-    private Button placeholderButton = Button.placeholder(Material.STAINED_GLASS_PANE, (byte) 15, " ");
+
+    private final Button placeholderButton = Button.placeholder(Material.STAINED_GLASS_PANE, (byte) 15);
 
     private ItemStack createItemStack(Player player, Button button) {
         ItemStack item = button.getButtonItem(player);

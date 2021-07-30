@@ -18,13 +18,19 @@ import xyz.refinedev.practice.util.config.BasicConfigurationFile;
 
 public class RatingsManager {
 
-    private final BasicConfigurationFile config = Array.getInstance().getRateConfig();
+    private final Array plugin;
+    private final BasicConfigurationFile config;
+
+    public RatingsManager(Array plugin) {
+        this.plugin = plugin;
+        this.config = plugin.getRateConfig();
+    }
 
     public void init() {
-        this.load();
-        this.save();
-
-        Array.logger("&7Calculated Arena Ratings!");
+        if (plugin.getConfigHandler().isRATINGS_ENABLED()) {
+            this.load();
+            this.save();
+        }
     }
 
     public void load() {

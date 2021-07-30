@@ -33,6 +33,11 @@ public class RateCommand {
             return;
         }
 
+        if (!profile.getRatingArena().getName().equalsIgnoreCase(arena.getName())) {
+            player.sendMessage(CC.translate("&7Invalid Arena!"));
+            return;
+        }
+
         Rating rating = arena.getRating();
         rating.recordVote(ratingType);
 

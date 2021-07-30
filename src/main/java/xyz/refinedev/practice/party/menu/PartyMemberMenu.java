@@ -16,7 +16,7 @@ import java.util.Map;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.util.menu.Menu;
 
-public class ManagePartyMember extends Menu {
+public class PartyMemberMenu extends Menu {
     Player target;
 
     @Override
@@ -34,7 +34,7 @@ public class ManagePartyMember extends Menu {
     }
 
     @ConstructorProperties({"target"})
-    public ManagePartyMember(final Player target) {
+    public PartyMemberMenu(final Player target) {
         this.target=target;
     }
 
@@ -44,7 +44,7 @@ public class ManagePartyMember extends Menu {
         @Override
         public ItemStack getButtonItem(final Player player) {
             ArrayList<String> lore=new ArrayList<>();
-            Player target = ManagePartyMember.this.target;
+            Player target = PartyMemberMenu.this.target;
             if (this.partyManageType == PartyManageType.LEADER) {
                 lore.add(CC.MENU_BAR);
                 lore.add("&7Click here to make &c" + target.getName());
@@ -84,14 +84,14 @@ public class ManagePartyMember extends Menu {
                 return;
             }
             if (this.partyManageType == PartyManageType.LEADER) {
-                profile.getParty().leader(player, ManagePartyMember.this.target);
+                profile.getParty().leader(player, PartyMemberMenu.this.target);
             }
             else if (this.partyManageType == PartyManageType.MANAGE) {
-                profile.getParty().leave(ManagePartyMember.this.target, true);
+                profile.getParty().leave(PartyMemberMenu.this.target, true);
             }
             else if (this.partyManageType == PartyManageType.BAN) {
-                profile.getParty().leave(ManagePartyMember.this.target, true);
-                profile.getParty().ban(ManagePartyMember.this.target);
+                profile.getParty().leave(PartyMemberMenu.this.target, true);
+                profile.getParty().ban(PartyMemberMenu.this.target);
             }
             Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
             player.closeInventory();

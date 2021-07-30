@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 @AllArgsConstructor
-public class BridgePlayerTask extends BukkitRunnable {
+public class MatchBridgePlayerTask extends BukkitRunnable {
 
     BridgeMatch bridgeMatch;
     Player player;

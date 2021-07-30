@@ -16,7 +16,7 @@ public class AssembleBoardCreateEvent extends Event implements Cancellable {
     private boolean cancelled = false;
 
     /**
-     * Assemble Board Create Event.
+     * ScoreboardHandler Board Create Event.
      *
      * @param player that the board is being created for.
      */

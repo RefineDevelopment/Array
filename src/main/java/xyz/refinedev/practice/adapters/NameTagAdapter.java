@@ -1,7 +1,6 @@
 package xyz.refinedev.practice.adapters;
 
-import xyz.refinedev.practice.essentials.Essentials;
-import xyz.refinedev.practice.essentials.meta.NametagMeta;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
@@ -21,10 +20,11 @@ import org.bukkit.entity.Player;
 
 public class NameTagAdapter extends NameTagProvider {
 
+    private final Array plugin = Array.getInstance();
+
     public NameTagAdapter() {
         super("Main", 1);
     }
-    public NametagMeta meta = Essentials.getNametagMeta();
 
     /**
      * Get the Target's Nametag for Viewer
@@ -35,7 +35,7 @@ public class NameTagAdapter extends NameTagProvider {
      */
     @Override
     public NameTagInfo fetchNameTag(Player target, Player viewer) {
-        if (meta.isEnabled()) {
+        if (plugin.getConfigHandler().isNAMETAGS_ENABLED()) {
             Profile targetProfile = Profile.getByPlayer(target);
             Profile viewerProfile = Profile.getByPlayer(viewer);
 
@@ -68,12 +68,12 @@ public class NameTagAdapter extends NameTagProvider {
         Player target = targetProfile.getPlayer();
 
         if (viewerProfile.getParty() != null && viewerProfile.getParty().containsPlayer(target)) {
-            return createNameTag(meta.getPartyColor().toString(), "");
+            return createNameTag(plugin.getConfigHandler().getPartyColor().toString(), "");
         }
         if (targetProfile.getParty() != null && targetProfile.getParty().containsPlayer(viewer)) {
-            return createNameTag(meta.getPartyColor().toString(), "");
+            return createNameTag(plugin.getConfigHandler().getPartyColor().toString(), "");
         }
-        String color = meta.getDefaultColor().equals("<rank_color>") ? targetProfile.getColor().toString() : ChatColor.valueOf(meta.getDefaultColor()).toString();
+        String color = plugin.getConfigHandler().getDefaultColor().equals("<rank_color>") ? targetProfile.getColor().toString() : ChatColor.valueOf(plugin.getConfigHandler().getDefaultColor()).toString();
         return createNameTag(color, "");
     }
 
@@ -83,7 +83,7 @@ public class NameTagAdapter extends NameTagProvider {
         Event event = targetProfile.getEvent();
 
         if (targetProfile.isInEvent()) {
-            return createNameTag(meta.getEventColor().toString(), "");
+            return createNameTag(plugin.getConfigHandler().getEventColor().toString(), "");
         }
         return createNameTag("", "");
     }

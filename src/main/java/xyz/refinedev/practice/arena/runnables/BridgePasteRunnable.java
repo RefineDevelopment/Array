@@ -79,17 +79,19 @@ public class BridgePasteRunnable implements Runnable {
                 CustomLocation max = new CustomLocation(arena.getSpawn1().getWorld(), maxX, arena.getMax().getY(), maxZ, arena.getMax().getYaw(), arena.getMax().getPitch());
                 CustomLocation a = new CustomLocation(arena.getSpawn1().getWorld(), aX, arena.getSpawn1().getY(), aZ, arena.getSpawn1().getYaw(), arena.getSpawn1().getPitch());
                 CustomLocation b = new CustomLocation(arena.getSpawn1().getWorld(), bX, arena.getSpawn2().getY(), bZ, arena.getSpawn2().getYaw(), arena.getSpawn2().getPitch());
-                Cuboid redPortal = new Cuboid(arena.getSpawn1().getWorld(), portalRedX1, portalRedY1, portalRedZ1, portalRedX2, portalRedY2, portalBlueZ2);
+                Cuboid redPortal = new Cuboid(arena.getSpawn1().getWorld(), portalRedX1, portalRedY1, portalRedZ1, portalRedX2, portalRedY2, portalRedZ2);
                 Cuboid bluePortal = new Cuboid(arena.getSpawn1().getWorld(), portalBlueX1, portalBlueY1, portalBlueZ1, portalBlueX2, portalBlueY2, portalBlueZ2);
                 Cuboid redCuboid = new Cuboid(arena.getSpawn1().getWorld(), cuboidRedX1, cuboidRedY1, cuboidRedZ1, cuboidRedX2, cuboidRedY2, cuboidRedZ2);
                 Cuboid blueCuboid = new Cuboid(arena.getSpawn1().getWorld(), cuboidBlueX1, cuboidBlueY1, cuboidBlueZ1, cuboidBlueX2, cuboidBlueY2, cuboidBlueZ2);
-
                 
-                TheBridgeArena duplicate = new TheBridgeArena(arena.getName() + " #2");
+                TheBridgeArena duplicate = new TheBridgeArena(arena.getName());
+
                 duplicate.setSpawn1(a.toBukkitLocation());
                 duplicate.setSpawn2(b.toBukkitLocation());
+
                 duplicate.setMax(max.toBukkitLocation());
                 duplicate.setMin(min.toBukkitLocation());
+
                 duplicate.setRedPortal(redPortal);
                 duplicate.setBlueCuboid(bluePortal);
                 duplicate.setRedCuboid(redCuboid);
@@ -106,7 +108,7 @@ public class BridgePasteRunnable implements Runnable {
                             player.sendMessage(CC.translate("&8[&c&lArray&8] &7Finished pasting &c" + copiedArena.getName() + "&7's " + amount + " &7duplicate arenas."));
                         }
                     }
-                    Array.logger("&8[&c&lArray&8] &7Finished pasting &c" + copiedArena.getName() + "&7's " + amount + " &7duplicate arenas.");
+                    plugin.logger("&8[&c&lArray&8] &7Finished pasting &c" + copiedArena.getName() + "&7's " + amount + " &7duplicate arenas.");
                     Arena.setPasting(false);
                     Arena.getArenas().forEach(Arena::save);
                 }

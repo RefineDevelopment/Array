@@ -3,7 +3,7 @@ package xyz.refinedev.practice.util.scoreboard;
 public class AssembleException extends RuntimeException {
 
     /**
-     * Assemble Exception.
+     * ScoreboardHandler Exception.
      *
      * @param message attributed to exception.
      */

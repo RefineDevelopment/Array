@@ -16,7 +16,7 @@ public class AssembleBoardDestroyEvent extends Event implements Cancellable {
     private boolean cancelled = false;
 
     /**
-     * Assemble Board Destroy Event.
+     * ScoreboardHandler Board Destroy Event.
      *
      * @param player who's board got destroyed.
      */

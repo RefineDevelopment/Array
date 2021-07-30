@@ -1,14 +1,15 @@
 package xyz.refinedev.practice.managers;
 
+import lombok.RequiredArgsConstructor;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.cmds.*;
+import xyz.refinedev.practice.cmds.essentials.*;
 import xyz.refinedev.practice.cmds.event.*;
 import xyz.refinedev.practice.cmds.settings.*;
 import xyz.refinedev.practice.cmds.standalone.*;
 import xyz.refinedev.practice.cmds.*;
 import xyz.refinedev.practice.cmds.event.*;
 import xyz.refinedev.practice.cmds.standalone.*;
-import xyz.refinedev.practice.essentials.Essentials;
 import xyz.refinedev.practice.util.command.CommandService;
 
 /**
@@ -20,21 +21,13 @@ import xyz.refinedev.practice.util.command.CommandService;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class CMDManager {
 
-    /**
-     * Quick Note to Source Viewers
-     *
-     * This Command API is NOT made by me, it was simply open source on github
-     * by the name "Drink". Its original author is Jonah Seguin.
-     *
-     * @see https://github.com/jonahseguin/drink
-     */
-
-    public final CommandService drink = Array.getDrink();
+    private final Array plugin;
+    public final CommandService drink;
 
     public void init() {
-        Array.logger("&7Registering Commands...");
         //These are the cmds which have proper sub cmds in them
         drink.register(new ArrayCommands(), "array", "practice");
         drink.register(new ArenaCommands(), "arena", "arenas");
@@ -54,10 +47,18 @@ public class CMDManager {
         drink.register(new AbortMatchCommand(), "cancelmatch", "forfeitmatch", "abortmatch");
         drink.register(new SettingsCommand(), "settings", "preferences", "practicesettings", "pracsettings");
         drink.register(new MapCommand(), "map");
-        if (Essentials.getMeta().isRatingEnabled()) drink.register(new RateCommand(), "rate");
+        if (plugin.getConfigHandler().isRATINGS_ENABLED()) drink.register(new RateCommand(), "rate");
         drink.register(new FlyCommand(), "fly", "flight");
         drink.register(new LeaderboardsCommand(), "leaderboards", "lb", "leaderboard");
         drink.register(new StatsCommand(), "stats", "elo", "statistics");
+
+        //Essentials Commands
+        drink.register(new UnrankedQueueCMD(), "unrankedqueue", "queue", "queue unranked");
+        drink.register(new RankedQueueCMD(), "rankedqueue", "queue ranked");
+        drink.register(new ClanQueueCMD(), "clanqueue", "queue clan");
+        drink.register(new LeaveQueueCMD(), "leavequeue", "queue leave");
+        drink.register(new KitEditorCMD() ,"kiteditor", "editkit");
+        drink.register(new MainMenuCMD(), "mainmenu", "menu main");
 
         //Settings Commands
         drink.register(new ToggleScoreboardCMD(), "tsb", "togglescoreboard");

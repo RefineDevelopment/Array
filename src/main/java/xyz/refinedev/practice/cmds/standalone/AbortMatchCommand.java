@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.cmds.standalone;
 
+import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
@@ -24,7 +25,7 @@ public class AbortMatchCommand {
     public void cancelMatch(@Sender CommandSender player, Player target) {
         Profile profile = Profile.getByPlayer(target);
         if (!profile.isInFight()) {
-            player.sendMessage(CC.translate("&7That player is not in a fight!"));
+            player.sendMessage(Locale.MATCH_NOT_IN.toString());
             return;
         }
         profile.getMatch().end();

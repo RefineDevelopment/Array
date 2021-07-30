@@ -14,21 +14,21 @@ import xyz.refinedev.practice.profile.Profile;
 
 public interface API {
 
-    public boolean isInLobby(Player player);
+    boolean isInLobby(Player player);
 
-    public boolean isInParty(Player player);
+    boolean isInParty(Player player);
 
-    public boolean isInFight(Player player);
+    boolean isInFight(Player player);
 
-    public boolean isInEvent(Player player);
+    boolean isInEvent(Player player);
 
-    public boolean isInTournament(Player player);
+    boolean isInTournament(Player player);
 
-    public void handleVisibility(Player player);
+    void handleVisibility(Player player);
 
-    public String getDisplayName(Player player);
+    String getDisplayName(Player player);
 
-    public Profile getProfile(Player player);
+    Profile getProfile(Player player);
 
 
 }

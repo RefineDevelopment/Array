@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.util.menu.pagination;
 
+import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 import lombok.AllArgsConstructor;
 import org.bukkit.ChatColor;
@@ -19,23 +20,15 @@ public class PageButton extends Button {
 
     @Override
     public ItemStack getButtonItem(Player player) {
-        ItemStack itemStack = new ItemStack(Material.ARROW);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-
+        ItemBuilder builder = new ItemBuilder(Material.CARPET);
         if (this.hasNext(player)) {
-            itemMeta.setDisplayName(this.mod > 0 ? ChatColor.GREEN + "Next page" : ChatColor.RED + "Previous page");
+            builder.name(this.mod > 0 ?  "§a⟶" : "§c⟵");
         } else {
-            itemMeta.setDisplayName(ChatColor.GREEN + (this.mod > 0 ? "Last page" : "First page"));
+            builder.name(ChatColor.GRAY + (this.mod > 0 ? "Last page" : "First page"));
         }
+        builder.durability(this.hasNext(player) ? 11 : 7);
 
-        itemMeta.setLore(Arrays.asList(
-                ChatColor.WHITE + "Click here to",
-                ChatColor.WHITE + "jump to a page"
-        ));
-
-        itemStack.setItemMeta(itemMeta);
-
-        return itemStack;
+        return builder.build();
     }
 
     @Override

@@ -12,15 +12,15 @@ import org.bukkit.event.player.PlayerQuitEvent;
 @Getter
 public class AssembleListener implements Listener {
 
-	private Assemble assemble;
+	private final ScoreboardHandler scoreboardHandler;
 
 	/**
-	 * Assemble Listener.
+	 * ScoreboardHandler Listener.
 	 *
-	 * @param assemble instance.
+	 * @param scoreboardHandler instance.
 	 */
-	public AssembleListener(Assemble assemble) {
-		this.assemble = assemble;
+	public AssembleListener(ScoreboardHandler scoreboardHandler) {
+		this.scoreboardHandler=scoreboardHandler;
 	}
 
 	@EventHandler
@@ -32,7 +32,7 @@ public class AssembleListener implements Listener {
 			return;
 		}
 
-		getAssemble().getBoards().put(event.getPlayer().getUniqueId(), new AssembleBoard(event.getPlayer(), getAssemble()));
+		getScoreboardHandler().getBoards().put(event.getPlayer().getUniqueId(), new AssembleBoard(event.getPlayer(), getScoreboardHandler()));
 	}
 
 	@EventHandler
@@ -44,7 +44,7 @@ public class AssembleListener implements Listener {
 			return;
 		}
 
-		getAssemble().getBoards().remove(event.getPlayer().getUniqueId());
+		getScoreboardHandler().getBoards().remove(event.getPlayer().getUniqueId());
 		event.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
 	}
 

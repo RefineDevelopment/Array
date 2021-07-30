@@ -1,8 +1,9 @@
 package xyz.refinedev.practice.util.other;
 
+import lombok.experimental.UtilityClass;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.hotbar.Hotbar;
 import xyz.refinedev.practice.profile.hotbar.HotbarLayout;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
@@ -22,13 +23,16 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@UtilityClass
 public class PlayerUtil {
+
+    private final Array plugin = Array.getInstance();
 
     private static Field STATUS_PACKET_ID_FIELD;
     private static Field STATUS_PACKET_STATUS_FIELD;
     private static Field SPAWN_PACKET_ID_FIELD;
 
-    public static void reset(Player player) {
+    public void reset(Player player) {
         AsyncCatcher.enabled = false;
 
         player.getActivePotionEffects().clear();
@@ -49,18 +53,25 @@ public class PlayerUtil {
         player.updateInventory();
     }
 
-    public static void spectator(Player player) {
+    public void spectator(Player player) {
         AsyncCatcher.enabled = false;
+        Profile profile = Profile.getByPlayer(player);
 
         player.setAllowFlight(true);
         player.setFlying(true);
         player.setGameMode(GameMode.CREATIVE);
         player.setFlySpeed(0.2F);
-        player.getInventory().setContents(Hotbar.getLayout(HotbarLayout.MATCH_SPECTATE, Profile.getByPlayer(player)));
+
+        if (profile.isInEvent()) {
+            player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.EVENT_SPECTATE, profile));
+        } else if (profile.isInMatch()) {
+            player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.MATCH_SPECTATE, profile));
+        }
+
         player.updateInventory();
     }
 
-    public static void denyMovement(Player player) {
+    public void denyMovement(Player player) {
         AsyncCatcher.enabled = false;
 
         player.setWalkSpeed(0.0F);
@@ -70,7 +81,7 @@ public class PlayerUtil {
         player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 200));
     }
 
-    public static void allowMovement(Player player) {
+    public void allowMovement(Player player) {
         AsyncCatcher.enabled = false;
 
         player.setWalkSpeed(0.2F);
@@ -80,12 +91,12 @@ public class PlayerUtil {
         player.removePotionEffect(PotionEffectType.JUMP);
     }
 
-    public static int getPing(Player player) {
+    public int getPing(Player player) {
         if (player == null) return 0;
         return ((CraftPlayer)player).getHandle() != null ? ((CraftPlayer)player).getHandle().ping : 0;
     }
 
-    public static void removeItems(Inventory inventory, ItemStack item, int amount) {
+    public void removeItems(Inventory inventory, ItemStack item, int amount) {
         for (int size = inventory.getSize(), slot = 0; slot < size; ++slot) {
             ItemStack is = inventory.getItem(slot);
             if (is != null && item.getType() == is.getType() && item.getDurability() == is.getDurability()) {
@@ -103,20 +114,20 @@ public class PlayerUtil {
         }
     }
 
-    public static boolean hasOtherInventoryOpen(Player player) {
+    public boolean hasOtherInventoryOpen(Player player) {
         return ((CraftPlayer)player).getHandle().activeContainer.windowId != 0;
     }
 
-    public static List<Player> convertUUIDListToPlayerList(List<UUID> list) {
+    public List<Player> convertUUIDListToPlayerList(List<UUID> list) {
         return list.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    public static CraftEntity getLastDamager(final Player p) {
+    public CraftEntity getLastDamager(final Player p) {
         final EntityLiving lastAttacker = ((CraftPlayer)p).getHandle().lastDamager;
         return (lastAttacker == null) ? null : lastAttacker.getBukkitEntity();
     }
 
-    public static Player getPlayer(String name) {
+    public Player getPlayer(String name) {
         for(Player p : Bukkit.getOnlinePlayers()) {
             if (p.getName().equals(name)) {
                 return p;
@@ -125,7 +136,7 @@ public class PlayerUtil {
         return Bukkit.getPlayer(ArrayCache.getUUID(name));
     }
 
-    public static void animateDeath(Player player) {
+    public void animateDeath(Player player) {
 
         final int entityId = EntityUtils.getFakeEntityId();
         final PacketPlayOutNamedEntitySpawn spawnPacket = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());

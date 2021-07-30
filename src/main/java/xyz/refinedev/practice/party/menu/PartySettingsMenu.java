@@ -18,9 +18,9 @@ import java.util.Map;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.util.menu.Menu;
 
-public class ManagePartySettings extends Menu {
+public class PartySettingsMenu extends Menu {
 
-    public ManagePartySettings() {
+    public PartySettingsMenu() {
         setAutoUpdate(true);
         setUpdateAfterClick(true);
     }

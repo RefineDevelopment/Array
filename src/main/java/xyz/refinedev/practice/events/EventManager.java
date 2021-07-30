@@ -2,7 +2,6 @@ package xyz.refinedev.practice.events;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.config.BasicConfigurationFile;
@@ -15,7 +14,8 @@ import java.util.List;
 @Getter @Setter
 public class EventManager {
 
-	private final BasicConfigurationFile config = Array.getInstance().getEventsConfig();
+	private final Array plugin;
+	private final BasicConfigurationFile config;
 
 	private Event activeEvent;
 	private Cooldown eventCooldown = new Cooldown(0);
@@ -30,7 +30,12 @@ public class EventManager {
 	protected List<Location> oitcSpawns = new ArrayList<>();
 	protected Location oitcSpectator;
 
-	public void setActiveEvent(Event event) {
+    public EventManager(Array plugin) {
+        this.plugin = plugin;
+        this.config = plugin.getEventsConfig();
+    }
+
+    public void setActiveEvent(Event event) {
 		if (this.activeEvent != null) {
 			this.activeEvent.setEventTask(null);
 		}
@@ -44,7 +49,7 @@ public class EventManager {
 		this.activeEvent.handleStart();
 	}
 
-	public void load() {
+	public void init() {
 		String key = "EVENTS.";
 
 		if (config.getString(key + "SUMO.SPAWN1") != null) this.sumoSpawn1 = LocationUtil.deserialize(config.getString(key + "SUMO.SPAWN1"));

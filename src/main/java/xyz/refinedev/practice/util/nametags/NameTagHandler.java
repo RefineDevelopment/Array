@@ -1,10 +1,14 @@
 package xyz.refinedev.practice.util.nametags;
 
+import lombok.RequiredArgsConstructor;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.adapters.NameTagAdapter;
 import xyz.refinedev.practice.util.nametags.construct.NameTagComparator;
 import xyz.refinedev.practice.util.nametags.construct.NameTagInfo;
 import xyz.refinedev.practice.util.nametags.construct.NametagUpdate;
 import lombok.Getter;
 import lombok.Setter;
+import xyz.refinedev.practice.util.nametags.listener.NameTagListener;
 import xyz.refinedev.practice.util.nametags.packet.ScoreboardTeamPacketMod;
 import xyz.refinedev.practice.util.nametags.provider.NameTagProvider;
 import org.bukkit.Bukkit;
@@ -13,62 +17,72 @@ import org.bukkit.entity.Player;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Getter @Setter
+@RequiredArgsConstructor
 public class NameTagHandler {
 
-    @Getter private static final Map<String, Map<String, NameTagInfo>> teamMap = new ConcurrentHashMap<>();
-    private static final List<NameTagProvider> providers = new ArrayList<>();
-    private static final List<NameTagInfo> registeredTeams = Collections.synchronizedList(new ArrayList<>());
+    private final Array plugin;
 
-    @Getter private static boolean initiated = false;
-    @Getter @Setter private static boolean async = true;
+    private final Map<String, Map<String, NameTagInfo>> teamMap = new ConcurrentHashMap<>();
+    private final List<NameTagProvider> providers = new ArrayList<>();
+    private final List<NameTagInfo> registeredTeams = Collections.synchronizedList(new ArrayList<>());
+
+    private NametagThread thread;
+
+    private boolean initiated = false;
+    private boolean async = true;
     private static int teamCreateIndex = 1;
 
-    public static void hook() {
+    public void init() {
         initiated = true;
 
-        new NametagThread().start();
+        thread = new NametagThread();
+        thread.start();
+
+        this.registerProvider(new NameTagAdapter());
+        this.plugin.getServer().getPluginManager().registerEvents(new NameTagListener(), this.plugin);
     }
 
-    public static void registerProvider(NameTagProvider newProvider) {
-        providers.add(newProvider);
-        providers.sort(new NameTagComparator());
+    public void registerProvider(NameTagProvider newProvider) {
+        this.providers.add(newProvider);
+        this.providers.sort(new NameTagComparator());
     }
 
-    public static void reloadPlayer(Player toRefresh) {
+    public void reloadPlayer(Player toRefresh) {
         NametagUpdate update = new NametagUpdate(toRefresh);
 
-        if(async) {
-            NametagThread.getPendingUpdates().put(update, true);
+        if (async) {
+            thread.getPendingUpdates().put(update, true);
         } else {
             applyUpdate(update);
         }
     }
 
-    public static void reloadOthersFor(Player refreshFor) {
-        Bukkit.getOnlinePlayers().forEach(toRefresh -> {
-            if(refreshFor != toRefresh) {
+    public void reloadOthersFor(Player refreshFor) {
+        this.plugin.getServer().getOnlinePlayers().forEach(toRefresh -> {
+            if (refreshFor != toRefresh) {
                 reloadPlayer(toRefresh, refreshFor);
             }
         });
     }
 
-    public static void reloadPlayer(Player toRefresh, Player refreshFor) {
+    public void reloadPlayer(Player toRefresh, Player refreshFor) {
         NametagUpdate update = new NametagUpdate(toRefresh, refreshFor);
 
-        if(async) {
-            NametagThread.getPendingUpdates().put(update, true);
+        if (async) {
+            thread.getPendingUpdates().put(update, true);
         } else {
             applyUpdate(update);
         }
     }
 
-    public static void applyUpdate(NametagUpdate nametagUpdate) {
-        if(nametagUpdate.getToRefresh() != null){
+    public void applyUpdate(NametagUpdate nametagUpdate) {
+        if (nametagUpdate.getToRefresh() != null){
             Player toRefreshPlayer = Bukkit.getPlayerExact(nametagUpdate.getToRefresh());
 
-            if(toRefreshPlayer == null) return;
+            if (toRefreshPlayer == null) return;
 
-            if(nametagUpdate.getRefreshFor() == null) {
+            if (nametagUpdate.getRefreshFor() == null) {
                 Bukkit.getOnlinePlayers().forEach(refreshFor -> reloadPlayerInternal(toRefreshPlayer, refreshFor));
             } else {
                 Player refreshForPlayer = Bukkit.getPlayerExact(nametagUpdate.getRefreshFor());
@@ -80,40 +94,38 @@ public class NameTagHandler {
         }
     }
 
-    public static void reloadPlayerInternal(Player toRefresh, Player refreshFor) {
-        if(!refreshFor.hasMetadata("Test-LoggedIn")) return;
+    public void reloadPlayerInternal(Player toRefresh, Player refreshFor) {
+        if (!refreshFor.hasMetadata("Test-LoggedIn")) return;
 
         NameTagInfo provided = null;
 
-        for ( NameTagProvider nametagProvider : providers){
+        for ( NameTagProvider nametagProvider : providers ) {
             provided =  nametagProvider.fetchNameTag(toRefresh, refreshFor);
             if (provided != null){
                 break;
             }
         }
 
-        if (provided == null){
-            return;
-        }
+        if (provided == null) return;
 
         Map<String, NameTagInfo> teamInfoMap = new HashMap<>();
         
-        if(teamMap.containsKey(refreshFor.getName())) {
+        if (teamMap.containsKey(refreshFor.getName())) {
             teamInfoMap = teamMap.get(refreshFor.getName());
         }
-        
-        (new ScoreboardTeamPacketMod(provided.getName(), Collections.singletonList(toRefresh.getName()), 3)).sendToPlayer(refreshFor);
+
+        new ScoreboardTeamPacketMod(provided.getName(), Collections.singletonList(toRefresh.getName()), 3).sendToPlayer(refreshFor);
         teamInfoMap.put(toRefresh.getName(), provided);
         teamMap.put(refreshFor.getName(), teamInfoMap);        
     }
 
-    public static void initiatePlayer(Player player) {
+    public void initiatePlayer(Player player) {
         registeredTeams.forEach(teamInfo -> teamInfo.getTeamAddPacket().sendToPlayer(player));
     }
 
-    public static NameTagInfo getOrCreate(String prefix, String suffix) {
-        for( NameTagInfo teamInfo : registeredTeams) {
-            if(teamInfo.getPrefix().equals(prefix) && teamInfo.getSuffix().equals(suffix)) {
+    public NameTagInfo getOrCreate(String prefix, String suffix) {
+        for( NameTagInfo teamInfo : registeredTeams ) {
+            if (teamInfo.getPrefix().equals(prefix) && teamInfo.getSuffix().equals(suffix)) {
                 return (teamInfo);
             }
         }
@@ -122,8 +134,7 @@ public class NameTagHandler {
         registeredTeams.add(newTeam);
 
         ScoreboardTeamPacketMod addPacket = newTeam.getTeamAddPacket();
-
-        Bukkit.getOnlinePlayers().forEach(addPacket::sendToPlayer);
+        this.plugin.getServer().getOnlinePlayers().forEach(addPacket::sendToPlayer);
 
         return (newTeam);
     }

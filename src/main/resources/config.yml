@@ -5,6 +5,7 @@
 #                                                                     #
 #######################################################################
 LICENSE: ""
+
 MONGO:
   URI-MODE: true
   NORMAL:
@@ -18,8 +19,9 @@ MONGO:
   URI:
     DATABASE: Array
     CONNECTION_STRING: mongodb://127.0.0.1:27017/Array
-ESSENTIAL:
-  SPAWN: practice:0.5:69.0:-0.5:0.0:0.0
+
+SETTINGS:
+  SPAWN: world:0:60.0:0:0.0:0.0
   CORE_HOOK: true
   HCF_ENABLED: true
   TAB_ENABLED: true
@@ -30,9 +32,11 @@ ESSENTIAL:
   ARENA_RATING: true
   BRIDGE_CLEARBLOCKS: true
   REMOVE_BOTTLES: true
-  JOIN_MESSAGE_ENABLED: true
   DISCLAIMER_MESSAGE_ENABLED: true
-  JOIN_MESSAGE:
+
+JOIN_MESSAGE:
+  ENABLED: true
+  MESSAGE:
     - ""
     - "&c&lArray &7&l| &fPractice &7(EU)"
     - "&7Welcome to the &cTest Server &7of &cArray Practice&7."
@@ -40,29 +44,14 @@ ESSENTIAL:
     - "&7Purchase Array at &chttps://dsc.gg/refine&7."
     - "&7Engage with our community at &cdiscord.link/purge&7."
     - ""
-  QUEUE_LORE:
-    - "&c&lQueue"
-    - "&7In Queue: &c<in_queue>"
-    - "&7In Fight: &c<in_fight>"
-    - ""
-    - "&c&lDescription"
-    - "<description>"
-    - ""
-    - "&7Click to join queue."
-    - ""
-DEFAULT_SETTINGS:
-  PLAYER_VISIBILITY: true
-  SCOREBOARD_ENABLED: true
-  DUEL_REQUESTS: true
-  ALLOW_SPECTATORS: true
-  DEATH_LIGHNING: true
-  PING_FACTOR: false
-  SCOREBOARD_PING: true
-  SCOREBOARD_DURATION: true
-  SCOREBOARD_CPS: false
-  VANILLA_TAB: false
-  TOURNEY_MESSAGES: true
-  DROP_PROTECT: false
+
+QUEUE_LORE:
+  - "&c&lQueue"
+  - "&7In Queue: &c<in_queue>"
+  - "&7In Fight: &c<in_fight>"
+  - ""
+  - "&7Click to join queue."
+  - ""
 
 #In Seconds
 COOLDOWNS:

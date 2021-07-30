@@ -84,9 +84,9 @@
 
         <!-- Spigot Support for Knockback & HCF -->
         <dependency>
-            <groupId>xyz.refinedev.addon</groupId>
+            <groupId>xyz.refinedev.array</groupId>
             <artifactId>SpigotSupport</artifactId>
-            <version>1.3</version>
+            <version>1.0</version>
             <scope>compile</scope>
         </dependency>
 

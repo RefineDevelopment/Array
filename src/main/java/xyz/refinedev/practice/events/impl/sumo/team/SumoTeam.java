@@ -19,11 +19,9 @@ import xyz.refinedev.practice.events.meta.group.EventTeamPlayer;
 import xyz.refinedev.practice.events.meta.player.EventPlayer;
 import xyz.refinedev.practice.events.meta.player.EventPlayerState;
 import xyz.refinedev.practice.events.task.EventWaterTask;
-import xyz.refinedev.practice.hook.SpigotHook;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.nametags.NameTagHandler;
 import xyz.refinedev.practice.util.other.Cooldown;
 import xyz.refinedev.practice.util.other.PlayerSnapshot;
 import xyz.refinedev.practice.util.other.PlayerUtil;
@@ -86,11 +84,12 @@ public class SumoTeam extends Event {
 
         this.onJoin(player);
 
+        player.teleport(this.getEventManager().getSpectator(this));
+
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setEvent(this);
         profile.setState(ProfileState.IN_EVENT);
         profile.refreshHotbar();
-        profile.teleportToSpawn();
 
         TaskUtil.runAsync(() -> {
             for (Player otherPlayer : getPlayers()) {
@@ -98,8 +97,8 @@ public class SumoTeam extends Event {
                 otherProfile.handleVisibility(otherPlayer, player);
                 profile.handleVisibility(player, otherPlayer);
 
-                NameTagHandler.reloadPlayer(player);
-                NameTagHandler.reloadOthersFor(player);
+                this.getPlugin().getNameTagHandler().reloadPlayer(player);
+                this.getPlugin().getNameTagHandler().reloadOthersFor(player);
             }
         });
     }
@@ -128,8 +127,8 @@ public class SumoTeam extends Event {
                 otherProfile.handleVisibility(otherPlayer, player);
                 profile.handleVisibility(player, otherPlayer);
 
-                NameTagHandler.reloadPlayer(player);
-                NameTagHandler.reloadOthersFor(player);
+                this.getPlugin().getNameTagHandler().reloadPlayer(player);
+                this.getPlugin().getNameTagHandler().reloadOthersFor(player);
             }
         });
 
@@ -151,12 +150,12 @@ public class SumoTeam extends Event {
 
     @Override
     public void onJoin(Player player) {
-        SpigotHook.getKnockbackType().applyKnockback(player, this.getEventManager().getSumoKB());
+        this.getPlugin().getKnockbackManager().knockback(player, this.getEventManager().getSumoKB());
     }
 
     @Override
     public void onLeave(Player player) {
-        SpigotHook.getKnockbackType().applyDefaultKnockback(player);
+        this.getPlugin().getKnockbackManager().resetKnockback(player);
     }
 
     @Override
@@ -211,13 +210,13 @@ public class SumoTeam extends Event {
             playerA.teleport(this.getEventManager().getSpawn1(this));
 
             this.roundTeamA.getPlayers().forEach(eventPlayer -> {
-                NameTagHandler.reloadPlayer(eventPlayer.getPlayer());
-                NameTagHandler.reloadOthersFor(eventPlayer.getPlayer());
+                this.getPlugin().getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
+                this.getPlugin().getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
             });
             
             this.roundTeamB.getPlayers().forEach(eventPlayer -> {
-                NameTagHandler.reloadPlayer(eventPlayer.getPlayer());
-                NameTagHandler.reloadOthersFor(eventPlayer.getPlayer());
+                this.getPlugin().getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
+                this.getPlugin().getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
             });
         }
         
@@ -228,13 +227,13 @@ public class SumoTeam extends Event {
             playerB.teleport(this.getEventManager().getSpawn2(this));
             
             this.roundTeamB.getPlayers().forEach(eventPlayer -> {
-                NameTagHandler.reloadPlayer(eventPlayer.getPlayer());
-                NameTagHandler.reloadOthersFor(eventPlayer.getPlayer());
+                this.getPlugin().getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
+                this.getPlugin().getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
             });
             
             this.roundTeamA.getPlayers().forEach(eventPlayer -> {
-                NameTagHandler.reloadPlayer(eventPlayer.getPlayer());
-                NameTagHandler.reloadOthersFor(eventPlayer.getPlayer());
+                this.getPlugin().getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
+                this.getPlugin().getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
             });
         }
         
@@ -350,8 +349,8 @@ public class SumoTeam extends Event {
 
     public void refreshNametag() {
         this.getEventPlayers().values().forEach(eventPlayer -> {
-            NameTagHandler.reloadPlayer(eventPlayer.getPlayer());
-            NameTagHandler.reloadOthersFor(eventPlayer.getPlayer());
+            this.getPlugin().getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
+            this.getPlugin().getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
         });
     }
 

@@ -227,7 +227,7 @@ public class ProfileListener implements Listener {
                 profile.handleJoin();
             } catch (Exception e) {
                 e.printStackTrace();
-                player.kickPlayer(CC.RED + "Failed to load your profile, Please contact an Administrator!");
+                player.kickPlayer(CC.RED + "Failed to init your profile, Please contact an Administrator!");
             }
         });
     }

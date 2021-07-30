@@ -1,33 +1,31 @@
 package xyz.refinedev.practice.match.types;
 
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.essentials.Essentials;
-import xyz.refinedev.practice.queue.QueueType;
-import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.match.Match;
-import xyz.refinedev.practice.match.MatchSnapshot;
-import xyz.refinedev.practice.match.team.Team;
-import xyz.refinedev.practice.match.team.TeamPlayer;
-import xyz.refinedev.practice.hook.SpigotHook;
-import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.ProfileState;
-import xyz.refinedev.practice.util.location.Circle;
-import xyz.refinedev.practice.util.nametags.NameTagHandler;
-import xyz.refinedev.practice.util.other.PlayerUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.arena.Arena;
+import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.match.Match;
+import xyz.refinedev.practice.match.MatchSnapshot;
+import xyz.refinedev.practice.match.team.Team;
+import xyz.refinedev.practice.match.team.TeamPlayer;
+import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.profile.ProfileState;
+import xyz.refinedev.practice.queue.QueueType;
+import xyz.refinedev.practice.util.location.Circle;
+import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
-import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FFAMatch extends Match {
+
+    private final Array plugin = Array.getInstance();
 
     private final Team team;
 
@@ -82,7 +80,7 @@ public class FFAMatch extends Match {
 
         if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
-        SpigotHook.getKnockbackType().appleKitKnockback(player, getKit());
+        plugin.getKnockbackManager().kitKnockback(player, getKit());
         player.setNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         Team team = getTeam(player);
@@ -92,8 +90,8 @@ public class FFAMatch extends Match {
             enemyProfile.handleVisibility();
         }
 
-        NameTagHandler.reloadPlayer(player);
-        NameTagHandler.reloadOthersFor(player);
+        plugin.getNameTagHandler().reloadPlayer(player);
+        plugin.getNameTagHandler().reloadOthersFor(player);
     }
 
     @Override
@@ -102,7 +100,7 @@ public class FFAMatch extends Match {
         for ( Player player : getPlayers() ) {
             Location midSpawn = this.getMidSpawn();
 
-            List<Location> circleLocations = Circle.getCircle(midSpawn, Essentials.getMeta().getFfaSpawnRadius(), this.getPlayers().size());
+            List<Location> circleLocations = Circle.getCircle(midSpawn, plugin.getConfigHandler().getFFA_SPAWN_RADIUS(), this.getPlayers().size());
             Location center = midSpawn.clone();
             Location loc = circleLocations.get(i);
             Location target = loc.setDirection(center.subtract(loc).toVector());
@@ -143,7 +141,7 @@ public class FFAMatch extends Match {
                             player.setFireTicks(0);
                             player.updateInventory();
 
-                            SpigotHook.getKnockbackType().appleKitKnockback(player, getKit());
+                            plugin.getKnockbackManager().kitKnockback(player, getKit());
 
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
@@ -155,7 +153,7 @@ public class FFAMatch extends Match {
                     }
                 }
             }
-        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : 4 * 20L);
+        }.runTaskLater(plugin, (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : plugin.getConfigHandler().getTELEPORT_DELAY() * 20L);
         return true;
     }
 

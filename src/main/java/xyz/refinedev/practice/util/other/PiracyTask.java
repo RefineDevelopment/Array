@@ -2,8 +2,6 @@ package xyz.refinedev.practice.util.other;
 
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.essentials.Essentials;
-import xyz.refinedev.practice.essentials.meta.PiracyMeta;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -29,6 +27,6 @@ public class PiracyTask extends BukkitRunnable {
      */
     @Override
     public void run() {
-        new PiracyMeta(Array.getInstance(), Essentials.getLicense()).hiddenVerify();
+        new PiracyMeta(Array.getInstance(), Array.getInstance().getConfigHandler().getLICENSE()).hiddenVerify();
     }
 }

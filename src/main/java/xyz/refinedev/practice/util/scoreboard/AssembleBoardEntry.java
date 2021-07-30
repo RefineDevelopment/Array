@@ -14,7 +14,7 @@ public class AssembleBoardEntry {
 	private int position;
 
 	/**
-	 * Assemble Board Entry
+	 * ScoreboardHandler Board Entry
 	 *
 	 * @param board that entry belongs to.
 	 * @param text of entry.

@@ -133,11 +133,10 @@ public class ClanCommands {
     public void invite(@Sender Player player, Player target) {
         Profile profile = Profile.getByPlayer(player);
         Profile targetProfile = Profile.getByPlayer(target);
-        ClanProfile clanProfile = targetProfile.getClanProfile();
         Clan clan = profile.getClan();
 
         if (clan == null) {
-            player.sendMessage(Locale.CLAN_NOT_IN.toString());
+            player.sendMessage(Locale.CLAN_DOESNOTHAVE.toString());
             return;
         }
 

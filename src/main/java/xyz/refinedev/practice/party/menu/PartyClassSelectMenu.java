@@ -17,6 +17,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -29,9 +30,7 @@ import java.util.*;
 
 public class PartyClassSelectMenu extends PaginatedMenu {
 
-    public PartyClassSelectMenu() {
-        this.setAutoUpdate(true);
-    }
+    {this.setAutoUpdate(true);}
 
     @Override
     public String getPrePaginatedTitle(Player player) {
@@ -45,20 +44,21 @@ public class PartyClassSelectMenu extends PaginatedMenu {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         Party party = profile.getParty();
 
+        //Maybe they left?, shouldn't happen but just checking
         for (UUID uuid : new ArrayList<>(party.getKits().keySet())) {
-            if (!(party.getPlayers().contains(uuid))) {
+            if (!party.getPlayers().stream().map(Player::getUniqueId).collect(Collectors.toList()).contains(uuid)) {
                 party.getKits().remove(uuid);
             }
         }
 
-        if (party != null && party.getPlayers() != null) {
+        if (!party.getPlayers().isEmpty()) {
             party.getPlayers().forEach(target -> buttons.put(buttons.size(), new MemberDisplayButton(target.getUniqueId())));
         }
         return buttons;
     }
 
     @AllArgsConstructor
-    public static class MemberDisplayButton extends Button {
+    public class MemberDisplayButton extends Button {
 
         private final UUID uuid;
 
@@ -79,8 +79,7 @@ public class PartyClassSelectMenu extends PaginatedMenu {
                     getPlayerClass(partyPlayer.getPlayer()).equals("Diamond") ? Material.DIAMOND_CHESTPLATE :
                     getPlayerClass(partyPlayer).equals("Bard") ? Material.GOLD_CHESTPLATE :
                     getPlayerClass(partyPlayer).equals("Archer") ? Material.LEATHER_CHESTPLATE :
-                    getPlayerClass(partyPlayer).equals("Rogue") ? Material.IRON_CHESTPLATE :
-                    null)
+                    getPlayerClass(partyPlayer).equals("Rogue") ? Material.IRON_CHESTPLATE : null)
                    .name("&a" + partyPlayer.getName())
                    .amount(1)
                    .lore(lore)
@@ -97,43 +96,40 @@ public class PartyClassSelectMenu extends PaginatedMenu {
                     String pvpClass = party.getKits().get(uuid);
 
                     if (pvpClass == null) {
-                        Array.logger("&cParty Class is null!");
+                        player.sendMessage(CC.translate("&7An internal error occured, please contact the author of this plugin!"));
+                        player.closeInventory();
                         return;
                     }
 
                     switch (pvpClass) {
                         case "Diamond":
                         case "diamond": {
-                            party.getKits().remove(uuid);
-                            party.getKits().put(uuid, "Bard");
+                            party.getKits().replace(uuid, "Bard");
                             party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Bard"));
                             break;
                         }
                         case "Bard":
                         case "bard": {
-                            party.getKits().remove(uuid);
-                            party.getKits().put(uuid, "Archer");
+                            party.getKits().replace(uuid, "Archer");
                             party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Archer"));
                             break;
                         }
                         case "Archer":
                         case "archer": {
-                            party.getKits().remove(uuid);
-                            party.getKits().put(uuid, "Rogue");
+                            party.getKits().replace(uuid, "Rogue");
                             party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Rogue"));
                             break;
                         }
                         case "Rogue":
                         case "rogue": {
-                            party.getKits().remove(uuid);
-                            party.getKits().put(uuid, "Diamond");
+                            party.getKits().replace(uuid, "Diamond");
                             party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Diamond"));
                             break;
                         }
                     }
                 } else {
                     Button.playFail(player);
-                    player.sendMessage(ChatColor.RED + "You are not the leader of your party.");
+                    player.sendMessage(Locale.PARTY_NOTLEADER.toString());
                 }
             }
         }
@@ -144,7 +140,7 @@ public class PartyClassSelectMenu extends PaginatedMenu {
         }
     }
 
-    public static String getPlayerClass(Player player) {
+    public String getPlayerClass(Player player) {
         Party party = Profile.getByPlayer(player).getParty();
 
         if (party == null) {

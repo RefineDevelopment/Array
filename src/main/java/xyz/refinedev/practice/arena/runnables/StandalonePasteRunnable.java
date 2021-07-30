@@ -67,7 +67,7 @@ public class StandalonePasteRunnable implements Runnable {
                             player.sendMessage(CC.translate("&8[&c&lArray&8] &7Finished pasting &c" + copiedArena.getName() + "&7's " + amount + " &7duplicate arenas."));
                         }
                     }
-                    Array.logger("&8[&c&lArray&8] &7Finished pasting &c" + copiedArena.getName() + "&7's " + amount + " &7duplicate arenas.");
+                    plugin.logger("&8[&c&lArray&8] &7Finished pasting &c" + copiedArena.getName() + "&7's " + amount + " &7duplicate arenas.");
                     Arena.setPasting(false);
                     Arena.getArenas().forEach(Arena::save);
                 }

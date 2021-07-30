@@ -3,6 +3,7 @@ package xyz.refinedev.practice.cmds.standalone;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 import org.bukkit.entity.Player;
@@ -23,7 +24,7 @@ public class SpectateCommand {
         Profile profile = Profile.getByUuid(player.getUniqueId());
 
         if (profile.isBusy()) {
-            player.sendMessage(Locale.ERROR_UNAVAILABLE.toString());
+            player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
         }
 
@@ -60,5 +61,33 @@ public class SpectateCommand {
         } else {
             player.sendMessage(Locale.ERROR_FREE.toString());
         }
+    }
+
+    @Command(name = "show", aliases = "view", desc = "Show spectators")
+    public void show(@Sender Player player) {
+        Profile profile = Profile.getByPlayer(player);
+        if (!profile.isInMatch()) {
+            player.sendMessage(Locale.MATCH_NOT_IN.toString());
+            return;
+        }
+        if (!profile.isSpectating()) {
+            player.sendMessage(Locale.ERROR_NOTSPECTATING.toString());
+            return;
+        }
+        profile.getMatch().toggleSpectators(player);
+    }
+
+    @Command(name = "hide", aliases = "disable", desc = "Hide spectators")
+    public void hide(@Sender Player player) {
+        Profile profile = Profile.getByPlayer(player);
+        if (!profile.isInMatch()) {
+            player.sendMessage(Locale.MATCH_NOT_IN.toString());
+            return;
+        }
+        if (!profile.isSpectating()) {
+            player.sendMessage(Locale.ERROR_NOTSPECTATING.toString());
+            return;
+        }
+        profile.getMatch().toggleSpectators(player);
     }
 }

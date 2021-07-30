@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.managers;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.selection.ArenaSelectionListener;
@@ -23,12 +24,12 @@ import xyz.refinedev.practice.util.nametags.listener.NameTagListener;
 
 import java.util.Arrays;
 
+@RequiredArgsConstructor
 public class ListenersManager {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin;
 
     public void init() {
-        Array.logger("&7Registering Listeners....");
         for ( Listener listener : Arrays.asList(
                 new ProfileListener(),
                 new MenuListener(),
@@ -48,7 +49,7 @@ public class ListenersManager {
                 new ToggleSprintFix(),
                 new QueueListener()
         )) {
-            Bukkit.getPluginManager().registerEvents(listener, plugin);
+            this.plugin.getServer().getPluginManager().registerEvents(listener, plugin);
         }
     }
 }

@@ -16,42 +16,39 @@ public class ArrayAPI implements API {
 
     @Override
     public boolean isInLobby(Player player) {
-        Profile p = Profile.getByUuid(player.getUniqueId());
-        if (p.isInLobby())
-            return true;
-        if (p.isInQueue())
-            return true;
-        return !p.isInFight() && !p.isInEvent() && !p.isSpectating() && !p.isInTournament();
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        if (profile.isInLobby() || profile.isInQueue()) return true;
+        return !profile.isInFight() && !profile.isInEvent() && !profile.isSpectating() && !profile.isInTournament();
     }
 
     @Override
     public boolean isInParty(Player player) {
-        Profile p = Profile.getByPlayer(player);
-        return p.getParty() != null;
+        Profile profile = Profile.getByPlayer(player);
+        return profile.getParty() != null;
     }
 
     @Override
     public boolean isInFight(Player player) {
-        Profile p = Profile.getByPlayer(player);
-        return p.isInFight();
+        Profile profile = Profile.getByPlayer(player);
+        return profile.isInFight();
     }
 
     @Override
     public boolean isInTournament(Player player) {
-        Profile p = Profile.getByPlayer(player);
-        return p.isInTournament();
+        Profile profile = Profile.getByPlayer(player);
+        return profile.isInTournament();
     }
 
     @Override
     public boolean isInEvent(Player player) {
-        Profile p = Profile.getByPlayer(player);
-        return p.isInEvent();
+        Profile profile = Profile.getByPlayer(player);
+        return profile.isInEvent();
     }
 
     @Override
     public void handleVisibility(Player player) {
-        Profile p = Profile.getByUuid(player.getUniqueId());
-        p.handleVisibility();
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        profile.handleVisibility();
     }
 
     @Override

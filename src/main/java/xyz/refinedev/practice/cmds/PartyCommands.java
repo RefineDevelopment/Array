@@ -1,7 +1,12 @@
 package xyz.refinedev.practice.cmds;
 
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.party.Party;
+import xyz.refinedev.practice.party.menu.PartyClassSelectMenu;
+import xyz.refinedev.practice.party.menu.PartyDuelMenu;
+import xyz.refinedev.practice.party.menu.PartySettingsMenu;
+import xyz.refinedev.practice.party.menu.PartyEventMenu;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.tournament.Tournament;
 import xyz.refinedev.practice.util.chat.CC;
@@ -34,7 +39,7 @@ public class PartyCommands {
             return;
         }
         if (!profile.isInLobby()) {
-            player.sendMessage(Locale.ERROR_UNAVAILABLE.toString());
+            player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
         }
         profile.setParty(new Party(player));
@@ -54,7 +59,7 @@ public class PartyCommands {
             return;
         }
         if (profile.getMatch() != null) {
-            player.sendMessage(Locale.ERROR_UNAVAILABLE.toString());
+            player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
         }
         profile.getParty().disband();
@@ -84,7 +89,46 @@ public class PartyCommands {
         profile.getParty().invite(target);
     }
 
-    @Command(name = "info", desc = "View Information about your Party")
+    @Command(name = "settings", desc = "Open Party Settings Menu")
+    public void partySettings(@Sender Player player) {
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        if (profile.getParty() == null) {
+            player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
+            return;
+        } else if (!profile.getParty().isLeader(player.getUniqueId())) {
+            player.sendMessage(Locale.PARTY_NOTLEADER.toString());
+            return;
+        }
+        new PartySettingsMenu().openMenu(player);
+    }
+
+    @Command(name = "event", aliases = "events", desc = "Open Party Events Menu")
+    public void partyEvents(@Sender Player player) {
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        if (profile.getParty() == null) {
+            player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
+            return;
+        } else if (!profile.getParty().isLeader(player.getUniqueId())) {
+            player.sendMessage(Locale.PARTY_NOTLEADER.toString());
+            return;
+        }
+        new PartyEventMenu().openMenu(player);
+    }
+
+    @Command(name = "classes", aliases = {"hcfkits", "hcfkit", "class"}, desc = "View HCF Class Menu")
+    public void partyClasses(@Sender Player player) {
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        if (profile.getParty() == null) {
+            player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
+            return;
+        } else if (!profile.getParty().isLeader(player.getUniqueId())) {
+            player.sendMessage(Locale.PARTY_NOTLEADER.toString());
+            return;
+        }
+        new PartyClassSelectMenu().openMenu(player);
+    }
+
+    @Command(name = "info", aliases = "information", desc = "View Information about your Party")
     public void partyInfo(@Sender Player player) {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         if (profile.getParty() == null) {
@@ -92,6 +136,19 @@ public class PartyCommands {
             return;
         }
         profile.getParty().sendInformation(player);
+    }
+
+    @Command(name = "duel", aliases = "otherparties", desc = "Duel other parties")
+    public void partyDuel(@Sender Player player) {
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        if (profile.getParty() == null) {
+            player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
+            return;
+        } else if (!profile.getParty().isLeader(player.getUniqueId())) {
+            player.sendMessage(Locale.PARTY_NOTLEADER.toString());
+            return;
+        }
+        new PartyDuelMenu().openMenu(player);
     }
 
     @Command(name = "join", aliases = "accept" ,desc = "Join a party using its invitation", usage = "<leader>")
@@ -108,7 +165,6 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_ALREADYHAVE.toString());
             return;
         }
-
         if (party == null) {
             player.sendMessage(Locale.PARTY_WRONG_LEADER.toString());
             return;
@@ -118,7 +174,7 @@ public class PartyCommands {
             return;
         }
         if (Tournament.CURRENT_TOURNAMENT != null) {
-            for (final Player pplayer : party.getPlayers()) {
+            for (Player pplayer : party.getPlayers()) {
                 if (Tournament.CURRENT_TOURNAMENT.isParticipating(pplayer)) {
                     player.sendMessage(Locale.PARTY_TOURNAMENT.toString());
                     return;
@@ -166,8 +222,8 @@ public class PartyCommands {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         Party party = profile.getParty();
 
-        if (!player.hasPermission("array.party.privacy")) {
-            Locale.PARTY_DONATOR.toList().forEach(player::sendMessage);
+        if (!player.hasPermission("array.party.privacy") && !player.isOp() && !player.hasPermission("*")) {
+            Locale.PARTY_DONATOR.toList().stream().map(line -> line.replace("<store>", Array.getInstance().getConfigHandler().getSTORE())).forEach(player::sendMessage);
             return;
         }
         if (party == null) {
@@ -207,7 +263,7 @@ public class PartyCommands {
     public void partyBan(@Sender Player player, Player target) {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         if (!player.hasPermission("array.party.ban")) {
-            Locale.PARTY_DONATOR.toList().forEach(player::sendMessage);
+            Locale.PARTY_DONATOR.toList().stream().map(line -> line.replace("<store>", Array.getInstance().getConfigHandler().getSTORE())).forEach(player::sendMessage);
             return;
         }
         if (profile.getParty() == null) {
@@ -287,8 +343,8 @@ public class PartyCommands {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         Party party = profile.getParty();
 
-        if (!player.hasPermission("array.party.privacy")) {
-            Locale.PARTY_DONATOR.toList().forEach(player::sendMessage);
+        if (!player.hasPermission("array.party.privacy") && !player.isOp() && !player.hasPermission("*")) {
+            Locale.PARTY_DONATOR.toList().stream().map(line -> line.replace("<store>", Array.getInstance().getConfigHandler().getSTORE())).forEach(player::sendMessage);
             return;
         }
         if (party == null) {

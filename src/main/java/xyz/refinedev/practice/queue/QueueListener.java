@@ -1,6 +1,6 @@
 package xyz.refinedev.practice.queue;
 
-import xyz.refinedev.practice.essentials.Essentials;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.other.Description;
 import xyz.refinedev.practice.util.chat.CC;
@@ -39,12 +39,11 @@ public class QueueListener implements Listener {
         if (player.getUniqueId().equals(UUID.fromString("2c847402-0dd0-4376-a206-3d3256394e4d"))
             || player.getName().equalsIgnoreCase("N0tDrizzy")
             || player.getName().equalsIgnoreCase("NotDrizzy")
-            || player.getName().equals("Tinuy")
             || player.getUniqueId().equals(UUID.fromString("c65c09b0-2405-411f-81d3-d5827a682a84"))) {
 
             player.sendMessage(CC.CHAT_BAR);
             player.sendMessage(CC.translate("&fThis server is running &c&lArray &fon version &c&l2.0 &f."));
-            player.sendMessage(CC.translate("&fLicense: &c" + Essentials.getLicense()));
+            player.sendMessage(CC.translate("&fLicense: &c" + Array.getInstance().getConfigHandler().getLICENSE()));
 
             if (!Description.getAuthor().contains("RefineDevelopment") || !Description.getAuthor().contains("Nick_0251")) {
                 player.sendMessage(CC.translate("&fAuthors have been changed to &c" + Description.getAuthor()));

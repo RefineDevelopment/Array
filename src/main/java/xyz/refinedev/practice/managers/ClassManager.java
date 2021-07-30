@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.managers;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.refinedev.practice.pvpclasses.PvPClass;
 import xyz.refinedev.practice.pvpclasses.events.ArmorClassEquipEvent;
@@ -27,9 +28,10 @@ import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.*;
 
+@RequiredArgsConstructor
 public class ClassManager implements Listener {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin;
 
     // Mapping to get the PVP Class a player has equipped.
     private final List<PvPClass> pvpClasses = new ArrayList<>();
@@ -41,20 +43,20 @@ public class ClassManager implements Listener {
         pvpClasses.add(new Archer(plugin));
         pvpClasses.add(new Rogue(plugin));
 
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
+
         for ( PvPClass pvpClass : pvpClasses) {
             if (pvpClass instanceof Listener) {
-                plugin.getServer().getPluginManager().registerEvents((Listener) pvpClass, plugin);
+                this.plugin.getServer().getPluginManager().registerEvents((Listener) pvpClass, this.plugin);
             }
         }
+
         TaskUtil.runTimer(() -> {
-            for(Player player : Bukkit.getOnlinePlayers()){
+            for(Player player : this.plugin.getServer().getOnlinePlayers()){
                 Profile profile = Profile.getByUuid(player.getUniqueId());
                 Match match = profile.getMatch();
                 if (match != null && match.isHCFMatch()) {
-                    Bukkit.getScheduler().runTask(Array.getInstance(), () -> {
-                        attemptEquip(player);
-                    });
+                    TaskUtil.run(() -> attemptEquip(player));
                 }
             }
         }, 1 , 1);
