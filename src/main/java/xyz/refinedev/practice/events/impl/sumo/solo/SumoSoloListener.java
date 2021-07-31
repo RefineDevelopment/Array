@@ -95,10 +95,10 @@ public class SumoSoloListener implements Listener {
                         event.setCancelled(true);
                         return;
                     }
-                    
-                    PlayerUtil.spectator(player);
+
                     player.teleport(plugin.getEventManager().getSpectator(sumo));
                     profile.getEvent().handleDeath(player);
+                    profile.refreshHotbar();
                     return;
                 }
 

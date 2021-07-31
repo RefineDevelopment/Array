@@ -3,6 +3,8 @@ package xyz.refinedev.practice.util.other;
 import lombok.experimental.UtilityClass;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.ArrayCache;
+import xyz.refinedev.practice.events.meta.player.EventPlayer;
+import xyz.refinedev.practice.events.meta.player.EventPlayerState;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.hotbar.HotbarLayout;
 import net.minecraft.server.v1_8_R3.*;
@@ -62,12 +64,11 @@ public class PlayerUtil {
         player.setGameMode(GameMode.CREATIVE);
         player.setFlySpeed(0.2F);
 
-        if (profile.isInEvent()) {
-            player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.EVENT_SPECTATE, profile));
-        } else if (profile.isInMatch()) {
+        if (profile.isInEvent() && profile.getEvent().getEventPlayer(player.getUniqueId()).getState().equals(EventPlayerState.ELIMINATED)) {
+            player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.EVENT, profile));
+        } else if (profile.isInMatch() && !profile.getMatch().getTeamPlayer(player).isAlive()) {
             player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.MATCH_SPECTATE, profile));
         }
-
         player.updateInventory();
     }
 

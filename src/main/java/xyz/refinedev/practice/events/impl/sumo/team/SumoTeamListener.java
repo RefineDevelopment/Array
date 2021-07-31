@@ -96,9 +96,9 @@ public class SumoTeamListener implements Listener {
                         return;
                     }
                     
-                    PlayerUtil.spectator(player);
                     player.teleport(plugin.getEventManager().getSpectator(sumo));
                     profile.getEvent().handleDeath(player);
+                    profile.refreshHotbar();
                     return;
                 }
 

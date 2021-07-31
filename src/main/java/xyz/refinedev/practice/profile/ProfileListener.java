@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.profile;
 
-import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.events.profile.SpawnTeleportEvent;
 import xyz.refinedev.practice.match.MatchState;
 import xyz.refinedev.practice.util.chat.CC;
@@ -220,6 +219,9 @@ public class ProfileListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         Profile profile = new Profile(uuid);
+
+        //We can use AsyncPlayerLoginEvent but that was creating Broken profiles
+        //for no reason
         TaskUtil.runAsync(() -> {
             try {
                 profile.load();
@@ -274,12 +276,7 @@ public class ProfileListener implements Listener {
                 event.setCancelled(true);
                 profile.getKitEditor().setActive(false);
                 PlayerUtil.reset(shooter);
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        profile.refreshHotbar();
-                    }
-                }.runTaskLaterAsynchronously(Array.getInstance(), 2L);
+                TaskUtil.runLaterAsync(profile::refreshHotbar, 2L);
             }
         }
     }
@@ -300,12 +297,7 @@ public class ProfileListener implements Listener {
                     event.setCancelled(true);
                     profile.getKitEditor().setActive(false);
                     PlayerUtil.reset(shooter);
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            profile.refreshHotbar();
-                        }
-                    }.runTaskLaterAsynchronously(Array.getInstance(), 2L);
+                    TaskUtil.runLaterAsync(profile::refreshHotbar, 2L);
                 }
             }
     }
@@ -318,18 +310,13 @@ public class ProfileListener implements Listener {
      */
     @EventHandler
     public void onUse(PlayerInteractEvent event) {
-        final Profile profile=Profile.getByUuid(event.getPlayer().getUniqueId());
+        final Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
         if (profile.isInLobby()) {
             if (profile.getKitEditor().isActive()) {
                 event.setCancelled(true);
                 profile.getKitEditor().setActive(false);
                 PlayerUtil.reset(event.getPlayer());
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        profile.refreshHotbar();
-                    }
-                }.runTaskLaterAsynchronously(Array.getInstance(), 2L);
+                TaskUtil.runLaterAsync(profile::refreshHotbar, 2L);
             }
         }
     }

@@ -194,11 +194,11 @@ public class HotbarManager {
                     switch (item.getLayout()) {
                         case EVENT_WAITING: {
                             if (profile.getEvent().isWaiting()) {
-                                HotbarItem teamItem = getHotbarItem(HotbarType.EVENT_TEAM);
-                                if (profile.getEvent().isTeam()) {
-                                    if (teamItem != null) toReturn[teamItem.getSlot()] = teamItem.getItem();
+                                if (item.getType().equals(HotbarType.EVENT_TEAM) && profile.getEvent().isTeam()) {
+                                    toReturn[item.getSlot()] = item.getItem();
+                                } else if (!item.getType().equals(HotbarType.EVENT_TEAM)) {
+                                    toReturn[item.getSlot()] = item.getItem();
                                 }
-                                toReturn[item.getSlot()] = item.getItem();
                             }
                             break;
                         }

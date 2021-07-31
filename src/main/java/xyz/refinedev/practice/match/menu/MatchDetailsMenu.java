@@ -99,7 +99,7 @@ public class MatchDetailsMenu extends Menu {
                 MatchSnapshot cachedInventory;
 
                 try {
-                    cachedInventory = MatchSnapshot.getByUuid(UUID.fromString(switchTo.getUuid().toString()));
+                    cachedInventory = MatchSnapshot.getByUuid(switchTo.getUuid());
                 } catch (Exception e) {
                     cachedInventory = MatchSnapshot.getByName(switchTo.getUuid().toString());
                 }

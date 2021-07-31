@@ -44,7 +44,6 @@ public class KitEditorListener implements Listener {
                 new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(event.getPlayer());
             }
 
-
             event.getPlayer().sendMessage(Locale.KITEDITOR_RENAMED.toString().replace("<custom_name>", customName));
         }
     }
@@ -65,18 +64,18 @@ public class KitEditorListener implements Listener {
             if (!profile.isInSomeSortOfFight() && player.getGameMode() == GameMode.SURVIVAL) {
                 if (!profile.isInEvent()) {
                     Inventory clicked = event.getClickedInventory();
-
                     if (profile.getKitEditor().isActive()) {
                         if (clicked == null) {
                             event.setCancelled(true);
+                            event.setCursor(null);
                             player.updateInventory();
-
                         } else if (clicked.equals(player.getOpenInventory().getTopInventory())) {
                             if (event.getCursor().getType() != Material.AIR &&
                                 event.getCurrentItem().getType() == Material.AIR ||
                                 event.getCursor().getType() != Material.AIR &&
                                 event.getCurrentItem().getType() != Material.AIR) {
                                 event.setCancelled(true);
+                                event.setCursor(null);
                                 player.updateInventory();
                             }
                         }

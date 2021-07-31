@@ -38,7 +38,7 @@ public class EventWaterTask extends BukkitRunnable {
             Block body = player.getLocation().getBlock();
             Block head = body.getRelative(BlockFace.UP);
             if (body.getType() == Material.WATER || body.getType() == Material.STATIONARY_WATER || head.getType() == Material.WATER || head.getType() == Material.STATIONARY_WATER) {
-                if ((event.isSumoSolo() || event.isSumoTeam()) && event.getState() != EventState.ROUND_ENDING) {
+                if ((event.isSumoSolo() || event.isSumoTeam()) && event.getState() == EventState.ROUND_FIGHTING) {
                     event.handleDeath(player);
                     return;
                 }

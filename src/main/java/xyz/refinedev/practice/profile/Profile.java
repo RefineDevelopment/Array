@@ -167,13 +167,8 @@ public class Profile {
 
             profiles.put(player.getUniqueId(), profile);
         }
-        if (!Array.getInstance().isDisabling()) {
-            //Save prevent data loss
-            TaskUtil.runTimerAsync(() -> {
-                Profile.getProfiles().values().forEach(Profile::save);
-                Profile.getProfiles().values().forEach(Profile::load);
-            }, 36000L, 36000L);
 
+        if (!Array.getInstance().isDisabling()) {
             //Reload Leaderboards
             TaskUtil.runTimerAsync(() -> {
                 Profile.loadUUIDCache();
@@ -181,7 +176,13 @@ public class Profile {
                 Profile.loadGlobalLeaderboards();
             }, 180 * 20L, 180 * 20L);
 
-            //Refresh players' hotbeds every 3 seconds
+            //Save prevent data loss
+            TaskUtil.runTimerAsync(() -> {
+                Profile.getProfiles().values().forEach(Profile::save);
+                Profile.getProfiles().values().forEach(Profile::load);
+            }, 36000L, 36000L);
+
+            //Refresh players' hotbar every 3 seconds
             TaskUtil.runTimerAsync(() -> Profile.getProfiles().values().forEach(Profile::checkForHotbarUpdate), 40L, 40L);
         }
     }
@@ -263,9 +264,7 @@ public class Profile {
      * Load the profile from the mongo database
      */
     public void load() {
-        mongoThread.execute(() -> {
             try {
-
                 Document document = collection.find(Filters.eq("uuid", uuid.toString())).first();
 
                 if (document  ==  null) {
@@ -342,7 +341,6 @@ public class Profile {
             } catch (Exception e) {
                 this.save();
             }
-        });
         new ProfileLoadEvent(this).call();
     }
 
@@ -350,7 +348,6 @@ public class Profile {
      * Save the profile to the mongo database
      */
     public void save() {
-        mongoThread.execute(() -> {
             Document document = new Document();
             document.put("uuid", uuid.toString());
             document.put("name", Bukkit.getOfflinePlayer(uuid).getName());
@@ -406,7 +403,6 @@ public class Profile {
             document.put("loadouts", kitsDocument);
 
             collection.replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
-        });
         new ProfileSaveEvent(this).call();
     }
 
@@ -588,7 +584,6 @@ public class Profile {
         }
     }
 
-
     public void reset() {
         PlayerUtil.reset(getPlayer());
     }
@@ -602,7 +597,7 @@ public class Profile {
         if (player != null) {
             PlayerUtil.reset(player);
 
-            if (isInLobby() && !kitEditor.isActive()) {
+            if (isInLobby()) {
                 if (hasParty()) {
                     player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.PARTY, this));
                 } else {
@@ -613,10 +608,10 @@ public class Profile {
             } else if (isSpectating()) {
                 TaskUtil.runLater(() -> PlayerUtil.spectator(player), 2L);
             } else if (isInEvent()) {
-                if (getEvent().getEventPlayer(uuid).getState().equals(EventPlayerState.ELIMINATED)) {
+                /*if (getEvent().getEventPlayer(uuid).getState().equals(EventPlayerState.ELIMINATED)) {
                     TaskUtil.runLater(() -> PlayerUtil.spectator(player), 2L);
                 }
-                player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.EVENT, this));
+                player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.EVENT, this));*/
             } else if (isInFight()) {
                 if (!match.getTeamPlayer(player).isAlive()) {
                     player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.MATCH_SPECTATE, this));

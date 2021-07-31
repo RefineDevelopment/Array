@@ -34,7 +34,7 @@ public class KitEditorMenu extends Menu {
     private static final int[] BORDER_POSITIONS = new int[]{1, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 28, 37, 46};
     private static final Button BORDER_BUTTON = Button.placeholder(Material.STAINED_GLASS_PANE, (byte) 8, " ");
 
-    KitEditorMenu() {
+     {
         setUpdateAfterClick(false);
     }
 
@@ -100,7 +100,7 @@ public class KitEditorMenu extends Menu {
         profile.getKitEditor().setActive(false);
 
         if (!profile.isInFight()) {
-            profile.refreshHotbar();
+            TaskUtil.run(profile::refreshHotbar);
         }
     }
 
@@ -187,8 +187,7 @@ public class KitEditorMenu extends Menu {
 
             Profile profile = Profile.getByUuid(player.getUniqueId());
 
-            player.getInventory()
-                    .setContents(profile.getKitEditor().getSelectedKit().getKitInventory().getContents());
+            player.getInventory().setContents(profile.getKitEditor().getSelectedKit().getKitInventory().getContents());
             player.updateInventory();
         }
 
@@ -216,18 +215,16 @@ public class KitEditorMenu extends Menu {
             Button.playNeutral(player);
             player.closeInventory();
 
-            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile=Profile.getByUuid(player.getUniqueId());
 
             if (profile.getKitEditor().getSelectedKitInventory() != null) {
                 profile.getKitEditor().getSelectedKitInventory().setContents(player.getInventory().getContents());
             }
 
-        PlayerUtil.reset(player);
-        profile.refreshHotbar();
+            profile.refreshHotbar();
 
             new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(player);
         }
-
     }
 
     @AllArgsConstructor
