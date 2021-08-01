@@ -55,6 +55,7 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 3
     LAYOUT_TYPE: INTERNAL
+    COMMAND: "/event join"
     #If rematch items are added to the inventory
     #and event join item is given then we move it to
     #this slot specifically to prevent overriding

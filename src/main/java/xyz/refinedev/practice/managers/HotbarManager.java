@@ -11,6 +11,7 @@ import xyz.refinedev.practice.profile.hotbar.HotbarType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.BasicConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
+import xyz.refinedev.practice.util.other.PlayerUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -76,12 +77,10 @@ public class HotbarManager {
             if (key == null) return;
 
             String path = key + ".";
-
-            if (!config.getBoolean(path + "ENABLED")) continue;
-
+            
             final ItemBuilder builder = new ItemBuilder(Material.valueOf(config.getString(path + "MATERIAL")));
-
             builder.name(CC.translate(config.getString(path + "NAME")));
+
             if (config.getInteger(path + "DURABILITY") != 0) builder.durability(config.getInteger(path + "DURABILITY"));
             if (config.getStringList(path + "LORE") != null || !config.getStringList(path + "LORE").isEmpty()) builder.lore(config.getStringList(path + "LORE"));
 
@@ -97,6 +96,7 @@ public class HotbarManager {
             }
 
             HotbarItem hotbarItem = new HotbarItem(HotbarType.CUSTOM, layout, builder.build(), slot);
+            hotbarItem.setEnabled(config.getBoolean(path + "ENABLED"));
             if (command != null && !command.equalsIgnoreCase("")) {
                 if (!command.contains("/")) {
                     plugin.logger("&cInvalid Command setup for " + key + ".");
@@ -132,7 +132,7 @@ public class HotbarManager {
                 boolean activeEvent = plugin.getEventManager().getActiveEvent() != null && eventJoinEnabled;
 
                 int eventRematchAddSlot = config.getInteger("HOTBAR_ITEMS.EVENT_JOIN.MOVE_SLOT_TO.REMATCH_ADDED");
-                int partyEventSlot = config.getInteger("HOTBAR_ITEMS.PARTY_CREATE.MOVE_SLOT_TO.EVENT_ADDED");
+                int partyEventSlot = config.getInteger("HOTBAR_ITEMS.PARTY_CREATE.MOVE_SLOT_TO.EVENT_JOIN_ADDED");
                 int partyRematchSlot = config.getInteger("HOTBAR_ITEMS.PARTY_CREATE.MOVE_SLOT_TO.REMATCH_ADDED");
                 int partybothSlot = config.getInteger("HOTBAR_ITEMS.PARTY_CREATE.MOVE_SLOT_TO.EVENT_JOIN_AND_REMATCH_ADDED");
 
@@ -236,6 +236,7 @@ public class HotbarManager {
                 for ( HotbarItem item : matchItems ) {
                     toReturn[item.getSlot()] = item.getItem();
                 }
+                PlayerUtil.spectator(profile.getPlayer());
                 break;
             }
         }

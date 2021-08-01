@@ -63,12 +63,6 @@ public class PlayerUtil {
         player.setFlying(true);
         player.setGameMode(GameMode.CREATIVE);
         player.setFlySpeed(0.2F);
-
-        if (profile.isInEvent() && profile.getEvent().getEventPlayer(player.getUniqueId()).getState().equals(EventPlayerState.ELIMINATED)) {
-            player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.EVENT, profile));
-        } else if (profile.isInMatch() && !profile.getMatch().getTeamPlayer(player).isAlive()) {
-            player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.MATCH_SPECTATE, profile));
-        }
         player.updateInventory();
     }
 

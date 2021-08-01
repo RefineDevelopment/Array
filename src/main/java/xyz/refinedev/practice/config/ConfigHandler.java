@@ -53,9 +53,14 @@ public class ConfigHandler {
     public ConfigHandler(Array plugin) {
         this.plugin = plugin;
         this.config = plugin.getMainConfig();
+    }
 
+    public void init() {
         this.NEW_VERSION = Description.getVersion();
         this.LICENSE = config.getStringOrDefault("LICENSE", "XXXX-XXXX-XXXX-XXXX");
+
+        PiracyMeta piracyMeta = new PiracyMeta(this.plugin, this.getLICENSE());
+        piracyMeta.verify();
 
         final String key = "SETTINGS.";
 
@@ -100,11 +105,6 @@ public class ConfigHandler {
         if (NAMETAGS_ENABLED) this.loadNametags();
 
         UPDATE_NOTIFICATION = config.getBoolean("UPDATE_NOTIFICATION");
-    }
-
-    public void init() {
-        PiracyMeta piracyMeta = new PiracyMeta(this.plugin, this.getLICENSE());
-        piracyMeta.verify();
     }
 
     public void setupEssentials() {

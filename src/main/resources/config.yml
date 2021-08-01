@@ -10,7 +10,7 @@ MONGO:
   URI-MODE: true
   NORMAL:
     HOST: 127.0.0.1
-    PORT: '27017'
+    PORT: 27017
     DATABASE: Array
     AUTHENTICATION:
       ENABLED: false
@@ -46,12 +46,12 @@ JOIN_MESSAGE:
     - ""
 
 QUEUE_LORE:
-  - "&c&lQueue"
-  - "&7In Queue: &c<in_queue>"
-  - "&7In Fight: &c<in_fight>"
+  - "&7&m------------------------"
+  - "&7* &fIn Queue: &c<in_queue>"
+  - "&7* &fIn Fight: &c<in_fight>"
   - ""
-  - "&7Click to join queue."
-  - ""
+  - "&fClick to join queue"
+  - "&7&m------------------------"
 
 #In Seconds
 COOLDOWNS:

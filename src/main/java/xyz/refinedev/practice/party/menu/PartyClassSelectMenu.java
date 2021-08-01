@@ -1,7 +1,10 @@
 package xyz.refinedev.practice.party.menu;
 
-import lombok.AllArgsConstructor;
-import xyz.refinedev.practice.Array;
+import lombok.RequiredArgsConstructor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
@@ -9,12 +12,6 @@ import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.pagination.PaginatedMenu;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -57,8 +54,8 @@ public class PartyClassSelectMenu extends PaginatedMenu {
         return buttons;
     }
 
-    @AllArgsConstructor
-    public class MemberDisplayButton extends Button {
+    @RequiredArgsConstructor
+    public static class MemberDisplayButton extends Button {
 
         private final UUID uuid;
 
@@ -66,21 +63,23 @@ public class PartyClassSelectMenu extends PaginatedMenu {
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
             
-            Player partyPlayer = Bukkit.getPlayer(uuid);
+            Profile profile = Profile.getByUuid(uuid);
+            Party party = profile.getParty();
+            String pvpClass = party.getKits().get(uuid);
 
             lore.add(CC.MENU_BAR);
-            lore.add(getPlayerClass(partyPlayer).equals("Diamond") ? "&7» &cDiamond" : "&7Diamond");
-            lore.add(getPlayerClass(partyPlayer).equals("Bard") ? "&7» &cBard" : "&7Bard");
-            lore.add(getPlayerClass(partyPlayer).equals("Archer") ? "&7» &cArcher" : "&7Archer");
-            lore.add(getPlayerClass(partyPlayer).equals("Rogue") ? "&7» &cRogue" : "&7Rogue");
+            lore.add(pvpClass.equals("Diamond") ? "&7» &cDiamond" : "&7Diamond");
+            lore.add(pvpClass.equals("Bard") ? "&7» &cBard" : "&7Bard");
+            lore.add(pvpClass.equals("Archer") ? "&7» &cArcher" : "&7Archer");
+            lore.add(pvpClass.equals("Rogue") ? "&7» &cRogue" : "&7Rogue");
             lore.add(CC.MENU_BAR);
 
             return new ItemBuilder(
-                    getPlayerClass(partyPlayer.getPlayer()).equals("Diamond") ? Material.DIAMOND_CHESTPLATE :
-                    getPlayerClass(partyPlayer).equals("Bard") ? Material.GOLD_CHESTPLATE :
-                    getPlayerClass(partyPlayer).equals("Archer") ? Material.LEATHER_CHESTPLATE :
-                    getPlayerClass(partyPlayer).equals("Rogue") ? Material.IRON_CHESTPLATE : null)
-                   .name("&a" + partyPlayer.getName())
+                    pvpClass.equals("Diamond") ? Material.DIAMOND_CHESTPLATE :
+                    pvpClass.equals("Bard") ? Material.GOLD_CHESTPLATE :
+                    pvpClass.equals("Archer") ? Material.LEATHER_CHESTPLATE :
+                    pvpClass.equals("Rogue") ? Material.IRON_CHESTPLATE : null)
+                   .name("&a" + profile.getName())
                    .amount(1)
                    .lore(lore)
                    .build();
@@ -88,6 +87,7 @@ public class PartyClassSelectMenu extends PaginatedMenu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
+            Profile profile = Profile.getByUuid(uuid);
             Party party = Profile.getByPlayer(player).getParty();
 
             if (party != null) {
@@ -96,37 +96,29 @@ public class PartyClassSelectMenu extends PaginatedMenu {
                     String pvpClass = party.getKits().get(uuid);
 
                     if (pvpClass == null) {
-                        player.sendMessage(CC.translate("&7An internal error occured, please contact the author of this plugin!"));
+                        player.sendMessage(CC.translate("&7An internal error occurred, please contact the author of this plugin!"));
                         player.closeInventory();
                         return;
                     }
-
                     switch (pvpClass) {
-                        case "Diamond":
-                        case "diamond": {
+                        case "Diamond": {
                             party.getKits().replace(uuid, "Bard");
-                            party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Bard"));
                             break;
                         }
-                        case "Bard":
-                        case "bard": {
+                        case "Bard": {
                             party.getKits().replace(uuid, "Archer");
-                            party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Archer"));
                             break;
                         }
-                        case "Archer":
-                        case "archer": {
+                        case "Archer": {
                             party.getKits().replace(uuid, "Rogue");
-                            party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Rogue"));
                             break;
                         }
-                        case "Rogue":
-                        case "rogue": {
+                        case "Rogue": {
                             party.getKits().replace(uuid, "Diamond");
-                            party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Diamond"));
                             break;
                         }
                     }
+                    party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", pvpClass).replace("<target>", profile.getName()));
                 } else {
                     Button.playFail(player);
                     player.sendMessage(Locale.PARTY_NOTLEADER.toString());
@@ -138,33 +130,5 @@ public class PartyClassSelectMenu extends PaginatedMenu {
         public boolean shouldUpdate(Player player, ClickType clickType) {
             return true;
         }
-    }
-
-    public String getPlayerClass(Player player) {
-        Party party = Profile.getByPlayer(player).getParty();
-
-        if (party == null) {
-            return "None";
-        }
-
-        String pvpclass = party.getKits().get(player.getUniqueId());
-
-        if (pvpclass == null) {
-            return "Diamond";
-        }
-
-        if (pvpclass.contains("Bard")) {
-            return "Bard";
-        }
-        
-        if (pvpclass.contains("Rogue")) {
-            return "Rogue";
-        }
-
-        if (pvpclass.contains("Archer")) {
-            return "Archer";
-        }
-
-        return "Diamond";
     }
 }    

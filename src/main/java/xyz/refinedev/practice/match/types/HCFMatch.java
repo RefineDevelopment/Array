@@ -213,8 +213,8 @@ public class HCFMatch extends Match {
             player.setFlying(true);
 
             Profile profile = Profile.getByUuid(player.getUniqueId());
-            profile.refreshHotbar();
             profile.setState(ProfileState.SPECTATING);
+            profile.refreshHotbar();
         }
     }
 

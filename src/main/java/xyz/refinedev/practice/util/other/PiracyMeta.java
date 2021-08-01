@@ -320,7 +320,7 @@ public class PiracyMeta {
     }
 
     private static boolean isLinux() {
-        return (OS.contains("inux"));
+        return (OS.contains("linux"));
     }
 
     private static String getLinuxMacAddress() throws FileNotFoundException, NoSuchAlgorithmException {

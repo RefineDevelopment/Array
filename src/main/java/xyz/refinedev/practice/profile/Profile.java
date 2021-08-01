@@ -608,10 +608,7 @@ public class Profile {
             } else if (isSpectating()) {
                 TaskUtil.runLater(() -> PlayerUtil.spectator(player), 2L);
             } else if (isInEvent()) {
-                /*if (getEvent().getEventPlayer(uuid).getState().equals(EventPlayerState.ELIMINATED)) {
-                    TaskUtil.runLater(() -> PlayerUtil.spectator(player), 2L);
-                }
-                player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.EVENT, this));*/
+                player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.EVENT, this));
             } else if (isInFight()) {
                 if (!match.getTeamPlayer(player).isAlive()) {
                     player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.MATCH_SPECTATE, this));

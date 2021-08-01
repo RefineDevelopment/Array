@@ -450,11 +450,9 @@ public class SoloMatch extends Match {
         getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
         deadPlayer.spigot().respawn();
 
-        PlayerUtil.reset(deadPlayer);
-
         for ( Player otherPlayer : getPlayersAndSpectators() ) {
             Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
-            TaskUtil.runLater(() -> profile.handleVisibility(otherPlayer, deadPlayer), 3L);
+            TaskUtil.runLater(() -> profile.handleVisibility(otherPlayer, deadPlayer), 2L);
         }
     }
 

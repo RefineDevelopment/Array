@@ -124,24 +124,23 @@ public class Array extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        mainConfig = new BasicConfigurationFile(this, "config");
-        arenasConfig = new BasicConfigurationFile(this, "arenas");
-        kitsConfig = new BasicConfigurationFile(this, "kits");
-        eventsConfig = new BasicConfigurationFile(this, "events");
-        hotbarConfig = new BasicConfigurationFile(this, "hotbar");
-        messagesConfig = new BasicConfigurationFile(this, "lang");
-        tablistConfig = new BasicConfigurationFile(this, "tablist");
-        scoreboardConfig = new BasicConfigurationFile(this, "scoreboard");
-        divisionsConfig = new BasicConfigurationFile(this, "divisions");
-        menuConfig = new BasicConfigurationFile(this, "menus");
-        rateConfig = new BasicConfigurationFile(this, "ratings");
+        instance = this;
+        mainConfig = new BasicConfigurationFile(this, "config", false);
+        arenasConfig = new BasicConfigurationFile(this, "arenas", false);
+        kitsConfig = new BasicConfigurationFile(this, "kits", false);
+        eventsConfig = new BasicConfigurationFile(this, "events", false);
+        hotbarConfig = new BasicConfigurationFile(this, "hotbar", false);
+        messagesConfig = new BasicConfigurationFile(this, "lang", false);
+        tablistConfig = new BasicConfigurationFile(this, "tablist", false);
+        scoreboardConfig = new BasicConfigurationFile(this, "scoreboard", false);
+        divisionsConfig = new BasicConfigurationFile(this, "divisions", false);
+        menuConfig = new BasicConfigurationFile(this, "menus", false);
+        rateConfig = new BasicConfigurationFile(this, "ratings", false);
         //brawlConfig = new BasicConfigurationFile(this, "brawl");
-
     }
 
     @Override
     public void onEnable() {
-        instance = this;
         random = new Random();
         api = new ArrayAPI();
         drink = Drink.get(this);

@@ -253,7 +253,6 @@ public class EntityHider extends PacketAdapter implements Listener {
 
             dropItemNaturally(world , entity.getLocation(), stack , entity);
         }
-        event.getDrops().clear();
     }
 
 
@@ -270,7 +269,7 @@ public class EntityHider extends PacketAdapter implements Listener {
             }
         }
 
-        if(item.getItemStack().getType() == Material.ARROW) {
+        if (item.getItemStack().getType() == Material.ARROW) {
             Object handle = METHOD_CRAFTENTITY_GET_HANDLE.invoke(item);
             if(handle != null) {
                 Entity entity = (Entity) METHOD_ENTITY_GET_BUKKIT_ENTITY.invoke(handle);
