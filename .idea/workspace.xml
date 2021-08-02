@@ -6,19 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3c41a8b3-4728-4d1b-a454-565d875f3ead" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Array.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Array.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/config/ConfigHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/config/ConfigHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/HotbarManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/HotbarManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/HCFMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/HCFMatch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/SoloMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/SoloMatch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/TeamMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/TeamMatch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/PartyClassSelectMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/PartyClassSelectMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/EntityHider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/EntityHider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/PiracyMeta.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/PiracyMeta.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/PlayerUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/PlayerUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/hotbar.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/hotbar.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,12 +36,12 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ArrayCommands.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Locale.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/CMDManager.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/event/EventCommands.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ClanCommands.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/PartyCommands.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/event/EventCommands.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ArrayCommands.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/CMDManager.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ClanCommands.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Locale.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="1" />

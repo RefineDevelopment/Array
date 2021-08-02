@@ -76,7 +76,7 @@ public class HotbarManager {
         for ( String key : config.getConfiguration().getConfigurationSection("CUSTOM_ITEMS").getKeys(false) ) {
             if (key == null) return;
 
-            String path = key + ".";
+            String path = "CUSTOM_ITEMS." + key + ".";
             
             final ItemBuilder builder = new ItemBuilder(Material.valueOf(config.getString(path + "MATERIAL")));
             builder.name(CC.translate(config.getString(path + "NAME")));
