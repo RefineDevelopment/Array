@@ -229,7 +229,7 @@ public class PiracyMeta {
                 long t = Long.parseLong(unix);
                 long hashT = Long.parseLong(aa[1]);
 
-                if(Math.abs(t - hashT) > 1) {
+                if (Math.abs(t - hashT) > 1) {
                     return new String[]{"1", "FAILED_AUTHENTICATION", statusCode, String.valueOf(false)};
                 }
             }

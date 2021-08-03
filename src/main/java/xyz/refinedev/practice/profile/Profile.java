@@ -22,6 +22,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.api.events.leaderboards.GlobalLeaderboardsUpdateEvent;
@@ -170,20 +171,32 @@ public class Profile {
 
         if (!Array.getInstance().isDisabling()) {
             //Reload Leaderboards
-            TaskUtil.runTimerAsync(() -> {
-                Profile.loadUUIDCache();
-                Kit.getKits().forEach(Kit::updateKitLeaderboards);
-                Profile.loadGlobalLeaderboards();
-            }, 180 * 20L, 180 * 20L);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Profile.loadUUIDCache();
+                    Kit.getKits().forEach(Kit::updateKitLeaderboards);
+                    Profile.loadGlobalLeaderboards();
+                }
+            }.runTaskTimerAsynchronously(Array.getInstance(), 180 * 20L, 180 * 20L);
 
             //Save prevent data loss
-            TaskUtil.runTimerAsync(() -> {
-                Profile.getProfiles().values().forEach(Profile::save);
-                Profile.getProfiles().values().forEach(Profile::load);
-            }, 36000L, 36000L);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Profile.getProfiles().values().forEach(Profile::save);
+                    Profile.getProfiles().values().forEach(Profile::load);
+                }
+            }.runTaskTimerAsynchronously(Array.getInstance(), 36000L, 36000L);
 
             //Refresh players' hotbar every 3 seconds
-            TaskUtil.runTimerAsync(() -> Profile.getProfiles().values().forEach(Profile::checkForHotbarUpdate), 40L, 40L);
+            new BukkitRunnable() {
+
+                @Override
+                public void run() {
+                    Profile.getProfiles().values().forEach(Profile::checkForHotbarUpdate);
+                }
+            }.runTaskTimerAsynchronously(Array.getInstance(), 40L, 40L);
         }
     }
 
@@ -264,83 +277,83 @@ public class Profile {
      * Load the profile from the mongo database
      */
     public void load() {
-            try {
-                Document document = collection.find(Filters.eq("uuid", uuid.toString())).first();
+        try {
+            Document document=collection.find(Filters.eq("uuid", uuid.toString())).first();
 
-                if (document  ==  null) {
-                    this.save();
-                    return;
-                }
-
-                this.globalElo = document.getInteger("globalElo");
-
-                if (document.getString("clan") != null) this.clan = Clan.getByName(document.getString("clan"));
-
-                Document options = (Document) document.get("settings");
-
-                this.settings.setScoreboardEnabled(options.getBoolean("showScoreboard"));
-                this.settings.setAllowSpectators(options.getBoolean("allowSpectators"));
-                this.settings.setReceiveDuelRequests(options.getBoolean("receiveDuelRequests"));
-                this.settings.setPingFactor(options.getBoolean("pingFactor"));
-                this.settings.setDeathLightning(options.getBoolean("toggleLightning"));
-                this.settings.setPingScoreboard(options.getBoolean("pingScoreboard"));
-                this.settings.setCpsScoreboard(options.getBoolean("cpsScoreboard"));
-                this.settings.setTmessagesEnabled(options.getBoolean("tmessagesEnabled"));
-                this.settings.setVanillaTab(options.getBoolean("usingVanillaTab"));
-                this.settings.setShowPlayers(options.getBoolean("showPlayers"));
-
-                Document kitStatistics = (Document) document.get("kitStatistics");
-
-                for ( String key : kitStatistics.keySet() ) {
-                    Document kitDocument = (Document) kitStatistics.get(key);
-                    Kit kit = Kit.getByName(key);
-
-                    if (kit !=  null) {
-                        StatisticsData statisticsData = new StatisticsData();
-                        if (kitDocument.getInteger("elo") !=  null) {
-                            statisticsData.setElo(kitDocument.getInteger("elo"));
-                        } else {
-                            kitDocument.put("elo", 0);
-                        }
-                        if (kitDocument.getInteger("won") !=  null) {
-                            statisticsData.setWon(kitDocument.getInteger("won"));
-                        } else {
-                            kitDocument.put("won", 0);
-                        }
-                        if (kitDocument.getInteger("lost") !=  null) {
-                            statisticsData.setLost(kitDocument.getInteger("lost"));
-                        } else {
-                            kitDocument.put("lost", 0);
-                        }
-                        this.statisticsData.put(kit, statisticsData);
-                    }
-                }
-
-                Document kitsDocument = (Document) document.get("loadouts");
-
-                for ( String key : kitsDocument.keySet() ) {
-                    Kit kit = Kit.getByName(key);
-
-                    if (kit !=  null) {
-                        JsonArray kitsArray = new JsonParser().parse(kitsDocument.getString(key)).getAsJsonArray();
-                        KitInventory[] loadouts = new KitInventory[4];
-
-                        for ( JsonElement kitElement : kitsArray ) {
-                            JsonObject kitObject = kitElement.getAsJsonObject();
-
-                            KitInventory loadout = new KitInventory(kitObject.get("name").getAsString());
-                            loadout.setArmor(InventoryUtil.deserializeInventory(kitObject.get("armor").getAsString()));
-                            loadout.setContents(InventoryUtil.deserializeInventory(kitObject.get("contents").getAsString()));
-
-                            loadouts[kitObject.get("index").getAsInt()] = loadout;
-                        }
-
-                        statisticsData.get(kit).setLoadouts(loadouts);
-                    }
-                }
-            } catch (Exception e) {
+            if (document == null) {
                 this.save();
+                return;
             }
+
+            this.globalElo=document.getInteger("globalElo");
+
+            if (document.getString("clan") != null) this.clan=Clan.getByName(document.getString("clan"));
+
+            Document options=(Document) document.get("settings");
+
+            this.settings.setScoreboardEnabled(options.getBoolean("showScoreboard"));
+            this.settings.setAllowSpectators(options.getBoolean("allowSpectators"));
+            this.settings.setReceiveDuelRequests(options.getBoolean("receiveDuelRequests"));
+            this.settings.setPingFactor(options.getBoolean("pingFactor"));
+            this.settings.setDeathLightning(options.getBoolean("toggleLightning"));
+            this.settings.setPingScoreboard(options.getBoolean("pingScoreboard"));
+            this.settings.setCpsScoreboard(options.getBoolean("cpsScoreboard"));
+            this.settings.setTmessagesEnabled(options.getBoolean("tmessagesEnabled"));
+            this.settings.setVanillaTab(options.getBoolean("usingVanillaTab"));
+            this.settings.setShowPlayers(options.getBoolean("showPlayers"));
+
+            Document kitStatistics=(Document) document.get("kitStatistics");
+
+            for ( String key : kitStatistics.keySet() ) {
+                Document kitDocument=(Document) kitStatistics.get(key);
+                Kit kit=Kit.getByName(key);
+
+                if (kit != null) {
+                    StatisticsData statisticsData=new StatisticsData();
+                    if (kitDocument.getInteger("elo") != null) {
+                        statisticsData.setElo(kitDocument.getInteger("elo"));
+                    } else {
+                        kitDocument.put("elo", 0);
+                    }
+                    if (kitDocument.getInteger("won") != null) {
+                        statisticsData.setWon(kitDocument.getInteger("won"));
+                    } else {
+                        kitDocument.put("won", 0);
+                    }
+                    if (kitDocument.getInteger("lost") != null) {
+                        statisticsData.setLost(kitDocument.getInteger("lost"));
+                    } else {
+                        kitDocument.put("lost", 0);
+                    }
+                    this.statisticsData.put(kit, statisticsData);
+                }
+            }
+
+            Document kitsDocument=(Document) document.get("loadouts");
+
+            for ( String key : kitsDocument.keySet() ) {
+                Kit kit=Kit.getByName(key);
+
+                if (kit != null) {
+                    JsonArray kitsArray=new JsonParser().parse(kitsDocument.getString(key)).getAsJsonArray();
+                    KitInventory[] loadouts=new KitInventory[4];
+
+                    for ( JsonElement kitElement : kitsArray ) {
+                        JsonObject kitObject=kitElement.getAsJsonObject();
+
+                        KitInventory loadout=new KitInventory(kitObject.get("name").getAsString());
+                        loadout.setArmor(InventoryUtil.deserializeInventory(kitObject.get("armor").getAsString()));
+                        loadout.setContents(InventoryUtil.deserializeInventory(kitObject.get("contents").getAsString()));
+
+                        loadouts[kitObject.get("index").getAsInt()]=loadout;
+                    }
+
+                    statisticsData.get(kit).setLoadouts(loadouts);
+                }
+            }
+        } catch (Exception e) {
+            this.save();
+        }
         new ProfileLoadEvent(this).call();
     }
 
@@ -348,61 +361,61 @@ public class Profile {
      * Save the profile to the mongo database
      */
     public void save() {
-            Document document = new Document();
-            document.put("uuid", uuid.toString());
-            document.put("name", Bukkit.getOfflinePlayer(uuid).getName());
-            document.put("globalElo", globalElo);
+        Document document=new Document();
+        document.put("uuid", uuid.toString());
+        document.put("name", Bukkit.getOfflinePlayer(uuid).getName());
+        document.put("globalElo", globalElo);
 
-            if (clan != null) document.put("clan", clan.getName());
+        if (clan != null) document.put("clan", clan.getName());
 
-            Document optionsDocument = new Document();
-            optionsDocument.put("showScoreboard", settings.isScoreboardEnabled());
-            optionsDocument.put("allowSpectators", settings.isAllowSpectators());
-            optionsDocument.put("receiveDuelRequests", settings.isReceiveDuelRequests());
-            optionsDocument.put("pingFactor", settings.isPingFactor());
-            optionsDocument.put("toggleLightning", settings.isDeathLightning());
-            optionsDocument.put("pingScoreboard", settings.isPingScoreboard());
-            optionsDocument.put("tmessagesEnabled", settings.isTmessagesEnabled());
-            optionsDocument.put("usingVanillaTab", settings.isVanillaTab());
-            optionsDocument.put("cpsScoreboard", settings.isCpsScoreboard());
-            optionsDocument.put("showPlayers", settings.isShowPlayers());
+        Document optionsDocument=new Document();
+        optionsDocument.put("showScoreboard", settings.isScoreboardEnabled());
+        optionsDocument.put("allowSpectators", settings.isAllowSpectators());
+        optionsDocument.put("receiveDuelRequests", settings.isReceiveDuelRequests());
+        optionsDocument.put("pingFactor", settings.isPingFactor());
+        optionsDocument.put("toggleLightning", settings.isDeathLightning());
+        optionsDocument.put("pingScoreboard", settings.isPingScoreboard());
+        optionsDocument.put("tmessagesEnabled", settings.isTmessagesEnabled());
+        optionsDocument.put("usingVanillaTab", settings.isVanillaTab());
+        optionsDocument.put("cpsScoreboard", settings.isCpsScoreboard());
+        optionsDocument.put("showPlayers", settings.isShowPlayers());
 
-            document.put("settings", optionsDocument);
+        document.put("settings", optionsDocument);
 
-            Document kitStatisticsDocument = new Document();
-            for ( Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet() ) {
-                Document kitDocument = new Document();
-                kitDocument.put("elo", entry.getValue().getElo());
-                kitDocument.put("won", entry.getValue().getWon());
-                kitDocument.put("lost", entry.getValue().getLost());
-                kitStatisticsDocument.put(entry.getKey().getName(), kitDocument);
-            }
+        Document kitStatisticsDocument=new Document();
+        for ( Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet() ) {
+            Document kitDocument=new Document();
+            kitDocument.put("elo", entry.getValue().getElo());
+            kitDocument.put("won", entry.getValue().getWon());
+            kitDocument.put("lost", entry.getValue().getLost());
+            kitStatisticsDocument.put(entry.getKey().getName(), kitDocument);
+        }
 
-            document.put("kitStatistics", kitStatisticsDocument);
+        document.put("kitStatistics", kitStatisticsDocument);
 
-            Document kitsDocument = new Document();
-            for ( Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet() ) {
-                JsonArray kitsArray = new JsonArray();
+        Document kitsDocument=new Document();
+        for ( Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet() ) {
+            JsonArray kitsArray=new JsonArray();
 
-                for ( int i=0; i < 4; i++ ) {
-                    KitInventory loadout=entry.getValue().getLoadout(i);
+            for ( int i=0; i < 4; i++ ) {
+                KitInventory loadout=entry.getValue().getLoadout(i);
 
-                    if (loadout != null) {
-                        JsonObject kitObject = new JsonObject();
-                        kitObject.addProperty("index", i);
-                        kitObject.addProperty("name", loadout.getCustomName());
-                        kitObject.addProperty("armor", InventoryUtil.serializeInventory(loadout.getArmor()));
-                        kitObject.addProperty("contents", InventoryUtil.serializeInventory(loadout.getContents()));
-                        kitsArray.add(kitObject);
-                    }
+                if (loadout != null) {
+                    JsonObject kitObject=new JsonObject();
+                    kitObject.addProperty("index", i);
+                    kitObject.addProperty("name", loadout.getCustomName());
+                    kitObject.addProperty("armor", InventoryUtil.serializeInventory(loadout.getArmor()));
+                    kitObject.addProperty("contents", InventoryUtil.serializeInventory(loadout.getContents()));
+                    kitsArray.add(kitObject);
                 }
-
-                kitsDocument.put(entry.getKey().getName(), kitsArray.toString());
             }
 
-            document.put("loadouts", kitsDocument);
+            kitsDocument.put(entry.getKey().getName(), kitsArray.toString());
+        }
 
-            collection.replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
+        document.put("loadouts", kitsDocument);
+
+        collection.replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
         new ProfileSaveEvent(this).call();
     }
 
@@ -468,22 +481,20 @@ public class Profile {
     public void handleJoin() {
         Player player = getPlayer();
 
-        getPlayerList().removeIf(players -> players.getName().equalsIgnoreCase(player.getName()));
-
-        Profile.getPlayerList().add(player);
-        Profile.getProfiles().values().forEach(Profile::handleVisibility);
-
         plugin.getTaskThread().execute(() -> {
+            getPlayerList().removeIf(players -> players.getName().equalsIgnoreCase(player.getName()));
+            getPlayerList().add(player);
+
             ArrayCache.getPlayerCache().putIfAbsent(player.getName(), this.getUuid());
 
             this.setName(player.getName());
             this.refreshHotbar();
         });
-
         this.teleportToSpawn();
 
-        //Visibility Bug Fix
-        TaskUtil.runLater(this::handleVisibility, 5L);
+        for (Profile profile : profiles.values()) {
+            profile.handleVisibility();
+        }
     }
 
     /**
@@ -494,9 +505,7 @@ public class Profile {
         if (this.isInQueue()) this.getQueue().removePlayer(this.getQueueProfile());
 
         plugin.getTaskThread().execute(() -> {
-            //Remove from the Tab PlayerList
-            Profile.getPlayerList().remove(this.getPlayer());
-            //Save their Profile
+            getPlayerList().remove(this.getPlayer());
             this.save();
             //If there is a rematch request pending for them, remove it
             if (this.getRematchData() != null) {
@@ -505,7 +514,6 @@ public class Profile {
                     Profile.getByUuid(target.getUniqueId()).checkForHotbarUpdate();
                 }
             }
-            //Bug fix for tournament party leave
             if (this.getParty() !=null && Tournament.CURRENT_TOURNAMENT !=null && Tournament.CURRENT_TOURNAMENT.isParticipating(this.getPlayer())) {
                 Tournament.CURRENT_TOURNAMENT.leave(this.getParty());
             }
@@ -528,6 +536,17 @@ public class Profile {
             player.teleport(event.getLocation());
         }
     }
+
+    public void handleKillEffect(Match match) {
+
+    }
+
+    public void handleKillEffect(Event event) {
+
+    }
+
+
+    //public void handleKillEffect(Brawl brawl) {}
 
     /**
      * See if the profile's hotbar needs to be updated
@@ -580,7 +599,9 @@ public class Profile {
                 update = true;
             }
 
-            if (update) TaskUtil.run(this::refreshHotbar);
+            if (update) {
+                TaskUtil.run(this::refreshHotbar);
+            }
         }
     }
 
@@ -605,12 +626,10 @@ public class Profile {
                 }
             } else if (isInQueue()) {
                 player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.QUEUE, this));
-            } else if (isSpectating()) {
-                TaskUtil.runLater(() -> PlayerUtil.spectator(player), 2L);
             } else if (isInEvent()) {
                 player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.EVENT, this));
-            } else if (isInFight()) {
-                if (!match.getTeamPlayer(player).isAlive()) {
+            } else if (isInMatch()) {
+                if (!match.getTeamPlayer(player).isAlive() || state == ProfileState.SPECTATING) {
                     player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.MATCH_SPECTATE, this));
                 }
             }
@@ -791,7 +810,7 @@ public class Profile {
     public boolean isInBrawl() {
         return state == ProfileState.IN_BRAWL && brawl != null;
     }
-    
+
     public boolean isInSomeSortOfFight() {
         return (state == ProfileState.IN_FIGHT && match != null) || (state == ProfileState.IN_EVENT) || (state == ProfileState.IN_BRAWL);
     }

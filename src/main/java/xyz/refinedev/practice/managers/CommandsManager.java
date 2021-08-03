@@ -22,7 +22,7 @@ import xyz.refinedev.practice.util.command.CommandService;
  */
 
 @RequiredArgsConstructor
-public class CMDManager {
+public class CommandsManager {
 
     private final Array plugin;
     public final CommandService drink;

@@ -27,12 +27,13 @@ public abstract class Event {
 
 	protected String EVENT_PREFIX;
 
+	private final Array plugin = Array.getInstance();
+	private final EventManager eventManager = plugin.getEventManager();
+
 	private final Map<UUID, EventPlayer> eventPlayers = new HashMap<>();
 	private final Map<UUID, EventTeamPlayer> eventTeamPlayers = new HashMap<>();
 	private final List<UUID> spectators = new ArrayList<>();
 	private final List<Entity> entities = new ArrayList<>();
-	private final Array plugin = Array.getInstance();
-	private final EventManager eventManager = plugin.getEventManager();
 
 	private final String name;
 	private final PlayerSnapshot host;

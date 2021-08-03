@@ -29,6 +29,7 @@ public class TogglePlayersCMD {
         String disabled = Locale.SETTINGS_DISABLED.toString().replace("<setting_name>", "Player Visibility");
 
         player.sendMessage(settings.isShowPlayers() ? enabled : disabled);
+        profile.handleVisibility();
     }
 
 }

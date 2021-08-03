@@ -79,7 +79,7 @@ public class Array extends JavaPlugin {
     /*
      * All ours Configs
      */
-    private BasicConfigurationFile mainConfig, arenasConfig, kitsConfig, eventsConfig, menuConfig,
+    private BasicConfigurationFile mainConfig, arenasConfig, kitsConfig, eventsConfig, menuConfig, killeffectsConfig,
             messagesConfig, scoreboardConfig, tablistConfig, divisionsConfig, hotbarConfig, rateConfig;//, brawlConfig;
 
     /*
@@ -108,8 +108,9 @@ public class Array extends JavaPlugin {
     private EventManager eventManager;
     private HotbarManager hotbarManager;
     private ListenersManager listenersManager;
-    private CMDManager cmdManager;
+    private CommandsManager commandsManager;
     private KnockbackManager knockbackManager;
+    private KillEffectManager killEffectManager;
     private Divisions divisionsManager;
     private RatingsManager ratingsManager;
     private ClassManager classManager;
@@ -125,6 +126,7 @@ public class Array extends JavaPlugin {
     @Override
     public void onLoad() {
         instance = this;
+
         mainConfig = new BasicConfigurationFile(this, "config", false);
         arenasConfig = new BasicConfigurationFile(this, "arenas", false);
         kitsConfig = new BasicConfigurationFile(this, "kits", false);
@@ -136,6 +138,7 @@ public class Array extends JavaPlugin {
         divisionsConfig = new BasicConfigurationFile(this, "divisions", false);
         menuConfig = new BasicConfigurationFile(this, "menus", false);
         rateConfig = new BasicConfigurationFile(this, "ratings", false);
+        killeffectsConfig = new BasicConfigurationFile(this, "killeffects", false);
         //brawlConfig = new BasicConfigurationFile(this, "brawl");
     }
 
@@ -182,11 +185,14 @@ public class Array extends JavaPlugin {
         this.ratingsManager = new RatingsManager(this);
         this.ratingsManager.init();
 
+        this.killEffectManager = new KillEffectManager(this, killeffectsConfig);
+        this.killEffectManager.init();
+
         this.knockbackManager = new KnockbackManager(this);
         this.knockbackManager.init();
 
-        this.cmdManager = new CMDManager(this, drink);
-        this.cmdManager.init();
+        this.commandsManager= new CommandsManager(this, drink);
+        this.commandsManager.init();
 
         this.listenersManager = new ListenersManager(this);
         this.listenersManager.init();

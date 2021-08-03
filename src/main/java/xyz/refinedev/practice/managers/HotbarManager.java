@@ -4,6 +4,9 @@ import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.events.Event;
+import xyz.refinedev.practice.events.meta.player.EventPlayer;
+import xyz.refinedev.practice.events.meta.player.EventPlayerState;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.hotbar.HotbarItem;
 import xyz.refinedev.practice.profile.hotbar.HotbarLayout;
@@ -190,10 +193,13 @@ public class HotbarManager {
                 Collection<HotbarItem> eventItems = items.stream().filter(HotbarItem::isEnabled).filter(item -> (item.getLayout().equals(HotbarLayout.EVENT) || item.getLayout().equals(HotbarLayout.EVENT_SPECTATE) || item.getLayout().equals(HotbarLayout.EVENT_WAITING))).collect(Collectors.toList());
                 eventItems.addAll(getCustomItems().stream().filter(item -> item.getLayout().equals(HotbarLayout.EVENT) || item.getLayout().equals(HotbarLayout.EVENT_SPECTATE) || item.getLayout().equals(HotbarLayout.EVENT_WAITING)).collect(Collectors.toList()));
 
+                Event event = profile.getEvent();
+                EventPlayer eventPlayer = event.getEventPlayer(profile.getUuid());
+
                 for ( HotbarItem item : eventItems ) {
                     switch (item.getLayout()) {
                         case EVENT_WAITING: {
-                            if (profile.getEvent().isWaiting()) {
+                            if (profile.getEvent().isWaiting() && eventPlayer.getState().equals(EventPlayerState.WAITING)) {
                                 if (item.getType().equals(HotbarType.EVENT_TEAM) && profile.getEvent().isTeam()) {
                                     toReturn[item.getSlot()] = item.getItem();
                                 } else if (!item.getType().equals(HotbarType.EVENT_TEAM)) {
@@ -209,13 +215,14 @@ public class HotbarManager {
                             break;
                         }
                         case EVENT: {
-                            if ((profile.isSpectating() && profile.isInEvent()) || profile.getEvent().isWaiting()) {
+                            if (!event.isFighting(profile.getUuid())) {
                                 toReturn[item.getSlot()] = item.getItem();
                             }
                             break;
                         }
                     }
                 }
+                if (profile.isSpectating()) PlayerUtil.spectator(profile.getPlayer());
             }
             case MATCH_SPECTATE: {
                 Collection<HotbarItem> matchItems = items.stream().filter(HotbarItem::isEnabled).filter(item -> item.getLayout().equals(HotbarLayout.MATCH_SPECTATE)).collect(Collectors.toList());
