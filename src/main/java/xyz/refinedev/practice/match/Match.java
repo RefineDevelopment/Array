@@ -41,6 +41,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.util.Vector;
 import xyz.refinedev.practice.match.task.*;
+import xyz.refinedev.practice.util.other.TitleAPI;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -199,6 +200,8 @@ public abstract class Match {
     public void end() {
         if (onEnd()) {
             state = MatchState.ENDING;
+            TitleAPI.sendTitle(getWinningPlayer(), 5, 20, 5, CC.translate("&aWINNER!"), CC.translate("&7Good Game"));
+            TitleAPI.sendTitle(getOpponentPlayer(getWinningPlayer()), 5, 20, 5, CC.translate("&cLOOSER!"), CC.translate("&7Better luck next time!"));
         } else {
             return;
         }
@@ -373,21 +376,20 @@ public abstract class Match {
             float thunderSoundPitch = 0.8f + ThreadLocalRandom.current().nextFloat() * 0.2f;
             float explodeSoundPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
 
-            for ( final Player onlinePlayer : this.getPlayers() ) {
+            for ( Player onlinePlayer : this.getPlayers() ) {
+                if (!getPlayers().contains(onlinePlayer)) return;
                 Profile profile = Profile.getByPlayer(onlinePlayer);
                 //PotPvP aka Lunar Death Animation
-                PlayerUtil.animateDeath(deadPlayer);
                 if (profile.getSettings().isDeathLightning()) {
                     onlinePlayer.playSound(deadPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
-
                     if (killerPlayer != null) {
                         onlinePlayer.playSound(killerPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
                         onlinePlayer.playSound(killerPlayer.getLocation(), Sound.EXPLODE, 2.0f, explodeSoundPitch);
                     }
-
                     this.sendLightningPacket(onlinePlayer, lightningPacket);
                 }
             }
+            PlayerUtil.animateDeath(deadPlayer);
         }
 
         this.onDeath(deadPlayer, killerPlayer);
@@ -554,11 +556,10 @@ public abstract class Match {
         player.spigot().setCollidesWithEntities(true);
         player.updateInventory();
 
-        if (state != MatchState.ENDING) {
-            for (Player otherPlayer : getPlayers()) {
-                if (!profile.getPlayer().hasPermission("array.profile.silent")) {
-                    otherPlayer.sendMessage(Locale.MATCH_STOPSPEC.toString().replace("<spectator>", player.getName()));
-                }
+        if (state == MatchState.ENDING) return;
+        for ( Player otherPlayer : getPlayers() ) {
+            if (!profile.getPlayer().hasPermission("array.profile.silent")) {
+                otherPlayer.sendMessage(Locale.MATCH_STOPSPEC.toString().replace("<spectator>", player.getName()));
             }
         }
     }

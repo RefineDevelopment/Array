@@ -11,5 +11,5 @@ package xyz.refinedev.practice.brawl;
 
 public enum BrawlPlayerState {
 
-    COUNTDOWN, STARTING, RELOADING
+    COUNTDOWN, FIGHTING, RESPAWNING
 }

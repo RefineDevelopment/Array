@@ -20,6 +20,7 @@ import xyz.refinedev.practice.pvpclasses.classes.Bard;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.tournament.Tournament;
+import xyz.refinedev.practice.tournament.TournamentType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.BasicConfigurationFile;
 import xyz.refinedev.practice.util.other.PlayerUtil;
@@ -81,7 +82,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                     .replace("<elo_league>", ChatColor.stripColor(profile.getEloLeague()))
                     .replace("<global_elo>", String.valueOf(profile.getGlobalElo())))));
 
-            if (profile.getParty() != null && Tournament.CURRENT_TOURNAMENT == null) {
+            if (profile.getParty() != null && Tournament.getCurrentTournament() == null) {
                 Party party = profile.getParty();
                 String armorClass = party.getKits().get(player.getUniqueId());
 
@@ -139,18 +140,20 @@ public class ScoreboardAdapter implements AssembleAdapter {
                             .replace("<clan_name>", clan.getName())
                             .replace("%splitter%", "┃").replace("|", "┃")));
                 }
-            } else if (Tournament.CURRENT_TOURNAMENT != null && profile.getParty() != null) {
-                final Tournament tournament = Tournament.CURRENT_TOURNAMENT;
+            } else if (Tournament.getCurrentTournament() != null) {
+                final Tournament tournament = Tournament.getCurrentTournament();
                 final String round = (tournament.getRound() > 0) ? String.valueOf(tournament.getRound()) : "&fStarting";
-                final String participantType = (tournament.getTeamCount() > 1) ? "Parties" : "Players";
+                final String participantType = (tournament.getType().equals(TournamentType.TEAM)) ? "Parties" : "Players";
 
                 config.getStringList("SCOREBOARD.TOURNAMENT").forEach(line -> lines.add(CC.translate(line
                         .replace("<round>", round)
-                        .replace("<kit>", tournament.getLadder().getName())
-                        .replace("<team>", String.valueOf(tournament.getTeamCount()))
+                        .replace("<kit>", tournament.getKit().getName())
+                        .replace("<team>", String.valueOf(tournament.getIndividualSize()))
                         .replace("<participant_type>", participantType)
-                        .replace("<participant_count>", String.valueOf(tournament.getParticipants().size()))
-                        .replace("<participant_size>", String.valueOf(50))).replace("%splitter%", "┃").replace("|", "┃")));
+                        .replace("<participant_count>", String.valueOf(tournament.getParticipatingCount()))
+                        .replace("<participant_max>", String.valueOf(tournament.getMaxPlayers()))
+                        .replace("%splitter%", "┃")
+                        .replace("|", "┃"))));
 
             }
         } else if (profile.isInFight()) {
@@ -332,7 +335,6 @@ public class ScoreboardAdapter implements AssembleAdapter {
                             .replace("<teamB_size>", String.valueOf(match.getTeamB().getPlayers().size()))).replace("%splitter%", "┃").replace("|", "┃")));
 
                 } else if (match.isHCFMatch() && !match.isEnding()) {
-
                     config.getStringList("SCOREBOARD.SPECTATOR.MATCH.HCF").forEach(line -> lines.add(CC.translate(line
                             .replace("<match_kit>", "HCF")
                             .replace("<match_duration>", match.getDuration())
@@ -577,7 +579,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         }
         lines.add("");
         lines.add(config.getStringOrDefault("SCOREBOARD.FOOTER", "&7&odemo.refinedev.xyz"));
-        lines.add(config.getStringOrDefault("SCOREOBARD.LINES", CC.SB_BAR));
+        lines.add(config.getStringOrDefault("SCOREBOARD.LINES", CC.SB_BAR));
 
         return lines.stream().map(line -> {
             if (line != null && Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {

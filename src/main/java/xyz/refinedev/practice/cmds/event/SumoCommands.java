@@ -33,10 +33,10 @@ public class SumoCommands {
         player.sendMessage(CC.CHAT_BAR);
         player.sendMessage(CC.translate("&c&lSumo &8(&7&o&7Commands List&8)"));
         player.sendMessage(CC.CHAT_BAR);
-        player.sendMessage(CC.translate(" &8• &c/sumo host &8(&7&o&7Host a Sumo Event&8)"));
-        player.sendMessage(CC.translate(" &8• &c/sumo setknockback &8<&7knockback&8> &8(&7&o&7Set Sumo Knockback Profile&8)"));
-        player.sendMessage(CC.translate(" &8• &c/sumo tp &8(&7&o&7Teleport to the Sumo Event Arena&8)"));
-        player.sendMessage(CC.translate(" &8• &c/sumo setspawn &8<&7one|two|spec&8> &8(&7&o&7Set the spawn locations for Sumo&8)"));
+        player.sendMessage(CC.translate(" &7* &c/sumo host &8(&7&o&7Host a Sumo Event&8)"));
+        player.sendMessage(CC.translate(" &7* &c/sumo setknockback &8<&7knockback&8> &8(&7&o&7Set Sumo Knockback Profile&8)"));
+        player.sendMessage(CC.translate(" &7* &c/sumo tp &8(&7&o&7Teleport to the Sumo Event Arena&8)"));
+        player.sendMessage(CC.translate(" &7* &c/sumo setspawn &8<&7one|two|spec&8> &8(&7&o&7Set the spawn locations for Sumo&8)"));
         player.sendMessage(CC.CHAT_BAR);
     }
 

@@ -1,5 +1,8 @@
 package xyz.refinedev.practice.leaderboards.menu.buttons;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
@@ -26,14 +29,17 @@ import java.util.List;
 
 public class GlobalLeaderboardsButton extends Button {
 
+    private final Array plugin = Array.getInstance();
+
     @Override
     public ItemStack getButtonItem(final Player player) {
         final List<String> lore = new ArrayList<>();
 
         int position = 1;
         lore.add(CC.MENU_BAR);
-        for ( LeaderboardsAdapter leaderboardsAdapter : Profile.getGlobalEloLeaderboards()) {
-            Profile profile = Profile.getByUuid(ArrayCache.getUUID(leaderboardsAdapter.getName()));
+        for ( LeaderboardsAdapter leaderboardsAdapter : plugin.getLeaderboardsManager().getGlobalLeaderboards()) {
+            Profile profile = Profile.getByUuid(leaderboardsAdapter.getUuid());
+
             lore.add(Locale.LEADERBOARDS_GLOBAL_FORMAT.toString()
                     .replace("<leaderboards_pos>", String.valueOf(position))
                     .replace("<leaderboards_name>", leaderboardsAdapter.getName())

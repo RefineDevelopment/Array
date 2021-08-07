@@ -50,8 +50,8 @@ public class PartyListener implements Listener {
             }
             party.leave(player, false);
 
-            if (Tournament.CURRENT_TOURNAMENT != null && Tournament.CURRENT_TOURNAMENT.isParticipating(player)) {
-                Tournament.CURRENT_TOURNAMENT.leave(party);
+            if (Tournament.getCurrentTournament() != null && Tournament.getCurrentTournament().isParticipating(player.getUniqueId())) {
+                Tournament.getCurrentTournament().leave(party);
             }
         }
     }

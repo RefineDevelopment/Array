@@ -100,25 +100,29 @@ public class PartyClassSelectMenu extends PaginatedMenu {
                         player.closeInventory();
                         return;
                     }
+
                     switch (pvpClass) {
                         case "Diamond": {
                             party.getKits().replace(uuid, "Bard");
+                            party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Bard").replace("<target>", profile.getName()));
                             break;
                         }
                         case "Bard": {
                             party.getKits().replace(uuid, "Archer");
+                            party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Archer").replace("<target>", profile.getName()));
                             break;
                         }
                         case "Archer": {
                             party.getKits().replace(uuid, "Rogue");
+                            party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Rogue").replace("<target>", profile.getName()));
                             break;
                         }
                         case "Rogue": {
                             party.getKits().replace(uuid, "Diamond");
+                            party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Diamond").replace("<target>", profile.getName()));
                             break;
                         }
                     }
-                    party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", pvpClass).replace("<target>", profile.getName()));
                 } else {
                     Button.playFail(player);
                     player.sendMessage(Locale.PARTY_NOTLEADER.toString());

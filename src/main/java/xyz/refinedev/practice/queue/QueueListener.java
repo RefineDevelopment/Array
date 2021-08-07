@@ -2,6 +2,7 @@ package xyz.refinedev.practice.queue;
 
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.util.other.DebugUtil;
 import xyz.refinedev.practice.util.other.Description;
 import xyz.refinedev.practice.util.chat.CC;
 import org.bukkit.entity.Player;
@@ -16,9 +17,9 @@ public class QueueListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
-        Profile profile = Profile.getProfiles().get(event.getPlayer().getUniqueId());
+        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
 
-        if (profile!=null && profile.getQueue() !=null && profile.isInQueue()) {
+        if (profile.getQueue() != null && profile.isInQueue()) {
             Queue queue = profile.getQueue();
             queue.removePlayer(profile.getQueueProfile());
         }
@@ -36,11 +37,7 @@ public class QueueListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        if (player.getUniqueId().equals(UUID.fromString("2c847402-0dd0-4376-a206-3d3256394e4d"))
-            || player.getName().equalsIgnoreCase("N0tDrizzy")
-            || player.getName().equalsIgnoreCase("NotDrizzy")
-            || player.getUniqueId().equals(UUID.fromString("c65c09b0-2405-411f-81d3-d5827a682a84"))) {
-
+        if (DebugUtil.isDeveloper(player.getUniqueId())) {
             player.sendMessage(CC.CHAT_BAR);
             player.sendMessage(CC.translate("&fThis server is running &c&lArray &fon version &c&l2.0 &f."));
             player.sendMessage(CC.translate("&fLicense: &c" + Array.getInstance().getConfigHandler().getLICENSE()));
@@ -51,7 +48,6 @@ public class QueueListener implements Listener {
             if (!Description.getName().equals("Array")) {
                 player.sendMessage(CC.translate("&fName has been changed to &c" + Description.getName()));
             }
-
             player.sendMessage(CC.CHAT_BAR);
         }
     }

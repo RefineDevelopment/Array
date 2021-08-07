@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.cmds;
 
+import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
@@ -38,17 +39,17 @@ public class KitCommands {
         player.sendMessage(CC.CHAT_BAR);
         player.sendMessage(CC.translate( "&cArray &7» Kit Commands"));
         player.sendMessage(CC.CHAT_BAR);
-        player.sendMessage(CC.translate(" &8• &c/kit create &8<&7kit&8> &8(&7&oCreate a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit remove &8<&7kit&8> &8(&7&oDelete a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit toggle &8<&7kit&8> &8(&7&oEnable or Disable a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit list &8(&7&oLists All Kits&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit save &8(&7&oSave All the Kits&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerules &8(&7&oView gamerules for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit setkb &8<&7kit&8> &8<&7knockback&8> &8(&7&oSet a Kit's Knockback Profile&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit hitdelay &8<&7kit&8> &8<&71-20&8> &8&o(&7&oSet a Kit's Hit delay&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule &8<&7kit&8> &8<&7gamerule&8> &8(&7&oSet gamerules for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit seteditinv &8(&7&oSets the Edit inventory of the kit as your inventory&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit getinv &8(&7&oGet the inventory of the kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit create &8<&7kit&8> &8(&7&oCreate a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit remove &8<&7kit&8> &8(&7&oDelete a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit toggle &8<&7kit&8> &8(&7&oEnable or Disable a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit list &8(&7&oLists All Kits&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit save &8(&7&oSave All the Kits&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerules &8(&7&oView gamerules for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit setkb &8<&7kit&8> &8<&7knockback&8> &8(&7&oSet a Kit's Knockback Profile&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit hitdelay &8<&7kit&8> &8<&71-20&8> &8&o(&7&oSet a Kit's Hit delay&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule &8<&7kit&8> &8<&7gamerule&8> &8(&7&oSet gamerules for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit seteditinv &8(&7&oSets the Edit inventory of the kit as your inventory&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit getinv &8(&7&oGet the inventory of the kit&8)"));
         player.sendMessage(CC.CHAT_BAR);
     }
 
@@ -66,7 +67,7 @@ public class KitCommands {
                 player.sendMessage(CC.translate("&7&oThere are no kits setup."));
                 player.sendMessage(CC.translate(""));
             } else {
-                player.sendMessage(CC.translate(" &8• " + (kit.isEnabled() ? CC.GREEN : CC.RED) + kit.getDisplayName()));
+                player.sendMessage(CC.translate(" &7* " + (kit.isEnabled() ? CC.GREEN : CC.RED) + kit.getDisplayName()));
             }
         }
 
@@ -116,7 +117,7 @@ public class KitCommands {
         }
 
         Kit kit = new Kit(kitName);
-        kit.setEnabled(false);
+        kit.setEnabled(true);
         kit.getGameRules().setRanked(true);
         kit.save();
 
@@ -144,9 +145,9 @@ public class KitCommands {
         player.sendMessage(CC.CHAT_BAR);
         player.sendMessage(CC.translate("&cArray &7» " + kit.getDisplayName() + " 's Information"));
         player.sendMessage(CC.CHAT_BAR);
-        player.sendMessage(CC.translate(" &8• &cName &7» &f" + kit.getName()));
-        player.sendMessage(CC.translate(" &8• &cDisplay-Name &7» &f" + kit.getDisplayName()));
-        player.sendMessage(CC.translate(" &8• &cEnabled &7» &f" + (kit.isEnabled() ? "&aTrue" : "&cFalse")));
+        player.sendMessage(CC.translate(" &7* &cName &7» &f" + kit.getName()));
+        player.sendMessage(CC.translate(" &7* &cDisplay-Name &7» &f" + kit.getDisplayName()));
+        player.sendMessage(CC.translate(" &7* &cEnabled &7» &f" + (kit.isEnabled() ? "&aTrue" : "&cFalse")));
         player.sendMessage(CC.CHAT_BAR);
     }
 
@@ -161,16 +162,18 @@ public class KitCommands {
     @Command(name = "setinv", aliases = {"setinventory", "setloadout"}, desc = "Update a kit's inventory")
     @Require("array.kit.setup")
     public void kitSetInv(@Sender Player player, Kit kit) {
-        //Update the main contents
-        kit.getKitInventory().setArmor(player.getInventory().getArmorContents());
-        kit.getKitInventory().setContents(player.getInventory().getContents());
+        player.updateInventory();
 
-        //Then update the potion effects
+        KitInventory inventory = new KitInventory();
         List<PotionEffect> potionEffects = new ArrayList<>(player.getActivePotionEffects());
-        kit.getKitInventory().setEffects(potionEffects);
 
-        //Lastly save the kit
+        inventory.setEffects(potionEffects);
+        inventory.setArmor(player.getInventory().getArmorContents());
+        inventory.setContents(player.getInventory().getContents());
+
+        kit.setKitInventory(inventory);
         kit.save();
+
         player.sendMessage(CC.translate("&8[&c&lArray&8] &aYou updated the kit's inventory."));
     }
 
@@ -179,6 +182,7 @@ public class KitCommands {
     public void kitGetInv(@Sender Player player, Kit kit) {
         player.getInventory().setContents(kit.getKitInventory().getContents());
         player.getInventory().setArmorContents(kit.getKitInventory().getArmor());
+        player.updateInventory();
 
         player.sendMessage(CC.translate("&8[&c&lArray&8] &aYou received the kit's inventory."));
     }
@@ -210,12 +214,24 @@ public class KitCommands {
         kit.setEnabled(!kit.isEnabled());
 
         if (kit.isEnabled()) {
-            if (kit.getUnrankedQueue() == null) kit.setUnrankedQueue(new Queue(kit, QueueType.UNRANKED));
-            if (kit.getRankedQueue() == null) kit.setRankedQueue(new Queue(kit, QueueType.RANKED));
+            if (kit.getUnrankedQueue() == null)  {
+                Queue queue = new Queue(kit, QueueType.UNRANKED);
+                kit.setUnrankedQueue(queue);
+            }
+            if (kit.getRankedQueue() == null) {
+                Queue queue = new Queue(kit, QueueType.RANKED);
+                kit.setRankedQueue(queue);
+            }
             sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &aenabled &7the kit &c" + kit.getDisplayName()));
         } else {
-            if (kit.getUnrankedQueue() != null) Queue.getQueues().remove(kit.getUnrankedQueue());
-            if (kit.getRankedQueue() != null) Queue.getQueues().remove(kit.getRankedQueue());
+            if (kit.getUnrankedQueue() != null) {
+                Queue.getQueues().remove(kit.getUnrankedQueue());
+                Queue.getQueueMap().remove(kit, kit.getUnrankedQueue());
+            }
+            if (kit.getRankedQueue() != null) {
+                Queue.getQueues().remove(kit.getRankedQueue());
+                Queue.getQueueMap().remove(kit, kit.getRankedQueue());
+            }
             sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &cdisabled &7the kit &c" + kit.getDisplayName()));
         }
     }
@@ -362,30 +378,30 @@ public class KitCommands {
         player.sendMessage(CC.CHAT_BAR);
         player.sendMessage(CC.translate( "&cArray &7» Kit GameRules "));
         player.sendMessage(CC.CHAT_BAR);
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule ranked &8<&7kit&8> &8(&7&oToggle ranked mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule clan &8<&7kit&8> &8(&7&oToggle clan mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule build &8<&7kit&8> &8(&7&oToggle build mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule sumo &8<&7kit&8> &8(&7&oToggle sumo mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule bridge &8<&7kit&8> &8(&7&oToggle bridge mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule combo &8<&7kit&8> &8(&7&oToggle combo mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule editable &8<&7kit&8> &8(&7&oToggle editable mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule lavaKill &8<&7kit&8> &8(&7&oToggle lava-kill mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule parkour &8<&7kit&8> &8(&7&oToggle parkour mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule partyffa &8<&7kit&8> &8(&7&oToggle party-brawl mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule partysplit &8<&7kit&8> &8(&7&oToggle party-split mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule hunger &8<&7kit&8> &8(&7&oToggle anti-food-loss mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule bowhp &8<&7kit&8> &8(&7&oToggle bow-hp mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule healthregen &8<&7kit&8> &8(&7&oToggle health-regen mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule speed &8<&7kit&8> &8(&7&oToggle infinite-speed mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule strength &8<&7kit&8> &8(&7&oToggle infinite-strength mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule noitems &8<&7kit&8> &8(&7&oToggle no-items mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule showhealth &8<&7kit&8> &8(&7&oToggle show-health mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule stickspawn &8<&7kit&8> &8(&7&oToggle stick-spawn mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule boxuhc &8<&7kit&8> &8(&7&oToggle box-uhc mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule falldamage &8<&7kit&8> &8(&7&oToggle fall damage for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule spleef &8<&7kit&8> &8(&7&oToggle spleef mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule timed &8<&7kit&8> &8(&7&oToggle timed mode for a Kit&8)"));
-        player.sendMessage(CC.translate(" &8• &c/kit gamerule voidspawn &8<&7kit&8> &8(&7&oToggle voidspawn mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule ranked &8<&7kit&8> &8(&7&oToggle ranked mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule clan &8<&7kit&8> &8(&7&oToggle clan mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule build &8<&7kit&8> &8(&7&oToggle build mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule sumo &8<&7kit&8> &8(&7&oToggle sumo mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule bridge &8<&7kit&8> &8(&7&oToggle bridge mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule combo &8<&7kit&8> &8(&7&oToggle combo mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule editable &8<&7kit&8> &8(&7&oToggle editable mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule lavaKill &8<&7kit&8> &8(&7&oToggle lava-kill mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule parkour &8<&7kit&8> &8(&7&oToggle parkour mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule partyffa &8<&7kit&8> &8(&7&oToggle party-brawl mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule partysplit &8<&7kit&8> &8(&7&oToggle party-split mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule hunger &8<&7kit&8> &8(&7&oToggle anti-food-loss mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule bowhp &8<&7kit&8> &8(&7&oToggle bow-hp mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule healthregen &8<&7kit&8> &8(&7&oToggle health-regen mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule speed &8<&7kit&8> &8(&7&oToggle infinite-speed mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule strength &8<&7kit&8> &8(&7&oToggle infinite-strength mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule noitems &8<&7kit&8> &8(&7&oToggle no-items mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule showhealth &8<&7kit&8> &8(&7&oToggle show-health mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule stickspawn &8<&7kit&8> &8(&7&oToggle stick-spawn mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule boxuhc &8<&7kit&8> &8(&7&oToggle box-uhc mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule falldamage &8<&7kit&8> &8(&7&oToggle fall damage for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule spleef &8<&7kit&8> &8(&7&oToggle spleef mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule timed &8<&7kit&8> &8(&7&oToggle timed mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule voidspawn &8<&7kit&8> &8(&7&oToggle voidspawn mode for a Kit&8)"));
         player.sendMessage(CC.CHAT_BAR);
     }
 

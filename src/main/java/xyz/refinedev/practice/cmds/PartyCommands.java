@@ -58,6 +58,10 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_NOTLEADER.toString());
             return;
         }
+        if (profile.getParty().isInTournament()) {
+            player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
+            return;
+        }
         if (profile.getMatch() != null) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
@@ -82,6 +86,10 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_ALREADYINPARTY.toString());
             return;
         }
+        if (profile.getParty().isInTournament()) {
+            player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
+            return;
+        }
         if (targetData.isBusy()) {
             player.sendMessage(Locale.ERROR_BUSY.toString());
             return;
@@ -99,6 +107,10 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_NOTLEADER.toString());
             return;
         }
+        if (profile.getParty().isInTournament()) {
+            player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
+            return;
+        }
         new PartySettingsMenu().openMenu(player);
     }
 
@@ -112,6 +124,10 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_NOTLEADER.toString());
             return;
         }
+        if (profile.getParty().isInTournament()) {
+            player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
+            return;
+        }
         new PartyEventMenu().openMenu(player);
     }
 
@@ -123,6 +139,10 @@ public class PartyCommands {
             return;
         } else if (!profile.getParty().isLeader(player.getUniqueId())) {
             player.sendMessage(Locale.PARTY_NOTLEADER.toString());
+            return;
+        }
+        if (profile.getParty().isInTournament()) {
+            player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
         new PartyClassSelectMenu().openMenu(player);
@@ -146,6 +166,10 @@ public class PartyCommands {
             return;
         } else if (!profile.getParty().isLeader(player.getUniqueId())) {
             player.sendMessage(Locale.PARTY_NOTLEADER.toString());
+            return;
+        }
+        if (profile.getParty().isInTournament()) {
+            player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
         new PartyDuelMenu().openMenu(player);
@@ -173,14 +197,11 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_NOT_INVITED.toString());
             return;
         }
-        if (Tournament.CURRENT_TOURNAMENT != null) {
-            for (Player pplayer : party.getPlayers()) {
-                if (Tournament.CURRENT_TOURNAMENT.isParticipating(pplayer)) {
-                    player.sendMessage(Locale.PARTY_TOURNAMENT.toString());
-                    return;
-                }
-            }
+        if (party.isInTournament()) {
+            player.sendMessage(Locale.PARTY_TOURNAMENT.toString());
+            return;
         }
+
         if (party.getPlayers().size() >= party.getLimit()) {
             player.sendMessage(Locale.PARTY_FULL.toString());
             return;
@@ -203,6 +224,10 @@ public class PartyCommands {
         }
         if (!party.isLeader(player.getUniqueId())) {
             player.sendMessage(Locale.PARTY_NOTLEADER.toString());
+            return;
+        }
+        if (profile.getParty().isInTournament()) {
+            player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
         if (!party.containsPlayer(target)) {
@@ -228,6 +253,10 @@ public class PartyCommands {
         }
         if (party == null) {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
+            return;
+        }
+        if (profile.getParty().isInTournament()) {
+            player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
         if (!party.isLeader(player.getUniqueId())) {
@@ -278,6 +307,10 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_NOTLEADER.toString());
             return;
         }
+        if (profile.getParty().isInTournament()) {
+            player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
+            return;
+        }
         if (player.equals(target)) {
             player.sendMessage(Locale.PARTY_BAN_SELF.toString());
             return;
@@ -310,6 +343,10 @@ public class PartyCommands {
         }
         if (!profile.getParty().isLeader(player.getUniqueId())) {
             player.sendMessage(Locale.PARTY_NOTLEADER.toString());
+            return;
+        }
+        if (profile.getParty().isInTournament()) {
+            player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
         if (player.equals(target)) {
@@ -370,7 +407,11 @@ public class PartyCommands {
         if (party.getLeader().getUuid().equals(player.getUniqueId())) {
             player.sendMessage(Locale.PARTY_LEAVE_SELF.toString());
             return;
-        } 
+        }
+        if (party.isInTournament()) {
+            player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
+            return;
+        }
         profile.getParty().leave(player, false);
     }
 

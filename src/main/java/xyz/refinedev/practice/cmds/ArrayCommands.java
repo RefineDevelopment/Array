@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.refinedev.practice.util.other.Description;
+import xyz.refinedev.practice.util.other.TaskUtil;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -34,38 +35,44 @@ import xyz.refinedev.practice.util.other.Description;
 
 public class ArrayCommands {
     
-    private static final Array plugin = Array.getInstance();
+    private final Array plugin = Array.getInstance();
+    private final String[] HELP_MESSAGE = {
+            CC.CHAT_BAR,
+            CC.translate("&cArray &7» Essential Commands"),
+            CC.CHAT_BAR,
+            CC.translate(" &7* &c/array setlobby &8(&7&oSets the lobby to player's location&8)"),
+            CC.translate(" &7* &c/array reload &8(&7&oReload All Configurations&8)"),
+            CC.translate(" &7* &c/array goldenhead &8(&7&oReceive a pre-made G-Head&8)"),
+            CC.translate(" &7* &c/array refill &8(&7&oRefill your Inventory with potions or soup&8)"),
+            CC.translate(" &7* &c/array update &8(&7&oSave and Update all leaderboards&8)"),
+            CC.translate(" &7* &c/array hcf &8(&7&oHelp on how to setup HCF&8)"),
+            CC.translate(" &7* &c/array worlds &8(&7&oShow a Worlds Menu&8)"),
+            CC.translate(" &7* &c/array resetstats &8<&7name&8> &8(&7&oResets a profile&8)"),
+            CC.translate(" &7* &c/array clearloadouts &8<&7kit|all&8> &8<&7global|name&8> &8(&7&oResets a profile&8)"),
+            CC.translate(" &7* &c/array rename &8<&7name&8> &8(&7&oRenames item in hand&8)"),
+            CC.translate(" &7* &c/array spawn &8(&7&oRefresh Profile & Teleport to spawn&8)"),
+            CC.CHAT_BAR
+    };
+    private final String[] INFO_MESSAGE = {
+            CC.CHAT_BAR,
+            CC.translate("&fThis server is currently running &cArray &fv&c" + Description.getVersion()),
+            CC.translate("&fDeveloped By &cRefine Development Team&7."),
+            CC.translate(""),
+            CC.translate("&7 * &cDiscord: &fhttps://dsc.gg/refine"),
+            CC.translate("&7 * &cTwitter: &fhttps://twitter.com/RefineDev"),
+            CC.translate("&7 * &cWebsite: &fhttps://www.refinedev.xyz"),
+            CC.translate("&7 * &cContact: &frefinedevelopment@gmail.com"),
+            CC.translate(""),
+            CC.translate("&7&oYou can buy our products and issue commisions in our discord."),
+            CC.CHAT_BAR
+    };
 
     @Command(name = "", aliases = "help", desc = "View Array Commands")
     public void help(@Sender CommandSender sender) {
         if (sender.hasPermission("array.essentials.admin")) {
-            sender.sendMessage(CC.CHAT_BAR);
-            sender.sendMessage(CC.translate("&cArray &7» Essential Commands"));
-            sender.sendMessage(CC.CHAT_BAR);
-            sender.sendMessage(CC.translate(" &8• &c/array setlobby &8(&7&oSets the lobby to player's location&8)"));
-            sender.sendMessage(CC.translate(" &8• &c/array reload &8(&7&oReload All Configurations&8)"));
-            sender.sendMessage(CC.translate(" &8• &c/array goldenhead &8(&7&oReceive a pre-made G-Head&8)"));
-            sender.sendMessage(CC.translate(" &8• &c/array refill &8(&7&oRefill your Inventory with potions or soup&8)"));
-            sender.sendMessage(CC.translate(" &8• &c/array update &8(&7&oSave and Update all leaderboards&8)"));
-            sender.sendMessage(CC.translate(" &8• &c/array hcf &8(&7&oHelp on how to setup HCF&8)"));
-            sender.sendMessage(CC.translate(" &8• &c/array worlds &8(&7&oShow a Worlds Menu&8)"));
-            sender.sendMessage(CC.translate(" &8• &c/array resetstats &8<&7name&8> &8(&7&oResets a profile&8)"));
-            sender.sendMessage(CC.translate(" &8• &c/array clearloadouts &8<&7kit|all&8> &8<&7global|name&8> &8(&7&oResets a profile&8)"));
-            sender.sendMessage(CC.translate(" &8• &c/array rename &8<&7name&8> &8(&7&oRenames item in hand&8)"));
-            sender.sendMessage(CC.translate(" &8• &c/array spawn &8(&7&oRefresh Profile & Teleport to spawn&8)"));
-            sender.sendMessage(CC.CHAT_BAR);
+            sender.sendMessage(HELP_MESSAGE);
         } else {
-            sender.sendMessage(CC.CHAT_BAR);
-            sender.sendMessage(CC.translate("&fThis server is currently running &cArray &fv&c" + Description.getVersion()));
-            sender.sendMessage(CC.translate("&fDeveloped By &cRefine Development Team&7."));
-            sender.sendMessage("");
-            sender.sendMessage(CC.translate("&7 * &cDiscord: &fhttps://dsc.gg/refine"));
-            sender.sendMessage(CC.translate("&7 * &cTwitter: &fhttps://twitter.com/RefineDev"));
-            sender.sendMessage(CC.translate("&7 * &cWebsite: &fhttps://www.refinedev.xyz"));
-            sender.sendMessage(CC.translate("&7 * &cContact: &frefinedevelopment@gmail.com"));
-            sender.sendMessage("");
-            sender.sendMessage(CC.translate("&7&oYou can buy our products and issue commisions in our discord."));
-            sender.sendMessage(CC.CHAT_BAR);
+            sender.sendMessage(INFO_MESSAGE);
         }
     }
     
@@ -119,18 +126,19 @@ public class ArrayCommands {
         player.sendMessage(CC.translate("&8[&c&lArray&8] &aSuccessfully reloaded all configurations."));
     }
 
-    @Command(name = "update", aliases = "save", desc = "Update and Save all Data related to Array")
+    @Command(name = "update", aliases = "save", desc = "Update and Save all data related to Array")
     @Require("array.essentials.admin")
     public void update(@Sender CommandSender player) {
-        Array.getInstance().getTaskThread().execute(() -> {
+        TaskUtil.runAsync(() -> {
             Profile.getProfiles().values().forEach(Profile::save);
             Profile.getProfiles().values().forEach(Profile::load);
             Kit.getKits().forEach(Kit::save);
-            Kit.getKits().forEach(Kit::updateKitLeaderboards);
-            Profile.loadGlobalLeaderboards();
             Arena.getArenas().forEach(Arena::save);
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7&oReloaded all Stats and Leaderboards!"));
+
+            plugin.getLeaderboardsManager().loadGlobalLeaderboards();
+            Kit.getKits().forEach(plugin.getLeaderboardsManager()::loadKitLeaderboards);
         });
+        player.sendMessage(CC.translate("&8[&c&lArray&8] &7&oReloaded all Stats and Leaderboards!"));
     }
 
     @Command(name = "spawn", aliases = "reset", desc = "Reset your profile and Teleport to Spawn")
@@ -146,17 +154,7 @@ public class ArrayCommands {
 
     @Command(name = "version", aliases = "ver", desc = "View Array's Build Version")
     public void version(@Sender CommandSender sender) {
-        sender.sendMessage(CC.CHAT_BAR);
-        sender.sendMessage(CC.translate("&fThis server is currently running &cArray &fv&c" + Description.getVersion()));
-        sender.sendMessage(CC.translate("&fDeveloped By &cRefine Development Team&7."));
-        sender.sendMessage("");
-        sender.sendMessage(CC.translate("&7 * &cDiscord: &fhttps://dsc.gg/refine"));
-        sender.sendMessage(CC.translate("&7 * &cTwitter: &fhttps://twitter.com/RefineDev"));
-        sender.sendMessage(CC.translate("&7 * &cWebsite: &fhttps://www.refinedev.xyz"));
-        sender.sendMessage(CC.translate("&7 * &cContact: &frefinedevelopment@gmail.com"));
-        sender.sendMessage("");
-        sender.sendMessage(CC.translate("&7&oYou can buy our products and issue commisions in our discord."));
-        sender.sendMessage(CC.CHAT_BAR);
+        sender.sendMessage(INFO_MESSAGE);
     }
 
     @Command(name = "worlds", aliases = "world", desc = "Open a Worlds GUI to Teleport to Different Worlds")
@@ -204,16 +202,18 @@ public class ArrayCommands {
 
     @Command(name = "resetstats", aliases = "clearstats", usage = "<target>", desc = "Reset a player's statistics")
     public void resetStats(@Sender Player player, Profile profile) {
-        profile.getStatisticsData().values().forEach(stats -> {
-            stats.setElo(1000);
-            stats.setWon(0);
-            stats.setLost(0);
+        TaskUtil.runAsync(() -> {
+            profile.getStatisticsData().values().forEach(stats -> {
+                stats.setElo(1000);
+                stats.setWon(0);
+                stats.setLost(0);
+            });
+            profile.setGlobalElo(1000);
+            profile.save();
         });
-        profile.setGlobalElo(1000);
-        profile.save();
 
         player.sendMessage(CC.translate("&aSuccessfully wiped statistics of " + profile.getName() + "."));
-        if (profile != null) {
+        if (profile.getPlayer() != null) {
             profile.getPlayer().kickPlayer(CC.RED + "You were kicked because your profile was reset by an Admin!");
         }
     }

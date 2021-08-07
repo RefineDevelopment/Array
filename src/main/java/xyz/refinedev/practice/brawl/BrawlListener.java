@@ -23,11 +23,12 @@ public class BrawlListener implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         Profile profile = Profile.getByUuid(player.getUniqueId());
+        Brawl brawl = profile.getBrawl();
 
-        if (profile.isInBrawl()) {
-            Brawl brawl = profile.getBrawl();
+        if (!profile.isInBrawl()) return;
 
 
-        }
+
+
     }
 }

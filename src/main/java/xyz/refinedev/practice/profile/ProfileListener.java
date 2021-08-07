@@ -234,11 +234,11 @@ public class ProfileListener implements Listener {
         });
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         event.setQuitMessage(null);
         Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
-        profile.handleLeave();
+        TaskUtil.runAsync(profile::handleLeave);
     }
 
     @EventHandler
@@ -249,8 +249,8 @@ public class ProfileListener implements Listener {
                 return;
             }
         }
-        Profile profile = Profile.getProfiles().get(event.getPlayer().getUniqueId());
-        profile.handleLeave();
+        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+        TaskUtil.runAsync(profile::handleLeave);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

@@ -35,6 +35,7 @@ public class CommandsManager {
         drink.register(new DuelCommands(), "duel");
         drink.register(new RematchCommand(), "rematch");
         drink.register(new PartyCommands(), "party", "p");
+        drink.register(new TournamentCommands(), "tournament", "tourney");
         drink.register(new ClanCommands(), "clan", "c");
         drink.register(new EventCommands(), "event", "events");
         drink.register(new SumoCommands(), "sumo");

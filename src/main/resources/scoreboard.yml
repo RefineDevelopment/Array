@@ -37,7 +37,7 @@ SCOREBOARD:
     - "&c&lTournament&7:"
     - "&c * &fKit: &c<kit>"
     - "&c * &fRound: &c<round>"
-    - "&c * &f<participant_type>: &c<participant_count>/<participant_size>"
+    - "&c * &f<participant_type>: &c<participant_count>/<participant_max>"
   MATCH:
     SOLO:
       - "&fRival: &c<opponent_name>"

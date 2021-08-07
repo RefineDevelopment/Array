@@ -151,20 +151,20 @@ public class InventoryUtil {
 
             switch (attributeId) {
                 case "t": {
-                    item = new ItemStack(Material.getMaterial(Integer.valueOf(itemAttribute[1])));
+                    item = new ItemStack(Material.getMaterial(Integer.parseInt(itemAttribute[1])));
                     meta = item.getItemMeta();
                     break;
                 }
                 case "d": {
                     if (item != null) {
-                        item.setDurability(Short.valueOf(itemAttribute[1]));
+                        item.setDurability(Short.parseShort(itemAttribute[1]));
                         break;
                     }
                     break;
                 }
                 case "a": {
                     if (item != null) {
-                        item.setAmount(Integer.valueOf(itemAttribute[1]));
+                        item.setAmount(Integer.parseInt(itemAttribute[1]));
                         break;
                     }
                     break;
@@ -172,8 +172,8 @@ public class InventoryUtil {
                 case "e": {
                     if (item != null) {
                         item.addUnsafeEnchantment(
-                                Enchantment.getById(Integer.valueOf(itemAttribute[1])),
-                                Integer.valueOf(itemAttribute[2])
+                                Enchantment.getById(Integer.parseInt(itemAttribute[1])),
+                                Integer.parseInt(itemAttribute[2])
                         );
                         break;
                     }

@@ -56,6 +56,7 @@ public enum Locale {
     PARTY_ALREADYLEADER("PARTY.ALREADY_LEADER", "&8[&cParty&8] &7You are already the leader of your party."),
     PARTY_ALREADYINPARTY("PARTY.ALREADY_JOINED", "&8[&cParty&8] &7That player is already in your party."),
     PARTY_ALREADYBANNED("PARTY.ALREADY_BANNED", "&8[&cParty&8] &7That player is already banned from your party."),
+    PARTY_IN_TOURNAMENT("PARTY.IN_TOURNAMENT", "&8[&cParty&8] &7Your party is currently in a tournament!"),
     PARTY_CHAT("PARTY.ENABLED_CHAT", "&aYou are now speaking in party chat!"),
     PARTY_GLOBAL("PARY.DISABLED_CHAT", "&aYou are now speaking in global chat!"),
     PARTY_INFO("PARTY.INFO", Arrays.asList(
@@ -208,14 +209,14 @@ public enum Locale {
 
     TOURNAMENT_ROUND("TOURNAMENT.ROUND_MESSAGE", "&8[&9&lRound&8] &c<round> &7has started!"),
     TOURNAMENT_BROADCAST("TOURNAMENT.BROADCAST", "&8[&c&lTournament&8] &c<host_name> &fis hosting a &c<kit> &7Tournament! &7(<tournament_type>)"),
-    TOURNAMENT_ACCEPT("TOURNAMENT.ACCEPT", "&8[&c&lTournament&8] &a(Click to accept)"),
+    TOURNAMENT_COUNTDOWN("TOURNAMENT.COUNTDOWN", "&8[&c&lTournament&8] &fThe tournament is starting in &c<seconds> &7seconds! &7[Click to Join]"),
     TOURNAMENT_HOVER("TOURNAMENT.HOVER", "Click to join the Tournament"),
     TOURNAMENT_CANCELLED("TOURNAMENT.CANCELLED", "&8[&c&lTournament&8] &cThe Tournament has been cancelled."),
     TOURNAMENT_NOT_PICKED("TOURNAMENT.NOT_PICKED", "&8[&c&lTournament&8] &7You weren't picked this round, please wait for your turn!"),
-    TOURNAMENT_ELIMINATED("TOURNAMENT.ELIMINATED", "&8[&c&lTournament&8] &c<eliminated> &7has been eliminated. &8(&c<participants_size>&7/&c<participants_count>&8)"),
+    TOURNAMENT_ELIMINATED("TOURNAMENT.ELIMINATED", "&8[&c&lTournament&8] &c<eliminated> &7has been eliminated by <killer>. &8(&c<participants_size>&7/&c<participants_max>&8)"),
     TOURNAMENT_WON("TOURNAMENT.WON", "&8[&c&lTournament&8] &c<won> &7won the &ctournament&7!"),
-    TOURNAMENT_JOIN("TOURNAMENT.JOIN", "&8[&c&lTournament&8] &c<joined_party>'s Party &7has joined the tournament! &8(&c<participants_size>/50&8)"),
-    TOURNAMENT_LEAVE("TOURNAMENT.LEAVE", "&8[&c&lTournament&8] &c<left_party>'s Party &7has left the tournament! &8(&c<participants_size>/50&8)"),
+    TOURNAMENT_JOIN("TOURNAMENT.JOIN", "&8[&c&lTournament&8] &c<joined> &7has joined the tournament! &8(&c<participants_size>/<participants_max>&8)"),
+    TOURNAMENT_LEAVE("TOURNAMENT.LEAVE", "&8[&c&lTournament&8] &c<left> &7has left the tournament! &8(&c<participants_size>/<participants_max>&8)"),
     TOURNAMENT_HELP("TOURNAMENT.HELP", Arrays.asList("&c&m--------&7&m-------------------------------------&c&m--------", "&cArray &7» Tournament Commands", "&c&m--------&7&m-------------------------------------&c&m--------", " &8\u2022 &c/tournament list &8(&7&oList Active Tournaments&8)", " &8\u2022 &c/tournament host (team-size(1/2)) &8(&7&oHost a tournament8&o)", " &8\u2022 &c/tournament cancel &8(&7&oCancel a tournament8&o) &8- &c&l[ADMIN]", " &8\u2022 &c/tournament join &8(&7&oJoin an on-going tournament8&o)", " &8\u2022 &c/tournament leave &8(&7&oLeave an on-going tournament8&o)", "&c&m--------&7&m-------------------------------------&c&m--------")),
 
     EVENT_PREFIX("EVENTS.PREFIX", "&8[&c<event_name>&8] &r"),
@@ -279,21 +280,21 @@ public enum Locale {
             "&c&m--------&7&m-------------------------------------&c&m--------",
             "&cArray &7» Event Commands",
             "&c&m--------&7&m-------------------------------------&c&m--------",
-            " &8• &c/event &8(&7&oView this message&8)",
-            " &8• &c/event host <event> &8(&7&oHost an Event&8)",
-            " &8• &c/event forcestart &8(&7&oForcestart an active event&8)",
-            " &8• &c/event stop &8(&7&oStop an active event&8)",
-            " &8• &c/event join &8(&7&oJoin an active event&8)",
-            " &8• &c/event leave &8(&7&oLeave an active event&8)",
-            " &8• &c/event teamselect &8(&7&oView Team Selection Menu&8)",
+            " &7* &c/event &8(&7&oView this message&8)",
+            " &7* &c/event host <event> &8(&7&oHost an Event&8)",
+            " &7* &c/event forcestart &8(&7&oForcestart an active event&8)",
+            " &7* &c/event stop &8(&7&oStop an active event&8)",
+            " &7* &c/event join &8(&7&oJoin an active event&8)",
+            " &7* &c/event leave &8(&7&oLeave an active event&8)",
+            " &7* &c/event teamselect &8(&7&oView Team Selection Menu&8)",
             "&c&m--------&7&m-------------------------------------&c&m--------")),
     EVENT_INFO("EVENTS.INFO", Arrays.asList(
             "&c&m--------&7&m-------------------------------------&c&m--------",
             "&c<event_name> &7» Information",
             "&c&m--------&7&m-------------------------------------&c&m--------",
-            " &8• &cState: &f<event_state>",
-            " &8• &cHost: &f<event_host>",
-            " &8• &cPlayers: &f<event_alive_players>&7/&f<event_max_players>",
+            " &7* &cState: &f<event_state>",
+            " &7* &cHost: &f<event_host>",
+            " &7* &cPlayers: &f<event_alive_players>&7/&f<event_max_players>",
             "&c&m--------&7&m-------------------------------------&c&m--------"
     )),
 
@@ -316,8 +317,12 @@ public enum Locale {
 
     LEADERBOARDS_KIT_FORMAT("LEADERBOARDS.KIT_FORMAT", "&c<leaderboards_pos> &7&l\uff5c &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
     LEADERBOARDS_KIT_HEADER("LEADERBOARDS.KIT_HEADER", "&c<kit_name> &7\uff5c &fTop 10"),
+
     LEADERBOARDS_GLOBAL_FORMAT("LEADERBOARDS.GLOBAL_FORMAT", "&c<leaderboards_pos> &7&l\uff5c &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
-    LEADERBOARDS_GLOBAL_HEADER("LEADERBOARDS.GLOBAL_HEADER", "&cGlobal &7\uff5c &fTop 10");
+    LEADERBOARDS_GLOBAL_HEADER("LEADERBOARDS.GLOBAL_HEADER", "&cGlobal &7\uff5c &fTop 10"),
+
+    LEADERBOARDS_CLAN_FORMAT("LEADERBOARDS.GLOBAL_FORMAT", "&c<leaderboards_pos> &7&l\uff5c &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
+    LEADERBOARDS_CLAN_HEADER("LEADERBOARDS.GLOBAL_HEADER", "&cClans &7\uff5c &fTop 10");
 
     private final String path;
     private String value;

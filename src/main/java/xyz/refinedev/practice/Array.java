@@ -83,15 +83,9 @@ public class Array extends JavaPlugin {
             messagesConfig, scoreboardConfig, tablistConfig, divisionsConfig, hotbarConfig, rateConfig;//, brawlConfig;
 
     /*
-     * All ours Async Threads
+     * Mongo
      */
-    private Executor mainThread;
-    private Executor taskThread;
     private Executor mongoThread;
-
-    /*
-     * Mongo Database
-     */
     private MongoDatabase mongoDatabase;
 
     /*
@@ -111,6 +105,7 @@ public class Array extends JavaPlugin {
     private CommandsManager commandsManager;
     private KnockbackManager knockbackManager;
     private KillEffectManager killEffectManager;
+    private LeaderboardsManager leaderboardsManager;
     private Divisions divisionsManager;
     private RatingsManager ratingsManager;
     private ClassManager classManager;
@@ -150,12 +145,7 @@ public class Array extends JavaPlugin {
 
         System.setProperty("file.encoding", "UTF-8");
 
-        /*
-         * Async Executor Threads
-         */
-        this.mainThread = Executors.newSingleThreadExecutor();
         this.mongoThread = Executors.newSingleThreadExecutor();
-        this.taskThread = Executors.newSingleThreadExecutor();
 
         this.configHandler = new ConfigHandler(this);
         this.configHandler.init();
@@ -181,6 +171,9 @@ public class Array extends JavaPlugin {
 
         this.hotbarManager = new HotbarManager(this);
         this.hotbarManager.init();
+
+        this.leaderboardsManager = new LeaderboardsManager(this);
+        this.leaderboardsManager.init();
 
         this.ratingsManager = new RatingsManager(this);
         this.ratingsManager.init();

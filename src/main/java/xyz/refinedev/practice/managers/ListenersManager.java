@@ -17,6 +17,7 @@ import xyz.refinedev.practice.party.PartyListener;
 import xyz.refinedev.practice.profile.ProfileListener;
 import xyz.refinedev.practice.profile.hotbar.HotbarListener;
 import xyz.refinedev.practice.queue.QueueListener;
+import xyz.refinedev.practice.tournament.TournamentListener;
 import xyz.refinedev.practice.util.events.WorldListener;
 import xyz.refinedev.practice.util.menu.MenuListener;
 import org.bukkit.event.Listener;
@@ -47,6 +48,7 @@ public class ListenersManager {
                 new WorldListener(),
                 new GoldenHeads(),
                 new ToggleSprintFix(),
+                new TournamentListener(),
                 new QueueListener()
         )) {
             this.plugin.getServer().getPluginManager().registerEvents(listener, plugin);

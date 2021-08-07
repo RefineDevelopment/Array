@@ -1,0 +1,28 @@
+package xyz.refinedev.practice.task;
+
+import lombok.RequiredArgsConstructor;
+import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.util.other.DebugUtil;
+
+/**
+ * This Project is property of Refine Development © 2021
+ * Redistribution of this Project is not allowed
+ *
+ * @author Drizzy
+ * Created: 8/6/2021
+ * Project: Array
+ */
+
+@RequiredArgsConstructor
+public class GlobalLeaderboardsTask extends BukkitRunnable {
+
+    private final Array plugin;
+
+    @Override
+    public void run() {
+        if (!plugin.isEnabled()) return;
+        plugin.getLeaderboardsManager().loadGlobalLeaderboards();
+        DebugUtil.sendDebug("&7Updating Global Leaderboards...");
+    }
+}

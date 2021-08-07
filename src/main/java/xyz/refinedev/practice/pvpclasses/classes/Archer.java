@@ -100,7 +100,6 @@ public class Archer extends PvPClass implements Listener {
 
                 shooter.sendMessage(Locale.HCF_ARCHER_RANGE.toString().replace("<range>", String.format("%.1f", distance)));
                 shooter.sendMessage(Locale.HCF_ARCHER_MARKED.toString().replace("<damaged>", damaged.getName()).replace("<damagedhealth>", String.valueOf(heartdamage)));
-
                 damaged.sendMessage(Locale.HCF_ARCHER_DAMAGEMARKED.toString().replace("<shooter>", shooter.getName()).replace("<distance>", String.format("%.1f", distance)));
 
                 LeatherArmorMeta helmMeta = (LeatherArmorMeta) shooter.getInventory().getHelmet().getItemMeta();
@@ -108,10 +107,10 @@ public class Archer extends PvPClass implements Listener {
                 LeatherArmorMeta leggingsMeta = (LeatherArmorMeta) shooter.getInventory().getLeggings().getItemMeta();
                 LeatherArmorMeta bootsMeta = (LeatherArmorMeta) shooter.getInventory().getBoots().getItemMeta();
 
-                Color green = Color.fromRGB(6717235);
 
                 double r = random.nextDouble();
 
+                Color green = Color.fromRGB(6717235);
                 if ((r <= 0.5D) && (helmMeta.getColor().equals(green)) && (chestMeta.getColor().equals(green)) && (leggingsMeta.getColor().equals(green)) && (bootsMeta.getColor().equals(green))) {
                     damaged.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 120, 0));
                     shooter.sendMessage(ChatColor.GRAY + "Since your armor is green, you gave " + damaged.getName() + " the poison effect for 6 seconds...");

@@ -91,24 +91,6 @@ public class PlayerUtil {
         return ((CraftPlayer)player).getHandle() != null ? ((CraftPlayer)player).getHandle().ping : 0;
     }
 
-    public void removeItems(Inventory inventory, ItemStack item, int amount) {
-        for (int size = inventory.getSize(), slot = 0; slot < size; ++slot) {
-            ItemStack is = inventory.getItem(slot);
-            if (is != null && item.getType() == is.getType() && item.getDurability() == is.getDurability()) {
-                int newAmount = is.getAmount() - amount;
-                if (newAmount > 0) {
-                    is.setAmount(newAmount);
-                } else {
-                    inventory.setItem(slot, new ItemStack(Material.AIR));
-                    amount = -newAmount;
-                    if (amount == 0) {
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
     public boolean hasOtherInventoryOpen(Player player) {
         return ((CraftPlayer)player).getHandle().activeContainer.windowId != 0;
     }
@@ -132,10 +114,9 @@ public class PlayerUtil {
     }
 
     public void animateDeath(Player player) {
-
-        final int entityId = EntityUtils.getFakeEntityId();
-        final PacketPlayOutNamedEntitySpawn spawnPacket = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
-        final PacketPlayOutEntityStatus statusPacket = new PacketPlayOutEntityStatus();
+        int entityId = EntityUtils.getFakeEntityId();
+        PacketPlayOutNamedEntitySpawn spawnPacket = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
+        PacketPlayOutEntityStatus statusPacket = new PacketPlayOutEntityStatus();
 
         try {
             SPAWN_PACKET_ID_FIELD.set(spawnPacket, entityId);
@@ -171,7 +152,24 @@ public class PlayerUtil {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
 
+    public void removeItems(Inventory inventory, ItemStack item, int amount) {
+        for (int size = inventory.getSize(), slot = 0; slot < size; ++slot) {
+            ItemStack is = inventory.getItem(slot);
+            if (is != null && item.getType() == is.getType() && item.getDurability() == is.getDurability()) {
+                int newAmount = is.getAmount() - amount;
+                if (newAmount > 0) {
+                    is.setAmount(newAmount);
+                } else {
+                    inventory.setItem(slot, new ItemStack(Material.AIR));
+                    amount = -newAmount;
+                    if (amount == 0) {
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     static {

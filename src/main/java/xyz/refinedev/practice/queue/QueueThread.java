@@ -16,7 +16,6 @@ import xyz.refinedev.practice.util.other.TaskUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-@SuppressWarnings("all")
 public class QueueThread extends Thread {
 
     private Arena arena;
@@ -37,9 +36,7 @@ public class QueueThread extends Thread {
                     for (QueueProfile firstQueueProfile : queue.getPlayers()) {
                         final Player firstPlayer = Bukkit.getPlayer(firstQueueProfile.getUuid());
 
-                        if (firstPlayer == null) {
-                            continue;
-                        }
+                        if (firstPlayer == null) continue;
 
                         final Profile firstProfile = Profile.getByUuid(firstQueueProfile.getUuid());
 
@@ -51,10 +48,9 @@ public class QueueThread extends Thread {
                             Player secondPlayer = Bukkit.getPlayer(secondQueueProfile.getUuid());
                             Profile secondProfile = Profile.getByUuid(secondQueueProfile.getUuid());
 
-                            if (secondPlayer == null) {
-                                continue;
-                            }
+                            if (secondPlayer == null) continue;
 
+                            //Ping factor code (either by nick or joe idk)
                             if (firstProfile.getSettings().isPingFactor() || secondProfile.getSettings().isPingFactor()) {
                                 if (PlayerUtil.getPing(firstPlayer) >= PlayerUtil.getPing(secondPlayer)) {
                                     if (PlayerUtil.getPing(firstPlayer) - PlayerUtil.getPing(secondPlayer) >= 50) {
@@ -68,8 +64,7 @@ public class QueueThread extends Thread {
                             }
 
                             if (queue.getType() == QueueType.RANKED || queue.getType() == QueueType.CLAN) {
-                                if (!firstQueueProfile.isInRange(secondQueueProfile.getElo()) ||
-                                        !secondQueueProfile.isInRange(firstQueueProfile.getElo())) {
+                                if (!firstQueueProfile.isInRange(secondQueueProfile.getElo()) || !secondQueueProfile.isInRange(firstQueueProfile.getElo())) {
                                     continue;
                                 }
                             }
@@ -78,9 +73,7 @@ public class QueueThread extends Thread {
                                 Clan firstClan = firstProfile.getClan();
                                 Clan secondClan = secondProfile.getClan();
 
-                                if (firstClan == secondClan){
-                                    continue;
-                                }
+                                if (firstClan == secondClan) continue;
                             }
 
                             if (Arena.getArenas().isEmpty()) continue;
@@ -88,11 +81,7 @@ public class QueueThread extends Thread {
                             // Find arena
                             arena = Arena.getRandom(queue.getKit());
 
-                            if (arena == null) continue;
-
-                            if (!arena.isSetup()) continue;
-
-                            if (arena.isActive()) continue;
+                            if (arena == null || !arena.isSetup() || arena.isActive()) continue;
 
                             if (queue.getKit().getGameRules().isBuild()) arena.setActive(true);
 
@@ -125,7 +114,6 @@ public class QueueThread extends Thread {
                                 firstPlayer.sendMessage(replaceOpponent(opponentMessages, firstPlayer));
                                 secondPlayer.sendMessage(replaceOpponent(opponentMessages, secondPlayer));
                             }
-
                             TaskUtil.run(match::start);
                         }
                     }

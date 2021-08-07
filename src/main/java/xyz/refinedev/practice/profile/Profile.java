@@ -26,7 +26,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.api.events.leaderboards.GlobalLeaderboardsUpdateEvent;
-import xyz.refinedev.practice.api.events.profile.ProfileGlobalEloCalculateEvent;
 import xyz.refinedev.practice.api.events.profile.ProfileLoadEvent;
 import xyz.refinedev.practice.api.events.profile.ProfileSaveEvent;
 import xyz.refinedev.practice.api.events.profile.SpawnTeleportEvent;
@@ -85,7 +84,7 @@ public class Profile {
     /*
      * Profile Mongo
      */
-    @Getter private static MongoCollection<Document> collection = Array.getInstance().getMongoDatabase().getCollection("profiles");
+    private static MongoCollection<Document> collection = Array.getInstance().getMongoDatabase().getCollection("profiles");
     private Executor mongoThread = plugin.getMongoThread();
 
 
@@ -155,31 +154,7 @@ public class Profile {
     }
 
     public static void preload() {
-        // Players might have joined before the plugin finished loading
-        for ( Player player : Bukkit.getOnlinePlayers() ) {
-            Profile profile = new Profile(player.getUniqueId());
-
-            try {
-                profile.load();
-            } catch (Exception e) {
-                player.kickPlayer(CC.RED + "The server is loading...");
-                continue;
-            }
-
-            profiles.put(player.getUniqueId(), profile);
-        }
-
         if (!Array.getInstance().isDisabling()) {
-            //Reload Leaderboards
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    Profile.loadUUIDCache();
-                    Kit.getKits().forEach(Kit::updateKitLeaderboards);
-                    Profile.loadGlobalLeaderboards();
-                }
-            }.runTaskTimerAsynchronously(Array.getInstance(), 180 * 20L, 180 * 20L);
-
             //Save prevent data loss
             new BukkitRunnable() {
                 @Override
@@ -191,7 +166,6 @@ public class Profile {
 
             //Refresh players' hotbar every 3 seconds
             new BukkitRunnable() {
-
                 @Override
                 public void run() {
                     Profile.getProfiles().values().forEach(Profile::checkForHotbarUpdate);
@@ -238,7 +212,7 @@ public class Profile {
     public static void loadGlobalLeaderboards() {
         if (!getGlobalEloLeaderboards().isEmpty()) getGlobalEloLeaderboards().clear();
             Array.getInstance().getMongoThread().execute(() -> {
-            for ( Document document : Profile.getCollection().find().sort(Sorts.descending("globalElo")).limit(10).into(new ArrayList<>()) ) {
+            for ( Document document : collection.find().sort(Sorts.descending("globalElo")).limit(10).into(new ArrayList<>()) ) {
                 LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
                 leaderboardsAdapter.setName(document.getString("name"));
                 leaderboardsAdapter.setElo(document.getInteger("globalElo"));
@@ -253,7 +227,7 @@ public class Profile {
 
     public static void loadUUIDCache() {
         ArrayCache.getPlayerCache().clear();
-        for (Document document : Profile.getCollection().find()) {
+        for (Document document : collection.find()) {
             if (document == null) return;
 
             String name = document.getString("name");
@@ -432,7 +406,6 @@ public class Profile {
             }
         }
         this.globalElo = Math.round(globalElo / kitCounter);
-        new ProfileGlobalEloCalculateEvent(this).call();
     }
 
     /**
@@ -465,9 +438,7 @@ public class Profile {
         if (!sentDuelRequests.containsKey(player.getUniqueId())) {
             return false;
         }
-
         DuelRequest request = sentDuelRequests.get(player.getUniqueId());
-
         if (request.isExpired()) {
             sentDuelRequests.remove(player.getUniqueId());
             return false;
@@ -479,17 +450,15 @@ public class Profile {
      * Execute join tasks for the profile
      */
     public void handleJoin() {
-        Player player = getPlayer();
+        final Player player = getPlayer();
+        this.name = player.getName();
 
-        plugin.getTaskThread().execute(() -> {
-            getPlayerList().removeIf(players -> players.getName().equalsIgnoreCase(player.getName()));
-            getPlayerList().add(player);
+        playerList.removeIf(players -> players.getName().equalsIgnoreCase(player.getName()));
+        playerList.add(player);
 
-            ArrayCache.getPlayerCache().putIfAbsent(player.getName(), this.getUuid());
+        ArrayCache.getPlayerCache().putIfAbsent(player.getName(), this.getUuid());
 
-            this.setName(player.getName());
-            this.refreshHotbar();
-        });
+        this.refreshHotbar();
         this.teleportToSpawn();
 
         for (Profile profile : profiles.values()) {
@@ -501,23 +470,16 @@ public class Profile {
      * Execute leave tasks for the profile
      */
     public void handleLeave() {
-       //If they are in a queue, remove them
-        if (this.isInQueue()) this.getQueue().removePlayer(this.getQueueProfile());
+        playerList.remove(this.getPlayer());
+        this.save();
 
-        plugin.getTaskThread().execute(() -> {
-            getPlayerList().remove(this.getPlayer());
-            this.save();
-            //If there is a rematch request pending for them, remove it
-            if (this.getRematchData() != null) {
-                Player target = plugin.getServer().getPlayer(this.getRematchData().getTarget());
-                if (target != null && target.isOnline()) {
-                    Profile.getByUuid(target.getUniqueId()).checkForHotbarUpdate();
-                }
+        if (this.getRematchData() != null) {
+            Player target = plugin.getServer().getPlayer(this.getRematchData().getTarget());
+            if (target != null && target.isOnline()) {
+                Profile profile = Profile.getByUuid(target.getUniqueId());
+                profile.checkForHotbarUpdate();
             }
-            if (this.getParty() !=null && Tournament.CURRENT_TOURNAMENT !=null && Tournament.CURRENT_TOURNAMENT.isParticipating(this.getPlayer())) {
-                Tournament.CURRENT_TOURNAMENT.leave(this.getParty());
-            }
-        });
+        }
     }
 
     /**
@@ -801,10 +763,7 @@ public class Profile {
     }
 
     public boolean isInTournament() {
-        if (Tournament.CURRENT_TOURNAMENT != null) {
-            return Tournament.CURRENT_TOURNAMENT.isParticipating(getPlayer());
-        }
-        return false;
+       return Tournament.getCurrentTournament() != null && Tournament.getCurrentTournament().isParticipating(this.uuid);
     }
 
     public boolean isInBrawl() {

@@ -102,7 +102,7 @@ public class ConfigHandler {
         TWITTER = config.getString("SOCIAL.TWITTER");
 
         NAMETAGS_ENABLED = config.getBoolean("NAMETAGS.ENABLED");
-        if (NAMETAGS_ENABLED) this.loadNametags();
+        if (NAMETAGS_ENABLED) this.loadNameTags();
 
         UPDATE_NOTIFICATION = config.getBoolean("UPDATE_NOTIFICATION");
     }
@@ -123,7 +123,7 @@ public class ConfigHandler {
         TaskUtil.runTimerAsync(new MenuUpdateTask(), 20L, 50L);
     }
 
-    private void loadNametags() {
+    private void loadNameTags() {
         defaultColor = config.getStringOrDefault("NAMETAGS.DEFAULT", "<rank_color>");
         if (!getDefaultColor().equalsIgnoreCase("<rank_color>")) {
             try {

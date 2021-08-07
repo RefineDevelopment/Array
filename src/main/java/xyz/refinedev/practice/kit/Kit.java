@@ -1,18 +1,14 @@
 package xyz.refinedev.practice.kit;
 
-import com.mongodb.client.model.Sorts;
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.api.events.leaderboards.KitLeaderboardsUpdateEvent;
 import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
-import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
@@ -20,7 +16,6 @@ import xyz.refinedev.practice.util.config.BasicConfigurationFile;
 import xyz.refinedev.practice.util.inventory.InventoryUtil;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,17 +33,16 @@ import java.util.List;
 public class Kit {
     
     @Getter private static final List<Kit> kits = new ArrayList<>();
-    
-    private static final Array plugin = Array.getInstance();
     @Getter @Setter private static Kit HCFTeamFight;
 
-    private final List<LeaderboardsAdapter> rankedEloLeaderboards = new ArrayList<>();
+    private static final Array plugin = Array.getInstance();
+
+    private final List<LeaderboardsAdapter> eloLeaderboards = new ArrayList<>();
     private final List<LeaderboardsAdapter> winLeaderboards = new ArrayList<>();
-    private final List<LeaderboardsAdapter> killsLeaderboards = new ArrayList<>();
     private final List<ItemStack> editorItems = new ArrayList<>();
 
-    private final KitInventory kitInventory = new KitInventory();
     private final KitGameRules gameRules = new KitGameRules();
+    private KitInventory kitInventory = new KitInventory();
 
     private final String name;
     private boolean enabled;
@@ -56,9 +50,7 @@ public class Kit {
     private List<String> kitDescription;
     private ItemStack displayIcon;
     private String displayName;
-    private Queue unrankedQueue;
-    private Queue rankedQueue;
-    private Queue clanQueue;
+    private Queue unrankedQueue, rankedQueue, clanQueue;
 
     public Kit(String name) {
         this.name = name;
@@ -79,7 +71,6 @@ public class Kit {
 
         plugin.getKitsConfig().getConfiguration().set("kits." + getName(), null);
         plugin.getKitsConfig().save();
-        
     }
 
     public static void preload() {
@@ -156,10 +147,10 @@ public class Kit {
 
             if (config.getConfigurationSection(path + ".edit-rules.items") != null) {
                 for (String itemKey : config.getConfigurationSection(path + ".edit-rules.items").getKeys(false)) {
-                    kit.getEditorItems().add(
-                            new ItemBuilder(Material.valueOf(config.getString(path + ".edit-rules.items." + itemKey + ".material")))
-                                    .durability(config.getInt(path + ".edit-rules.items." + itemKey + ".durability"))
-                                    .amount(config.getInt(path + ".edit-rules.items." + itemKey + ".amount"))
+                    String pathKey = path + ".edit-rules.items." + itemKey;
+                    kit.getEditorItems().add(new ItemBuilder(Material.valueOf(config.getString(pathKey + ".material")))
+                                    .durability(config.getInt(pathKey + ".durability"))
+                                    .amount(config.getInt(pathKey + ".amount"))
                                     .build());
                 }
             }
@@ -168,7 +159,6 @@ public class Kit {
         kits.forEach(kit -> {
             if (kit.isEnabled()) {
                 kit.setUnrankedQueue(new Queue(kit, QueueType.UNRANKED));
-
                 if (kit.getGameRules().isRanked()) {
                     kit.setRankedQueue(new Queue(kit, QueueType.RANKED));
                 }
@@ -179,14 +169,14 @@ public class Kit {
         });
 
         try {
-            Kit.getKits().forEach(Kit::updateKitLeaderboards);
+            Kit.getKits().forEach(plugin.getLeaderboardsManager()::loadKitLeaderboards);
         } catch (Exception e) {
             plugin.logger("&cThere was an error loading Leaderboards, Disabling Array!");
             Bukkit.shutdown();
         }
 
         } catch (Exception e) {
-            plugin.logger("&cAn Error occured while loading Kits, please check kits.yml and try again.");
+            plugin.logger("&cAn error occurred while loading Kits, please check kits.yml and try again.");
             Bukkit.shutdown();
         }
     }
@@ -215,11 +205,14 @@ public class Kit {
         configFile.getConfiguration().set(path + ".display-name", displayName);
         configFile.getConfiguration().set(path + ".knockback-profile", knockbackProfile);
         configFile.getConfiguration().set(path + ".description", kitDescription);
+
         configFile.getConfiguration().set(path + ".icon.material", displayIcon.getType().name());
         configFile.getConfiguration().set(path + ".icon.durability", displayIcon.getDurability());
+
         configFile.getConfiguration().set(path + ".loadout.armor", InventoryUtil.serializeInventory(kitInventory.getArmor()));
         configFile.getConfiguration().set(path + ".loadout.contents", InventoryUtil.serializeInventory(kitInventory.getContents()));
         configFile.getConfiguration().set(path + ".loadout.effects", InventoryUtil.serializeEffects(kitInventory.getEffects()));
+
         configFile.getConfiguration().set(path + ".game-rules.ranked", gameRules.isRanked());
         configFile.getConfiguration().set(path + ".game-rules.clan", gameRules.isClan());
         configFile.getConfiguration().set(path + ".game-rules.party-ffa", !gameRules.isDisablePartyFFA());
@@ -248,45 +241,7 @@ public class Kit {
         configFile.getConfiguration().set(path + ".game-rules.hit-delay", gameRules.getHitDelay());
         configFile.getConfiguration().set(path + ".game-rules.bow-hp", gameRules.isBowHP());
 
-        try {
-            configFile.getConfiguration().save(configFile.getFile());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void updateKitLeaderboards() {
-        if (!this.getRankedEloLeaderboards().isEmpty()) this.getRankedEloLeaderboards().clear();
-        if (!this.getWinLeaderboards().isEmpty()) this.getWinLeaderboards().clear();
-        plugin.getMongoThread().execute(() -> {
-            for (Document document : Profile.getCollection().find().sort(Sorts.descending("kitStatistics." + getName() + ".elo")).limit(10).into(new ArrayList<>())) {
-                Document kitStatistics = (Document) document.get("kitStatistics");
-                if (kitStatistics.containsKey(getName())) {
-                    Document kitDocument = (Document) kitStatistics.get(getName());
-                    LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
-                    leaderboardsAdapter.setName((String) document.get("name"));
-                    leaderboardsAdapter.setElo((Integer) kitDocument.get("elo"));
-                    if (!getRankedEloLeaderboards().isEmpty()) {
-                        getRankedEloLeaderboards().removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
-                    }
-                    this.getRankedEloLeaderboards().add(leaderboardsAdapter);
-                }
-            }
-            for (Document document : Profile.getCollection().find().sort(Sorts.descending("kitStatistics." + getName() + ".won")).limit(10).into(new ArrayList<>())) {
-                Document kitStatistics = (Document) document.get("kitStatistics");
-                if (kitStatistics.containsKey(getName())) {
-                    Document kitDocument = (Document) kitStatistics.get(getName());
-                    LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
-                    leaderboardsAdapter.setName((String) document.get("name"));
-                    leaderboardsAdapter.setElo((Integer) kitDocument.get("won"));
-                    if (!getWinLeaderboards().isEmpty()) {
-                        getWinLeaderboards().removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
-                    }
-                    this.getWinLeaderboards().add(leaderboardsAdapter);
-                }
-            }
-            });
-        new KitLeaderboardsUpdateEvent().call();
+        configFile.save();
     }
 
     public boolean isParty() {

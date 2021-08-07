@@ -1,20 +1,8 @@
 package xyz.refinedev.practice.managers;
 
 import lombok.RequiredArgsConstructor;
-import org.bukkit.plugin.java.JavaPlugin;
-import xyz.refinedev.practice.pvpclasses.PvPClass;
-import xyz.refinedev.practice.pvpclasses.events.ArmorClassEquipEvent;
-import xyz.refinedev.practice.pvpclasses.events.ArmorClassUnequipEvent;
-import xyz.refinedev.practice.match.Match;
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.pvpclasses.classes.Archer;
-import xyz.refinedev.practice.pvpclasses.classes.Bard;
-import xyz.refinedev.practice.pvpclasses.classes.Rogue;
-import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.util.events.ArmorEquipEvent;
-import xyz.refinedev.practice.util.inventory.InventoryUtil;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -23,7 +11,18 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.match.Match;
+import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.pvpclasses.PvPClass;
+import xyz.refinedev.practice.pvpclasses.classes.Archer;
+import xyz.refinedev.practice.pvpclasses.classes.Bard;
+import xyz.refinedev.practice.pvpclasses.classes.Rogue;
+import xyz.refinedev.practice.pvpclasses.events.ArmorClassEquipEvent;
+import xyz.refinedev.practice.pvpclasses.events.ArmorClassUnequipEvent;
+import xyz.refinedev.practice.util.events.ArmorEquipEvent;
+import xyz.refinedev.practice.util.inventory.InventoryUtil;
+import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.*;
@@ -223,11 +222,23 @@ public class ClassManager implements Listener {
 
 
     public static void giveArcherKit(Player player) {
-        player.getInventory().setHelmet(new ItemBuilder(Material.LEATHER_HELMET).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
-        player.getInventory().setChestplate(new ItemBuilder(Material.LEATHER_CHESTPLATE).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
-        player.getInventory().setLeggings(new ItemBuilder(Material.LEATHER_LEGGINGS).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
-        player.getInventory().setBoots(new ItemBuilder(Material.LEATHER_BOOTS).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).enchantment(Enchantment.PROTECTION_FALL, 4).build());
+        List<Color> colors = Arrays.asList(Color.fromRGB(6717235), Color.fromRGB(3361970), Color.fromRGB(5000268), Color.fromRGB(1644825));
+        Collections.shuffle(colors);
 
+        double chance = Array.random.nextDouble();
+
+        if (chance <= 0.7D) {
+            Color color = colors.get(0);
+            player.getInventory().setHelmet(new ItemBuilder(Material.LEATHER_HELMET).color(color).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
+            player.getInventory().setChestplate(new ItemBuilder(Material.LEATHER_CHESTPLATE).color(color).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
+            player.getInventory().setLeggings(new ItemBuilder(Material.LEATHER_LEGGINGS).color(color).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
+            player.getInventory().setBoots(new ItemBuilder(Material.LEATHER_BOOTS).color(color).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).enchantment(Enchantment.PROTECTION_FALL, 4).build());
+        } else {
+            player.getInventory().setHelmet(new ItemBuilder(Material.LEATHER_HELMET).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
+            player.getInventory().setChestplate(new ItemBuilder(Material.LEATHER_CHESTPLATE).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
+            player.getInventory().setLeggings(new ItemBuilder(Material.LEATHER_LEGGINGS).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
+            player.getInventory().setBoots(new ItemBuilder(Material.LEATHER_BOOTS).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).enchantment(Enchantment.PROTECTION_FALL, 4).build());
+        }
         player.getInventory().setItem(0, new ItemBuilder(Material.DIAMOND_SWORD).enchantment(Enchantment.DAMAGE_ALL, 2).enchantment(Enchantment.FIRE_ASPECT, 2).enchantment(Enchantment.DURABILITY, 3).build());
         player.getInventory().setItem(2, new ItemBuilder(Material.ENDER_PEARL).amount(16).build());
         player.getInventory().setItem(1, new ItemBuilder(Material.BOW).enchantment(Enchantment.ARROW_DAMAGE, 3).enchantment(Enchantment.DURABILITY, 3).enchantment(Enchantment.ARROW_FIRE, 1).enchantment(Enchantment.ARROW_INFINITE, 1).build());

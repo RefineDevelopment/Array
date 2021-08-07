@@ -1,15 +1,13 @@
 package xyz.refinedev.practice.leaderboards.menu;
 
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.leaderboards.menu.buttons.ClanLeaderboardsButton;
 import xyz.refinedev.practice.leaderboards.menu.buttons.GlobalLeaderboardsButton;
 import xyz.refinedev.practice.leaderboards.menu.buttons.KitLeaderboardsButton;
 import xyz.refinedev.practice.leaderboards.menu.buttons.StatsButton;
-import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,8 +18,6 @@ public class LeaderboardsMenu extends Menu {
         setAutoUpdate(true);
     }
 
-    private static final Button BLACK_PANE = Button.placeholder(Material.STAINED_GLASS_PANE,DyeColor.BLACK.getData(), CC.translate("&7"));
-
     @Override
     public String getTitle(final Player player) {
         return "&7Leaderboards";
@@ -31,8 +27,9 @@ public class LeaderboardsMenu extends Menu {
     public Map<Integer, Button> getButtons(final Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        buttons.put(getSlot(3, 1), new StatsButton());
-        buttons.put(getSlot(5, 1), new GlobalLeaderboardsButton());
+        buttons.put(getSlot(2, 1), new StatsButton());
+        buttons.put(getSlot(4, 1), new GlobalLeaderboardsButton());
+        buttons.put(getSlot(6, 1), new ClanLeaderboardsButton());
 
         int y = 3;
         int x = 1;
@@ -48,7 +45,7 @@ public class LeaderboardsMenu extends Menu {
         }
 
         for (int i = 0; i < 54; i++) {
-            buttons.putIfAbsent(i, BLACK_PANE);
+            buttons.putIfAbsent(i, getPlaceholderButton());
         }
         return buttons;
     }

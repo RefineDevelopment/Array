@@ -2,6 +2,7 @@ package xyz.refinedev.practice.match;
 
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.api.events.match.MatchEndEvent;
 import xyz.refinedev.practice.api.events.match.MatchPlayerSetupEvent;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.impl.TheBridgeArena;
@@ -11,8 +12,10 @@ import xyz.refinedev.practice.match.task.MatchBridgePlayerTask;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.kit.BridgeMatch;
+import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
+import xyz.refinedev.practice.tournament.Tournament;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.location.Cuboid;
@@ -45,6 +48,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MatchListener implements Listener {
     
@@ -378,6 +382,48 @@ public class MatchListener implements Listener {
             objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
             objective.setDisplayName(ChatColor.RED + org.apache.commons.lang.StringEscapeUtils.unescapeJava("\u2764"));
             objective.getScore(otherPlayer.getName()).setScore((int) Math.floor(otherPlayer.getHealth() / 2));
+        }
+    }
+
+    @EventHandler
+    public void onMatchEndEvent(MatchEndEvent event) {
+        Match match = event.getMatch();
+        Tournament tournament = Tournament.getCurrentTournament();
+
+        if (tournament == null) return;
+
+        if (tournament.getMatches().contains(match)) {
+            if (match.isSoloMatch()) {
+                Player player = match.getOpponentPlayer(match.getWinningPlayer());
+                tournament.eliminateParticipant(player, match.getWinningPlayer());
+            }
+            if (match.isTeamMatch()) {
+                UUID loserUUID = match.getOpponentTeam(match.getWinningTeam()).getLeader().getUuid();
+                Profile loserProfile = Profile.getByUuid(loserUUID);
+                Party looserParty = loserProfile.getParty();
+
+                UUID winnerUUID = match.getWinningTeam().getLeader().getUuid();
+                Profile winnerProfile = Profile.getByUuid(winnerUUID);
+                Party winnerParty = winnerProfile.getParty();
+
+                tournament.eliminateParticipant(looserParty, winnerParty);
+            }
+            //Remove the match
+            tournament.getMatches().remove(match);
+            //If matches have ended then pick last remaining team as winner
+            if (tournament.getMatches().isEmpty()) {
+                if (tournament.getTeamPlayers().size() == 1) {
+                    tournament.end(tournament.getTeamPlayers().get(0));
+                    //Otherwise cancel the tournament (this shouldn't happen unless everyone leaves)
+                } else if (tournament.getTeamPlayers().isEmpty()) {
+                    tournament.end(null);
+                } else {
+                    //If the matches are not empty then move the next stage!
+                    if (tournament.getMatches().isEmpty()) {
+                        tournament.nextStage();
+                    }
+                }
+            }
         }
     }
 

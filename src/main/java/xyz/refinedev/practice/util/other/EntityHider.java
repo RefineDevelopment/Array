@@ -5,52 +5,43 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BlockPosition;
-import net.minecraft.server.v1_8_R3.WorldServer;
-import org.apache.commons.lang.Validate;
-import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemSpawnEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import xyz.refinedev.practice.Array;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import static com.comphenix.protocol.PacketType.Play.Server.*;
 
-
 public class EntityHider extends PacketAdapter implements Listener {
 
-    public static final PluginConflictResolution PLUGIN_CONFLICT_RESOLUTION = PluginConflictResolution.OVERRIDE;
-    private final String VERSION;
+    //private final String VERSION;
 
-    private Method METHOD_CRAFTITEMSTACK_AS_NMS_COPY;
-    private Method METHOD_CRAFTWORLD_GET_HANDLE;
-    private Method METHOD_CRAFTENTITY_GET_HANDLE;
+    //private Method METHOD_CRAFTITEMSTACK_AS_NMS_COPY;
+    //private Method METHOD_CRAFTWORLD_GET_HANDLE;
+    //private Method METHOD_CRAFTENTITY_GET_HANDLE;
     private Method METHOD_ENTITY_GET_BUKKIT_ENTITY;
-    private Method METHOD_WORLD_ADD_ENTITY;
+    //private Method METHOD_WORLD_ADD_ENTITY;
     private Method METHOD_WORLD_GET_ENTITY_BY_ID;
 
     private Field FIELD_ENTITYITEM_THROWER;
-
-    private Constructor<?> CONSTRUCTOR_ENTITY_ITEM;
-
-    private final boolean PRE18;
+    //private Constructor<?> CONSTRUCTOR_ENTITY_ITEM;
 
     public EntityHider(Array plugin) {
-        super(plugin , ENTITY_EQUIPMENT, BED, ANIMATION, NAMED_ENTITY_SPAWN,
+        super(plugin, ENTITY_EQUIPMENT, BED, ANIMATION, NAMED_ENTITY_SPAWN,
                 COLLECT, SPAWN_ENTITY, SPAWN_ENTITY_LIVING, SPAWN_ENTITY_PAINTING, SPAWN_ENTITY_EXPERIENCE_ORB,
                 ENTITY_VELOCITY, REL_ENTITY_MOVE, ENTITY_LOOK, ENTITY_MOVE_LOOK, ENTITY_MOVE_LOOK,
                 ENTITY_TELEPORT, ENTITY_HEAD_ROTATION, ENTITY_STATUS, ATTACH_ENTITY, ENTITY_METADATA,
@@ -62,32 +53,30 @@ public class EntityHider extends PacketAdapter implements Listener {
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
 
         String b = Bukkit.getServer().getClass().getPackage().getName();
-        VERSION = b.substring(b.lastIndexOf('.') + 1);
+        //VERSION = b.substring(b.lastIndexOf('.') + 1);
 
-        Class<?> craftItemstackClazz = org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack.class;
-        Class<?> craftEntityClazz = org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity.class;
-        Class<?> craftWorldClazz = org.bukkit.craftbukkit.v1_8_R3.CraftWorld.class;
+        //Class<?> craftItemstackClazz = org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack.class;
+        //Class<?> craftEntityClazz = org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity.class;
+        //Class<?> craftWorldClazz = org.bukkit.craftbukkit.v1_8_R3.CraftWorld.class;
 
         Class<?> minecraftEntityItemClazz = net.minecraft.server.v1_8_R3.EntityItem.class;
         Class<?> minecraftEntityClazz = net.minecraft.server.v1_8_R3.Entity.class;
         Class<?> minecraftWorldClazz = net.minecraft.server.v1_8_R3.World.class;
-        Class<?> minecraftItemStackClazz = net.minecraft.server.v1_8_R3.ItemStack.class;
-
-        PRE18 = VERSION.startsWith("v1_7");
+        //Class<?> minecraftItemStackClazz = net.minecraft.server.v1_8_R3.ItemStack.class;
 
         try {
-            METHOD_CRAFTITEMSTACK_AS_NMS_COPY=craftItemstackClazz.getDeclaredMethod("asNMSCopy", ItemStack.class);
-            METHOD_CRAFTENTITY_GET_HANDLE=craftEntityClazz.getDeclaredMethod("getHandle");
+           // METHOD_CRAFTITEMSTACK_AS_NMS_COPY=craftItemstackClazz.getDeclaredMethod("asNMSCopy", ItemStack.class);
+           // METHOD_CRAFTENTITY_GET_HANDLE=craftEntityClazz.getDeclaredMethod("getHandle");
             METHOD_ENTITY_GET_BUKKIT_ENTITY=minecraftEntityClazz.getDeclaredMethod("getBukkitEntity");
-            METHOD_WORLD_ADD_ENTITY=minecraftWorldClazz.getDeclaredMethod("addEntity", minecraftEntityClazz);
-            METHOD_CRAFTWORLD_GET_HANDLE=craftWorldClazz.getDeclaredMethod("getHandle");
+           // METHOD_WORLD_ADD_ENTITY=minecraftWorldClazz.getDeclaredMethod("addEntity", minecraftEntityClazz);
+           // METHOD_CRAFTWORLD_GET_HANDLE=craftWorldClazz.getDeclaredMethod("getHandle");
             METHOD_WORLD_GET_ENTITY_BY_ID=minecraftWorldClazz.getDeclaredMethod("a", int.class);
 
 
-            FIELD_ENTITYITEM_THROWER=minecraftEntityItemClazz.getDeclaredField("f");
+            FIELD_ENTITYITEM_THROWER = minecraftEntityItemClazz.getDeclaredField("f");
             FIELD_ENTITYITEM_THROWER.setAccessible(true);
 
-            CONSTRUCTOR_ENTITY_ITEM=minecraftEntityItemClazz.getDeclaredConstructor(minecraftWorldClazz, double.class, double.class, double.class, minecraftItemStackClazz);
+            //CONSTRUCTOR_ENTITY_ITEM=minecraftEntityItemClazz.getDeclaredConstructor(minecraftWorldClazz, double.class, double.class, double.class, minecraftItemStackClazz);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,41 +86,30 @@ public class EntityHider extends PacketAdapter implements Listener {
     @Override
     public void onPacketSending(PacketEvent event) {
         PacketType type = event.getPacketType();
-        Player reciever = event.getPlayer();
+        Player receiver = event.getPlayer();
 
-        if(type == WORLD_EVENT) {
+        if (type == WORLD_EVENT) {
             int effect = event.getPacket().getIntegers().read(0);
 
-            if(effect == 2002) {
-                int x;
-                int y;
-                int z;
-                if(PRE18) {
-                    x = event.getPacket().getIntegers().read(2);
-                    y = event.getPacket().getIntegers().read(3);
-                    z = event.getPacket().getIntegers().read(4);
-                } else {
-                    BlockPosition position = event.getPacket().getBlockPositionModifier().read(0);
-                    x = position.getX();
-                    y = position.getY();
-                    z = position.getZ();
-                }
+            if (effect == 2002) {
+                BlockPosition position = event.getPacket().getBlockPositionModifier().read(0);
+                int x = position.getX();
+                int y = position.getY();
+                int  z = position.getZ();
 
                 boolean hasAnyPlayablePotion = false;
                 boolean hasAtleastOneMatch = false;
 
-                for(ThrownPotion potion : reciever.getWorld().getEntitiesByClass(ThrownPotion.class)) {
-                    Location location = potion.getLocation();
+                for (ThrownPotion potion : receiver.getWorld().getEntitiesByClass(ThrownPotion.class)) {
+                    int potionX = floor(x);
+                    int potionY = floor(y);
+                    int potionZ = floor(z);
 
-                    int potionX = PRE18 ? (int)Math.round(location.getX()) : MathHelper.floor(x);
-                    int potionY = PRE18 ? (int)Math.round(location.getY()) : MathHelper.floor(y);
-                    int potionZ = PRE18 ? (int)Math.round(location.getZ()) : MathHelper.floor(z);
-
-                    if(x == potionX &&  y == potionY &&  z == potionZ) {
-                        if(potion.getShooter() instanceof Player ) {
+                    if (x == potionX &&  y == potionY &&  z == potionZ) {
+                        if (potion.getShooter() instanceof Player ) {
                             Player shooter = (Player) potion.getShooter();
                             hasAtleastOneMatch = true;
-                            if(reciever.canSee(shooter)) {
+                            if(receiver.canSee(shooter)) {
                                 hasAnyPlayablePotion = true;
                             }
                         }
@@ -142,7 +120,7 @@ public class EntityHider extends PacketAdapter implements Listener {
                     event.setCancelled(true);
                 }
             }
-        }else if(type == NAMED_SOUND_EFFECT){
+        } else if (type == NAMED_SOUND_EFFECT){
             String sound = event.getPacket().getStrings().read(0);
             if(sound.equals("random.bow") || sound.equals("random.bowhit") || sound.equals("random.pop")) {
 
@@ -153,18 +131,18 @@ public class EntityHider extends PacketAdapter implements Listener {
                 boolean hasAnyPlayable = false;
                 boolean hasAtleastOneMatch = false;
 
-                for(Entity entity : reciever.getWorld().getEntitiesByClasses(Player.class , Projectile.class)) {
+                for(Entity entity : receiver.getWorld().getEntitiesByClasses(Player.class , Projectile.class)) {
                     Player player;
-                    if(entity instanceof Player) {
+                    if (entity instanceof Player) {
                         player = (Player) entity;
-                    }else if(entity instanceof Projectile) {
+                    } else if (entity instanceof Projectile) {
                         Projectile projectile = (Projectile) entity;
-                        if(projectile.getShooter() instanceof Player) {
+                        if (projectile.getShooter() instanceof Player) {
                             player = (Player) projectile.getShooter();
-                        }else {
+                        } else {
                             continue;
                         }
-                    }else {
+                    } else {
                         continue;
                     }
                     Location location = entity.getLocation();
@@ -188,7 +166,7 @@ public class EntityHider extends PacketAdapter implements Listener {
                         }
                         if(pass) {
                             hasAtleastOneMatch = true;
-                            if(reciever.canSee(player)) {
+                            if(receiver.canSee(player)) {
                                 hasAnyPlayable = true;
                             }
                         }
@@ -199,25 +177,25 @@ public class EntityHider extends PacketAdapter implements Listener {
                 }
             }
         } else {
-            Entity entity = getFromID(reciever.getWorld() , event.getPacket().getIntegers().read(0));
+            Entity entity = getFromID(receiver.getWorld() , event.getPacket().getIntegers().read(0));
             if(entity instanceof Player) {
                 Player player = ((Player)entity);
-                if(!reciever.canSee(player)) {
+                if(!receiver.canSee(player)) {
                     event.setCancelled(true);
                 }
             } else if(entity instanceof Projectile) {
                 Projectile projectile = ((Projectile)entity);
                 if(projectile.getShooter() instanceof Player ) {
                     Player shooter = (Player) projectile.getShooter();
-                    if(!reciever.canSee(shooter)) {
+                    if(!receiver.canSee(shooter)) {
                         event.setCancelled(true);
                     }
                 }
             } else  if(entity instanceof Item) {
                 Item item = ((Item)entity);
                 Player dropper = getPlayerWhoDropped(item);
-                if(dropper != null) {
-                    if(!reciever.canSee(dropper)) {
+                if (dropper != null) {
+                    if(!receiver.canSee(dropper)) {
                         event.setCancelled(true);
                     }
                 }
@@ -225,23 +203,17 @@ public class EntityHider extends PacketAdapter implements Listener {
         }
     }
 
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void onItemSpawn(ItemSpawnEvent event) {
         Item item = event.getEntity();
-
         Player dropper = getPlayerWhoDropped(item);
-        if(dropper == null) {
-            if(PLUGIN_CONFLICT_RESOLUTION == PluginConflictResolution.OVERRIDE) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            } else if (PLUGIN_CONFLICT_RESOLUTION == PluginConflictResolution.WARN) {
-                new PluginConflictException().printStackTrace();
-            }
+        if (dropper == null) {
+            event.setCancelled(true);
+            event.getEntity().remove();
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    /*@EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerDeath(PlayerDeathEvent event) throws ReflectiveOperationException {
         Player entity = event.getEntity();
 
@@ -250,36 +222,32 @@ public class EntityHider extends PacketAdapter implements Listener {
             if (stack == null || stack.getType() == Material.AIR) {
                 continue;
             }
-
             dropItemNaturally(world , entity.getLocation(), stack , entity);
         }
-    }
+    }*/
 
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerPickupItem(PlayerPickupItemEvent event) throws ReflectiveOperationException {
-        Player reciever = event.getPlayer();
+    public void onPlayerPickupItem(PlayerPickupItemEvent event) {
+        Player receiver = event.getPlayer();
         Item item = event.getItem();
 
         Player dropper = getPlayerWhoDropped(item);
-        if(dropper != null) {
-            if(!reciever.canSee(dropper)) {
+        if (dropper != null) {
+            if (!receiver.canSee(dropper)) {
                 event.setCancelled(true);
                 return;
             }
         }
 
         if (item.getItemStack().getType() == Material.ARROW) {
-            Object handle = METHOD_CRAFTENTITY_GET_HANDLE.invoke(item);
-            if(handle != null) {
-                Entity entity = (Entity) METHOD_ENTITY_GET_BUKKIT_ENTITY.invoke(handle);
-                if(entity instanceof Arrow) {
-                    Arrow arrow = (Arrow) entity;
-                    if(arrow.getShooter() instanceof Player) {
-                        Player shooter = (Player) arrow.getShooter();
-                        if(!reciever.canSee(shooter)) {
-                            event.setCancelled(true);
-                        }
+            Entity entity = ((CraftEntity) item).getHandle().getBukkitEntity();
+            if (entity instanceof Arrow) {
+                Arrow arrow = (Arrow) entity;
+                if (arrow.getShooter() instanceof Player) {
+                    Player shooter=(Player) arrow.getShooter();
+                    if (!receiver.canSee(shooter)) {
+                        event.setCancelled(true);
                     }
                 }
             }
@@ -289,13 +257,13 @@ public class EntityHider extends PacketAdapter implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPotionSplash(PotionSplashEvent event) {
         ThrownPotion potion = event.getEntity();
-        if(potion.getShooter() instanceof Player) {
+        if (potion.getShooter() instanceof Player) {
             Player shooter = (Player) potion.getShooter();
 
-            for(LivingEntity livingEntity : event.getAffectedEntities()) {
-                if(livingEntity instanceof Player) {
+            for (LivingEntity livingEntity : event.getAffectedEntities()) {
+                if (livingEntity instanceof Player) {
                     Player receiver = (Player) livingEntity;
-                    if(!receiver.canSee(shooter)) {
+                    if (!receiver.canSee(shooter)) {
                         event.setIntensity(receiver, 0.0D);
                     }
                 }
@@ -305,10 +273,8 @@ public class EntityHider extends PacketAdapter implements Listener {
 
     private Player getPlayerWhoDropped(Item item) {
         try {
-            String name = (String) FIELD_ENTITYITEM_THROWER.get(METHOD_CRAFTENTITY_GET_HANDLE.invoke(item));
-            if(name == null) {
-                return null;
-            }
+            String name = (String) FIELD_ENTITYITEM_THROWER.get(((CraftEntity)item).getHandle());
+            if (name == null) return null;
             return Bukkit.getPlayer(name);
         } catch (Exception e) {
             //
@@ -316,7 +282,7 @@ public class EntityHider extends PacketAdapter implements Listener {
         return null;
     }
 
-    public Item dropItemNaturally(World world , Location loc , ItemStack item , Player player) throws ReflectiveOperationException {
+    /*public Item dropItemNaturally(World world , Location loc , ItemStack item , Player player) throws ReflectiveOperationException {
         Validate.notNull(item, "Cannot drop a Null item.");
         Validate.isTrue(item.getTypeId() != 0, "Cannot drop AIR.");
 
@@ -334,44 +300,26 @@ public class EntityHider extends PacketAdapter implements Listener {
         result.setPickupDelay(10);
         METHOD_WORLD_ADD_ENTITY.invoke(METHOD_CRAFTWORLD_GET_HANDLE.invoke(world), entity);
         return result;
-    }
+    }*/
 
     private Entity getFromID(World world , int id) {
         try {
-            Object result =  METHOD_WORLD_GET_ENTITY_BY_ID.invoke(METHOD_CRAFTWORLD_GET_HANDLE.invoke(world), id);
-            if(result != null) {
+            Object result =  METHOD_WORLD_GET_ENTITY_BY_ID.invoke(((CraftWorld)world).getHandle(), id);
+            if (result != null) {
                 return (Entity) METHOD_ENTITY_GET_BUKKIT_ENTITY.invoke(result);
             }
-        }catch (Exception e) {
-            //
-        }
+        } catch (Exception ignored) {}
 
-        for(Entity entity : world.getEntities()) {
-            if(entity.getEntityId() == id) {
+        for (Entity entity : world.getEntities()) {
+            if (entity.getEntityId() == id) {
                 return entity;
             }
         }
         return null;
     }
 
-    private static class MathHelper{
-        public static int floor(double var0) {
-            int var2 = (int)var0;
-            return var0 < var2 ? var2 - 1 : var2;
-        }
-
+    public static int floor(double value) {
+        int floor = (int) value;
+        return value < floor ? floor - 1 : floor;
     }
-
-    public enum PluginConflictResolution{
-        OVERRIDE , WARN , IGNORE;
-    }
-
-    public static class PluginConflictException extends RuntimeException {
-        private static final long serialVersionUID = 1L;
-
-        public PluginConflictException() {
-            super("Potential Plugin Conflict has been detected. Another Plugin is hooking into drop item.");
-        }
-    }
-
 }

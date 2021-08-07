@@ -18,6 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter @Setter
 public class Party extends Team {
@@ -33,6 +34,7 @@ public class Party extends Team {
     private int limit;
 
     private boolean isPublic;
+    private boolean inTournament;
     private boolean disbanded;
 
     /**
@@ -327,24 +329,19 @@ public class Party extends Team {
      * @param player The player receiving the information
      */
     public void sendInformation(Player player) {
-        StringBuilder builder = new StringBuilder();
+        String members = "None";
 
-        for (Player member : this.getPlayers()) {
-            if (this.getPlayers().size() == 1) {
-                builder.append(CC.RESET).append("None").append(CC.GRAY).append(", ");
-            } else {
-                if (member.equals(this.getLeader().getPlayer())) {
-                    continue;
-                }
-                builder.append(CC.RESET).append(member.getName()).append(CC.GRAY).append(", ");
-            }
+        if (this.getPlayers().size() != 1) {
+            members = this.getPlayers().stream().map(Player::getName).collect(Collectors.joining(", "));
         }
 
+        String finalMembers = members;
         Locale.PARTY_INFO.toList().forEach(string -> {
             String main = string.replace("<party_leader_name>", this.getLeader().getUsername())
                                 .replace("<party_privacy>", getPrivacy())
-                                .replace("<party_members_formatted>", CC.GRAY + "(" + (this.getTeamPlayers().size() - 1) + ") " + builder.substring(0, builder.length() - 2))
+                                .replace("<party_members_formatted>", CC.GRAY + "(" + (this.getTeamPlayers().size() - 1) + ") " + finalMembers)
                                 .replace("<party_members>", String.valueOf(getTeamPlayers().size()));
+
             player.sendMessage(CC.translate(main));
         });
     }

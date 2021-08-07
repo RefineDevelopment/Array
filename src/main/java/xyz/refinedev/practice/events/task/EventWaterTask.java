@@ -43,7 +43,7 @@ public class EventWaterTask extends BukkitRunnable {
                     return;
                 }
                 if (event.isParkour()) {
-                    //.teleport(match.getTeamPlayer(player).getParkourCheckpoint());
+                    //.teleport(match.getTeamPlayers(player).getParkourCheckpoint());
                 }
             }
         }

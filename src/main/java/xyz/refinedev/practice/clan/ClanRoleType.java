@@ -14,7 +14,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ClanProfileType {
+public enum ClanRoleType {
 
     LEADER(0),
     CAPTAIN(1),

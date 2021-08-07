@@ -1,0 +1,38 @@
+TITLE: "&cSelect a party events"
+SIZE: 9
+BUTTONS:
+  PARTY_SPLIT:
+    NAME: "&c&lParty Split"
+    SLOT: 2
+    HCF_DISABLED_SLOT: 3
+    COMMAND: "/party split"
+    MATERIAL: LEASH
+    LORE:
+      - " &fSplit your party into"
+      - " &ftwo teams and the last"
+      - " &fteam remaining wins!"
+      - " "
+      - "&7&o(( Click to Start ))"
+  PARTY_FFA:
+    NAME: "&c&lParty FFA"
+    SLOT: 4
+    HCF_DISABLED_SLOT: 5
+    COMMAND: "/party ffa"
+    MATERIAL: DIAMOND
+    LORE:
+      - " &fUnleash your party in"
+      - " &fa Free For All Match"
+      - " &fLast player standing wins!"
+      - " "
+      - "&7&o(( Click to Start ))"
+  PARTY_HCF:
+    NAME: "&c&lParty HCF"
+    SLOT: 6
+    COMMAND: "/party hcf"
+    MATERIAL: DIAMOND
+    LORE:
+      - " &fUnleash your party in"
+      - " &fa Free For All Match"
+      - " &fLast player standing wins!"
+      - " "
+      - "&7&o(( Click to Start ))"

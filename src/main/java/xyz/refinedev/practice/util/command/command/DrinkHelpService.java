@@ -24,13 +24,13 @@ public class DrinkHelpService {
             sender.sendMessage(CC.CHAT_BAR);
             if (!(sender instanceof Player)) {
                 for (DrinkCommand c : container.getCommands().values()) {
-                    sender.sendMessage(CC.translate(" &8• &c/" + container.getName() + (c.getName().length() > 0 ? " &c" + c.getName() : "") + " &8<&7" + c.getMostApplicableUsage() + "&8> &8(&7&o" + c.getDescription() + "&8)"));
+                    sender.sendMessage(CC.translate(" &7* &c/" + container.getName() + (c.getName().length() > 0 ? " &c" + c.getName() : "") + " &8<&7" + c.getMostApplicableUsage() + "&8> &8(&7&o" + c.getDescription() + "&8)"));
                 }
                 return;
             }
             for (DrinkCommand c : container.getCommands().values()) {
                 TextComponent msg = new TextComponent(net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&',
-                        " &8• &c/" + container.getName() + (c.getName().length() > 0 ? " &c" + c.getName() : "") + " &8<&7" + c.getMostApplicableUsage() + "&8> &8(&7&o" + c.getDescription() + "&8)"));
+                        " &7* &c/" + container.getName() + (c.getName().length() > 0 ? " &c" + c.getName() : "") + " &8<&7" + c.getMostApplicableUsage() + "&8> &8(&7&o" + c.getDescription() + "&8)"));
                 msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.GRAY + "/" + container.getName() + " " + c.getName() + " - " + ChatColor.WHITE + c.getDescription())));
                 msg.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + container.getName() + " " + c.getName()));
 

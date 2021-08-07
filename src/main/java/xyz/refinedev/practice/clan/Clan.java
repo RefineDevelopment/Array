@@ -78,7 +78,7 @@ public class Clan {
         this.members = new ArrayList<>();
         this.captains = new ArrayList<>();
         this.bannedPlayers = new ArrayList<>();
-        this.leader = new ClanProfile(leader, this, ClanProfileType.LEADER);
+        this.leader = new ClanProfile(leader, this, ClanRoleType.LEADER);
         this.dateCreated = DateUtil.getFormattedDate(System.currentTimeMillis());
 
         this.maxMembers  = 25;
@@ -128,15 +128,10 @@ public class Clan {
      * We use this to init our clans and setup Tasks
      */
     public static void  preload() {
-        //First of all Load up the Leaderboards
-        Clan.updateClanLeaderboards();
         //Register a Task that will clear the expired Invites
         TaskUtil.runTimerAsync(() -> {
             Profile.getProfiles().values().forEach(clan -> clan.getClanInviteList().removeIf(ClanInvite::hasExpired));
         }, 100L, 100L);
-
-        //Then register a Task that will update the leaderboards frequently
-        TaskUtil.runTimerAsync(Clan::updateClanLeaderboards, 600L, 600L);
         //Fetch clans directly from mongo
         Clan.fetchClans();
     }
@@ -210,7 +205,7 @@ public class Clan {
             if (!document.getList("members", String.class).isEmpty()) {
                 for ( String memberUUID : document.getList("members", String.class) ) {
                     UUID uuid = Array.GSON.fromJson(memberUUID, UUID.class);
-                    ClanProfile member = new ClanProfile(uuid, this, ClanProfileType.MEMBER);
+                    ClanProfile member = new ClanProfile(uuid, this, ClanRoleType.MEMBER);
 
                     Profile profile = Profile.getByUuid(uuid);
                     profile.setClanProfile(member);
@@ -222,7 +217,7 @@ public class Clan {
             if (!document.getList("captains", String.class).isEmpty()) {
                 for ( String captainUUID : document.getList("captains", String.class) ) {
                     UUID uuid = Array.GSON.fromJson(captainUUID, UUID.class);
-                    ClanProfile captain = new ClanProfile(uuid, this, ClanProfileType.CAPTAIN);
+                    ClanProfile captain = new ClanProfile(uuid, this, ClanRoleType.CAPTAIN);
 
                     Profile profile = Profile.getByUuid(uuid);
                     profile.setClanProfile(captain);
@@ -288,7 +283,7 @@ public class Clan {
      */
     public void promote(final ClanProfile member) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(member.getUuid());
-        member.setType(ClanProfileType.CAPTAIN);
+        member.setType(ClanRoleType.CAPTAIN);
         this.members.remove(member);
         this.captains.add(member);
         this.save();
@@ -307,12 +302,17 @@ public class Clan {
         this.broadcast(Locale.CLAN_PROMOTE.toString().replace("<player>", player.getName()).replace("<role>", "Leader"));
         this.broadcast(Locale.CLAN_DEMOTE.toString().replace("<player>", leaderPlayer.getName()).replace("<role>", "Captain"));
 
-        member.setType(ClanProfileType.LEADER);
-        leader.setType(ClanProfileType.CAPTAIN);
+        //Change the roles
+        member.setType(ClanRoleType.LEADER);
+        leader.setType(ClanRoleType.CAPTAIN);
 
+        //Remove the new leader from being a member or captain
         this.members.remove(member);
         this.captains.remove(member);
+
+        //Add the old leader as a captain
         this.captains.add(leader);
+        //Finally assign the new leader as a leader
         this.leader = member;
 
         this.save();
@@ -326,7 +326,7 @@ public class Clan {
     public void demote(final ClanProfile member) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(member.getUuid());
 
-        member.setType(ClanProfileType.MEMBER);
+        member.setType(ClanRoleType.MEMBER);
 
         this.members.add(member);
         this.captains.remove(member);
@@ -375,7 +375,7 @@ public class Clan {
             return;
         }
 
-        ClanProfile clanProfile = new ClanProfile(joiner.getUniqueId(), this, ClanProfileType.MEMBER);
+        ClanProfile clanProfile = new ClanProfile(joiner.getUniqueId(), this, ClanRoleType.MEMBER);
 
         this.getMembers().add(clanProfile);
 
@@ -398,11 +398,11 @@ public class Clan {
         Profile profile = Profile.getByPlayer(leaver);
         ClanProfile clanProfile = profile.getClanProfile();
 
-        if (clanProfile.getType() == ClanProfileType.LEADER) {
+        if (clanProfile.getType() == ClanRoleType.LEADER) {
             throw new IllegalArgumentException("Leader can not leave the clan!");
         }
 
-        if (clanProfile.getType() == ClanProfileType.CAPTAIN) this.captains.remove(clanProfile);
+        if (clanProfile.getType() == ClanRoleType.CAPTAIN) this.captains.remove(clanProfile);
         else this.members.remove(clanProfile);
         profile.setClan(null);
         profile.setClanProfile(null);
@@ -422,11 +422,11 @@ public class Clan {
         ClanProfile clanProfile = profile.getClanProfile();
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
 
-        if (clanProfile.getType() == ClanProfileType.LEADER) {
+        if (clanProfile.getType() == ClanRoleType.LEADER) {
             throw new IllegalArgumentException("Leader can not leave the clan!");
         }
 
-        if (clanProfile.getType() == ClanProfileType.CAPTAIN) this.captains.remove(clanProfile);
+        if (clanProfile.getType() == ClanRoleType.CAPTAIN) this.captains.remove(clanProfile);
         else this.members.remove(clanProfile);
         profile.setClan(null);
         profile.setClanProfile(null);
@@ -446,11 +446,11 @@ public class Clan {
         ClanProfile clanProfile = profile.getClanProfile();
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
 
-        if (clanProfile.getType() == ClanProfileType.LEADER) {
+        if (clanProfile.getType() == ClanRoleType.LEADER) {
             throw new IllegalArgumentException("Leader can not leave the clan!");
         }
 
-        if (clanProfile.getType() == ClanProfileType.CAPTAIN) this.captains.remove(clanProfile);
+        if (clanProfile.getType() == ClanRoleType.CAPTAIN) this.captains.remove(clanProfile);
         else this.members.remove(clanProfile);
         profile.setClan(null);
         profile.setClanProfile(null);
@@ -459,22 +459,6 @@ public class Clan {
         this.save();
         this.broadcast(Locale.CLAN_BANNED.toString().replace("<player>", player.getName()));
         this.bannedPlayers.add(uuid);
-    }
-
-
-    /**
-     * Load our Clan Leaderboards
-     */
-    public static void updateClanLeaderboards() {
-        if (!getClanLeaderboards().isEmpty()) getClanLeaderboards().clear();
-        thread.execute(() -> {
-            for ( Document document : collection.find().sort(Sorts.descending("elo")).limit(10).into(new ArrayList<>()) ) {
-                LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
-                leaderboardsAdapter.setName(document.getString("name"));
-                leaderboardsAdapter.setElo(document.getInteger("elo"));
-                getClanLeaderboards().add(leaderboardsAdapter);
-            }
-        });
     }
 
     /**
