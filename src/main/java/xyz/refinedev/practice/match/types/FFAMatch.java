@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.match.types;
 
+import com.comphenix.protocol.events.PacketContainer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,13 +16,17 @@ import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
+import xyz.refinedev.practice.profile.killeffect.KillEffect;
+import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.location.Circle;
+import xyz.refinedev.practice.util.other.EffectUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class FFAMatch extends Match {
 
@@ -160,6 +165,38 @@ public class FFAMatch extends Match {
     @Override
     public boolean canEnd() {
         return getAlivePlayers().size() == 1;
+    }
+
+    @Override
+    public void handleKillEffect(Player deadPlayer, Player killerPlayer) {
+        if (killerPlayer == null) return;
+        Profile profile = Profile.getByPlayer(killerPlayer);
+        KillEffect killEffect = profile.getKillEffect();
+        if (killEffect == null) {
+            killEffect = plugin.getKillEffectManager().getDefault();
+        }
+
+        if (killEffect.getEffect() != null) {
+            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 0.0f);
+            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 1.0f, 0.0f);
+            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 1.0f);
+        }
+
+        if (killEffect.isLightning()) {
+            for ( Player player : this.getPlayers() ) {
+                PacketContainer packetContainer = this.createLightningPacket(deadPlayer.getLocation());
+                this.sendLightningPacket(player, packetContainer);
+            }
+        }
+
+        if (killEffect.isAnimateDeath()) PlayerUtil.animateDeath(deadPlayer);
+
+        if (!killEffect.getKillEffectSounds().isEmpty()) {
+            float randomPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
+            for ( KillEffectSound killEffectSound : killEffect.getKillEffectSounds()) {
+                this.getPlayers().forEach(player -> player.playSound(deadPlayer.getLocation(), killEffectSound.getSound(), killEffectSound.getPitch(), randomPitch));
+            }
+        }
     }
 
     @Override

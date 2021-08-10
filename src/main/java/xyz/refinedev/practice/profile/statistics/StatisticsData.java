@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.profile.statistics;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
 import xyz.refinedev.practice.kit.KitInventory;
@@ -12,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-@Data
+@Getter @Setter
 public class StatisticsData {
 
     private int elo = 1000;

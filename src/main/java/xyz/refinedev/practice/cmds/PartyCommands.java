@@ -38,7 +38,7 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_ALREADYHAVE.toString());
             return;
         }
-        if (!profile.isInLobby()) {
+        if (!profile.isInLobby() || profile.isBusy()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
         }

@@ -181,6 +181,6 @@ public class SoloTournament extends Tournament<Player> {
         } else {
             Bukkit.broadcastMessage(Locale.TOURNAMENT_CANCELLED.toString());
         }
-        TaskUtil.runLater(() -> setCurrentTournament(null), 20 * 30L);
+        setCurrentTournament(null);
     }
 }

@@ -6,12 +6,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.ArrayCache;
+import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.FFAMatch;
-import xyz.refinedev.practice.match.types.kit.BridgeMatch;
+import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.pvpclasses.PvPClass;
@@ -392,6 +393,13 @@ public class TablistAdapter implements TabAdapter {
                     entries.add(finalEntry);
                 }
             }
+        } else if (profile.isInEvent() && !profile.isSpectating()) {
+            Event event = profile.getEvent();
+            if (event.isWaiting()) {
+
+            } else if (event.isFighting()) {
+
+            }
         }
         return entries;
     }
@@ -476,7 +484,7 @@ public class TablistAdapter implements TabAdapter {
         return replaceTeamPlayer(player, replaceLobby(player, toReplace))
                 .replace("<match_kit>", match.getKit().getDisplayName())
                 .replace("<match_arena>", match.getArena().getDisplayName())
-                .replace("<match_duartion>", match.getDuration())
+                .replace("<match_duration>", match.getDuration())
                 .replace("<playerA_name>", match.getTeamPlayerA().getUsername())
                 .replace("<playerB_name>", match.getTeamPlayerB().getUsername())
                 .replace("<playerA_ping>", String.valueOf(playera))
@@ -535,11 +543,14 @@ public class TablistAdapter implements TabAdapter {
 
     public String replaceBridgeMatch(Player player, String toReplace) {
         Profile profile = Profile.getByPlayer(player);
-        BridgeMatch match = (BridgeMatch) profile.getMatch();
-        Profile opponentProfile = Profile.getByPlayer(match.getOpponentPlayer(player));
+        SoloBridgeMatch match = (SoloBridgeMatch) profile.getMatch();
+        TeamPlayer teamPlayer = match.getTeamPlayer(player);
+        TeamPlayer opponentPlayer = match.getTeamPlayer(player);
 
-        int yourPoints = profile.getBridgeRounds();
-        int opponentPoints = opponentProfile.getBridgeRounds();
+        if (teamPlayer == null || opponentPlayer == null) return toReplace;
+
+        int yourPoints = match.getTeamPlayerA().equals(teamPlayer) ? match.getPlayerARounds() : match.getPlayerBRounds();
+        int opponentPoints = match.getTeamPlayerA().equals(opponentPlayer) ? match.getPlayerARounds() : match.getPlayerBRounds();
 
         toReplace = toReplace
                 .replace("<your_points>", String.valueOf(yourPoints))

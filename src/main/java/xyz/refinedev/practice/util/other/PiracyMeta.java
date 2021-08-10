@@ -75,6 +75,7 @@ public class PiracyMeta {
             plugin.logger("&7Twitter: &chttps://twitter.com/RefineDev");
             plugin.logger("&7Contact: &crefinedevelopment@gmail.com");
             plugin.logger("---------------[" + plugin + "-License&8]----------------");
+            System.exit(0);
             Bukkit.shutdown();
         }
     }

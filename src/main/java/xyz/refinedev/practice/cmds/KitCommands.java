@@ -243,9 +243,9 @@ public class KitCommands {
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Updated &c" + kit.getName() + " &7hit delay set to &c" + integ));
     }
 
-    @Command(name = "gamerule", desc = "Toggle a Gamerule for the Kit", usage = "<kit> <gamerule>")
+    @Command(name = "gamerule", desc = "Toggle a Gamerule for the Kit", usage = "<gamerule> <kit> ")
     @Require("array.kit.setup")
-    public void gameRuleToggle(@Sender CommandSender player, Kit kit, String gamerule) {
+    public void gameRuleToggle(@Sender CommandSender player, String gamerule, Kit kit) {
         switch (gamerule) {
             case "elo":
             case "ranked": {

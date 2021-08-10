@@ -7,7 +7,7 @@ import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.SoloMatch;
-import xyz.refinedev.practice.match.types.kit.BridgeMatch;
+import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.rank.Rank;
 import xyz.refinedev.practice.util.chat.CC;
@@ -101,13 +101,7 @@ public class QueueThread extends Thread {
                             kit = queue.getKit();
 
                             // Create match
-                            Match match;
-                            if (queue.getKit().getGameRules().isBuild() && queue.getKit().getGameRules().isBridge()) {
-                                match = new BridgeMatch(queue, firstMatchPlayer, secondMatchPlayer, queue.getKit(), arena, queue.getType());
-                            } else {
-                                match = new SoloMatch(queue, firstMatchPlayer, secondMatchPlayer, queue.getKit(), arena, queue.getType());
-                            }
-                            this.match = match;
+                            this.match = queue.getKit().createSoloKitMatch(queue, firstMatchPlayer, secondMatchPlayer, kit, arena, queue.getType());
 
                             for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList() ) {
                                 String opponentMessages = this.formatMessages(firstPlayer, secondPlayer, string, Rank.getRankType().getFullName(firstPlayer), Rank.getRankType().getFullName(secondPlayer), firstProfile.getStatisticsData().get(kit).getElo(), secondProfile.getStatisticsData().get(kit).getElo(), queue.getType());

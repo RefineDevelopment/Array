@@ -2,7 +2,9 @@ package xyz.refinedev.practice.cmds;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.tournament.Tournament;
 import xyz.refinedev.practice.tournament.impl.SoloTournament;
 import xyz.refinedev.practice.util.chat.CC;
@@ -34,6 +36,12 @@ public class TournamentCommands {
         }
         if (Tournament.getCurrentTournament().isParticipating(player.getUniqueId())) {
             player.sendMessage(CC.translate("&7You are already participating in a tournament!"));
+            return;
+        }
+
+        Profile profile = Profile.getByPlayer(player);
+        if (profile.isBusy()) {
+            player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
         }
         Tournament.getCurrentTournament().join(player);

@@ -27,14 +27,14 @@ public class PartySelectKitMenu extends Menu {
     private final PartyEventType partyEventType;
 
     @Override
-    public String getTitle(final Player player) {
+    public String getTitle(Player player) {
         return "&cSelect a kit";
     }
 
     @Override
-    public Map<Integer, Button> getButtons(final Player player) {
-        final Map<Integer, Button> buttons = new HashMap<>();
-        for (final Kit kit : Kit.getKits()) {
+    public Map<Integer, Button> getButtons(Player player) {
+        Map<Integer, Button> buttons = new HashMap<>();
+        for (Kit kit : Kit.getKits()) {
             if (kit.isEnabled() && kit.isParty()) {
                 if (this.getCheck(partyEventType, kit)) {
                     buttons.put(buttons.size(), new SelectKitButton(this.partyEventType, kit));
@@ -57,7 +57,6 @@ public class PartySelectKitMenu extends Menu {
 
         @Override
         public void clicked(final Player player, final ClickType clickType) {
-
             Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
             player.closeInventory();
 
@@ -100,7 +99,7 @@ public class PartySelectKitMenu extends Menu {
                 List<Player> players2 = new ArrayList<>(party.getPlayers());
                 Collections.shuffle(players2);
                 match = new TeamMatch(teamA, teamB, this.kit, arena);
-                for (final Player otherPlayer2 : players2) {
+                for (Player otherPlayer2 : players2) {
                     if (!teamA.getLeader().getUuid().equals(otherPlayer2.getUniqueId())) {
                         if (teamB.getLeader().getUuid().equals(otherPlayer2.getUniqueId())) {
                             continue;

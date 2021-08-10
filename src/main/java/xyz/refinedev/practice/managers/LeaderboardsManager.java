@@ -46,13 +46,20 @@ public class LeaderboardsManager {
     }
 
     public void init() {
+        //Load the leaderboards so that they aren't empty until the
+        //the task is ran after 3 minutes
+        Kit.getKits().forEach(this::loadKitLeaderboards);
+        this.loadClanLeaderboards();
+        this.loadGlobalLeaderboards();
+
         globalTask = new GlobalLeaderboardsTask(plugin);
         kitTask = new KitLeaderboardsTask(plugin);
         clanTask = new ClanLeaderboardsTask(plugin);
 
-        globalTask.runTaskTimerAsynchronously(plugin, 180 * 20L, 180 * 20L);
-        kitTask.runTaskTimerAsynchronously(plugin, 180 * 20L, 180 * 20L);
-        clanTask.runTaskTimerAsynchronously(plugin, 600L, 600L);
+        //Run the task async every 1 minute
+        globalTask.runTaskTimerAsynchronously(plugin, 60 * 20L, 60 * 20L);
+        kitTask.runTaskTimerAsynchronously(plugin, 60 * 20L, 60 * 20L);
+        clanTask.runTaskTimerAsynchronously(plugin, 60 * 20L, 60 * 20L);
     }
 
     public void loadGlobalLeaderboards() {

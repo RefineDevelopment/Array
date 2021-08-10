@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.match.types;
 
+import com.comphenix.protocol.events.PacketContainer;
 import lombok.Getter;
+import lombok.Setter;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
@@ -21,26 +23,31 @@ import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
+import xyz.refinedev.practice.profile.killeffect.KillEffect;
+import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
 import xyz.refinedev.practice.util.elo.EloUtil;
+import xyz.refinedev.practice.util.other.EffectUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
+import xyz.refinedev.practice.util.other.TitleAPI;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
-@Getter
+@Getter @Setter
 public class SoloMatch extends Match {
 
     private final Array plugin = Array.getInstance();
 
     private final TeamPlayer playerA;
     private final TeamPlayer playerB;
+
+    private int playerARounds = 0;
+    private int playerBRounds = 0;
 
     private String eloMessage;
     private String specMessage;
@@ -52,30 +59,9 @@ public class SoloMatch extends Match {
         this.playerB = playerB;
     }
 
-
     @Override
     public boolean isSoloMatch() {
         return true;
-    }
-
-    @Override
-    public boolean isTeamMatch() {
-        return false;
-    }
-
-    @Override
-    public boolean isFreeForAllMatch() {
-        return false;
-    }
-
-    @Override
-    public boolean isHCFMatch() {
-        return false;
-    }
-
-    @Override
-    public boolean isTheBridgeMatch() {
-        return false;
     }
 
     @Override
@@ -121,15 +107,17 @@ public class SoloMatch extends Match {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (!getState().equals(MatchState.FIGHTING))
+                    if (!isFighting()) {
+                        cancel();
                         return;
+                    }
 
                     if (getDuration().equalsIgnoreCase("01:00") || (getDuration().equalsIgnoreCase("01:01") && getState().equals(MatchState.FIGHTING)) || (getDuration().equalsIgnoreCase("01:02") && getState().equals(MatchState.FIGHTING))) {
                         onEnd();
                         cancel();
                     }
                 }
-            }.runTaskTimer(Array.getInstance(), 20L, 20L);
+            }.runTaskTimer(plugin, 20L, 20L);
         }
     }
 
@@ -140,7 +128,6 @@ public class SoloMatch extends Match {
         for (TeamPlayer teamPlayer : new TeamPlayer[]{getTeamPlayerA(), getTeamPlayerB()}) {
             if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
                 Player player = teamPlayer.getPlayer();
-
                 if (player != null) {
                     if (teamPlayer.isAlive()) {
                         MatchSnapshot snapshot = new MatchSnapshot(teamPlayer);
@@ -193,7 +180,7 @@ public class SoloMatch extends Match {
                     }
                 }
             }
-        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isSumo() || getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : plugin.getConfigHandler().getTELEPORT_DELAY() * 20L);
+        }.runTaskLater(plugin, (getKit().getGameRules().isSumo() || getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : plugin.getConfigHandler().getTELEPORT_DELAY() * 20L);
 
         Player winningPlayer = getWinningPlayer();
         Player losingPlayer = getOpponentPlayer(winningPlayer);
@@ -273,38 +260,67 @@ public class SoloMatch extends Match {
                     .replace("<loser_elo>", String.valueOf(newLoserElo));
         }
 
-        StringBuilder builder = new StringBuilder();
+        if (getSpectators().isEmpty()) return true;
 
-        if (!(getSpectators().size() <= 0)) {
-            List<Player> specs = new ArrayList<>(getSpectators());
-            int i = 0;
-            for (Player spectator : getSpectators()) {
-                if (getSpectators().size() >= 1) {
-                    if (!specs.contains(spectator)) specs.add(spectator);
-                    if (i != getSpectators().size()) {
-                        i++;
-                        if (i == getSpectators().size()) {
-                            builder.append(CC.GRAY).append(spectator.getDisplayName());
-                        } else {
-                            builder.append(CC.GRAY).append(spectator.getDisplayName()).append(CC.GRAY).append(", ");
-                        }
+        StringBuilder builder = new StringBuilder();
+        List<Player> specs = new ArrayList<>(getSpectators());
+        int i = 0;
+        for (Player spectator : getSpectators()) {
+            if (getSpectators().size() >= 1) {
+                if (i != getSpectators().size()) {
+                    i++;
+                    if (i == getSpectators().size()) {
+                        builder.append(CC.GRAY).append(spectator.getName());
+                    } else {
+                        builder.append(CC.GRAY).append(spectator.getName()).append(CC.GRAY).append(", ");
                     }
+
                 }
             }
-
-            if (specs.size() >= 1) {
-                specMessage = Locale.MATCH_SPEC_MESSAGE.toString()
-                        .replace("<spec_size>", String.valueOf(specs.size()))
-                        .replace("<spectators>", builder.substring(0, builder.length()));
-            }
         }
-
+        if (specs.size() >= 1) {
+            specMessage = Locale.MATCH_SPEC_MESSAGE.toString()
+                    .replace("<spec_size>", String.valueOf(specs.size()))
+                    .replace("<spectators>", builder.substring(0, builder.length()));
+        }
         return true;
     }
 
     @Override
     public boolean canEnd() {
         return !playerA.isAlive() || !playerB.isAlive() || playerA.isDisconnected() || playerB.isDisconnected();
+    }
+
+    @Override
+    public void handleKillEffect(Player deadPlayer, Player killerPlayer) {
+        if (killerPlayer == null) return;
+        Profile profile = Profile.getByPlayer(killerPlayer);
+        KillEffect killEffect = profile.getKillEffect();
+        if (killEffect == null) {
+            killEffect = plugin.getKillEffectManager().getDefault();
+        }
+
+        if (killEffect.getEffect() != null) {
+            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 0.0f);
+            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 1.0f, 0.0f);
+            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 1.0f);
+        }
+
+        if (killEffect.isLightning()) {
+            for ( Player player : this.getPlayers() ) {
+                PacketContainer packetContainer = this.createLightningPacket(deadPlayer.getLocation());
+                this.sendLightningPacket(player, packetContainer);
+            }
+        }
+
+        if (killEffect.isAnimateDeath()) PlayerUtil.animateDeath(deadPlayer);
+
+        if (!killEffect.getKillEffectSounds().isEmpty()) {
+            float randomPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
+            for ( KillEffectSound killEffectSound : killEffect.getKillEffectSounds()) {
+                this.getPlayers().forEach(player -> player.playSound(deadPlayer.getLocation(), killEffectSound.getSound(), killEffectSound.getPitch(), randomPitch));
+            }
+        }
     }
 
     @Override
@@ -448,11 +464,26 @@ public class SoloMatch extends Match {
         TeamPlayer roundWinner = getOpponentTeamPlayer(deadPlayer);
 
         getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
-        deadPlayer.spigot().respawn();
+
+        TitleAPI.sendMatchWinner(killerPlayer);
+        TitleAPI.sendMatchLoser(deadPlayer);
 
         for ( Player otherPlayer : getPlayersAndSpectators() ) {
             Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
             TaskUtil.runLater(() -> profile.handleVisibility(otherPlayer, deadPlayer), 2L);
+        }
+
+        if (this.canEnd()) {
+            this.end();
+        } else {
+            PlayerUtil.spectator(deadPlayer);
+            TaskUtil.runLater(() -> {
+                getPlayers().forEach(player -> Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer));
+                getSpectators().forEach(spectator -> {
+                    if (Profile.getByPlayer(spectator).getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
+                    if (Profile.getByPlayer(deadPlayer).getSettings().isShowSpectator()) deadPlayer.showPlayer(spectator);
+                });
+            }, 8L);
         }
     }
 

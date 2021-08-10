@@ -102,6 +102,7 @@ public class ArenaCommands {
                 default:
                     arena = new StandaloneArena(name);
             }
+            arena.setActive(false);
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully created an Arena called &c" + name + "&7 of type &c" + type));
         }
         Arena.getArenas().add(arena);
@@ -381,7 +382,7 @@ public class ArenaCommands {
 
     @Command(name = "setportal", usage = "<arena> <blue/red>", desc = "Set a bridge arena's team portal")
     @Require("array.arena.setup")
-    public void arenaBridgePortal(Player player, Arena arena,  String color) {
+    public void arenaBridgePortal(@Sender Player player, Arena arena,  String color) {
         if (!color.equals("blue") && !color.equals("red")) {
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7That is an invalid team."));
             return;
@@ -448,7 +449,7 @@ public class ArenaCommands {
 
     @Command(name = "setdisplayname", usage = "<arena> <displayname>", desc = "Set an arena's display name")
     @Require("array.arena.setup")
-    public void arenaDisplayname(Player player, Arena arena, String displayname) {
+    public void arenaDisplayname(@Sender Player player, Arena arena, String displayname) {
         arena.setDisplayName(displayname);
         arena.save();
         player.sendMessage(CC.translate("&8[&cArray&8] &7Successfully updated the arena &c" + arena.getName() + "'s &7display name."));
@@ -482,8 +483,6 @@ public class ArenaCommands {
     @Command(name = "addbuildkits", aliases = "kits addbuild", usage = "<arena>", desc = "Add build kits to an arena")
     @Require("array.arena.kit")
     public void arenaBuildKit(@Sender CommandSender player, Arena arena) {
-
-        
         for ( Kit kit : Kit.getKits() ) {
             if (kit == null) {
                 player.sendMessage(CC.translate("&8[&c&lArray&8] &7There are no kits setup."));

@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.cmds.essentials;
 
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.queue.menu.QueueSelectKitMenu;
@@ -23,6 +24,8 @@ public class UnrankedQueueCMD {
         Profile profile = Profile.getByPlayer(player);
         if (!profile.isBusy()) {
             new QueueSelectKitMenu(QueueType.UNRANKED).openMenu(player);
+        } else {
+            player.sendMessage(Locale.ERROR_NOTABLE.toString());
         }
     }
 }

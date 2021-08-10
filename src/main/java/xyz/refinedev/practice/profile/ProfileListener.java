@@ -213,32 +213,33 @@ public class ProfileListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
+    public void AsyncPlayerLoginEvent(AsyncPlayerPreLoginEvent event) {
+        UUID uuid = event.getUniqueId();
+        Profile profile = new Profile(uuid);
+        try {
+            profile.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+            event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
+            event.setKickMessage(CC.RED + "Failed to init your profile, Please contact an Administrator!");
+        }
+        Profile.getProfiles().put(uuid, profile);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         event.setJoinMessage(null);
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        Profile profile = new Profile(uuid);
-
-        //We can use AsyncPlayerLoginEvent but that was creating Broken profiles
-        //for no reason
-        TaskUtil.runAsync(() -> {
-            try {
-                profile.load();
-                Profile.getProfiles().put(uuid, profile);
-                profile.handleJoin();
-            } catch (Exception e) {
-                e.printStackTrace();
-                player.kickPlayer(CC.RED + "Failed to init your profile, Please contact an Administrator!");
-            }
-        });
+        Profile profile = Profile.getByPlayer(player);
+        profile.handleJoin();
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         event.setQuitMessage(null);
-        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
-        TaskUtil.runAsync(profile::handleLeave);
+        Profile profile = Profile.getByPlayer(event.getPlayer());
+        profile.handleLeave();
     }
 
     @EventHandler

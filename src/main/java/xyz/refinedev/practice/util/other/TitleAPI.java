@@ -1,9 +1,10 @@
 package xyz.refinedev.practice.util.other;
 
-import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.util.config.BasicConfigurationFile;
 
 import java.lang.reflect.Constructor;
 
@@ -16,6 +17,8 @@ import java.lang.reflect.Constructor;
  */
 
 public class TitleAPI {
+
+    private final static BasicConfigurationFile configHandler = Array.getInstance().getMainConfig();
 
     public static void sendPacket(Player player, Object packet) {
         try {
@@ -38,6 +41,7 @@ public class TitleAPI {
     }
 
     public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {
+        if (player == null) return;
         try {
             Object e;
             Object chatTitle;
@@ -79,8 +83,77 @@ public class TitleAPI {
                 subtitlePacket = subtitleConstructor.newInstance(e, chatSubtitle, fadeIn, stay, fadeOut);
                 sendPacket(player, subtitlePacket);
             }
-        } catch (Exception var11) {
-            var11.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendMatchStart(Player player) {
+        String path = "MATCH.TITLE.STARTED";
+        if (!configHandler.contains(path)) return;
+        if (!configHandler.getBoolean(path + "ENABLED")) return;
+
+        int stay = configHandler.getInteger(path + "STAY", 5);
+        int fadeIn = configHandler.getInteger(path + "FADE_IN", 20);
+        int fadeOut = configHandler.getInteger(path + "FADE_OUT", 20);
+        String text = configHandler.getString(path + "TEXT");
+        String subtitle = configHandler.getString(path + "SUB_TEXT");
+
+        if (subtitle != null && !subtitle.equalsIgnoreCase(" ") && !subtitle.equalsIgnoreCase("")) {
+            sendTitle(player, fadeIn, stay, fadeOut, text, subtitle);
+        } else {
+            sendTitle(player, fadeIn, stay, fadeOut, text, null);
+        }
+    }
+    public static void sendMatchCountdown(Player player) {
+        String path = "MATCH.TITLE.COUNTDOWN";
+        if (!configHandler.contains(path)) return;
+        if (!configHandler.getBoolean(path + "ENABLED")) return;
+
+        int stay = configHandler.getInteger(path + "STAY", 5);
+        int fadeIn = configHandler.getInteger(path + "FADE_IN", 20);
+        int fadeOut = configHandler.getInteger(path + "FADE_OUT", 20);
+        String text = configHandler.getString(path + "TEXT");
+        String subtitle = configHandler.getString(path + "SUB_TEXT");
+
+        if (subtitle != null && !subtitle.equalsIgnoreCase(" ") && !subtitle.equalsIgnoreCase("")) {
+            sendTitle(player, fadeIn, stay, fadeOut, text, subtitle);
+        } else {
+            sendTitle(player, fadeIn, stay, fadeOut, text, null);
+        }
+    }
+    public static void sendMatchWinner(Player player) {
+        String path = "MATCH.TITLE.WINNER";
+        if (!configHandler.contains(path)) return;
+        if (!configHandler.getBoolean(path + "ENABLED")) return;
+
+        int stay = configHandler.getInteger(path + "STAY", 5);
+        int fadeIn = configHandler.getInteger(path + "FADE_IN", 20);
+        int fadeOut = configHandler.getInteger(path + "FADE_OUT", 20);
+        String text = configHandler.getString(path + "TEXT");
+        String subtitle = configHandler.getString(path + "SUB_TEXT");
+
+        if (subtitle != null && !subtitle.equalsIgnoreCase(" ") && !subtitle.equalsIgnoreCase("")) {
+            sendTitle(player, fadeIn, stay, fadeOut, text, subtitle);
+        } else {
+            sendTitle(player, fadeIn, stay, fadeOut, text, null);
+        }
+    }
+    public static void sendMatchLoser(Player player) {
+        String path = "MATCH.TITLE.LOSER";
+        if (!configHandler.contains(path)) return;
+        if (!configHandler.getBoolean(path + "ENABLED")) return;
+
+        int stay = configHandler.getInteger(path + "STAY", 5);
+        int fadeIn = configHandler.getInteger(path + "FADE_IN", 20);
+        int fadeOut = configHandler.getInteger(path + "FADE_OUT", 20);
+        String text = configHandler.getString(path + "TEXT");
+        String subtitle = configHandler.getString(path + "SUB_TEXT");
+
+        if (subtitle != null && !subtitle.equalsIgnoreCase(" ") && !subtitle.equalsIgnoreCase("")) {
+            sendTitle(player, fadeIn, stay, fadeOut, text, subtitle);
+        } else {
+            sendTitle(player, fadeIn, stay, fadeOut, text, null);
         }
     }
 

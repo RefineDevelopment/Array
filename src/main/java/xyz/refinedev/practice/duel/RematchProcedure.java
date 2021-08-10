@@ -11,7 +11,7 @@ import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.SoloMatch;
-import xyz.refinedev.practice.match.types.kit.BridgeMatch;
+import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.rank.RankType;
 import xyz.refinedev.practice.util.chat.CC;
@@ -131,7 +131,7 @@ public class RematchProcedure {
         arena.setActive(true);
 
         if (getKit().getGameRules().isBridge()) {
-            match = new BridgeMatch(null, new TeamPlayer(sender), new TeamPlayer(target), getKit(), arena,
+            match = new SoloBridgeMatch(null, new TeamPlayer(sender), new TeamPlayer(target), getKit(), arena,
                     QueueType.UNRANKED);
         } else {
             match = new SoloMatch(null, new TeamPlayer(sender), new TeamPlayer(target), getKit(), arena,

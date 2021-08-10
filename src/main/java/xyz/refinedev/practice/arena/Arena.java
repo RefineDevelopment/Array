@@ -34,11 +34,13 @@ public class Arena {
     protected Rating rating;
     protected String displayName;
     protected ItemStack displayIcon;
+    protected int fallDeathHeight;
     protected Location spawn1, spawn2, min, max;
-    protected boolean active, disablePearls;
+    protected boolean active = false, disablePearls = false;
 
     public Arena(String name) {
         this.name = name;
+        this.active = false;
         this.rating = new Rating(this);
         this.displayName = CC.RED + name;
         this.displayIcon = new ItemStack(Material.PAPER);
@@ -76,6 +78,8 @@ public class Arena {
                     }
                 }
 
+                arena.setActive(false);
+
                 if (configuration.contains(path + ".display-name")) {
                     arena.setDisplayName(CC.translate(configuration.getString(path + ".display-name")));
                 }
@@ -110,6 +114,9 @@ public class Arena {
                     arena.setMin(LocationUtil.deserialize(configuration.getString(path + ".min")));
                 }
 
+                if (configuration.contains(path + ".fall-death-height")) {
+                    arena.setFallDeathHeight(configuration.getInt(path + ".fall-death-height", 25));
+                }
 
                 if (arena instanceof TheBridgeArena && configuration.contains(path + ".redCuboid") && configuration.contains(path + ".blueCuboid")) {
                     Location location1;
@@ -232,18 +239,22 @@ public class Arena {
         return spawn2.clone();
     }
 
+    public int getFallDeathHeight() {
+        return this.getSpawn1().getBlockY() - this.fallDeathHeight;
+    }
+
 
     public void setActive(boolean active) {
         if (getType() != ArenaType.SHARED) this.active = active;
     }
 
     public void save() {
-        //This are overrided in the types and are not use for Duplicate Arenas which is the default type of
+        //This is override in the types and are not use for Duplicate Arenas which is the default type of
         //arena in the main class
     }
 
     public void delete() {
-        //This are overrided in the types and are not use for Duplicate Arenas which is the default type of
+        //This is override in the types and are not use for Duplicate Arenas which is the default type of
         //arena in the main class
     }
 }

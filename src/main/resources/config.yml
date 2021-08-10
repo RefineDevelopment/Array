@@ -25,8 +25,6 @@ SETTINGS:
   CORE_HOOK: true
   HCF_ENABLED: true
   TAB_ENABLED: true
-  VOIDSPAWN_YLEVEL: 45
-  MATCH_YLEVEL_SPAWN_ADD: 6
   FFA_CIRCLE_RADIUS: 10
   TELEPORT_DELAY: 4
   ARENA_RATING: true
@@ -42,7 +40,7 @@ JOIN_MESSAGE:
     - "&7Welcome to the &cTest Server &7of &cArray Practice&7."
     - ""
     - "&7Purchase Array at &chttps://dsc.gg/refine&7."
-    - "&7Engage with our community at &cdiscord.link/purge&7."
+    - "&7Engage with our community at &cdsc.gg/purge&7."
     - ""
 
 QUEUE_LORE:
@@ -57,6 +55,41 @@ QUEUE_LORE:
 COOLDOWNS:
   ENDER_PEARL: 15
   BOW: 10
+
+MATCH:
+  SPAWN_YLEVEL_ADD: 6
+  START_COUNTDOWN: 3
+  COUNTDOWN_SOUND: NOTE_STICKS
+  STARTED_SOUND: NOTE_BASS
+  TITLE:
+    STARTED:
+      ENABLED: true
+      TEXT: "&aMatch Started"
+      SUB_TEXT: ""
+      FADE_IN: 5
+      STAY: 20
+      FADE_OUT: 5
+    COUNTDOWN:
+      ENABLED: true
+      TEXT: "&7Starting in &c<seconds>"
+      SUB_TEXT: ""
+      FADE_IN: 5
+      STAY: 20
+      FADE_OUT: 5
+    WINNER:
+      ENABLED: true
+      TEXT: "&aWINNER"
+      SUB_TEXT: "&7Good Game!"
+      FADE_IN: 5
+      STAY: 20
+      FADE_OUT: 5
+    LOSER:
+      ENABLED: true
+      TEXT: "&cLOSER!"
+      SUB_TEXT: "&7Better Luck next time!"
+      FADE_IN: 5
+      STAY: 20
+      FADE_OUT: 5
 
 SOCIAL:
   DISCORD: discord.link/purge

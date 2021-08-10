@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.util.config;
 
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,22 +17,45 @@ public class BasicConfigurationFile extends AbstractConfigurationFile {
 
     public BasicConfigurationFile(JavaPlugin plugin, String name, boolean overwrite) {
         super(plugin, name);
+
         this.file = new File(plugin.getDataFolder(), name + ".yml");
         plugin.saveResource(name + ".yml", overwrite);
         this.configuration = YamlConfiguration.loadConfiguration(this.file);
+
+        this.applyHeader();
     }
 
     public BasicConfigurationFile(JavaPlugin plugin, String name) {
         this(plugin, name, false);
     }
 
+    public void applyHeader() {
+        configuration.options().header(
+                "#####################################################################\n" +
+                "                                                                     #\n" +
+                "          Array Practice Core - Developed By Drizzy#0278             #\n" +
+                "       Bought at Refine Development - https://dsc.gg/refine          #\n" +
+                "                                                                     #\n" +
+                "#####################################################################");
+        save();
+    }
+
     public String getString(String path) {
         return this.configuration.contains(path) ? ChatColor.translateAlternateColorCodes('&', this.configuration.getString(path)) : null;
     }
 
+    public boolean contains(String path) {
+        return this.configuration.contains(path);
+    }
+
     public String getStringOrDefault(String path, String or) {
         String toReturn = this.getString(path);
-        return toReturn == null ? or : toReturn;
+        if (toReturn == null) {
+            this.set(or, path);
+            this.save();
+            return or;
+        }
+        return toReturn;
     }
 
     public int getInteger(String path) {
@@ -53,6 +77,10 @@ public class BasicConfigurationFile extends AbstractConfigurationFile {
 
     public double getDouble(String path) {
         return this.configuration.contains(path) ? this.configuration.getDouble(path) : 0.0D;
+    }
+
+    public ConfigurationSection getConfigurationSection(String path) {
+        return this.getConfiguration().getConfigurationSection(path);
     }
 
     public Object get(String path) {

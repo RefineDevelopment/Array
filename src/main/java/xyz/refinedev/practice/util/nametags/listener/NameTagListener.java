@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.util.nametags.listener;
 
+import org.bukkit.event.EventPriority;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.nametags.NameTagHandler;
 import xyz.refinedev.practice.util.other.TaskUtil;
@@ -20,16 +21,16 @@ public final class NameTagListener implements Listener {
 
     private final Array plugin = Array.getInstance();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        event.getPlayer().setMetadata("Test-LoggedIn", new FixedMetadataValue(Array.getInstance(), true));
+        event.getPlayer().setMetadata("sl-LoggedIn", new FixedMetadataValue(plugin, true));
 
         if (plugin.getConfigHandler().isNAMETAGS_ENABLED()) {
             try {
                 PacketPlayOutScoreboardTeam a = new PacketPlayOutScoreboardTeam();
                 team_mode.set(a, 3);
-                team_name.set(a, "reArray");
-                team_display.set(a, "reArray");
+                team_name.set(a, "zLane");
+                team_display.set(a, "zLane");
                 team_color.set(a, -1);
                 team_players.set(a, Collections.singletonList(event.getPlayer().getName()));
 
@@ -48,7 +49,7 @@ public final class NameTagListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        event.getPlayer().removeMetadata("Test-LoggedIn", Array.getInstance());
+        event.getPlayer().removeMetadata("sl-LoggedIn", plugin);
         plugin.getNameTagHandler().getTeamMap().remove(event.getPlayer().getName());
     }
 

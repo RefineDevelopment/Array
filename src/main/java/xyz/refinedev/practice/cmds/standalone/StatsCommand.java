@@ -1,9 +1,7 @@
 package xyz.refinedev.practice.cmds.standalone;
 
 import org.bukkit.entity.Player;
-import xyz.refinedev.practice.profile.statistics.menu.StatsMenu;
 import xyz.refinedev.practice.util.command.annotation.Command;
-import xyz.refinedev.practice.util.command.annotation.Flag;
 import xyz.refinedev.practice.util.command.annotation.OptArg;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 
@@ -21,9 +19,9 @@ public class StatsCommand {
     @Command(name = "", desc = "View Statistics of your profile")
     public void stats(@Sender Player player, @OptArg() Player target) {
         if (target == null) {
-            new StatsMenu(player).openMenu(player);
+            //new StatsMenu(player).openMenu(player);
             return;
         }
-        new StatsMenu(target).openMenu(player);
+       // new StatsMenu(target).openMenu(player);
     }
 }

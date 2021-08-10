@@ -25,10 +25,10 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="Maven: xyz.refinedev.array:SpigotSupport:1.0" level="project" />
-    <orderEntry type="library" name="Maven: org.mongodb:mongo-java-driver:3.12.9" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:mongo-java-driver:3.12.10" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.comphenix.protocol:ProtocolLib:4.6.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.bytebuddy:byte-buddy:1.10.16" level="project" />
-    <orderEntry type="library" name="Maven: xyz.refinedev.tablist:TablistAPI:1.2" level="project" />
+    <orderEntry type="library" name="Maven: xyz.refinedev.tablist:TablistAPI:1.4" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: com.moonsworth:LunarClient-API:LATEST">
         <CLASSES>

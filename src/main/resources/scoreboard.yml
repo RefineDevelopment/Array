@@ -1,6 +1,7 @@
 SCOREBOARD:
   HEADER: "&c&lRefine &7&l%splitter% &fPractice"
   FOOTER: "&7demo.refinedev.xyz"
+  FOOTER_ENABLED: true
   LINES: "&7&m----------------------"
   ELO_RANGE_FORMAT: "<min_range> -> <max_range>"
   LOBBY:
@@ -53,10 +54,6 @@ SCOREBOARD:
       - "&c&lRound #<bridge_round>&7:"
       - "&c Red: &r<red_points_formatted>"
       - "&9 Blue: &r<blue_points_formatted>"
-    BRIDGE_BOW_COOLDOWN:
-      - ""
-      - "&c&lCooldown&7:"
-      - "&c * &fBow: &c<bow_cooldown>"
     TEAM:
       - "&fTime: &c<match_duration>"
       - "&fKit: &c<match_kit>"

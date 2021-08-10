@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.match.task;
 
+import lombok.RequiredArgsConstructor;
 import xyz.refinedev.practice.match.MatchState;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.match.Match;
@@ -9,35 +10,47 @@ import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.scheduler.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@RequiredArgsConstructor
 public class MatchWaterCheckTask extends BukkitRunnable {
 
     private final Match match;
-
-    public MatchWaterCheckTask(Match match) {
-        this.match = match;
-    }
+    private final List<UUID> caught = new ArrayList<>();
 
     @Override
     public void run() {
         if (match == null || match.getAlivePlayers().isEmpty() || match.getAlivePlayers().size() <= 1) {
+            caught.clear();
+            this.cancel();
             return;
         }
 
         for (Player player : match.getAlivePlayers()) {
-            if (player == null || Profile.getByUuid(player.getUniqueId()).getState() != ProfileState.IN_FIGHT) {
+            if (player == null) continue;
+            Profile profile = Profile.getByPlayer(player);
+            if (!profile.isInFight()) continue;
+            if (this.caught.contains(player.getUniqueId())) continue;
+
+            if (match.isEnding()) {
+                caught.clear();
+                this.cancel();
                 return;
             }
 
             Block body = player.getLocation().getBlock();
             Block head = body.getRelative(BlockFace.UP);
+
             if (body.getType() == Material.WATER || body.getType() == Material.STATIONARY_WATER || head.getType() == Material.WATER || head.getType() == Material.STATIONARY_WATER) {
-                if(match.getKit().getGameRules().isWaterKill() && match.getState() != MatchState.ENDING && !match.getKit().getGameRules().isParkour() || match.getKit().getGameRules().isSumo() && match.getState() != MatchState.ENDING) {
-                    if (match.getCatcher().contains(player)) return;
+                if (match.getKit().getGameRules().isWaterKill() || match.getKit().getGameRules().isSumo()) {
+                    this.caught.add(player.getUniqueId());
                     match.handleDeath(player, null, false);
-                    match.getCatcher().add(player);
-                    return;
+                    continue;
                 }
-                if(match.getKit().getGameRules().isParkour() || match.getKit().getGameRules().isWaterKill()) {
+                if (match.getKit().getGameRules().isParkour()) {
+                    this.caught.add(player.getUniqueId());
                     player.teleport(match.getTeamPlayer(player).getParkourCheckpoint());
                 }
             }

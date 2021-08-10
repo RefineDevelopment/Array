@@ -5,27 +5,6 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import lombok.Getter;
 import lombok.Setter;
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.api.events.match.*;
-import xyz.refinedev.practice.api.events.match.*;
-import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.arena.meta.RatingType;
-import xyz.refinedev.practice.queue.QueueType;
-import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.match.task.*;
-import xyz.refinedev.practice.match.team.Team;
-import xyz.refinedev.practice.match.team.TeamPlayer;
-import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.ProfileState;
-import xyz.refinedev.practice.queue.Queue;
-import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
-import xyz.refinedev.practice.util.chat.ChatHelper;
-import xyz.refinedev.practice.util.chat.Clickable;
-import xyz.refinedev.practice.util.other.PlayerUtil;
-import xyz.refinedev.practice.util.other.TaskUtil;
-import xyz.refinedev.practice.util.other.TimeUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.*;
 import org.bukkit.block.BlockState;
@@ -34,21 +13,41 @@ import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
-import org.bukkit.util.Vector;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.api.events.match.*;
+import xyz.refinedev.practice.arena.Arena;
+import xyz.refinedev.practice.arena.meta.RatingType;
+import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.task.*;
-import xyz.refinedev.practice.util.other.TitleAPI;
+import xyz.refinedev.practice.match.team.Team;
+import xyz.refinedev.practice.match.team.TeamPlayer;
+import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.TeamBridgeMatch;
+import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.profile.ProfileState;
+import xyz.refinedev.practice.queue.Queue;
+import xyz.refinedev.practice.queue.QueueType;
+import xyz.refinedev.practice.util.chat.CC;
+import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
+import xyz.refinedev.practice.util.chat.ChatHelper;
+import xyz.refinedev.practice.util.chat.Clickable;
+import xyz.refinedev.practice.util.other.Cooldown;
+import xyz.refinedev.practice.util.other.PlayerUtil;
+import xyz.refinedev.practice.util.other.TaskUtil;
+import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Getter @Setter
 public abstract class Match {
+
+    private final Array plugin = Array.getInstance();
 
     @Getter protected static List<Match> matches = new ArrayList<>();
 
@@ -59,7 +58,6 @@ public abstract class Match {
     private final List<Item> droppedItems = new ArrayList<>();
     private final List<Location> placedBlocks = new ArrayList<>();
     private final List<BlockState> changedBlocks = new ArrayList<>();
-    private final List<Player> catcher = new ArrayList<>();
 
     private final UUID matchId = UUID.randomUUID();
     private final Queue queue;
@@ -84,6 +82,7 @@ public abstract class Match {
 
     public static void preload() {
         TaskUtil.runTimerAsync(new MatchPearlCooldownTask(), 2L, 2L);
+        TaskUtil.runTimerAsync(new MatchBowCooldownTask(), 2L, 2L);
         TaskUtil.runTimerAsync(new MatchSnapshotCleanupTask(), 20L * 5, 20L * 5);
 
         TaskUtil.runTimer(() -> Bukkit.getWorlds().forEach(world -> {
@@ -126,7 +125,6 @@ public abstract class Match {
 
     public void start() {
         for (Player player : getPlayers()) {
-
             Profile profile = Profile.getByUuid(player.getUniqueId());
             profile.setState(ProfileState.IN_FIGHT);
             profile.setMatch(this);
@@ -135,17 +133,16 @@ public abstract class Match {
                 profile.handleVisibility(player, otherPlayer);
             }
 
+            //So that chunks are properly visible
             if (!this.arena.getSpawn1().getChunk().isLoaded() || !this.arena.getSpawn2().getChunk().isLoaded()) {
                 this.arena.getSpawn1().getChunk().load();
                 this.arena.getSpawn2().getChunk().load();
             }
-
             new MatchPlayerSetupEvent(player, this).call();
-
             this.setupPlayer(player);
         }
 
-        this.onStart();
+        TaskUtil.run(this::onStart);
 
         for (Player player : this.getPlayers()) {
             Profile profile = Profile.getByPlayer(player);
@@ -162,46 +159,19 @@ public abstract class Match {
 
         if (getKit() != null) {
             if (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isParkour() || getKit().getGameRules().isSumo()) {
-                this.matchWaterCheck = new MatchWaterCheckTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
+                this.matchWaterCheck = new MatchWaterCheckTask(this).runTaskTimer(plugin, 20L, 20L);
             }
         }
 
-        this.task = new MatchStartTask(this).runTaskTimer(Array.getInstance(), 20L, 20L);
+        this.task = new MatchStartTask(this).runTaskTimer(plugin, 20L, 20L);
+        getPlayers().forEach(player -> new MatchPotionTrackTask(player).runTaskTimerAsynchronously(plugin, 0L, 5L));
 
-        for (Player shooter : getPlayers()) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    Profile shooterData = Profile.getByPlayer(shooter);
-
-                    if (shooterData.isInFight()) {
-                        int potions = 0;
-                        for (ItemStack item : shooter.getInventory().getContents()) {
-                            if (item == null)
-                                continue;
-                            if (item.getType() == Material.AIR)
-                                continue;
-                            if (item.getType() != Material.POTION)
-                                continue;
-                            if (item.getDurability() != (short) 16421)
-                                continue;
-                            potions++;
-                        }
-                        shooterData.getMatch().getTeamPlayer(shooter).setPotions(potions);
-                    } else {
-                        cancel();
-                    }
-                }
-            }.runTaskTimerAsynchronously(Array.getInstance(), 0L, 5L);
-        }
         new MatchStartEvent(this).call();
     }
 
     public void end() {
         if (onEnd()) {
             state = MatchState.ENDING;
-            TitleAPI.sendTitle(getWinningPlayer(), 5, 20, 5, CC.translate("&aWINNER!"), CC.translate("&7Good Game"));
-            TitleAPI.sendTitle(getOpponentPlayer(getWinningPlayer()), 5, 20, 5, CC.translate("&cLOOSER!"), CC.translate("&7Better luck next time!"));
         } else {
             return;
         }
@@ -218,20 +188,25 @@ public abstract class Match {
                     MatchSnapshot.getSnapshots().put(matchInventory.getTeamPlayer().getUuid(), matchInventory);
         });
 
+        for ( Player player : getPlayers() ) {
+            plugin.getKnockbackManager().resetKnockback(player);
+            player.setMaximumNoDamageTicks(20);
+        }
+
         for ( TeamPlayer gamePlayer : getTeamPlayers()) {
-            if (!gamePlayer.isDisconnected() && gamePlayer.getPlayer() != null) {
-                Player player = gamePlayer.getPlayer();
-                for ( BaseComponent[] components : generateEndComponents(player) ) {
-                    player.spigot().sendMessage(components);
-                }
+            Player player = gamePlayer.getPlayer();
+            if (gamePlayer.isDisconnected() || player == null) continue;
+            for ( BaseComponent[] components : generateEndComponents(player) ) {
+                player.spigot().sendMessage(components);
             }
         }
 
         for (Player player : getSpectators()) {
+            if (player == null) continue;
             for (BaseComponent[] components : generateEndComponents(player)) {
                 player.spigot().sendMessage(components);
             }
-            removeSpectator(player);
+            this.removeSpectator(player);
         }
 
         if (Array.getInstance().getConfigHandler().isRATINGS_ENABLED()) {
@@ -242,14 +217,11 @@ public abstract class Match {
             });
         }
 
-        this.getPlayers().forEach(this::removePearl);
-
+        this.getPlayers().forEach(p -> this.removePearl(p, true));
         this.getPlayers().stream().map(Profile::getByPlayer).map(Profile::getPlates).forEach(List::clear);
 
-        if (!isSoloMatch()) {
-            entities.forEach(Entity::remove);
-            droppedItems.forEach(Entity::remove);
-        }
+        entities.forEach(Entity::remove);
+        droppedItems.forEach(Entity::remove);
 
         arena.setActive(false);
 
@@ -259,34 +231,27 @@ public abstract class Match {
         new MatchResetTask(this).runTask(Array.getInstance());
 
         matches.remove(this);
-
-        TaskUtil.runLaterAsync(() -> getPlayers().forEach(player -> ((CraftPlayer) player).getHandle().getDataWatcher().watch(9, (byte) 0)), 2L);
     }
 
     public String replace(String input) {
         input = input.replace("<arena>", this.getArena().getName())
                      .replace("<kit>", this.getKit().getName());
-
         return input;
     }
 
     public void sendStartMessage() {
-        if (!this.isSoloMatch() || !isHCFMatch() || !this.isTheBridgeMatch()) {
-            if (this.isFreeForAllMatch() || this.isTeamMatch()) {
-                for ( String string : Locale.MATCH_TEAM_STARTMESSAGE.toList()) {
-                    this.broadcastMessage(CC.translate(this.replace(string)));
-                }
-            }
-        }
-        if (isHCFMatch()) {
+        if (this.isFreeForAllMatch() || this.isTeamMatch()) {
+            Locale.MATCH_TEAM_STARTMESSAGE.toList().forEach(this::broadcastMessage);
+        } else if (isHCFMatch()) {
             Locale.MATCH_HCF_STARTMESSAGE.toList().forEach(this::broadcastMessage);
         }
     }
 
     public void sendRatingMessage(Player player, Arena arena) {
-        Profile.getByPlayer(player).setCanIssueRating(true);
-        String key = "&7Click to rate &a" + arena.getDisplayName();
+        Profile profile = Profile.getByPlayer(player);
+        profile.setCanIssueRating(true);
 
+        String key = "&7Click to rate &a" + arena.getDisplayName();
         Clickable clickable =
         new Clickable("&c&l[1⭐]", key + " &7as &cTerrible&7.", "/rate " + arena.getName() + " " + RatingType.TERRIBLE.name());
         clickable.add("&6&l[2⭐]", key + " &7as &6Okay&7.", "/rate " + arena.getName() + " " + RatingType.OKAY.name());
@@ -303,13 +268,14 @@ public abstract class Match {
         this.pearlMap.put(player.getUniqueId(), pearl);
     }
 
-    public void removePearl(Player player) {
-        final EnderPearl pearl;
-        if (player != null) {
-            if ((pearl = this.pearlMap.remove(player.getUniqueId())) != null) {
-                pearl.remove();
-            }
+    public void removePearl(Player player, boolean resetCooldown) {
+        if (player == null) return;
+        if (resetCooldown) {
+            Profile profile = Profile.getByUuid(player.getUniqueId());
+            profile.setEnderpearlCooldown(new Cooldown(0L));
         }
+        EnderPearl pearl = this.pearlMap.get(player.getUniqueId());
+        if (pearl != null) pearl.remove();
     }
 
     public void handleDeath(Player player) {
@@ -321,11 +287,13 @@ public abstract class Match {
         } else {
             handleDeath(player, null, false);
         }
-        player.teleport(player.getLocation().add(0.0, 1.0, 0.0));
     }
 
     public void handleDeath(Player deadPlayer, Player killerPlayer, boolean disconnected) {
-        TeamPlayer teamPlayer=this.getTeamPlayer(deadPlayer);
+        //This makes it look sick and dope
+        deadPlayer.teleport(deadPlayer.getLocation().add(0.0, 1.0, 0.0));
+
+        TeamPlayer teamPlayer = this.getTeamPlayer(deadPlayer);
 
         if (teamPlayer == null) return;
 
@@ -334,92 +302,41 @@ public abstract class Match {
         if (!teamPlayer.isAlive()) return;
 
         teamPlayer.setAlive(false);
-
         teamPlayer.setParkourCheckpoint(null);
 
-        List<Player> playersAndSpectators=getPlayersAndSpectators();
+        for ( Player player : getPlayersAndSpectators() ) {
+            //Fixes some null pointer exceptions
+            TeamPlayer otherTeamPlayer = getTeamPlayer(player);
+            if (otherTeamPlayer == null || otherTeamPlayer.isDisconnected()) continue;
 
-
-        for ( Player player : playersAndSpectators ) {
             if (teamPlayer.isDisconnected()) {
-
                 player.sendMessage(Locale.MATCH_DISCONNECTED.toString()
                         .replace("<relation_color>", getRelationColor(player, deadPlayer).toString())
                         .replace("<participant_name>", deadPlayer.getName()));
-
                 continue;
             }
-            if (!isTheBridgeMatch()) {
-                if ((!isHCFMatch()) && getKit().getGameRules().isParkour() && killerPlayer != null) {
-                    player.sendMessage(Locale.MATCH_WON.toString()
-                            .replace("<relation_color>", getRelationColor(player, killerPlayer).toString())
-                            .replace("<participant_name>", killerPlayer.getName()));
-                } else if (killerPlayer == null) {
-                    player.sendMessage(Locale.MATCH_DIED.toString()
-                            .replace("<relation_color>", getRelationColor(player, deadPlayer).toString())
-                            .replace("<participant_name>", deadPlayer.getName()));
-                } else {
-                    player.sendMessage(Locale.MATCH_KILLED.toString()
-                            .replace("<relation_color_dead>", getRelationColor(player, deadPlayer).toString())
-                            .replace("<dead_name>", deadPlayer.getName())
-                            .replace("<relation_color_killer>", getRelationColor(player, killerPlayer).toString())
-                            .replace("<killer_name>", killerPlayer.getName()));
-                }
-            }
-        }
-
-        catcher.remove(deadPlayer);
-
-        if (!isTheBridgeMatch()) {
-            PacketContainer lightningPacket = this.createLightningPacket(deadPlayer.getLocation());
-
-            float thunderSoundPitch = 0.8f + ThreadLocalRandom.current().nextFloat() * 0.2f;
-            float explodeSoundPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
-
-            for ( Player onlinePlayer : this.getPlayers() ) {
-                if (!getPlayers().contains(onlinePlayer)) return;
-                Profile profile = Profile.getByPlayer(onlinePlayer);
-                //PotPvP aka Lunar Death Animation
-                if (profile.getSettings().isDeathLightning()) {
-                    onlinePlayer.playSound(deadPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
-                    if (killerPlayer != null) {
-                        onlinePlayer.playSound(killerPlayer.getLocation(), Sound.AMBIENCE_THUNDER, 10000.0f, thunderSoundPitch);
-                        onlinePlayer.playSound(killerPlayer.getLocation(), Sound.EXPLODE, 2.0f, explodeSoundPitch);
-                    }
-                    this.sendLightningPacket(onlinePlayer, lightningPacket);
-                }
-            }
-            PlayerUtil.animateDeath(deadPlayer);
-        }
-
-        this.onDeath(deadPlayer, killerPlayer);
-
-        if (this.isTheBridgeMatch() && disconnected) {
-            this.end();
-            return;
-        }
-
-        if (!this.isTheBridgeMatch()) {
-            if (this.canEnd()) {
-                this.end();
+            if (!isHCFMatch() && getKit().getGameRules().isParkour() && killerPlayer != null) {
+                player.sendMessage(Locale.MATCH_WON.toString()
+                        .replace("<relation_color>", getRelationColor(player, killerPlayer).toString())
+                        .replace("<participant_name>", killerPlayer.getName()));
+            } else if (killerPlayer == null) {
+                player.sendMessage(Locale.MATCH_DIED.toString()
+                        .replace("<relation_color>", getRelationColor(player, deadPlayer).toString())
+                        .replace("<participant_name>", deadPlayer.getName()));
             } else {
-                PlayerUtil.spectator(deadPlayer);
-                TaskUtil.runLater(() -> getPlayersAndSpectators().forEach(player -> Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer)), 7L);
-
-                TaskUtil.runLater(() -> getSpectators().forEach(spectator -> {
-                    if (Profile.getByPlayer(spectator).getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
-                    if (Profile.getByPlayer(deadPlayer).getSettings().isShowSpectator()) deadPlayer.showPlayer(spectator);
-                }), 8L);
+                player.sendMessage(Locale.MATCH_KILLED.toString()
+                        .replace("<relation_color_dead>", getRelationColor(player, deadPlayer).toString())
+                        .replace("<relation_color_killer>", getRelationColor(player, killerPlayer).toString())
+                        .replace("<dead_name>", deadPlayer.getName())
+                        .replace("<killer_name>", killerPlayer.getName()));
             }
-        } else {
-            if (this.canEnd()) {
-                this.end();
-            }
+            this.handleKillEffect(deadPlayer, killerPlayer);
         }
+        this.onDeath(deadPlayer, killerPlayer);
     }
 
-    private PacketContainer createLightningPacket(Location location) {
-        final PacketContainer lightningPacket = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
+    public PacketContainer createLightningPacket(Location location) {
+        PacketContainer lightningPacket = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
         lightningPacket.getModifier().writeDefaults();
         lightningPacket.getIntegers().write(0, 128);
         lightningPacket.getIntegers().write(4, 1);
@@ -429,7 +346,7 @@ public abstract class Match {
         return lightningPacket;
     }
 
-    private void sendLightningPacket(final Player target, final PacketContainer packet) {
+    public void sendLightningPacket(Player target, PacketContainer packet) {
         try {
             ProtocolLibrary.getProtocolManager().sendServerPacket(target, packet);
         } catch (InvocationTargetException ignored) {}
@@ -444,6 +361,11 @@ public abstract class Match {
             default:
                 return TimeUtil.millisToTimer(getElapsedDuration());
         }
+    }
+
+    public void handleRespawn(Player player) {
+        player.setVelocity(player.getLocation().getDirection().setY(1));
+        this.onRespawn(player);
     }
 
     public long getElapsedDuration() {
@@ -461,7 +383,7 @@ public abstract class Match {
     }
 
     public List<Player> getSpectators() {
-        return PlayerUtil.convertUUIDListToPlayerList(spectators);
+        return spectators.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public void addSpectator(Player player, Player target) {
@@ -473,6 +395,7 @@ public abstract class Match {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setMatch(this);
         profile.setState(ProfileState.SPECTATING);
+        profile.handleVisibility();
         profile.refreshHotbar();
 
         player.teleport(this.getMidSpawn());
@@ -486,7 +409,7 @@ public abstract class Match {
         }
 
         Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), () -> {
-            if (this.isSoloMatch()) {
+            /*if (this.isSoloMatch()) {
                 target.hidePlayer(player);
             } else if (this.isTheBridgeMatch()) {
                 target.hidePlayer(player);
@@ -509,7 +432,7 @@ public abstract class Match {
                 for (  Player targetPlayers : this.getPlayers()) {
                     targetPlayers.hidePlayer(player);
                 }
-            }
+            }*/
             if (profile.getSettings().isShowSpectator()) {
                 getSpectators().forEach(spectator -> {
                     spectator.showPlayer(player);
@@ -580,7 +503,6 @@ public abstract class Match {
     }
 
     public Location getMidSpawn() {
-
         Location spawn = getArena().getSpawn1();
         Location spawn2 = getArena().getSpawn2();
 
@@ -610,35 +532,44 @@ public abstract class Match {
 
         totalPlayers += participants.size();
 
+        for (TeamPlayer gamePlayer : participants) {
+            processedPlayers++;
 
-            for (TeamPlayer gamePlayer : participants) {
-                processedPlayers++;
+            ChatComponentBuilder current = new ChatComponentBuilder(gamePlayer.getUsername())
+                    .attachToEachPart(ChatHelper.hover(CC.translate(getHoverEvent(gamePlayer))))
+                    .attachToEachPart(ChatHelper.click(getClickEvent(gamePlayer)));
 
-                ChatComponentBuilder current = new ChatComponentBuilder(gamePlayer.getUsername())
-                        .attachToEachPart(ChatHelper.hover(CC.translate(getHoverEvent(gamePlayer))))
-                        .attachToEachPart(ChatHelper.click(getClickEvent(gamePlayer)));
+            builder.append(current.create());
 
-                builder.append(current.create());
-
-                if (processedPlayers != totalPlayers) {
-                    builder.append(", ");
-                    builder.getCurrent().setClickEvent(null);
-                    builder.getCurrent().setHoverEvent(null);
-                }
+            if (processedPlayers != totalPlayers) {
+                builder.append(", ");
+                builder.getCurrent().setClickEvent(null);
+                builder.getCurrent().setHoverEvent(null);
             }
+        }
 
         return builder.create();
     }
 
-    public abstract boolean isSoloMatch();
+    public boolean isSoloMatch() {
+        return false;
+    }
 
-    public abstract boolean isTeamMatch();
+    public boolean isTeamMatch(){
+        return false;
+    }
 
-    public abstract boolean isFreeForAllMatch();
+    public boolean isFreeForAllMatch(){
+        return false;
+    }
 
-    public abstract boolean isHCFMatch();
+    public boolean isHCFMatch() {
+        return false;
+    }
 
-    public abstract boolean isTheBridgeMatch();
+    public boolean isTheBridgeMatch() {
+        return this instanceof SoloBridgeMatch || this instanceof TeamBridgeMatch;
+    }
 
     public abstract void setupPlayer(Player player);
 
@@ -647,6 +578,8 @@ public abstract class Match {
     public abstract boolean onEnd();
 
     public abstract boolean canEnd();
+
+    public abstract void handleKillEffect(Player deadPlayer, Player killerPlayer);
 
     public abstract void onDeath(Player player, Player killer);
 

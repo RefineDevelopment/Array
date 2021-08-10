@@ -8,7 +8,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
+import xyz.refinedev.practice.match.Match;
+import xyz.refinedev.practice.match.team.Team;
+import xyz.refinedev.practice.match.team.TeamPlayer;
+import xyz.refinedev.practice.match.types.SoloMatch;
+import xyz.refinedev.practice.match.types.TeamMatch;
+import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.TeamBridgeMatch;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
@@ -69,14 +77,13 @@ public class Kit {
         if (rankedQueue != null )Queue.getQueues().remove(unrankedQueue);
         if (clanQueue != null) Queue.getQueues().remove(clanQueue);
 
-        plugin.getKitsConfig().getConfiguration().set("kits." + getName(), null);
+        plugin.getKitsConfig().set("kits." + getName(), null);
         plugin.getKitsConfig().save();
     }
 
     public static void preload() {
-        FileConfiguration config = plugin.getKitsConfig().getConfiguration();
+        BasicConfigurationFile config = plugin.getKitsConfig();
 
-        try {
         if (plugin.getConfigHandler().isHCF_ENABLED()) {
             HCFTeamFight = new Kit("HCFTeamFight");
             HCFTeamFight.setDisplayIcon(new ItemBuilder(Material.BEACON).clearEnchantments().clearFlags().build());
@@ -102,7 +109,7 @@ public class Kit {
             }
 
             kit.setDisplayIcon(new ItemBuilder(Material.valueOf(config.getString(path + ".icon.material")))
-                    .durability(config.getInt(path + ".icon.durability"))
+                    .durability(config.getInteger(path + ".icon.durability"))
                     .build());
 
             if (config.contains(path + ".loadout.armor")) {
@@ -143,14 +150,14 @@ public class Kit {
             kit.getGameRules().setStrength(config.getBoolean(path + ".game-rules.strength"));
             kit.getGameRules().setShowHealth(config.getBoolean(path + ".game-rules.show-health"));
             kit.getGameRules().setBowHP(config.getBoolean(path + ".game-rules.bow-hp"));
-            kit.getGameRules().setHitDelay(config.getInt(path + ".game-rules.hit-delay"));
+            kit.getGameRules().setHitDelay(config.getInteger(path + ".game-rules.hit-delay"));
 
             if (config.getConfigurationSection(path + ".edit-rules.items") != null) {
                 for (String itemKey : config.getConfigurationSection(path + ".edit-rules.items").getKeys(false)) {
                     String pathKey = path + ".edit-rules.items." + itemKey;
                     kit.getEditorItems().add(new ItemBuilder(Material.valueOf(config.getString(pathKey + ".material")))
-                                    .durability(config.getInt(pathKey + ".durability"))
-                                    .amount(config.getInt(pathKey + ".amount"))
+                                    .durability(config.getInteger(pathKey + ".durability"))
+                                    .amount(config.getInteger(pathKey + ".amount"))
                                     .build());
                 }
             }
@@ -167,18 +174,6 @@ public class Kit {
                 }
             }
         });
-
-        try {
-            Kit.getKits().forEach(plugin.getLeaderboardsManager()::loadKitLeaderboards);
-        } catch (Exception e) {
-            plugin.logger("&cThere was an error loading Leaderboards, Disabling Array!");
-            Bukkit.shutdown();
-        }
-
-        } catch (Exception e) {
-            plugin.logger("&cAn error occurred while loading Kits, please check kits.yml and try again.");
-            Bukkit.shutdown();
-        }
     }
 
     public static Kit getByName(String name) {
@@ -201,45 +196,45 @@ public class Kit {
         if (name.equals("HCFTeamFight")) return;
 
         BasicConfigurationFile configFile = plugin.getKitsConfig();
-        configFile.getConfiguration().set(path + ".enabled", enabled);
-        configFile.getConfiguration().set(path + ".display-name", displayName);
-        configFile.getConfiguration().set(path + ".knockback-profile", knockbackProfile);
-        configFile.getConfiguration().set(path + ".description", kitDescription);
+        configFile.set(path + ".enabled", enabled);
+        configFile.set(path + ".display-name", displayName);
+        configFile.set(path + ".knockback-profile", knockbackProfile);
+        configFile.set(path + ".description", kitDescription);
 
-        configFile.getConfiguration().set(path + ".icon.material", displayIcon.getType().name());
-        configFile.getConfiguration().set(path + ".icon.durability", displayIcon.getDurability());
+        configFile.set(path + ".icon.material", displayIcon.getType().name());
+        configFile.set(path + ".icon.durability", displayIcon.getDurability());
 
-        configFile.getConfiguration().set(path + ".loadout.armor", InventoryUtil.serializeInventory(kitInventory.getArmor()));
-        configFile.getConfiguration().set(path + ".loadout.contents", InventoryUtil.serializeInventory(kitInventory.getContents()));
-        configFile.getConfiguration().set(path + ".loadout.effects", InventoryUtil.serializeEffects(kitInventory.getEffects()));
+        configFile.set(path + ".loadout.armor", InventoryUtil.serializeInventory(kitInventory.getArmor()));
+        configFile.set(path + ".loadout.contents", InventoryUtil.serializeInventory(kitInventory.getContents()));
+        configFile.set(path + ".loadout.effects", InventoryUtil.serializeEffects(kitInventory.getEffects()));
 
-        configFile.getConfiguration().set(path + ".game-rules.ranked", gameRules.isRanked());
-        configFile.getConfiguration().set(path + ".game-rules.clan", gameRules.isClan());
-        configFile.getConfiguration().set(path + ".game-rules.party-ffa", !gameRules.isDisablePartyFFA());
-        configFile.getConfiguration().set(path + ".game-rules.party-split", !gameRules.isDisablePartySplit());
-        configFile.getConfiguration().set(path + ".game-rules.editable", gameRules.isEditable());
-        configFile.getConfiguration().set(path + ".game-rules.hunger", !gameRules.isAntiFoodLoss());
-        configFile.getConfiguration().set(path + ".game-rules.noitems", gameRules.isNoItems());
-        configFile.getConfiguration().set(path + ".game-rules.build", gameRules.isBuild());
-        configFile.getConfiguration().set(path + ".game-rules.bridge", gameRules.isBridge());
-        configFile.getConfiguration().set(path + ".game-rules.spleef", gameRules.isSpleef());
-        configFile.getConfiguration().set(path + ".game-rules.parkour", gameRules.isParkour());
-        configFile.getConfiguration().set(path + ".game-rules.fall-damage", !gameRules.isDisableFallDamage());
-        configFile.getConfiguration().set(path + ".game-rules.stickspawn", gameRules.isStickSpawn());
-        configFile.getConfiguration().set(path + ".game-rules.voidspawn", gameRules.isVoidSpawn());
-        configFile.getConfiguration().set(path + ".game-rules.mlgrush", gameRules.isMlgRush());
-        configFile.getConfiguration().set(path + ".game-rules.combo", gameRules.isCombo());
-        configFile.getConfiguration().set(path + ".game-rules.sumo", gameRules.isSumo());
-        configFile.getConfiguration().set(path + ".game-rules.boxuhc", gameRules.isBoxuhc());
-        configFile.getConfiguration().set(path + ".game-rules.timed", gameRules.isTimed());
-        configFile.getConfiguration().set(path + ".game-rules.water-kill", gameRules.isWaterKill());
-        configFile.getConfiguration().set(path + ".game-rules.lava-kill", gameRules.isLavaKill());
-        configFile.getConfiguration().set(path + ".game-rules.health-regeneration", gameRules.isRegen());
-        configFile.getConfiguration().set(path + ".game-rules.speed", gameRules.isSpeed());
-        configFile.getConfiguration().set(path + ".game-rules.strength", gameRules.isStrength());
-        configFile.getConfiguration().set(path + ".game-rules.show-health", gameRules.isShowHealth());
-        configFile.getConfiguration().set(path + ".game-rules.hit-delay", gameRules.getHitDelay());
-        configFile.getConfiguration().set(path + ".game-rules.bow-hp", gameRules.isBowHP());
+        configFile.set(path + ".game-rules.ranked", gameRules.isRanked());
+        configFile.set(path + ".game-rules.clan", gameRules.isClan());
+        configFile.set(path + ".game-rules.party-ffa", !gameRules.isDisablePartyFFA());
+        configFile.set(path + ".game-rules.party-split", !gameRules.isDisablePartySplit());
+        configFile.set(path + ".game-rules.editable", gameRules.isEditable());
+        configFile.set(path + ".game-rules.hunger", !gameRules.isAntiFoodLoss());
+        configFile.set(path + ".game-rules.noitems", gameRules.isNoItems());
+        configFile.set(path + ".game-rules.build", gameRules.isBuild());
+        configFile.set(path + ".game-rules.bridge", gameRules.isBridge());
+        configFile.set(path + ".game-rules.spleef", gameRules.isSpleef());
+        configFile.set(path + ".game-rules.parkour", gameRules.isParkour());
+        configFile.set(path + ".game-rules.fall-damage", !gameRules.isDisableFallDamage());
+        configFile.set(path + ".game-rules.stickspawn", gameRules.isStickSpawn());
+        configFile.set(path + ".game-rules.voidspawn", gameRules.isVoidSpawn());
+        configFile.set(path + ".game-rules.mlgrush", gameRules.isMlgRush());
+        configFile.set(path + ".game-rules.combo", gameRules.isCombo());
+        configFile.set(path + ".game-rules.sumo", gameRules.isSumo());
+        configFile.set(path + ".game-rules.boxuhc", gameRules.isBoxuhc());
+        configFile.set(path + ".game-rules.timed", gameRules.isTimed());
+        configFile.set(path + ".game-rules.water-kill", gameRules.isWaterKill());
+        configFile.set(path + ".game-rules.lava-kill", gameRules.isLavaKill());
+        configFile.set(path + ".game-rules.health-regeneration", gameRules.isRegen());
+        configFile.set(path + ".game-rules.speed", gameRules.isSpeed());
+        configFile.set(path + ".game-rules.strength", gameRules.isStrength());
+        configFile.set(path + ".game-rules.show-health", gameRules.isShowHealth());
+        configFile.set(path + ".game-rules.hit-delay", gameRules.getHitDelay());
+        configFile.set(path + ".game-rules.bow-hp", gameRules.isBowHP());
 
         configFile.save();
     }
@@ -252,5 +247,27 @@ public class Kit {
         player.getInventory().setArmorContents(getKitInventory().getArmor());
         player.getInventory().setContents(getKitInventory().getContents());
         player.updateInventory();
+    }
+
+    public Match createSoloKitMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
+        if (gameRules.isBridge()) {
+            return new SoloBridgeMatch(queue, playerA, playerB, kit, arena, queueType);
+        } else if (gameRules.isBedwars()) {
+            //
+        } else if (gameRules.isMlgRush()) {
+            //
+        } else if (gameRules.isBoxing()) {
+            //
+        }
+        return new SoloMatch(queue, playerA, playerB, kit, arena, queueType);
+    }
+
+    public Match createTeamKitMatch(Team teamA, Team teamB, Kit kit, Arena arena) {
+        if (gameRules.isBridge()) {
+            return new TeamBridgeMatch(teamA, teamB, kit, arena);
+        } else if (gameRules.isBedwars()) {
+            //
+        }
+        return new TeamMatch(teamA, teamB, kit, arena);
     }
 }

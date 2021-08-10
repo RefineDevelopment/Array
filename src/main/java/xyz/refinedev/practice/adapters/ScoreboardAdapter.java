@@ -1,6 +1,6 @@
 package xyz.refinedev.practice.adapters;
 
-import com.google.common.base.Preconditions;
+import com.mongodb.internal.authentication.SaslPrep;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,7 +12,8 @@ import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
-import xyz.refinedev.practice.match.types.kit.BridgeMatch;
+import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.TeamBridgeMatch;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.pvpclasses.PvPClass;
@@ -73,7 +74,6 @@ public class ScoreboardAdapter implements AssembleAdapter {
 
         lines.add(config.getStringOrDefault("SCOREBOARD.LINES", CC.SB_BAR));
         if (profile.isInLobby() || profile.isInQueue()) {
-
             config.getStringList("SCOREBOARD.LOBBY").forEach(line -> lines.add(CC.translate(line
                     .replace("<online>", String.valueOf(ArrayCache.getOnline()))
                     .replace("<in_fights>", String.valueOf(ArrayCache.getInFights()))
@@ -109,7 +109,6 @@ public class ScoreboardAdapter implements AssembleAdapter {
             if (profile.isInQueue()) {
                 Queue queue = profile.getQueue();
                 if (queue.getType() == QueueType.UNRANKED) {
-
                     config.getStringList("SCOREBOARD.UNRANKED_QUEUE").forEach(line -> lines.add(CC.translate(line
                             .replace("<queue_kit>", queue.getKit().getDisplayName())
                             .replace("<queue_duration>", queue.getDuration(player))
@@ -117,7 +116,6 @@ public class ScoreboardAdapter implements AssembleAdapter {
                             .replace("%splitter%", "┃").replace("|", "┃")));
 
                 } else if (queue.getType() == QueueType.RANKED) {
-
                     config.getStringList("SCOREBOARD.RANKED_QUEUE").forEach(line -> lines.add(CC.translate(line
                             .replace("<queue_kit>", queue.getKit().getDisplayName())
                             .replace("<queue_duration>", queue.getDuration(player))
@@ -127,7 +125,6 @@ public class ScoreboardAdapter implements AssembleAdapter {
 
                 } else if (queue.getType() == QueueType.CLAN) {
                     Clan clan = profile.getClan();
-
                     config.getStringList("SCOREBOARD.CLAN_QUEUE").forEach(line -> lines.add(CC.translate(line
                             .replace("<queue_kit>", queue.getKit().getDisplayName())
                             .replace("<queue_duration>", queue.getDuration(player))
@@ -142,8 +139,8 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 }
             } else if (Tournament.getCurrentTournament() != null) {
                 final Tournament tournament = Tournament.getCurrentTournament();
-                final String round = (tournament.getRound() > 0) ? String.valueOf(tournament.getRound()) : "&fStarting";
-                final String participantType = (tournament.getType().equals(TournamentType.TEAM)) ? "Parties" : "Players";
+                final String round = tournament.getRound() > 0 ? String.valueOf(tournament.getRound()) : "&fStarting";
+                final String participantType = tournament.getType().equals(TournamentType.TEAM) ? "Parties" : "Players";
 
                 config.getStringList("SCOREBOARD.TOURNAMENT").forEach(line -> lines.add(CC.translate(line
                         .replace("<round>", round)
@@ -154,112 +151,108 @@ public class ScoreboardAdapter implements AssembleAdapter {
                         .replace("<participant_max>", String.valueOf(tournament.getMaxPlayers()))
                         .replace("%splitter%", "┃")
                         .replace("|", "┃"))));
-
             }
         } else if (profile.isInFight()) {
             final Match match = profile.getMatch();
             if (match != null) {
                 if (match.isEnding()) {
-
                     config.getStringList("SCOREBOARD.MATCH.ENDING").forEach(line -> lines.add(CC.translate(line
                             .replace("<match_duration>", match.getDuration())
                             .replace("<player_count>", String.valueOf(match.getPlayers().size()))).replace("%splitter%", "┃").replace("|", "┃")));
 
-                } else if (match.isSoloMatch() && !match.isEnding()) {
-                    final TeamPlayer self = match.getTeamPlayer(player);
-                    final TeamPlayer opponent = match.getOpponentTeamPlayer(player);
+                } else if (match.isSoloMatch()) {
+                    if (match instanceof SoloBridgeMatch) {
+                        final SoloBridgeMatch soloBridgeMatch = (SoloBridgeMatch) match;
+                        final TeamPlayer teamPlayer = match.getTeamPlayer(player);
+                        final TeamPlayer opponentPlayer = match.getTeamPlayer(player);
 
-                    config.getStringList("SCOREBOARD.MATCH.SOLO").forEach(line -> lines.add(CC.translate(line
-                            .replace("<opponent_name>", opponent.getUsername())
-                            .replace("<match_arena>", match.getArena().getDisplayName())
-                            .replace("<match_duration>", match.getDuration())
-                            .replace("<match_kit>", match.getKit().getDisplayName())
-                            .replace("<player_count>", String.valueOf(match.getPlayers().size()))
-                            .replace("<your_name>", player.getName())
-                            .replace("<match_type>", "Solo")).replace("%splitter%", "┃").replace("|", "┃")));
+                        int yourPoints = match.getTeamPlayerA().equals(teamPlayer) ? soloBridgeMatch.getPlayerARounds() : soloBridgeMatch.getPlayerBRounds();
+                        int opponentPoints = match.getTeamPlayerA().equals(opponentPlayer) ? soloBridgeMatch.getPlayerARounds() : soloBridgeMatch.getPlayerBRounds();
 
-                    if (profile.getSettings().isPingScoreboard()) {
+                        config.getStringList("SCOREBOARD.MATCH.BRIDGE").forEach(line -> lines.add(CC.translate(line
+                                .replace("<opponent_name>", opponentPlayer.getUsername())
+                                .replace("<match_kit>", match.getKit().getDisplayName())
+                                .replace("<match_arena>", match.getArena().getDisplayName())
+                                .replace("<match_duration>", match.getDuration())
+                                .replace("<bridge_round>", String.valueOf(soloBridgeMatch.getRound()))
+                                .replace("<match_type>", "Bridges")
+                                .replace("<player_name>", player.getName())
+                                .replace("<bow_cooldown>", (profile.getBowCooldown().hasExpired() ? "None" : profile.getBowCooldown().getTimeLeft() + "s"))
+                                .replace("<player_count>", String.valueOf(match.getPlayers().size()))
+                                .replace("<opponent_points>", String.valueOf(opponentPoints))
+                                .replace("<your_points>", String.valueOf(yourPoints))
+                                .replace("<red_points_formatted>", this.getFormattedPoints(match.getTeamPlayerA().getPlayer()) + (match.getTeamPlayerA().getPlayer() == player ? " &7(You)" : ""))
+                                .replace("<blue_points_formatted>", this.getFormattedPoints(match.getTeamPlayerB().getPlayer()) + (match.getTeamPlayerB().getPlayer() == player ? " &7(You)" : "")))
+                                .replace("%splitter%", "┃")
+                                .replace("|", "┃")));
+                    } else {
+                        final TeamPlayer self = match.getTeamPlayer(player);
+                        final TeamPlayer opponent = match.getOpponentTeamPlayer(player);
 
-                        config.getStringList("SCOREBOARD.MATCH.PING_ADDITION").forEach(line -> lines.add(CC.translate(line
-                                .replace("<your_ping>", String.valueOf(self.getPing()))
-                                .replace("<opponent_ping>", String.valueOf(opponent.getPing()))).replace("%splitter%", "┃").replace("|", "┃")));
-                    }
-                    if (profile.getSettings().isCpsScoreboard()) {
-
-                        config.getStringList("SCOREBOARD.MATCH.CPS_ADDITION").forEach(line -> lines.add(CC.translate(line
-                                .replace("<your_cps>", String.valueOf(self.getCps()))
-                                .replace("<opponent_cps>", String.valueOf(opponent.getCps()))).replace("%splitter%", "┃").replace("|", "┃")));
-
-                    }
-                } else if (match.isTheBridgeMatch() && !match.isEnding()) {
-                    final BridgeMatch bridgeMatch = (BridgeMatch) match;
-                    TeamPlayer opponent = match.getOpponentTeamPlayer(player);
-                    Profile opponentProfile = Profile.getByPlayer(opponent.getPlayer());
-
-                    config.getStringList("SCOREBOARD.MATCH.BRIDGE").forEach(line -> lines.add(CC.translate(line
-                            .replace("<opponent_name>", opponent.getPlayer().getName())
-                            .replace("<match_kit>", match.getKit().getDisplayName())
-                            .replace("<match_arena>", match.getArena().getDisplayName())
-                            .replace("<match_duration>", match.getDuration())
-                            .replace("<bridge_round>", String.valueOf(bridgeMatch.getRound()))
-                            .replace("<match_type>", "Bridge")
-                            .replace("<your_name>", player.getName())
-                            .replace("<player_count>", String.valueOf(match.getPlayers().size()))
-                            .replace("<opponent_points>", String.valueOf(opponentProfile.getBridgeRounds()))
-                            .replace("<your_points>", String.valueOf(profile.getBridgeRounds()))
-                            .replace("<red_points_formatted>", this.getFormattedPoints(match.getTeamPlayerA().getPlayer()) + (match.getTeamPlayerA().getPlayer() == player ? " &7(You)" : ""))
-                            .replace("<blue_points_formatted>", this.getFormattedPoints(match.getTeamPlayerB().getPlayer()) + (match.getTeamPlayerB().getPlayer() == player ? " &7(You)" : ""))).replace("%splitter%", "┃").replace("|", "┃")));
-
-                    if (!profile.getBowCooldown().hasExpired()) {
-
-                        config.getStringList("SCOREBOARD.MATCH.BRIDGE_BOW_COOLDOWN").forEach(line -> lines.add(CC.translate(line
-                                .replace("<bow_cooldown>", profile.getBowCooldown().getTimeLeft() + "s")).replace("%splitter%", "┃").replace("|", "┃")));
-                    }
-
-                } else if (match.isTeamMatch() || match.isHCFMatch()) {
-                    final Team team = match.getTeam(player);
-                    final Team opponentTeam = match.getOpponentTeam(player);
-                    if (match.isTeamMatch() && !match.isEnding()) {
-
-                        config.getStringList("SCOREBOARD.MATCH.TEAM").forEach(line -> lines.add(CC.translate(line
+                        config.getStringList("SCOREBOARD.MATCH.SOLO").forEach(line -> lines.add(CC.translate(line
+                                .replace("<opponent_name>", opponent.getUsername())
+                                .replace("<match_arena>", match.getArena().getDisplayName())
                                 .replace("<match_duration>", match.getDuration())
                                 .replace("<match_kit>", match.getKit().getDisplayName())
-                                .replace("<match_type>", "Team")
-                                .replace("<match_arena>", match.getArena().getDisplayName())
                                 .replace("<player_count>", String.valueOf(match.getPlayers().size()))
                                 .replace("<your_name>", player.getName())
-                                .replace("<your_team_alive>", String.valueOf(team.getAliveCount()))
-                                .replace("<opponent_team_alive>", String.valueOf(opponentTeam.getAliveCount()))
-                                .replace("<your_team_count>", String.valueOf(team.getPlayers().size()))
-                                .replace("<opponent_team_count>", String.valueOf(opponentTeam.getPlayers().size()))).replace("%splitter%", "┃").replace("|", "┃")));
-                    }
+                                .replace("<match_type>", "Solo"))
+                                .replace("%splitter%", "┃")
+                                .replace("|", "┃")));
 
-                    if (match.isHCFMatch() && !match.isEnding()) {
-                        final PvPClass pvpClass = Array.getInstance().getClassManager().getEquippedClass(player);
-
-                        config.getStringList("SCOREBOARD.MATCH.HCF").forEach(line -> lines.add(CC.translate(line
-                                .replace("<match_duration>", match.getDuration())
-                                .replace("<match_kit>", "HCF")
-                                .replace("<match_arena>", match.getArena().getDisplayName())
-                                .replace("<match_type>", "HCF")
-                                .replace("<player_count>", String.valueOf(match.getPlayers().size()))
-                                .replace("<your_name>", player.getName())
-                                .replace("<your_class>", pvpClass == null ? "None" : pvpClass.getName())
-                                .replace("<your_team_alive>", String.valueOf(team.getAliveCount()))
-                                .replace("<opponent_team_alive>", String.valueOf(opponentTeam.getAliveCount()))
-                                .replace("<your_team_count>", String.valueOf(team.getPlayers().size()))
-                                .replace("<opponent_team_count>", String.valueOf(opponentTeam.getPlayers().size())))
-                                .replace("%splitter%", "┃").replace("|", "┃")));
-
-                        if (pvpClass instanceof Bard) {
-                            final Bard bardClass = (Bard) pvpClass;
-
-                            config.getStringList("SCOREBOARD.MATCH.HCF_BARD_ADDITION").forEach(line -> lines.add(CC.translate(line
-                                    .replace("<your_bard_energy>", String.valueOf(bardClass.getEnergy(player)))
-                                    .replace("%splitter%", "┃").replace("|", "┃"))));
+                        if (profile.getSettings().isPingScoreboard()) {
+                            config.getStringList("SCOREBOARD.MATCH.PING_ADDITION").forEach(line -> lines.add(CC.translate(line
+                                    .replace("<your_ping>", String.valueOf(self.getPing()))
+                                    .replace("<opponent_ping>", String.valueOf(opponent.getPing()))).replace("%splitter%", "┃").replace("|", "┃")));
+                        }
+                        if (profile.getSettings().isCpsScoreboard()) {
+                            config.getStringList("SCOREBOARD.MATCH.CPS_ADDITION").forEach(line -> lines.add(CC.translate(line
+                                    .replace("<your_cps>", String.valueOf(self.getCps()))
+                                    .replace("<opponent_cps>", String.valueOf(opponent.getCps()))).replace("%splitter%", "┃").replace("|", "┃")));
                         }
                     }
-                } else if (match.isFreeForAllMatch() && !match.isEnding()) {
+                } else if (match.isTeamMatch()) {
+                    final Team team = match.getTeam(player);
+                    final Team opponentTeam = match.getOpponentTeam(player);
+                    config.getStringList("SCOREBOARD.MATCH.TEAM").forEach(line -> lines.add(CC.translate(line
+                            .replace("<match_duration>", match.getDuration())
+                            .replace("<match_kit>", match.getKit().getDisplayName())
+                            .replace("<match_type>", "Team")
+                            .replace("<match_arena>", match.getArena().getDisplayName())
+                            .replace("<player_count>", String.valueOf(match.getPlayers().size()))
+                            .replace("<your_name>", player.getName())
+                            .replace("<your_team_alive>", String.valueOf(team.getAliveCount()))
+                            .replace("<opponent_team_alive>", String.valueOf(opponentTeam.getAliveCount()))
+                            .replace("<your_team_count>", String.valueOf(team.getPlayers().size()))
+                            .replace("<opponent_team_count>", String.valueOf(opponentTeam.getPlayers().size()))).replace("%splitter%", "┃").replace("|", "┃")));
+
+                } else if (match.isHCFMatch()) {
+                    final Team team = match.getTeam(player);
+                    final Team opponentTeam = match.getOpponentTeam(player);
+                    final PvPClass pvpClass = Array.getInstance().getClassManager().getEquippedClass(player);
+
+                    config.getStringList("SCOREBOARD.MATCH.HCF").forEach(line -> lines.add(CC.translate(line
+                            .replace("<match_duration>", match.getDuration())
+                            .replace("<match_kit>", "HCF")
+                            .replace("<match_arena>", match.getArena().getDisplayName())
+                            .replace("<match_type>", "HCF")
+                            .replace("<player_count>", String.valueOf(match.getPlayers().size()))
+                            .replace("<your_name>", player.getName())
+                            .replace("<your_class>", pvpClass == null ? "None" : pvpClass.getName())
+                            .replace("<your_team_alive>", String.valueOf(team.getAliveCount()))
+                            .replace("<opponent_team_alive>", String.valueOf(opponentTeam.getAliveCount()))
+                            .replace("<your_team_count>", String.valueOf(team.getPlayers().size()))
+                            .replace("<opponent_team_count>", String.valueOf(opponentTeam.getPlayers().size())))
+                            .replace("%splitter%", "┃").replace("|", "┃")));
+
+                    if (pvpClass instanceof Bard) {
+                        final Bard bardClass=(Bard) pvpClass;
+
+                        config.getStringList("SCOREBOARD.MATCH.HCF_BARD_ADDITION").forEach(line -> lines.add(CC.translate(line
+                                .replace("<your_bard_energy>", String.valueOf(bardClass.getEnergy(player)))
+                                .replace("%splitter%", "┃").replace("|", "┃"))));
+                    }
+                } else if (match.isFreeForAllMatch()) {
                     final Team team = match.getTeam(player);
 
                     config.getStringList("SCOREBOARD.MATCH.FFA").forEach(line -> lines.add(CC.translate(line
@@ -275,10 +268,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 }
             }
         } else if (profile.isSpectating()) {
-
             final Match match = profile.getMatch();
-            final Event event = profile.getEvent();
-
             if (match != null) {
                 if (match.isEnding()) {
                     config.getStringList("SCOREBOARD.SPECTATOR.MATCH.ENDING").forEach(line -> lines.add(CC.translate(line
@@ -286,43 +276,40 @@ public class ScoreboardAdapter implements AssembleAdapter {
                             .replace("<player_count>", String.valueOf(match.getPlayers().size())))
                             .replace("%splitter%", "┃").replace("|", "┃")));
 
-                } else if (match.isSoloMatch() && !match.isEnding()) {
-                    int playera = PlayerUtil.getPing(match.getTeamPlayerA().getPlayer());
-                    int playerb = PlayerUtil.getPing(match.getTeamPlayerB().getPlayer());
+                } else if (match.isSoloMatch()) {
+                    int playerA = PlayerUtil.getPing(match.getTeamPlayerA().getPlayer());
+                    int playerB = PlayerUtil.getPing(match.getTeamPlayerB().getPlayer());
 
-                    config.getStringList("SCOREBOARD.SPECTATOR.MATCH.SOLO").forEach(line -> lines.add(CC.translate(line
-                            .replace("<match_kit>", match.getKit().getDisplayName())
-                            .replace("<match_duration>", match.getDuration())
-                            .replace("<match_arena>", match.getArena().getDisplayName())
-                            .replace("<playerA_name>", match.getTeamPlayerA().getUsername())
-                            .replace("<playerB_name>", match.getTeamPlayerB().getUsername())
-                            .replace("<playerA_ping>", String.valueOf(playera))
-                            .replace("<playerB_ping>", String.valueOf(playerb))
-                            .replace("<player_count>", String.valueOf(match.getPlayers().size()))
-                            .replace("<match_type>", "Solo"))
-                            .replace("%splitter%", "┃").replace("|", "┃")));
+                    if (match instanceof SoloBridgeMatch) {
+                        SoloBridgeMatch soloBridgeMatch=(SoloBridgeMatch) match;
+                        config.getStringList("SCOREBOARD.SPECTATOR.MATCH.BRIDGE").forEach(line -> lines.add(CC.translate(line
+                                .replace("<match_kit>", match.getKit().getDisplayName())
+                                .replace("<match_duration>", match.getDuration())
+                                .replace("<playerA_name>", match.getTeamPlayerA().getUsername())
+                                .replace("<playerB_name>", match.getTeamPlayerB().getUsername())
+                                .replace("<match_arena>", match.getArena().getDisplayName())
+                                .replace("<playerA_ping>", String.valueOf(playerA))
+                                .replace("<playerB_ping>", String.valueOf(playerB))
+                                .replace("<bridge_round>", String.valueOf(soloBridgeMatch.getRound()))
+                                .replace("<blue_points_formatted>", this.getFormattedPoints(match.getTeamPlayerB().getPlayer()))
+                                .replace("<red_points_formatted>", this.getFormattedPoints(match.getTeamPlayerA().getPlayer()))
+                                .replace("<player_count>", String.valueOf(match.getPlayers().size()))
+                                .replace("<match_type>", "Bridge")).replace("%splitter%", "┃").replace("|", "┃")));
 
-                } else if (match.isTheBridgeMatch() && !match.isEnding()) {
-                    int playera = PlayerUtil.getPing(match.getTeamPlayerA().getPlayer());
-                    int playerb = PlayerUtil.getPing(match.getTeamPlayerB().getPlayer());
-                    BridgeMatch bridgeMatch = (BridgeMatch) match;
-
-                    config.getStringList("SCOREBOARD.SPECTATOR.MATCH.BRIDGE").forEach(line -> lines.add(CC.translate(line
-                            .replace("<match_kit>", match.getKit().getDisplayName())
-                            .replace("<match_duration>", match.getDuration())
-                            .replace("<playerA_name>", match.getTeamPlayerA().getUsername())
-                            .replace("<playerB_name>", match.getTeamPlayerB().getUsername())
-                            .replace("<match_arena>", match.getArena().getDisplayName())
-                            .replace("<playerA_ping>", String.valueOf(playera))
-                            .replace("<playerB_ping>", String.valueOf(playerb))
-                            .replace("<bridge_round>", String.valueOf(bridgeMatch.getRound()))
-                            .replace("<blue_points_formatted>", this.getFormattedPoints(match.getTeamPlayerB().getPlayer()))
-                            .replace("<red_points_formatted>", this.getFormattedPoints(match.getTeamPlayerA().getPlayer()))
-                            .replace("<player_count>", String.valueOf(match.getPlayers().size()))
-                            .replace("<match_type>", "Bridge")).replace("%splitter%", "┃").replace("|", "┃")));
-
-                } else if (match.isTeamMatch() && !match.isEnding()) {
-
+                    } else {
+                        config.getStringList("SCOREBOARD.SPECTATOR.MATCH.SOLO").forEach(line -> lines.add(CC.translate(line
+                                .replace("<match_kit>", match.getKit().getDisplayName())
+                                .replace("<match_duration>", match.getDuration())
+                                .replace("<match_arena>", match.getArena().getDisplayName())
+                                .replace("<playerA_name>", match.getTeamPlayerA().getUsername())
+                                .replace("<playerB_name>", match.getTeamPlayerB().getUsername())
+                                .replace("<playerA_ping>", String.valueOf(playerA))
+                                .replace("<playerB_ping>", String.valueOf(playerB))
+                                .replace("<player_count>", String.valueOf(match.getPlayers().size()))
+                                .replace("<match_type>", "Solo"))
+                                .replace("%splitter%", "┃").replace("|", "┃")));
+                    }
+                } else if (match.isTeamMatch()) {
                     config.getStringList("SCOREBOARD.SPECTATOR.MATCH.TEAM").forEach(line -> lines.add(CC.translate(line
                             .replace("<match_kit>", match.getKit().getDisplayName())
                             .replace("<match_duration>", match.getDuration())
@@ -334,7 +321,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                             .replace("<teamA_size>", String.valueOf(match.getTeamA().getPlayers().size()))
                             .replace("<teamB_size>", String.valueOf(match.getTeamB().getPlayers().size()))).replace("%splitter%", "┃").replace("|", "┃")));
 
-                } else if (match.isHCFMatch() && !match.isEnding()) {
+                } else if (match.isHCFMatch()) {
                     config.getStringList("SCOREBOARD.SPECTATOR.MATCH.HCF").forEach(line -> lines.add(CC.translate(line
                             .replace("<match_kit>", "HCF")
                             .replace("<match_duration>", match.getDuration())
@@ -345,8 +332,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                             .replace("<teamB_leader_name>", match.getTeamB().getLeader().getUsername())
                             .replace("<teamA_size>", String.valueOf(match.getTeamA().getPlayers().size()))
                             .replace("<teamB_size>", String.valueOf(match.getTeamB().getPlayers().size()))).replace("%splitter%", "┃").replace("|", "┃")));
-
-                } else if (match.isFreeForAllMatch() && !match.isEnding()) {
+                } else if (match.isFreeForAllMatch()) {
                     final Team team = match.getTeam(player);
 
                     config.getStringList("SCOREBOARD.SPECTATOR.MATCH.FFA").forEach(line -> lines.add(CC.translate(line
@@ -356,229 +342,122 @@ public class ScoreboardAdapter implements AssembleAdapter {
                             .replace("<match_arena>", match.getArena().getDisplayName())
                             .replace("<alive_count>", String.valueOf(team.getAliveCount()))
                             .replace("<total_count>", String.valueOf(team.getPlayers().size()))).replace("%splitter%", "┃").replace("|", "┃")));
-
-                }
-            } else if (event != null) {
-                if (!event.isTeam()) {
-                    if (event.isWaiting()) {
-
-                        String status;
-                        if (event.getCooldown() == null) {
-                            status = CC.translate(config.getString("SCOREBOARD.EVENT.SOLO.STATUS_WAITING")
-                                    .replace("<event_name>", event.getName())
-                                    .replace("<event_host_name>", event.getHost().getUsername())
-                                    .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
-                                    .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
-
-                        } else {
-                            String remaining = TimeUtil.millisToSeconds(event.getCooldown().getRemaining());
-                            if (remaining.startsWith("-")) remaining = "0.0";
-
-                            String finalRemaining = remaining;
-                            status = CC.translate(config.getString("SCOREBOARD.EVENT.SOLO.STATUS_COUNTING")
-                                    .replace("<event_host_name>", event.getHost().getUsername())
-                                    .replace("<event_name>", event.getName())
-                                    .replace("<event_remaining>", finalRemaining)
-                                    .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
-                                    .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
-
-                        }
-                        config.getStringList("SCOREBOARD.EVENT.SOLO.WAITING").forEach(line -> lines.add(CC.translate(line
-                                .replace("<event_host_name>", event.getHost().getUsername())
-                                .replace("<event_name>", event.getName())
-                                .replace("<event_status>", status)
-                                .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
-                                .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
-
-                    } else {
-                        config.getStringList("SCOREBOARD.EVENT.SOLO.FIGHTING").forEach(line -> lines.add(CC.translate(line
-                                .replace("<event_host_name>", event.getName())
-                                .replace("<event_duration>", event.getDuration())
-                                .replace("<event_players_alive>", String.valueOf(event.getRemainingPlayers().size()))
-                                .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
-                                .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
-
-                        if (!event.isFreeForAll()) {
-                            config.getStringList("SCOREBOARD.EVENT.SOLO_ROUND_ADDITION").forEach(line -> lines.add(CC.translate(line
-                                    .replace("<event_playerA_name>", event.getRoundPlayerA().getUsername())
-                                    .replace("<event_playerA_ping>", String.valueOf(event.getRoundPlayerA().getPing()))
-                                    .replace("<event_playerB_name>", event.getRoundPlayerB().getUsername())
-                                    .replace("<event_playerB_ping>", String.valueOf(event.getRoundPlayerB().getPing()))
-                                    .replace("<event_host_name>", event.getName())
-                                    .replace("<event_duration>", event.getDuration())
-                                    .replace("<event_players_alive>", String.valueOf(event.getRemainingPlayers().size()))
-                                    .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
-                                    .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
-                        }
-                    }
-                } else {
-                    if (event.isWaiting()) {
-
-                        String status;
-                        if (event.getCooldown() == null) {
-                            status = CC.translate(config.getString("SCOREBOARD.EVENT.TEAM.STATUS_WAITING")
-                                    .replace("<event_name>", event.getName())
-                                    .replace("<event_host_name>", event.getHost().getUsername())
-                                    .replace("<event_player_count>", String.valueOf(event.getEventTeamPlayers().size()))
-                                    .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
-
-                        } else {
-                            String remaining = TimeUtil.millisToSeconds(event.getCooldown().getRemaining());
-                            if (remaining.startsWith("-")) remaining = "0.0";
-
-                            String finalRemaining = remaining;
-                            status = CC.translate(config.getString("SCOREBOARD.EVENT.TEAM.STATUS_COUNTING")
-                                    .replace("<event_host_name>", event.getHost().getUsername())
-                                    .replace("<event_name>", event.getName())
-                                    .replace("<event_remaining>", finalRemaining)
-                                    .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
-                                    .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
-
-                        }
-                        config.getStringList("SCOREBOARD.EVENT.TEAM.WAITING").forEach(line -> lines.add(CC.translate(line
-                                .replace("<event_host_name>", event.getHost().getUsername())
-                                .replace("<event_name>", event.getName())
-                                .replace("<event_status>", status)
-                                .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
-                                .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
-
-                    } else {
-                        config.getStringList("SCOREBOARD.EVENT.TEAM.FIGHTING").forEach(line -> lines.add(CC.translate(line
-                                .replace("<event_host_name>", event.getName())
-                                .replace("<event_duration>", event.getDuration())
-                                .replace("<event_players_alive>", String.valueOf(event.getRemainingPlayers().size()))
-                                .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
-                                .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
-
-                        if (!event.isFreeForAll()) {
-                            config.getStringList("SCOREBOARD.EVENT.TEAM_ROUND_ADDITION").forEach(line -> lines.add(CC.translate(line
-                                    .replace("<event_teamA_name>", event.getRoundTeamA().getColor().getTitle())
-                                    .replace("<event_teamB_name>", event.getRoundTeamB().getColor().getTitle())
-                                    .replace("<event_teamA_size>", String.valueOf(event.getRoundTeamA().getPlayers().size()))
-                                    .replace("<event_teamB_size>", String.valueOf(event.getRoundTeamB().getPlayers().size()))
-                                    .replace("<event_host_name>", event.getName())
-                                    .replace("<event_duration>", event.getDuration())
-                                    .replace("<event_players_alive>", String.valueOf(event.getRemainingPlayers().size()))
-                                    .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
-                                    .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
-                        }
-                    }
                 }
             }
-        } else if (profile.isInEvent()) {
+        } else if ((profile.isSpectating() && profile.getEvent() != null) || profile.isInEvent()) {
             Event event = profile.getEvent();
-            if (event != null) {
-                if (!event.isTeam()) {
-                    if (event.isWaiting()) {
-                        String status;
-                        if (event.getCooldown() == null) {
-                            status = CC.translate(config.getString("SCOREBOARD.EVENT.SOLO.STATUS_WAITING")
-                                    .replace("<event_name>", event.getName())
-                                    .replace("<event_host_name>", event.getHost().getUsername())
-                                    .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
-                                    .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
-
-                        } else {
-                            String remaining = TimeUtil.millisToSeconds(event.getCooldown().getRemaining());
-                            if (remaining.startsWith("-")) remaining="0.0";
-
-                            String finalRemaining = remaining;
-                            status = CC.translate(config.getString("SCOREBOARD.EVENT.SOLO.STATUS_COUNTING")
-                                    .replace("<event_host_name>", event.getHost().getUsername())
-                                    .replace("<event_name>", event.getName())
-                                    .replace("<event_remaining>", finalRemaining)
-                                    .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
-                                    .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
-
-                        }
-                        config.getStringList("SCOREBOARD.EVENT.SOLO.WAITING").forEach(line -> lines.add(CC.translate(line
-                                .replace("<event_host_name>", event.getHost().getUsername())
+            if (!event.isTeam()) {
+                if (event.isWaiting()) {
+                    String status;
+                    if (event.getCooldown() == null) {
+                        status=CC.translate(config.getString("SCOREBOARD.EVENT.SOLO.STATUS_WAITING")
                                 .replace("<event_name>", event.getName())
-                                .replace("<event_status>", status)
+                                .replace("<event_host_name>", event.getHost().getUsername())
                                 .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
-                                .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
+                                .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
 
                     } else {
-                        config.getStringList("SCOREBOARD.EVENT.SOLO.FIGHTING").forEach(line -> lines.add(CC.translate(line
+                        String remaining=TimeUtil.millisToSeconds(event.getCooldown().getRemaining());
+                        if (remaining.startsWith("-")) remaining="0.0";
+
+                        String finalRemaining=remaining;
+                        status=CC.translate(config.getString("SCOREBOARD.EVENT.SOLO.STATUS_COUNTING")
+                                .replace("<event_host_name>", event.getHost().getUsername())
+                                .replace("<event_name>", event.getName())
+                                .replace("<event_remaining>", finalRemaining)
+                                .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
+                                .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
+
+                    }
+                    config.getStringList("SCOREBOARD.EVENT.SOLO.WAITING").forEach(line -> lines.add(CC.translate(line
+                            .replace("<event_host_name>", event.getHost().getUsername())
+                            .replace("<event_name>", event.getName())
+                            .replace("<event_status>", status)
+                            .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
+                            .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
+
+                } else {
+                    config.getStringList("SCOREBOARD.EVENT.SOLO.FIGHTING").forEach(line -> lines.add(CC.translate(line
+                            .replace("<event_host_name>", event.getName())
+                            .replace("<event_name>", event.getName())
+                            .replace("<event_duration>", event.getDuration())
+                            .replace("<event_players_alive>", String.valueOf(event.getRemainingPlayers().size()))
+                            .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
+                            .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
+
+                    if (!event.isFreeForAll()) {
+                        config.getStringList("SCOREBOARD.EVENT.SOLO_ROUND_ADDITION").forEach(line -> lines.add(CC.translate(line
+                                .replace("<event_playerA_name>", event.getRoundPlayerA().getUsername())
+                                .replace("<event_playerA_ping>", String.valueOf(event.getRoundPlayerA().getPing()))
+                                .replace("<event_playerB_name>", event.getRoundPlayerB().getUsername())
+                                .replace("<event_playerB_ping>", String.valueOf(event.getRoundPlayerB().getPing()))
                                 .replace("<event_host_name>", event.getName())
                                 .replace("<event_name>", event.getName())
                                 .replace("<event_duration>", event.getDuration())
                                 .replace("<event_players_alive>", String.valueOf(event.getRemainingPlayers().size()))
                                 .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
                                 .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
-
-                        if (!event.isFreeForAll()) {
-                            config.getStringList("SCOREBOARD.EVENT.SOLO_ROUND_ADDITION").forEach(line -> lines.add(CC.translate(line
-                                    .replace("<event_playerA_name>", event.getRoundPlayerA().getUsername())
-                                    .replace("<event_playerA_ping>", String.valueOf(event.getRoundPlayerA().getPing()))
-                                    .replace("<event_playerB_name>", event.getRoundPlayerB().getUsername())
-                                    .replace("<event_playerB_ping>", String.valueOf(event.getRoundPlayerB().getPing()))
-                                    .replace("<event_host_name>", event.getName())
-                                    .replace("<event_name>", event.getName())
-                                    .replace("<event_duration>", event.getDuration())
-                                    .replace("<event_players_alive>", String.valueOf(event.getRemainingPlayers().size()))
-                                    .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
-                                    .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
-                        }
                     }
-                } else {
-                    if (event.isWaiting()) {
-                        String status;
-                        if (event.getCooldown() == null) {
-                            status = CC.translate(config.getString("SCOREBOARD.EVENT.TEAM.STATUS_WAITING")
-                                    .replace("<event_name>", event.getName())
-                                    .replace("<event_host_name>", event.getHost().getUsername())
-                                    .replace("<event_player_count>", String.valueOf(event.getEventTeamPlayers().size()))
-                                    .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
-
-                        } else {
-                            String remaining = TimeUtil.millisToSeconds(event.getCooldown().getRemaining());
-                            if (remaining.startsWith("-")) remaining="0.0";
-
-                            String finalRemaining = remaining;
-                            status=CC.translate(config.getString("SCOREBOARD.EVENT.TEAM.STATUS_COUNTING")
-                                    .replace("<event_host_name>", event.getHost().getUsername())
-                                    .replace("<event_name>", event.getName())
-                                    .replace("<event_remaining>", finalRemaining)
-                                    .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
-                                    .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
-
-                        }
-                        config.getStringList("SCOREBOARD.EVENT.TEAM.WAITING").forEach(line -> lines.add(CC.translate(line
-                                .replace("<event_host_name>", event.getHost().getUsername())
+                }
+            } else {
+                if (event.isWaiting()) {
+                    String status;
+                    if (event.getCooldown() == null) {
+                        status=CC.translate(config.getString("SCOREBOARD.EVENT.TEAM.STATUS_WAITING")
                                 .replace("<event_name>", event.getName())
-                                .replace("<event_status>", status)
-                                .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
-                                .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
+                                .replace("<event_host_name>", event.getHost().getUsername())
+                                .replace("<event_player_count>", String.valueOf(event.getEventTeamPlayers().size()))
+                                .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
 
                     } else {
-                        config.getStringList("SCOREBOARD.EVENT.TEAM.FIGHTING").forEach(line -> lines.add(CC.translate(line
-                                .replace("<event_host_name>", event.getHost().getUsername())
-                                .replace("<event_duration>", event.getDuration())
-                                .replace("<event_name>", event.getName())
-                                .replace("<event_players_alive>", String.valueOf(event.getRemainingPlayers().size()))
-                                .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
-                                .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
+                        String remaining=TimeUtil.millisToSeconds(event.getCooldown().getRemaining());
+                        if (remaining.startsWith("-")) remaining="0.0";
 
-                        if (!event.isFreeForAll()) {
-                            config.getStringList("SCOREBOARD.EVENT.TEAM_ROUND_ADDITION").forEach(line -> lines.add(CC.translate(line
-                                    .replace("<event_teamA_name>", event.getRoundTeamA().getColor().getTitle())
-                                    .replace("<event_teamB_name>", event.getRoundTeamB().getColor().getTitle())
-                                    .replace("<event_teamA_size>", String.valueOf(event.getRoundTeamA().getPlayers().size()))
-                                    .replace("<event_teamB_size>", String.valueOf(event.getRoundTeamB().getPlayers().size()))
-                                    .replace("<event_host_name>", event.getHost().getUsername())
-                                    .replace("<event_name>", event.getName())
-                                    .replace("<event_duration>", event.getDuration())
-                                    .replace("<event_players_alive>", String.valueOf(event.getRemainingPlayers().size()))
-                                    .replace("<event_player_count>", String.valueOf(event.getEventTeamPlayers().size()))
-                                    .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
-                        }
+                        String finalRemaining=remaining;
+                        status=CC.translate(config.getString("SCOREBOARD.EVENT.TEAM.STATUS_COUNTING")
+                                .replace("<event_host_name>", event.getHost().getUsername())
+                                .replace("<event_name>", event.getName())
+                                .replace("<event_remaining>", finalRemaining)
+                                .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
+                                .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
+
+                    }
+                    config.getStringList("SCOREBOARD.EVENT.TEAM.WAITING").forEach(line -> lines.add(CC.translate(line
+                            .replace("<event_host_name>", event.getHost().getUsername())
+                            .replace("<event_name>", event.getName())
+                            .replace("<event_status>", status)
+                            .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
+                            .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
+
+                } else {
+                    config.getStringList("SCOREBOARD.EVENT.TEAM.FIGHTING").forEach(line -> lines.add(CC.translate(line
+                            .replace("<event_host_name>", event.getHost().getUsername())
+                            .replace("<event_duration>", event.getDuration())
+                            .replace("<event_name>", event.getName())
+                            .replace("<event_players_alive>", String.valueOf(event.getRemainingPlayers().size()))
+                            .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
+                            .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
+
+                    if (!event.isFreeForAll()) {
+                        config.getStringList("SCOREBOARD.EVENT.TEAM_ROUND_ADDITION").forEach(line -> lines.add(CC.translate(line
+                                .replace("<event_teamA_name>", event.getRoundTeamA().getColor().getTitle())
+                                .replace("<event_teamB_name>", event.getRoundTeamB().getColor().getTitle())
+                                .replace("<event_teamA_size>", String.valueOf(event.getRoundTeamA().getPlayers().size()))
+                                .replace("<event_teamB_size>", String.valueOf(event.getRoundTeamB().getPlayers().size()))
+                                .replace("<event_host_name>", event.getHost().getUsername())
+                                .replace("<event_name>", event.getName())
+                                .replace("<event_duration>", event.getDuration())
+                                .replace("<event_players_alive>", String.valueOf(event.getRemainingPlayers().size()))
+                                .replace("<event_player_count>", String.valueOf(event.getEventTeamPlayers().size()))
+                                .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
                     }
                 }
             }
         }
-        lines.add("");
-        lines.add(config.getStringOrDefault("SCOREBOARD.FOOTER", "&7&odemo.refinedev.xyz"));
+        if (config.getBoolean("FOOTER_ENABLED")) {
+            lines.add("");
+            lines.add(config.getStringOrDefault("SCOREBOARD.FOOTER", "&7&odemo.refinedev.xyz"));
+        }
         lines.add(config.getStringOrDefault("SCOREBOARD.LINES", CC.SB_BAR));
 
         return lines.stream().map(line -> {
@@ -592,7 +471,20 @@ public class ScoreboardAdapter implements AssembleAdapter {
 
     public String getFormattedPoints(Player player) {
         Profile profile = Profile.getByPlayer(player);
-        int points = profile.getBridgeRounds();
+        Match match = profile.getMatch();
+        int points = 0;
+
+        if (match instanceof SoloBridgeMatch) {
+            TeamPlayer teamPlayer = match.getTeamPlayer(player);
+            SoloBridgeMatch soloBridgeMatch = (SoloBridgeMatch) match;
+            points = match.getTeamPlayerA().equals(teamPlayer) ? soloBridgeMatch.getPlayerARounds() : soloBridgeMatch.getPlayerBRounds();
+        } else if (match instanceof TeamBridgeMatch) {
+            Team team = match.getTeam(player);
+            TeamBridgeMatch teamBridgeMatch = (TeamBridgeMatch) match;
+
+            //points = match.getTeamA().equals(team) ? teamBridgeMatch.getTeamARounds() : teamBridgeMatch.getTeamBRounds();
+        }
+
 
         switch (points) {
             case 3:

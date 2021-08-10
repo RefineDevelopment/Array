@@ -16,7 +16,7 @@ import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.HCFMatch;
 import xyz.refinedev.practice.match.types.SoloMatch;
 import xyz.refinedev.practice.match.types.TeamMatch;
-import xyz.refinedev.practice.match.types.kit.BridgeMatch;
+import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
@@ -160,46 +160,25 @@ public class DuelCommands {
 
         if (request.isParty()) {
             Team teamA = new Team(new TeamPlayer(player));
-            if (request.getKit().getName().equals("HCFTeamFight")) {
-
-                for ( Player partyMember : senderProfile.getParty().getPlayers() ) {
-                    if (!partyMember.getPlayer().equals(player)) {
-                        teamA.getTeamPlayers().add(new TeamPlayer(partyMember));
-                    }
+            for ( Player partyMember : senderProfile.getParty().getPlayers() ) {
+                if (!partyMember.getPlayer().equals(player)) {
+                    teamA.getTeamPlayers().add(new TeamPlayer(partyMember));
                 }
-
-                Team teamB = new Team(new TeamPlayer(target));
-
-                for ( Player partyMember : receiverProfile.getParty().getPlayers() ) {
-                    if (!partyMember.getPlayer().equals(target)) {
-                        teamB.getTeamPlayers().add(new TeamPlayer(partyMember));
-                    }
-                }
-
-                match = new HCFMatch(teamA, teamB, arena);
-            } else {
-                for ( Player partyMember : senderProfile.getParty().getPlayers() ) {
-                    if (!partyMember.getPlayer().equals(player)) {
-                        teamA.getTeamPlayers().add(new TeamPlayer(partyMember));
-                    }
-                }
-
-                Team teamB = new Team(new TeamPlayer(target));
-
-                for ( Player partyMember : receiverProfile.getParty().getPlayers() ) {
-                    if (!partyMember.getPlayer().equals(target)) {
-                        teamB.getTeamPlayers().add(new TeamPlayer(partyMember));
-                    }
-                }
-                match = new TeamMatch(teamA, teamB, request.getKit(), arena);
             }
 
-        } else if (request.getKit().getGameRules().isBridge()) {
-            match = new BridgeMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,
-                    QueueType.UNRANKED);
+            Team teamB = new Team(new TeamPlayer(target));
+            for ( Player partyMember : receiverProfile.getParty().getPlayers() ) {
+                if (!partyMember.getPlayer().equals(target)) {
+                    teamB.getTeamPlayers().add(new TeamPlayer(partyMember));
+                }
+            }
+            if (request.getKit().getName().equals("HCFTeamFight")) {
+                match = new HCFMatch(teamA, teamB, arena);
+            } else {
+                match = kit.createTeamKitMatch(teamA, teamB, request.getKit(), arena);
+            }
         } else {
-            match = new SoloMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena,
-                    QueueType.UNRANKED);
+            match = kit.createSoloKitMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena, QueueType.UNRANKED);
         }
         if (!request.isParty()) {
             for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList() ) {

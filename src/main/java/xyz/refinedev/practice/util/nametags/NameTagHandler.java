@@ -39,8 +39,9 @@ public class NameTagHandler {
         thread = new NametagThread();
         thread.start();
 
-        this.registerProvider(new NameTagAdapter());
         this.plugin.getServer().getPluginManager().registerEvents(new NameTagListener(), this.plugin);
+
+        this.registerProvider(new NameTagAdapter());
     }
 
     public void registerProvider(NameTagProvider newProvider) {

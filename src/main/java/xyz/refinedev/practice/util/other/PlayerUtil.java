@@ -57,7 +57,6 @@ public class PlayerUtil {
 
     public void spectator(Player player) {
         AsyncCatcher.enabled = false;
-        Profile profile = Profile.getByPlayer(player);
 
         player.setAllowFlight(true);
         player.setFlying(true);

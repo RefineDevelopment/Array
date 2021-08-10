@@ -3,7 +3,6 @@ package xyz.refinedev.practice.events.meta.player;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
-import xyz.refinedev.practice.events.meta.player.EventPlayerState;
 import xyz.refinedev.practice.util.other.PlayerSnapshot;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 

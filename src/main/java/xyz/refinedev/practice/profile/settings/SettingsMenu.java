@@ -32,7 +32,7 @@ import java.util.Map;
 public class SettingsMenu extends Menu {
 
     private final Array plugin = Array.getInstance();
-    private final BasicConfigurationFile config = plugin.getMenuConfig();
+    private final BasicConfigurationFile config = plugin.getMainConfig();
     private String key;
 
     @Override

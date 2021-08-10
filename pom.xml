@@ -109,7 +109,7 @@
         <dependency>
             <groupId>xyz.refinedev.tablist</groupId>
             <artifactId>TablistAPI</artifactId>
-            <version>1.2</version>
+            <version>1.4</version>
             <scope>compile</scope>
         </dependency>
 
@@ -216,6 +216,20 @@
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <relocations>
+                        <relocation>
+                            <pattern>com.mongodb</pattern>
+                            <shadedPattern>xyz.refinedev.libs.com.mongodb</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.google.gson</pattern>
+                            <shadedPattern>xyz.refinedev.libs.com.google.gson</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.bson</pattern>
+                            <shadedPattern>xyz.refinedev.libs.org.bson</shadedPattern>
+                        </relocation>
+                    </relocations>
                 </configuration>
                 <executions>
                     <execution>

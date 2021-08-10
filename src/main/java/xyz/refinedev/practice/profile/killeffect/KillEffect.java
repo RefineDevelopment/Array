@@ -3,6 +3,7 @@ package xyz.refinedev.practice.profile.killeffect;
 import lombok.Data;
 import org.bukkit.Effect;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,11 +20,18 @@ import java.util.UUID;
 public class KillEffect {
 
     private final UUID uniqueId;
-    private final KillEffectType type;
-    
+
     private String displayName;
     private String permission;
+
     private Effect effect;
-    private List<String> description;
-    private LightningEffectType lightningEffectType;
+    private int data;
+
+    private boolean animateDeath;
+    private boolean permissionEnabled;
+    private boolean dropsClear;
+    private boolean lightning;
+
+    private final List<KillEffectSound> killEffectSounds = new ArrayList<>();
+    private final List<String> description = new ArrayList<>();
 }

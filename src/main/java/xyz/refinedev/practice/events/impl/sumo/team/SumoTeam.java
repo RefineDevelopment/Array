@@ -203,7 +203,7 @@ public class SumoTeam extends Event {
         this.roundTeamA = this.findRoundTeam();
         this.roundTeamB = this.findRoundTeam();
         
-        for (final Player playerA : this.roundTeamA.getPlayers().stream().filter(eventPlayer -> eventPlayer != null && eventPlayer.getPlayer() != null && eventPlayer.getPlayer().isOnline()).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
+        for (Player playerA : this.roundTeamA.getPlayers().stream().filter(eventPlayer -> eventPlayer != null && eventPlayer.getPlayer() != null && eventPlayer.getPlayer().isOnline()).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
             PlayerUtil.reset(playerA);
             PlayerUtil.denyMovement(playerA);
 
@@ -259,7 +259,10 @@ public class SumoTeam extends Event {
             }
         }
 
-        if (eventTeam == null) throw new RuntimeException("Could not find a new round player");
+        if (eventTeam == null) {
+            this.end();
+            throw new RuntimeException("Could not find a new round player");
+        }
 
         return eventTeam;
     }

@@ -52,6 +52,7 @@ public class CommandsManager {
         drink.register(new FlyCommand(), "fly", "flight");
         drink.register(new LeaderboardsCommand(), "leaderboards", "lb", "leaderboard");
         drink.register(new StatsCommand(), "stats", "elo", "statistics");
+        drink.register(new KillEffectsCMD(), "killeffect", "killeffects");
 
         //Essentials Commands
         drink.register(new UnrankedQueueCMD(), "unrankedqueue", "queue", "queue unranked");

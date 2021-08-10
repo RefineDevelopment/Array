@@ -44,6 +44,7 @@ public class PartyListener implements Listener {
 
         if (party != null) {
             List<Player> partyPlayers = party.getPlayers().stream().filter(p -> !p.getUniqueId().equals(player.getUniqueId())).collect(Collectors.toList());
+            if (partyPlayers.isEmpty()) party.disband();
             if (party.isLeader(player.getUniqueId())) {
                 party.leader(player, partyPlayers.get(0));
                 party.broadcast(CC.translate("&e" + party.getLeader().getUsername() + " has been randomly promoted to leader because the previous leader left."));

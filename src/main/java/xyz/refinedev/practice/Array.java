@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.refinedev.practice.adapters.ScoreboardAdapter;
 import xyz.refinedev.practice.adapters.TablistAdapter;
@@ -79,7 +80,7 @@ public class Array extends JavaPlugin {
     /*
      * All ours Configs
      */
-    private BasicConfigurationFile mainConfig, arenasConfig, kitsConfig, eventsConfig, menuConfig, killeffectsConfig,
+    private BasicConfigurationFile mainConfig, arenasConfig, kitsConfig, eventsConfig, killEffectsConfig,
             messagesConfig, scoreboardConfig, tablistConfig, divisionsConfig, hotbarConfig, rateConfig;//, brawlConfig;
 
     /*
@@ -131,10 +132,8 @@ public class Array extends JavaPlugin {
         tablistConfig = new BasicConfigurationFile(this, "tablist", false);
         scoreboardConfig = new BasicConfigurationFile(this, "scoreboard", false);
         divisionsConfig = new BasicConfigurationFile(this, "divisions", false);
-        menuConfig = new BasicConfigurationFile(this, "menus", false);
         rateConfig = new BasicConfigurationFile(this, "ratings", false);
-        killeffectsConfig = new BasicConfigurationFile(this, "killeffects", false);
-        //brawlConfig = new BasicConfigurationFile(this, "brawl");
+        killEffectsConfig= new BasicConfigurationFile(this, "killeffects", false);
     }
 
     @Override
@@ -154,12 +153,13 @@ public class Array extends JavaPlugin {
         this.preload();
 
         if (!Description.getAuthor().contains("RefineDevelopment") || !Description.getName().contains("Array")
-                || !Description.getAuthor().contains("Nick_0251") || !Description.getWebsite().equalsIgnoreCase("https://dsc.gg/refine")) {
-            logger(CC.CHAT_BAR);
-            logger("  &cYou edited the plugin.yml, haha get caught in 4k");
-            logger("  &cPlease check your plugin.yml and try again.");
-            logger("                 &cDisabling Array");
-            logger(CC.CHAT_BAR);
+           || !Description.getAuthor().contains("Nick_0251") || !Description.getWebsite().equalsIgnoreCase("https://dsc.gg/refine")) {
+            this.logger(CC.CHAT_BAR);
+            this.logger("  &cYou edited the plugin.yml, haha get caught in 4k");
+            this.logger("  &cPlease check your plugin.yml and try again.");
+            this.logger("                 &cDisabling Array");
+            this.logger(CC.CHAT_BAR);
+            System.exit(0);
             Bukkit.shutdown();
             return;
         }
@@ -178,7 +178,7 @@ public class Array extends JavaPlugin {
         this.ratingsManager = new RatingsManager(this);
         this.ratingsManager.init();
 
-        this.killEffectManager = new KillEffectManager(this, killeffectsConfig);
+        this.killEffectManager = new KillEffectManager(this);
         this.killEffectManager.init();
 
         this.knockbackManager = new KnockbackManager(this);
@@ -292,15 +292,6 @@ public class Array extends JavaPlugin {
     }
 
     public void loadMessages() {
-        mainConfig.getConfiguration().options().header(
-                "#####################################################################\n" +
-                "                                                                     #\n" +
-                "          Array Practice Core - Developed By Drizzy#0278             #\n" +
-                "       Bought at Refine Development - https://dsc.gg/refine          #\n" +
-                "                                                                     #\n" +
-                "#####################################################################");
-        mainConfig.save();
-
         if (this.messagesConfig == null) return;
 
         Arrays.stream(Locale.values()).forEach(language -> {

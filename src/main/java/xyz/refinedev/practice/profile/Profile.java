@@ -25,12 +25,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.ArrayCache;
-import xyz.refinedev.practice.api.events.leaderboards.GlobalLeaderboardsUpdateEvent;
 import xyz.refinedev.practice.api.events.profile.ProfileLoadEvent;
 import xyz.refinedev.practice.api.events.profile.ProfileSaveEvent;
 import xyz.refinedev.practice.api.events.profile.SpawnTeleportEvent;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.brawl.Brawl;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.clan.meta.ClanInvite;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
@@ -50,13 +48,13 @@ import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.hotbar.HotbarLayout;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
+import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.profile.rank.Rank;
 import xyz.refinedev.practice.profile.settings.meta.SettingsMeta;
 import xyz.refinedev.practice.profile.statistics.StatisticsData;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueProfile;
 import xyz.refinedev.practice.tournament.Tournament;
-import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.InventoryUtil;
 import xyz.refinedev.practice.util.other.Cooldown;
 import xyz.refinedev.practice.util.other.PlayerUtil;
@@ -98,7 +96,6 @@ public class Profile {
      * Integer Values
      */
     int globalElo = 1000;
-    int bridgeRounds = 0;
 
     /*
      * Profile Meta
@@ -107,13 +104,13 @@ public class Profile {
     private Party party;
     private Match match;
     private Queue queue;
-    private Brawl brawl;
     private Clan clan;
     private Event event;
 
     /*
      * Fight Meta
      */
+    private KillEffect killEffect;
     private ClanProfile clanProfile;
     private QueueProfile queueProfile;
     private DuelProcedure duelProcedure;
@@ -207,37 +204,6 @@ public class Profile {
     }
 
     /**
-     * Load the global leaderboards from the mongo database
-     */
-    public static void loadGlobalLeaderboards() {
-        if (!getGlobalEloLeaderboards().isEmpty()) getGlobalEloLeaderboards().clear();
-            Array.getInstance().getMongoThread().execute(() -> {
-            for ( Document document : collection.find().sort(Sorts.descending("globalElo")).limit(10).into(new ArrayList<>()) ) {
-                LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
-                leaderboardsAdapter.setName(document.getString("name"));
-                leaderboardsAdapter.setElo(document.getInteger("globalElo"));
-                if (!globalEloLeaderboards.isEmpty()) {
-                    globalEloLeaderboards.removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
-                }
-                getGlobalEloLeaderboards().add(leaderboardsAdapter);
-            }
-        });
-        new GlobalLeaderboardsUpdateEvent().call();
-    }
-
-    public static void loadUUIDCache() {
-        ArrayCache.getPlayerCache().clear();
-        for (Document document : collection.find()) {
-            if (document == null) return;
-
-            String name = document.getString("name");
-            UUID uuid = UUID.fromString(document.getString("uuid"));
-
-            ArrayCache.getPlayerCache().put(name, uuid);
-        }
-    }
-
-    /**
      * Get a profile's rank color from the Core Hook
      * in ChatColor format
      *
@@ -252,14 +218,20 @@ public class Profile {
      */
     public void load() {
         try {
-            Document document=collection.find(Filters.eq("uuid", uuid.toString())).first();
+            Document document = collection.find(Filters.eq("uuid", uuid.toString())).first();
 
             if (document == null) {
                 this.save();
                 return;
             }
 
-            this.globalElo=document.getInteger("globalElo");
+            this.globalElo = document.getInteger("globalElo");
+
+            if (document.getString("kill_effect") != null) {
+                UUID uuid = UUID.fromString(document.getString("kill_effect"));
+                KillEffect kill = plugin.getKillEffectManager().getByUUID(uuid);
+                if (kill != null) this.killEffect = kill;
+            }
 
             if (document.getString("clan") != null) this.clan=Clan.getByName(document.getString("clan"));
 
@@ -276,18 +248,18 @@ public class Profile {
             this.settings.setVanillaTab(options.getBoolean("usingVanillaTab"));
             this.settings.setShowPlayers(options.getBoolean("showPlayers"));
 
-            Document kitStatistics=(Document) document.get("kitStatistics");
+            Document kitStatistics = (Document) document.get("kitStatistics");
 
             for ( String key : kitStatistics.keySet() ) {
                 Document kitDocument=(Document) kitStatistics.get(key);
                 Kit kit=Kit.getByName(key);
 
                 if (kit != null) {
-                    StatisticsData statisticsData=new StatisticsData();
+                    StatisticsData statisticsData = new StatisticsData();
                     if (kitDocument.getInteger("elo") != null) {
                         statisticsData.setElo(kitDocument.getInteger("elo"));
                     } else {
-                        kitDocument.put("elo", 0);
+                        kitDocument.put("elo", 1000);
                     }
                     if (kitDocument.getInteger("won") != null) {
                         statisticsData.setWon(kitDocument.getInteger("won"));
@@ -306,7 +278,7 @@ public class Profile {
             Document kitsDocument=(Document) document.get("loadouts");
 
             for ( String key : kitsDocument.keySet() ) {
-                Kit kit=Kit.getByName(key);
+                Kit kit = Kit.getByName(key);
 
                 if (kit != null) {
                     JsonArray kitsArray=new JsonParser().parse(kitsDocument.getString(key)).getAsJsonArray();
@@ -591,7 +563,10 @@ public class Profile {
             } else if (isInEvent()) {
                 player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.EVENT, this));
             } else if (isInMatch()) {
-                if (!match.getTeamPlayer(player).isAlive() || state == ProfileState.SPECTATING) {
+                if (match.getTeamPlayer(player) != null && !match.getTeamPlayer(player).isAlive()) {
+                    player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.MATCH_SPECTATE, this));
+                }
+                if (state == ProfileState.SPECTATING) {
                     player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.MATCH_SPECTATE, this));
                 }
             }
@@ -766,16 +741,12 @@ public class Profile {
        return Tournament.getCurrentTournament() != null && Tournament.getCurrentTournament().isParticipating(this.uuid);
     }
 
-    public boolean isInBrawl() {
-        return state == ProfileState.IN_BRAWL && brawl != null;
-    }
-
     public boolean isInSomeSortOfFight() {
         return (state == ProfileState.IN_FIGHT && match != null) || (state == ProfileState.IN_EVENT) || (state == ProfileState.IN_BRAWL);
     }
 
     public boolean isBusy() {
-        return isInQueue() || isInFight() || isInEvent() || isSpectating() || isInTournament() || isInBrawl();
+        return isInQueue() || isInFight() || isInEvent() || isSpectating() || isInTournament();
     }
 
     public boolean hasClan() {

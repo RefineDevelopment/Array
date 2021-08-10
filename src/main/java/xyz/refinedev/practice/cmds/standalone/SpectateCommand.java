@@ -69,8 +69,7 @@ public class SpectateCommand {
         if (!profile.isInMatch()) {
             player.sendMessage(Locale.MATCH_NOT_IN.toString());
             return;
-        }
-        if (!profile.isSpectating()) {
+        } else if (!profile.isSpectating()) {
             player.sendMessage(Locale.ERROR_NOTSPECTATING.toString());
             return;
         }
@@ -83,8 +82,7 @@ public class SpectateCommand {
         if (!profile.isInMatch()) {
             player.sendMessage(Locale.MATCH_NOT_IN.toString());
             return;
-        }
-        if (!profile.isSpectating()) {
+        } else if (!profile.isSpectating()) {
             player.sendMessage(Locale.ERROR_NOTSPECTATING.toString());
             return;
         }

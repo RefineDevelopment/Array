@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.match.types;
 
+import com.comphenix.protocol.events.PacketContainer;
 import lombok.Getter;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
@@ -14,8 +15,11 @@ import xyz.refinedev.practice.hook.SpigotType;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
+import xyz.refinedev.practice.profile.killeffect.KillEffect;
+import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.nametags.NameTagHandler;
+import xyz.refinedev.practice.util.other.EffectUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -27,6 +31,7 @@ import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
 public class HCFMatch extends Match {
@@ -44,28 +49,8 @@ public class HCFMatch extends Match {
     }
 
     @Override
-    public boolean isSoloMatch() {
-        return false;
-    }
-
-    @Override
-    public boolean isTeamMatch() {
-        return false;
-    }
-
-    @Override
-    public boolean isFreeForAllMatch() {
-        return false;
-    }
-
-    @Override
     public boolean isHCFMatch() {
         return true;
-    }
-
-    @Override
-    public boolean isTheBridgeMatch() {
-        return false;
     }
 
     @Override
@@ -120,18 +105,18 @@ public class HCFMatch extends Match {
 
     @Override
     public boolean onEnd() {
-        for (TeamPlayer teamPlayer : getTeamPlayers()) {
+        for ( TeamPlayer teamPlayer : getTeamPlayers() ) {
             if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
-                Player player=teamPlayer.getPlayer();
+                Player player = teamPlayer.getPlayer();
+                if (player == null) continue;
 
-                if (player != null) {
-                    Profile profile = Profile.getByUuid(player.getUniqueId());
-                    profile.handleVisibility();
+                Profile profile = Profile.getByUuid(player.getUniqueId());
+                profile.handleVisibility();
 
-                    getSnapshots().add(new MatchSnapshot(teamPlayer));
-                }
+                getSnapshots().add(new MatchSnapshot(teamPlayer));
             }
         }
+
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -199,22 +184,64 @@ public class HCFMatch extends Match {
     }
 
     @Override
-    public void onDeath(Player player, Player killer) {
+    public void handleKillEffect(Player deadPlayer, Player killerPlayer) {
+        if (killerPlayer == null) return;
+        Profile profile = Profile.getByPlayer(killerPlayer);
+        KillEffect killEffect = profile.getKillEffect();
+        if (killEffect == null) {
+            killEffect = plugin.getKillEffectManager().getDefault();
+        }
 
-        TeamPlayer teamPlayer = getTeamPlayer(player);
+        if (killEffect.getEffect() != null) {
+            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 0.0f);
+            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 1.0f, 0.0f);
+            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 1.0f);
+        }
+
+        if (killEffect.isLightning()) {
+            for ( Player player : this.getPlayers() ) {
+                PacketContainer packetContainer = this.createLightningPacket(deadPlayer.getLocation());
+                this.sendLightningPacket(player, packetContainer);
+            }
+        }
+
+        if (killEffect.isAnimateDeath()) PlayerUtil.animateDeath(deadPlayer);
+
+        if (!killEffect.getKillEffectSounds().isEmpty()) {
+            float randomPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
+            for ( KillEffectSound killEffectSound : killEffect.getKillEffectSounds()) {
+                this.getPlayers().forEach(player -> player.playSound(deadPlayer.getLocation(), killEffectSound.getSound(), killEffectSound.getPitch(), randomPitch));
+            }
+        }
+    }
+
+    @Override
+    public void onDeath(Player deadPlayer, Player killer) {
+
+        TeamPlayer teamPlayer = getTeamPlayer(deadPlayer);
         getSnapshots().add(new MatchSnapshot(teamPlayer));
 
-        PlayerUtil.reset(player);
+        PlayerUtil.reset(deadPlayer);
 
-        if (!canEnd() && !teamPlayer.isDisconnected()) {
+        if (this.canEnd()) {
+            this.end();
+        } else {
+            TaskUtil.runLater(() -> {
+                if (!teamPlayer.isDisconnected()) {
+                    deadPlayer.teleport(getMidSpawn());
+                    deadPlayer.setAllowFlight(true);
+                    deadPlayer.setFlying(true);
 
-            player.teleport(getMidSpawn());
-            player.setAllowFlight(true);
-            player.setFlying(true);
-
-            Profile profile = Profile.getByUuid(player.getUniqueId());
-            profile.setState(ProfileState.SPECTATING);
-            profile.refreshHotbar();
+                    Profile profile = Profile.getByUuid(deadPlayer.getUniqueId());
+                    profile.setState(ProfileState.SPECTATING);
+                    profile.refreshHotbar();
+                }
+                getPlayers().forEach(player -> Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer));
+                getSpectators().forEach(spectator -> {
+                    if (Profile.getByPlayer(spectator).getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
+                    if (Profile.getByPlayer(deadPlayer).getSettings().isShowSpectator()) deadPlayer.showPlayer(spectator);
+                });
+            }, 8L);
         }
     }
 

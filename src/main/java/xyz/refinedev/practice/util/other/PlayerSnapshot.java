@@ -13,4 +13,8 @@ public class PlayerSnapshot {
     private final UUID uuid;
     private final String username;
 
+    public Player getPlayer() {
+        return Bukkit.getPlayer(uuid);
+    }
+
 }

@@ -130,8 +130,4 @@ public class TeamPlayer {
         return Profile.getByUuid(uuid);
     }
 
-    public int getRounds() {
-        return getProfile().getBridgeRounds();
-    }
-
 }

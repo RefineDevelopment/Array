@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@AllArgsConstructor
+/*@AllArgsConstructor
 public class StatsMenu extends Menu {
 
     private static final BasicConfigurationFile config = Array.getInstance().getMenuConfig();
@@ -96,4 +96,4 @@ public class StatsMenu extends Menu {
 
     }
 
-}
+}*/

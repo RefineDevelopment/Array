@@ -28,6 +28,8 @@ public class ClanQueueCMD {
         }
         if (!profile.isBusy()) {
             new QueueSelectKitMenu(QueueType.CLAN).openMenu(player);
+        }else {
+            player.sendMessage(Locale.ERROR_NOTABLE.toString());
         }
     }
 }
