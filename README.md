@@ -1,6 +1,6 @@
-# Array
+# Array (1.0)
 
-Array Full Source
+Array 1.0 Full Source
 
 ## Terms of Use
 
@@ -19,7 +19,7 @@ You are NOT allowed to:
 
 - Extract to a folder
 
-- Open Array-master as an Intelli J Project
+- Open Array-1.0 as an Intelli J Project
 
 - Go to Intelli J Settings > Plugins and Install Lombok
 
@@ -49,4 +49,4 @@ You Need Intelli J to compile, This does NOT support Eclipse
 
 ## Credits
 
-Drizzy, Tinuy, Nick, Joeloeli, Veltus
+Drizzy, Tinuy, Nick, Joeloeli, kayalust
