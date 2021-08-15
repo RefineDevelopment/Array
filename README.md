@@ -1,4 +1,4 @@
-# Array [Being Recoded, All this infomration is currenlty redundant!]
+# Array
 
 Array Full Source
 
@@ -25,7 +25,7 @@ You are NOT allowed to:
 
 ## How to Compile
 
-- Click the Green Play Button next to "Array [clean, install]"
+- Click the Green Play Button next to "Array Compile with Depends"
 
 - That will generate a jar called Array.jar in target folder
 
@@ -48,5 +48,5 @@ You Need Intelli J to compile, This does NOT support Eclipse
 - Build Permission: array.build (also the player has to be in gamemode creative)
 
 ## Credits
-``
-Drizzy, Nick, Joeloeli, kayalust
+
+Drizzy, Tinuy, Nick, Joeloeli, Veltus

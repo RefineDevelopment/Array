@@ -5,67 +5,43 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>Array</name>
-    <url>https://dsc.gg/refine</url>
-    <description>Most Modern and Support Friendly Practice Plugin</description>
+    <url>https://discord.link/purge</url>
 
     <organization>
-        <name>Refine Development</name>
-        <url>https://dsc.gg/refine</url>
+        <name>Purge Development</name>
+        <url>https://discord.link/purge</url>
     </organization>
 
-    <groupId>xyz.refinedev.practice</groupId>
+    <groupId>me.drizzy.practice</groupId>
     <artifactId>Array</artifactId>
-    <version>2.0</version>
-
-    <repositories>
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>dmulloy2-repo</id>
-            <url>https://repo.dmulloy2.net/repository/public/</url>
-        </repository>
-        <repository>
-            <id>viaversion-repo</id>
-            <url>https://repo.viaversion.com</url>
-        </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
+    <version>1.0</version>
 
     <dependencies>
         <!--Annotations-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.20</version>
-            <scope>provided</scope>
+            <version>1.18.8</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Lombok.jar</systemPath>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
             <version>4.0</version>
-            <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
             <version>1.8</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.8.5</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -73,44 +49,64 @@
             <scope>compile</scope>
         </dependency>
 
-        <!--Spigot-->
+        <!--Spigots-->
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <groupId>pt.foxspigot.jar</groupId>
+            <artifactId>FoxSpigot</artifactId>
+            <version>0.5-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot.jar</systemPath>
         </dependency>
 
-        <!-- Spigot Support for Knockback & HCF -->
         <dependency>
-            <groupId>xyz.refinedev.array</groupId>
+            <groupId>me.drizzy.nms</groupId>
             <artifactId>SpigotSupport</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
+            <version>1.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/SpigotSupport.jar</systemPath>
         </dependency>
 
-        <!--Mongo-->
+        <!-- Mongo Driver -->
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>LATEST</version>
-            <scope>compile</scope>
+            <version>3.9.1</version>
         </dependency>
 
         <!--Packet Handler-->
         <dependency>
-            <groupId>com.comphenix.protocol</groupId>
+            <groupId>com.comphenix</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>4.6.0</version>
-            <scope>provided</scope>
+            <version>4.4</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/ProtocolLib.jar</systemPath>
+        </dependency>
+
+        <!--Robot Handler-->
+        <dependency>
+            <groupId>net.citizensnpcs</groupId>
+            <artifactId>citizensapi</artifactId>
+            <version>2.0.18-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Citizens.jar</systemPath>
+        </dependency>
+
+        <!--Tablist Handler-->
+        <dependency>
+            <groupId>me.allen.ziggurat</groupId>
+            <artifactId>Ziggurat</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/ziggurat.jar</systemPath>
         </dependency>
 
         <dependency>
-            <groupId>xyz.refinedev.tablist</groupId>
-            <artifactId>TablistAPI</artifactId>
-            <version>1.4</version>
-            <scope>compile</scope>
+            <groupId>us.myles</groupId>
+            <artifactId>viaversion</artifactId>
+            <version>2.2.3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/api/ViaAPI.jar</systemPath>
         </dependency>
 
         <!--LunarAPI Support-->
@@ -163,6 +159,12 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/api/PlaceholderAPI.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!--Arena Generator-->
         <dependency>
@@ -170,27 +172,23 @@
             <artifactId>fawe-api</artifactId>
             <version>latest</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/api/FAWE.jar</systemPath>
+            <systemPath>${project.basedir}/lib/FAWE.jar</systemPath>
         </dependency>
-
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldedit</artifactId>
             <version>6.0.0-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/api/WorldEdit.jar</systemPath>
+            <systemPath>${project.basedir}/lib/WorldEdit.jar</systemPath>
         </dependency>
 
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>21.0.0</version>
-        </dependency>
     </dependencies>
 
 
+    <!--Maven Compiler (Deprecated)-->
+    <!--Use Artifact to compile please!-->
+
     <build>
-        <finalName>${project.name}-[DEV-${project.version}]</finalName>
         <defaultGoal>clean install</defaultGoal>
 
         <resources>
@@ -203,7 +201,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.6.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -212,24 +210,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.0.0</version>
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
-                    <shadedArtifactAttached>true</shadedArtifactAttached>
-                    <relocations>
-                        <relocation>
-                            <pattern>com.mongodb</pattern>
-                            <shadedPattern>xyz.refinedev.libs.com.mongodb</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>com.google.gson</pattern>
-                            <shadedPattern>xyz.refinedev.libs.com.google.gson</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>org.bson</pattern>
-                            <shadedPattern>xyz.refinedev.libs.org.bson</shadedPattern>
-                        </relocation>
-                    </relocations>
+                    <shadedArtifactAttached>false</shadedArtifactAttached>
                 </configuration>
                 <executions>
                     <execution>

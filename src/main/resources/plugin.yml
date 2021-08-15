@@ -1,19 +1,13 @@
+main: me.drizzy.practice.Array
 name: Array
-main: xyz.refinedev.practice.Array
-authors: [RefineDevelopment, Nick_0251]
-website: https://dsc.gg/refine
-version: 2.0
-description: "Most Modern and Support Friendly Practice Plugin"
-
+version: 1.0
+authors: ["Nick", "Drizzy"]
 depend:
   - ProtocolLib
 softdepend:
   - HolographicDisplays
   - PlaceholderAPI
-  - ViaVersion
-  - ProtocolSupport
   - MizuCore
   - ZoomCore
   - AquaCore
   - Hestia
-  - KarhuLoader
