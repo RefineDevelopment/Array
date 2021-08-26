@@ -23,7 +23,6 @@ import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
-import xyz.refinedev.practice.util.nametags.NameTagHandler;
 import xyz.refinedev.practice.util.other.EffectUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;

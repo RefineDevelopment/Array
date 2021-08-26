@@ -1,12 +1,12 @@
 package xyz.refinedev.practice.match;
 
-import xyz.refinedev.practice.match.team.TeamPlayer;
 import lombok.Data;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import xyz.refinedev.practice.match.team.TeamPlayer;
 
 import java.util.Collection;
 import java.util.HashMap;

@@ -2,14 +2,28 @@ package xyz.refinedev.practice.managers;
 
 import lombok.RequiredArgsConstructor;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.arena.Arena;
+import xyz.refinedev.practice.arena.ArenaProvider;
+import xyz.refinedev.practice.arena.ArenaType;
+import xyz.refinedev.practice.arena.ArenaTypeProvider;
+import xyz.refinedev.practice.arena.meta.RatingType;
+import xyz.refinedev.practice.arena.meta.RatingTypeProvider;
 import xyz.refinedev.practice.cmds.*;
 import xyz.refinedev.practice.cmds.essentials.*;
-import xyz.refinedev.practice.cmds.event.*;
+import xyz.refinedev.practice.cmds.event.EventCommands;
+import xyz.refinedev.practice.cmds.event.SumoCommands;
 import xyz.refinedev.practice.cmds.settings.*;
 import xyz.refinedev.practice.cmds.standalone.*;
-import xyz.refinedev.practice.cmds.*;
-import xyz.refinedev.practice.cmds.event.*;
-import xyz.refinedev.practice.cmds.standalone.*;
+import xyz.refinedev.practice.events.EventProvider;
+import xyz.refinedev.practice.events.EventType;
+import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.kit.KitProvider;
+import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.profile.ProfileProvider;
+import xyz.refinedev.practice.profile.killeffect.KillEffect;
+import xyz.refinedev.practice.profile.killeffect.KillEffectProvider;
+import xyz.refinedev.practice.tournament.TournamentType;
+import xyz.refinedev.practice.tournament.TournamentTypeProvider;
 import xyz.refinedev.practice.util.command.CommandService;
 
 /**
@@ -28,6 +42,8 @@ public class CommandsManager {
     public final CommandService drink;
 
     public void init() {
+        this.registerProviders();
+
         //These are the cmds which have proper sub cmds in them
         drink.register(new ArrayCommands(), "array", "practice");
         drink.register(new ArenaCommands(), "arena", "arenas");
@@ -39,6 +55,7 @@ public class CommandsManager {
         drink.register(new ClanCommands(), "clan", "c");
         drink.register(new EventCommands(), "event", "events");
         drink.register(new SumoCommands(), "sumo");
+        drink.register(new KillEffectCommands(), "killeffect", "killeffects");
 
         //These are standalone cmds which cannot have sub cmds
         drink.register(new ViewInvCommand(), "viewinv", "viewinventory", "inventory");
@@ -51,8 +68,8 @@ public class CommandsManager {
         if (plugin.getConfigHandler().isRATINGS_ENABLED()) drink.register(new RateCommand(), "rate");
         drink.register(new FlyCommand(), "fly", "flight");
         drink.register(new LeaderboardsCommand(), "leaderboards", "lb", "leaderboard");
+        drink.register(new OpenMenu(), "openmenu", "menu", "menus");
         drink.register(new StatsCommand(), "stats", "elo", "statistics");
-        drink.register(new KillEffectsCMD(), "killeffect", "killeffects");
 
         //Essentials Commands
         drink.register(new UnrankedQueueCMD(), "unrankedqueue", "queue", "queue unranked");
@@ -74,5 +91,16 @@ public class CommandsManager {
         drink.register(new ToggleCPSScoreboardCMD(), "tcpssb", "togglecpssb", "togglecps", "togglecpsscoreboard");
 
         drink.registerCommands();
+    }
+
+    public void registerProviders() {
+        drink.bind(Arena.class).toProvider(new ArenaProvider());
+        drink.bind(ArenaType.class).toProvider(new ArenaTypeProvider());
+        drink.bind(Kit.class).toProvider(new KitProvider());
+        drink.bind(Profile.class).toProvider(new ProfileProvider());
+        drink.bind(EventType.class).toProvider(new EventProvider());
+        drink.bind(RatingType.class).toProvider(new RatingTypeProvider());
+        drink.bind(TournamentType.class).toProvider(new TournamentTypeProvider());
+        drink.bind(KillEffect.class).toProvider(new KillEffectProvider());
     }
 }

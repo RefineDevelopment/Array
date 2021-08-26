@@ -1,9 +1,9 @@
 package xyz.refinedev.practice.cmds.standalone;
 
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.leaderboards.menu.LeaderboardsMenu;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
-import org.bukkit.entity.Player;
 
 /**
  * This Project is property of Purge Community © 2021

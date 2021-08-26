@@ -1,12 +1,12 @@
 package xyz.refinedev.practice.util.location;
 
-import xyz.refinedev.practice.arena.impl.TheBridgeArena;
-import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
-import xyz.refinedev.practice.profile.Profile;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.arena.impl.TheBridgeArena;
+import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
+import xyz.refinedev.practice.profile.Profile;
 
 public class LocationUtils {
     public static String getString(Location loc) {

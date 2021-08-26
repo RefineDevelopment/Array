@@ -16,7 +16,6 @@ import xyz.refinedev.practice.events.meta.player.EventPlayerState;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.util.chat.Clickable;
-import xyz.refinedev.practice.util.nametags.NameTagHandler;
 import xyz.refinedev.practice.util.other.*;
 
 import java.util.*;

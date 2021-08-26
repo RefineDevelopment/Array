@@ -1,7 +1,5 @@
 package xyz.refinedev.practice.events.impl.sumo.solo;
 
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -11,14 +9,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.events.Event;
-import xyz.refinedev.practice.events.EventState;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.util.location.BlockUtil;
-import xyz.refinedev.practice.util.other.PlayerUtil;
 
 /**
  * This Project is property of Refine Development © 2021

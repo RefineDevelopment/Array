@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.util.inventory;
 
-import xyz.refinedev.practice.Array;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -8,6 +7,7 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import xyz.refinedev.practice.Array;
 
 import java.util.*;
 

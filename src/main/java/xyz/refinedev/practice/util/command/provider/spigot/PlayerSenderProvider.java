@@ -1,9 +1,9 @@
 package xyz.refinedev.practice.util.command.provider.spigot;
 
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
-import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

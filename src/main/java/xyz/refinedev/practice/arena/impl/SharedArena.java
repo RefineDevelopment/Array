@@ -1,13 +1,13 @@
 package xyz.refinedev.practice.arena.impl;
 
+import lombok.Getter;
+import lombok.Setter;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.config.BasicConfigurationFile;
+import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.location.LocationUtil;
-import lombok.Getter;
-import lombok.Setter;
 
 @Getter @Setter
 public class SharedArena extends Arena {

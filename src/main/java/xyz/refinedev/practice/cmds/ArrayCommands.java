@@ -1,11 +1,18 @@
 package xyz.refinedev.practice.cmds;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.essentials.listener.GoldenHeads;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitInventory;
+import xyz.refinedev.practice.listeners.GHeadListener;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.menu.WorldsMenu;
 import xyz.refinedev.practice.util.chat.CC;
@@ -14,13 +21,6 @@ import xyz.refinedev.practice.util.command.annotation.Require;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 import xyz.refinedev.practice.util.command.annotation.Text;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import xyz.refinedev.practice.util.other.Description;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
@@ -63,13 +63,13 @@ public class ArrayCommands {
             CC.translate("&7 * &cWebsite: &fhttps://www.refinedev.xyz"),
             CC.translate("&7 * &cContact: &frefinedevelopment@gmail.com"),
             CC.translate(""),
-            CC.translate("&7&oYou can buy our products and issue commisions in our discord."),
+            CC.translate("&7&oYou can buy our products and issue commisions at our discord."),
             CC.CHAT_BAR
     };
 
     @Command(name = "", aliases = "help", desc = "View Array Commands")
     public void help(@Sender CommandSender sender) {
-        if (sender.hasPermission("array.essentials.admin")) {
+        if (sender.hasPermission("array.listeners.admin")) {
             sender.sendMessage(HELP_MESSAGE);
         } else {
             sender.sendMessage(INFO_MESSAGE);
@@ -77,7 +77,7 @@ public class ArrayCommands {
     }
     
     @Command(name = "hcf", aliases = {"teamfight","pvpclasses"}, desc = "View Help on how to setup HCF")
-    @Require("array.essentials.admin")
+    @Require("array.listeners.admin")
     public void HCF(@Sender CommandSender player) {
         if (plugin.getConfigHandler().isHCF_ENABLED()) {
             player.sendMessage(CC.translate("&c&lHow to Setup HCF "));
@@ -90,12 +90,12 @@ public class ArrayCommands {
             player.sendMessage(CC.translate("&7So you don't need to worry about setting them up as they will be automatically provided"));
             player.sendMessage(CC.CHAT_BAR);
         } else {
-            player.sendMessage(CC.translate("&cHCF has been disabled by an Admin."));
+            player.sendMessage(CC.translate("&cHCFTeamFight has been disabled by an Admin."));
         }
     }
     
     @Command(name = "rename", desc = "Rename the Item you are currently holding")
-    @Require("array.essentials.admin")
+    @Require("array.listeners.admin")
     public void rename(@Sender Player player, @Text String name) {
         if (player.getItemInHand() == null || player.getItemInHand().getType().equals(Material.AIR)) {
             player.sendMessage(ChatColor.RED + "Hold something in your hand.");
@@ -113,7 +113,7 @@ public class ArrayCommands {
     }
     
     @Command(name = "reload", aliases = "refresh", desc = "Reload Array's Configurations")
-    @Require("array.essentials.admin")
+    @Require("array.listeners.admin")
     public void reload(@Sender CommandSender player) {
         plugin.getDivisionsConfig().reload();
         plugin.getArenasConfig().reload();
@@ -121,13 +121,12 @@ public class ArrayCommands {
         plugin.getMainConfig().reload();
         plugin.getTablistConfig().reload();
         plugin.getScoreboardConfig().reload();
-        //plugin.getBrawlConfig().reload();
 
         player.sendMessage(CC.translate("&8[&c&lArray&8] &aSuccessfully reloaded all configurations."));
     }
 
     @Command(name = "update", aliases = "save", desc = "Update and Save all data related to Array")
-    @Require("array.essentials.admin")
+    @Require("array.listeners.admin")
     public void update(@Sender CommandSender player) {
         TaskUtil.runAsync(() -> {
             Profile.getProfiles().values().forEach(Profile::save);
@@ -142,7 +141,7 @@ public class ArrayCommands {
     }
 
     @Command(name = "spawn", aliases = "reset", desc = "Reset your profile and Teleport to Spawn")
-    @Require("array.essentials.admin")
+    @Require("array.listeners.admin")
     public void spawn(@Sender Player player) {
         Profile profile = Profile.getByPlayer(player);
         if (profile.isBusy()) {
@@ -158,31 +157,20 @@ public class ArrayCommands {
     }
 
     @Command(name = "worlds", aliases = "world", desc = "Open a Worlds GUI to Teleport to Different Worlds")
-    @Require("array.essentials.admin")
+    @Require("array.listeners.admin")
     public void worlds(@Sender Player player) {
         new WorldsMenu().openMenu(player);
     }
 
     @Command(name = "goldenhead", aliases = {"ghead", "goldh", "head"}, desc = "Receive a pre-made Golden Head")
-    @Require("array.essentials.admin")
-    public void goldenHead(@Sender Player player, String type) {
-        switch (type) {
-            case "bridge": {
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7You received a &cAdam's Apple&7."));
-                player.getInventory().addItem(GoldenHeads.getBridgeApple());
-                return;
-            }
-            case "normal": {
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7You received a &cGolden head&7."));
-                player.getInventory().addItem(GoldenHeads.getGoldenHeadApple());
-                return;
-            }
-        }
-        player.sendMessage(CC.translate("&8[&c&lArray&8] &7Please pick specify &c'normal' &7or &c'bridge' &7type."));
+    @Require("array.listeners.admin")
+    public void goldenHead(@Sender Player player) {
+        player.sendMessage(CC.translate("&8[&c&lArray&8] &7You received a &cGolden head&7."));
+        player.getInventory().addItem(GHeadListener.getGoldenHeadApple());
     }
 
     @Command(name = "refill", aliases = "cheat", desc = "Refill your Inventory with Soup or Potions Quitely")
-    @Require("array.essentials.admin")
+    @Require("array.listeners.admin")
     public void refill(@Sender Player player) {
         Profile profile = Profile.getByPlayer(player);
         if (profile.isInFight()) {
@@ -240,7 +228,7 @@ public class ArrayCommands {
      * THIS WILL BE RECODED, SORRY!
      */
     @Command(name = "clearloadouts", aliases = {"clearinventories", "clearkits"}, desc = "Clear Loadouts of a Certain Kit or All", usage = "<kit/all> <profile/global>")
-    @Require("array.essentials.admin")
+    @Require("array.listeners.admin")
     public void clearLoadouts(@Sender CommandSender player, String type, String reach) {
         if (reach.equalsIgnoreCase("global")) {
             Kit kitType = Kit.getByName(type);

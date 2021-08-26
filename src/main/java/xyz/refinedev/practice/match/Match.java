@@ -22,6 +22,7 @@ import xyz.refinedev.practice.api.events.match.*;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.meta.RatingType;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.kit.KitGameRules;
 import xyz.refinedev.practice.match.task.*;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
@@ -71,6 +72,14 @@ public abstract class Match {
 
     private long startTimestamp;
 
+    /**
+     * Construct a match using the given details
+     *
+     * @param queue {@link Queue} if match is started from queue, then we provide it
+     * @param kit {@link Kit} The kit that will be given to all players in the match
+     * @param arena {@link Arena} The arena that will be used in the match
+     * @param queueType {@link QueueType} if we are connecting from queue then we provide it, otherwise its Unranked
+     */
     public Match(Queue queue, Kit kit, Arena arena, QueueType queueType) {
         this.queue = queue;
         this.kit = kit;
@@ -80,6 +89,9 @@ public abstract class Match {
         matches.add(this);
     }
 
+    /**
+     * Preload all normal match tasks
+     */
     public static void preload() {
         TaskUtil.runTimerAsync(new MatchPearlCooldownTask(), 2L, 2L);
         TaskUtil.runTimerAsync(new MatchBowCooldownTask(), 2L, 2L);
@@ -91,6 +103,10 @@ public abstract class Match {
         }), 20, 20);
     }
 
+
+    /**
+     * Clear up the match remnants
+     */
     public static void cleanup() {
         for (Match match : matches) {
             match.getPlacedBlocks().forEach(location -> location.getBlock().setType(Material.AIR));
@@ -99,6 +115,13 @@ public abstract class Match {
         }
     }
 
+    /**
+     * Get amount of players in fight from a certain
+     * queue
+     *
+     * @param queue {@link Queue}
+     * @return amount of players in fight with the queue
+     */
     public static int getInFights(Queue queue) {
         int i = 0;
 
@@ -111,18 +134,38 @@ public abstract class Match {
         return i;
     }
 
+    /**
+     * Returns true if the match starting
+     *
+     * @return {@link Boolean}
+     */
     public boolean isStarting() {
         return state == MatchState.STARTING;
     }
 
+    /**
+     * Returns true if the match is in fight
+     *
+     * @return {@link Boolean}
+     */
     public boolean isFighting() {
         return state == MatchState.FIGHTING;
     }
 
+    /**
+     * Returns true if the match is ending
+     *
+     * @return {@link Boolean}
+     */
     public boolean isEnding() {
         return state == MatchState.ENDING;
     }
 
+    /**
+     * Initiate and start the {@link Match}
+     * This method sets up the players, teleports them
+     * starts the countdown tasks, handles visibility
+     */
     public void start() {
         for (Player player : getPlayers()) {
             Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -169,6 +212,13 @@ public abstract class Match {
         new MatchStartEvent(this).call();
     }
 
+    /**
+     * End the {@link Match}
+     * This resets the players, updates the match's state
+     * Created the Match inventories for each player
+     * Resets their knockback and hit delay
+     * and finally sends them rating message if enabled
+     */
     public void end() {
         if (onEnd()) {
             state = MatchState.ENDING;
@@ -239,6 +289,12 @@ public abstract class Match {
         return input;
     }
 
+    /**
+     * Send Match start message
+     * This isn't used in solo matches
+     * because we get their message in our queue thread
+     * or duel handler
+     */
     public void sendStartMessage() {
         if (this.isFreeForAllMatch() || this.isTeamMatch()) {
             Locale.MATCH_TEAM_STARTMESSAGE.toList().forEach(this::broadcastMessage);
@@ -247,6 +303,13 @@ public abstract class Match {
         }
     }
 
+    /**
+     * Send the player our rating message and allow them to
+     * rate the arena provided in their match
+     *
+     * @param player {@link Player} the player sending the rating message
+     * @param arena {@link Arena} the arena being rated
+     */
     public void sendRatingMessage(Player player, Arena arena) {
         Profile profile = Profile.getByPlayer(player);
         profile.setCanIssueRating(true);
@@ -264,10 +327,22 @@ public abstract class Match {
         clickable.sendToPlayer(player);
     }
 
+    /**
+     * Add the pearl to our map to track it
+     *
+     * @param player {@link Player} the player pearling
+     * @param pearl {@link EnderPearl} the enderpearl used
+     */
     public void onPearl(Player player, EnderPearl pearl) {
         this.pearlMap.put(player.getUniqueId(), pearl);
     }
 
+    /**
+     * Remove the pearl from our map because we have tracked it
+     *
+     * @param player {@link Player} the player that threw the pearl
+     * @param resetCooldown {@link Boolean} should we reset their pearl cooldown
+     */
     public void removePearl(Player player, boolean resetCooldown) {
         if (player == null) return;
         if (resetCooldown) {
@@ -278,6 +353,22 @@ public abstract class Match {
         if (pearl != null) pearl.remove();
     }
 
+    /**
+     * Handle the player's respawn
+     *
+     * @param player {@link Player} the player respawning
+     */
+    public void handleRespawn(Player player) {
+        player.setVelocity(player.getLocation().getDirection().setY(1));
+        this.onRespawn(player);
+    }
+
+    /**
+     * Handle the player's death, this method auto detects
+     * any killer if preset or if the player disconnected or not
+     *
+     * @param player {@link Player} The player dying
+     */
     public void handleDeath(Player player) {
         if (PlayerUtil.getLastDamager(player) instanceof CraftPlayer) {
             Player killer = (Player) PlayerUtil.getLastDamager(player);
@@ -289,8 +380,15 @@ public abstract class Match {
         }
     }
 
+    /**
+     * Main method for handling a player's death while in match
+     * or a player disconnecting while in match
+     *
+     * @param deadPlayer {@link Player} the player that died or disconnected
+     * @param killerPlayer {@link Player} the killer of the player if there is one or else null
+     * @param disconnected {@link Boolean} disconnected
+     */
     public void handleDeath(Player deadPlayer, Player killerPlayer, boolean disconnected) {
-        //This makes it look sick and dope
         deadPlayer.teleport(deadPlayer.getLocation().add(0.0, 1.0, 0.0));
 
         TeamPlayer teamPlayer = this.getTeamPlayer(deadPlayer);
@@ -305,7 +403,6 @@ public abstract class Match {
         teamPlayer.setParkourCheckpoint(null);
 
         for ( Player player : getPlayersAndSpectators() ) {
-            //Fixes some null pointer exceptions
             TeamPlayer otherTeamPlayer = getTeamPlayer(player);
             if (otherTeamPlayer == null || otherTeamPlayer.isDisconnected()) continue;
 
@@ -333,8 +430,17 @@ public abstract class Match {
             this.handleKillEffect(deadPlayer, killerPlayer);
         }
         this.onDeath(deadPlayer, killerPlayer);
+        //Respawn the player jic
+        deadPlayer.spigot().respawn();
     }
 
+    /**
+     * Lightning through Protocol Lib cuz we care about the
+     * environment
+     *
+     * @param location {@link Location} where the lightning should spawn
+     * @return {@link PacketContainer}
+     */
     public PacketContainer createLightningPacket(Location location) {
         PacketContainer lightningPacket = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
         lightningPacket.getModifier().writeDefaults();
@@ -352,6 +458,11 @@ public abstract class Match {
         } catch (InvocationTargetException ignored) {}
     }
 
+    /**
+     * Get match's duration in string form
+     *
+     * @return {@link String}
+     */
     public String getDuration() {
         switch (state) {
             case STARTING:
@@ -363,29 +474,45 @@ public abstract class Match {
         }
     }
 
-    public void handleRespawn(Player player) {
-        player.setVelocity(player.getLocation().getDirection().setY(1));
-        this.onRespawn(player);
-    }
-
     public long getElapsedDuration() {
         return System.currentTimeMillis() - startTimestamp;
     }
 
+    /**
+     * Broadcast a {@link String} message to all match participants
+     *
+     * @param message {@link String}
+     */
     public void broadcastMessage(String message) {
         getPlayers().forEach(player -> player.sendMessage(message));
         getSpectators().forEach(player -> player.sendMessage(message));
     }
 
+    /**
+     * Broadcast a {@link Sound} to all match participants
+     *
+     * @param sound {@link Sound}
+     */
     public void broadcastSound(Sound sound) {
         getPlayers().forEach(player -> player.playSound(player.getLocation(), sound, 1.0F, 1.0F));
         getSpectators().forEach(player -> player.playSound(player.getLocation(), sound, 1.0F, 1.0F));
     }
 
+    /**
+     * Get all spectators currently in the match
+     *
+     * @return {@link List}
+     */
     public List<Player> getSpectators() {
         return spectators.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
+    /**
+     * Add a player as a spectator for this match
+     *
+     * @param player {@link Player} being added
+     * @param target {@link Player} target that the player is spectating
+     */
     public void addSpectator(Player player, Player target) {
         spectators.add(player.getUniqueId());
         new MatchSpectatorJoinEvent(player, this).call();
@@ -408,41 +535,25 @@ public abstract class Match {
             }
         }
 
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Array.getInstance(), () -> {
-            /*if (this.isSoloMatch()) {
-                target.hidePlayer(player);
-            } else if (this.isTheBridgeMatch()) {
-                target.hidePlayer(player);
-                this.getOpponentPlayer(target).hidePlayer(player);
-            } else if (this.isTeamMatch()) {
-                for ( Player targetPlayers : this.getTeam(target).getPlayers() ) {
-                    targetPlayers.hidePlayer(player);
-                }
-                for ( Player targetPlayers : this.getOpponentTeam(target).getPlayers() ) {
-                    targetPlayers.hidePlayer(player);
-                }
-            } else if (this.isHCFMatch()) {
-                for ( Player targetPlayers : this.getTeam(target).getPlayers() ) {
-                    targetPlayers.hidePlayer(player);
-                }
-                for ( Player targetPlayers : this.getOpponentTeam(target).getPlayers() ) {
-                    targetPlayers.hidePlayer(player);
-                }
-            } else if (this.isFreeForAllMatch()) {
-                for (  Player targetPlayers : this.getPlayers()) {
-                    targetPlayers.hidePlayer(player);
-                }
-            }*/
+        // I'll probably change this later onwards
+        plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, () -> {
+            this.getPlayers().forEach(p -> p.hidePlayer(player));
+
             if (profile.getSettings().isShowSpectator()) {
                 getSpectators().forEach(spectator -> {
                     spectator.showPlayer(player);
                     player.showPlayer(spectator);
                 });
             }
-        }, 10L);
+        }, 5L);
 
     }
 
+    /**
+     * Toggle spectator visibility for specified player
+     *
+     * @param player {@link Player}
+     */
     public void toggleSpectators(Player player) {
         Profile profile = Profile.getByPlayer(player);
         profile.getSettings().setShowSpectator(!profile.getSettings().isShowSpectator());
@@ -463,6 +574,12 @@ public abstract class Match {
         }
     }
 
+    /**
+     * Remove the specified spectator and teleport
+     * them back to spawn with their visibility and hotbar being reset
+     *
+     * @param player {@link Player} leaving spectating
+     */
     public void removeSpectator(Player player) {
         spectators.remove(player.getUniqueId());
         new MatchSpectatorLeaveEvent(player, this).call();
@@ -487,6 +604,11 @@ public abstract class Match {
         }
     }
 
+    /**
+     * Get both players and spectators in a {@link List}
+     *
+     * @return {@link List}
+     */
     public List<Player> getPlayersAndSpectators() {
         List<Player> allPlayers = new ArrayList<>();
         allPlayers.addAll(getPlayers());
@@ -502,6 +624,11 @@ public abstract class Match {
         return "/viewinv " + teamPlayer.getUuid().toString();
     }
 
+    /**
+     * Get the middle spawn of the current arena
+     *
+     * @return {@link Location} middle spawn
+     */
     public Location getMidSpawn() {
         Location spawn = getArena().getSpawn1();
         Location spawn2 = getArena().getSpawn2();
@@ -514,16 +641,37 @@ public abstract class Match {
         return midSpawn;
     }
 
+    /**
+     * Average between two numbers
+     *
+     * @param one {@link Double} first number
+     * @param two {@link Double} second number
+     * @return {@link Double} average of both numbers
+     */
     public double getAverage(double one, double two) {
         double three = one + two;
         three = three / 2;
         return three;
     }
 
+    /**
+     * Generate match inventory click messages
+     *
+     * @param prefix {@link String} prefix of the message, either winner or loser
+     * @param participant {@link TeamPlayer} the teamPlayer whose inventory message we are displaying
+     * @return {@link BaseComponent}
+     */
     public static BaseComponent[] generateInventoriesComponents(String prefix, TeamPlayer participant) {
         return generateInventoriesComponents(prefix, Collections.singletonList(participant));
     }
 
+    /**
+     * Generate match inventory click messages
+     *
+     * @param prefix {@link String} prefix of the message, either winner or loser
+     * @param participants {@link List<TeamPlayer>} the list of teamPlayers whose message we are displaying
+     * @return {@link BaseComponent}
+     */
     public static BaseComponent[] generateInventoriesComponents(String prefix, List<TeamPlayer> participants) {
         ChatComponentBuilder builder = new ChatComponentBuilder(prefix);
 
@@ -571,12 +719,38 @@ public abstract class Match {
         return this instanceof SoloBridgeMatch || this instanceof TeamBridgeMatch;
     }
 
+    /**
+     * Setup the player according to {@link Kit},
+     * {@link KitGameRules} and {@link Arena}
+     * <p>
+     * This also teleports the player to the specified arena,
+     * set's their parkour checkpoint if kit is parkour and
+     * gives special potion effects if specified
+     *
+     * @param player {@link Player} being setup
+     */
     public abstract void setupPlayer(Player player);
 
+    /**
+     * Execute start tasks through this method
+     * This method is called as soon as the match is started
+     */
     public abstract void onStart();
 
+    /**
+     * Execute match end tasks through this method
+     * This method is called to check if the match can end or not
+     * and if it can then the method itself clears up a bit of ending the match
+     *
+     * @return {@link Boolean} Whether the match successfully ended or not
+     */
     public abstract boolean onEnd();
 
+    /**
+     * Returns true if the match is ready to end
+     *
+     * @return {@link Boolean} Where the match can statistically end or not
+     */
     public abstract boolean canEnd();
 
     public abstract void handleKillEffect(Player deadPlayer, Player killerPlayer);

@@ -1,11 +1,11 @@
 package xyz.refinedev.practice.cmds.standalone;
 
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
-import org.bukkit.entity.Player;
 
 /**
  * This Project is the property of Refine Development © 2021

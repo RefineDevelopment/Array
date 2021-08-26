@@ -1,8 +1,8 @@
 package xyz.refinedev.practice.pvpclasses;
 
-import xyz.refinedev.practice.util.chat.Color;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
+import xyz.refinedev.practice.util.chat.Color;
 
 import java.util.HashSet;
 import java.util.Set;

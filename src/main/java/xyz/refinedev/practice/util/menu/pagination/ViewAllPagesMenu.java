@@ -1,12 +1,12 @@
 package xyz.refinedev.practice.util.menu.pagination;
 
-import xyz.refinedev.practice.util.menu.Button;
-import xyz.refinedev.practice.util.menu.Menu;
-import xyz.refinedev.practice.util.menu.button.BackButton;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.Menu;
+import xyz.refinedev.practice.util.menu.button.BackButton;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,9 +1,9 @@
 package xyz.refinedev.practice.util.location;
 
+import org.bukkit.Location;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.bukkit.Location;
 
 public class Circle {
 

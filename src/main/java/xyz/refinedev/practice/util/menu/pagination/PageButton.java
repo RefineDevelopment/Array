@@ -1,16 +1,13 @@
 package xyz.refinedev.practice.util.menu.pagination;
 
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
-import xyz.refinedev.practice.util.menu.Button;
 import lombok.AllArgsConstructor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Arrays;
+import xyz.refinedev.practice.util.inventory.ItemBuilder;
+import xyz.refinedev.practice.util.menu.Button;
 
 @AllArgsConstructor
 public class PageButton extends Button {

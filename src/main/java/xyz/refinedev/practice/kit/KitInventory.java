@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.kit;
 
 import lombok.Data;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
@@ -32,6 +33,14 @@ public class KitInventory {
         this.armor = armor;
         this.contents = contents;
         this.effects = new ArrayList<>();
+    }
+
+    public void applyToPlayer(Kit kit, Player player) {
+        player.getInventory().setArmorContents(this.getArmor());
+        player.getInventory().setContents(this.getContents());
+        player.getActivePotionEffects().clear();
+        player.addPotionEffects(kit.getKitInventory().getEffects());
+        player.updateInventory();
     }
 
 }

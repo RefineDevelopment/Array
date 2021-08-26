@@ -1,6 +1,46 @@
-TITLE: "&7Choose a Kill Effect"
-SIZE: 27
+# This menu is paginated so, remember that while changing size
+# CUSTOM_ICON: false -> if set to false, the kill effect's icon will be used
+#
+TITLE: "&7Kill Effects"
+SIZE: 9
+PAGINATED: false
 BUTTONS:
   SELECTED:
+    NAME: "&a&l<display_name>"
+    CUSTOM_ICON: false
+    MATERIAL: PAPER
+    LORE:
+      - "<description>"
+      - ""
+      - "&c&lDetails"
+      - " &fAnimate Death: &c<effect_animated_death>"
+      - " &fLightning: &c<effect_lightning>"
+      - " &fEffect: &c<effect_name>"
+      - " "
+      - "&aYou have equipped this!"
   NO_PERM:
+    NAME: "&c<display_name>"
+    CUSTOM_ICON: false
+    MATERIAL: PAPER
+    LORE:
+      - "<description>"
+      - ""
+      - "&c&lDetails"
+      - " &fAnimate Death: &c<effect_animated_death>"
+      - " &fLightning: &c<effect_lightning>"
+      - " &fEffect: &c<effect_name>"
+      - " "
+      - "&cYou don't have permission to use!"
   PERM:
+    NAME: "&c<display_name>"
+    CUSTOM_ICON: false
+    MATERIAL: PAPER
+    LORE:
+      - "<description>"
+      - ""
+      - "&c&lDetails"
+      - " &fAnimate Death: &c<effect_animated_death>"
+      - " &fLightning: &c<effect_lightning>"
+      - " &fEffect: &c<effect_name>"
+      - " "
+      - "&7&o(( Click to Equip ))"

@@ -28,7 +28,6 @@ SETTINGS:
   FFA_CIRCLE_RADIUS: 10
   TELEPORT_DELAY: 4
   ARENA_RATING: true
-  BRIDGE_CLEARBLOCKS: true
   REMOVE_BOTTLES: true
   DISCLAIMER_MESSAGE_ENABLED: true
 
@@ -58,7 +57,8 @@ COOLDOWNS:
 
 MATCH:
   SPAWN_YLEVEL_ADD: 6
-  START_COUNTDOWN: 3
+  COUNTDOWN_INTERVAL: 3
+  THEBRIDGE_CLEARBLOCKS: true
   COUNTDOWN_SOUND: NOTE_STICKS
   STARTED_SOUND: NOTE_BASS
   TITLE:
@@ -92,10 +92,10 @@ MATCH:
       FADE_OUT: 5
 
 SOCIAL:
-  DISCORD: discord.link/purge
-  STORE: store.purgecommunity.com
-  WEBSITE: www.purgecommunity.com
-  TWITTER: '@PurgeCommunity'
+  DISCORD: discord.gg/refine
+  STORE: store.refinedev.xyz
+  WEBSITE: www.refinedev.xyz
+  TWITTER: '@RefineDev'
 
 RANKED:
   ENABLED: true
@@ -109,5 +109,162 @@ NAMETAGS:
   DEFAULT: <rank_color>
   PARTY: BLUE
   EVENT: AQUA
+
+DIVISIONS:
+   ENABLED: true
+   #If set to false, the division will be based on elo
+   #and XP will be turned off completely as it won't have any purpose
+   XP_BASED: false
+   RANKS:
+     SILVER_1:
+       Display_Name: "&7Silver I"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 0
+       XP-LEVEL: 1
+     SILVER_2:
+       Display_Name: "&7Silver II"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 1000
+       XP-LEVEL: 2
+     SILVER_3:
+       Display_Name: "&7Silver III"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 2000
+       XP-LEVEL: 3
+     SILVER_4:
+       Display_Name: "&7Silver IV"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 3000
+       XP-LEVEL: 4
+     SILVER_5:
+       Display_Name: "&7Silver V"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 4000
+       XP-LEVEL: 5
+     GOLD_1:
+       Display_Name: "&6Gold I"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 5000
+       XP-LEVEL: 6
+     GOLD_2:
+       Display_Name: "&6Gold II"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 7000
+       XP-LEVEL: 7
+     GOLD_3:
+       Display_Name: "&6Gold III"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 8000
+       XP-LEVEL: 8
+     DIAMOND_1:
+       Display_Name: "&bDiamond I"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 9000
+       XP-LEVEL: 9
+     DIAMOND_2:
+       Display_Name: "&bDiamond II"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 10000
+       XP-LEVEL: 10
+     DIAMOND_3:
+       Display_Name: "&bDiamond III"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 11000
+       XP-LEVEL: 11
+     EMERALD_1:
+       Display_Name: "&aEmerald I"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 12000
+       XP-LEVEL: 12
+     EMERALD_2:
+       Display_Name: "&aEmerald II"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 13000
+       XP-LEVEL: 13
+     EMERALD_3:
+       Display_Name: "&aEmerald III"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 14000
+       XP-LEVEL: 14
+     EMERALD_4:
+       Display_Name: "&aEmerald IV"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 16000
+       XP-LEVEL: 15
+     EMERALD_5:
+       Display_Name: "&aEmerald V"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 20000
+       XP-LEVEL: 16
+     AMETHYST_1:
+       Display_Name: "&2Amethyst I"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 24000
+       XP-LEVEL: 17
+     AMETHYST_2:
+       Display_Name: "&2Amethyst II"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 26000
+       XP-LEVEL: 18
+     AMETHYST_3:
+       Display_Name: "&2Amethyst III"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 36000
+       XP-LEVEL: 19
+     PLATINUM_1:
+       Display_Name: "&ePlatinum I"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 46000
+       XP-LEVEL: 20
+     PLATINUM_2:
+       Display_Name: "&ePlatinum II"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 56000
+       XP-LEVEL: 21
+     PLATINUM_3:
+       Display_Name: "&ePlatinum III"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 76000
+       XP-LEVEL: 22
+     PLATINUM_4:
+       Display_Name: "&ePlatinum IV"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 86000
+       XP-LEVEL: 23
+     PLATINUM_5:
+       Display_Name: "&ePlatinum V"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 100000
+       XP-LEVEL: 24
+     MASTER:
+       Display_Name: "&cMaster"
+       ELO-Min: 0
+       ELO-Max: 1000
+       XP-AMOUNT: 200000
+       XP-LEVEL: 25
 
 UPDATE_NOTIFICATION: true

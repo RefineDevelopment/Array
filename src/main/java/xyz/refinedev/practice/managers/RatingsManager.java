@@ -5,7 +5,7 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.meta.Rating;
 import xyz.refinedev.practice.util.chat.ProgressBar;
-import xyz.refinedev.practice.util.config.BasicConfigurationFile;
+import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 
 /**
  * This Project is property of Refine Development © 2021

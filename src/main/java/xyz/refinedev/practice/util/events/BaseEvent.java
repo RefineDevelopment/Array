@@ -1,8 +1,8 @@
 package xyz.refinedev.practice.util.events;
 
-import xyz.refinedev.practice.Array;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import xyz.refinedev.practice.Array;
 
 public class BaseEvent extends Event {
 

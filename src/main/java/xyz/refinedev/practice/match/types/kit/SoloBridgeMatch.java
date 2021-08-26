@@ -3,10 +3,12 @@ package xyz.refinedev.practice.match.types.kit;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.v1_8_R3.PacketPlayInClientCommand;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
@@ -26,10 +28,8 @@ import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.location.LocationUtils;
 import xyz.refinedev.practice.util.other.EffectUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
+import xyz.refinedev.practice.util.other.TaskUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Getter @Setter
@@ -54,6 +54,7 @@ public class SoloBridgeMatch extends SoloMatch {
 
         teamPlayer.setAlive(true);
 
+        //TODO: Fix player move? maybe have already idk
         PlayerUtil.reset(player);
         PlayerUtil.denyMovement(player);
 
@@ -131,7 +132,10 @@ public class SoloBridgeMatch extends SoloMatch {
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.refreshHotbar();
-        this.getPlugin().getServer().getScheduler().runTaskLaterAsynchronously(this.getPlugin(), () -> this.setupPlayer(player), 2L);
+        TaskUtil.runLaterAsync(() -> {
+            this.setupPlayer(player);
+            PlayerUtil.allowMovement(player);
+        }, 2L);
     }
 
     @Override
@@ -152,6 +156,10 @@ public class SoloBridgeMatch extends SoloMatch {
 
         if (killEffect.isAnimateDeath()) PlayerUtil.animateDeath(deadPlayer);
 
+        if (killEffect.isDropsClear()) {
+            this.getEntities().forEach(Entity::remove);
+        }
+
         if (!killEffect.getKillEffectSounds().isEmpty()) {
             float randomPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
             for ( KillEffectSound killEffectSound : killEffect.getKillEffectSounds()) {
@@ -160,6 +168,11 @@ public class SoloBridgeMatch extends SoloMatch {
         }
     }
 
+    /**
+     * Execute tasks when a player enters the portal
+     *
+     * @param player {@link Player} the player entering the portal
+     */
     public void onPortalEnter(Player player) {
         TeamPlayer teamPlayer = this.getTeamPlayer(player);
 
@@ -183,6 +196,13 @@ public class SoloBridgeMatch extends SoloMatch {
         }
     }
 
+    /**
+     * Get relation color between viewer and target
+     *
+     * @param viewer {@link Player} viewer
+     * @param target {@link Player} target
+     * @return {@link ChatColor} color
+     */
     @Override
     public org.bukkit.ChatColor getRelationColor(Player viewer, Player target) {
         if (target == getPlayerB().getPlayer()) {

@@ -2,7 +2,6 @@ package xyz.refinedev.practice.events.meta.group;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.bukkit.Color;
 
 /**

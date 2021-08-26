@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.events.impl.sumo.team.task;
 
-import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.events.impl.sumo.team.SumoTeam;
 import xyz.refinedev.practice.events.task.EventRoundEndTask;
 

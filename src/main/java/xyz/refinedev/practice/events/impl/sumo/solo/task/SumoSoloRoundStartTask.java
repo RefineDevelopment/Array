@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.events.EventState;
-import xyz.refinedev.practice.events.impl.sumo.solo.SumoSolo;
 import xyz.refinedev.practice.events.task.EventRoundStartTask;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 

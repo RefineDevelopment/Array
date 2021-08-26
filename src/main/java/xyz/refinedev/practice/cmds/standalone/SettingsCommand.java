@@ -1,9 +1,9 @@
 package xyz.refinedev.practice.cmds.standalone;
 
-import xyz.refinedev.practice.profile.settings.SettingsMenu;
+import org.bukkit.entity.Player;
+import xyz.refinedev.practice.profile.settings.menu.SettingsMenu;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
-import org.bukkit.entity.Player;
 
 /**
  * This Project is the property of Refine Development © 2021

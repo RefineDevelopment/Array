@@ -1,189 +1,234 @@
-#You can not change these buttons nor remove them, you can add custom buttons tho
-#and you can still edit the
+#You can edit these but not remove or change their action, however you can always add custom buttons
 
-TITLE: "&7Profile Settings"
+TITLE: " &7Profile Settings"
 SIZE: 27
+PAGINATED: false
 BUTTONS:
   TOGGLESCOREBOARD:
     SLOT: 0
     NAME: "&c&lToggle Scoreboard"
     MATERIAL: PAINTING
+    DATA: 0
     LORE:
-      - "&7Enable or Disable Scoreboard"
-      - "&7Display for your Profile"
+      - " &fEnable or Disable Scoreboard"
+      - " &fDisplay for your Profile"
       - ""
-      - "<options>"
+      - "&c&lPreferences"
+      - " <options>"
+      - " "
+      - "&7&o(( Click to Toggle ))"
     ENABLED:
-      SELECTED: "&a&l■ &fShow scoreboard"
-      NOT_SELECTED: "&8&l■ &fShow scoreboard"
+      SELECTED: " &c▶ &fShow scoreboard"
+      NOT_SELECTED: " &8&l▶ &fShow scoreboard"
     DISABLED:
-      SELECTED: "&a&l■ &fDon't Show scoreboard"
-      NOT_SELECTED: "&8&l■ &fDon't Show scoreboard"
+      SELECTED: " &c▶ &fDon't Show scoreboard"
+      NOT_SELECTED: " &8&l▶ &fDon't Show scoreboard"
   TOGGLEPINGONSCOREBOARD:
     SLOT: 1
     NAME: "&c&lToggle Ping on Scoreboard"
     MATERIAL: STRING
+    DATA: 0
     LORE:
-      - "&7Enable or Disable Ping on"
-      - "&7Scoreboard for your Profile"
+      - " &fEnable or Disable Ping on"
+      - " &fScoreboard for your Profile"
       - ""
-      - "<options>"
+      - "&c&lPreferences"
+      - " <options>"
+      - " "
+      - "&7&o(( Click to Toggle ))"
     ENABLED:
-      SELECTED: "&a&l■ &fShow Ping on Scoreboard"
-      NOT_SELECTED: "&8&l■ &fShow Ping on Scoreboard"
+      SELECTED: " &c▶ &fShow Ping on Scoreboard"
+      NOT_SELECTED: " &8&l▶ &fShow Ping on Scoreboard"
     DISABLED:
-      SELECTED: "&a&l■ &fDon't Show Ping on Scoreboard"
-      NOT_SELECTED: "&8&l■ &fDon't Show Ping on Scoreboard"
+      SELECTED: " &c▶ &fDon't Show Ping on Scoreboard"
+      NOT_SELECTED: " &8&l▶ &fDon't Show Ping on Scoreboard"
   TOGGLECPSONSCOREBOARD:
     SLOT: 2
     NAME: "&c&lToggle CPS on Scoreboard"
     MATERIAL: BEACON
+    DATA: 0
     LORE:
-      - "&7Enable or Disable CPS on"
-      - "&7Scoreboard for your Profile"
+      - " &fEnable or Disable CPS on"
+      - " &fScoreboard for your Profile"
       - ""
-      - "<options>"
+      - "&c&lPreferences"
+      - " <options>"
+      - " "
+      - "&7&o(( Click to Toggle ))"
     ENABLED:
-      SELECTED: "&a&l■ &fShow CPS on Scoreboard"
-      NOT_SELECTED: "&8&l■ &fShow CPS on Scoreboard"
+      SELECTED: " &c▶ &fShow CPS on Scoreboard"
+      NOT_SELECTED: " &8&l▶ &fShow CPS on Scoreboard"
     DISABLED:
-      SELECTED: "&a&l■ &fDon't Show CPS on Scoreboard"
-      NOT_SELECTED: "&8&l■ &fDon't Show CPS on Scoreboard"
+      SELECTED: " &c▶ &fDon't Show CPS on Scoreboard"
+      NOT_SELECTED: " &8&l▶ &fDon't Show CPS on Scoreboard"
   TOGGLESPECTATORS:
     SLOT: 3
     NAME: "&c&lToggle Spectators"
     MATERIAL: ENDER_PEARL
+    DATA: 0
     LORE:
-      - "&7Enable or Disable Spectators"
-      - "&7on your Matches for your Profile"
+      - " &fEnable or Disable Spectators"
+      - " &fon your Matches for your Profile"
       - ""
-      - "<options>"
+      - "&c&lPreferences"
+      - " <options>"
+      - " "
+      - "&7&o(( Click to Toggle ))"
     ENABLED:
-      SELECTED: "&a&l■ &fAllow Spectators"
-      NOT_SELECTED: "&8&l■ &fAllow Spectators"
+      SELECTED: " &c▶ &fAllow Spectators"
+      NOT_SELECTED: " &8&l▶ &fAllow Spectators"
     DISABLED:
-      SELECTED: "&a&l■ &fDon't Allow Spectators"
-      NOT_SELECTED: "&8&l■ &fDon't Allow Spectators"
+      SELECTED: " &c▶ &fDon't Allow Spectators"
+      NOT_SELECTED: " &8&l▶ &fDon't Allow Spectators"
   TOGGLESHOWPLAYERS:
     SLOT: 4
     NAME: "&c&lToggle Player Visibility"
     MATERIAL: LEVER
+    DATA: 0
     LORE:
-      - "&7Toggle visibility of others"
-      - "&7in the Lobby for your Profile"
+      - " &fToggle visibility of others"
+      - " &fin the Lobby for your Profile"
       - ""
-      - "<options>"
+      - "&c&lPreferences"
+      - " <options>"
+      - " "
+      - "&7&o(( Click to Toggle ))"
     ENABLED:
-      SELECTED: "&a&l■ &fShow Players at Lobby"
-      NOT_SELECTED: "&8&l■ &fShow Players at Lobby"
+      SELECTED: " &c▶ &fShow Players at Lobby"
+      NOT_SELECTED: " &8&l▶ &fShow Players at Lobby"
     DISABLED:
-      SELECTED: "&a&l■ &fDon't Players at Lobby"
-      NOT_SELECTED: "&8&l■ &fDon't Players at Lobby"
+      SELECTED: " &c▶ &fDon't Players at Lobby"
+      NOT_SELECTED: " &8&l▶ &fDon't Players at Lobby"
   TOGGLEDUELREQUESTS:
     SLOT: 5
     NAME: "&c&lToggle Duel Requests"
     MATERIAL: DIAMOND_SWORD
+    DATA: 0
     LORE:
-      - "&7Enable or Disable Duels from"
-      - "&7other players for your profile."
+      - " &fEnable or Disable Duels from"
+      - " &fother players for your profile."
       - ""
-      - "<options>"
+      - "&c&lPreferences"
+      - " <options>"
+      - " "
+      - "&7&o(( Click to Toggle ))"
     ENABLED:
-      SELECTED: "&a&l■ &fAllow Duels from others"
-      NOT_SELECTED: "&8&l■ &fAllow Duels from others"
+      SELECTED: " &c▶ &fAllow Duels from others"
+      NOT_SELECTED: " &8&l▶ &fAllow Duels from others"
     DISABLED:
-      SELECTED: "&a&l■ &fDon't Allow Duels from others"
-      NOT_SELECTED: "&8&l■ &fDon't Allow Duels from others"
+      SELECTED: " &c▶ &fDon't Allow Duels from others"
+      NOT_SELECTED: " &8&l▶ &fDon't Allow Duels from others"
   TOGGLETOURNAMENTMESSAGES:
     SLOT: 6
     NAME: "&c&lToggle Tournament Messages"
     MATERIAL: PAPER
+    DATA: 0
     LORE:
-      - "&7Enable or Disable Tournament"
-      - "&7Messages for your Profile"
+      - " &fEnable or Disable Tournament"
+      - " &fMessages for your Profile"
       - ""
-      - "<options>"
+      - "&c&lPreferences"
+      - " <options>"
+      - " "
+      - "&7&o(( Click to Toggle ))"
     ENABLED:
-      SELECTED: "&a&l■ &fShow Tournament Messages"
-      NOT_SELECTED: "&8&l■ &fShow Tournament Messages"
+      SELECTED: " &c▶ &fShow Tournament Messages"
+      NOT_SELECTED: " &8&l▶ &fShow Tournament Messages"
     DISABLED:
-      SELECTED: "&a&l■ &fDon't Show Tournament Messages"
-      NOT_SELECTED: "&8&l■ &fDon't Show Tournament Messages"
+      SELECTED: " &c▶ &fDon't Show Tournament Messages"
+      NOT_SELECTED: " &8&l▶ &fDon't Show Tournament Messages"
   TOGGLETABSTYLE:
     SLOT: 7
     NAME: "&c&lToggle Tablist Style"
     MATERIAL: REDSTONE_COMPARATOR
+    DATA: 0
     LORE:
-      - "&7Enable or Disable different"
-      - "&7types of tablist for your Profile"
+      - " &fEnable or Disable different"
+      - " &ftypes of tablist for your Profile"
       - ""
-      - "<options>"
+      - "&c&lPreferences"
+      - " <options>"
+      - " "
+      - "&7&o(( Click to Toggle ))"
     ENABLED:
-      SELECTED: "&a&l■ &fShow scoreboard"
-      NOT_SELECTED: "&8&l■ &fShow scoreboard"
+      SELECTED: " &c▶ &fShow vanilla tablist"
+      NOT_SELECTED: " &8&l▶ &fShow vanilla tablist"
     DISABLED:
-      SELECTED: "&a&l■ &fDon't Show scoreboard"
-      NOT_SELECTED: "&8&l■ &fDon't Show scoreboard"
+      SELECTED: " &c▶ &fShow default tablist"
+      NOT_SELECTED: " &8&l▶ &fShow default tablist"
   TOGGLEPINGFACTOR:
     SLOT: 8
     NAME: "&c&lToggle Ping Factor"
     MATERIAL: BOOK
+    DATA: 0
     LORE_NO_PERM:
-      - "&7Enable or Disable queueing with"
-      - "&7players of similar ping as you."
+      - " &fEnable or Disable queueing with"
+      - " &fplayers of similar ping as you."
       - ""
-      - "&7You do not have permission to use this."
+      - "&cYou do not have permission to use this."
       - "&7&oVisit: &c<store>"
     LORE_PERMISSION:
-      - "&7Enable or Disable queueing with"
-      - "&7players of similar ping as you."
+      - " &fEnable or Disable queueing with"
+      - " &fplayers of similar ping as you."
       - ""
-      - "<options>"
+      - "&c&lPreferences"
+      - " <options>"
+      - " "
+      - "&7&o(( Click to Toggle ))"
     ENABLED:
-      SELECTED: "&a&l■ &fUse Ping Factor"
-      NOT_SELECTED: "&8&l■ &fUse Ping Factor"
+      SELECTED: " &c▶ &fUse Ping Factor"
+      NOT_SELECTED: " &8&l▶ &fUse Ping Factor"
     DISABLED:
-      SELECTED: "&a&l■ &fDon't Use Ping Factor"
-      NOT_SELECTED: "&8&l■ &fDon't Use Ping Factor"
+      SELECTED: " &c▶ &fDon't Use Ping Factor"
+      NOT_SELECTED: " &8&l▶ &fDon't Use Ping Factor"
   TOGGLELIGHTNING:
     SLOT: 9
     NAME: "&c&lToggle Lightning"
     MATERIAL: BLAZE_ROD
+    DATA: 0
     LORE_NO_PERM:
-      - "&7Enable or Disable Lightning"
-      - "&7Death effect for your Profile."
+      - " &fEnable or Disable Lightning"
+      - " &fDeath effect for your Profile."
       - ""
-      - "&7You do not have permission to use this."
-      - "&7&oVisit: &c<store>"
+      - "&cYou do not have permission to use this."
     LORE_PERMISSION:
-      - "&7Enable or Disable Lightning"
-      - "&7Death effect for your Profile."
+      - " &fEnable or Disable Lightning"
+      - " &fDeath effect for your Profile."
       - ""
-      - "<options>"
+      - "&c&lPreferences"
+      - " <options>"
+      - " "
+      - "&7&o(( Click to Toggle ))"
     ENABLED:
-      SELECTED: "&a&l■ &fEnable Lightning Death Effect"
-      NOT_SELECTED: "&8&l■ &fEnable Lightning Death Effect"
+      SELECTED: " &c▶ &fEnable Lightning Death Effect"
+      NOT_SELECTED: " &8&l▶ &fEnable Lightning Death Effect"
     DISABLED:
-      SELECTED: "&a&l■ &fDisable Lightning Death Effect"
-      NOT_SELECTED: "&8&l■ &fDisable Lightning Death Effect"
+      SELECTED: " &c▶ &fDisable Lightning Death Effect"
+      NOT_SELECTED: " &8&l▶ &fDisable Lightning Death Effect"
   TOGGLEDROPPROTECT:
     SLOT: 10
     NAME: "&c&lToggle Drop Protect"
     MATERIAL: GOLD_SWORD
+    DATA: 0
     LORE_NO_PERM:
-      - "&7Enable or Disable Protection to prevent"
-      - "&7accidentally dropping your Sword in 1st Slot"
+      - " &fEnable or Disable protection to prevent"
+      - " &faccidentally dropping your Sword in 1st Slot"
       - ""
-      - "&7You do not have permission to use this."
-      - "&7&oVisit: &c<store>"
+      - "&cYou do not have permission to use this."
     LORE_PERMISSION:
-      - "&7Enable or Disable Protection to prevent"
-      - "&7accidentally dropping your Sword in 1st Slot"
+      - " &fEnable or Disable protection to prevent"
+      - " &faccidentally dropping your Sword in 1st Slot"
       - ""
-      - "<options>"
+      - "&c&lPreferences"
+      - " <options>"
+      - " "
+      - "&7&o(( Click to Toggle ))"
     ENABLED:
-      SELECTED: "&a&l■ &fEnable Drop Protect"
-      NOT_SELECTED: "&8&l■ &fEnable Drop Protect"
+      SELECTED: " &c▶ &fEnable Drop Protect"
+      NOT_SELECTED: " &8&l▶ &fEnable Drop Protect"
     DISABLED:
-      SELECTED: "&a&l■ &fDisable Drop Protect"
-      NOT_SELECTED: "&8&l■ &fDisable Drop Protect"
+      SELECTED: " &c▶ &fDisable Drop Protect"
+      NOT_SELECTED: " &8&l▶ &fDisable Drop Protect"
+
+CUSTOM_BUTTONS:
+  

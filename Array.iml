@@ -41,16 +41,16 @@
     <orderEntry type="module-library">
       <library name="Maven: me.activated.core:AquaCore-API:2.5.8">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/api/AquaCoreAPI.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/core/AquaCoreAPI.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: club.frozed:Zoom-API:1.1-SNAPSHOT">
+      <library name="Maven: club.frozed:Zoom-API:1.4">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/api/ZoomAPI-1.1-SNAPSHOT.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/core/Zoom-API-1.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -59,7 +59,7 @@
     <orderEntry type="module-library">
       <library name="Maven: me.quartz:Hestia-API:1.0-SNAPSHOT">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/api/HestiaAPI.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/core/HestiaAPI.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -68,7 +68,43 @@
     <orderEntry type="module-library">
       <library name="Maven: com.broustudio:Mizu-API:1.0-SNAPSHOT">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/api/MizuAPI.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/core/MizuAPI.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.solexgames.core:ScandiumAPI:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/core/ScandiumAPI.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: net.milbowl.api:VaultAPI:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/core/Vault.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: me.absurd.core:nCore:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/core/nCoreAPI.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: me.idfk.core:PermissionsEx:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/core/PermissionsEx.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

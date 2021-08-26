@@ -1,7 +1,5 @@
 package xyz.refinedev.practice.match.team;
 
-import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.util.other.PlayerUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -9,8 +7,13 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.util.other.PlayerUtil;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Getter @Setter
 public class TeamPlayer {

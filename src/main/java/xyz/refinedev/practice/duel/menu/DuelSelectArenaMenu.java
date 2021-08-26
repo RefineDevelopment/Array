@@ -1,6 +1,9 @@
 package xyz.refinedev.practice.duel.menu;
 
 import lombok.AllArgsConstructor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.profile.Profile;
@@ -8,9 +11,6 @@ import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.menu.pagination.PaginatedMenu;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -3,8 +3,10 @@ package xyz.refinedev.practice.events.impl.sumo.solo.task;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.events.EventState;
-import xyz.refinedev.practice.events.task.EventStartTask;;
+import xyz.refinedev.practice.events.task.EventStartTask;
 import xyz.refinedev.practice.util.other.Cooldown;
+
+;
 
 /**
  * This Project is property of Refine Development © 2021

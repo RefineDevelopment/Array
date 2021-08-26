@@ -1,9 +1,13 @@
 package xyz.refinedev.practice.profile.killeffect;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.bukkit.Effect;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,22 +20,27 @@ import java.util.UUID;
  * Project: Array
  */
 
-@Data
+@Getter @Setter
+@RequiredArgsConstructor
 public class KillEffect {
 
+    private final List<KillEffectSound> killEffectSounds = new ArrayList<>();
+    private final List<String> description = Arrays.asList(" &fThis is the default", " &fdescription for kill", " &feffects, you can change", " &fthem in killeffects.yml");
+
     private final UUID uniqueId;
+    private final String name;
 
     private String displayName;
     private String permission;
-
     private Effect effect;
-    private int data;
+    private ItemStack itemStack;
+    private int data, priority;
+
+    private boolean enabled;
+    private boolean defaultEffect;
 
     private boolean animateDeath;
     private boolean permissionEnabled;
     private boolean dropsClear;
     private boolean lightning;
-
-    private final List<KillEffectSound> killEffectSounds = new ArrayList<>();
-    private final List<String> description = new ArrayList<>();
 }

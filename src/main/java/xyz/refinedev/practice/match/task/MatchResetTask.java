@@ -1,9 +1,9 @@
 package xyz.refinedev.practice.match.task;
 
-import xyz.refinedev.practice.match.Match;
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.match.Match;
 
 @AllArgsConstructor
 public class MatchResetTask extends BukkitRunnable {

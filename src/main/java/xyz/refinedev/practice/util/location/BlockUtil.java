@@ -1,13 +1,13 @@
 package xyz.refinedev.practice.util.location;
 
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import org.bukkit.entity.Entity;
-import org.bukkit.Location;
-import org.bukkit.block.BlockFace;
 
 public class BlockUtil {
     private static Set<Byte> blockSolidPassSet;

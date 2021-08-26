@@ -1,24 +1,24 @@
 package xyz.refinedev.practice.duel;
 
 import lombok.Data;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.match.Match;
-import xyz.refinedev.practice.profile.rank.Rank;
-import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.SoloMatch;
 import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.profile.rank.RankAdapter;
 import xyz.refinedev.practice.profile.rank.RankType;
+import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.Clickable;
 import xyz.refinedev.practice.util.other.PlayerUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -26,7 +26,7 @@ import java.util.UUID;
 public class RematchProcedure {
 
     private final long timestamp = System.currentTimeMillis();
-    public static RankType rank = Rank.getRankType();
+    public static RankAdapter rank = RankType.getRankAdapter();
 
     private final UUID key;
     private final UUID sender;

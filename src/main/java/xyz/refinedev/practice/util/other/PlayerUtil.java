@@ -1,12 +1,6 @@
 package xyz.refinedev.practice.util.other;
 
 import lombok.experimental.UtilityClass;
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.api.ArrayCache;
-import xyz.refinedev.practice.events.meta.player.EventPlayer;
-import xyz.refinedev.practice.events.meta.player.EventPlayerState;
-import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.hotbar.HotbarLayout;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -20,6 +14,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.AsyncCatcher;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.api.ArrayCache;
 
 import java.lang.reflect.Field;
 import java.util.*;

@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.cmds.event;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
@@ -12,11 +13,9 @@ import xyz.refinedev.practice.events.impl.sumo.solo.SumoSolo;
 import xyz.refinedev.practice.events.impl.sumo.team.SumoTeam;
 import xyz.refinedev.practice.events.menu.EventTeamMenu;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Require;
 import xyz.refinedev.practice.util.command.annotation.Sender;
-import org.bukkit.command.CommandSender;
 
 import java.util.stream.Collectors;
 

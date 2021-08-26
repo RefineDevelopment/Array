@@ -1,10 +1,10 @@
 package xyz.refinedev.practice.util.scoreboard.events;
 
-import xyz.refinedev.practice.util.scoreboard.AssembleBoard;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import xyz.refinedev.practice.util.scoreboard.AssembleBoard;
 
 @Getter @Setter
 public class AssembleBoardCreatedEvent extends Event {

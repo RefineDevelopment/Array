@@ -1,18 +1,17 @@
 package xyz.refinedev.practice.util.nametags.listener;
 
-import org.bukkit.event.EventPriority;
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.util.nametags.NameTagHandler;
-import xyz.refinedev.practice.util.other.TaskUtil;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.lang.reflect.Field;
 import java.util.Collections;

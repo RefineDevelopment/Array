@@ -4,7 +4,6 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.queue.QueueProfile;
-import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 

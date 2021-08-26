@@ -1,26 +1,15 @@
 package xyz.refinedev.practice.managers;
 
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.arena.selection.ArenaSelectionListener;
-import xyz.refinedev.practice.clan.listener.ClanListener;
-import xyz.refinedev.practice.essentials.listener.GoldenHeads;
-import xyz.refinedev.practice.essentials.listener.MOTDListener;
-import xyz.refinedev.practice.essentials.listener.OutdatedListener;
-import xyz.refinedev.practice.essentials.listener.ToggleSprintFix;
 import xyz.refinedev.practice.events.impl.sumo.solo.SumoSoloListener;
 import xyz.refinedev.practice.events.impl.sumo.team.SumoTeamListener;
 import xyz.refinedev.practice.kit.kiteditor.KitEditorListener;
-import xyz.refinedev.practice.match.MatchListener;
-import xyz.refinedev.practice.party.PartyListener;
-import xyz.refinedev.practice.profile.ProfileListener;
+import xyz.refinedev.practice.listeners.*;
 import xyz.refinedev.practice.profile.hotbar.HotbarListener;
-import xyz.refinedev.practice.queue.QueueListener;
-import xyz.refinedev.practice.tournament.TournamentListener;
 import xyz.refinedev.practice.util.events.WorldListener;
 import xyz.refinedev.practice.util.menu.MenuListener;
-import org.bukkit.event.Listener;
 import xyz.refinedev.practice.util.nametags.listener.NameTagListener;
 
 import java.util.Arrays;
@@ -34,7 +23,7 @@ public class ListenersManager {
         for ( Listener listener : Arrays.asList(
                 new ProfileListener(),
                 new MenuListener(),
-                new ClanListener(),
+                new ChatListener(),
                 new SumoSoloListener(),
                 new SumoTeamListener(),
                 new ArenaSelectionListener(),
@@ -46,8 +35,8 @@ public class ListenersManager {
                 new HotbarListener(),
                 new MatchListener(),
                 new WorldListener(),
-                new GoldenHeads(),
-                new ToggleSprintFix(),
+                new GHeadListener(),
+                new ToggleSprintListener(),
                 new TournamentListener(),
                 new QueueListener()
         )) {

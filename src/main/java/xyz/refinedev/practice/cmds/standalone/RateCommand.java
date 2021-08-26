@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.cmds.standalone;
 
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
@@ -10,8 +11,6 @@ import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
-import xyz.refinedev.practice.util.config.BasicConfigurationFile;
-import org.bukkit.entity.Player;
 
 /**
  * This Project is property of Purge Community © 2021

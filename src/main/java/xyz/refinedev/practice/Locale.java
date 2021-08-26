@@ -2,7 +2,7 @@ package xyz.refinedev.practice;
 
 import lombok.Getter;
 import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.config.BasicConfigurationFile;
+import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +34,7 @@ public enum Locale {
     PARTY_PRIVACY("PARTY.PRIVACY", "&8[&c&lParty&8] &7Your party privacy has been changed to &c<privacy>"),
     PARTY_PROMOTED("PARTY.PROMOTED", "&8[&c&lParty&8] &c<promoted> &ahas been promoted to Leader in your party."),
     PARTY_DONOTHAVE("PARTY.DO_NOT_HAVE", "&8[&c&lParty&8] &7You don't have a party!"),
-    PARTY_CHAT_FORMAT("PARTY.CHAT_FORMAT", "&8[&cParty&8] &c<player_displayname>&7: &a<message>"),
+    PARTY_CHAT_FORMAT("PARTY.CHAT_FORMAT", "&8[&cParty&8] &c<player_rankname> &7» &f<message>"),
     PARTY_ALREADYINVITED("PARTY.ALREADY_INVITED", "&8[&cParty&8] &7That player has already been invited to your party."),
     PARTY_WRONG_LEADER("PARTY.DONT_HAVE_PARTY", "&8[&cParty&8] &7That player does not have a party."),
     PARTY_HCF_UPDATED("PARTY.HCF_CLASS_CHANGE", "&8[&cParty&8] &c<target>'s &7HCF Class was changed to &c<class>&7."),
@@ -44,12 +44,14 @@ public enum Locale {
     PARTY_NOTLEADER("PARTY.NOTLEADER", "&8[&c&lParty&8] &7You are not the leader of this party!"),
     PARTY_NOT_MEMBER("PARTY.NOT_MEMBER", "&8[&cParty&8] &7That player is not a member of this party."),
     PARTY_NOT_BANNED("PARTY.NOT_BANNED", "&8[&cParty&8] &7That player is not banned from your party."),
+    PARTY_BUSY("PARTY.BUSY", "&8[&cParty&8] &7Your party is currently busy, please try again later!"),
     PARTY_BAN_SELF("PARTY.BAN_SELF", "&8[&cParty&8] &7You can't ban yourself from your own party."),
     PARTY_UNBAN_SELF("PARTY.KICK_SELF", "&8[&cParty&8] &7You can't unban yourself from your own party."),
     PARTY_LEAVE_SELF("PARTY.LEAVE_SELF", "&8[&cParty&8] &7You can't leave your own party, please do /party disband."),
     PARTY_KICK_SELF("PARTY.KICK_SELFT", "&8[&cParty&8] &7You can't kick yourself from your own party."),
     PARTY_BANNED("PARTY.BANNED", "&8[&cParty&8] &7You have been banned from the party."),
     PARTY_BAN("PARTY.BAN", "&8[&cParty&8] &7Successfully banned &c<target> &7from the party."),
+    PARTY_EVENT_NEED("PARTY.EVENT_REQUIRED", "&8[&cParty&8] &7You need at least 2 members to start an Event!"),
     PARTY_KICKED("PARTY.KICKED", "&8[&cParty&8] &7You have been kicked from the party."),
     PARTY_UNBANNED("PARTY.UNBANNED", "&8[&cParty&8] &c<target> &7has been unbanned from the party."),
     PARTY_ALREADYHAVE("PARTY.ALREAD_HAVE", "&8[&c&lParty&8] &7You already have a party!"),
@@ -120,6 +122,7 @@ public enum Locale {
     CLAN_SETPASS("CLAN.SET_PASS", "&8[&cClan&8] &7Successfully updated the &cpassword &7of your Clan!"),
     CLAN_LEADER_LEAVE("CLAN.LEADER_LEAVE", "&8[&cClan&8] &7The Leader can not leave the Clan, use &c/clan disband &7to disband your Clan!"),
     CLAN_IS_BANNED("CLAN.PLAYER_BANNED", "&8[&c&lClan&8] &7That player has been banned from this clan, use &c/clan unban <profile> &7to unban."),
+    CLAN_CHAT_FORMAT("CLAN.CHAT_FORMAT", "&8[&c&lClan&8] &c<player_displayname> &7» &f<message>"),
     CLAN_HELP("CLAN.HELP_MESSAGE", Arrays.asList("&c&m--------&7&m-------------------------------------&c&m--------", "&cClan Commands", "&c&m--------&7&m-------------------------------------&c&m--------", " &8\u2022 &c/clan create &8<&7name&8> &8(&7&oCreate a Clan&8)", " &8\u2022 &c/clan disband &8(&7&oDisband your Clan&8)", " &8\u2022 &c/clan chat &8(&7&oToggle your Clan Chat Mode&8)", " &8\u2022 &c/clan accept &8<&7leader&8> &8(&7&oAccept a Clan Invitation&8)", " &8\u2022 &c/clan leave &8(&7&oLeave your Current Clan&8)", " &8\u2022 &c/clan info &8(&7&oView information about your Clan&8)", " &8\u2022 &c/clan invite &8<&7profile&8> &8(&7&oInvite a Profile to your Clan&8)", " &8\u2022 &c/clan kick &8<&7profile&8> &8(&7&oKick a Profile from your Clan&8)", " &8\u2022 &c/clan ban &8<&7profile&8> &8(&7&oBan a Profile from your Clan&8)", " &8\u2022 &c/clan promote &8<&7profile&8> &8(&7&oPromote a Profile to Captain&8)", " &8\u2022 &c/clan demote &8<&7profile&8> &8(&7&oDemote a Profile to Member&8)", " &8\u2022 &c/clan leader &8<&7profile&8> &8(&7&oPromote a Profile to Leader&8)", " &8\u2022 &c/clan description &8<&7text&8> &8(&7&oSet your Clan's Description&8)", "&c&m--------&7&m-------------------------------------&c&m--------")),
     CLAN_INFO("CLAN.INFO", Arrays.asList(
             "&c&m--------&7&m-------------------------------------&c&m--------",
@@ -132,7 +135,7 @@ public enum Locale {
             "&8 \u2022 &cWinstreak | Highest WS: &f<clan_winstreak> &7\uff5c &f<clan_highest_winstreak>",
             "&c&m--------&7&m-------------------------------------&c&m--------")),
 
-    ERROR_BUSY("ERROR.NOT_AVAILABLE", "&7That player is currently busy, please try again."),
+    ERROR_BUSY("ERROR.BUSY", "&7That player is currently busy, please try again."),
     ERROR_NOTACTIVE("ERROR.NOT_ACTIVE", "&7There is no current on-going event!"),
     ERROR_NOTPARTOF("ERROR.NOT_PARTOF", "&7You are not part of any on-going <event> event!"),
     ERROR_NOTSPECTATING("ERROR.NOT_SPECTATING", "&7You are not spectating!"),
@@ -140,14 +143,19 @@ public enum Locale {
     ERROR_EXPIREREMATCH("ERROR.REMATCH_EXPIRED", "&7Your rematch time has been expired!"),
     ERROR_PEARLSDISABLED("ERROR.PEARLS_DISABLED", "&cYou can't enderpearl in this arena!"),
     ERROR_REMATCHSENT("ERROR.REMATCH_SENT", "&7You have already sent the rematch request!"),
-    ERROR_PARTY("ERROR.IN_PARTY", "&7Please leave your party to execute this task."),
+    ERROR_PARTY("ERROR.IN_PARTY", "&7Please leave your party to do this."),
     ERROR_NOSPEC("ERROR.NO_SPEC", "&7That player is not allowing spectators currently."),
     ERROR_NOT_IN_QUEUE("ERROR.NOT_IN_QUEUE", "&7You are not in a queue!"),
     ERROR_MATCHNOSPEC("ERROR.MATCH_NOSPEC", "&7This match contains a player that is not allowing spectators currently."),
+    ERROR_NO_PERM("ERROR.NO_PERMISSION", "&cYou don't have permission to use this!"),
     ERROR_FREE("ERROR.FREE", "&7That player is not in any match or any events."),
+    ERROR_NO_ARENAS("ERROR.NO_ARENAS", "&7There are no available arenas!"),
     ERROR_NOTMATCH("ERROR.NOT_IN_MATCH", "&7You are not in any match."),
     ERROR_NOTABLE("ERROR.NOT_ABLE", "&7You can not do this right now."),
     ERROR_PING_TOO_HIGH("ERROR.PING_TOO_HIGH", "&7Your ping is too high!"),
+    ERROR_TARGET_IN_PARTY("ERROR.TARGET_IN_PARTY", "&7The dueled player is currently in a party."),
+    ERROR_NO_PARTY_TO_DUEL("ERROR.NO_PARTY_TO_DUEL", "&7You don't have a party to duel with."),
+    ERROR_TARGET_NO_PARTY("ERROR.TARGET_NO_PARTY", "&7The dueled player does not have a party!"),
     ERROR_PLAYERNOTFOUND("ERROR.PLAYER_NOT_FOUND", "&7That player does not exist or is not currently online."),
     ERROR_SETTING_NOPERM("ERROR.SETTINGS_NO_PERM", Arrays.asList("&7You don't have permission to use this setting", "&7&oyou can upgrade your rank at &c&ostore.purgecommunity.com&7&o.")),
 
@@ -249,7 +257,7 @@ public enum Locale {
     EVENT_KILLED("EVENTS.KILLED", "&c<killed_name> &7has died!"),
     EVENT_NO_PERMISSION("EVENTS.NO_PERM", Arrays.asList(
             "&7You do not have permission to use this.",
-            "&7&oPlease upgrade your Rank at &c&<store> &7")),
+            "&7&oPlease upgrade your RankType at &c&<store> &7")),
     EVENT_ANNOUNCE("EVENTS.ANNOUCE", Arrays.asList(" ",
             "&7\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b\u2b1b",
             "&7\u2b1b\u2b1b&c\u2b1b\u2b1b\u2b1b\u2b1b&7\u2b1b\u2b1b &c&l[<event_name> Event]",
@@ -298,6 +306,10 @@ public enum Locale {
             "&c&m--------&7&m-------------------------------------&c&m--------"
     )),
 
+    KILL_EFFECT_SELECTED("KILL_EFFECT.SELECTED", "&7Successfully equipped &c<kill_effect> &7for your profile!"),
+    KILL_EFFECT_ALREADY_SELECTED("KILL_EFFECT.ALREADY_SELECTED", "&7You have already selected that kill effect!"),
+    KILL_EFFECT_NO_PERM("KILL_EFFECT.NO_PERMISSION", "&7You don't have permission to use this kill effect!\n&7&oPlease upgrade your rank at &c<store>&7&o!"),
+
     QUEUE_JOIN_UNRANKED("QUEUE.JOIN_UNRANKED", "&7You have been added to the &c<queue_name> &7queue."),
     QUEUE_JOIN_RANKED("QUEUE.JOIN_RANKED", "&7You have been added to the &c<queue_name> &7queue. &c[<queue_elo>]"),
     QUEUE_JOIN_CLAN("QUEUE.JOIN_CLAN", "&7You have been added to the &c<queue_name> &7queue. &c[<clan_elo>]"),
@@ -321,8 +333,8 @@ public enum Locale {
     LEADERBOARDS_GLOBAL_FORMAT("LEADERBOARDS.GLOBAL_FORMAT", "&c<leaderboards_pos> &7&l\uff5c &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
     LEADERBOARDS_GLOBAL_HEADER("LEADERBOARDS.GLOBAL_HEADER", "&cGlobal &7\uff5c &fTop 10"),
 
-    LEADERBOARDS_CLAN_FORMAT("LEADERBOARDS.GLOBAL_FORMAT", "&c<leaderboards_pos> &7&l\uff5c &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
-    LEADERBOARDS_CLAN_HEADER("LEADERBOARDS.GLOBAL_HEADER", "&cClans &7\uff5c &fTop 10");
+    LEADERBOARDS_CLAN_FORMAT("LEADERBOARDS.CLAN_FORMAT", "&c<leaderboards_pos> &7&l\uff5c &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
+    LEADERBOARDS_CLAN_HEADER("LEADERBOARDS.CLAN_HEADER", "&cClans &7\uff5c &fTop 10");
 
     private final String path;
     private String value;

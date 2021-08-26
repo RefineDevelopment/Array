@@ -1,19 +1,19 @@
 package xyz.refinedev.practice.queue.menu;
 
 import lombok.AllArgsConstructor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.queue.Queue;
-import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.queue.Queue;
+import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;

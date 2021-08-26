@@ -1,9 +1,9 @@
 package xyz.refinedev.practice.util.command.command;
 
-import xyz.refinedev.practice.util.command.exception.CommandRegistrationException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
+import xyz.refinedev.practice.util.command.exception.CommandRegistrationException;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;

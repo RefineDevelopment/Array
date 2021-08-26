@@ -1,23 +1,5 @@
 package xyz.refinedev.practice.profile.statistics.menu;
 
-import lombok.AllArgsConstructor;
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.util.config.BasicConfigurationFile;
-import xyz.refinedev.practice.util.other.SkullCreator;
-import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
-import xyz.refinedev.practice.util.menu.Button;
-import xyz.refinedev.practice.util.menu.Menu;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /*@AllArgsConstructor
 public class StatsMenu extends Menu {
 

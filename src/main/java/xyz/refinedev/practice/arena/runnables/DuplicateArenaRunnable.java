@@ -1,14 +1,15 @@
 package xyz.refinedev.practice.arena.runnables;
 
-import java.util.HashMap;
-import java.util.Map;
 import lombok.Getter;
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.arena.Arena;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.arena.Arena;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @since 11/25/2017

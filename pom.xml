@@ -128,15 +128,15 @@
             <artifactId>AquaCore-API</artifactId>
             <version>2.5.8</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/api/AquaCoreAPI.jar</systemPath>
+            <systemPath>${project.basedir}/lib/core/AquaCoreAPI.jar</systemPath>
         </dependency>
 
         <dependency>
             <groupId>club.frozed</groupId>
             <artifactId>Zoom-API</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.4</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/api/ZoomAPI-1.1-SNAPSHOT.jar</systemPath>
+            <systemPath>${project.basedir}/lib/core/Zoom-API-1.4.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -144,7 +144,7 @@
             <artifactId>Hestia-API</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/api/HestiaAPI.jar</systemPath>
+            <systemPath>${project.basedir}/lib/core/HestiaAPI.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -152,7 +152,39 @@
             <artifactId>Mizu-API</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/api/MizuAPI.jar</systemPath>
+            <systemPath>${project.basedir}/lib/core/MizuAPI.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.solexgames.core</groupId>
+            <artifactId>ScandiumAPI</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/core/ScandiumAPI.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>net.milbowl.api</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/core/Vault.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>me.absurd.core</groupId>
+            <artifactId>nCore</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/core/nCoreAPI.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>me.idfk.core</groupId>
+            <artifactId>PermissionsEx</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/core/PermissionsEx.jar</systemPath>
         </dependency>
 
         <!--Placeholder Hooks-->
@@ -242,6 +274,11 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
             </plugin>
         </plugins>
     </build>

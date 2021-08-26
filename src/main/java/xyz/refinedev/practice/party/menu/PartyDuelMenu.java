@@ -1,23 +1,13 @@
 package xyz.refinedev.practice.party.menu;
 
-import lombok.AllArgsConstructor;
-import org.bukkit.Bukkit;
-import xyz.refinedev.practice.match.team.TeamPlayer;
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.party.menu.buttons.PartyDuelButton;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
-import xyz.refinedev.practice.util.menu.Menu;
+import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.pagination.PaginatedMenu;
-import xyz.refinedev.practice.util.other.SkullCreator;
-import org.bukkit.event.inventory.ClickType;
 
 import java.util.*;
-
-import org.bukkit.inventory.ItemStack;
-import xyz.refinedev.practice.util.menu.Button;
-import org.bukkit.entity.Player;
 
 public class PartyDuelMenu extends PaginatedMenu {
 

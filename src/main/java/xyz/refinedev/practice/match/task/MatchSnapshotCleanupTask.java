@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.match.task;
 
-import xyz.refinedev.practice.match.MatchSnapshot;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.match.MatchSnapshot;
 
 public class MatchSnapshotCleanupTask extends BukkitRunnable {
 

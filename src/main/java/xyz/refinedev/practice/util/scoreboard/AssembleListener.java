@@ -1,13 +1,13 @@
 package xyz.refinedev.practice.util.scoreboard;
 
-import xyz.refinedev.practice.util.scoreboard.events.AssembleBoardCreateEvent;
-import xyz.refinedev.practice.util.scoreboard.events.AssembleBoardDestroyEvent;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import xyz.refinedev.practice.util.scoreboard.events.AssembleBoardCreateEvent;
+import xyz.refinedev.practice.util.scoreboard.events.AssembleBoardDestroyEvent;
 
 @Getter
 public class AssembleListener implements Listener {

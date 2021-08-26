@@ -1,11 +1,11 @@
 package xyz.refinedev.practice.util.command.argument;
 
 import com.google.common.base.Preconditions;
-import xyz.refinedev.practice.util.command.command.CommandFlag;
-import xyz.refinedev.practice.util.command.command.DrinkCommandService;
 import lombok.Getter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.util.command.command.CommandFlag;
+import xyz.refinedev.practice.util.command.command.DrinkCommandService;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

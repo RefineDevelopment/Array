@@ -2,6 +2,8 @@ package xyz.refinedev.practice.party;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.duel.DuelRequest;
@@ -14,8 +16,6 @@ import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.Clickable;
 import xyz.refinedev.practice.util.other.TaskUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.stream.Collectors;

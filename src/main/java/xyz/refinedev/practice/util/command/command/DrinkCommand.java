@@ -1,11 +1,11 @@
 package xyz.refinedev.practice.util.command.command;
 
+import lombok.Getter;
 import xyz.refinedev.practice.util.command.exception.CommandStructureException;
 import xyz.refinedev.practice.util.command.exception.MissingProviderException;
 import xyz.refinedev.practice.util.command.parametric.CommandParameter;
 import xyz.refinedev.practice.util.command.parametric.CommandParameters;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
-import lombok.Getter;
 
 import java.lang.reflect.Method;
 import java.util.Set;

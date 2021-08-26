@@ -1,9 +1,5 @@
 package xyz.refinedev.practice.pvpclasses.classes;
 
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.pvpclasses.PvPClass;
-import xyz.refinedev.practice.profile.Profile;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -23,6 +19,10 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.pvpclasses.PvPClass;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -77,12 +77,12 @@ public class Archer extends PvPClass implements Listener {
                     return;
                 }
 
-                PvPClass equipped = this.plugin.getClassManager().getEquippedClass(shooter);
+                PvPClass equipped = this.plugin.getPvpClassManager().getEquippedClass(shooter);
 
                 if ((equipped == null) || (!equipped.equals(this))) {
                     return;
                 }
-                if ((this.plugin.getClassManager().getEquippedClass(damaged) != null) && (this.plugin.getClassManager().getEquippedClass(damaged).equals(this))) {
+                if ((this.plugin.getPvpClassManager().getEquippedClass(damaged) != null) && (this.plugin.getPvpClassManager().getEquippedClass(damaged).equals(this))) {
                     return;
                 }
 
@@ -149,7 +149,7 @@ public class Archer extends PvPClass implements Listener {
         }
 
         if (((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK)) && (event.hasItem()) && (event.getItem().getType() == Material.SUGAR)) {
-            if (this.plugin.getClassManager().getEquippedClass(event.getPlayer()) != this) {
+            if (this.plugin.getPvpClassManager().getEquippedClass(event.getPlayer()) != this) {
                 return;
             }
             long timestamp = archerSpeedCooldowns.getOrDefault(event.getPlayer().getUniqueId(), 0L);
@@ -172,7 +172,7 @@ public class Archer extends PvPClass implements Listener {
             }
         } else if (((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK)) && (event.hasItem()) && (event.getItem().getType() == Material.FEATHER)) {
 
-            if (this.plugin.getClassManager().getEquippedClass(event.getPlayer()) != this) {
+            if (this.plugin.getPvpClassManager().getEquippedClass(event.getPlayer()) != this) {
                 return;
             }
 
@@ -196,7 +196,7 @@ public class Archer extends PvPClass implements Listener {
             }
         } else if (((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK)) && (event.hasItem()) && (event.getItem().getType() == Material.IRON_INGOT)) {
 
-            if (this.plugin.getClassManager().getEquippedClass(event.getPlayer()) != this) {
+            if (this.plugin.getPvpClassManager().getEquippedClass(event.getPlayer()) != this) {
                 return;
             }
 

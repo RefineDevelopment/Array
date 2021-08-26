@@ -1,26 +1,22 @@
 package xyz.refinedev.practice.cmds;
 
-import com.mongodb.client.model.Filters;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.clan.meta.ClanInvite;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
-import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.rank.Rank;
+import xyz.refinedev.practice.profile.rank.RankType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.OptArg;
 import xyz.refinedev.practice.util.command.annotation.Sender;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import xyz.refinedev.practice.util.command.annotation.Text;
 
-import java.util.Arrays;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -166,7 +162,7 @@ public class ClanCommands {
         }
 
         clan.invite(target);
-        clan.broadcast(Locale.CLAN_INVITED_BROADCAST.toString().replace("<invited>", Rank.getRankType().getFullName(target)));
+        clan.broadcast(Locale.CLAN_INVITED_BROADCAST.toString().replace("<invited>", RankType.getRankAdapter().getFullName(target)));
     }
 
 

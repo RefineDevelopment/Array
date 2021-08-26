@@ -1,7 +1,5 @@
 package xyz.refinedev.practice.util.menu;
 
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.util.other.TaskUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,6 +11,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.util.other.TaskUtil;
 
 public class MenuListener implements Listener {
 

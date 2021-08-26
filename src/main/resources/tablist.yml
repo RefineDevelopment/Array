@@ -1,7 +1,52 @@
 TABLIST:
-  HEADER: "\n&c&lRefine Practice\n&7&owww.refinedev.xyz\n"
-  FOOTER: "\n&c&oYou can buy our products and issue commissions at\n&7discord.refinedev.xyz\n"
+  #In Seconds
+  UPDATE_TICKS: 1
+  VANILLA_TAB: true
   ELO_FORMAT: "&c<name> &7- &c<elo>"
+  HEADER:
+    - ""
+    - "&c&lRefine Practice"
+    - "&7&owww.refinedev.xyz"
+    - ""
+  FOOTER:
+    - ""
+    - "&c&oYou can buy our products and issue commissions at"
+    - "&7discord.refinedev.xyz"
+    - ""
+  SORT_RANKS:
+    owner:
+      permission: "array.tablist.owner"
+      priority: 10
+    manager:
+      permission: "array.tablist.manager"
+      priority: 9
+    developer:
+      permission: "array.tablist.developer"
+      priority: 8
+    mod:
+      permission: "array.tablist.mod"
+      priority: 7
+    helper:
+      permission: "array.tablist.helper"
+      priority: 6
+    builder:
+      permission: "array.tablist.builder"
+      priority: 5
+    trial:
+      permission: "array.tablist.trial"
+      priority: 4
+    famous:
+      permission: "array.tablist.famous"
+      priority: 3
+    media:
+      permission: "array.tablist.media"
+      priority: 2
+    diamond:
+      permission: "array.tablist.diamond"
+      priority: 1
+    default:
+      permission: "none"
+      priority: 0
 
 LOBBY:
   LEFT:
@@ -140,14 +185,14 @@ IN-PARTY:
     6: "&cMembers"
     7: "&f<party_member_1>"
     8: "&f<party_member_2>"
-    9: "&f<party_member_2>"
-    10: "&f<party_member_2>"
-    11: "&f<party_member_3>"
-    12: "&f<party_member_4>"
-    13: "&f<party_member_5>"
-    14: "&f<party_member_6>"
-    15: "&f<party_member_7>"
-    16: "&f<party_member_8>"
+    9: "&f<party_member_3>"
+    10: "&f<party_member_4>"
+    11: "&f<party_member_5>"
+    12: "&f<party_member_6>"
+    13: "&f<party_member_7>"
+    14: "&f<party_member_8>"
+    15: "&f<party_member_9>"
+    16: "&f<party_member_10>"
     17: " "
     18: ""
     19: "&9&lDiscord"

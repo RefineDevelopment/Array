@@ -1,10 +1,5 @@
 package xyz.refinedev.practice.arena.runnables;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 import com.boydti.fawe.util.EditSessionBuilder;
 import com.boydti.fawe.util.TaskManager;
 import com.sk89q.worldedit.EditSession;
@@ -15,6 +10,11 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @since 11/25/2017

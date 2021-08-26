@@ -1,9 +1,9 @@
 package xyz.refinedev.practice.pvpclasses.events;
 
-import xyz.refinedev.practice.pvpclasses.PvPClass;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import xyz.refinedev.practice.pvpclasses.PvPClass;
 
 /**
  * Event called when a player equips a {@link PvPClass}.

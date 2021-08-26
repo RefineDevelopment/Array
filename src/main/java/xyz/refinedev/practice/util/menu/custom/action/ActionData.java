@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.util.menu.custom.action;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -11,10 +13,12 @@ import lombok.Data;
  * Project: Array
  */
 
-@Data
+@Getter @Setter
+@RequiredArgsConstructor
 public class ActionData {
 
     private final ActionType type;
+    private final String clickType;
     private final String action;
 
 }

@@ -1,22 +1,23 @@
 package xyz.refinedev.practice.party.menu;
 
 import lombok.AllArgsConstructor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.party.enums.PartyManageType;
 import xyz.refinedev.practice.party.Party;
+import xyz.refinedev.practice.party.enums.PartyManageType;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.Menu;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import xyz.refinedev.practice.util.menu.Button;
 import java.util.List;
 import java.util.Map;
-import org.bukkit.entity.Player;
-import xyz.refinedev.practice.util.menu.Menu;
 
 public class PartySettingsMenu extends Menu {
 

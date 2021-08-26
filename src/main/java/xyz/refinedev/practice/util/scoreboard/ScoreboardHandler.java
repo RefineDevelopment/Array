@@ -1,17 +1,16 @@
 package xyz.refinedev.practice.util.scoreboard;
 
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
-import xyz.refinedev.practice.util.scoreboard.events.AssembleBoardCreateEvent;
 import lombok.Getter;
 import lombok.Setter;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.refinedev.practice.util.scoreboard.events.AssembleBoardCreateEvent;
+
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter @Setter
 public class ScoreboardHandler {

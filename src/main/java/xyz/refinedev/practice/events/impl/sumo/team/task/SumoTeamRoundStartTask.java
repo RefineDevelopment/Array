@@ -3,7 +3,6 @@ package xyz.refinedev.practice.events.impl.sumo.team.task;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.events.EventState;
 import xyz.refinedev.practice.events.impl.sumo.team.SumoTeam;
 import xyz.refinedev.practice.events.meta.player.EventPlayer;

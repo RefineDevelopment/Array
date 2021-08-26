@@ -1,14 +1,15 @@
 package xyz.refinedev.practice.arena.meta.cuboid;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @Data
 public class Cuboid implements Iterable<Location> {
@@ -197,7 +198,7 @@ public class Cuboid implements Iterable<Location> {
 	/**
 	 * Get the Blocks at the four corners of the Cuboid, without respect to y-value
 	 *
-	 * @return essentials of Block objects representing the Cuboid corners
+	 * @return listeners of Block objects representing the Cuboid corners
 	 */
 	public Location[] getCorners() {
 		Location[] res = new Location[4];

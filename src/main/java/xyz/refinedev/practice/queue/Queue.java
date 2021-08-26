@@ -1,13 +1,13 @@
 package xyz.refinedev.practice.queue;
 
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.util.other.TimeUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.util.*;
 

@@ -1,28 +1,27 @@
 package xyz.refinedev.practice.cmds;
 
+import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
+import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.arena.impl.StandaloneArena;
 import xyz.refinedev.practice.duel.DuelProcedure;
 import xyz.refinedev.practice.duel.DuelRequest;
 import xyz.refinedev.practice.duel.menu.DuelSelectKitMenu;
-import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.profile.rank.Rank;
-import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.HCFMatch;
-import xyz.refinedev.practice.match.types.SoloMatch;
-import xyz.refinedev.practice.match.types.TeamMatch;
-import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.profile.rank.RankAdapter;
+import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 import xyz.refinedev.practice.util.other.PlayerUtil;
-import org.bukkit.entity.Player;
+import xyz.refinedev.practice.util.other.TaskUtil;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -34,6 +33,9 @@ import org.bukkit.entity.Player;
  */
 
 public class DuelCommands {
+
+    private final Array plugin = Array.getInstance();
+    private final RankAdapter rankAdapter = plugin.getRankManager().getRankType().getRankAdapter();
 
     private Match match;
     private Arena arena;
@@ -48,7 +50,6 @@ public class DuelCommands {
             player.sendMessage(CC.RED + "You cannot duel yourself.");
             return;
         }
-
         if (senderProfile.isBusy()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
@@ -61,12 +62,12 @@ public class DuelCommands {
             player.sendMessage(CC.RED + "That player is not accepting any duel requests at the moment.");
             return;
         }
-        if (!senderProfile.canSendDuelRequest(player)) {
+        if (senderProfile.cannotSendDuelRequest(player)) {
             player.sendMessage(CC.RED + "You have already sent that player a duel request.");
             return;
         }
         if (senderProfile.getParty() != null && receiverProfile.getParty() == null) {
-            player.sendMessage(CC.RED + "That player is not in a party.");
+            player.sendMessage(Locale.ERROR_TARGET_NO_PARTY.toString());
             return;
         }
 
@@ -105,18 +106,18 @@ public class DuelCommands {
 
         if (request.isParty()) {
             if (senderProfile.getParty() == null) {
-                player.sendMessage(CC.RED + "You do not have a party to duel with.");
+                player.sendMessage(Locale.ERROR_NO_PARTY_TO_DUEL.toString());
                 return;
             } else if (receiverProfile.getParty() == null) {
-                player.sendMessage(CC.RED + "That player does not have a party to duel with.");
+                player.sendMessage(Locale.ERROR_TARGET_NO_PARTY.toString());
                 return;
             }
         } else {
             if (senderProfile.getParty() != null) {
-                player.sendMessage(CC.RED + "You cannot duel whilst in a party.");
+                player.sendMessage(Locale.ERROR_PARTY.toString());
                 return;
             } else if (receiverProfile.getParty() != null) {
-                player.sendMessage(CC.RED + "That player is in a party and cannot duel right now.");
+                player.sendMessage(Locale.ERROR_TARGET_IN_PARTY.toString());
                 return;
             }
         }
@@ -131,22 +132,24 @@ public class DuelCommands {
         if (arena.isActive()) {
             if (arena.getType().equals(ArenaType.STANDALONE)) {
                 StandaloneArena sarena = (StandaloneArena) arena;
-                if (sarena.getDuplicates() != null) {
-                    boolean foundarena = false;
-                    for ( Arena darena : sarena.getDuplicates() ) {
-                        if (!darena.isActive()) {
-                            arena = darena;
-                            foundarena = true;
-                            break;
-                        }
-                    }
-                    if (!foundarena) {
-                        player.sendMessage(CC.RED + "The arena you were dueled was a build arena and there were no arenas found.");
-                        return;
+                if (sarena.getDuplicates() == null) {
+                    player.sendMessage(CC.RED + "The arena you were dueled was a build arena and all arenas are busy.");
+                    return;
+                }
+                boolean foundarena = false;
+                for ( Arena duplicate : sarena.getDuplicates() ) {
+                    if (!duplicate.isActive()) {
+                        arena = duplicate;
+                        foundarena = true;
+                        break;
                     }
                 }
+                if (!foundarena) {
+                    player.sendMessage(CC.RED + "The arena you were dueled was a build arena and all arenas are busy.");
+                    return;
+                }
             } else if (arena.getType().equals(ArenaType.THEBRIDGE)) {
-                player.sendMessage(CC.RED + "The arena you were dueled was a bridge arena and there were no arenas found.");
+                player.sendMessage(CC.RED + "The arena you were dueled was a build arena and all arenas are busy.");
                 return;
             }
         }
@@ -155,7 +158,7 @@ public class DuelCommands {
             arena.setActive(true);
         }
 
-        kit = request.getKit();
+        this.kit = request.getKit();
         this.arena = arena;
 
         if (request.isParty()) {
@@ -172,22 +175,20 @@ public class DuelCommands {
                     teamB.getTeamPlayers().add(new TeamPlayer(partyMember));
                 }
             }
-            if (request.getKit().getName().equals("HCFTeamFight")) {
+            if (request.getKit().equals(Kit.getHCFTeamFight())) {
                 match = new HCFMatch(teamA, teamB, arena);
             } else {
                 match = kit.createTeamKitMatch(teamA, teamB, request.getKit(), arena);
             }
         } else {
             match = kit.createSoloKitMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena, QueueType.UNRANKED);
-        }
-        if (!request.isParty()) {
             for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList() ) {
-                String opponentMessages = this.formatMessages(target, player, string, Rank.getRankType().getFullName(player), Rank.getRankType().getFullName(target), senderProfile.getStatisticsData().get(request.getKit()).getElo(), receiverProfile.getStatisticsData().get(request.getKit()).getElo(), QueueType.UNRANKED);
+                String opponentMessages = this.formatMessages(target, player, string, rankAdapter.getFullName(player), rankAdapter.getFullName(target), senderProfile.getStatisticsData().get(request.getKit()).getElo(), receiverProfile.getStatisticsData().get(request.getKit()).getElo(), QueueType.UNRANKED);
                 player.sendMessage(replaceOpponent(opponentMessages, player));
                 target.sendMessage(replaceOpponent(opponentMessages, target));
             }
         }
-        match.start();
+        TaskUtil.run(match::start);
     }
 
     private String formatMessages(Player player1P, Player player2P, String string, String player1, String player2, int player1Elo, int player2Elo, QueueType type) {

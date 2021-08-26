@@ -5,12 +5,10 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.events.EventManager;
-import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Require;
 import xyz.refinedev.practice.util.command.annotation.Sender;
-import xyz.refinedev.practice.util.other.Cooldown;
 
 /**
  * This Project is property of Refine Development © 2021

@@ -1,8 +1,8 @@
 package xyz.refinedev.practice.util.command;
 
 import com.google.common.base.Preconditions;
-import xyz.refinedev.practice.util.command.command.DrinkCommandService;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.refinedev.practice.util.command.command.DrinkCommandService;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.ConcurrentHashMap;

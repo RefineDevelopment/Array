@@ -1,20 +1,20 @@
 package xyz.refinedev.practice.duel;
 
 import lombok.Data;
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.profile.rank.Rank;
-import xyz.refinedev.practice.profile.rank.RankType;
-import xyz.refinedev.practice.util.chat.Clickable;
-import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
-import org.bukkit.entity.Player;
+import xyz.refinedev.practice.profile.rank.RankAdapter;
+import xyz.refinedev.practice.profile.rank.RankType;
+import xyz.refinedev.practice.util.chat.Clickable;
+import xyz.refinedev.practice.util.other.PlayerUtil;
 
 @Data
 public class DuelProcedure {
 
-    public static RankType rank = Rank.getRankType();
+    public static RankAdapter rank = RankType.getRankAdapter();
 
     private final Player sender;
     private final Player target;

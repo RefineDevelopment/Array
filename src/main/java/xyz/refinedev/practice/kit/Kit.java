@@ -2,9 +2,7 @@ package xyz.refinedev.practice.kit;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
@@ -20,7 +18,7 @@ import xyz.refinedev.practice.match.types.kit.TeamBridgeMatch;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.config.BasicConfigurationFile;
+import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.inventory.InventoryUtil;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 

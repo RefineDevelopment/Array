@@ -1,12 +1,11 @@
 package xyz.refinedev.practice.util.menu.button;
 
+import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-
-import lombok.AllArgsConstructor;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.menu.Button;

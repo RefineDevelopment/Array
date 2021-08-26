@@ -16,6 +16,7 @@ import org.bukkit.Sound;
 @Getter @Setter
 public class KillEffectSound {
 
+    private String key;
     private Sound sound;
     private float pitch = 2.0f;
 }

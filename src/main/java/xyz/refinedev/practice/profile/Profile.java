@@ -4,24 +4,17 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import com.lunarclient.bukkitapi.cooldown.LunarClientAPICooldown;
-
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
-import com.mongodb.client.model.Sorts;
-
 import lombok.Getter;
 import lombok.Setter;
-
 import org.bson.Document;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.ArrayCache;
@@ -49,7 +42,6 @@ import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.hotbar.HotbarLayout;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
 import xyz.refinedev.practice.profile.killeffect.KillEffect;
-import xyz.refinedev.practice.profile.rank.Rank;
 import xyz.refinedev.practice.profile.settings.meta.SettingsMeta;
 import xyz.refinedev.practice.profile.statistics.StatisticsData;
 import xyz.refinedev.practice.queue.Queue;
@@ -64,7 +56,6 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.Executor;
 
-@SuppressWarnings("all")
 @Getter @Setter
 public class Profile {
 
@@ -210,7 +201,7 @@ public class Profile {
      * @return {@link ChatColor}
      */
     public ChatColor getColor() {
-        return Rank.getRankType().getRankColor(this.getPlayer());
+        return plugin.getRankManager().getRankType().getRankAdapter().getRankColor(this.getPlayer());
     }
 
     /**
@@ -230,12 +221,16 @@ public class Profile {
             if (document.getString("kill_effect") != null) {
                 UUID uuid = UUID.fromString(document.getString("kill_effect"));
                 KillEffect kill = plugin.getKillEffectManager().getByUUID(uuid);
-                if (kill != null) this.killEffect = kill;
+                if (kill != null) {
+                    this.killEffect = kill;
+                } else {
+                    this.killEffect = plugin.getKillEffectManager().getDefault();
+                }
             }
 
-            if (document.getString("clan") != null) this.clan=Clan.getByName(document.getString("clan"));
+            if (document.getString("clan") != null) this.clan = Clan.getByName(document.getString("clan"));
 
-            Document options=(Document) document.get("settings");
+            Document options = (Document) document.get("settings");
 
             this.settings.setScoreboardEnabled(options.getBoolean("showScoreboard"));
             this.settings.setAllowSpectators(options.getBoolean("allowSpectators"));
@@ -252,7 +247,7 @@ public class Profile {
 
             for ( String key : kitStatistics.keySet() ) {
                 Document kitDocument=(Document) kitStatistics.get(key);
-                Kit kit=Kit.getByName(key);
+                Kit kit = Kit.getByName(key);
 
                 if (kit != null) {
                     StatisticsData statisticsData = new StatisticsData();
@@ -307,11 +302,12 @@ public class Profile {
      * Save the profile to the mongo database
      */
     public void save() {
-        Document document=new Document();
+        Document document = new Document();
         document.put("uuid", uuid.toString());
         document.put("name", Bukkit.getOfflinePlayer(uuid).getName());
         document.put("globalElo", globalElo);
 
+        if (killEffect != null) document.put("kill_effect", killEffect.getUniqueId().toString());
         if (clan != null) document.put("clan", clan.getName());
 
         Document optionsDocument=new Document();
@@ -328,9 +324,9 @@ public class Profile {
 
         document.put("settings", optionsDocument);
 
-        Document kitStatisticsDocument=new Document();
+        Document kitStatisticsDocument = new Document();
         for ( Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet() ) {
-            Document kitDocument=new Document();
+            Document kitDocument = new Document();
             kitDocument.put("elo", entry.getValue().getElo());
             kitDocument.put("won", entry.getValue().getWon());
             kitDocument.put("lost", entry.getValue().getLost());
@@ -339,7 +335,7 @@ public class Profile {
 
         document.put("kitStatistics", kitStatisticsDocument);
 
-        Document kitsDocument=new Document();
+        Document kitsDocument = new Document();
         for ( Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet() ) {
             JsonArray kitsArray=new JsonArray();
 
@@ -368,6 +364,7 @@ public class Profile {
     /**
      * Recalculate the profile's global elo
      */
+    @SuppressWarnings("all")
     public void calculateGlobalElo() {
         int globalElo = 0;
         int kitCounter = 0;
@@ -381,23 +378,23 @@ public class Profile {
     }
 
     /**
-     * Can the profile send a duel request
+     * Can the profile not send a duel request
      * to another player
      *
      * @param player The player receiving the duel request
      * @return {@link Boolean}
      */
-    public boolean canSendDuelRequest(Player player) {
+    public boolean cannotSendDuelRequest(Player player) {
         if (!sentDuelRequests.containsKey(player.getUniqueId())) {
-            return true;
+            return false;
         }
 
         DuelRequest request = sentDuelRequests.get(player.getUniqueId());
         if (request.isExpired()) {
             sentDuelRequests.remove(player.getUniqueId());
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     /**
@@ -459,6 +456,7 @@ public class Profile {
      */
     public void teleportToSpawn() {
         final Player player = getPlayer();
+
         SpawnTeleportEvent event = new SpawnTeleportEvent(player, plugin.getConfigHandler().getSpawn());
         event.call();
 
@@ -470,17 +468,6 @@ public class Profile {
             player.teleport(event.getLocation());
         }
     }
-
-    public void handleKillEffect(Match match) {
-
-    }
-
-    public void handleKillEffect(Event event) {
-
-    }
-
-
-    //public void handleKillEffect(Brawl brawl) {}
 
     /**
      * See if the profile's hotbar needs to be updated
@@ -575,6 +562,16 @@ public class Profile {
     }
 
     /**
+     * Get's vanilla tablist priority checking
+     * through permissions given in the config
+     *
+     * @return {@link Integer}
+     */
+    public int getTabPriority() {
+        return 0;
+    }
+
+    /**
      * Get the profile's win/loose ratio
      *
      * @return Returns the WLR in {@link String} format
@@ -586,6 +583,15 @@ public class Profile {
         double ratio = totalWins / Math.max(totalLosses, 1);
         DecimalFormat format = new DecimalFormat("#.##");
         return format.format(ratio);
+    }
+
+    /**
+     * Returns true if the specified kill effect is selected
+     *
+     * @param killEffect {@link KillEffect}
+     */
+    public boolean isSelected(KillEffect killEffect) {
+        return this.killEffect != null && this.killEffect.getUniqueId().equals(killEffect.getUniqueId());
     }
 
     /**
@@ -659,7 +665,7 @@ public class Profile {
     public void handleVisibility() {
         Player player = getPlayer();
         if (player != null) {
-            TaskUtil.runAsync(() -> {
+            TaskUtil.run(() -> {
                 for ( Player otherPlayer : Bukkit.getOnlinePlayers() ) {
                     this.handleVisibility(player, otherPlayer);
                 }
@@ -694,7 +700,7 @@ public class Profile {
     }
 
     public String getEloLeague() {
-        return plugin.getDivisionsManager().getDivision(this);
+        return plugin.getDivisionsManager().getDivisionByELO(globalElo).getDisplayName();
     }
 
     public Integer getTotalWins() {

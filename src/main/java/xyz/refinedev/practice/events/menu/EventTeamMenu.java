@@ -2,14 +2,11 @@ package xyz.refinedev.practice.events.menu;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
-import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.events.Event;
-import xyz.refinedev.practice.events.impl.sumo.team.SumoTeam;
 import xyz.refinedev.practice.events.menu.buttons.SelectTeamButton;
 import xyz.refinedev.practice.events.meta.group.EventGroup;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.menu.Button;
-import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.menu.pagination.PaginatedMenu;
 
 import java.util.HashMap;

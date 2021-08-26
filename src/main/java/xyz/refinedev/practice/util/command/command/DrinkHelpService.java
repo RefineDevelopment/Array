@@ -2,13 +2,13 @@ package xyz.refinedev.practice.util.command.command;
 
 import lombok.Getter;
 import lombok.Setter;
-import xyz.refinedev.practice.util.chat.CC;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.util.chat.CC;
 
 @Getter @Setter
 public class DrinkHelpService {

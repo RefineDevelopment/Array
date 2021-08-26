@@ -1,14 +1,13 @@
 package xyz.refinedev.practice.leaderboards.external;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.api.ArrayCache;
-import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
-import xyz.refinedev.practice.profile.Profile;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
+import xyz.refinedev.practice.profile.Profile;
 
 public class LeaderboardPlaceholders extends PlaceholderExpansion {
 

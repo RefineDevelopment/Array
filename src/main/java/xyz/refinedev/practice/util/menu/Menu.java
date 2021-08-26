@@ -1,18 +1,21 @@
 package xyz.refinedev.practice.util.menu;
 
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.util.chat.CC;
 import lombok.Getter;
 import lombok.Setter;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.util.chat.CC;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter @Setter
 public abstract class Menu {
@@ -31,6 +34,19 @@ public abstract class Menu {
 
     private ItemStack createItemStack(Player player, Button button) {
         ItemStack item = button.getButtonItem(player);
+        ItemMeta itemMeta = item.getItemMeta();
+
+        boolean placeholderAPI = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
+
+        //PlaceholderAPI Support
+        if (placeholderAPI) {
+            itemMeta.setDisplayName(PlaceholderAPI.setPlaceholders(player, itemMeta.getDisplayName()));
+            if (itemMeta.getLore() != null && !itemMeta.getLore().isEmpty()) {
+                List<String> lore = itemMeta.getLore();
+                itemMeta.setLore(lore.stream().map(s -> PlaceholderAPI.setPlaceholders(player, s)).collect(Collectors.toList()));
+            }
+            item.setItemMeta(itemMeta);
+        }
 
         if (item.getType() != Material.SKULL_ITEM) {
             ItemMeta meta = item.getItemMeta();
@@ -41,11 +57,15 @@ public abstract class Menu {
 
             item.setItemMeta(meta);
         }
-
         return item;
     }
 
-    public void openMenu(final Player player) {
+    /**
+     * Open the menu for the Player
+     *
+     * @param player Player viewing the menu
+     */
+    public void openMenu(Player player) {
         this.buttons = this.getButtons(player);
 
         Menu previousMenu = Menu.currentlyOpenedMenus.get(player.getName());
@@ -105,6 +125,12 @@ public abstract class Menu {
         this.setClosedByMenu(false);
     }
 
+    /**
+     * Returns the size of buttons
+     *
+     * @param buttons {@link HashMap}
+     * @return The amount of buttons
+     */
     public int size(Map<Integer, Button> buttons) {
         int highest = 0;
 
@@ -117,21 +143,53 @@ public abstract class Menu {
         return (int) (Math.ceil((highest + 1) / 9D) * 9D);
     }
 
+    /**
+     * Size of the inventory
+     *
+     * @return {@link Integer}
+     */
     public int getSize() {
         return -1;
     }
 
+    /**
+     * Get slot at a particular x and y
+     *
+     * @return The slot
+     */
     public int getSlot(int x, int y) {
         return ((9 * y) + x);
     }
 
+    /**
+     * Get menu's title
+     *
+     * @param player {@link Player} viewing the menu
+     * @return {@link String} the title of the menu
+     */
     public abstract String getTitle(Player player);
 
+    /**
+     * Map of slots and buttons on that particular slot
+     *
+     * @param player {@link Player} player viewing the menu
+     * @return {@link HashMap}
+     */
     public abstract Map<Integer, Button> getButtons(Player player);
 
+    /**
+     * This method runs when the menu is opened
+     *
+     * @param player {@link Player} player viewing the menu
+     */
     public void onOpen(Player player) {
     }
 
+    /**
+     * This method runs when the menu is closed
+     *
+     * @param player {@link Player} player viewing the menu
+     */
     public void onClose(Player player) {
     }
 

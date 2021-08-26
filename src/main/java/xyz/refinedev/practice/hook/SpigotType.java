@@ -3,9 +3,7 @@ package xyz.refinedev.practice.hook;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.event.Listener;
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.hook.KnockbackType;
-import xyz.refinedev.practice.hook.types.*;
+import xyz.refinedev.practice.hook.types.Default;
 import xyz.refinedev.practice.hook.types.atomspigot.AtomSpigot;
 import xyz.refinedev.practice.hook.types.atomspigot.AtomSpigotRestorer;
 import xyz.refinedev.practice.hook.types.carbonspigot.CarbonSpigot;
@@ -20,7 +18,6 @@ import xyz.refinedev.practice.hook.types.ravespigot.RaveSpigot;
 import xyz.refinedev.practice.hook.types.ravespigot.RaveSpigotRestorer;
 import xyz.refinedev.practice.hook.types.spigotx.SpigotX;
 import xyz.refinedev.practice.hook.types.spigotx.SpigotXRestorer;
-import org.bukkit.Bukkit;
 
 import java.util.Arrays;
 

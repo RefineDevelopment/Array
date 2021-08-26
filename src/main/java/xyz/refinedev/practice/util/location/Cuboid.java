@@ -292,7 +292,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
     /**
      * Get the Blocks at the eight corners of the Cuboid.
      *
-     * @return essentials of Block objects representing the Cuboid corners
+     * @return listeners of Block objects representing the Cuboid corners
      */
     public Block[] corners() {
         Block[] res = new Block[8];

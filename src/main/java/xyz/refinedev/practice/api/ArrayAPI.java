@@ -2,7 +2,7 @@ package xyz.refinedev.practice.api;
 
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.rank.Rank;
+import xyz.refinedev.practice.profile.rank.RankType;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -53,7 +53,7 @@ public class ArrayAPI implements API {
 
     @Override
     public String getDisplayName(Player player) {
-        return Rank.getRankType().getFullName(player);
+        return RankType.getRankAdapter().getFullName(player);
     }
 
     @Override

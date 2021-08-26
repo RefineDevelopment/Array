@@ -3,6 +3,7 @@ package xyz.refinedev.practice.adapters;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.ArrayCache;
@@ -18,13 +19,14 @@ import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.pvpclasses.PvPClass;
 import xyz.refinedev.practice.pvpclasses.classes.Bard;
 import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.config.BasicConfigurationFile;
+import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.tablist.adapter.TabAdapter;
 import xyz.refinedev.tablist.construct.TabEntry;
 import xyz.refinedev.tablist.util.Skin;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +52,7 @@ public class TablistAdapter implements TabAdapter {
      */
     @Override
     public String getHeader(Player player) {
-        return config.getString("TABLIST.HEADER");
+        return Strings.join(config.getStringList("TABLIST.HEADER"), "\n");
     }
 
     /**
@@ -61,7 +63,7 @@ public class TablistAdapter implements TabAdapter {
      */
     @Override
     public String getFooter(Player player) {
-        return config.getString("TABLIST.FOOTER");
+        return Strings.join(config.getStringList("TABLIST.FOOTER"), "\n");
     }
 
     /**
@@ -73,7 +75,24 @@ public class TablistAdapter implements TabAdapter {
     @Override
     public List<TabEntry> getLines(Player player) {
         List<TabEntry> entries = new ArrayList<>();
-        Profile profile = Profile.getByPlayer(player); 
+        Profile profile = Profile.getByPlayer(player);
+
+        if (player == null) return entries;
+
+        if (profile.getSettings().isVanillaTab()) {
+            List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+            players.sort(new TabComparator());
+
+            for ( int i = 0; i < 80; i++ ) {
+                final int x = i % 4;
+                final int y = i / 4;
+
+                Player tabPlayer = players.get(i);
+                entries.add(new TabEntry(x, y, tabPlayer.getDisplayName(), tabPlayer.spigot().getPing(), Skin.getPlayer(tabPlayer)));
+            }
+
+            return entries;
+        }
         
         if ((profile.isInLobby() || profile.isInQueue()) && profile.getParty() == null) {
             for ( int i = 0; i < 20; i++ ) {
@@ -580,7 +599,7 @@ public class TablistAdapter implements TabAdapter {
         Profile profile = Profile.getByPlayer(player);
         Match match = profile.getMatch();
         Party party = profile.getParty();
-        PvPClass pvpClass = Array.getInstance().getClassManager().getEquippedClass(player);
+        PvPClass pvpClass = Array.getInstance().getPvpClassManager().getEquippedClass(player);
 
         Team team = match.getTeam(player);
         Team opponentTeam = match.getOpponentTeam(player);
@@ -743,5 +762,13 @@ public class TablistAdapter implements TabAdapter {
                 .replace("<twitter>", plugin.getConfigHandler().getTWITTER())
                 .replace("<discord>", plugin.getConfigHandler().getDISCORD())
                 .replace("<store>", plugin.getConfigHandler().getSTORE());
+    }
+
+    private static class TabComparator implements Comparator<Player> {
+
+        @Override
+        public int compare(Player o1, Player o2) {
+            return Profile.getByPlayer(o2).getTabPriority() - Profile.getByPlayer(o1).getTabPriority();
+        }
     }
 }

@@ -1,8 +1,8 @@
 package xyz.refinedev.practice.util.nametags;
 
+import lombok.Getter;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.nametags.construct.NametagUpdate;
-import lombok.Getter;
 
 import java.util.Iterator;
 import java.util.Map;

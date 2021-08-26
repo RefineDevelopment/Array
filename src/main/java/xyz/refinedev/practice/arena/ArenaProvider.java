@@ -1,14 +1,13 @@
 package xyz.refinedev.practice.arena;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ArenaProvider extends DrinkProvider<Arena> {

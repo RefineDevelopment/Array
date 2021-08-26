@@ -14,7 +14,10 @@ import xyz.refinedev.practice.task.ClanLeaderboardsTask;
 import xyz.refinedev.practice.task.GlobalLeaderboardsTask;
 import xyz.refinedev.practice.task.KitLeaderboardsTask;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.Executor;
 
 /**

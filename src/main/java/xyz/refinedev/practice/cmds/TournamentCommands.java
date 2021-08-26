@@ -1,12 +1,13 @@
 package xyz.refinedev.practice.cmds;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.tournament.Tournament;
+import xyz.refinedev.practice.tournament.TournamentType;
 import xyz.refinedev.practice.tournament.impl.SoloTournament;
+import xyz.refinedev.practice.tournament.impl.TeamTournament;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
@@ -23,9 +24,14 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
 public class TournamentCommands {
 
     @Command(name = "host", aliases = "start", desc = "Start a tournament")
-    public void host(@Sender Player player) {
-        SoloTournament tournament = new SoloTournament(player.getName(), Kit.getByName("NoDebuff"));
-        tournament.join(player);
+    public void host(@Sender Player player, Kit kit, TournamentType type) {
+        if (type.equals(TournamentType.SOLO)) {
+            new SoloTournament(player.getName(), kit);
+        } else {
+            new TeamTournament(player.getName(), 2, kit);
+        }
+        this.join(player);
+
     }
 
     @Command(name = "join", desc = "Join the on-going tournament")
@@ -43,8 +49,17 @@ public class TournamentCommands {
         if (profile.isBusy()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
+        } else if (profile.getParty() != null && profile.getParty().isFighting()) {
+            player.sendMessage(Locale.ERROR_NOTABLE.toString());
         }
-        Tournament.getCurrentTournament().join(player);
+        
+        if (Tournament.getCurrentTournament() instanceof TeamTournament) {
+            player.chat("/party create");
+            Tournament.getCurrentTournament().join(profile.getParty());
+        } else {
+            Tournament.getCurrentTournament().join(player);
+        }
+        
     }
 
     @Command(name = "leave", aliases = "quit", desc = "Leave the on-going tournament")
@@ -57,6 +72,16 @@ public class TournamentCommands {
             player.sendMessage(CC.translate("&7You are not participating in any tournament!"));
             return;
         }
-        Tournament.getCurrentTournament().leave(player);
+
+        Profile profile = Profile.getByPlayer(player);
+
+        if (Tournament.getCurrentTournament() instanceof TeamTournament) {
+            if (profile.getParty() == null) {
+                player.sendMessage(Locale.ERROR_NOTABLE.toString());
+            }
+            Tournament.getCurrentTournament().leave(profile.getParty());
+        } else {
+            Tournament.getCurrentTournament().leave(player);
+        }
     }
 }

@@ -1,14 +1,13 @@
 package xyz.refinedev.practice.match.task;
 
 import lombok.RequiredArgsConstructor;
-import xyz.refinedev.practice.match.MatchState;
-import xyz.refinedev.practice.profile.ProfileState;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.profile.Profile;
-import org.bukkit.*;
-import org.bukkit.block.*;
-import org.bukkit.entity.*;
-import org.bukkit.scheduler.*;
 
 import java.util.ArrayList;
 import java.util.List;

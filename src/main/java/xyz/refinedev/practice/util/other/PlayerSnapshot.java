@@ -1,7 +1,6 @@
 package xyz.refinedev.practice.util.other;
 
 import lombok.Data;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

@@ -1,11 +1,11 @@
 package xyz.refinedev.practice.profile;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -38,7 +38,7 @@ public class ProfileProvider extends DrinkProvider<Profile> {
         String name = arg.get();
         Profile profile = Profile.getByUuid(ArrayCache.getUUID(name));
 
-        if (profile != null && ArrayCache.getUUID(name) != null) {
+        if (ArrayCache.getUUID(name) != null) {
             return profile;
         }
 

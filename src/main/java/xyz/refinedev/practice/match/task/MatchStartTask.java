@@ -1,15 +1,12 @@
 package xyz.refinedev.practice.match.task;
 
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Sound;
+import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.MatchState;
-import xyz.refinedev.practice.util.chat.CC;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TitleAPI;
 

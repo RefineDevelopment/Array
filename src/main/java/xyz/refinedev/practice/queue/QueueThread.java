@@ -1,20 +1,18 @@
 package xyz.refinedev.practice.queue;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
-import xyz.refinedev.practice.match.types.SoloMatch;
-import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.rank.Rank;
+import xyz.refinedev.practice.profile.rank.RankType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 public class QueueThread extends Thread {
 
@@ -104,7 +102,7 @@ public class QueueThread extends Thread {
                             this.match = queue.getKit().createSoloKitMatch(queue, firstMatchPlayer, secondMatchPlayer, kit, arena, queue.getType());
 
                             for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList() ) {
-                                String opponentMessages = this.formatMessages(firstPlayer, secondPlayer, string, Rank.getRankType().getFullName(firstPlayer), Rank.getRankType().getFullName(secondPlayer), firstProfile.getStatisticsData().get(kit).getElo(), secondProfile.getStatisticsData().get(kit).getElo(), queue.getType());
+                                String opponentMessages = this.formatMessages(firstPlayer, secondPlayer, string, RankType.getRankAdapter().getFullName(firstPlayer), RankType.getRankAdapter().getFullName(secondPlayer), firstProfile.getStatisticsData().get(kit).getElo(), secondProfile.getStatisticsData().get(kit).getElo(), queue.getType());
                                 firstPlayer.sendMessage(replaceOpponent(opponentMessages, firstPlayer));
                                 secondPlayer.sendMessage(replaceOpponent(opponentMessages, secondPlayer));
                             }

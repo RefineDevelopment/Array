@@ -1,26 +1,24 @@
 package xyz.refinedev.practice.arena;
 
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.arena.impl.SharedArena;
-import xyz.refinedev.practice.arena.impl.StandaloneArena;
-import xyz.refinedev.practice.arena.impl.TheBridgeArena;
-import xyz.refinedev.practice.arena.meta.Rating;
-import xyz.refinedev.practice.arena.meta.RatingType;
-import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.arena.meta.cuboid.Cuboid;
-import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
-import xyz.refinedev.practice.util.location.LocationUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.arena.impl.SharedArena;
+import xyz.refinedev.practice.arena.impl.StandaloneArena;
+import xyz.refinedev.practice.arena.impl.TheBridgeArena;
+import xyz.refinedev.practice.arena.meta.Rating;
+import xyz.refinedev.practice.arena.meta.cuboid.Cuboid;
+import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.util.chat.CC;
+import xyz.refinedev.practice.util.inventory.ItemBuilder;
+import xyz.refinedev.practice.util.location.LocationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter @Setter
 public class Arena {

@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.util.chat;
 
-import xyz.refinedev.practice.Locale;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;

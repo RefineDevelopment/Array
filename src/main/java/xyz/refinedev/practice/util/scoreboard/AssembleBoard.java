@@ -1,10 +1,5 @@
 package xyz.refinedev.practice.util.scoreboard;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import xyz.refinedev.practice.util.scoreboard.events.AssembleBoardCreatedEvent;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,6 +7,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+import xyz.refinedev.practice.util.scoreboard.events.AssembleBoardCreatedEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class AssembleBoard {
 

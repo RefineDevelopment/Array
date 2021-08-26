@@ -1,14 +1,13 @@
 package xyz.refinedev.practice.util.menu.menus;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.entity.Player;
-
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.menu.TypeCallback;
 import xyz.refinedev.practice.util.menu.button.ConfirmationButton;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ConfirmMenu extends Menu {
 

@@ -1,17 +1,16 @@
 package xyz.refinedev.practice.leaderboards.menu.buttons;
 
 import lombok.AllArgsConstructor;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;

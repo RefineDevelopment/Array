@@ -12,44 +12,32 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.refinedev.practice.adapters.ScoreboardAdapter;
 import xyz.refinedev.practice.adapters.TablistAdapter;
 import xyz.refinedev.practice.api.API;
 import xyz.refinedev.practice.api.ArrayAPI;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.arena.ArenaProvider;
-import xyz.refinedev.practice.arena.ArenaType;
-import xyz.refinedev.practice.arena.ArenaTypeProvider;
-import xyz.refinedev.practice.arena.meta.RatingType;
-import xyz.refinedev.practice.arena.meta.RatingTypeProvider;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.config.ConfigHandler;
 import xyz.refinedev.practice.events.EventManager;
-import xyz.refinedev.practice.events.EventProvider;
-import xyz.refinedev.practice.events.EventType;
 import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.kit.KitProvider;
 import xyz.refinedev.practice.leaderboards.external.LeaderboardPlaceholders;
 import xyz.refinedev.practice.managers.*;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.ProfileProvider;
-import xyz.refinedev.practice.profile.divisions.Divisions;
-import xyz.refinedev.practice.profile.rank.Rank;
 import xyz.refinedev.practice.pvpclasses.bard.EffectRestorer;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.CommandService;
 import xyz.refinedev.practice.util.command.Drink;
-import xyz.refinedev.practice.util.config.BasicConfigurationFile;
+import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.nametags.NameTagHandler;
 import xyz.refinedev.practice.util.other.Description;
 import xyz.refinedev.practice.util.other.EntityHider;
-import xyz.refinedev.practice.util.scoreboard.ScoreboardHandler;
 import xyz.refinedev.practice.util.scoreboard.AssembleStyle;
+import xyz.refinedev.practice.util.scoreboard.ScoreboardHandler;
 import xyz.refinedev.tablist.TablistHandler;
 
 import java.util.Arrays;
@@ -81,7 +69,7 @@ public class Array extends JavaPlugin {
      * All ours Configs
      */
     private BasicConfigurationFile mainConfig, arenasConfig, kitsConfig, eventsConfig, killEffectsConfig,
-            messagesConfig, scoreboardConfig, tablistConfig, divisionsConfig, hotbarConfig, rateConfig;//, brawlConfig;
+                                   messagesConfig, scoreboardConfig, tablistConfig,  hotbarConfig, rateConfig;
 
     /*
      * Mongo
@@ -105,11 +93,13 @@ public class Array extends JavaPlugin {
     private ListenersManager listenersManager;
     private CommandsManager commandsManager;
     private KnockbackManager knockbackManager;
+    private MenuManager menuManager;
+    private RankManager rankManager;
     private KillEffectManager killEffectManager;
     private LeaderboardsManager leaderboardsManager;
-    private Divisions divisionsManager;
+    private DivisionsManager divisionsManager;
     private RatingsManager ratingsManager;
-    private ClassManager classManager;
+    private PvPClassManager pvpClassManager;
     private EffectRestorer effectRestorer;
 
     /*
@@ -131,9 +121,8 @@ public class Array extends JavaPlugin {
         messagesConfig = new BasicConfigurationFile(this, "lang", false);
         tablistConfig = new BasicConfigurationFile(this, "tablist", false);
         scoreboardConfig = new BasicConfigurationFile(this, "scoreboard", false);
-        divisionsConfig = new BasicConfigurationFile(this, "divisions", false);
         rateConfig = new BasicConfigurationFile(this, "ratings", false);
-        killEffectsConfig= new BasicConfigurationFile(this, "killeffects", false);
+        killEffectsConfig = new BasicConfigurationFile(this, "killeffects", false);
     }
 
     @Override
@@ -164,7 +153,13 @@ public class Array extends JavaPlugin {
             return;
         }
 
-        this.divisionsManager = new Divisions();
+        this.divisionsManager = new DivisionsManager(this, mainConfig);
+
+        this.rankManager = new RankManager(this);
+        this.rankManager.init();
+
+        this.menuManager = new MenuManager(this);
+        this.menuManager.init();
 
         this.eventManager = new EventManager(this);
         this.eventManager.init();
@@ -190,8 +185,8 @@ public class Array extends JavaPlugin {
         this.listenersManager = new ListenersManager(this);
         this.listenersManager.init();
 
-        this.classManager = new ClassManager(this);
-        this.classManager.init();
+        this.pvpClassManager= new PvPClassManager(this);
+        this.pvpClassManager.init();
 
         this.effectRestorer = new EffectRestorer(this);
         this.effectRestorer.init();
@@ -214,7 +209,7 @@ public class Array extends JavaPlugin {
         //Save our Values to Config
         this.configHandler.save();
         this.eventManager.save();
-        this.classManager.onDisable();
+        this.pvpClassManager.onDisable();
 
         //Clear out the PlayerList for Vanilla Tab
         Profile.getPlayerList().clear();
@@ -222,8 +217,6 @@ public class Array extends JavaPlugin {
     }
 
     public void preload() {
-        //Static Abuse be like, but i aint using managers rn
-        //cuz praxi was always static af
         this.preLoadMongo();
         Kit.preload();
         Profile.preload();
@@ -232,14 +225,6 @@ public class Array extends JavaPlugin {
         Match.preload();
         Party.preLoad();
         Queue.preLoad();
-        Rank.preLoad();
-
-        drink.bind(Arena.class).toProvider(new ArenaProvider());
-        drink.bind(ArenaType.class).toProvider(new ArenaTypeProvider());
-        drink.bind(Kit.class).toProvider(new KitProvider());
-        drink.bind(Profile.class).toProvider(new ProfileProvider());
-        drink.bind(EventType.class).toProvider(new EventProvider());
-        drink.bind(RatingType.class).toProvider(new RatingTypeProvider());
     }
 
     public void preloadAdapters() {
@@ -251,7 +236,7 @@ public class Array extends JavaPlugin {
         this.nameTagHandler.init();
 
         if (this.configHandler.isTAB_ENABLED()) {
-            this.tablistHandler = new TablistHandler(new TablistAdapter(), this, 20);
+            this.tablistHandler = new TablistHandler(new TablistAdapter(), this, tablistConfig.getInteger("TABLIST.UPDATE_TICKS") * 20L);
         }
 
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {

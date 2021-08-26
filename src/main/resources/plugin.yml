@@ -4,7 +4,6 @@ authors: [RefineDevelopment, Nick_0251]
 website: https://dsc.gg/refine
 version: 2.0
 description: "Most Modern and Support Friendly Practice Plugin"
-
 depend:
   - ProtocolLib
 softdepend:
@@ -16,4 +15,6 @@ softdepend:
   - ZoomCore
   - AquaCore
   - Hestia
-  - KarhuLoader
+  - Scandium
+  - nCore
+  - PermissionsEx

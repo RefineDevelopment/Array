@@ -1,17 +1,17 @@
 package xyz.refinedev.practice.arena.selection;
 
-import java.util.Arrays;
-
 import lombok.Data;
 import lombok.NonNull;
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.arena.meta.cuboid.Cuboid;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.arena.meta.cuboid.Cuboid;
+import xyz.refinedev.practice.util.inventory.ItemBuilder;
+
+import java.util.Arrays;
 
 @Data
 public class  Selection {

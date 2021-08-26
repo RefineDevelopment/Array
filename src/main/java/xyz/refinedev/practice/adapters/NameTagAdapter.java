@@ -1,13 +1,13 @@
 package xyz.refinedev.practice.adapters;
 
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.nametags.construct.NameTagInfo;
 import xyz.refinedev.practice.util.nametags.provider.NameTagProvider;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.entity.Player;
 
 /**
  * This Project is the property of Refine Development © 2021

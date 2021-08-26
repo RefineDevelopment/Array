@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.adapters;
 
-import com.mongodb.internal.authentication.SaslPrep;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,7 +22,7 @@ import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.tournament.Tournament;
 import xyz.refinedev.practice.tournament.TournamentType;
 import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.config.BasicConfigurationFile;
+import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TimeUtil;
 import xyz.refinedev.practice.util.scoreboard.AssembleAdapter;
@@ -164,7 +163,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                     if (match instanceof SoloBridgeMatch) {
                         final SoloBridgeMatch soloBridgeMatch = (SoloBridgeMatch) match;
                         final TeamPlayer teamPlayer = match.getTeamPlayer(player);
-                        final TeamPlayer opponentPlayer = match.getTeamPlayer(player);
+                        final TeamPlayer opponentPlayer = match.getOpponentTeamPlayer(player);
 
                         int yourPoints = match.getTeamPlayerA().equals(teamPlayer) ? soloBridgeMatch.getPlayerARounds() : soloBridgeMatch.getPlayerBRounds();
                         int opponentPoints = match.getTeamPlayerA().equals(opponentPlayer) ? soloBridgeMatch.getPlayerARounds() : soloBridgeMatch.getPlayerBRounds();
@@ -229,7 +228,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 } else if (match.isHCFMatch()) {
                     final Team team = match.getTeam(player);
                     final Team opponentTeam = match.getOpponentTeam(player);
-                    final PvPClass pvpClass = Array.getInstance().getClassManager().getEquippedClass(player);
+                    final PvPClass pvpClass = Array.getInstance().getPvpClassManager().getEquippedClass(player);
 
                     config.getStringList("SCOREBOARD.MATCH.HCF").forEach(line -> lines.add(CC.translate(line
                             .replace("<match_duration>", match.getDuration())
@@ -454,7 +453,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 }
             }
         }
-        if (config.getBoolean("FOOTER_ENABLED")) {
+        if (config.getBoolean("SCOREBOARD.FOOTER_ENABLED")) {
             lines.add("");
             lines.add(config.getStringOrDefault("SCOREBOARD.FOOTER", "&7&odemo.refinedev.xyz"));
         }

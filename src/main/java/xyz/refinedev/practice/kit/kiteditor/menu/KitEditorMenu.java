@@ -6,8 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.profile.Profile;

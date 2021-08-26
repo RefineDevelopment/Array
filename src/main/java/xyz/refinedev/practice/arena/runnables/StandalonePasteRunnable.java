@@ -2,13 +2,13 @@ package xyz.refinedev.practice.arena.runnables;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.impl.StandaloneArena;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.location.CustomLocation;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 /**
  * @since 11/25/2017

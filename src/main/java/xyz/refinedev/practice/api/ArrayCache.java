@@ -1,9 +1,10 @@
 package xyz.refinedev.practice.api;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.profile.Profile;
-import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

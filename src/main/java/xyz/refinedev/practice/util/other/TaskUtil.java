@@ -1,8 +1,8 @@
 package xyz.refinedev.practice.util.other;
 
-import xyz.refinedev.practice.Array;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.Array;
 
 public class TaskUtil {
 

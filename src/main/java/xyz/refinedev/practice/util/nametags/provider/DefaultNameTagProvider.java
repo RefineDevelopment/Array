@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.util.nametags.provider;
 
-import xyz.refinedev.practice.util.nametags.construct.NameTagInfo;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.util.nametags.construct.NameTagInfo;
 
 public class DefaultNameTagProvider extends NameTagProvider {
 

@@ -16,6 +16,7 @@ import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.duel.RematchProcedure;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.kit.KitGameRules;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.MatchSnapshot;
 import xyz.refinedev.practice.match.MatchState;
@@ -35,7 +36,10 @@ import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 import xyz.refinedev.practice.util.other.TitleAPI;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Getter @Setter
@@ -52,6 +56,16 @@ public class SoloMatch extends Match {
     private String eloMessage;
     private String specMessage;
 
+    /**
+     * Construct a solo match with the specified details
+     *
+     * @param playerA {@link TeamPlayer} first player of the message
+     * @param playerB {@link TeamPlayer} second player of the message
+     * @param queue {@link Queue} if match is started from queue, then we provide it
+     * @param kit {@link Kit} The kit that will be given to all players in the match
+     * @param arena {@link Arena} The arena that will be used in the match
+     * @param queueType {@link QueueType} if we are connecting from queue then we provide it, otherwise its Unranked
+     */
     public SoloMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
         super(queue, kit, arena, queueType);
 
@@ -59,11 +73,27 @@ public class SoloMatch extends Match {
         this.playerB = playerB;
     }
 
+    /**
+     * Override the boolean method to identify
+     * the correct match without checking instanceOf
+     *
+     * @return {@link Boolean}
+     */
     @Override
     public boolean isSoloMatch() {
         return true;
     }
 
+    /**
+     * Setup the player according to {@link Kit},
+     * {@link KitGameRules} and {@link Arena}
+     * <p>
+     * This also teleports the player to the specified arena,
+     * set's their parkour checkpoint if kit is parkour and
+     * gives special potion effects if specified
+     *
+     * @param player {@link Player} being setup
+     */
     @Override
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
@@ -101,6 +131,10 @@ public class SoloMatch extends Match {
         plugin.getNameTagHandler().reloadOthersFor(player);
     }
 
+    /**
+     * Execute start tasks through this method
+     * This method is called as soon as the match is started
+     */
     @Override
     public void onStart() {
         if (getKit().getGameRules().isTimed()) {
@@ -160,7 +194,6 @@ public class SoloMatch extends Match {
                             player.updateInventory();
 
                             plugin.getKnockbackManager().resetKnockback(player);
-
 
                             Profile profile = Profile.getByUuid(player.getUniqueId());
                             profile.setState(ProfileState.IN_LOBBY);
@@ -260,28 +293,30 @@ public class SoloMatch extends Match {
                     .replace("<loser_elo>", String.valueOf(newLoserElo));
         }
 
-        if (getSpectators().isEmpty()) return true;
-
         StringBuilder builder = new StringBuilder();
-        List<Player> specs = new ArrayList<>(getSpectators());
-        int i = 0;
-        for (Player spectator : getSpectators()) {
-            if (getSpectators().size() >= 1) {
-                if (i != getSpectators().size()) {
-                    i++;
-                    if (i == getSpectators().size()) {
-                        builder.append(CC.GRAY).append(spectator.getName());
-                    } else {
-                        builder.append(CC.GRAY).append(spectator.getName()).append(CC.GRAY).append(", ");
-                    }
 
+        if (!(getSpectators().size() <= 0)) {
+            List<Player> specs = new ArrayList<>(getSpectators());
+            int i=0;
+            for ( Player spectator : getSpectators() ) {
+                if (getSpectators().size() >= 1) {
+                    if (!specs.contains(spectator)) specs.add(spectator);
+                    if (i != getSpectators().size()) {
+                        i++;
+                        if (i == getSpectators().size()) {
+                            builder.append(CC.GRAY).append(spectator.getName());
+                        } else {
+                            builder.append(CC.GRAY).append(spectator.getName()).append(CC.GRAY).append(", ");
+                        }
+                    }
                 }
             }
-        }
-        if (specs.size() >= 1) {
-            specMessage = Locale.MATCH_SPEC_MESSAGE.toString()
-                    .replace("<spec_size>", String.valueOf(specs.size()))
-                    .replace("<spectators>", builder.substring(0, builder.length()));
+
+            if (specs.size() >= 1) {
+                specMessage = Locale.MATCH_SPEC_MESSAGE.toString()
+                        .replace("<spec_size>", String.valueOf(specs.size()))
+                        .replace("<spectators>", builder.substring(0, builder.length()));
+            }
         }
         return true;
     }
@@ -311,6 +346,10 @@ public class SoloMatch extends Match {
                 PacketContainer packetContainer = this.createLightningPacket(deadPlayer.getLocation());
                 this.sendLightningPacket(player, packetContainer);
             }
+        }
+
+        if (killEffect.isDropsClear()) {
+            this.getEntities().forEach(Entity::remove);
         }
 
         if (killEffect.isAnimateDeath()) PlayerUtil.animateDeath(deadPlayer);
@@ -478,8 +517,11 @@ public class SoloMatch extends Match {
         } else {
             PlayerUtil.spectator(deadPlayer);
             TaskUtil.runLater(() -> {
-                getPlayers().forEach(player -> Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer));
-                getSpectators().forEach(spectator -> {
+                //Handle match players' visibility
+                this.getPlayers().forEach(player -> Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer));
+
+                //Then handle spectator visibility
+                this.getSpectators().forEach(spectator -> {
                     if (Profile.getByPlayer(spectator).getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
                     if (Profile.getByPlayer(deadPlayer).getSettings().isShowSpectator()) deadPlayer.showPlayer(spectator);
                 });

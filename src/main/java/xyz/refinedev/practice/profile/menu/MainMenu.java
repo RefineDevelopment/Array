@@ -1,14 +1,13 @@
 package xyz.refinedev.practice.profile.menu;
 
 import lombok.AllArgsConstructor;
-import xyz.refinedev.practice.cmds.event.EventCommands;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.kit.kiteditor.menu.KitEditorSelectKitMenu;
-import xyz.refinedev.practice.profile.settings.SettingsMenu;
 import xyz.refinedev.practice.leaderboards.menu.LeaderboardsMenu;
+import xyz.refinedev.practice.profile.settings.menu.SettingsMenu;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;

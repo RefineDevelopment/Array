@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.util.menu.button;
 
-import xyz.refinedev.practice.util.menu.Button;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.util.menu.Button;
 
 @AllArgsConstructor
 @Getter @Setter

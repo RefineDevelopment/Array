@@ -1,16 +1,15 @@
 package xyz.refinedev.practice.profile.statistics;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.profile.hotbar.HotbarType;
-import xyz.refinedev.practice.kit.KitInventory;
-import xyz.refinedev.practice.util.chat.CC;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.kit.KitInventory;
+import xyz.refinedev.practice.profile.hotbar.HotbarType;
+import xyz.refinedev.practice.util.chat.CC;
 
 import java.util.*;
 

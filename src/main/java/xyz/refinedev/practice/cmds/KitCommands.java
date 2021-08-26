@@ -1,21 +1,21 @@
 package xyz.refinedev.practice.cmds;
 
-import xyz.refinedev.practice.kit.KitInventory;
-import xyz.refinedev.practice.queue.QueueType;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.profile.statistics.StatisticsData;
+import xyz.refinedev.practice.queue.Queue;
+import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Require;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 import xyz.refinedev.practice.util.command.annotation.Text;
 import xyz.refinedev.practice.util.other.TaskUtil;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
 
 import java.util.ArrayList;
 import java.util.Arrays;

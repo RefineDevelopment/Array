@@ -131,10 +131,9 @@ public class SoloTournament extends Tournament<Player> {
                 if (arena == null) {
                     playerA.getPlayer().sendMessage(CC.translate("&cTried to start a match but there are no available arenas."));
                     playerB.getPlayer().sendMessage(CC.translate("&cTried to start a match but there are no available arenas."));
-                    this.cancel();
-                    end(null);
                     return;
                 }
+
                 if (getKit().getGameRules().isBuild()) arena.setActive(true);
                 Match match = new SoloMatch(null, playerA, playerB, getKit(), arena, QueueType.RANKED);
                 match.start();
@@ -175,9 +174,9 @@ public class SoloTournament extends Tournament<Player> {
         this.getTeamPlayers().clear();
 
         if (winner != null){
-            Bukkit.broadcastMessage(CC.CHAT_BAR);
+            Bukkit.broadcastMessage("");
             Bukkit.broadcastMessage(Locale.TOURNAMENT_WON.toString().replace("<winner>", winner.getName()));
-            Bukkit.broadcastMessage(CC.CHAT_BAR);
+            Bukkit.broadcastMessage("");
         } else {
             Bukkit.broadcastMessage(Locale.TOURNAMENT_CANCELLED.toString());
         }

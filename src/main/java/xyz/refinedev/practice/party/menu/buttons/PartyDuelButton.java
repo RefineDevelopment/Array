@@ -10,8 +10,8 @@ import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
+import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.other.SkullCreator;
 
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public class PartyDuelButton extends Button {
             player.sendMessage(Locale.PARTY_NOTLEADER.toString());
             return;
         }
-        if (!senderProfile.canSendDuelRequest(player)) {
+        if (senderProfile.cannotSendDuelRequest(player)) {
             player.sendMessage(Locale.DUEL_ALREADYSENT.toString());
             return;
         }

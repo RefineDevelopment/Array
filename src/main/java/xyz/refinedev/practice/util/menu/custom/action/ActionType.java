@@ -11,5 +11,5 @@ package xyz.refinedev.practice.util.menu.custom.action;
 
 public enum ActionType {
 
-    COMMAND, MENU, CLOSE;
+    COMMAND, MENU, CLOSE, MESSAGE
 }

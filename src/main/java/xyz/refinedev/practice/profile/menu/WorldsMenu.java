@@ -1,16 +1,16 @@
 package xyz.refinedev.practice.profile.menu;
 
 import lombok.AllArgsConstructor;
-import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
-import xyz.refinedev.practice.util.menu.Button;
-import xyz.refinedev.practice.util.menu.Menu;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.util.chat.CC;
+import xyz.refinedev.practice.util.inventory.ItemBuilder;
+import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.Menu;
 
 import java.util.HashMap;
 import java.util.Map;

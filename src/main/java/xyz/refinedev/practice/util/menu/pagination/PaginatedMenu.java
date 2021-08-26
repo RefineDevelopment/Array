@@ -1,9 +1,9 @@
 package xyz.refinedev.practice.util.menu.pagination;
 
-import xyz.refinedev.practice.util.menu.Button;
-import xyz.refinedev.practice.util.menu.Menu;
 import lombok.Getter;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.Menu;
 
 import java.util.HashMap;
 import java.util.Map;

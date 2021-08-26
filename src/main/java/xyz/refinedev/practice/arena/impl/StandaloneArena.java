@@ -1,13 +1,13 @@
 package xyz.refinedev.practice.arena.impl;
 
+import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.configuration.file.FileConfiguration;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.location.LocationUtil;
-import lombok.Getter;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.IOException;
 import java.util.ArrayList;

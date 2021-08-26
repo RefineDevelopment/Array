@@ -1,15 +1,5 @@
 package xyz.refinedev.practice.match.menu;
 
-import xyz.refinedev.practice.match.MatchSnapshot;
-import xyz.refinedev.practice.match.team.TeamPlayer;
-import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.inventory.InventoryUtil;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
-import xyz.refinedev.practice.util.other.PotionUtil;
-import xyz.refinedev.practice.util.other.TimeUtil;
-import xyz.refinedev.practice.util.menu.Button;
-import xyz.refinedev.practice.util.menu.Menu;
-import xyz.refinedev.practice.util.menu.button.DisplayButton;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.bukkit.Material;
@@ -17,6 +7,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import xyz.refinedev.practice.match.MatchSnapshot;
+import xyz.refinedev.practice.match.team.TeamPlayer;
+import xyz.refinedev.practice.util.chat.CC;
+import xyz.refinedev.practice.util.inventory.InventoryUtil;
+import xyz.refinedev.practice.util.inventory.ItemBuilder;
+import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.Menu;
+import xyz.refinedev.practice.util.menu.button.DisplayButton;
+import xyz.refinedev.practice.util.other.PotionUtil;
+import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.util.*;
 

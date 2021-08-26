@@ -2,14 +2,6 @@ package xyz.refinedev.practice.pvpclasses.classes;
 
 import gnu.trove.map.TObjectLongMap;
 import gnu.trove.map.hash.TObjectLongHashMap;
-import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.match.Match;
-import xyz.refinedev.practice.pvpclasses.PvPClass;
-import xyz.refinedev.practice.pvpclasses.bard.BardData;
-import xyz.refinedev.practice.pvpclasses.bard.EffectData;
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.match.team.Team;
-import xyz.refinedev.practice.profile.Profile;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -26,6 +18,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.match.Match;
+import xyz.refinedev.practice.match.team.Team;
+import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.pvpclasses.PvPClass;
+import xyz.refinedev.practice.pvpclasses.bard.BardData;
+import xyz.refinedev.practice.pvpclasses.bard.EffectData;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -160,7 +160,7 @@ public class Bard extends PvPClass implements Listener {
         Match match = profile.getMatch();
         if (match != null && (match.isHCFMatch() )) {
             Player player = event.getPlayer();
-            PvPClass equipped = plugin.getClassManager().getEquippedClass(player);
+            PvPClass equipped = plugin.getPvpClassManager().getEquippedClass(player);
             if (equipped == null || !equipped.equals(this)) {
                 return;
             }

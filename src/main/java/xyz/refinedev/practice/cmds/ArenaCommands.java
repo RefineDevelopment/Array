@@ -1,15 +1,20 @@
 package xyz.refinedev.practice.cmds;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
+import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.arena.impl.SharedArena;
 import xyz.refinedev.practice.arena.impl.StandaloneArena;
 import xyz.refinedev.practice.arena.impl.TheBridgeArena;
 import xyz.refinedev.practice.arena.meta.Rating;
-import xyz.refinedev.practice.arena.runnables.StandalonePasteRunnable;
 import xyz.refinedev.practice.arena.runnables.BridgePasteRunnable;
+import xyz.refinedev.practice.arena.runnables.StandalonePasteRunnable;
 import xyz.refinedev.practice.arena.selection.Selection;
-import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.util.chat.CC;
@@ -17,11 +22,6 @@ import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Require;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 import xyz.refinedev.practice.util.other.TaskUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -54,6 +54,7 @@ public class ArenaCommands {
         player.sendMessage(CC.translate(" &7* &c/arena setspawn &8<&7arena&8> &8<&71/2&8> &8<&7duplicate-id&8> &8(&7&oSet 1/2 spawn of a duplicate arena&8)"));
         player.sendMessage(CC.translate(" &7* &c/arena setmax &8(&7&oSet Max Location of a Standalone Arena&8)"));
         player.sendMessage(CC.translate(" &7* &c/arena setmin &8(&7&oSet Min Location of a Standalone Arena&8)"));
+        player.sendMessage(CC.translate(" &7* &c/arena setfalldeathheight &8<&7int&8> &8(&7&oSet Fall Death Height of the Arena&8)"));
         player.sendMessage(CC.translate(" &7* &c/arena generate &8<&7arena&8> &8<&7Amount&8> &8(&7&oCopy and paste Standalone Arenas automatically&8)"));
         player.sendMessage(CC.translate(" &7* &c/arena addkit &8<&7arena&8> &8<&7kit&8> &8(&7&oAdd a kit to the arena&8)"));
         player.sendMessage(CC.translate(" &7* &c/arena addnormalkits &8<&7arena&8> &8<&7kit&8> &8(&7&oAdd all the normal kits to the arena&8)"));
@@ -107,6 +108,13 @@ public class ArenaCommands {
         }
         Arena.getArenas().add(arena);
         Arena.getArenas().forEach(Arena::save);
+    }
+
+    @Command(name = "", usage = "<arena> <int>",desc = "Set an arena's fall death height")
+    public void fallDeathHeight(@Sender CommandSender sender, Arena arena, int amount) {
+        arena.setFallDeathHeight(amount);
+        sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully set &c" + arena.getDisplayName() + "'s &7fall death height to &c" + amount + "&7."));
+        sender.sendMessage(CC.translate("&8[&cTIP&8] &7&oPlease bare in mind, this amount is subtracted from the y-level of your spawn 1 to get the y level for death height."));
     }
 
     @Command(name = "save", aliases = "export", desc = "Save Arenas to Config")

@@ -1,8 +1,5 @@
 package xyz.refinedev.practice.pvpclasses.classes;
 
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.pvpclasses.PvPClass;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -18,6 +15,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.pvpclasses.PvPClass;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -55,7 +55,7 @@ public class Rogue extends PvPClass implements Listener {
             Entity entity = event.getEntity();
             Entity damager = event.getDamager();
             Player attacker = (Player) damager;
-            if (plugin.getClassManager().getEquippedClass(attacker) == this) {
+            if (plugin.getPvpClassManager().getEquippedClass(attacker) == this) {
                 ItemStack stack = attacker.getItemInHand();
                 if ((stack != null) && (stack.getType() == Material.GOLD_SWORD)
                         && (stack.getEnchantments().isEmpty())) {
@@ -102,7 +102,7 @@ public class Rogue extends PvPClass implements Listener {
         Player player = event.getPlayer();
         Action action = event.getAction();
         if (((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK)) && (event.hasItem()) && (event.getItem().getType() == Material.SUGAR)) {
-            if (this.plugin.getClassManager().getEquippedClass(event.getPlayer()) != this) {
+            if (this.plugin.getPvpClassManager().getEquippedClass(event.getPlayer()) != this) {
                 return;
             }
             long timestamp = rogueSpeedCooldowns.getOrDefault(event.getPlayer().getUniqueId(), 0L);
@@ -123,7 +123,7 @@ public class Rogue extends PvPClass implements Listener {
             }
         } else if (((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK)) && (event.hasItem()) && (event.getItem().getType() == Material.FEATHER)) {
 
-            if (this.plugin.getClassManager().getEquippedClass(event.getPlayer()) != this) {
+            if (this.plugin.getPvpClassManager().getEquippedClass(event.getPlayer()) != this) {
                 return;
             }
 

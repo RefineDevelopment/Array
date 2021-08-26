@@ -1,8 +1,8 @@
 package xyz.refinedev.practice.util.command.command;
 
-import xyz.refinedev.practice.util.command.argument.CommandArgs;
 import lombok.Getter;
 import org.bukkit.command.CommandSender;
+import xyz.refinedev.practice.util.command.argument.CommandArgs;
 
 import java.util.List;
 
