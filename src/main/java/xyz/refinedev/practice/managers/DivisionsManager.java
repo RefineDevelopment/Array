@@ -36,6 +36,8 @@ public class DivisionsManager {
 
 
     public Division getDivisionByELO(int elo) {
+        if (divisions.isEmpty()) return new Division("Default");
+
         for (Division eloRank : divisions) {
             if (elo >= eloRank.getMinElo() && elo <= eloRank.getMaxElo()) {
                 return eloRank;

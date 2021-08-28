@@ -22,12 +22,12 @@ public class Team {
     }
 
     public boolean isLeader(UUID uuid) {
-        return this.leader.getUuid().equals(uuid);
+        return this.leader.getUniqueId().equals(uuid);
     }
 
     public boolean containsPlayer(Player player) {
         for (TeamPlayer playerInfo : this.teamPlayers) {
-            if (playerInfo.getUuid().equals(player.getUniqueId())) {
+            if (playerInfo.getUniqueId().equals(player.getUniqueId())) {
                 return true;
             }
         }

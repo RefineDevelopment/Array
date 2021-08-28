@@ -146,6 +146,7 @@ public class ConfigHandler {
         }
     }
 
+
     public void loadMatchSettings() {
         MATCH_COUNTDOWN_TIMER = config.getInteger("MATCH.COUNTDOWN_INTERVAL");
         MATCH_SPAWN_YLEVEL = config.getInteger("MATCH.SPAWN_YLEVEL_ADD");

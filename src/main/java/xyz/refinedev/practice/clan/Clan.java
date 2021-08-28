@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-@SuppressWarnings("all")
 public class Clan {
 
     @Getter public static final List<Clan> clans = new ArrayList<>();
@@ -129,7 +128,7 @@ public class Clan {
     public static void  preload() {
         //Register a Task that will clear the expired Invites
         TaskUtil.runTimerAsync(() -> {
-            Profile.getProfiles().values().forEach(clan -> clan.getClanInviteList().removeIf(ClanInvite::hasExpired));
+            Profile.getProfiles().values().forEach(profile -> profile.getClanInviteList().removeIf(ClanInvite::hasExpired));
         }, 100L, 100L);
         //Fetch clans directly from mongo
         Clan.fetchClans();

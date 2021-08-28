@@ -1,15 +1,21 @@
 package xyz.refinedev.practice.util.inventory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import xyz.refinedev.practice.Array;
-
-import java.util.*;
 
 public class InventoryUtil {
 
@@ -42,36 +48,6 @@ public class InventoryUtil {
         }
 
         return items.toArray(new ItemStack[items.size()]);
-    }
-
-    public static String serializeEffects(List<PotionEffect> source) {
-        StringBuilder builder = new StringBuilder();
-        if (source.size() == 0) return null;
-
-        for (PotionEffect potionEffect : source) {
-            String potionString = serializeEffect(potionEffect);
-            if (potionString == null || potionString == "null") continue;
-
-            builder.append(potionString);
-            builder.append(";");
-        }
-
-        return builder.toString();
-    }
-
-    public static List<PotionEffect> deserializeEffects(String source) {
-        List<PotionEffect> items = new ArrayList<>();
-
-        if (source.equalsIgnoreCase(""))
-            return null;
-
-        String[] split = source.split(";");
-
-        for (String piece : split) {
-            items.add(deserializeEffect(piece));
-        }
-
-        return items;
     }
 
     public static String serializeItemStack(ItemStack item) {
@@ -114,23 +90,23 @@ public class InventoryUtil {
             }
         }
 
-//		if (item.getType() == Material.POTION) {
-//			Potion potion = Potion.fromItemStack(item);
-//
-//			builder.append(":pd@")
-//			       .append(potion.getType().getDamageValue())
-//			       .append("-")
-//			       .append(potion.getLevel());
-//
-//			for (PotionEffect effect : potion.getEffects()) {
-//				builder.append("=")
-//				       .append(effect.getType().getId())
-//				       .append("-")
-//				       .append(effect.getDuration())
-//				       .append("-")
-//				       .append(effect.getAmplifier());
-//			}
-//		}
+        if (item.getType() == Material.POTION) {
+            Potion potion = Potion.fromItemStack(item);
+
+            builder.append(":pd@")
+                    .append(potion.getType().getDamageValue())
+                    .append("-")
+                    .append(potion.getLevel());
+
+            for (PotionEffect effect : potion.getEffects()) {
+                builder.append("=")
+                        .append(effect.getType().getId())
+                        .append("-")
+                        .append(effect.getDuration())
+                        .append("-")
+                        .append(effect.getAmplifier());
+            }
+        }
 
         return builder.toString();
     }
@@ -151,20 +127,20 @@ public class InventoryUtil {
 
             switch (attributeId) {
                 case "t": {
-                    item = new ItemStack(Material.getMaterial(Integer.parseInt(itemAttribute[1])));
+                    item = new ItemStack(Material.getMaterial(Integer.valueOf(itemAttribute[1])));
                     meta = item.getItemMeta();
                     break;
                 }
                 case "d": {
                     if (item != null) {
-                        item.setDurability(Short.parseShort(itemAttribute[1]));
+                        item.setDurability(Short.valueOf(itemAttribute[1]));
                         break;
                     }
                     break;
                 }
                 case "a": {
                     if (item != null) {
-                        item.setAmount(Integer.parseInt(itemAttribute[1]));
+                        item.setAmount(Integer.valueOf(itemAttribute[1]));
                         break;
                     }
                     break;
@@ -172,8 +148,8 @@ public class InventoryUtil {
                 case "e": {
                     if (item != null) {
                         item.addUnsafeEnchantment(
-                                Enchantment.getById(Integer.parseInt(itemAttribute[1])),
-                                Integer.parseInt(itemAttribute[2])
+                                Enchantment.getById(Integer.valueOf(itemAttribute[1])),
+                                Integer.valueOf(itemAttribute[2])
                         );
                         break;
                     }
@@ -212,34 +188,34 @@ public class InventoryUtil {
 
                     break;
                 }
-//				case "pd": {
-//					if (item != null && item.getType() == Material.POTION) {
-//						String[] effectsList = itemAttribute[1].split("=");
-//						String[] potionData = effectsList[0].split("-");
-//
-//						Potion potion = new Potion(PotionType.getByDamageValue(Integer.valueOf(potionData[0])),
-//								Integer.valueOf(potionData[1]));
-//						potion.setSplash(item.getDurability() >= 16000);
-//
-//						PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
-//
-//						for (int i = 1; i < effectsList.length; i++) {
-//							String[] effectData = effectsList[1].split("-");
-//
-//							PotionEffect potionEffect = new PotionEffect(PotionEffectType.getById(
-//									Integer.valueOf(effectData[0])), Double.valueOf(effectData[1]).intValue(),
-//									Integer.valueOf(effectData[2]), false
-//							);
-//
-//							potionMeta.addCustomEffect(potionEffect, true);
-//						}
-//
-//						item = potion.toItemStack(item.getAmount());
-//						item.setItemMeta(potionMeta);
-//					}
-//
-//					break;
-//				}
+                case "pd": {
+                    if (item != null && item.getType() == Material.POTION) {
+                        String[] effectsList = itemAttribute[1].split("=");
+                        String[] potionData = effectsList[0].split("-");
+
+                        Potion potion = new Potion(PotionType.getByDamageValue(Integer.valueOf(potionData[0])),
+                                Integer.valueOf(potionData[1]));
+                        potion.setSplash(item.getDurability() >= 16000);
+
+                        PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
+
+                        for (int i = 1; i < effectsList.length; i++) {
+                            String[] effectData = effectsList[1].split("-");
+
+                            PotionEffect potionEffect = new PotionEffect(PotionEffectType.getById(
+                                    Integer.valueOf(effectData[0])), Double.valueOf(effectData[1]).intValue(),
+                                    Integer.valueOf(effectData[2]), false
+                            );
+
+                            potionMeta.addCustomEffect(potionEffect, true);
+                        }
+
+                        item = potion.toItemStack(item.getAmount());
+                        item.setItemMeta(potionMeta);
+                    }
+
+                    break;
+                }
             }
         }
 
@@ -248,6 +224,37 @@ public class InventoryUtil {
         }
 
         return item;
+    }
+
+
+    public static String serializeEffects(List<PotionEffect> source) {
+        StringBuilder builder = new StringBuilder();
+        if (source.size() == 0) return null;
+
+        for (PotionEffect potionEffect : source) {
+            String potionString = serializeEffect(potionEffect);
+            if (potionString == null || potionString == "null") continue;
+
+            builder.append(potionString);
+            builder.append(";");
+        }
+
+        return builder.toString();
+    }
+
+    public static List<PotionEffect> deserializeEffects(String source) {
+        List<PotionEffect> items = new ArrayList<>();
+
+        if (source.equalsIgnoreCase(""))
+            return null;
+
+        String[] split = source.split(";");
+
+        for (String piece : split) {
+            items.add(deserializeEffect(piece));
+        }
+
+        return items;
     }
 
     public static String serializeEffect(PotionEffect item) {

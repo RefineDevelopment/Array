@@ -22,8 +22,10 @@ public class KitLeaderboardsTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (!plugin.isEnabled()) return;
+        if (!plugin.isEnabled()) {
+            cancel();
+            return;
+        }
         Kit.getKits().forEach(plugin.getLeaderboardsManager()::loadKitLeaderboards);
-        DebugUtil.sendDebug("&7Loading Kit Leaderboards...");
     }
 }

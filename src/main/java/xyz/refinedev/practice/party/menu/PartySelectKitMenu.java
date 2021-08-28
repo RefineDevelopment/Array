@@ -1,9 +1,11 @@
 package xyz.refinedev.practice.party.menu;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
@@ -18,10 +20,11 @@ import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
+import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.*;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PartySelectKitMenu extends Menu {
 
     private final PartyEventType partyEventType;
@@ -44,8 +47,8 @@ public class PartySelectKitMenu extends Menu {
         return buttons;
     }
 
-    @AllArgsConstructor
-    private static class SelectKitButton extends Button {
+    @RequiredArgsConstructor
+    private class SelectKitButton extends Button {
 
         private final PartyEventType partyEventType;
         private final Kit kit;
@@ -57,10 +60,9 @@ public class PartySelectKitMenu extends Menu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
-            Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
             player.closeInventory();
 
-            final Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = Profile.getByUuid(player.getUniqueId());
 
             if (profile.getParty() == null) {
                 player.sendMessage(CC.RED + "You are not in a party.");
@@ -72,8 +74,8 @@ public class PartySelectKitMenu extends Menu {
                 return;
             }
 
-            final Party party = profile.getParty();
-            final Arena arena = Arena.getRandom(this.kit);
+            Party party = profile.getParty();
+            Arena arena = Arena.getRandom(this.kit);
 
             if (arena == null) {
                 player.sendMessage(CC.RED + "There are no available arenas.");
@@ -85,10 +87,12 @@ public class PartySelectKitMenu extends Menu {
             Match match;
             if (this.partyEventType == PartyEventType.PARTY_FFA) {
                 Team team = new Team(new TeamPlayer(party.getLeader().getPlayer()));
+
                 List<Player> players = new ArrayList<>(party.getPlayers());
                 match = new FFAMatch(team, this.kit, arena);
-                for (final Player otherPlayer : players) {
-                    if (team.getLeader().getUuid().equals(otherPlayer.getUniqueId())) {
+
+                for (Player otherPlayer : players) {
+                    if (team.getLeader().getUniqueId().equals(otherPlayer.getUniqueId())) {
                         continue;
                     }
                     team.getTeamPlayers().add(new TeamPlayer(otherPlayer));
@@ -96,23 +100,28 @@ public class PartySelectKitMenu extends Menu {
             } else {
                 Team teamA = new Team(new TeamPlayer(party.getPlayers().get(0)));
                 Team teamB = new Team(new TeamPlayer(party.getPlayers().get(1)));
-                List<Player> players2 = new ArrayList<>(party.getPlayers());
-                Collections.shuffle(players2);
+
+                List<Player> shuffled = new ArrayList<>(party.getPlayers());
+                //Shuffling twice cuz noobs saying its not random
+                Collections.shuffle(shuffled);
+                Collections.shuffle(shuffled);
+
                 match = new TeamMatch(teamA, teamB, this.kit, arena);
-                for (Player otherPlayer2 : players2) {
-                    if (!teamA.getLeader().getUuid().equals(otherPlayer2.getUniqueId())) {
-                        if (teamB.getLeader().getUuid().equals(otherPlayer2.getUniqueId())) {
+
+                for (Player shuffledPlayer : shuffled) {
+                    if (!teamA.getLeader().getUniqueId().equals(shuffledPlayer.getUniqueId())) {
+                        if (teamB.getLeader().getUniqueId().equals(shuffledPlayer.getUniqueId())) {
                             continue;
                         }
                         if (teamA.getTeamPlayers().size() > teamB.getTeamPlayers().size()) {
-                            teamB.getTeamPlayers().add(new TeamPlayer(otherPlayer2));
+                            teamB.getTeamPlayers().add(new TeamPlayer(shuffledPlayer));
                         } else {
-                            teamA.getTeamPlayers().add(new TeamPlayer(otherPlayer2));
+                            teamA.getTeamPlayers().add(new TeamPlayer(shuffledPlayer));
                         }
                     }
                 }
             }
-            match.start();
+            TaskUtil.run(match::start);
         }
     }
 

@@ -9,7 +9,6 @@ import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -56,7 +55,7 @@ import java.util.concurrent.TimeUnit;
  * Project: Array
  */
 
-@Getter @Setter
+@Getter
 public class Array extends JavaPlugin {
 
     @Getter private static CommandService drink;
@@ -78,7 +77,7 @@ public class Array extends JavaPlugin {
     private MongoDatabase mongoDatabase;
 
     /*
-     * Handlers
+     * All Handlers
      */
     private ScoreboardHandler scoreboardHandler;
     private ConfigHandler configHandler;
@@ -88,19 +87,19 @@ public class Array extends JavaPlugin {
     /*
      * All Managers
      */
-    private EventManager eventManager;
-    private HotbarManager hotbarManager;
-    private ListenersManager listenersManager;
-    private CommandsManager commandsManager;
-    private KnockbackManager knockbackManager;
     private MenuManager menuManager;
     private RankManager rankManager;
+    private EventManager eventManager;
+    private HotbarManager hotbarManager;
+    private EffectRestorer effectRestorer;
+    private RatingsManager ratingsManager;
+    private CommandsManager commandsManager;
+    private PvPClassManager pvpClassManager;
+    private ListenersManager listenersManager;
+    private KnockbackManager knockbackManager;
+    private DivisionsManager divisionsManager;
     private KillEffectManager killEffectManager;
     private LeaderboardsManager leaderboardsManager;
-    private DivisionsManager divisionsManager;
-    private RatingsManager ratingsManager;
-    private PvPClassManager pvpClassManager;
-    private EffectRestorer effectRestorer;
 
     /*
      * Essential Utilities
@@ -139,7 +138,6 @@ public class Array extends JavaPlugin {
         this.configHandler.init();
 
         this.loadMessages();
-        this.preload();
 
         if (!Description.getAuthor().contains("RefineDevelopment") || !Description.getName().contains("Array")
            || !Description.getAuthor().contains("Nick_0251") || !Description.getWebsite().equalsIgnoreCase("https://dsc.gg/refine")) {
@@ -154,9 +152,12 @@ public class Array extends JavaPlugin {
         }
 
         this.divisionsManager = new DivisionsManager(this, mainConfig);
+        this.divisionsManager.init();
 
         this.rankManager = new RankManager(this);
         this.rankManager.init();
+
+        this.preload();
 
         this.menuManager = new MenuManager(this);
         this.menuManager.init();
@@ -198,7 +199,7 @@ public class Array extends JavaPlugin {
     @Override
     public void onDisable() {
         //Stop all matches and remove the placed Blocks
-        Match.cleanup();
+        Match.getMatches().forEach(Match::cleanup);
 
         //Save everything before disabling to prevent data loss
         Kit.getKits().forEach(Kit::save);
@@ -209,6 +210,7 @@ public class Array extends JavaPlugin {
         //Save our Values to Config
         this.configHandler.save();
         this.eventManager.save();
+        this.killEffectManager.exportConfig();
         this.pvpClassManager.onDisable();
 
         //Clear out the PlayerList for Vanilla Tab

@@ -65,7 +65,7 @@ public class StatsMenu extends Menu {
                         .replace("<profile_global_elo>", String.valueOf(profile.getGlobalElo()))
                         .replace("<profile_global_wins>", String.valueOf(profile.getTotalWins()))
                         .replace("<profile_global_losses>", String.valueOf(profile.getTotalLost()))
-                        .replace("<profile_elo_division>", profile.getEloLeague())
+                        .replace("<profile_elo_division>", profile.getDivision())
                         .replace("<profile_wr_ratio>", String.valueOf(profile.getWLR())));
 
             });

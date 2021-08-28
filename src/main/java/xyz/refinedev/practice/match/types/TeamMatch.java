@@ -1,10 +1,12 @@
 package xyz.refinedev.practice.match.types;
 
 import com.comphenix.protocol.events.PacketContainer;
+import com.mysql.jdbc.profiler.ProfilerEvent;
 import lombok.Getter;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -112,32 +114,32 @@ public class TeamMatch extends Match {
                 Profile profile = Profile.getByUuid(player.getUniqueId());
                 profile.handleVisibility();
 
-                getSnapshots().add(new MatchSnapshot(teamPlayer));
+                this.getSnapshots().add(new MatchSnapshot(teamPlayer));
             }
         }
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (TeamPlayer firstTeamPlayer : getTeamPlayers()) {
-                    if (firstTeamPlayer.isDisconnected()) continue;
-                    Player player = firstTeamPlayer.getPlayer();
+                for (TeamPlayer teamPlayer : getTeamPlayers()) {
+                    if (teamPlayer.isDisconnected()) continue;
+
+                    Player player = teamPlayer.getPlayer();
                     if (player == null) continue;
 
                     for ( TeamPlayer secondTeamPlayer : getTeamPlayers() ) {
-                        if (secondTeamPlayer.isDisconnected() || secondTeamPlayer.getUuid().equals(player.getUniqueId())) {
+                        if (secondTeamPlayer.isDisconnected() || secondTeamPlayer.getUniqueId().equals(player.getUniqueId())) {
                             continue;
                         }
 
                         Player secondPlayer = secondTeamPlayer.getPlayer();
+                        if (secondPlayer == null) continue;
 
-                        if (secondPlayer != null) {
-                            player.hidePlayer(secondPlayer);
-                        }
+                        player.hidePlayer(secondPlayer);
                     }
 
-                    if (firstTeamPlayer.isAlive()) {
-                        getSnapshots().add(new MatchSnapshot(firstTeamPlayer));
+                    if (teamPlayer.isAlive()) {
+                        getSnapshots().add(new MatchSnapshot(teamPlayer));
                     }
 
                     player.setFireTicks(0);
@@ -153,7 +155,7 @@ public class TeamMatch extends Match {
                     profile.teleportToSpawn();
                 }
             }
-        }.runTaskLater(Array.getInstance(), (getKit().getGameRules().isSumo() || getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L :  plugin.getConfigHandler().getTELEPORT_DELAY() * 20L);
+        }.runTaskLater(this.getPlugin(), (getKit().getGameRules().isSumo() || getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L :  plugin.getConfigHandler().getTELEPORT_DELAY() * 20L);
 
         Team winningTeam = getWinningTeam();
         Team losingTeam = getOpponentTeam(winningTeam);
@@ -181,6 +183,7 @@ public class TeamMatch extends Match {
         if (killerPlayer == null) return;
         Profile profile = Profile.getByPlayer(killerPlayer);
         KillEffect killEffect = profile.getKillEffect();
+
         if (killEffect == null) {
             killEffect = plugin.getKillEffectManager().getDefault();
         }
@@ -200,6 +203,10 @@ public class TeamMatch extends Match {
 
         if (killEffect.isAnimateDeath()) PlayerUtil.animateDeath(deadPlayer);
 
+        if (killEffect.isDropsClear()) {
+            this.getDroppedItems().forEach(Item::remove);
+        }
+
         if (!killEffect.getKillEffectSounds().isEmpty()) {
             float randomPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
             for ( KillEffectSound killEffectSound : killEffect.getKillEffectSounds()) {
@@ -211,27 +218,33 @@ public class TeamMatch extends Match {
     @Override
     public void onDeath(Player deadPlayer, Player killer) {
         TeamPlayer teamPlayer = getTeamPlayer(deadPlayer);
-        getSnapshots().add(new MatchSnapshot(teamPlayer));
 
+        this.getSnapshots().add(new MatchSnapshot(teamPlayer));
         PlayerUtil.reset(deadPlayer);
+
+        for ( Player otherPlayer : getPlayers() ) {
+            Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
+            TaskUtil.runLater(() -> profile.handleVisibility(otherPlayer, deadPlayer), 2L);
+        }
 
         if (this.canEnd()) {
             this.end();
         } else {
-            TaskUtil.runLater(() -> {
-                if (!teamPlayer.isDisconnected()) {
-                    deadPlayer.teleport(getMidSpawn());
-                    deadPlayer.setAllowFlight(true);
-                    deadPlayer.setFlying(true);
+            PlayerUtil.spectator(deadPlayer);
+            if (!teamPlayer.isDisconnected()) {
+                deadPlayer.teleport(getMidSpawn());
 
-                    Profile profile = Profile.getByUuid(deadPlayer.getUniqueId());
-                    profile.setState(ProfileState.SPECTATING);
-                    profile.refreshHotbar();
-                }
-                getPlayers().forEach(player -> Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer));
-                getSpectators().forEach(spectator -> {
-                    if (Profile.getByPlayer(spectator).getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
-                    if (Profile.getByPlayer(deadPlayer).getSettings().isShowSpectator()) deadPlayer.showPlayer(spectator);
+                Profile profile = Profile.getByUuid(deadPlayer.getUniqueId());
+                profile.refreshHotbar();
+                profile.setState(ProfileState.SPECTATING);
+            }
+            TaskUtil.runLater(() -> {
+                //Then handle spectator visibility
+                this.getSpectators().forEach(spectator -> {
+                    Profile spectatorProfile = Profile.getByPlayer(spectator);
+                    Profile deadProfile = Profile.getByPlayer(deadPlayer);
+                    if (spectatorProfile.getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
+                    if (deadProfile.getSettings().isShowSpectator()) deadPlayer.showPlayer(spectator);
                 });
             }, 8L);
         }
@@ -338,13 +351,13 @@ public class TeamMatch extends Match {
     @Override
     public Team getTeam(Player player) {
         for (TeamPlayer teamTeamPlayer : teamA.getTeamPlayers()) {
-            if (teamTeamPlayer.getUuid().equals(player.getUniqueId())) {
+            if (teamTeamPlayer.getUniqueId().equals(player.getUniqueId())) {
                 return teamA;
             }
         }
 
         for (TeamPlayer teamTeamPlayer : teamB.getTeamPlayers()) {
-            if (teamTeamPlayer.getUuid().equals(player.getUniqueId())) {
+            if (teamTeamPlayer.getUniqueId().equals(player.getUniqueId())) {
                 return teamB;
             }
         }
@@ -355,13 +368,13 @@ public class TeamMatch extends Match {
     @Override
     public TeamPlayer getTeamPlayer(Player player) {
         for (TeamPlayer teamPlayer : teamA.getTeamPlayers()) {
-            if (teamPlayer.getUuid().equals(player.getUniqueId())) {
+            if (teamPlayer.getUniqueId().equals(player.getUniqueId())) {
                 return teamPlayer;
             }
         }
 
         for (TeamPlayer teamPlayer : teamB.getTeamPlayers()) {
-            if (teamPlayer.getUuid().equals(player.getUniqueId())) {
+            if (teamPlayer.getUniqueId().equals(player.getUniqueId())) {
                 return teamPlayer;
             }
         }

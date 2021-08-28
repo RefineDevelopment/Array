@@ -56,7 +56,7 @@ public class MenuManager {
         this.checkMissingConfigs(files);
 
         for ( File menuFile : files ) {
-            MenuConfigurationFile menuConfig = new MenuConfigurationFile(menuFile.getName(), plugin);
+            MenuConfigurationFile menuConfig = new MenuConfigurationFile(menuFile.getName().replace(".yml", ""), plugin);
             MenuData menu = new MenuData();
 
             menu.setName(menuFile.getName());
@@ -111,23 +111,23 @@ public class MenuManager {
 
             Material material;
             try {
-                material = Material.valueOf(configurationSection.getString("MATERIAL"));
+                material = Material.valueOf(configurationSection.getString(key + ".MATERIAL"));
             } catch (Exception e) {
                 System.out.println("Button " + key + "'s Material is invalid, ignoring button...");
                 continue;
             }
             ItemBuilder itemBuilder = new ItemBuilder(material);
-            itemBuilder.name(configurationSection.getString("NAME"));
+            itemBuilder.name(configurationSection.getString(key + ".NAME"));
             itemBuilder.clearFlags();
-            if (configurationSection.getInt("DATA") != 0) {
-                itemBuilder.durability(configurationSection.getInt("DATA"));
+            if (configurationSection.getInt(key + ".DATA") != 0) {
+                itemBuilder.durability(configurationSection.getInt(key + ".DATA"));
             }
-            if (configurationSection.getStringList("LORE") != null && !configurationSection.getStringList("LORE").isEmpty()) {
-                itemBuilder.lore(configurationSection.getStringList("LORE"));
+            if (configurationSection.getStringList(key + ".LORE") != null && !configurationSection.getStringList(key + ".LORE").isEmpty()) {
+                itemBuilder.lore(configurationSection.getStringList(key + ".LORE"));
             }
             ItemStack itemStack = itemBuilder.build();
             buttonData.setItem(itemStack);
-            buttonData.setSlot(configurationSection.getInt("SLOT"));
+            buttonData.setSlot(configurationSection.getInt(key + ".SLOT"));
 
             buttonData.getActions().addAll(this.loadActionData(key, config));
 
@@ -145,13 +145,13 @@ public class MenuManager {
      * @return {@link List} of ActionData
      */
     public List<ActionData> loadActionData(String buttonKey, FoldersConfigurationFile config) {
-        ConfigurationSection configurationSection = config.getConfigurationSection("CUSTOM_BUTTONS." + buttonKey + ".ACTION");
+        ConfigurationSection configurationSection = config.getConfigurationSection("CUSTOM_BUTTONS." + buttonKey + ".ACTIONS");
         if (configurationSection == null || configurationSection.getKeys(false).isEmpty()) return null;
 
         List<ActionData> actionData = new ArrayList<>();
 
         for ( String key : configurationSection.getKeys(false) ) {
-            String path = "CUSTOM_BUTTONS." + buttonKey + ".ACTION." + key;
+            String path = "CUSTOM_BUTTONS." + buttonKey + ".ACTIONS." + key;
 
             ActionType actionType;
             try {

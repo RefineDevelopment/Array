@@ -1,4 +1,4 @@
-TITLE: "&7Select a party events"
+TITLE: "&7Profile Statistics"
 SIZE: 9
 PAGINATED: false
 BUTTONS:
@@ -34,20 +34,3 @@ BUTTONS:
       - " &fLast player standing wins!"
       - ""
       - " &7&o(( Click to Start ))"
-CUSTOM_BUTTONS:
-  TEST_BUTTON:
-    NAME: "&cThis can be anything"
-    SLOT: 2
-    MATERIAL: DIAMOND_SWORD
-    DATA: 0
-    LORE:
-      - " &fTest Button"
-      - " &fDon't mind me kek"
-      - " &fThis opens kill effects menu"
-      - " "
-      - "&7&o(( Click to Open ))"
-    ACTIONS:
-      TEST:
-        ACTION_TYPE: MENU
-        CLICK_TYPE:
-        ACTION: "kill_effects"

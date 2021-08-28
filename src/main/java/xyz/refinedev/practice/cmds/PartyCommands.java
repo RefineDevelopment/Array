@@ -403,7 +403,7 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
             return;
         }
-        if (party.getLeader().getUuid().equals(player.getUniqueId())) {
+        if (party.getLeader().getUniqueId().equals(player.getUniqueId())) {
             player.sendMessage(Locale.PARTY_LEAVE_SELF.toString());
             return;
         }

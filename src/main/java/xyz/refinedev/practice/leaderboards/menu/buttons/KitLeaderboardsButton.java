@@ -43,7 +43,7 @@ public class KitLeaderboardsButton extends Button {
                     .replace("<leaderboards_pos>", String.valueOf(position))
                     .replace("<leaderboards_name>", leaderboardsAdapter.getName())
                     .replace("<leaderboards_elo>", String.valueOf(leaderboardsAdapter.getElo()))
-                    .replace("<leaderboards_division>", ChatColor.stripColor(profile.getEloLeague())));
+                    .replace("<leaderboards_division>", ChatColor.stripColor(profile.getDivision())));
             ++position;
         }
         lore.add(CC.MENU_BAR);

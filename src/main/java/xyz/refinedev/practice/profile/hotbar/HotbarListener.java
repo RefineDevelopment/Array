@@ -13,22 +13,22 @@ public class HotbarListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.getItem() != null && event.getAction().name().contains("RIGHT")) {
-            final Player player = event.getPlayer();
+        if (event.getItem() == null || !event.getAction().name().contains("RIGHT")) return;
+        final Player player = event.getPlayer();
 
-            final HotbarType hotbarType = plugin.getHotbarManager().fromItemStack(event.getItem());
-            final HotbarItem hotbarItem = plugin.getHotbarManager().getItem(event.getItem());
+        final HotbarType hotbarType = plugin.getHotbarManager().fromItemStack(event.getItem());
+        final HotbarItem hotbarItem = plugin.getHotbarManager().getItem(event.getItem());
 
-            if (hotbarType == null || hotbarItem == null) return;
+        if (hotbarType == null || hotbarItem == null) return;
 
-            event.setCancelled(true);
-            player.updateInventory();
+        event.setCancelled(true);
+        player.updateInventory();
 
-            String command  = hotbarItem.getCommand();
-            if (command != null) {
-                player.chat(command);
-            }
+        String command = hotbarItem.getCommand();
+        if (command != null) {
+            player.chat(command);
         }
+
     }
 }
 

@@ -31,7 +31,7 @@ public class ScoreboardHandler {
 	 * ScoreboardHandler.
 	 *
 	 * @param plugin instance.
-	 * @param adapter
+	 * @param adapter {@link AssembleAdapter} the adapter
 	 */
 	public ScoreboardHandler(JavaPlugin plugin, AssembleAdapter adapter) {
 		if (plugin == null) {

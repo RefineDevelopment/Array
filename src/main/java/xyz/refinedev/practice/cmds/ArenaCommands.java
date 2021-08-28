@@ -34,6 +34,8 @@ import xyz.refinedev.practice.util.other.TaskUtil;
 
 public class ArenaCommands {
 
+    private final Array plugin = Array.getInstance();
+
     @Command(name = "", aliases = "help", desc = "View Arena Commands")
     @Require("array.arena.admin")
     public void help(@Sender CommandSender player) {
@@ -182,7 +184,7 @@ public class ArenaCommands {
     public void arenaReload(@Sender CommandSender player) {
         long st = System.currentTimeMillis();
 
-        Match.cleanup();
+        Match.getMatches().forEach(Match::cleanup);
         Arena.getArenas().clear();
         Arena.preload();
 
@@ -252,19 +254,19 @@ public class ArenaCommands {
         Rating rating = arena.getRating();
         int total = rating.getAverage() + rating.getGood() + rating.getDecent() + rating.getOkay() + rating.getAverage() + rating.getTerrible();
 
-        String terrible = Array.getInstance().getRatingsManager().getBar(rating.getTerrible(), total);
-        String average = Array.getInstance().getRatingsManager().getBar(rating.getAverage(), total);
-        String okay = Array.getInstance().getRatingsManager().getBar(rating.getOkay(), total);
-        String decent = Array.getInstance().getRatingsManager().getBar(rating.getDecent(), total);
-        String good = Array.getInstance().getRatingsManager().getBar(rating.getGood(), total);
+        String terrible = plugin.getRatingsManager().getBar(rating.getTerrible(), total);
+        String average = plugin.getRatingsManager().getBar(rating.getAverage(), total);
+        String okay = plugin.getRatingsManager().getBar(rating.getOkay(), total);
+        String decent = plugin.getRatingsManager().getBar(rating.getDecent(), total);
+        String good = plugin.getRatingsManager().getBar(rating.getGood(), total);
 
         sender.sendMessage(CC.CHAT_BAR);
         sender.sendMessage(CC.translate("&cArray &7» " + arena.getDisplayName() + "'s Ratings"));
         sender.sendMessage(CC.CHAT_BAR);
         sender.sendMessage("");
         sender.sendMessage(CC.translate("&7There have been &c" + total + " &7ratings of arena &c" + arena.getDisplayName() + "&7."));
-        sender.sendMessage(CC.translate("&7These are small survey graph bars of our ratings analysis, these can help you decide which"));
-        sender.sendMessage(CC.translate("&7arena was favoured by your community and playerbase in general."));
+        sender.sendMessage(CC.translate("&7These are small survey graph bars of our ratings analysis, these can help you decide"));
+        sender.sendMessage(CC.translate("&7 which arena was favoured by your community and playerbase in general."));
         sender.sendMessage("");
         sender.sendMessage(CC.translate("&4Terrible: &8[&r" + terrible + "&8]"));
         sender.sendMessage(CC.translate("&6Okay: &8[&r" + okay + "&8]"));

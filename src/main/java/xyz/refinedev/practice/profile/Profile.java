@@ -337,7 +337,7 @@ public class Profile {
 
         Document kitsDocument = new Document();
         for ( Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet() ) {
-            JsonArray kitsArray=new JsonArray();
+            JsonArray kitsArray = new JsonArray();
 
             for ( int i=0; i < 4; i++ ) {
                 KitInventory loadout=entry.getValue().getLoadout(i);
@@ -699,7 +699,7 @@ public class Profile {
         if (plugin.getServer().getPluginManager().isPluginEnabled("LunarClient-API")) LunarClientAPICooldown.sendCooldown(player, "Bow");
     }
 
-    public String getEloLeague() {
+    public String getDivision() {
         return plugin.getDivisionsManager().getDivisionByELO(globalElo).getDisplayName();
     }
 

@@ -159,8 +159,8 @@ public class PartyEventMenu extends Menu {
 
             //Add players to the newly created teams
             for ( Player otherPlayer : players ) {
-                if (!teamA.getLeader().getUuid().equals(otherPlayer.getUniqueId())) {
-                    if (teamB.getLeader().getUuid().equals(otherPlayer.getUniqueId())) {
+                if (!teamA.getLeader().getUniqueId().equals(otherPlayer.getUniqueId())) {
+                    if (teamB.getLeader().getUniqueId().equals(otherPlayer.getUniqueId())) {
                         continue;
                     }
                     if (teamA.getTeamPlayers().size() > teamB.getTeamPlayers().size()) {

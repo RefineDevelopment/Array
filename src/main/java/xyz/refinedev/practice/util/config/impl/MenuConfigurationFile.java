@@ -14,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MenuConfigurationFile extends FoldersConfigurationFile {
 
     public MenuConfigurationFile(String name, JavaPlugin plugin) {
-        super(plugin, "menu", name , false, false);
+        super(plugin, "menu", name, false, false);
 
     }
 }

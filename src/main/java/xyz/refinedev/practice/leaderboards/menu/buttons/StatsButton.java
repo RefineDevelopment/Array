@@ -36,7 +36,7 @@ public class StatsButton extends Button {
         }
         lore.add(CC.MENU_BAR);
         lore.add("&aGlobal ELO: &f" + profile.getGlobalElo());
-        lore.add("&aGlobal League: &f" + profile.getEloLeague());
+        lore.add("&aGlobal League: &f" + profile.getDivision());
         lore.add(CC.MENU_BAR);
 
         return new ItemBuilder(SkullCreator.itemFromUuid(player.getUniqueId()))

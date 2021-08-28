@@ -55,6 +55,48 @@ COOLDOWNS:
   ENDER_PEARL: 15
   BOW: 10
 
+EVENT:
+  COUNTDOWN_INTERVAL: 60
+  COOLDOWN_INTERVAL: 15
+  TITLE:
+    STARTED:
+      ENABLED: true
+      TEXT: "&aRound Started"
+      SUB_TEXT: "&7<playerA> vs <playerB>"
+      FADE_IN: 5
+      STAY: 20
+      FADE_OUT: 5
+    COUNTDOWN:
+      ENABLED: true
+      TEXT: "&7Starting in &c<seconds>"
+      SUB_TEXT: ""
+      FADE_IN: 5
+      STAY: 20
+      FADE_OUT: 5
+    WINNER:
+      ENABLED: true
+      TEXT: "&aWINNER"
+      SUB_TEXT: "&7Good Game!"
+      FADE_IN: 5
+      STAY: 20
+      FADE_OUT: 5
+    LOSER:
+      ENABLED: true
+      TEXT: "&cLOSER!"
+      SUB_TEXT: "&7Better Luck next time!"
+      FADE_IN: 5
+      STAY: 20
+      FADE_OUT: 5
+  SUMO:
+    SOLO:
+      ENABLED: true
+      MAX_PLAYERS: 100
+      PLAYERS_TO_START: 8
+    TEAM:
+      ENABLED: true
+      MAX_PLAYERS: 100
+      PLAYERS_TO_START: 16
+      KICK_NOT_ON_TEAM: false
 MATCH:
   SPAWN_YLEVEL_ADD: 6
   COUNTDOWN_INTERVAL: 3

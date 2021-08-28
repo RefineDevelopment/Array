@@ -36,18 +36,6 @@ public abstract class Menu {
         ItemStack item = button.getButtonItem(player);
         ItemMeta itemMeta = item.getItemMeta();
 
-        boolean placeholderAPI = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
-
-        //PlaceholderAPI Support
-        if (placeholderAPI) {
-            itemMeta.setDisplayName(PlaceholderAPI.setPlaceholders(player, itemMeta.getDisplayName()));
-            if (itemMeta.getLore() != null && !itemMeta.getLore().isEmpty()) {
-                List<String> lore = itemMeta.getLore();
-                itemMeta.setLore(lore.stream().map(s -> PlaceholderAPI.setPlaceholders(player, s)).collect(Collectors.toList()));
-            }
-            item.setItemMeta(itemMeta);
-        }
-
         if (item.getType() != Material.SKULL_ITEM) {
             ItemMeta meta = item.getItemMeta();
 

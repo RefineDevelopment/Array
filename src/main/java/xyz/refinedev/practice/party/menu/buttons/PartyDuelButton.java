@@ -33,7 +33,7 @@ public class PartyDuelButton extends Button {
 
     @Override
     public ItemStack getButtonItem(Player player) {
-        ItemStack itemStack = SkullCreator.itemFromUuid(party.getLeader().getUuid());
+        ItemStack itemStack = SkullCreator.itemFromUuid(party.getLeader().getUniqueId());
         ItemBuilder builder = new ItemBuilder(party.isFighting() ? new ItemStack(Material.SKULL) : itemStack);
 
         builder.name(ChatColor.RED + party.getLeader().getUsername() + "'s Party");
@@ -44,7 +44,7 @@ public class PartyDuelButton extends Button {
         List<String> lore = new ArrayList<>();
         lore.add("");
         for ( TeamPlayer member : party.getTeamPlayers()) {
-            ChatColor color = party.isLeader(member.getUuid()) ? ChatColor.RED : ChatColor.WHITE;
+            ChatColor color = party.isLeader(member.getUniqueId()) ? ChatColor.RED : ChatColor.WHITE;
             lore.add(color + member.getUsername());
         }
         lore.add("");

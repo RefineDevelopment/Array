@@ -26,7 +26,7 @@ import java.util.UUID;
 public class RematchProcedure {
 
     private final long timestamp = System.currentTimeMillis();
-    public static RankAdapter rank = RankType.getRankAdapter();
+    public static RankAdapter rank = Array.getInstance().getRankManager().getRankType().getRankAdapter();
 
     private final UUID key;
     private final UUID sender;

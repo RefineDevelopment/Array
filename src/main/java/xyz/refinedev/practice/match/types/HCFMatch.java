@@ -4,6 +4,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import lombok.Getter;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Location;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
@@ -40,7 +41,7 @@ public class HCFMatch extends Match {
     private final Team teamB;
 
     public HCFMatch(Team teamA, Team teamB, Arena arena) {
-        super(null, null, arena, QueueType.UNRANKED);
+        super(null, Kit.getHCFTeamFight(), arena, QueueType.UNRANKED);
 
         this.teamA = teamA;
         this.teamB = teamB;
@@ -98,7 +99,7 @@ public class HCFMatch extends Match {
 
     @Override
     public void onStart() {
-        getPlayers().forEach(player1 -> plugin.getKnockbackManager().kitKnockback(player1, Kit.getHCFTeamFight()));
+        this.getPlayers().forEach(player -> plugin.getKnockbackManager().kitKnockback(player, Kit.getHCFTeamFight()));
     }
 
     @Override
@@ -111,52 +112,48 @@ public class HCFMatch extends Match {
                 Profile profile = Profile.getByUuid(player.getUniqueId());
                 profile.handleVisibility();
 
-                getSnapshots().add(new MatchSnapshot(teamPlayer));
+                this.getSnapshots().add(new MatchSnapshot(teamPlayer));
             }
         }
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (TeamPlayer firstTeamPlayer : getTeamPlayers()) {
-                    if (!firstTeamPlayer.isDisconnected()) {
-                        Player player = firstTeamPlayer.getPlayer();
+                for (TeamPlayer teamPlayer : getTeamPlayers()) {
+                    if (teamPlayer.isDisconnected()) continue;
 
-                        if (player != null) {
-                            for (TeamPlayer secondTeamPlayer : getTeamPlayers()) {
-                                if (secondTeamPlayer.isDisconnected()) {
-                                    continue;
-                                }
+                    Player player = teamPlayer.getPlayer();
+                    if (player == null) continue;
 
-                                if (secondTeamPlayer.getUuid().equals(player.getUniqueId())) {
-                                    continue;
-                                }
+                    for ( TeamPlayer secondTeamPlayer : getTeamPlayers() ) {
+                        if (secondTeamPlayer.isDisconnected()) continue;
 
-                                Player secondPlayer = secondTeamPlayer.getPlayer();
-
-                                if (secondPlayer != null) {
-                                    player.hidePlayer(secondPlayer);
-                                }
-                            }
-
-                            if (firstTeamPlayer.isAlive()) {
-                                getSnapshots().add(new MatchSnapshot(firstTeamPlayer));
-                            }
-
-                            player.setFireTicks(0);
-                            player.updateInventory();
-                            player.getActivePotionEffects().clear();
-
-                            plugin.getKnockbackManager().resetKnockback(player);
-
-                            Profile profile = Profile.getByUuid(player.getUniqueId());
-                            profile.setState(ProfileState.IN_LOBBY);
-                            profile.setMatch(null);
-                            profile.refreshHotbar();
-                            profile.handleVisibility();
-                            profile.teleportToSpawn();
+                        if (secondTeamPlayer.getUniqueId().equals(player.getUniqueId())) {
+                            continue;
                         }
+
+                        Player secondPlayer = secondTeamPlayer.getPlayer();
+                        if (secondPlayer == null) continue;
+
+                        player.hidePlayer(secondPlayer);
                     }
+
+                    if (teamPlayer.isAlive()) {
+                        getSnapshots().add(new MatchSnapshot(teamPlayer));
+                    }
+
+                    player.setFireTicks(0);
+                    player.updateInventory();
+                    player.getActivePotionEffects().clear();
+
+                    plugin.getKnockbackManager().resetKnockback(player);
+
+                    Profile profile = Profile.getByUuid(player.getUniqueId());
+                    profile.setState(ProfileState.IN_LOBBY);
+                    profile.setMatch(null);
+                    profile.refreshHotbar();
+                    profile.handleVisibility();
+                    profile.teleportToSpawn();
                 }
             }
         }.runTaskLater(plugin, TimeUtil.parseTime(plugin.getConfigHandler().getTELEPORT_DELAY()  + "s"));
@@ -172,7 +169,6 @@ public class HCFMatch extends Match {
             profile.getStatisticsData().get(getKit()).incrementLost();
             TaskUtil.runAsync(profile::save);
         });
-
         return true;
     }
 
@@ -186,6 +182,7 @@ public class HCFMatch extends Match {
         if (killerPlayer == null) return;
         Profile profile = Profile.getByPlayer(killerPlayer);
         KillEffect killEffect = profile.getKillEffect();
+
         if (killEffect == null) {
             killEffect = plugin.getKillEffectManager().getDefault();
         }
@@ -203,6 +200,10 @@ public class HCFMatch extends Match {
             }
         }
 
+        if (killEffect.isDropsClear()) {
+            this.getDroppedItems().forEach(Item::remove);
+        }
+
         if (killEffect.isAnimateDeath()) PlayerUtil.animateDeath(deadPlayer);
 
         if (!killEffect.getKillEffectSounds().isEmpty()) {
@@ -215,27 +216,30 @@ public class HCFMatch extends Match {
 
     @Override
     public void onDeath(Player deadPlayer, Player killer) {
-
         TeamPlayer teamPlayer = getTeamPlayer(deadPlayer);
-        getSnapshots().add(new MatchSnapshot(teamPlayer));
 
+        this.getSnapshots().add(new MatchSnapshot(teamPlayer));
         PlayerUtil.reset(deadPlayer);
+
+        for ( Player otherPlayer : getPlayers() ) {
+            Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
+            TaskUtil.runLater(() -> profile.handleVisibility(otherPlayer, deadPlayer), 2L);
+        }
 
         if (this.canEnd()) {
             this.end();
         } else {
-            TaskUtil.runLater(() -> {
-                if (!teamPlayer.isDisconnected()) {
-                    deadPlayer.teleport(getMidSpawn());
-                    deadPlayer.setAllowFlight(true);
-                    deadPlayer.setFlying(true);
+            PlayerUtil.spectator(deadPlayer);
+            if (!teamPlayer.isDisconnected()) {
+                deadPlayer.teleport(getMidSpawn());
 
-                    Profile profile = Profile.getByUuid(deadPlayer.getUniqueId());
-                    profile.setState(ProfileState.SPECTATING);
-                    profile.refreshHotbar();
-                }
-                getPlayers().forEach(player -> Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer));
-                getSpectators().forEach(spectator -> {
+                Profile profile = Profile.getByUuid(deadPlayer.getUniqueId());
+                profile.refreshHotbar();
+                profile.setState(ProfileState.SPECTATING);
+            }
+            TaskUtil.runLater(() -> {
+                //Then handle spectator visibility
+                this.getSpectators().forEach(spectator -> {
                     if (Profile.getByPlayer(spectator).getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
                     if (Profile.getByPlayer(deadPlayer).getSettings().isShowSpectator()) deadPlayer.showPlayer(spectator);
                 });
@@ -344,13 +348,13 @@ public class HCFMatch extends Match {
     @Override
     public Team getTeam(Player player) {
         for (TeamPlayer teamTeamPlayer : teamA.getTeamPlayers()) {
-            if (teamTeamPlayer.getUuid().equals(player.getUniqueId())) {
+            if (teamTeamPlayer.getUniqueId().equals(player.getUniqueId())) {
                 return teamA;
             }
         }
 
         for (TeamPlayer teamTeamPlayer : teamB.getTeamPlayers()) {
-            if (teamTeamPlayer.getUuid().equals(player.getUniqueId())) {
+            if (teamTeamPlayer.getUniqueId().equals(player.getUniqueId())) {
                 return teamB;
             }
         }
@@ -361,13 +365,13 @@ public class HCFMatch extends Match {
     @Override
     public TeamPlayer getTeamPlayer(Player player) {
         for (TeamPlayer teamPlayer : teamA.getTeamPlayers()) {
-            if (teamPlayer.getUuid().equals(player.getUniqueId())) {
+            if (teamPlayer.getUniqueId().equals(player.getUniqueId())) {
                 return teamPlayer;
             }
         }
 
         for (TeamPlayer teamPlayer : teamB.getTeamPlayers()) {
-            if (teamPlayer.getUuid().equals(player.getUniqueId())) {
+            if (teamPlayer.getUniqueId().equals(player.getUniqueId())) {
                 return teamPlayer;
             }
         }

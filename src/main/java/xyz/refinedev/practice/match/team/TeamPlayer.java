@@ -20,7 +20,7 @@ public class TeamPlayer {
 
     private Map<UUID, List<Long>> cpsMap = new HashMap<>();
 
-    private final UUID uuid;
+    private final UUID uniqueId;
     private final String username;
 
     private Location playerSpawn;
@@ -38,7 +38,7 @@ public class TeamPlayer {
     private int longestCombo;
 
     public TeamPlayer(Player player) {
-        this.uuid = player.getUniqueId();
+        this.uniqueId= player.getUniqueId();
         this.username = player.getName();
         int pots = 0;
         for (ItemStack item : player.getInventory().getContents()) {
@@ -55,11 +55,11 @@ public class TeamPlayer {
         this.potions = pots;
     }
 
-    public TeamPlayer(UUID uuid, String username) {
-        this.uuid = uuid;
+    public TeamPlayer(UUID uniqueId, String username) {
+        this.uniqueId=uniqueId;
         this.username = username;
         int pots = 0;
-        for (ItemStack item : Bukkit.getPlayer(uuid).getInventory().getContents()) {
+        for (ItemStack item : Bukkit.getPlayer(uniqueId).getInventory().getContents()) {
             if (item == null)
                 continue;
             if (item.getType() == Material.AIR)
@@ -74,7 +74,7 @@ public class TeamPlayer {
     }
 
     public Player getPlayer() {
-        return Bukkit.getPlayer(uuid);
+        return Bukkit.getPlayer(uniqueId);
     }
 
     public String getDisplayName() {
@@ -88,11 +88,11 @@ public class TeamPlayer {
     }
 
     public int getCps() {
-        if (cpsMap.get(uuid) == null) {
+        if (cpsMap.get(uniqueId) == null) {
             return 0;
         }
-        cpsMap.get(uuid).removeIf(count -> count < System.currentTimeMillis() - 1000L);
-        return cpsMap.get(uuid).size();
+        cpsMap.get(uniqueId).removeIf(count -> count < System.currentTimeMillis() - 1000L);
+        return cpsMap.get(uniqueId).size();
     }
 
     public double getPotionAccuracy() {
@@ -130,7 +130,7 @@ public class TeamPlayer {
     }
 
     public Profile getProfile() {
-        return Profile.getByUuid(uuid);
+        return Profile.getByUuid(uniqueId);
     }
 
 }

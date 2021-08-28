@@ -52,11 +52,11 @@ public class TournamentListener implements Listener {
                 tournament.eliminateParticipant(player, match.getWinningPlayer());
             }
             if (match.isTeamMatch()) {
-                UUID loserUUID = match.getOpponentTeam(match.getWinningTeam()).getLeader().getUuid();
+                UUID loserUUID = match.getOpponentTeam(match.getWinningTeam()).getLeader().getUniqueId();
                 Profile loserProfile = Profile.getByUuid(loserUUID);
                 Party looserParty = loserProfile.getParty();
 
-                UUID winnerUUID = match.getWinningTeam().getLeader().getUuid();
+                UUID winnerUUID = match.getWinningTeam().getLeader().getUniqueId();
                 Profile winnerProfile = Profile.getByUuid(winnerUUID);
                 Party winnerParty = winnerProfile.getParty();
 

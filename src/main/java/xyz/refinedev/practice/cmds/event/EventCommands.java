@@ -11,6 +11,7 @@ import xyz.refinedev.practice.events.EventState;
 import xyz.refinedev.practice.events.EventType;
 import xyz.refinedev.practice.events.impl.sumo.solo.SumoSolo;
 import xyz.refinedev.practice.events.impl.sumo.team.SumoTeam;
+import xyz.refinedev.practice.events.menu.EventSelectMenu;
 import xyz.refinedev.practice.events.menu.EventTeamMenu;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.command.annotation.Command;
@@ -38,10 +39,16 @@ public class EventCommands {
         Locale.EVENT_HELP.toList().forEach(sender::sendMessage);
     }
 
+    @Command(name = "host", aliases = "menu", desc = "Open Event Host Menu")
+    public void host(@Sender Player player) {
+        new EventSelectMenu().openMenu(player);
+    }
+
     @Command(name = "teamselect", aliases = "teams", desc = "Choose a Team for your Event")
     public void teamSelect(@Sender Player player) {
         final Profile profile = Profile.getByPlayer(player);
         final Event activeEvent = eventManager.getActiveEvent();
+
         if (activeEvent == null) {
             player.sendMessage(Locale.ERROR_NOTACTIVE.toString());
             return;
@@ -67,6 +74,7 @@ public class EventCommands {
             player.sendMessage(Locale.EVENT_COOLDOWN_ACTIVE.toString().replace("<expire_time>", eventManager.getEventCooldown().getTimeLeft()));
             return;
         }
+
         switch (type) {
             case SUMO_SOLO: {
                 if (!player.hasPermission("*") && !player.isOp() && !player.hasPermission("array.event.sumosolo")) {

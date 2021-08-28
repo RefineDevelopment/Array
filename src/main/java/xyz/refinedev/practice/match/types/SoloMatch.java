@@ -455,9 +455,9 @@ public class SoloMatch extends Match {
 
     @Override
     public TeamPlayer getTeamPlayer(Player player) {
-        if (playerA.getUuid().equals(player.getUniqueId())) {
+        if (playerA.getUniqueId().equals(player.getUniqueId())) {
             return playerA;
-        } else if (playerB.getUuid().equals(player.getUniqueId())) {
+        } else if (playerB.getUniqueId().equals(player.getUniqueId())) {
             return playerB;
         }
         return null;
@@ -479,9 +479,9 @@ public class SoloMatch extends Match {
             return null;
         }
 
-        if (playerA.getUuid().equals(player.getUniqueId())) {
+        if (playerA.getUniqueId().equals(player.getUniqueId())) {
             return playerB.getPlayer();
-        } else if (playerB.getUuid().equals(player.getUniqueId())) {
+        } else if (playerB.getUniqueId().equals(player.getUniqueId())) {
             return playerA.getPlayer();
         }
         return null;
@@ -489,9 +489,9 @@ public class SoloMatch extends Match {
 
     @Override
     public TeamPlayer getOpponentTeamPlayer(Player player) {
-        if (playerA.getUuid().equals(player.getUniqueId())) {
+        if (playerA.getUniqueId().equals(player.getUniqueId())) {
             return playerB;
-        } else if (playerB.getUuid().equals(player.getUniqueId())) {
+        } else if (playerB.getUniqueId().equals(player.getUniqueId())) {
             return playerA;
         }
         return null;
@@ -502,12 +502,13 @@ public class SoloMatch extends Match {
         TeamPlayer roundLoser = getTeamPlayer(deadPlayer);
         TeamPlayer roundWinner = getOpponentTeamPlayer(deadPlayer);
 
-        getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
+        this.getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
+        PlayerUtil.reset(deadPlayer);
 
         TitleAPI.sendMatchWinner(killerPlayer);
         TitleAPI.sendMatchLoser(deadPlayer);
 
-        for ( Player otherPlayer : getPlayersAndSpectators() ) {
+        for ( Player otherPlayer : getPlayers() ) {
             Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
             TaskUtil.runLater(() -> profile.handleVisibility(otherPlayer, deadPlayer), 2L);
         }
@@ -516,10 +517,14 @@ public class SoloMatch extends Match {
             this.end();
         } else {
             PlayerUtil.spectator(deadPlayer);
-            TaskUtil.runLater(() -> {
-                //Handle match players' visibility
-                this.getPlayers().forEach(player -> Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer));
+            if (!roundLoser.isDisconnected()) {
+                deadPlayer.teleport(getMidSpawn());
 
+                Profile profile = Profile.getByUuid(deadPlayer.getUniqueId());
+                profile.refreshHotbar();
+                profile.setState(ProfileState.SPECTATING);
+            }
+            TaskUtil.runLater(() -> {
                 //Then handle spectator visibility
                 this.getSpectators().forEach(spectator -> {
                     if (Profile.getByPlayer(spectator).getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
@@ -541,10 +546,10 @@ public class SoloMatch extends Match {
         }
 
         boolean[] booleans = new boolean[]{
-                getTeamPlayerA().getUuid().equals(viewer.getUniqueId()),
-                getTeamPlayerB().getUuid().equals(viewer.getUniqueId()),
-                getTeamPlayerA().getUuid().equals(target.getUniqueId()),
-                getTeamPlayerB().getUuid().equals(target.getUniqueId())
+                getTeamPlayerA().getUniqueId().equals(viewer.getUniqueId()),
+                getTeamPlayerB().getUniqueId().equals(viewer.getUniqueId()),
+                getTeamPlayerA().getUniqueId().equals(target.getUniqueId()),
+                getTeamPlayerB().getUniqueId().equals(target.getUniqueId())
         };
 
         if ((booleans[0] && booleans[3]) || (booleans[2] && booleans[1])) {
@@ -552,7 +557,7 @@ public class SoloMatch extends Match {
         } else if ((booleans[0] && booleans[2]) || (booleans[1] && booleans[3])) {
             return org.bukkit.ChatColor.GREEN;
         } else if (getSpectators().contains(viewer)) {
-            return getTeamPlayerA().getUuid().equals(target.getUniqueId()) ? org.bukkit.ChatColor.GREEN : org.bukkit.ChatColor.RED;
+            return getTeamPlayerA().getUniqueId().equals(target.getUniqueId()) ? org.bukkit.ChatColor.GREEN : org.bukkit.ChatColor.RED;
         } else {
             return org.bukkit.ChatColor.AQUA;
         }

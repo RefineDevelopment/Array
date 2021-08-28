@@ -78,7 +78,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                     .replace("<in_fights>", String.valueOf(ArrayCache.getInFights()))
                     .replace("<in_queues>", String.valueOf(ArrayCache.getInQueues()))
                     .replace("%splitter%", "┃").replace("|", "┃").replace("|", "┃")
-                    .replace("<elo_league>", ChatColor.stripColor(profile.getEloLeague()))
+                    .replace("<elo_league>", ChatColor.stripColor(profile.getDivision()))
                     .replace("<global_elo>", String.valueOf(profile.getGlobalElo())))));
 
             if (profile.getParty() != null && Tournament.getCurrentTournament() == null) {

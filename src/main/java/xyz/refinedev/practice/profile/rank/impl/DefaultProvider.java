@@ -28,11 +28,6 @@ public class DefaultProvider implements RankAdapter {
     }
 
     @Override
-    public boolean isBusy(OfflinePlayer player) {
-        return false;
-    }
-
-    @Override
     public ChatColor getRankColor(OfflinePlayer player) {
         return ChatColor.GREEN;
     }

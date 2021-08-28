@@ -91,7 +91,7 @@ public class PartyClassSelectMenu extends PaginatedMenu {
             Party party = Profile.getByPlayer(player).getParty();
 
             if (party != null) {
-                if (party.getLeader().getUuid().equals(player.getUniqueId())) {
+                if (party.getLeader().getUniqueId().equals(player.getUniqueId())) {
                     Button.playSuccess(player);
                     String pvpClass = party.getKits().get(uuid);
 

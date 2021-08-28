@@ -20,12 +20,15 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.api.events.match.*;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.arena.meta.RatingType;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitGameRules;
 import xyz.refinedev.practice.match.task.*;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
+import xyz.refinedev.practice.match.types.FFAMatch;
+import xyz.refinedev.practice.match.types.HCFMatch;
+import xyz.refinedev.practice.match.types.SoloMatch;
+import xyz.refinedev.practice.match.types.TeamMatch;
 import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
 import xyz.refinedev.practice.match.types.kit.TeamBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
@@ -35,7 +38,6 @@ import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
 import xyz.refinedev.practice.util.chat.ChatHelper;
-import xyz.refinedev.practice.util.chat.Clickable;
 import xyz.refinedev.practice.util.other.Cooldown;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
@@ -105,14 +107,21 @@ public abstract class Match {
 
 
     /**
-     * Clear up the match remnants
+     * Clear up the {@link Match} leftovers and remnants
+     * and rollback the {@link Arena} to its original state
      */
-    public static void cleanup() {
-        for (Match match : matches) {
-            match.getPlacedBlocks().forEach(location -> location.getBlock().setType(Material.AIR));
-            match.getChangedBlocks().forEach((blockState) -> blockState.getLocation().getBlock().setType(blockState.getType()));
-            match.getEntities().forEach(Entity::remove);
+    public void cleanup() {
+        if (kit.getGameRules().isBuild() && this.placedBlocks.size() > 0) {
+            this.placedBlocks.forEach(l -> l.getBlock().setType(Material.AIR));
+            this.placedBlocks.clear();
         }
+        if (kit.getGameRules().isBuild() && this.changedBlocks.size() > 0) {
+            this.changedBlocks.forEach(blockState -> blockState.getLocation().getBlock().setType(blockState.getType()));
+            this.changedBlocks.clear();
+        }
+        this.arena.setActive(false);
+        this.entities.forEach(Entity::remove);
+        this.droppedItems.forEach(Item::remove);
     }
 
     /**
@@ -126,8 +135,8 @@ public abstract class Match {
         int i = 0;
 
         for (Match match : matches) {
-            if (match.getQueue() == null || !match.getQueue().equals(queue)) return i;
-            if (!match.isFighting() && !match.isStarting()) return i;
+            if (match.getQueue() == null || !match.getQueue().equals(queue)) continue;
+            if (!match.isFighting() && !match.isStarting()) continue;
 
             i += match.getTeamPlayers().size();
         }
@@ -167,49 +176,52 @@ public abstract class Match {
      * starts the countdown tasks, handles visibility
      */
     public void start() {
-        for (Player player : getPlayers()) {
+        //So that chunks are properly visible
+        //My old dumb ass put this in the loop below causing massive lag
+        if (!this.arena.getSpawn1().getChunk().isLoaded() || !this.arena.getSpawn2().getChunk().isLoaded()) {
+            this.arena.getSpawn1().getChunk().load();
+            this.arena.getSpawn2().getChunk().load();
+        }
+
+        for (Player player : this.getPlayers()) {
             Profile profile = Profile.getByUuid(player.getUniqueId());
             profile.setState(ProfileState.IN_FIGHT);
             profile.setMatch(this);
+            profile.handleVisibility();
 
-            for ( Player otherPlayer : Bukkit.getOnlinePlayers() ) {
-                profile.handleVisibility(player, otherPlayer);
-            }
-
-            //So that chunks are properly visible
-            if (!this.arena.getSpawn1().getChunk().isLoaded() || !this.arena.getSpawn2().getChunk().isLoaded()) {
-                this.arena.getSpawn1().getChunk().load();
-                this.arena.getSpawn2().getChunk().load();
-            }
-            new MatchPlayerSetupEvent(player, this).call();
-            this.setupPlayer(player);
-        }
-
-        TaskUtil.run(this::onStart);
-
-        for (Player player : this.getPlayers()) {
-            Profile profile = Profile.getByPlayer(player);
             if (!profile.getSentDuelRequests().isEmpty()) {
                 profile.getSentDuelRequests().clear();
             }
+
+            MatchPlayerSetupEvent event = new MatchPlayerSetupEvent(player, this);
+            event.call();
+
+            this.setupPlayer(player);
         }
+
+        this.onStart();
 
         this.state = MatchState.STARTING;
         this.startTimestamp = -1;
         this.arena.setActive(true);
 
         this.sendStartMessage();
+        this.initiateTasks();
 
-        if (getKit() != null) {
-            if (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isParkour() || getKit().getGameRules().isSumo()) {
-                this.matchWaterCheck = new MatchWaterCheckTask(this).runTaskTimer(plugin, 20L, 20L);
-            }
+        new MatchStartEvent(this).call();
+    }
+
+    /**
+     * Start all the usual Match tasks that
+     * track and execute the match's logic
+     */
+    public void initiateTasks() {
+        if (kit.getGameRules().isWaterKill() || kit.getGameRules().isParkour() || kit.getGameRules().isSumo()) {
+            this.matchWaterCheck = new MatchWaterCheckTask(this).runTaskTimer(plugin, 20L, 20L);
         }
 
         this.task = new MatchStartTask(this).runTaskTimer(plugin, 20L, 20L);
-        getPlayers().forEach(player -> new MatchPotionTrackTask(player).runTaskTimerAsynchronously(plugin, 0L, 5L));
-
-        new MatchStartEvent(this).call();
+        this.getPlayers().forEach(player -> new MatchPotionTrackTask(player).runTaskTimerAsynchronously(plugin, 0L, 5L));
     }
 
     /**
@@ -220,13 +232,11 @@ public abstract class Match {
      * and finally sends them rating message if enabled
      */
     public void end() {
-        if (onEnd()) {
-            state = MatchState.ENDING;
-        } else {
-            return;
-        }
+        if (!onEnd()) return;
 
-        if (getKit().getGameRules().isBuild() || getKit().getGameRules().isShowHealth()) {
+        this.state = MatchState.ENDING;
+
+        if (kit.getGameRules().isBuild() || kit.getGameRules().isShowHealth()) {
             for ( Player otherPlayerTeam : getPlayers() ) {
                 Objective objective = otherPlayerTeam.getScoreboard().getObjective(DisplaySlot.BELOW_NAME);
                 if (objective != null) objective.unregister();
@@ -234,13 +244,20 @@ public abstract class Match {
         }
 
         snapshots.forEach(matchInventory -> {
-                    matchInventory.setCreated(System.currentTimeMillis());
-                    MatchSnapshot.getSnapshots().put(matchInventory.getTeamPlayer().getUuid(), matchInventory);
+            matchInventory.setCreated(System.currentTimeMillis());
+            MatchSnapshot.getSnapshots().put(matchInventory.getTeamPlayer().getUniqueId(), matchInventory);
         });
 
-        for ( Player player : getPlayers() ) {
+        for ( Player player : this.getPlayers() ) {
             plugin.getKnockbackManager().resetKnockback(player);
             player.setMaximumNoDamageTicks(20);
+
+            if (kit.getGameRules().isParkour()) {
+                Profile profile = Profile.getByPlayer(player);
+                profile.getPlates().clear();
+            }
+
+            this.removePearl(player, true);
         }
 
         for ( TeamPlayer gamePlayer : getTeamPlayers()) {
@@ -259,34 +276,22 @@ public abstract class Match {
             this.removeSpectator(player);
         }
 
-        if (Array.getInstance().getConfigHandler().isRATINGS_ENABLED()) {
+        if (plugin.getConfigHandler().isRATINGS_ENABLED()) {
             this.getPlayers().stream().map(Profile::getByPlayer).forEach(profile ->  {
                 profile.setCanIssueRating(true);
                 profile.setRatingArena(arena);
-                this.sendRatingMessage(profile.getPlayer(), this.getArena());
+                plugin.getRatingsManager().sendRatingMessage(profile.getPlayer(), this.getArena());
             });
         }
 
-        this.getPlayers().forEach(p -> this.removePearl(p, true));
-        this.getPlayers().stream().map(Profile::getByPlayer).map(Profile::getPlates).forEach(List::clear);
-
-        entities.forEach(Entity::remove);
-        droppedItems.forEach(Entity::remove);
-
-        arena.setActive(false);
+        this.cleanup();
 
         if (matchWaterCheck != null) matchWaterCheck.cancel();
 
-        new MatchEndEvent(this).call();
-        new MatchResetTask(this).runTask(Array.getInstance());
+        MatchEndEvent event = new MatchEndEvent(this);
+        event.call();
 
         matches.remove(this);
-    }
-
-    public String replace(String input) {
-        input = input.replace("<arena>", this.getArena().getName())
-                     .replace("<kit>", this.getKit().getName());
-        return input;
     }
 
     /**
@@ -297,34 +302,10 @@ public abstract class Match {
      */
     public void sendStartMessage() {
         if (this.isFreeForAllMatch() || this.isTeamMatch()) {
-            Locale.MATCH_TEAM_STARTMESSAGE.toList().forEach(this::broadcastMessage);
+            Locale.MATCH_TEAM_STARTMESSAGE.toList().stream().map(s -> s.replace("<arena>", this.arena.getDisplayName()).replace("<kit>", this.kit.getDisplayName())).forEach(this::broadcastMessage);
         } else if (isHCFMatch()) {
-            Locale.MATCH_HCF_STARTMESSAGE.toList().forEach(this::broadcastMessage);
+            Locale.MATCH_HCF_STARTMESSAGE.toList().stream().map(s -> s.replace("<arena>", this.arena.getDisplayName()).replace("<kit>", this.kit.getDisplayName())).forEach(this::broadcastMessage);
         }
-    }
-
-    /**
-     * Send the player our rating message and allow them to
-     * rate the arena provided in their match
-     *
-     * @param player {@link Player} the player sending the rating message
-     * @param arena {@link Arena} the arena being rated
-     */
-    public void sendRatingMessage(Player player, Arena arena) {
-        Profile profile = Profile.getByPlayer(player);
-        profile.setCanIssueRating(true);
-
-        String key = "&7Click to rate &a" + arena.getDisplayName();
-        Clickable clickable =
-        new Clickable("&c&l[1⭐]", key + " &7as &cTerrible&7.", "/rate " + arena.getName() + " " + RatingType.TERRIBLE.name());
-        clickable.add("&6&l[2⭐]", key + " &7as &6Okay&7.", "/rate " + arena.getName() + " " + RatingType.OKAY.name());
-        clickable.add("&e&l[3⭐]", key + " &7as &eAverage&7.", "/rate " + arena.getName() + " " + RatingType.AVERAGE.name());
-        clickable.add("&2&l[4⭐]", key + " &7as &2Decent&7.", "/rate " + arena.getName() + " " + RatingType.DECENT.name());
-        clickable.add("&a&l[5⭐]", key + " &7as &aGood&7.", "/rate " + arena.getName() + " " + RatingType.GOOD.name());
-
-        player.sendMessage("");
-        player.sendMessage(CC.translate("&aPlease give us feedback on the Arena, How was it?"));
-        clickable.sendToPlayer(player);
     }
 
     /**
@@ -372,11 +353,11 @@ public abstract class Match {
     public void handleDeath(Player player) {
         if (PlayerUtil.getLastDamager(player) instanceof CraftPlayer) {
             Player killer = (Player) PlayerUtil.getLastDamager(player);
-            handleDeath(player, killer, false);
+            this.handleDeath(player, killer, false);
         } else if (player.getKiller() != null) {
-            handleDeath(player, player.getKiller(), false);
+            this.handleDeath(player, player.getKiller(), false);
         } else {
-            handleDeath(player, null, false);
+            this.handleDeath(player, null, false);
         }
     }
 
@@ -402,7 +383,7 @@ public abstract class Match {
         teamPlayer.setAlive(false);
         teamPlayer.setParkourCheckpoint(null);
 
-        for ( Player player : getPlayersAndSpectators() ) {
+        for ( Player player : getAllPlayers() ) {
             TeamPlayer otherTeamPlayer = getTeamPlayer(player);
             if (otherTeamPlayer == null || otherTeamPlayer.isDisconnected()) continue;
 
@@ -412,7 +393,7 @@ public abstract class Match {
                         .replace("<participant_name>", deadPlayer.getName()));
                 continue;
             }
-            if (!isHCFMatch() && getKit().getGameRules().isParkour() && killerPlayer != null) {
+            if (kit.getGameRules().isParkour() && killerPlayer != null) {
                 player.sendMessage(Locale.MATCH_WON.toString()
                         .replace("<relation_color>", getRelationColor(player, killerPlayer).toString())
                         .replace("<participant_name>", killerPlayer.getName()));
@@ -427,11 +408,10 @@ public abstract class Match {
                         .replace("<dead_name>", deadPlayer.getName())
                         .replace("<killer_name>", killerPlayer.getName()));
             }
-            this.handleKillEffect(deadPlayer, killerPlayer);
         }
+
+        this.handleKillEffect(deadPlayer, killerPlayer);
         this.onDeath(deadPlayer, killerPlayer);
-        //Respawn the player jic
-        deadPlayer.spigot().respawn();
     }
 
     /**
@@ -443,12 +423,14 @@ public abstract class Match {
      */
     public PacketContainer createLightningPacket(Location location) {
         PacketContainer lightningPacket = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
+
         lightningPacket.getModifier().writeDefaults();
         lightningPacket.getIntegers().write(0, 128);
         lightningPacket.getIntegers().write(4, 1);
         lightningPacket.getIntegers().write(1, (int)(location.getX() * 32.0));
         lightningPacket.getIntegers().write(2, (int)(location.getY() * 32.0));
         lightningPacket.getIntegers().write(3, (int)(location.getZ() * 32.0));
+
         return lightningPacket;
     }
 
@@ -474,6 +456,11 @@ public abstract class Match {
         }
     }
 
+    /**
+     * Get Elapsed Duration of the {@link Match}
+     *
+     * @return {@link Long} the time passed in long
+     */
     public long getElapsedDuration() {
         return System.currentTimeMillis() - startTimestamp;
     }
@@ -514,13 +501,22 @@ public abstract class Match {
      * @param target {@link Player} target that the player is spectating
      */
     public void addSpectator(Player player, Player target) {
-        spectators.add(player.getUniqueId());
-        new MatchSpectatorJoinEvent(player, this).call();
+        //This could happen mane
+        if (this.isEnding()) {
+            player.sendMessage(CC.translate("&cThat match has just ended, failed to add you as a spectator!"));
+            return;
+        }
+
+        this.spectators.add(player.getUniqueId());
+
+        MatchSpectatorJoinEvent event = new MatchSpectatorJoinEvent(player, this);
+        event.call();
 
         PlayerUtil.spectator(player);
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setMatch(this);
+        profile.setSpectating(target);
         profile.setState(ProfileState.SPECTATING);
         profile.handleVisibility();
         profile.refreshHotbar();
@@ -536,7 +532,7 @@ public abstract class Match {
         }
 
         // I'll probably change this later onwards
-        plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, () -> {
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             this.getPlayers().forEach(p -> p.hidePlayer(player));
 
             if (profile.getSettings().isShowSpectator()) {
@@ -581,12 +577,15 @@ public abstract class Match {
      * @param player {@link Player} leaving spectating
      */
     public void removeSpectator(Player player) {
-        spectators.remove(player.getUniqueId());
-        new MatchSpectatorLeaveEvent(player, this).call();
+        this.spectators.remove(player.getUniqueId());
+
+        MatchSpectatorLeaveEvent event = new MatchSpectatorLeaveEvent(player, this);
+        event.call();
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setState(ProfileState.IN_LOBBY);
         profile.setMatch(null);
+        profile.setSpectating(null);
         profile.refreshHotbar();
         profile.handleVisibility();
         profile.teleportToSpawn();
@@ -596,7 +595,7 @@ public abstract class Match {
         player.spigot().setCollidesWithEntities(true);
         player.updateInventory();
 
-        if (state == MatchState.ENDING) return;
+        if (this.isEnding()) return;
         for ( Player otherPlayer : getPlayers() ) {
             if (!profile.getPlayer().hasPermission("array.profile.silent")) {
                 otherPlayer.sendMessage(Locale.MATCH_STOPSPEC.toString().replace("<spectator>", player.getName()));
@@ -609,19 +608,33 @@ public abstract class Match {
      *
      * @return {@link List}
      */
-    public List<Player> getPlayersAndSpectators() {
+    public List<Player> getAllPlayers() {
         List<Player> allPlayers = new ArrayList<>();
         allPlayers.addAll(getPlayers());
         allPlayers.addAll(getSpectators());
         return allPlayers;
     }
 
+    /**
+     * Get hover event for Clickable Inventories of
+     * a specified {@link TeamPlayer}
+     *
+     * @param teamPlayer {@link TeamPlayer} the player whose hover event we are getting
+     * @return {@link String} the hover string of the hover event
+     */
     protected static String getHoverEvent(TeamPlayer teamPlayer) {
         return Locale.MATCH_INVENTORY_HOVER.toString().replace("<inventory_name>", teamPlayer.getUsername());
     }
 
+    /**
+     * Get click event for Clickable Inventories of
+     * a specified {@link TeamPlayer}
+     *
+     * @param teamPlayer {@link TeamPlayer} the player whose click event we are getting
+     * @return {@link String} the command string of the click event
+     */
     protected static String getClickEvent(TeamPlayer teamPlayer) {
-        return "/viewinv " + teamPlayer.getUuid().toString();
+        return "/viewinv " + teamPlayer.getUniqueId().toString();
     }
 
     /**
@@ -632,7 +645,6 @@ public abstract class Match {
     public Location getMidSpawn() {
         Location spawn = getArena().getSpawn1();
         Location spawn2 = getArena().getSpawn2();
-
         Location midSpawn = getArena().getSpawn1();
 
         midSpawn.setX(getAverage(spawn.getX(), spawn2.getX()));
@@ -699,22 +711,53 @@ public abstract class Match {
         return builder.create();
     }
 
+    /**
+     * This method is returns true if the
+     * current match related to {@link SoloMatch}
+     *
+     * @return {@link Boolean}
+     */
     public boolean isSoloMatch() {
         return false;
     }
 
+    /**
+     * This method is returns true if the
+     * current match related to {@link TeamMatch}
+     *
+     * @return {@link Boolean}
+     */
     public boolean isTeamMatch(){
         return false;
     }
 
+    /**
+     * This method is returns true if the
+     * current match related to {@link FFAMatch}
+     *
+     * @return {@link Boolean}
+     */
     public boolean isFreeForAllMatch(){
         return false;
     }
 
+    /**
+     * This method is returns true if the
+     * current match related to {@link HCFMatch}
+     *
+     * @return {@link Boolean}
+     */
     public boolean isHCFMatch() {
         return false;
     }
 
+    /**
+     * This method is returns true if the
+     * current match related to {@link SoloBridgeMatch}
+     * or {@link TeamBridgeMatch}
+     *
+     * @return {@link Boolean}
+     */
     public boolean isTheBridgeMatch() {
         return this instanceof SoloBridgeMatch || this instanceof TeamBridgeMatch;
     }
@@ -753,28 +796,90 @@ public abstract class Match {
      */
     public abstract boolean canEnd();
 
+    /**
+     * Execute the Kill Effect for a specified Player
+     *
+     * @param deadPlayer {@link Player} the player being killed
+     * @param killerPlayer {@link Player} the player killing
+     */
     public abstract void handleKillEffect(Player deadPlayer, Player killerPlayer);
 
+    /**
+     * Execute tasks upon a player's death
+     *
+     * @param player {@link Player} the player being killed
+     * @param killer {@link Player} the player killing
+     */
     public abstract void onDeath(Player player, Player killer);
 
+    /**
+     * Execute tasks upon a player's respawn
+     *
+     * @param player {@link Player} the player being respawned
+     */
     public abstract void onRespawn(Player player);
 
+    /**
+     * Get the winning {@link Player} of a Match
+     *
+     * @return {@link Player}
+     */
     public abstract Player getWinningPlayer();
 
+    /**
+     * Get the winning {@link Team} of a Match
+     *
+     * @return {@link Team}
+     */
     public abstract Team getWinningTeam();
 
+    /**
+     * Get teamPlayerA of a Match
+     *
+     * @return {@link TeamPlayer}
+     */
     public abstract TeamPlayer getTeamPlayerA();
 
+    /**
+     * Get teamPlayerB of a Match
+     *
+     * @return {@link TeamPlayer}
+     */
     public abstract TeamPlayer getTeamPlayerB();
 
+    /**
+     * Get a List of all TeamPlayers of a Match
+     *
+     * @return {@link List<TeamPlayer>}
+     */
     public abstract List<TeamPlayer> getTeamPlayers();
 
+    /**
+     * Get a List of all Players of a Match
+     *
+     * @return {@link List<Player>}
+     */
     public abstract List<Player> getPlayers();
 
+    /**
+     * Get a List of all Alive Players of a Match
+     *
+     * @return {@link List<Player>}
+     */
     public abstract List<Player> getAlivePlayers();
 
+    /**
+     * Get Team A of a Match
+     *
+     * @return {@link Team}
+     */
     public abstract Team getTeamA();
 
+    /**
+     * Get Team B of a Match
+     *
+     * @return {@link Team}
+     */
     public abstract Team getTeamB();
 
     public abstract Team getTeam(Player player);

@@ -21,8 +21,10 @@ public class GlobalLeaderboardsTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (!plugin.isEnabled()) return;
+        if (!plugin.isEnabled()) {
+            cancel();
+            return;
+        }
         plugin.getLeaderboardsManager().loadGlobalLeaderboards();
-        DebugUtil.sendDebug("&7Updating Global Leaderboards...");
     }
 }

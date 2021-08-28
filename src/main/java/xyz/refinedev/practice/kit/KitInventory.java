@@ -35,12 +35,11 @@ public class KitInventory {
         this.effects = new ArrayList<>();
     }
 
-    public void applyToPlayer(Kit kit, Player player) {
-        player.getInventory().setArmorContents(this.getArmor());
-        player.getInventory().setContents(this.getContents());
+    public void applyToPlayer(Player player) {
+        player.getInventory().setContents(contents);
+        player.getInventory().setArmorContents(armor);
         player.getActivePotionEffects().clear();
-        player.addPotionEffects(kit.getKitInventory().getEffects());
+        player.getActivePotionEffects().addAll(effects);
         player.updateInventory();
     }
-
 }

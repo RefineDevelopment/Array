@@ -454,7 +454,7 @@ public class TablistAdapter implements TabAdapter {
                     .replace("<profile_wlr>", profile.getWLR())
                     .replace("<profile_wins>", String.valueOf(profile.getTotalWins()))
                     .replace("<profile_losses>", String.valueOf(profile.getTotalLost()))
-                    .replace("<profile_division>", profile.getEloLeague())
+                    .replace("<profile_division>", profile.getDivision())
                     .replace("<profile_name>", profile.getName())));
         }
         return toReplace
@@ -462,7 +462,7 @@ public class TablistAdapter implements TabAdapter {
                 .replace("<profile_wlr>", profile.getWLR())
                 .replace("<profile_wins>", String.valueOf(profile.getTotalWins()))
                 .replace("<profile_losses>", String.valueOf(profile.getTotalLost()))
-                .replace("<profile_division>", profile.getEloLeague())
+                .replace("<profile_division>", profile.getDivision())
                 .replace("<profile_name>", profile.getName()));
     }
 
@@ -613,7 +613,7 @@ public class TablistAdapter implements TabAdapter {
                 TeamPlayer teamPlayer = opponentTeam.getTeamPlayers().get(i);
                 String name = teamPlayer.getUsername();
 
-                String pvPClass = party.getKits().get(teamPlayer.getUuid());
+                String pvPClass = party.getKits().get(teamPlayer.getUniqueId());
                 String displayName = pvPClass == null ? name : getClassColor(pvPClass) + name;
 
                 if (toReplace.contains(member)) {
@@ -631,7 +631,7 @@ public class TablistAdapter implements TabAdapter {
                 TeamPlayer teamPlayer = opponentTeam.getTeamPlayers().get(i);
                 String name = teamPlayer.getUsername();
 
-                String pvPClass = party.getKits().get(teamPlayer.getUuid());
+                String pvPClass = party.getKits().get(teamPlayer.getUniqueId());
                 String displayName = pvPClass == null ? name : getClassColor(pvPClass) + name;
 
                 if (toReplace.contains(member)) {
@@ -680,7 +680,7 @@ public class TablistAdapter implements TabAdapter {
         Profile profile = Profile.getByPlayer(player);
         FFAMatch match = (FFAMatch) profile.getMatch();
         Team team = match.getTeam(player);
-        List<TeamPlayer> fixedPlayers = team.getTeamPlayers().stream().filter(teamPlayer -> !teamPlayer.getUuid().equals(player.getUniqueId())).collect(Collectors.toList());
+        List<TeamPlayer> fixedPlayers = team.getTeamPlayers().stream().filter(teamPlayer -> !teamPlayer.getUniqueId().equals(player.getUniqueId())).collect(Collectors.toList());
 
         String yourPlayer = profile.getName();
 

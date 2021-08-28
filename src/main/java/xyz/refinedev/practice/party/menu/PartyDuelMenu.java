@@ -28,7 +28,7 @@ public class PartyDuelMenu extends PaginatedMenu {
         parties.sort(Comparator.comparing(p -> p.getPlayers().size()));
 
         for (Party party : parties) {
-            Profile profile = Profile.getByUuid(party.getLeader().getUuid());
+            Profile profile = Profile.getByUuid(party.getLeader().getUniqueId());
             if (party.isMember(player.getUniqueId()) || !profile.getSettings().isReceiveDuelRequests()) continue;
 
             buttons.put(index++, new PartyDuelButton(party));

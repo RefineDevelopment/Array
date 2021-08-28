@@ -200,20 +200,38 @@ public class FFAMatch extends Match {
     }
 
     @Override
-    public void onDeath(Player player, Player killer) {
-        TeamPlayer teamPlayer = getTeamPlayer(player);
-        getSnapshots().add(new MatchSnapshot(teamPlayer));
+    public void onDeath(Player deadPlayer, Player killer) {
+        TeamPlayer teamPlayer = getTeamPlayer(deadPlayer);
 
-        PlayerUtil.reset(player);
+        this.getSnapshots().add(new MatchSnapshot(teamPlayer));
+        PlayerUtil.reset(deadPlayer);
 
-        if (!canEnd() && !teamPlayer.isDisconnected()) {
-            player.teleport(getMidSpawn());
-            player.setAllowFlight(true);
-            player.setFlying(true);
+        for ( Player otherPlayer : getAllPlayers() ) {
+            Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
+            TaskUtil.runLater(() -> profile.handleVisibility(otherPlayer, deadPlayer), 2L);
+        }
 
-            Profile profile = Profile.getByUuid(player.getUniqueId());
-            profile.refreshHotbar();
-            profile.setState(ProfileState.SPECTATING);
+        if (this.canEnd()) {
+            this.end();
+        } else {
+            PlayerUtil.spectator(deadPlayer);
+            if (!teamPlayer.isDisconnected()) {
+                deadPlayer.teleport(getMidSpawn());
+
+                Profile profile = Profile.getByUuid(deadPlayer.getUniqueId());
+                profile.refreshHotbar();
+                profile.setState(ProfileState.SPECTATING);
+            }
+            TaskUtil.runLater(() -> {
+                //Handle match players' visibility
+                this.getPlayers().forEach(player -> Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer));
+
+                //Then handle spectator visibility
+                this.getSpectators().forEach(spectator -> {
+                    if (Profile.getByPlayer(spectator).getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
+                    if (Profile.getByPlayer(deadPlayer).getSettings().isShowSpectator()) deadPlayer.showPlayer(spectator);
+                });
+            }, 8L);
         }
     }
 
@@ -292,7 +310,7 @@ public class FFAMatch extends Match {
     @Override
     public TeamPlayer getTeamPlayer(Player player) {
         for (TeamPlayer teamPlayer : team.getTeamPlayers()) {
-            if (teamPlayer.getUuid().equals(player.getUniqueId())) {
+            if (teamPlayer.getUniqueId().equals(player.getUniqueId())) {
                 return teamPlayer;
             }
         }

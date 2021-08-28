@@ -18,11 +18,11 @@ import lombok.Setter;
 public class Division {
 
     private final String name;
-    private String displayName;
+    private String displayName = "&aDefault";
 
-    private int minElo;
-    private int maxElo;
+    private int minElo = 0;
+    private int maxElo = 0;
 
-    private int xpLevel;
-    private int experience;
+    private int xpLevel = 0;
+    private int experience = 0;
 }

@@ -3,6 +3,7 @@ package xyz.refinedev.practice.cmds;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.clan.Clan;
@@ -28,6 +29,8 @@ import java.util.UUID;
  */
 
 public class ClanCommands {
+
+    private final Array plugin = Array.getInstance();
 
     @Command(name = "", desc = "View Clan Commands")
     public void clan(@Sender CommandSender player) {
@@ -162,7 +165,7 @@ public class ClanCommands {
         }
 
         clan.invite(target);
-        clan.broadcast(Locale.CLAN_INVITED_BROADCAST.toString().replace("<invited>", RankType.getRankAdapter().getFullName(target)));
+        clan.broadcast(Locale.CLAN_INVITED_BROADCAST.toString().replace("<invited>", plugin.getRankManager().getRankType().getRankAdapter().getFullName(target)));
     }
 
 

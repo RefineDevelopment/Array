@@ -107,13 +107,16 @@ public class SoloBridgeMatch extends SoloMatch {
 
     @Override
     public void onDeath(Player deadPlayer, Player killerPlayer) {
+        TeamPlayer roundLoser = getTeamPlayer(deadPlayer);
+        TeamPlayer roundWinner = getOpponentTeamPlayer(deadPlayer);
+
         if (this.canEnd()) {
-            TeamPlayer roundLoser = this.getTeamPlayer(deadPlayer);
-            this.getSnapshots().add(new MatchSnapshot(roundLoser, this.getOpponentTeamPlayer(deadPlayer)));
+            this.getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
+            PlayerUtil.reset(deadPlayer);
             this.end();
         }
         this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> {
-            if (deadPlayer != null && deadPlayer.isOnline() && deadPlayer.isDead()) {
+            if (deadPlayer.isOnline() && deadPlayer.isDead()) {
                 ((CraftPlayer)deadPlayer).getHandle().playerConnection.a(new PacketPlayInClientCommand(PacketPlayInClientCommand.EnumClientCommand.PERFORM_RESPAWN));
             }
         });
@@ -122,6 +125,7 @@ public class SoloBridgeMatch extends SoloMatch {
     @Override
     public void onRespawn(Player player) {
         TeamPlayer teamPlayer = this.getTeamPlayer(player);
+
         if (!isFighting()) return;
         if (teamPlayer.isDisconnected()) return;
 
@@ -132,6 +136,7 @@ public class SoloBridgeMatch extends SoloMatch {
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.refreshHotbar();
+
         TaskUtil.runLaterAsync(() -> {
             this.setupPlayer(player);
             PlayerUtil.allowMovement(player);

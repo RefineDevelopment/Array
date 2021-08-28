@@ -43,7 +43,6 @@ import xyz.refinedev.practice.util.other.TaskUtil;
 import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -621,8 +620,8 @@ public class MatchListener implements Listener {
         try {
             List<Long> list;
 
-            if (teamPlayer.getCpsMap().containsKey(teamPlayer.getUuid())) {
-                list = teamPlayer.getCpsMap().get(teamPlayer.getUuid());
+            if (teamPlayer.getCpsMap().containsKey(teamPlayer.getUniqueId())) {
+                list = teamPlayer.getCpsMap().get(teamPlayer.getUniqueId());
             } else {
                 list = new ArrayList<>();
             }
@@ -726,7 +725,7 @@ public class MatchListener implements Listener {
             if (kitInventory == null) continue;
 
             if (ChatColor.stripColor(kitInventory.getCustomName()).equals(ChatColor.stripColor(kitName))) {
-                kitInventory.applyToPlayer(match.getKit(), event.getPlayer());
+                kitInventory.applyToPlayer(event.getPlayer());
                 event.setCancelled(true);
                 return;
             }

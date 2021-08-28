@@ -43,6 +43,9 @@ public class KillEffectManager {
         this.config = plugin.getKillEffectsConfig();
     }
 
+    /**
+     * Initiate and load are Kill Effects
+     */
     public void init() {
         for ( Document document : collection.find() ) {
             if (document == null) {
@@ -55,9 +58,18 @@ public class KillEffectManager {
         }
     }
 
+    /**
+     * Import {@link KillEffect} from config
+     */
     public void importConfig() {
+        //if there are any then clear them
+        this.killEffects.clear();
+
         ConfigurationSection section = config.getConfigurationSection("KILL_EFFECTS.");
-        if (section == null || section.getKeys(false) == null) return;
+        if (section == null || section.getKeys(false) == null) {
+            this.createDefault();
+            return;
+        }
 
         for ( String key : section.getKeys(false) ) {
             String path = "KILL_EFFECTS." + key + ".";
@@ -103,8 +115,15 @@ public class KillEffectManager {
             }
             this.killEffects.add(killEffect);
         }
+
+        if (killEffects.stream().noneMatch(KillEffect::isDefaultEffect)) {
+            this.createDefault();
+        }
     }
 
+    /**
+     * Export all {@link KillEffect} to config
+     */
     public void exportConfig() {
         for ( KillEffect killEffect : killEffects ) {
             if (killEffect == null) return;
@@ -135,6 +154,12 @@ public class KillEffectManager {
         config.save();
     }
 
+    /**
+     * Save a {@link KillEffect} to mongo
+     *
+     * @param killEffect {@link KillEffect} to save
+     * @param async {@link Boolean} should we run this task async
+     */
     public void save(KillEffect killEffect, boolean async) {
         if (async) TaskUtil.runAsync(() -> this.save(killEffect, false));
 
@@ -142,24 +167,54 @@ public class KillEffectManager {
         Document document = new Document();
 
         document.put("killEffect", serialized);
+        document.put("_id", killEffect.getUniqueId());
 
-        collection.replaceOne(Filters.eq("uuid", killEffect.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
+        collection.replaceOne(Filters.eq("_id", killEffect.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
     }
 
+    /**
+     * Get a {@link KillEffect} by its {@link UUID}
+     *
+     * @param uuid {@link UUID} of the kill effect
+     * @return {@link KillEffect}
+     */
     public KillEffect getByUUID(UUID uuid) {
         return killEffects.stream().filter(killEffect -> killEffect.getUniqueId().equals(uuid)).findFirst().orElse(getDefault());
     }
 
+    /**
+     * Get a {@link KillEffect} by its name
+     *
+     * @param name Name of the kill effect
+     * @return {@link KillEffect}
+     */
     public KillEffect getByName(String name) {
         return killEffects.stream().filter(killEffect -> killEffect.getName().equals(name)).findFirst().orElse(getDefault());
     }
 
+    /**
+     * Get the default kill effect
+     *
+     * @return {@link KillEffect}
+     */
     public KillEffect getDefault() {
+        return killEffects.stream().filter(KillEffect::isDefaultEffect).findAny().orElse(createDefault());
+    }
+
+    /**
+     * Create the default {@link KillEffect}
+     * and return it
+     *
+     * @return {@link KillEffect}
+     */
+    public KillEffect createDefault() {
         KillEffect killEffect = new KillEffect(UUID.randomUUID(), "&aDefault");
         killEffect.setLightning(true);
         killEffect.setDropsClear(true);
+        killEffect.setDefaultEffect(true);
         killEffect.setItemStack(new ItemBuilder(Material.PAPER).lore(Arrays.asList(" &fThis is the default kill effect", " &fThis will do nothing upon death.")).name("&aDefault").build());
 
+        this.killEffects.add(killEffect);
         return killEffect;
     }
 }

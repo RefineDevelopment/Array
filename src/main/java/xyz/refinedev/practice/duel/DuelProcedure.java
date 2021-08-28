@@ -2,6 +2,7 @@ package xyz.refinedev.practice.duel;
 
 import lombok.Data;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
@@ -14,7 +15,7 @@ import xyz.refinedev.practice.util.other.PlayerUtil;
 @Data
 public class DuelProcedure {
 
-    public static RankAdapter rank = RankType.getRankAdapter();
+    public static RankAdapter rank = Array.getInstance().getRankManager().getRankType().getRankAdapter();
 
     private final Player sender;
     private final Player target;

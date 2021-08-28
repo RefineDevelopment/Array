@@ -164,14 +164,12 @@ public class KitCommands {
     public void kitSetInv(@Sender Player player, Kit kit) {
         player.updateInventory();
 
-        KitInventory inventory = new KitInventory();
         List<PotionEffect> potionEffects = new ArrayList<>(player.getActivePotionEffects());
 
-        inventory.setEffects(potionEffects);
-        inventory.setArmor(player.getInventory().getArmorContents());
-        inventory.setContents(player.getInventory().getContents());
+        kit.getKitInventory().setEffects(potionEffects);
+        kit.getKitInventory().setArmor(player.getInventory().getArmorContents());
+        kit.getKitInventory().setContents(player.getInventory().getContents());
 
-        kit.setKitInventory(inventory);
         kit.save();
 
         player.sendMessage(CC.translate("&8[&c&lArray&8] &aYou updated the kit's inventory."));

@@ -109,7 +109,7 @@ public class EntityHider extends PacketAdapter implements Listener {
                         if (potion.getShooter() instanceof Player ) {
                             Player shooter = (Player) potion.getShooter();
                             hasAtleastOneMatch = true;
-                            if(receiver.canSee(shooter)) {
+                            if (receiver.canSee(shooter)) {
                                 hasAnyPlayablePotion = true;
                             }
                         }
@@ -131,7 +131,7 @@ public class EntityHider extends PacketAdapter implements Listener {
                 boolean hasAnyPlayable = false;
                 boolean hasAtleastOneMatch = false;
 
-                for(Entity entity : receiver.getWorld().getEntitiesByClasses(Player.class , Projectile.class)) {
+                for (Entity entity : receiver.getWorld().getEntitiesByClasses(Player.class , Projectile.class)) {
                     Player player;
                     if (entity instanceof Player) {
                         player = (Player) entity;

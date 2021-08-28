@@ -115,7 +115,6 @@ public class ArrayCommands {
     @Command(name = "reload", aliases = "refresh", desc = "Reload Array's Configurations")
     @Require("array.listeners.admin")
     public void reload(@Sender CommandSender player) {
-        plugin.getDivisionsConfig().reload();
         plugin.getArenasConfig().reload();
         plugin.getKitsConfig().reload();
         plugin.getMainConfig().reload();

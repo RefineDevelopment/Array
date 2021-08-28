@@ -179,7 +179,7 @@ public class Party extends Team {
         for (TeamPlayer teamPlayer : this.getTeamPlayers()) {
             Player otherPlayer = teamPlayer.getPlayer();
             if (otherPlayer != null) {
-                Profile teamProfile = Profile.getByUuid(teamPlayer.getUuid());
+                Profile teamProfile = Profile.getByUuid(teamPlayer.getUniqueId());
                 teamProfile.handleVisibility(otherPlayer, player);
             }
         }
@@ -201,7 +201,7 @@ public class Party extends Team {
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         profile.setParty(null);
-        this.getTeamPlayers().removeIf(member -> member.getUuid().equals(player.getUniqueId()));
+        this.getTeamPlayers().removeIf(member -> member.getUniqueId().equals(player.getUniqueId()));
         this.getPlayers().removeIf(member -> member.getUniqueId().equals(player.getUniqueId()));
         this.kits.remove(player.getUniqueId());
 
@@ -230,7 +230,7 @@ public class Party extends Team {
                     if (secondTeamPlayer.isDisconnected()) {
                         continue;
                     }
-                    if (secondTeamPlayer.getUuid().equals(player.getUniqueId())) {
+                    if (secondTeamPlayer.getUniqueId().equals(player.getUniqueId())) {
                         continue;
                     }
                     final Player secondPlayer = secondTeamPlayer.getPlayer();
@@ -255,7 +255,7 @@ public class Party extends Team {
         for (TeamPlayer teamPlayer : this.getTeamPlayers()) {
             Player otherPlayer = teamPlayer.getPlayer();
             if (otherPlayer != null) {
-                Profile otherProfile = Profile.getByUuid(teamPlayer.getUuid());
+                Profile otherProfile = Profile.getByUuid(teamPlayer.getUniqueId());
                 otherProfile.handleVisibility(otherPlayer, player);
             }
         }
@@ -295,7 +295,7 @@ public class Party extends Team {
     public void disband() {
         this.broadcast(Locale.PARTY_DISBANDED.toString());
 
-        Profile leaderProfile = Profile.getByUuid(this.getLeader().getUuid());
+        Profile leaderProfile = Profile.getByUuid(this.getLeader().getUniqueId());
         leaderProfile.getSentDuelRequests().values().removeIf(DuelRequest::isParty);
 
         this.getPlayers().forEach(player -> {

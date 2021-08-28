@@ -119,11 +119,13 @@ public class SoloTournament extends Tournament<Player> {
                     cancel();
                     return;
                 }
+
                 TeamPlayer playerA = teamShuffle.poll();
                 if (teamShuffle.isEmpty()) {
                     playerA.getPlayer().sendMessage(CC.translate("&7We couldn't find an opponent for you, please wait for the next round!"));
                     return;
                 }
+
                 TeamPlayer playerB = teamShuffle.poll();
 
                 Arena arena = Arena.getRandom(getKit());
