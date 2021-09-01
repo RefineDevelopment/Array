@@ -3,12 +3,14 @@ package xyz.refinedev.practice.events.impl.sumo.team;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.events.EventState;
+import xyz.refinedev.practice.events.EventTeamSize;
 import xyz.refinedev.practice.events.EventType;
 import xyz.refinedev.practice.events.impl.sumo.team.task.SumoTeamRoundEndTask;
 import xyz.refinedev.practice.events.impl.sumo.team.task.SumoTeamRoundStartTask;
@@ -28,7 +30,6 @@ import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -53,11 +54,16 @@ public class SumoTeam extends Event {
     private EventGroup roundTeamA;
     private EventGroup roundTeamB;
 
-    public SumoTeam(Player host, int maxPlayers) {
-        super("Sumo", new PlayerSnapshot(host.getUniqueId(), host.getName()), maxPlayers, EventType.SUMO_TEAM);
+    public SumoTeam(Player host, EventTeamSize size) {
+        super("Sumo", new PlayerSnapshot(host.getUniqueId(), host.getName()), size.getMaxParticipants(), EventType.SUMO_TEAM);
 
-        Arrays.stream(EventGroupColor.values()).forEach(value -> this.teams.add(new EventGroup(2, value)));
-        this.setEVENT_PREFIX(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
+        for ( int i = 0; i <= size.getTeams(); i++ ) {
+            EventGroupColor color = EventGroupColor.values()[i];
+            EventGroup eventGroup = new EventGroup(size.getMaxTeamPlayers(), color);
+            this.teams.add(eventGroup);
+        }
+
+        this.setEvent_Prefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
     }
 
     @Override
@@ -396,6 +402,33 @@ public class SumoTeam extends Event {
     @Override
     public boolean isFighting(EventGroup group) {
         return this.roundTeamA != null && this.roundTeamA.equals(group) || this.roundTeamB != null && this.roundTeamB.equals(group);
+    }
+
+    @Override
+    public ChatColor getRelationColor(Player viewer, Player target) {
+        if (viewer.equals(target)) {
+            if (!this.isFighting()) {
+                return this.getPlugin().getConfigHandler().getEventColor();
+            }
+            return org.bukkit.ChatColor.GREEN;
+        }
+
+        boolean[] booleans = new boolean[]{
+                roundTeamA.contains(viewer),
+                roundTeamB.contains(viewer),
+                roundTeamA.contains(target),
+                roundTeamB.contains(target)
+        };
+
+        if ((booleans[0] && booleans[3]) || (booleans[2] && booleans[1])) {
+            return org.bukkit.ChatColor.RED;
+        } else if ((booleans[0] && booleans[2]) || (booleans[1] && booleans[3])) {
+            return org.bukkit.ChatColor.GREEN;
+        } else if (getSpectators().contains(viewer.getUniqueId())) {
+            return roundTeamA.contains(target) ?  org.bukkit.ChatColor.GREEN : org.bukkit.ChatColor.RED;
+        } else {
+            return ChatColor.AQUA;
+        }
     }
 
     @Override

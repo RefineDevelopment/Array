@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.util.menu.button;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,12 +9,12 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.util.menu.Button;
 
-@AllArgsConstructor
 @Getter @Setter
+@RequiredArgsConstructor
 public class DisplayButton extends Button {
 
-    private ItemStack itemStack;
-    private boolean cancel;
+    private final ItemStack itemStack;
+    private final boolean cancel;
 
     @Override
     public ItemStack getButtonItem(Player player) {

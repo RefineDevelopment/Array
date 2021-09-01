@@ -75,29 +75,6 @@ public class EventCommands {
             return;
         }
 
-        switch (type) {
-            case SUMO_SOLO: {
-                if (!player.hasPermission("*") && !player.isOp() && !player.hasPermission("array.event.sumosolo")) {
-                    player.sendMessage(Locale.EVENT_NO_PERMISSION.toString().replace("<store>", plugin.getConfigHandler().getSTORE()));
-                    return;
-                }
-                eventManager.setActiveEvent(new SumoSolo(player, 100));
-                break;
-            }
-            case SUMO_TEAM: {
-                if (!player.hasPermission("*") && !player.isOp() && !player.hasPermission("array.event.sumoteam")) {
-                    player.sendMessage(Locale.EVENT_NO_PERMISSION.toString().replace("<store>", plugin.getConfigHandler().getSTORE()));
-                    return;
-                }
-                eventManager.setActiveEvent(new SumoTeam(player, 100));
-                break;
-            }
-            case BRACKETS_SOLO:
-            case BRACKETS_TEAM:
-            case GULAG_SOLO:
-            case GULAG_TEAM:
-                break;
-        }
         Bukkit.getOnlinePlayers().stream().map(Profile::getByPlayer).filter(profile -> profile.isInLobby() && !profile.getKitEditor().isActive()).forEach(Profile::refreshHotbar);
     }
 
@@ -184,7 +161,7 @@ public class EventCommands {
                     .replace("<event_host>", event.getHost().getUsername())
                     .replace("<event_alive_players>", String.valueOf(event.getRemainingPlayers().size()))
                     .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))
-                    .replace("<event_type>", event.getType().getReadable())
+                    .replace("<event_type>", event.getType().getName())
                     .replace("<event_name>", event.getName());
 
         }).collect(Collectors.toList()).forEach(sender::sendMessage);

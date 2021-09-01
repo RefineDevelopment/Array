@@ -70,6 +70,7 @@ public class CommandsManager {
         drink.register(new LeaderboardsCommand(), "leaderboards", "lb", "leaderboard");
         drink.register(new OpenMenu(), "openmenu", "menu", "menus");
         drink.register(new StatsCommand(), "stats", "elo", "statistics");
+        drink.register(new SpectateMenuCommand(), "specmenu", "spectatemenu");
 
         //Essentials Commands
         drink.register(new UnrankedQueueCMD(), "unrankedqueue", "queue", "queue unranked");

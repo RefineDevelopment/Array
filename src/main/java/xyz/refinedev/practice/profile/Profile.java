@@ -158,7 +158,7 @@ public class Profile {
                 public void run() {
                     Profile.getProfiles().values().forEach(Profile::checkForHotbarUpdate);
                 }
-            }.runTaskTimerAsynchronously(Array.getInstance(), 40L, 40L);
+            }.runTaskTimerAsynchronously(Array.getInstance(), 60L, 60L);
         }
     }
 
@@ -209,7 +209,7 @@ public class Profile {
      */
     public void load() {
         try {
-            Document document = collection.find(Filters.eq("uuid", uuid.toString())).first();
+            Document document = collection.find(Filters.eq("_id", uuid.toString())).first();
 
             if (document == null) {
                 this.save();
@@ -218,17 +218,15 @@ public class Profile {
 
             this.globalElo = document.getInteger("globalElo");
 
-            if (document.getString("kill_effect") != null) {
-                UUID uuid = UUID.fromString(document.getString("kill_effect"));
-                KillEffect kill = plugin.getKillEffectManager().getByUUID(uuid);
-                if (kill != null) {
-                    this.killEffect = kill;
-                } else {
-                    this.killEffect = plugin.getKillEffectManager().getDefault();
-                }
+            if (document.getString("killEffect") != null) {
+                UUID uuid = UUID.fromString(document.getString("killEffect"));
+                KillEffect effect = plugin.getKillEffectManager().getByUUID(uuid);
+                if (effect == null) effect = plugin.getKillEffectManager().getDefault();
+
+                this.killEffect = effect;
             }
 
-            if (document.getString("clan") != null) this.clan = Clan.getByName(document.getString("clan"));
+            if (document.getString("clan") != null) this.clan = Clan.getByUUID(UUID.fromString(document.getString("clan")));
 
             Document options = (Document) document.get("settings");
 
@@ -248,49 +246,50 @@ public class Profile {
             for ( String key : kitStatistics.keySet() ) {
                 Document kitDocument=(Document) kitStatistics.get(key);
                 Kit kit = Kit.getByName(key);
+                if (kit == null) return;
 
-                if (kit != null) {
-                    StatisticsData statisticsData = new StatisticsData();
-                    if (kitDocument.getInteger("elo") != null) {
-                        statisticsData.setElo(kitDocument.getInteger("elo"));
-                    } else {
-                        kitDocument.put("elo", 1000);
-                    }
-                    if (kitDocument.getInteger("won") != null) {
-                        statisticsData.setWon(kitDocument.getInteger("won"));
-                    } else {
-                        kitDocument.put("won", 0);
-                    }
-                    if (kitDocument.getInteger("lost") != null) {
-                        statisticsData.setLost(kitDocument.getInteger("lost"));
-                    } else {
-                        kitDocument.put("lost", 0);
-                    }
-                    this.statisticsData.put(kit, statisticsData);
+                StatisticsData statisticsData = new StatisticsData();
+
+                if (kitDocument.getInteger("elo") != null) {
+                    statisticsData.setElo(kitDocument.getInteger("elo"));
+                } else {
+                    kitDocument.put("elo", 1000);
                 }
+                if (kitDocument.getInteger("won") != null) {
+                    statisticsData.setWon(kitDocument.getInteger("won"));
+                } else {
+                    kitDocument.put("won", 0);
+                }
+                if (kitDocument.getInteger("lost") != null) {
+                    statisticsData.setLost(kitDocument.getInteger("lost"));
+                } else {
+                    kitDocument.put("lost", 0);
+                }
+                this.statisticsData.put(kit, statisticsData);
+
             }
 
-            Document kitsDocument=(Document) document.get("loadouts");
+            Document kitsDocument = (Document) document.get("kitInventory");
 
             for ( String key : kitsDocument.keySet() ) {
                 Kit kit = Kit.getByName(key);
+                if (kit == null) return;
 
-                if (kit != null) {
-                    JsonArray kitsArray=new JsonParser().parse(kitsDocument.getString(key)).getAsJsonArray();
-                    KitInventory[] loadouts=new KitInventory[4];
+                JsonArray kitsArray = new JsonParser().parse(kitsDocument.getString(key)).getAsJsonArray();
+                KitInventory[] kitInventory = new KitInventory[4];
 
-                    for ( JsonElement kitElement : kitsArray ) {
-                        JsonObject kitObject=kitElement.getAsJsonObject();
+                for ( JsonElement kitElement : kitsArray ) {
+                    JsonObject kitObject = kitElement.getAsJsonObject();
 
-                        KitInventory loadout=new KitInventory(kitObject.get("name").getAsString());
-                        loadout.setArmor(InventoryUtil.deserializeInventory(kitObject.get("armor").getAsString()));
-                        loadout.setContents(InventoryUtil.deserializeInventory(kitObject.get("contents").getAsString()));
+                    KitInventory loadout = new KitInventory(kitObject.get("name").getAsString());
+                    loadout.setArmor(InventoryUtil.deserializeInventory(kitObject.get("armor").getAsString()));
+                    loadout.setContents(InventoryUtil.deserializeInventory(kitObject.get("contents").getAsString()));
 
-                        loadouts[kitObject.get("index").getAsInt()]=loadout;
-                    }
-
-                    statisticsData.get(kit).setLoadouts(loadouts);
+                    kitInventory[kitObject.get("index").getAsInt()]=loadout;
                 }
+
+                statisticsData.get(kit).setLoadouts(kitInventory);
+
             }
         } catch (Exception e) {
             this.save();
@@ -303,14 +302,16 @@ public class Profile {
      */
     public void save() {
         Document document = new Document();
-        document.put("uuid", uuid.toString());
+
+        document.put("_id", uuid.toString());
         document.put("name", Bukkit.getOfflinePlayer(uuid).getName());
         document.put("globalElo", globalElo);
 
-        if (killEffect != null) document.put("kill_effect", killEffect.getUniqueId().toString());
-        if (clan != null) document.put("clan", clan.getName());
+        if (killEffect != null) document.put("killEffect", killEffect.getUniqueId().toString());
+        if (clan != null) document.put("clan", clan.getUuid());
 
-        Document optionsDocument=new Document();
+        Document optionsDocument = new Document();
+
         optionsDocument.put("showScoreboard", settings.isScoreboardEnabled());
         optionsDocument.put("allowSpectators", settings.isAllowSpectators());
         optionsDocument.put("receiveDuelRequests", settings.isReceiveDuelRequests());
@@ -327,9 +328,11 @@ public class Profile {
         Document kitStatisticsDocument = new Document();
         for ( Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet() ) {
             Document kitDocument = new Document();
+
             kitDocument.put("elo", entry.getValue().getElo());
             kitDocument.put("won", entry.getValue().getWon());
             kitDocument.put("lost", entry.getValue().getLost());
+
             kitStatisticsDocument.put(entry.getKey().getName(), kitDocument);
         }
 
@@ -339,11 +342,11 @@ public class Profile {
         for ( Map.Entry<Kit, StatisticsData> entry : statisticsData.entrySet() ) {
             JsonArray kitsArray = new JsonArray();
 
-            for ( int i=0; i < 4; i++ ) {
-                KitInventory loadout=entry.getValue().getLoadout(i);
+            for ( int i = 0; i < 4; i++ ) {
+                KitInventory loadout = entry.getValue().getLoadout(i);
 
                 if (loadout != null) {
-                    JsonObject kitObject=new JsonObject();
+                    JsonObject kitObject = new JsonObject();
                     kitObject.addProperty("index", i);
                     kitObject.addProperty("name", loadout.getCustomName());
                     kitObject.addProperty("armor", InventoryUtil.serializeInventory(loadout.getArmor()));
@@ -355,9 +358,9 @@ public class Profile {
             kitsDocument.put(entry.getKey().getName(), kitsArray.toString());
         }
 
-        document.put("loadouts", kitsDocument);
+        document.put("kitInventory", kitsDocument);
 
-        collection.replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
+        collection.replaceOne(Filters.eq("_id", uuid.toString()), document, new ReplaceOptions().upsert(true));
         new ProfileSaveEvent(this).call();
     }
 
@@ -737,10 +740,6 @@ public class Profile {
 
     public boolean isInEvent() {
         return event != null;
-    }
-
-    public boolean isInBrackets() {
-        return isInEvent() && (event.getType().equals(EventType.BRACKETS_SOLO) || event.getType().equals(EventType.BRACKETS_TEAM));
     }
 
     public boolean isInTournament() {

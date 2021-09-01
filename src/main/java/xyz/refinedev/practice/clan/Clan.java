@@ -111,6 +111,16 @@ public class Clan {
     }
 
     /**
+     * Get a clan by its UUID
+     *
+     * @param uuid The UUID of the Clan
+     * @return {@link Clan}
+     */
+    public static Clan getByUUID(UUID uuid) {
+        return clans.stream().filter(c -> c.getUuid().equals(uuid)).findFirst().orElse(null);
+    }
+
+    /**
      * Get a clan by its leader
      *
      * @param player The leader of the Clan
@@ -481,8 +491,7 @@ public class Clan {
     /**
      * Send clan information to the player
      *
-     * @param player The Player recieving the information
-     * @param clan The Clan whose information is being sent
+     * @param player The Player receiving the information
      */
     public void information(Player player) {
         this.getAllMembers().sort(Comparator.comparing(cm -> cm.getType().getWeight()));

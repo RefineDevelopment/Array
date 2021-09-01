@@ -64,11 +64,12 @@ public class TeamTournament extends Tournament<Party> {
     @Override
     public void start() {
         this.setStarted(true);
-        if (!getParties().isEmpty()) {
-            this.nextStage();
-        } else {
+
+        if (getParties().isEmpty()) {
             this.end(null);
+            return;
         }
+        this.nextStage();
     }
 
     @Override

@@ -60,21 +60,28 @@ public class LeaderboardsManager {
         kitTask = new KitLeaderboardsTask(plugin);
         clanTask = new ClanLeaderboardsTask(plugin);
 
-        //Run the task async every 1 minute
-        globalTask.runTaskTimerAsynchronously(plugin, 60 * 20L, 60 * 20L);
-        kitTask.runTaskTimerAsynchronously(plugin, 60 * 20L, 60 * 20L);
-        clanTask.runTaskTimerAsynchronously(plugin, 60 * 20L, 60 * 20L);
+        //Run the task async every 3 minute
+        globalTask.runTaskTimerAsynchronously(plugin, 180 * 20L, 180 * 20L);
+        kitTask.runTaskTimerAsynchronously(plugin, 180 * 20L, 180 * 20L);
+        clanTask.runTaskTimerAsynchronously(plugin, 180 * 20L, 180 * 20L);
     }
 
+    /**
+     * Update and Reload Global Leaderboards
+     * directly from mongo, this runs every 3 minutes
+     */
     public void loadGlobalLeaderboards() {
-        new GlobalLeaderboardsUpdateEvent().call();
+        GlobalLeaderboardsUpdateEvent event = new GlobalLeaderboardsUpdateEvent();
+        event.call();
+
+        //Clear our previous leaderboards
         if (!this.globalLeaderboards.isEmpty()) this.globalLeaderboards.clear();
 
         List<Document> top10 = profiles.find().sort(Sorts.descending("globalElo")).limit(10).into(new ArrayList<>());
         for ( Document document : top10 ) {
             LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
             leaderboardsAdapter.setName(document.getString("name"));
-            leaderboardsAdapter.setUuid(UUID.fromString(document.getString("uuid")));
+            leaderboardsAdapter.setUuid(UUID.fromString(document.getString("_id")));
             leaderboardsAdapter.setElo(document.getInteger("globalElo"));
 
             //Sometimes the leaderboard entries are duplicated, this is what I am checking here
@@ -85,8 +92,13 @@ public class LeaderboardsManager {
         }
     }
 
+    /**
+     * Update and Reload Kit Leaderboards
+     * directly from mongo, this runs every 3 minutes
+     */
     public void loadKitLeaderboards(Kit kit) {
-        new KitLeaderboardsUpdateEvent().call();
+        KitLeaderboardsUpdateEvent event = new KitLeaderboardsUpdateEvent();
+        event.call();
 
         List<LeaderboardsAdapter> eloLB = kit.getEloLeaderboards();
         List<LeaderboardsAdapter> winLB = kit.getWinLeaderboards();
@@ -103,7 +115,7 @@ public class LeaderboardsManager {
 
                 LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
                 leaderboardsAdapter.setName(document.getString("name"));
-                leaderboardsAdapter.setUuid(UUID.fromString(document.getString("uuid")));
+                leaderboardsAdapter.setUuid(UUID.fromString(document.getString("_id")));
                 leaderboardsAdapter.setElo(kitDocument.getInteger("elo"));
 
                 //Sometimes the leaderboard entries are duplicated, this is what I am checking here
@@ -122,7 +134,7 @@ public class LeaderboardsManager {
 
                 LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
                 leaderboardsAdapter.setName(document.getString("name"));
-                leaderboardsAdapter.setUuid(UUID.fromString(document.getString("uuid")));
+                leaderboardsAdapter.setUuid(UUID.fromString(document.getString("_id")));
                 leaderboardsAdapter.setElo(kitDocument.getInteger("won"));
 
                 //Sometimes the leaderboard entries are duplicated, this is what I am checking here
@@ -134,13 +146,25 @@ public class LeaderboardsManager {
         }
     }
 
+    /**
+     * Update and Reload Clan Leaderboards
+     * directly from mongo, this runs every 3 minutes
+     */
     public void loadClanLeaderboards() {
-        for ( Document document : clans.find().sort(Sorts.descending("elo")).limit(10).into(new ArrayList<>()) ) {
+        List<Document> top10 = clans.find().sort(Sorts.descending("elo")).limit(10).into(new ArrayList<>());
+
+        for ( Document document : top10 ) {
             LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
             leaderboardsAdapter.setName(document.getString("name"));
             leaderboardsAdapter.setUuid(UUID.fromString(document.getString("_id")));
             leaderboardsAdapter.setElo(document.getInteger("elo"));
-            getClanLeaderboards().add(leaderboardsAdapter);
+
+            //Sometimes the leaderboard entries are duplicated, this is what I am checking here
+            if (!clanLeaderboards.isEmpty()) {
+                clanLeaderboards.removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
+            }
+
+            clanLeaderboards.add(leaderboardsAdapter);
         }
     }
 

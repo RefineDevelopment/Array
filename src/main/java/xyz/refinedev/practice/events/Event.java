@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
@@ -24,7 +25,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public abstract class Event {
 
-	protected String EVENT_PREFIX;
+	private String Event_Prefix;
 
 	private final Array plugin = Array.getInstance();
 	private final EventManager eventManager = plugin.getEventManager();
@@ -202,7 +203,7 @@ public abstract class Event {
 			Locale.EVENT_WON.toList().forEach(line -> Bukkit.broadcastMessage(line
 					.replace("<winner>", winner.getName())
 					.replace("<event_name>", getName())
-					.replace("<event_prefix>", EVENT_PREFIX)));
+					.replace("<event_prefix>", Event_Prefix)));
 		}
 
 		for (EventPlayer eventPlayer : this.isTeam() ? this.eventTeamPlayers.values() : this.isTeam() ? this.eventTeamPlayers.values() : this.eventPlayers.values()) {
@@ -250,7 +251,7 @@ public abstract class Event {
 			String main = string
 					.replace("<event_name>", this.getName())
 					.replace("<event_host>", this.getHost().getUsername())
-					.replace("<event_prefix>", EVENT_PREFIX);
+					.replace("<event_prefix>", Event_Prefix);
 
 			Clickable message = new Clickable(main, Locale.EVENT_HOVER.toString().replace("<event_name>", this.getName()), "/event join");
 
@@ -264,7 +265,7 @@ public abstract class Event {
 
 	public void broadcastMessage(String message) {
 		for (Player player : this.getPlayers()) {
-			player.sendMessage(EVENT_PREFIX + message);
+			player.sendMessage(Event_Prefix + message);
 		}
 	}
 
@@ -380,5 +381,7 @@ public abstract class Event {
 	public abstract boolean isFighting(UUID uuid);
 	
 	public abstract boolean isFighting(EventGroup group);
+
+	public abstract ChatColor getRelationColor(Player viewer, Player target);
 
 }

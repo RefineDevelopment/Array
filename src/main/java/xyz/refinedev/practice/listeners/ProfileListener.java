@@ -2,6 +2,8 @@ package xyz.refinedev.practice.listeners;
 
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,9 +17,11 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.events.profile.SpawnTeleportEvent;
+import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.match.MatchState;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
@@ -31,24 +35,27 @@ public class ProfileListener implements Listener {
     private final Array plugin = Array.getInstance();
 
     @EventHandler
-    public void onInteract(PlayerInteractEvent e) {
-        if (e.getItem() == null || e.getClickedBlock() == null) {
-            return;
-        }
+    public void onInteract(PlayerInteractEvent event) {
+        if (event.getItem() == null || event.getClickedBlock() == null) return;
+        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
 
-        if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (e.getItem().getType() == Material.PAINTING) {
-                if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
-                    if (!e.getPlayer().hasPermission("array.build"))
-                        e.setCancelled(true);
+        ItemStack item = event.getItem();
+        Block block = event.getClickedBlock();
+        Player player = event.getPlayer();
+
+
+        if (item != null) {
+            if (player.getGameMode() != GameMode.CREATIVE || !player.hasPermission("array.build")) {
+                if (item.getType().equals(Material.PAINTING) || item.getType().equals(Material.TRAP_DOOR)) {
+                    event.setCancelled(true);
                 }
             }
+        }
 
-            if (e.getClickedBlock().getState() instanceof ItemFrame) {
-                if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
-                    if (!e.getPlayer().hasPermission("array.build")) {
-                        e.setCancelled(true);
-                    }
+        if (block != null) {
+            if (player.getGameMode() != GameMode.CREATIVE || !player.hasPermission("array.build")) {
+                if (block.getState() instanceof ItemFrame) {
+                    event.setCancelled(true);
                 }
             }
         }
@@ -56,176 +63,135 @@ public class ProfileListener implements Listener {
 
     @EventHandler(ignoreCancelled=true)
     public void onSpawnTeleportEvent(SpawnTeleportEvent event) {
-        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByUuid(player.getUniqueId());
 
-        if (!profile.isBusy() && event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-            profile.refreshHotbar();
-            profile.handleVisibility();
-        }
-            PlayerUtil.allowMovement(event.getPlayer());
-        }
+        if (profile.isBusy()) return;
+        if (player.getGameMode().equals(GameMode.CREATIVE)) return;
+
+        profile.refreshHotbar();
+        profile.handleVisibility();
+    }
 
     @EventHandler
     public void onPlayerPickupItemEvent(PlayerPickupItemEvent event) {
-        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        if (profile.isInSomeSortOfFight()) return;
 
-        if (!profile.isInSomeSortOfFight()) {
-            if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-                if (!event.getPlayer().hasPermission("array.build")) {
-                    event.setCancelled(true);
-                }
-            } else {
-                event.setCancelled(true);
-            }
+        if (player.getGameMode() != GameMode.CREATIVE || !player.hasPermission("array.build")) {
+            event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
-        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        if (profile.isInSomeSortOfFight()) return;
 
-        if (!profile.isInSomeSortOfFight()) {
-            if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-                if (!event.getPlayer().hasPermission("array.build")) {
-                    event.setCancelled(true);
-                }
-            } else {
-                event.setCancelled(true);
-            }
+        if (player.getGameMode() != GameMode.CREATIVE || !player.hasPermission("array.build")) {
+            event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBreak(BlockBreakEvent event) {
-        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        if (profile.isInSomeSortOfFight()) return;
 
-        if (!profile.isInSomeSortOfFight()) {
-            if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-                if (!event.getPlayer().hasPermission("array.build")) {
-                    event.setCancelled(true);
-                }
-            } else {
-                event.setCancelled(true);
-            }
+        if (player.getGameMode() != GameMode.CREATIVE || !player.hasPermission("array.build")) {
+            event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlace(BlockPlaceEvent event) {
-        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        if (profile.isInSomeSortOfFight()) return;
 
-        if (profile.isInSomeSortOfFight()) {
-            if (!profile.isInFight()) {
-                if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-                    if (!event.getPlayer().hasPermission("array.build")) {
-                        event.setCancelled(true);
-                    }
-                } else {
-                    event.setCancelled(true);
-                }
-            }
-        } else {
-            if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-                if (!event.getPlayer().hasPermission("array.build")) {
-                    event.setCancelled(true);
-                }
-            } else {
-                event.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler
-    public void itemFrameItemRemoval(EntityDamageEvent e) {
-        if (e.getEntity() instanceof ItemFrame) {
-            e.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onBucket(PlayerBucketEmptyEvent event) {
-        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
-
-        if (profile.isInSomeSortOfFight()) {
-            if (!profile.isInFight()) {
-                if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-                    if (!event.getPlayer().hasPermission("array.build")) {
-                        event.setCancelled(true);
-                    }
-                } else {
-                    event.setCancelled(true);
-                }
-            }
-        } else {
-            if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-                if (!event.getPlayer().hasPermission("array.build")) {
-                    event.setCancelled(true);
-                }
-            } else {
-                event.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onPlayerItemDamageEvent(PlayerItemDamageEvent event) {
-        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
-
-        if (profile.isInLobby()) {
+        if (player.getGameMode() != GameMode.CREATIVE || !player.hasPermission("array.build")) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
+    public void itemFrameItemRemoval(EntityDamageEvent event) {
+        if (event.getEntity() instanceof ItemFrame) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onBucket(PlayerBucketEmptyEvent event) {
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        if (profile.isInSomeSortOfFight()) return;
+
+        if (player.getGameMode() != GameMode.CREATIVE || !player.hasPermission("array.build")) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerItemDamageEvent(PlayerItemDamageEvent event) {
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        if (!profile.isInLobby()) return;
+
+        event.setCancelled(true);
+    }
+
+    @EventHandler
     public void onEntityDamageEvent(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Profile profile = Profile.getByUuid(event.getEntity().getUniqueId());
+        if (!(event.getEntity() instanceof Player)) return;
 
-            if (profile.isInLobby() || profile.isInQueue()) {
-                event.setCancelled(true);
+        Player player = (Player) event.getEntity();
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        if (!profile.isInLobby() && !profile.isInQueue()) return;
 
-                if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                    profile.teleportToSpawn();
-                }
-            }
+        event.setCancelled(true);
+        if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
+            profile.teleportToSpawn();
         }
     }
 
     @EventHandler
     public void onFoodLoss(FoodLevelChangeEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Profile profile = Profile.getByUuid(event.getEntity().getUniqueId());
+        if (!(event.getEntity() instanceof Player)) return;
 
-            if (profile.isInLobby() || profile.isInQueue()) {
+        Player player = (Player) event.getEntity();
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+
+        if (profile.isInLobby() || profile.isInQueue()) {
+            event.setCancelled(true);
+        }
+        if (profile.isInEvent()) {
+            Event profileEvent = profile.getEvent();
+            if (profileEvent.isBracketsSolo() || profileEvent.isBracketsTeam() || profileEvent.isLMS()) return;
+
+            event.setCancelled(true);
+        }
+
+        if (profile.isInMatch()) {
+            if (profile.getMatch().isStarting()) {
                 event.setCancelled(true);
-            }
-            if (profile.isInEvent() &&
-                    (profile.getEvent().isSumoSolo()
-                    || profile.getEvent().isSumoTeam()
-                    || profile.getEvent().isGulagSolo()
-                    || profile.getEvent().isGulagTeam()
-                    || profile.getEvent().isSpleef()
-                    || profile.getEvent().isParkour())) {
-                event.setCancelled(true);
-            }
-            if (profile.isInSomeSortOfFight()) {
-                if (profile.getMatch() != null && profile.getMatch().getState() == MatchState.STARTING) {
-                    event.setCancelled(true);
-                }
             }
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void AsyncPlayerLoginEvent(AsyncPlayerPreLoginEvent event) {
-        UUID uuid = event.getUniqueId();
-        Profile profile = new Profile(uuid);
-
         if (!plugin.getConfigHandler().isLoaded()) {
             event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
             event.setKickMessage(CC.RED + "The server is still loading, please wait for it to load!");
             return;
         }
+
+        UUID uuid = event.getUniqueId();
+        Profile profile = new Profile(uuid);
 
         try {
             profile.load();
@@ -240,14 +206,17 @@ public class ProfileListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         event.setJoinMessage(null);
+
         Player player = event.getPlayer();
         Profile profile = Profile.getByPlayer(player);
+
         profile.handleJoin();
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         event.setQuitMessage(null);
+
         Profile profile = Profile.getByPlayer(event.getPlayer());
         TaskUtil.runAsync(profile::handleLeave);
     }
@@ -279,10 +248,10 @@ public class ProfileListener implements Listener {
      */
     @EventHandler (priority = EventPriority.LOW)
     public void onPearlThrow(final ProjectileLaunchEvent event) {
-        final ProjectileSource source=event.getEntity().getShooter();
+        final ProjectileSource source = event.getEntity().getShooter();
         if (source instanceof Player) {
-            final Player shooter=(Player) source;
-            final Profile profile=Profile.getByUuid(shooter.getUniqueId());
+            final Player shooter = (Player) source;
+            final Profile profile = Profile.getByUuid(shooter.getUniqueId());
             if (profile.isInLobby() || profile.isInQueue()) {
                 event.setCancelled(true);
                 profile.getKitEditor().setActive(false);
@@ -321,15 +290,14 @@ public class ProfileListener implements Listener {
      */
     @EventHandler
     public void onUse(PlayerInteractEvent event) {
-        final Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
-        if (profile.isInLobby()) {
-            if (profile.getKitEditor().isActive()) {
-                event.setCancelled(true);
-                profile.getKitEditor().setActive(false);
-                PlayerUtil.reset(event.getPlayer());
-                TaskUtil.runLaterAsync(profile::refreshHotbar, 2L);
-            }
-        }
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByUuid(player.getUniqueId());
+        if (!profile.isInLobby() || !profile.getKitEditor().isActive()) return;
+
+        event.setCancelled(true);
+        profile.getKitEditor().setActive(false);
+        PlayerUtil.reset(event.getPlayer());
+        TaskUtil.runLaterAsync(profile::refreshHotbar, 2L);
     }
 
 }

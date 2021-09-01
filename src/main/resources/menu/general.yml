@@ -1,0 +1,9 @@
+SPECTATING_MENU:
+  TITLE: "&7Spectator Menu"
+  ALIVE_NAME: "&a<player_name>"
+  DEAD_NAME: "&7<player_name>"
+  HEAD_LORE:
+    - ""
+    - " &c➥ &fStatus&7: &r<player_status>"
+    - ""
+    - " &7&o(( Click to view Inventory ))"

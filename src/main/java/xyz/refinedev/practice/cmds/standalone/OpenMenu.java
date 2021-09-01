@@ -23,7 +23,7 @@ public class OpenMenu {
     public void openMenu(@Sender Player player, @Text String name) {
         Menu menu = Array.getInstance().getMenuManager().findMenu(name);
         if (menu == null) {
-            player.sendMessage(CC.translate("&7Invalid Menu!"));
+            player.sendMessage(CC.translate("&cInvalid Menu!"));
             return;
         }
         menu.openMenu(player);

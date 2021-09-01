@@ -3,6 +3,8 @@ package xyz.refinedev.practice.events;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+
 @Getter
 @RequiredArgsConstructor
 public enum EventType {
@@ -21,5 +23,9 @@ public enum EventType {
     PAINTBALL("Paintball"),
     OMA("OMA");
 
-    private final String readable;
+    private final String name;
+
+    public static EventType getByName(String name) {
+        return Arrays.stream(EventType.values()).filter(type -> type.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+    }
 }

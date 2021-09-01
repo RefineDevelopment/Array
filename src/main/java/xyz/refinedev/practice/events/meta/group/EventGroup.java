@@ -3,11 +3,16 @@ package xyz.refinedev.practice.events.meta.group;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.events.meta.player.EventPlayer;
 import xyz.refinedev.practice.events.meta.player.EventPlayerState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -45,6 +50,11 @@ public class EventGroup {
     public void removePlayer(EventTeamPlayer player) {
         player.setGroup(null);
         this.players.remove(player);
+    }
+
+    public boolean contains(Player player) {
+        List<UUID> players  = this.players.stream().map(EventPlayer::getUuid).collect(Collectors.toList());
+        return players.contains(player.getUniqueId());
     }
 
     public int getAlivePlayers() {

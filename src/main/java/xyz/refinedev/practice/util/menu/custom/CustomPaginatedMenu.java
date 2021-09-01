@@ -2,6 +2,7 @@ package xyz.refinedev.practice.util.menu.custom;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.custom.button.CustomButton;
 import xyz.refinedev.practice.util.menu.pagination.PaginatedMenu;
@@ -18,10 +19,20 @@ import java.util.Map;
  * Project: Array
  */
 
-@RequiredArgsConstructor
 public class CustomPaginatedMenu extends PaginatedMenu {
 
     private final MenuData menuData;
+
+    public CustomPaginatedMenu(MenuData menuData) {
+        this.menuData = menuData;
+
+        this.setPlaceholder(menuData.isPlaceholder());
+
+        if (this.isPlaceholder()) {
+            ItemStack item = menuData.getPlaceholderItem();
+            this.setPlaceholderButton(Button.placeholder(item));
+        }
+    }
 
     /**
      * Get menu's title

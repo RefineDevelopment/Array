@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.util.other.TimeUtil;
@@ -34,6 +35,7 @@ public class Queue {
         this.kit = kit;
         this.type = type;
         this.uuid = UUID.randomUUID();
+
         queues.add(this);
         queueMap.put(kit, this);
     }
@@ -55,6 +57,24 @@ public class Queue {
             }
         }
         return null;
+    }
+
+    /**
+     * Get amount of players in fight from a certain
+     * queue
+     *
+     * @return amount of players in fight with the queue
+     */
+    public int getInFights() {
+        int i = 0;
+
+        for ( Match match : Match.getMatches()) {
+            if (match.getQueue() == null || !match.getQueue().equals(this)) continue;
+            if (!match.isFighting() && !match.isStarting()) continue;
+
+            i += match.getTeamPlayers().size();
+        }
+        return i;
     }
 
     /**

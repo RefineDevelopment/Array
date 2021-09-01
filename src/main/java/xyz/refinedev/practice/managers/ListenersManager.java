@@ -7,7 +7,7 @@ import xyz.refinedev.practice.events.impl.sumo.solo.SumoSoloListener;
 import xyz.refinedev.practice.events.impl.sumo.team.SumoTeamListener;
 import xyz.refinedev.practice.kit.kiteditor.KitEditorListener;
 import xyz.refinedev.practice.listeners.*;
-import xyz.refinedev.practice.profile.hotbar.HotbarListener;
+import xyz.refinedev.practice.listeners.HotbarListener;
 import xyz.refinedev.practice.util.events.WorldListener;
 import xyz.refinedev.practice.util.menu.MenuListener;
 import xyz.refinedev.practice.util.nametags.listener.NameTagListener;
@@ -29,7 +29,7 @@ public class ListenersManager {
                 new ArenaSelectionListener(),
                 new KitEditorListener(),
                 new NameTagListener(),
-                new MOTDListener(),
+                new JoinMessageListener(),
                 new OutdatedListener(),
                 new PartyListener(),
                 new HotbarListener(),

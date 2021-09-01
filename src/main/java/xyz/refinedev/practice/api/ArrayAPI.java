@@ -24,7 +24,7 @@ public class ArrayAPI implements API {
     @Override
     public boolean isInParty(Player player) {
         Profile profile = Profile.getByPlayer(player);
-        return profile.getParty() != null;
+        return profile.hasParty();
     }
 
     @Override

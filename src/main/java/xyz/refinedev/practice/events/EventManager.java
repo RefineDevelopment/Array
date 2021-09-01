@@ -2,10 +2,17 @@ package xyz.refinedev.practice.events;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.events.impl.sumo.solo.SumoSolo;
+import xyz.refinedev.practice.events.impl.sumo.team.SumoTeam;
+import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.location.LocationUtil;
+import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.other.Cooldown;
 
 import java.util.ArrayList;
@@ -20,15 +27,15 @@ public class EventManager {
 	private Event activeEvent;
 	private Cooldown eventCooldown = new Cooldown(0);
 
-	protected Location sumoSpawn1, sumoSpawn2, sumoSpectator;
-	protected Location bracketsSpawn1, bracketsSpawn2, bracketsSpectator;
-	protected Location gulagSpawn1, gulagSpawn2, gulagSpectator;
-	protected Location lmsSpawn, parkourSpawn, spleefSpawn, omaSpawn;
+	Location sumoSpawn1, sumoSpawn2, sumoSpectator;
+	Location bracketsSpawn1, bracketsSpawn2, bracketsSpectator;
+	Location gulagSpawn1, gulagSpawn2, gulagSpectator;
+	Location lmsSpawn, parkourSpawn, spleefSpawn, omaSpawn;
+
+	List<Location> oitcSpawns = new ArrayList<>();
+	Location oitcSpectator;
 
 	private String sumoKB = "Default", gulagKB = "Default", omaKB = "Default", spleefKB = "Default";
-
-	protected List<Location> oitcSpawns = new ArrayList<>();
-	protected Location oitcSpectator;
 
     public EventManager(Array plugin) {
         this.plugin = plugin;
@@ -36,6 +43,8 @@ public class EventManager {
     }
 
     public void setActiveEvent(Event event) {
+		plugin.getServer().getOnlinePlayers().stream().map(Profile::getByPlayer).filter(profile -> profile.isInLobby() && !profile.getKitEditor().isActive()).forEach(Profile::refreshHotbar);
+
 		if (this.activeEvent != null) {
 			this.activeEvent.setEventTask(null);
 		}
@@ -97,6 +106,32 @@ public class EventManager {
 		if (spleefSpawn != null) config.set(key + "SPLEEF.SPAWN", LocationUtil.serialize(spleefSpawn));
 
 		config.save();
+	}
+
+	public boolean hostByType(Player player, EventType type) {
+		if (!player.hasPermission("*") && !player.isOp() && !player.hasPermission("array.event." + type.getName().toLowerCase())) {
+			player.sendMessage(Locale.EVENT_NO_PERMISSION.toString().replace("<store>", plugin.getConfigHandler().getSTORE()));
+			return false;
+		}
+
+		Button.playNeutral(player);
+
+		switch (type) {
+			case PARKOUR: {
+
+				return true;
+			}
+			case KOTH: {
+				return true;
+			}
+			case LMS: {
+				return true;
+			}
+			case SPLEEF: {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public Location getSpawn1(Event event) {

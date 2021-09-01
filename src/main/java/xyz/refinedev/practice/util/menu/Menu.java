@@ -30,7 +30,7 @@ public abstract class Menu {
     private boolean closedByMenu = false;
     private boolean placeholder = false;
 
-    private final Button placeholderButton = Button.placeholder(Material.STAINED_GLASS_PANE, (byte) 15);
+    private Button placeholderButton = Button.placeholder(Material.STAINED_GLASS_PANE, (byte) 15);
 
     private ItemStack createItemStack(Player player, Button button) {
         ItemStack item = button.getButtonItem(player);
@@ -161,7 +161,7 @@ public abstract class Menu {
      * Map of slots and buttons on that particular slot
      *
      * @param player {@link Player} player viewing the menu
-     * @return {@link HashMap}
+     * @return {@link Map}
      */
     public abstract Map<Integer, Button> getButtons(Player player);
 

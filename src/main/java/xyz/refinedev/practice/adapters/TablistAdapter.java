@@ -77,8 +77,6 @@ public class TablistAdapter implements TabAdapter {
         List<TabEntry> entries = new ArrayList<>();
         Profile profile = Profile.getByPlayer(player);
 
-        if (player == null) return entries;
-
         if (profile.getSettings().isVanillaTab()) {
             List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
             players.sort(new TabComparator());
@@ -698,7 +696,6 @@ public class TablistAdapter implements TabAdapter {
             }
         }
 
-
         return replaceTeamPlayer(player, replaceLobby(player, toReplace))
                 .replace("<your_player>", yourPlayer)
                 .replace("<match_duration>", match.getDuration())
@@ -764,7 +761,7 @@ public class TablistAdapter implements TabAdapter {
                 .replace("<store>", plugin.getConfigHandler().getSTORE());
     }
 
-    private static class TabComparator implements Comparator<Player> {
+    private class TabComparator implements Comparator<Player> {
 
         @Override
         public int compare(Player o1, Player o2) {

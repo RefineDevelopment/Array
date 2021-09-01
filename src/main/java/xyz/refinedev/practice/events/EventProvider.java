@@ -38,7 +38,7 @@ public class EventProvider extends DrinkProvider<EventType> {
         String name = arg.get();
 
         for ( EventType type : EventType.values() ) {
-            if (type.name().equalsIgnoreCase(name) || type.getReadable().equalsIgnoreCase(name)) {
+            if (type.name().equalsIgnoreCase(name) || type.getName().equalsIgnoreCase(name)) {
                 return type;
             }
         }
@@ -54,6 +54,6 @@ public class EventProvider extends DrinkProvider<EventType> {
     @Override
     public List<String> getSuggestions(@NotNull String prefix) {
         final String finalPrefix = prefix;
-        return Arrays.stream(EventType.values()).map(EventType::getReadable).filter(s -> finalPrefix.length() == 0 || s.startsWith(finalPrefix)).collect(Collectors.toList());
+        return Arrays.stream(EventType.values()).map(EventType::getName).filter(s -> finalPrefix.length() == 0 || s.startsWith(finalPrefix)).collect(Collectors.toList());
     }
 }

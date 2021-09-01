@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.util.menu.custom;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -13,13 +15,14 @@ import java.util.List;
  * Project: Array
  */
 
-@Data
+@Getter @Setter
 public class MenuData {
 
     private String name;
     private int size;
     private String title;
-    private boolean paginated;
+    private boolean paginated, autoUpdate, placeholder;
+    private ItemStack placeholderItem;
     private List<ButtonData> buttons;
 
 }

@@ -33,19 +33,19 @@ public class MatchDetailsMenu extends Menu {
 
     @Override
     public Map<Integer, Button> getButtons(Player player) {
-        Map<Integer, Button> buttons=new HashMap<>();
-        ItemStack[] fixedContents=InventoryUtil.fixInventoryOrder(snapshot.getContents());
+        Map<Integer, Button> buttons = new HashMap<>();
+        ItemStack[] fixedContents = InventoryUtil.fixInventoryOrder(snapshot.getContents());
 
-        for ( int i=0; i < fixedContents.length; i++ ) {
-            ItemStack itemStack=fixedContents[i];
+        for ( int i = 0; i < fixedContents.length; i++ ) {
+            ItemStack itemStack = fixedContents[i];
 
             if (itemStack != null && itemStack.getType() != Material.AIR) {
                 buttons.put(i, new DisplayButton(itemStack, true));
             }
         }
 
-        for ( int i=0; i < snapshot.getArmor().length; i++ ) {
-            ItemStack itemStack=snapshot.getArmor()[i];
+        for ( int i = 0; i < snapshot.getArmor().length; i++ ) {
+            ItemStack itemStack = snapshot.getArmor()[i];
 
             if (itemStack != null && itemStack.getType() != Material.AIR) {
                 buttons.put(39 - i, new DisplayButton(itemStack, true));

@@ -2,6 +2,7 @@ package xyz.refinedev.practice.util.menu.custom;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.menu.custom.button.CustomButton;
@@ -18,10 +19,21 @@ import java.util.Map;
  * Project: Array
  */
 
-@RequiredArgsConstructor
 public class CustomMenu extends Menu {
 
     private final MenuData menuData;
+
+    public CustomMenu(MenuData menuData) {
+        this.menuData = menuData;
+
+        this.setPlaceholder(menuData.isPlaceholder());
+        this.setAutoUpdate(menuData.isPlaceholder());
+
+        if (this.isPlaceholder()) {
+            ItemStack item = menuData.getPlaceholderItem();
+            this.setPlaceholderButton(Button.placeholder(item));
+        }
+    }
 
     /**
      * Get menu's title

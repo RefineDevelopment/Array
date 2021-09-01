@@ -3,7 +3,7 @@ package xyz.refinedev.practice.adapters;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.events.Event;
+import xyz.refinedev.practice.events.meta.player.EventPlayer;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.nametags.construct.NameTagInfo;
@@ -27,10 +27,10 @@ public class NameTagAdapter extends NameTagProvider {
     }
 
     /**
-     * Get the Target's Nametag for Viewer
+     * Get the Target's NameTag for Viewer
      *
-     * @param target The player whose nametag is being fetched
-     * @param viewer The player who is viewing the nametag
+     * @param target The player whose NameTag is being fetched
+     * @param viewer The player who is viewing the NameTag
      * @return {@link NameTagInfo}
      */
     @Override
@@ -80,9 +80,12 @@ public class NameTagAdapter extends NameTagProvider {
     public NameTagInfo getEventColor(Profile viewerProfile, Profile targetProfile) {
         Player viewer = viewerProfile.getPlayer();
         Player target = targetProfile.getPlayer();
-        Event event = targetProfile.getEvent();
 
-        if (targetProfile.isInEvent()) {
+        if (viewerProfile.isInEvent()) {
+            EventPlayer targetEventPlayer = viewerProfile.getEvent().getEventPlayer(target.getUniqueId());
+            if (targetEventPlayer != null) {
+                return createNameTag(viewerProfile.getEvent().getRelationColor(viewer, target).toString(), "");
+            }
             return createNameTag(plugin.getConfigHandler().getEventColor().toString(), "");
         }
         return createNameTag("", "");

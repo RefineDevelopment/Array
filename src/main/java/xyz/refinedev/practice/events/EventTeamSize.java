@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.events;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
  * Project: Array
  */
 
+@Getter
 @RequiredArgsConstructor
 public enum EventTeamSize {
 

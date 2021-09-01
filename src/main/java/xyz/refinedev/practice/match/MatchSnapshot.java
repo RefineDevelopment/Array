@@ -2,6 +2,7 @@ package xyz.refinedev.practice.match;
 
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Data
+@Getter @Setter
 public class MatchSnapshot {
 
     @Getter

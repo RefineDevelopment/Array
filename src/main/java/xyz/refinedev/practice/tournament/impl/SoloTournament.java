@@ -91,11 +91,12 @@ public class SoloTournament extends Tournament<Player> {
     @Override
     public void start() {
         this.setStarted(true);
-        if (!getPlayers().isEmpty()) {
-            this.nextStage();
-        } else {
+
+        if (getPlayers().isEmpty()) {
             this.end(null);
+            return;
         }
+        this.nextStage();
     }
 
     /**

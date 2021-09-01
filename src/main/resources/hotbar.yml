@@ -10,7 +10,7 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 0
     LAYOUT_TYPE: LOBBY
-    COMMAND: "/queue"
+    COMMAND: "queue"
     LORE: []
   QUEUE_JOIN_RANKED:
     NAME: "&cJoin Ranked Queue &7(Right-Click)"
@@ -19,7 +19,7 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 1
     LAYOUT_TYPE: LOBBY
-    COMMAND: "/rankedqueue"
+    COMMAND: "rankedqueue"
     LORE: []
   QUEUE_JOIN_CLAN:
     NAME: "&cJoin Clan Queue &7(Right-Click)"
@@ -28,7 +28,7 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 2
     LAYOUT_TYPE: LOBBY
-    COMMAND: "/clanqueue"
+    COMMAND: "clanqueue"
     LORE: []
   REMATCH_REQUEST:
     NAME: "&cRequest Rematch &7(Right-Click)"
@@ -37,7 +37,7 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 3
     LAYOUT_TYPE: INTERNAL
-    COMMAND: "/rematch"
+    COMMAND: "rematch"
     LORE: []
   REMATCH_ACCEPT:
     NAME: "&cAccept Rematch &7(Right-Click)"
@@ -46,7 +46,7 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 3
     LAYOUT_TYPE: INTERNAL
-    COMMAND: "/rematch"
+    COMMAND: "rematch"
     LORE: []
   EVENT_JOIN:
     NAME: "&cJoin Event &7(Right-Click)"
@@ -55,7 +55,7 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 3
     LAYOUT_TYPE: INTERNAL
-    COMMAND: "/event join"
+    COMMAND: "event join"
     #If rematch items are added to the inventory
     #and event join item is given then we move it to
     #this slot specifically to prevent overriding
@@ -69,7 +69,7 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 4
     LAYOUT_TYPE: INTERNAL
-    COMMAND: "/party create"
+    COMMAND: "party create"
     #Moves the item to these slots when these items are added
     #in the inventory
     MOVE_SLOT_TO:
@@ -84,7 +84,7 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 7
     LAYOUT_TYPE: LOBBY
-    COMMAND: "/mainmenu"
+    COMMAND: "mainmenu"
     LORE: []
   KIT_EDITOR:
     NAME: "&cKit Editor &7(Right-Click)"
@@ -93,7 +93,7 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 8
     LAYOUT_TYPE: LOBBY
-    COMMAND: "/kiteditor"
+    COMMAND: "kiteditor"
     LORE: []
   QUEUE_LEAVE:
     NAME: "&cLeave Queue &7(Right-Click)"
@@ -102,7 +102,7 @@ HOTBAR_ITEMS:
     DURABILITY: 1
     SLOT: 8
     LAYOUT_TYPE: QUEUE
-    COMMAND: "/leavequeue"
+    COMMAND: "leavequeue"
     LORE: []
   PARTY_CLASSES:
     NAME: "&cSelect HCF Kit &7(Right-Click)"
@@ -111,7 +111,7 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 1
     LAYOUT_TYPE: PARTY
-    COMMAND: "/party classes"
+    COMMAND: "party classes"
     LORE: []
   PARTY_EVENTS:
     NAME: "&cParty Events &7(Right-Click)"
@@ -120,7 +120,7 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 2
     LAYOUT_TYPE: PARTY_LEADER
-    COMMAND: "/party events"
+    COMMAND: "party events"
     LORE: []
   PARTY_SETTINGS:
     NAME: "&cParty Settings &7(Right-Click)"
@@ -129,7 +129,7 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 7
     LAYOUT_TYPE: PARTY_LEADER
-    COMMAND: "/party settings"
+    COMMAND: "party settings"
     LORE: []
   PARTY_DISBAND:
     NAME: "&cDisband Party &7(Right-Click)"
@@ -138,7 +138,7 @@ HOTBAR_ITEMS:
     DURABILITY: 1
     SLOT: 8
     LAYOUT_TYPE: PARTY_LEADER
-    COMMAND: "/party disband"
+    COMMAND: "party disband"
     LORE: []
   PARTY_LEAVE:
     NAME: "&cLeave Party &7(Right-Click)"
@@ -147,7 +147,7 @@ HOTBAR_ITEMS:
     DURABILITY: 1
     SLOT: 8
     LAYOUT_TYPE: PARTY_MEMBER
-    COMMAND: "/party leave"
+    COMMAND: "party leave"
     LORE: []
   PARTY_INFO:
     NAME: "&cParty Information &7(Right-Click)"
@@ -156,7 +156,7 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 0
     LAYOUT_TYPE: PARTY
-    COMMAND: "/party info"
+    COMMAND: "party info"
     LORE: []
   OTHER_PARTIES:
     NAME: "&cDuel Other Parties &7(Right-Click)"
@@ -165,25 +165,34 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 4
     LAYOUT_TYPE: PARTY
-    COMMAND: "/party duel"
+    COMMAND: "party duel"
     LORE: []
   SPECTATOR_SHOW:
-    NAME: "&a&lShow Spectators &7(Right-Click)"
+    NAME: "&aShow Spectators &7(Right-Click)"
     ENABLED: true
     MATERIAL: INK_SACK
     DURABILITY: 10
-    SLOT: 0
+    SLOT: 4
     LAYOUT_TYPE: INTERNAL
-    COMMAND: "/spec show"
+    COMMAND: "spec show"
     LORE: []
   SPECTATOR_HIDE:
-    NAME: "&c&lHide Spectators &7(Right-Click)"
+    NAME: "&cHide Spectators &7(Right-Click)"
     ENABLED: true
     MATERIAL: INK_SACK
     DURABILITY: 8
-    SLOT: 0
+    SLOT: 4
     LAYOUT_TYPE: INTERNAL
-    COMMAND: "/spec hide"
+    COMMAND: "spec hide"
+    LORE: []
+  SPECTATE_MENU:
+    NAME: "&cView Spectate Menu &7(Right-Click)"
+    ENABLED: true
+    MATERIAL: INK_SACK
+    DURABILITY: 1
+    SLOT: 8
+    LAYOUT_TYPE: MATCH_SPECTATE
+    COMMAND: "specmenu"
     LORE: []
   SPECTATE_STOP:
     NAME: "&c&lStop Spectating &7(Right-Click)"
@@ -192,7 +201,7 @@ HOTBAR_ITEMS:
     DURABILITY: 1
     SLOT: 8
     LAYOUT_TYPE: MATCH_SPECTATE
-    COMMAND: "/stopspectating"
+    COMMAND: "stopspectating"
     LORE: []
   EVENT_TEAM:
     NAME: "&cChoose a Team &7(Right-Click)"
@@ -201,7 +210,7 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 0
     LAYOUT_TYPE: EVENT_WAITING
-    COMMAND: "/event teamselect"
+    COMMAND: "event teamselect"
     LORE: []
   EVENT_LEAVE:
     NAME: "&cLeave Event &7(Right-Click)"
@@ -210,7 +219,7 @@ HOTBAR_ITEMS:
     DURABILITY: 1
     SLOT: 8
     LAYOUT_TYPE: EVENT
-    COMMAND: "/event leave"
+    COMMAND: "event leave"
     LORE: []
   PARKOUR_SPAWN:
     NAME: "&aBack to Checkpoint &7(Right-Click)"
@@ -259,7 +268,7 @@ HOTBAR_ITEMS:
 #    DURABILITY: 0
 #    SLOT: 0
 #    LAYOUT_TYPE: LOBBY
-#    COMMAND: "/drizzyishot"
+#    COMMAND: "drizzyishot"
 #    LORE: []
 #
 CUSTOM_ITEMS:
@@ -270,7 +279,7 @@ CUSTOM_ITEMS:
     DURABILITY: 0
     SLOT: 6
     LAYOUT_TYPE: PARTY_LEADER
-    COMMAND: "/kiteditor"
+    COMMAND: "kiteditor"
     LORE: []
   MEMBER_KIT_EDITOR:
     NAME: "&cKit Editor &7(Right-Click)"
@@ -279,5 +288,5 @@ CUSTOM_ITEMS:
     DURABILITY: 0
     SLOT: 7
     LAYOUT_TYPE: PARTY_MEMBER
-    COMMAND: "/kiteditor"
+    COMMAND: "kiteditor"
     LORE: []

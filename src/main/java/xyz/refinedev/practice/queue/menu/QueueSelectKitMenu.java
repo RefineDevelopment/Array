@@ -87,7 +87,7 @@ public class QueueSelectKitMenu extends Menu {
         public String replace(Profile profile, String input) {
             input = input.replace("<in_queue>", String.valueOf(this.queue.getPlayers().size()))
                          .replace("<queue_elo>", String.valueOf(queueType == QueueType.RANKED ? profile.getStatisticsData().get(this.queue.getKit()).getElo() : queueType == QueueType.CLAN ? profile.getClan().getElo() : "None"))
-                         .replace("<in_fight>", String.valueOf(Match.getInFights(this.queue)));
+                         .replace("<in_fight>", String.valueOf(this.queue.getInFights()));
             return input;
         }
 

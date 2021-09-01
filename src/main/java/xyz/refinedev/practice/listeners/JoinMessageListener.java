@@ -6,8 +6,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.util.chat.CC;
 
-public class MOTDListener implements Listener {
+public class JoinMessageListener implements Listener {
 
     private final Array plugin = Array.getInstance();
 
@@ -18,7 +19,12 @@ public class MOTDListener implements Listener {
 
             for (int i = 0; i < 300; i++) player.sendMessage(" ");
 
-            plugin.getConfigHandler().getJOIN_MESSAGE().stream().map(string -> string.replace("%splitter%", "┃").replace("|", "┃")).forEach(player::sendMessage);
+            plugin.getConfigHandler().getJOIN_MESSAGE()
+                    .stream()
+                    .map(string -> CC.translate(string)
+                    .replace("%splitter%", "┃")
+                    .replace("|", "┃"))
+                    .forEach(player::sendMessage);
         }
     }
 }

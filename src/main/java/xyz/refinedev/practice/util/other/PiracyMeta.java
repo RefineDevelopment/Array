@@ -9,8 +9,8 @@ import org.json.simple.parser.ParseException;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.chat.CC;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URL;
@@ -46,8 +46,8 @@ public class PiracyMeta {
             this.consoleLog("&7Twitter: &chttps://twitter.com/RefineDev");
             this.consoleLog("&7Contact: &crefinedevelopment@gmail.com");
             this.consoleLog("&7---------------&8[&cRefine-Licenses&8]&7----------------");
-            plugin.getConfigHandler().setOUTDATED(false);
-            plugin.getConfigHandler().setupEssentials();
+            //plugin.getConfigHandler().setOUTDATED(false);
+            //plugin.getConfigHandler().setupEssentials();
             TaskUtil.runTimerAsync(new PiracyTask(), 20, TimeUtil.parseTime("60m"));
         } else if (respo[0].equals("3") && Boolean.parseBoolean(respo[3])) {
             this.consoleLog("&aLicense valid!");
@@ -88,30 +88,22 @@ public class PiracyMeta {
             plugin.getConfigHandler().setNEW_VERSION(respo[1].split("#")[1]);
         } else if (!respo[0].equals("2") && !Boolean.parseBoolean(respo[3])) {
             this.consoleLog("&cCould not verify your License, Shutting Down Server in 10 Seconds");
-            this.consoleLog("&cCould not verify your License, Shutting Down Server in 10 Seconds");
-            this.consoleLog("&cCould not verify your License, Shutting Down Server in 10 Seconds");
-            this.consoleLog("&cCould not verify your License, Shutting Down Server in 10 Seconds");
-            this.consoleLog("&cCould not verify your License, Shutting Down Server in 10 Seconds");
-
-            for ( int t = 0; t < 5; t++) {
-                Bukkit.getOnlinePlayers().forEach(player -> {
-                    if (player.isOp()) {
-                        player.sendMessage("&8[&cArray&8] &cCould not verify your License, Shutting Down Server in 10 Seconds");
-                    }
-                });
-            }
+            Bukkit.getOnlinePlayers().forEach(player -> {
+                if (player.isOp()) {
+                    player.sendMessage("[" + plugin.getName() + "] &cCould not verify your License, Shutting Down Server in 10 Seconds");
+                }
+            });
             TaskUtil.runLater(Bukkit::shutdown, 10 * 20L);
         }
     }
     
     public void consoleLog(String string) {
-        Bukkit.getConsoleSender().sendMessage(CC.translate(string));
+        Bukkit.getConsoleSender().sendMessage(CC.translate( "[" + plugin.getName() + "] " + string));
     }
 
-    private String requestServer(String productKey) throws IOException {
-        String server = "http://backend.refinedev.xyz:8080/api/client";
-        URL url = new URL(server);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+    private String requestServerHTTPS(String productKey) throws IOException {
+        URL url = new URL("https://backend.refinedev.xyz/api/client");
+        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("User-Agent", "uLicense");
         con.setDoInput(true);
@@ -152,7 +144,7 @@ public class PiracyMeta {
 
     public String[] isValid() {
         try {
-            String response = requestServer(productKey);
+            String response = requestServerHTTPS(productKey);
 
             if(!response.contains("{")) {
                 return new String[]{"1", "ODD_RESULT", "420"};

@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.profile.hotbar;
+package xyz.refinedev.practice.listeners;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -6,6 +6,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.profile.hotbar.HotbarItem;
+import xyz.refinedev.practice.profile.hotbar.HotbarType;
 
 public class HotbarListener implements Listener {
 
@@ -26,7 +28,7 @@ public class HotbarListener implements Listener {
 
         String command = hotbarItem.getCommand();
         if (command != null) {
-            player.chat(command);
+            player.chat("/" + command);
         }
 
     }

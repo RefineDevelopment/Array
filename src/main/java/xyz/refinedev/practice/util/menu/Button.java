@@ -27,6 +27,14 @@ public abstract class Button {
         });
     }
 
+    public static Button placeholder(ItemStack itemStack) {
+        return (new Button() {
+            public ItemStack getButtonItem(Player player) {
+                return itemStack;
+            }
+        });
+    }
+
     /**
      * Play a fail sound upon clicking
      *

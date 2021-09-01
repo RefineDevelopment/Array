@@ -26,6 +26,7 @@ public enum HotbarType {
     
     SPECTATOR_SHOW,
     SPECTATOR_HIDE,
+    SPECTATE_MENU,
     SPECTATE_STOP, 
     
     EVENT_JOIN,

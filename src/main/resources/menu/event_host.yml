@@ -1,14 +1,21 @@
 TITLE: "&7Host Event"
 SIZE: 27
 PAGINATED: false
+PLACEHOLDER: true
+PLACEHOLDER_BUTTON:
+  NAME: ""
+  DATA: 0
+  LORE: []
 BUTTONS:
-  PARTY_SPLIT:
-    NAME: "&c&lParty Split"
+  SUMO:
+    NAME: "&c&lSumo"
     SLOT: 2
     MATERIAL: LEASH
-    LORE:
+    ACTIVE_LORE:
+      - ""
+    IDLE_LORE:
       - " &fSplit your party into"
       - " &ftwo teams and the last"
       - " &fteam remaining wins!"
       - ""
-      - " &7&o(( Click to Start ))"
+      - " &7&o(( Click to Host ))"

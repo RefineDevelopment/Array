@@ -29,7 +29,7 @@ public class KnockbackManager {
 
         if (spigotType.equals(SpigotType.Default)) {
             TaskUtil.runLater(() -> plugin.getConfigHandler().setHCF_ENABLED(false), 10L);
-            plugin.logger("&7No compatible Spigot was found, Knockback implementation will not work!");
+            plugin.logger("&7No compatible Spigot was found, Knockback implementation and HCF will not work!");
             return;
         }
         plugin.getServer().getPluginManager().registerEvents(this.spigotType.getListener(), plugin);

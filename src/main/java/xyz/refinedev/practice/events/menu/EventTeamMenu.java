@@ -3,7 +3,7 @@ package xyz.refinedev.practice.events.menu;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.events.Event;
-import xyz.refinedev.practice.events.menu.buttons.SelectTeamButton;
+import xyz.refinedev.practice.events.menu.buttons.EventTeamButton;
 import xyz.refinedev.practice.events.meta.group.EventGroup;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.menu.Button;
@@ -37,7 +37,7 @@ public class EventTeamMenu extends PaginatedMenu {
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
         for ( EventGroup eventGroup : event.getTeams() ) {
-            buttons.put(buttons.size(), new SelectTeamButton(event, eventGroup));
+            buttons.put(buttons.size(), new EventTeamButton(event, eventGroup));
         }
         return buttons;
     }

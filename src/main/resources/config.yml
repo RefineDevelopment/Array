@@ -61,6 +61,13 @@ EVENT:
   TITLE:
     STARTED:
       ENABLED: true
+      TEXT: "&aMatch Started"
+      SUB_TEXT: ""
+      FADE_IN: 5
+      STAY: 20
+      FADE_OUT: 5
+    ROUND_STARTED:
+      ENABLED: true
       TEXT: "&aRound Started"
       SUB_TEXT: "&7<playerA> vs <playerB>"
       FADE_IN: 5

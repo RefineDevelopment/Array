@@ -2,6 +2,7 @@ package xyz.refinedev.practice.events.impl.sumo.solo;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
@@ -44,7 +45,7 @@ public class SumoSolo extends Event {
     public SumoSolo(Player host, int maxPlayers) {
         super("Sumo", new PlayerSnapshot(host.getUniqueId(), host.getName()), maxPlayers, EventType.SUMO_SOLO);
 
-        this.setEVENT_PREFIX(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
+        this.setEvent_Prefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
     }
 
     @Override
@@ -217,5 +218,32 @@ public class SumoSolo extends Event {
     @Override
     public boolean isFighting(EventGroup group) {
         throw new IllegalArgumentException("You can't get a team from a solo event");
+    }
+
+    @Override
+    public ChatColor getRelationColor(Player viewer, Player target) {
+        if (viewer.equals(target)) {
+            if (!this.isFighting()) {
+                return this.getPlugin().getConfigHandler().getEventColor();
+            }
+            return ChatColor.GREEN;
+        }
+
+        boolean[] booleans = new boolean[]{
+                roundPlayerA.getUuid().equals(viewer.getUniqueId()),
+                roundPlayerB.getUuid().equals(viewer.getUniqueId()),
+                roundPlayerA.getUuid().equals(target.getUniqueId()),
+                roundPlayerB.getUuid().equals(target.getUniqueId())
+        };
+
+        if ((booleans[0] && booleans[3]) || (booleans[2] && booleans[1])) {
+            return org.bukkit.ChatColor.RED;
+        } else if ((booleans[0] && booleans[2]) || (booleans[1] && booleans[3])) {
+            return org.bukkit.ChatColor.GREEN;
+        } else if (getSpectators().contains(viewer.getUniqueId())) {
+            return roundPlayerA.getUuid().equals(target.getUniqueId()) ? org.bukkit.ChatColor.GREEN : org.bukkit.ChatColor.RED;
+        } else {
+            return org.bukkit.ChatColor.AQUA;
+        }
     }
 }

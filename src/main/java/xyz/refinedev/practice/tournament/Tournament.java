@@ -1,8 +1,10 @@
 package xyz.refinedev.practice.tournament;
 
+import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
@@ -27,11 +29,33 @@ public abstract class Tournament<T> {
     @Getter @Setter private static Tournament currentTournament;
 
     //Used for Team Tournaments
-    private final List<Party> parties = new LinkedList<>();
+    //Credits to Nick for Filtering
+    private final List<Party> parties = new ArrayList<Party>(){
+        @Override
+        public @NotNull Iterator<Party> iterator() {
+            this.filter();
+            return super.iterator();
+        }
+
+        @Override
+        public int size() {
+            this.filter();
+            return super.size();
+        }
+
+        private void filter() {
+            List<Party> toRemove = new ArrayList<>();
+            for (int i = 0; i < super.size(); ++i) {
+                Party party = this.get(i);
+                if (party.isDisbanded()) toRemove.add(party);
+            }
+            this.removeAll(toRemove);
+        }
+    };
 
     //Used for Solo Tournaments
     private final Map<UUID, TeamPlayer> teamPlayers = new ConcurrentHashMap<>();
-    private final List<UUID> players = new LinkedList<>();
+    private final List<UUID> players = new ArrayList<>();
 
     //Used for monitoring the tournament matches
     private final List<Match> matches = new ArrayList<>();

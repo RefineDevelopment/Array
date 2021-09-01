@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MenuManager {
 
-    private final String[] configNames = {"settings", "party_events", "kill_effects"};
+    private final String[] configNames = {"settings", "party_events", "kill_effects", "general"};
 
     private final Map<String, FoldersConfigurationFile> configs = new HashMap<>();
     private final List<MenuData> menuData = new ArrayList<>();
@@ -63,6 +63,28 @@ public class MenuManager {
             menu.setTitle(menuConfig.getString("TITLE"));
             menu.setSize(menuConfig.getInteger("SIZE"));
             menu.setPaginated(menuConfig.getBoolean("PAGINATED"));
+            menu.setPlaceholder(menuConfig.getBoolean("PLACEHOLDER"));
+
+            if (menu.isPlaceholder()) {
+                Material material;
+
+                try {
+                    material = Material.valueOf(menuConfig.getString("PLACEHOLDER_BUTTON.MATERIAL"));
+                } catch (Exception e) {
+                    plugin.logger("Invalid Placeholder Button on Menu " + menu.getName() + ", turning off placeholder mode.");
+                    menu.setPlaceholder(false);
+                    return;
+                }
+
+                ItemBuilder itemBuilder = new ItemBuilder(material);
+                itemBuilder.name(menuConfig.getString("PLACEHOLDER_BUTTON.NAME"));
+                if (menuConfig.getInteger("PLACEHOLDER_BUTTON.DATA") != 0) itemBuilder.durability(menuConfig.getInteger("PLACEHOLDER_BUTTON.DATA"));
+                itemBuilder.lore(menuConfig.getStringList("PLACEHOLDER_BUTTON.LORE"));
+                itemBuilder.clearFlags();
+
+                menu.setPlaceholderItem(itemBuilder.build());
+            }
+
             menu.setButtons(this.loadCustomButtons(menuConfig));
 
             menuData.add(menu);

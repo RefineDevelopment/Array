@@ -27,7 +27,7 @@ import java.util.List;
  */
 
 @RequiredArgsConstructor
-public class SelectTeamButton extends Button {
+public class EventTeamButton extends Button {
 
     private final Event event;
     private final EventGroup eventGroup;

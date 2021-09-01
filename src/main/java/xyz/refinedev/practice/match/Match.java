@@ -125,25 +125,6 @@ public abstract class Match {
     }
 
     /**
-     * Get amount of players in fight from a certain
-     * queue
-     *
-     * @param queue {@link Queue}
-     * @return amount of players in fight with the queue
-     */
-    public static int getInFights(Queue queue) {
-        int i = 0;
-
-        for (Match match : matches) {
-            if (match.getQueue() == null || !match.getQueue().equals(queue)) continue;
-            if (!match.isFighting() && !match.isStarting()) continue;
-
-            i += match.getTeamPlayers().size();
-        }
-        return i;
-    }
-
-    /**
      * Returns true if the match starting
      *
      * @return {@link Boolean}
@@ -326,6 +307,7 @@ public abstract class Match {
      */
     public void removePearl(Player player, boolean resetCooldown) {
         if (player == null) return;
+
         if (resetCooldown) {
             Profile profile = Profile.getByUuid(player.getUniqueId());
             profile.setEnderpearlCooldown(new Cooldown(0L));
@@ -673,7 +655,7 @@ public abstract class Match {
      * @param participant {@link TeamPlayer} the teamPlayer whose inventory message we are displaying
      * @return {@link BaseComponent}
      */
-    public static BaseComponent[] generateInventoriesComponents(String prefix, TeamPlayer participant) {
+    public BaseComponent[] generateInventoriesComponents(String prefix, TeamPlayer participant) {
         return generateInventoriesComponents(prefix, Collections.singletonList(participant));
     }
 
@@ -684,7 +666,7 @@ public abstract class Match {
      * @param participants {@link List<TeamPlayer>} the list of teamPlayers whose message we are displaying
      * @return {@link BaseComponent}
      */
-    public static BaseComponent[] generateInventoriesComponents(String prefix, List<TeamPlayer> participants) {
+    public BaseComponent[] generateInventoriesComponents(String prefix, List<TeamPlayer> participants) {
         ChatComponentBuilder builder = new ChatComponentBuilder(prefix);
 
         int totalPlayers = 0;
