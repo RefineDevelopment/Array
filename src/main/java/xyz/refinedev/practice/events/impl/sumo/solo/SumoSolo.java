@@ -184,7 +184,6 @@ public class SumoSolo extends Event {
         return (roundPlayerA != null && roundPlayerA.getUuid().equals(uuid)) || (roundPlayerB != null && roundPlayerB.getUuid().equals(uuid));
     }
 
-
     @Override
     public EventPlayer getRoundPlayerA() {
         return this.roundPlayerA;
@@ -197,21 +196,6 @@ public class SumoSolo extends Event {
 
     @Override
     public EventGroup getWinningTeam() {
-        throw new IllegalArgumentException("You can't get a team from a solo event");
-    }
-
-    @Override
-    public List<EventGroup> getTeams() {
-        throw new IllegalArgumentException("You can't get a list of event groups from a solo event");
-    }
-
-    @Override
-    public EventGroup getRoundTeamA() {
-        throw new IllegalArgumentException("You can't get a team from a solo event");
-    }
-
-    @Override
-    public EventGroup getRoundTeamB() {
         throw new IllegalArgumentException("You can't get a team from a solo event");
     }
 
