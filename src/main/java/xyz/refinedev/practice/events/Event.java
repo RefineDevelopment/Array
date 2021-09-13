@@ -190,7 +190,7 @@ public abstract class Event {
 	public void end() {
 		// Remove active event and set cooldown
 		plugin.getEventManager().setActiveEvent(null);
-		plugin.getEventManager().setEventCooldown(new Cooldown(60_000L * 3));
+		plugin.getEventManager().setCooldown(new Cooldown(60_000L * 3));
 
 		// Cancel any active task
 		this.setEventTask(null);
@@ -232,13 +232,6 @@ public abstract class Event {
 		}
 
 		return remaining == 1;
-	}
-
-	public void refreshNametag() {
-		this.getEventPlayers().values().forEach(eventPlayer -> {
-			this.getPlugin().getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
-			this.getPlugin().getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
-		});
 	}
 
 	public Player getWinner() {
@@ -323,43 +316,6 @@ public abstract class Event {
 		profile.teleportToSpawn();
 	}
 
-	public EventGroup getWinningTeam() {
-		for (EventGroup eventGroup : this.getTeams()) {
-			if (eventGroup.getState() != EventPlayerState.ELIMINATED) {
-				return eventGroup;
-			}
-		}
-		return null;
-	}
-
-	public List<EventGroup> getTeams() {
-		throw new IllegalArgumentException("You can't get a list of event groups from a solo event");
-	}
-
-	public EventPlayer getRoundPlayerA() {
-		throw new IllegalArgumentException("Unable to get a EventPlayer from a Team Event");
-	}
-
-	public EventPlayer getRoundPlayerB() {
-		throw new IllegalArgumentException("Unable to get a EventPlayer from a Team Event");
-	}
-
-	public EventGroup getRoundTeamA() {
-		throw new IllegalArgumentException("You can't get a team from a solo event");
-	}
-
-	public EventGroup getRoundTeamB() {
-		throw new IllegalArgumentException("You can't get a team from a solo event");
-	}
-
-	public boolean isFighting(EventGroup group) {
-		return this.getRoundTeamA() != null && this.getRoundTeamA().equals(group) || this.getRoundTeamB() != null && this.getRoundTeamB().equals(group);
-	}
-
-	public void onJoin(Player player) {
-		plugin.getKnockbackManager().knockback(player, this.getEventManager().getSumoKB());
-	}
-
 	public boolean isSumoSolo() {
 		return this.getType().equals(EventType.SUMO_SOLO);
 	}
@@ -400,6 +356,8 @@ public abstract class Event {
 
 	public abstract boolean isTeam();
 
+	public abstract void onJoin(Player player);
+
 	public abstract void onLeave(Player player);
 
 	public abstract void onRound();
@@ -408,7 +366,21 @@ public abstract class Event {
 
 	public abstract void handleStart();
 
+	public abstract EventGroup getWinningTeam();
+
+	public abstract List<EventGroup> getTeams();
+
+	public abstract EventPlayer getRoundPlayerA();
+
+	public abstract EventPlayer getRoundPlayerB();
+
+	public abstract EventGroup getRoundTeamA();
+
+	public abstract EventGroup getRoundTeamB();
+
 	public abstract boolean isFighting(UUID uuid);
+
+	public abstract boolean isFighting(EventGroup group);
 
 	public abstract ChatColor getRelationColor(Player viewer, Player target);
 

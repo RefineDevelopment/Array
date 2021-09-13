@@ -9,8 +9,6 @@ import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.events.EventManager;
 import xyz.refinedev.practice.events.EventState;
 import xyz.refinedev.practice.events.EventType;
-import xyz.refinedev.practice.events.impl.sumo.solo.SumoSolo;
-import xyz.refinedev.practice.events.impl.sumo.team.SumoTeam;
 import xyz.refinedev.practice.events.menu.EventSelectMenu;
 import xyz.refinedev.practice.events.menu.EventTeamMenu;
 import xyz.refinedev.practice.profile.Profile;
@@ -70,8 +68,8 @@ public class EventCommands {
             player.sendMessage(Locale.EVENT_ON_GOING.toString());
             return;
         }
-        if (!eventManager.getEventCooldown().hasExpired()) {
-            player.sendMessage(Locale.EVENT_COOLDOWN_ACTIVE.toString().replace("<expire_time>", eventManager.getEventCooldown().getTimeLeft()));
+        if (!eventManager.getCooldown().hasExpired()) {
+            player.sendMessage(Locale.EVENT_COOLDOWN_ACTIVE.toString().replace("<expire_time>", eventManager.getCooldown().getTimeLeft()));
             return;
         }
 

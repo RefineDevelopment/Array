@@ -72,7 +72,7 @@ public class KillEffectCommands {
         killEffect.setDisplayName(CC.translate(displayName));
 
         plugin.getKillEffectManager().getKillEffects().add(killEffect);
-        plugin.getKillEffectManager().save(killEffect, true);
+        plugin.getKillEffectManager().save(killEffect);
 
         sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully created a kill effect with the name &c" + name + "&7."));
     }
@@ -107,9 +107,9 @@ public class KillEffectCommands {
     @Require("array.killeffect.admin")
     public void save(@Sender CommandSender sender, @OptArg KillEffect killEffect) {
         if (killEffect == null) {
-            plugin.getKillEffectManager().getKillEffects().forEach(k -> plugin.getKillEffectManager().save(k, true));
+            plugin.getKillEffectManager().getKillEffects().forEach(k -> plugin.getKillEffectManager().save(k));
         } else {
-            plugin.getKillEffectManager().save(killEffect, true);
+            plugin.getKillEffectManager().save(killEffect);
         }
         sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully saved &c" + killEffect == null ? "all" : killEffect.getName() + " &7killeffect to our database."));
     }
@@ -118,7 +118,7 @@ public class KillEffectCommands {
     @Require("array.killeffect.admin")
     public void setData(@Sender CommandSender sender, KillEffect killEffect, int data) {
         killEffect.setData(data);
-        plugin.getKillEffectManager().save(killEffect, true);
+        plugin.getKillEffectManager().save(killEffect);
         sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully set &c" + killEffect.getName() + "'s &7Effect Data to &c" + data));
     }
 
@@ -127,7 +127,7 @@ public class KillEffectCommands {
     public void setEffect(@Sender CommandSender sender, KillEffect killEffect, String effect) {
         if (effect.equalsIgnoreCase("none")) {
             killEffect.setEffect(null);
-            plugin.getKillEffectManager().save(killEffect, true);
+            plugin.getKillEffectManager().save(killEffect);
             sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully removed the effect from &c" + killEffect.getName() + "&7."));
             return;
         }
@@ -141,7 +141,7 @@ public class KillEffectCommands {
         }
 
         killEffect.setEffect(bukkitEffect);
-        plugin.getKillEffectManager().save(killEffect, true);
+        plugin.getKillEffectManager().save(killEffect);
         sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully updated the effect for &c" + killEffect.getName() + "&7."));
     }
 
@@ -154,14 +154,14 @@ public class KillEffectCommands {
             return;
         }
         killEffect.setItemStack(itemStack);
-        plugin.getKillEffectManager().save(killEffect, true);
+        plugin.getKillEffectManager().save(killEffect);
         sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully updated &c" + killEffect.getName() + "'s &7icon to the item you're holding."));
     }
 
     @Command(name = "setpriority", aliases = "priority", usage = "<killeffect> <priority>", desc = "Set your kill effect's menu priorty")
     public void setPriority(@Sender CommandSender sender, KillEffect killEffect, int priority) {
         killEffect.setPriority(priority);
-        plugin.getKillEffectManager().save(killEffect, true);
+        plugin.getKillEffectManager().save(killEffect);
         sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully updated &c" + killEffect.getName() + "&7's priority."));
     }
 }

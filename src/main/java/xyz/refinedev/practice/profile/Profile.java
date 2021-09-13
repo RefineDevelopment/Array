@@ -17,7 +17,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.api.events.profile.ProfileLoadEvent;
 import xyz.refinedev.practice.api.events.profile.ProfileSaveEvent;
 import xyz.refinedev.practice.api.events.profile.SpawnTeleportEvent;
@@ -29,19 +28,18 @@ import xyz.refinedev.practice.duel.DuelProcedure;
 import xyz.refinedev.practice.duel.DuelRequest;
 import xyz.refinedev.practice.duel.RematchProcedure;
 import xyz.refinedev.practice.events.Event;
-import xyz.refinedev.practice.events.EventType;
 import xyz.refinedev.practice.events.meta.player.EventPlayer;
 import xyz.refinedev.practice.events.meta.player.EventPlayerState;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.kit.kiteditor.KitEditor;
-import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.hotbar.HotbarLayout;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
 import xyz.refinedev.practice.profile.killeffect.KillEffect;
+import xyz.refinedev.practice.profile.rank.TablistRank;
 import xyz.refinedev.practice.profile.settings.meta.SettingsMeta;
 import xyz.refinedev.practice.profile.statistics.StatisticsData;
 import xyz.refinedev.practice.queue.Queue;
@@ -54,16 +52,14 @@ import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.concurrent.Executor;
 
 @Getter @Setter
 public class Profile {
 
     @Getter private static final Map<UUID, Profile> profiles = new HashMap<>();
-    @Getter private static final List<LeaderboardsAdapter> globalEloLeaderboards = new ArrayList<>();
-    @Getter public static final List<Player> playerList = new ArrayList<>();
 
     private final Array plugin = Array.getInstance();
+    private MongoCollection<Document> collection = plugin.getMongoManager().getProfiles();
 
     private final Map<UUID, DuelRequest> sentDuelRequests = new HashMap<>();
     private final Map<Kit, StatisticsData> statisticsData = new LinkedHashMap<>();
@@ -71,22 +67,11 @@ public class Profile {
     private final List<Location> plates = new ArrayList<>();
 
     /*
-     * Profile Mongo
-     */
-    private static MongoCollection<Document> collection = Array.getInstance().getMongoDatabase().getCollection("profiles");
-    private Executor mongoThread = plugin.getMongoThread();
-
-
-    /*
-     * Part of Constructor
+     * Part of Profile
      */
     private String name;
     private final UUID uuid;
-
-    /*
-     * Integer Values
-     */
-    int globalElo = 1000;
+    private int globalElo = 1000;
 
     /*
      * Profile Meta
@@ -101,6 +86,7 @@ public class Profile {
     /*
      * Fight Meta
      */
+    private TablistRank tablistRank;
     private KillEffect killEffect;
     private ClanProfile clanProfile;
     private QueueProfile queueProfile;
@@ -139,27 +125,28 @@ public class Profile {
             this.statisticsData.put(kit, new StatisticsData());
         }
         this.calculateGlobalElo();
+        this.calculateTabRank();
     }
 
     public static void preload() {
-        if (!Array.getInstance().isDisabling()) {
-            //Save prevent data loss
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    Profile.getProfiles().values().forEach(Profile::save);
-                    Profile.getProfiles().values().forEach(Profile::load);
-                }
-            }.runTaskTimerAsynchronously(Array.getInstance(), 36000L, 36000L);
+        //Save prevent data loss
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (Array.getInstance().isDisabling()) cancel();
+                Profile.getProfiles().values().forEach(Profile::save);
+                Profile.getProfiles().values().forEach(Profile::load);
+            }
+        }.runTaskTimerAsynchronously(Array.getInstance(), 36000L, 36000L);
 
-            //Refresh players' hotbar every 3 seconds
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    Profile.getProfiles().values().forEach(Profile::checkForHotbarUpdate);
-                }
-            }.runTaskTimerAsynchronously(Array.getInstance(), 60L, 60L);
-        }
+        //Refresh players' hotbar every 3 seconds
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (Array.getInstance().isDisabling()) cancel();
+                Profile.getProfiles().values().forEach(Profile::checkForHotbarUpdate);
+            }
+        }.runTaskTimerAsynchronously(Array.getInstance(), 60L, 60L);
     }
 
     /**
@@ -220,13 +207,12 @@ public class Profile {
 
             if (document.getString("killEffect") != null) {
                 UUID uuid = UUID.fromString(document.getString("killEffect"));
-                KillEffect effect = plugin.getKillEffectManager().getByUUID(uuid);
-                if (effect == null) effect = plugin.getKillEffectManager().getDefault();
-
-                this.killEffect = effect;
+                this.killEffect = plugin.getKillEffectManager().getByUUID(uuid);
             }
 
-            if (document.getString("clan") != null) this.clan = Clan.getByUUID(UUID.fromString(document.getString("clan")));
+            String clanString = document.getString("clan");
+            if (clanString != null)
+                this.clan = plugin.getClanManager().getByUUID(UUID.fromString(clanString));
 
             Document options = (Document) document.get("settings");
 
@@ -237,7 +223,7 @@ public class Profile {
             this.settings.setDeathLightning(options.getBoolean("toggleLightning"));
             this.settings.setPingScoreboard(options.getBoolean("pingScoreboard"));
             this.settings.setCpsScoreboard(options.getBoolean("cpsScoreboard"));
-            this.settings.setTmessagesEnabled(options.getBoolean("tmessagesEnabled"));
+            this.settings.setTournamentMessages(options.getBoolean("tournamentMessages"));
             this.settings.setVanillaTab(options.getBoolean("usingVanillaTab"));
             this.settings.setShowPlayers(options.getBoolean("showPlayers"));
 
@@ -308,7 +294,7 @@ public class Profile {
         document.put("globalElo", globalElo);
 
         if (killEffect != null) document.put("killEffect", killEffect.getUniqueId().toString());
-        if (clan != null) document.put("clan", clan.getUuid());
+        if (clan != null) document.put("clan", clan.getUniqueId());
 
         Document optionsDocument = new Document();
 
@@ -318,7 +304,7 @@ public class Profile {
         optionsDocument.put("pingFactor", settings.isPingFactor());
         optionsDocument.put("toggleLightning", settings.isDeathLightning());
         optionsDocument.put("pingScoreboard", settings.isPingScoreboard());
-        optionsDocument.put("tmessagesEnabled", settings.isTmessagesEnabled());
+        optionsDocument.put("tournamentMessages", settings.isTournamentMessages());
         optionsDocument.put("usingVanillaTab", settings.isVanillaTab());
         optionsDocument.put("cpsScoreboard", settings.isCpsScoreboard());
         optionsDocument.put("showPlayers", settings.isShowPlayers());
@@ -425,11 +411,6 @@ public class Profile {
         final Player player = getPlayer();
         this.name = player.getName();
 
-        playerList.removeIf(players -> players.getName().equalsIgnoreCase(player.getName()));
-        playerList.add(player);
-
-        ArrayCache.getPlayerCache().putIfAbsent(player.getName(), this.getUuid());
-
         this.refreshHotbar();
         this.teleportToSpawn();
 
@@ -442,7 +423,6 @@ public class Profile {
      * Execute leave tasks for the profile
      */
     public void handleLeave() {
-        playerList.remove(this.getPlayer());
         this.save();
 
         if (this.getRematchData() != null) {
@@ -463,7 +443,6 @@ public class Profile {
         SpawnTeleportEvent event = new SpawnTeleportEvent(player, plugin.getConfigHandler().getSpawn());
         event.call();
 
-        //Update their visibility
         this.handleVisibility();
         this.refreshHotbar();
 
@@ -533,6 +512,10 @@ public class Profile {
         PlayerUtil.reset(getPlayer());
     }
 
+    public String getColouredName() {
+        return plugin.getRankManager().getRankType().getRankAdapter().getFullName(this.getPlayer());
+    }
+
     /**
      * Update the profile's hotbar
      */
@@ -571,7 +554,19 @@ public class Profile {
      * @return {@link Integer}
      */
     public int getTabPriority() {
-        return 0;
+        return tablistRank == null ? 0 : tablistRank.getPriority();
+    }
+
+    public void calculateTabRank() {
+        LinkedList<TablistRank> ranks = new LinkedList<>(plugin.getConfigHandler().getTablistRanks());
+        ranks.sort(Comparator.comparingInt(TablistRank::getPriority));
+
+        while ( ranks.size() > 0 ) {
+            TablistRank rank = ranks.poll();
+            if (!getPlayer().hasPermission(rank.getPermission())) continue;
+
+            this.tablistRank = rank;
+        }
     }
 
     /**

@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.jetbrains.annotations.Nullable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.api.events.match.*;
@@ -95,9 +96,11 @@ public abstract class Match {
      * Preload all normal match tasks
      */
     public static void preload() {
-        TaskUtil.runTimerAsync(new MatchPearlCooldownTask(), 2L, 2L);
-        TaskUtil.runTimerAsync(new MatchBowCooldownTask(), 2L, 2L);
-        TaskUtil.runTimerAsync(new MatchSnapshotCleanupTask(), 20L * 5, 20L * 5);
+        final Array plugin = Array.getInstance();
+
+        new MatchPearlCooldownTask().runTaskTimerAsynchronously(plugin, 2L, 2L);
+        new MatchBowCooldownTask().runTaskTimerAsynchronously(plugin, 2L, 2L);
+        new MatchSnapshotCleanupTask().runTaskTimerAsynchronously(plugin, 20L * 5, 20L * 5);
 
         TaskUtil.runTimer(() -> Bukkit.getWorlds().forEach(world -> {
             world.setStorm(false);
@@ -122,33 +125,6 @@ public abstract class Match {
         this.arena.setActive(false);
         this.entities.forEach(Entity::remove);
         this.droppedItems.forEach(Item::remove);
-    }
-
-    /**
-     * Returns true if the match starting
-     *
-     * @return {@link Boolean}
-     */
-    public boolean isStarting() {
-        return state == MatchState.STARTING;
-    }
-
-    /**
-     * Returns true if the match is in fight
-     *
-     * @return {@link Boolean}
-     */
-    public boolean isFighting() {
-        return state == MatchState.FIGHTING;
-    }
-
-    /**
-     * Returns true if the match is ending
-     *
-     * @return {@link Boolean}
-     */
-    public boolean isEnding() {
-        return state == MatchState.ENDING;
     }
 
     /**
@@ -333,8 +309,8 @@ public abstract class Match {
      * @param player {@link Player} The player dying
      */
     public void handleDeath(Player player) {
-        if (PlayerUtil.getLastDamager(player) instanceof CraftPlayer) {
-            Player killer = (Player) PlayerUtil.getLastDamager(player);
+        if (PlayerUtil.getLastAttacker(player) instanceof CraftPlayer) {
+            Player killer = (Player) PlayerUtil.getLastAttacker(player);
             this.handleDeath(player, killer, false);
         } else if (player.getKiller() != null) {
             this.handleDeath(player, player.getKiller(), false);
@@ -482,7 +458,7 @@ public abstract class Match {
      * @param player {@link Player} being added
      * @param target {@link Player} target that the player is spectating
      */
-    public void addSpectator(Player player, Player target) {
+    public void addSpectator(Player player, @Nullable Player target) {
         //This could happen mane
         if (this.isEnding()) {
             player.sendMessage(CC.translate("&cThat match has just ended, failed to add you as a spectator!"));
@@ -691,6 +667,33 @@ public abstract class Match {
         }
 
         return builder.create();
+    }
+
+    /**
+     * Returns true if the match starting
+     *
+     * @return {@link Boolean}
+     */
+    public boolean isStarting() {
+        return state == MatchState.STARTING;
+    }
+
+    /**
+     * Returns true if the match is in fight
+     *
+     * @return {@link Boolean}
+     */
+    public boolean isFighting() {
+        return state == MatchState.FIGHTING;
+    }
+
+    /**
+     * Returns true if the match is ending
+     *
+     * @return {@link Boolean}
+     */
+    public boolean isEnding() {
+        return state == MatchState.ENDING;
     }
 
     /**

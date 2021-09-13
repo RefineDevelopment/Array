@@ -41,28 +41,8 @@ public class FFAMatch extends Match {
     }
 
     @Override
-    public boolean isSoloMatch() {
-        return false;
-    }
-
-    @Override
-    public boolean isTeamMatch() {
-        return false;
-    }
-
-    @Override
     public boolean isFreeForAllMatch() {
         return true;
-    }
-
-    @Override
-    public boolean isHCFMatch() {
-        return false;
-    }
-
-    @Override
-    public boolean isTheBridgeMatch() {
-        return false;
     }
 
     @Override
@@ -118,44 +98,40 @@ public class FFAMatch extends Match {
 
     @Override
     public boolean onEnd() {
-            for ( TeamPlayer teamPlayer : team.getTeamPlayers() ) {
-                if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
-                    Player player=teamPlayer.getPlayer();
+        for ( TeamPlayer teamPlayer : team.getTeamPlayers() ) {
+            if (teamPlayer.isDisconnected() || !teamPlayer.isAlive()) continue;
+            Player player = teamPlayer.getPlayer();
+            if (player == null) continue;
 
-                    if (player != null) {
-                        Profile profile = Profile.getByUuid(player.getUniqueId());
-                        profile.handleVisibility();
+            Profile profile = Profile.getByUuid(player.getUniqueId());
+            profile.handleVisibility();
 
-                        getSnapshots().add(new MatchSnapshot(teamPlayer));
-                    }
-                }
-            }
+            this.getSnapshots().add(new MatchSnapshot(teamPlayer));
+        }
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (TeamPlayer firstTeamPlayer : team.getTeamPlayers()) {
-                    if (!firstTeamPlayer.isDisconnected()) {
-                        Player player = firstTeamPlayer.getPlayer();
+                for ( TeamPlayer firstTeamPlayer : team.getTeamPlayers() ) {
+                    if (firstTeamPlayer.isDisconnected()) continue;
+                    Player player = firstTeamPlayer.getPlayer();
+                    if (player == null) continue;
 
-                        if (player != null) {
-                            if (firstTeamPlayer.isAlive()) {
-                                getSnapshots().add(new MatchSnapshot(firstTeamPlayer));
-                            }
-
-                            player.setFireTicks(0);
-                            player.updateInventory();
-
-                            plugin.getKnockbackManager().kitKnockback(player, getKit());
-
-                            Profile profile = Profile.getByUuid(player.getUniqueId());
-                            profile.setState(ProfileState.IN_LOBBY);
-                            profile.setMatch(null);
-                            profile.handleVisibility();
-                            profile.refreshHotbar();
-                            profile.teleportToSpawn();
-                        }
+                    if (firstTeamPlayer.isAlive()) {
+                        getSnapshots().add(new MatchSnapshot(firstTeamPlayer));
                     }
+
+                    player.setFireTicks(0);
+                    player.updateInventory();
+
+                    plugin.getKnockbackManager().resetKnockback(player);
+
+                    Profile profile = Profile.getByUuid(player.getUniqueId());
+                    profile.setState(ProfileState.IN_LOBBY);
+                    profile.setMatch(null);
+                    profile.handleVisibility();
+                    profile.refreshHotbar();
+                    profile.teleportToSpawn();
                 }
             }
         }.runTaskLater(plugin, (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : plugin.getConfigHandler().getTELEPORT_DELAY() * 20L);

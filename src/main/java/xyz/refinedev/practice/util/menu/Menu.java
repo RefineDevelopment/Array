@@ -2,7 +2,6 @@ package xyz.refinedev.practice.util.menu;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,16 +10,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.chat.CC;
+import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
+import xyz.refinedev.practice.util.inventory.ItemBuilder;
+import xyz.refinedev.practice.util.menu.custom.ButtonData;
+import xyz.refinedev.practice.util.menu.custom.button.CustomButton;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Getter @Setter
 public abstract class Menu {
 
-    private final Array array = Array.getInstance();
+    private final Array plugin= Array.getInstance();
+
+    private final List<ButtonData> customButtons = new ArrayList<>();
 
     public static Map<String, Menu> currentlyOpenedMenus = new HashMap<>();
     private Map<Integer, Button> buttons = new HashMap<>();
@@ -48,6 +53,33 @@ public abstract class Menu {
         return item;
     }
 
+    public void loadMenu(FoldersConfigurationFile config) {
+        List<ButtonData> custom = plugin.getMenuManager().loadCustomButtons(config);
+        if (custom != null && !custom.isEmpty()) {
+            this.getCustomButtons().addAll(custom);
+        }
+        this.setPlaceholder(config.getBoolean("PLACEHOLDER"));
+
+        if (this.isPlaceholder()) {
+            ItemBuilder itemBuilder;
+            try {
+                Material material = Material.valueOf(config.getString("PLACEHOLDER_BUTTON.MATERIAL"));
+                itemBuilder = new ItemBuilder(material);
+                itemBuilder.name(config.getString("PLACEHOLDER_BUTTON.NAME"));
+                if (config.getInteger("PLACEHOLDER_BUTTON.DATA") != 0)
+                    itemBuilder.durability(config.getInteger("PLACEHOLDER_BUTTON.DATA"));
+                itemBuilder.lore(config.getStringList("PLACEHOLDER_BUTTON.LORE"));
+                itemBuilder.clearFlags();
+            } catch (Exception e) {
+                plugin.logger("Invalid Placeholder Button on " + config.getFile().getName().replace(".yml", "") + " Menu, turning off placeholder mode.");
+                this.setPlaceholder(false);
+                return;
+            }
+
+            this.setPlaceholderButton(Button.placeholder(itemBuilder.build()));
+        }
+    }
+
     /**
      * Open the menu for the Player
      *
@@ -55,6 +87,11 @@ public abstract class Menu {
      */
     public void openMenu(Player player) {
         this.buttons = this.getButtons(player);
+
+        for ( ButtonData customButton : getCustomButtons() ) {
+            if (customButtons.isEmpty()) return;
+            this.buttons.put(customButton.getSlot(), new CustomButton(customButton));
+        }
 
         Menu previousMenu = Menu.currentlyOpenedMenus.get(player.getName());
         Inventory inventory = null;

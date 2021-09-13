@@ -1,16 +1,19 @@
 package xyz.refinedev.practice.util.other;
 
+import lombok.experimental.UtilityClass;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@UtilityClass
 public class DateUtil {
 
-	public static String getFormattedDate(long value) {
+	String stringDateFormat = "MMMM d, yyyy";
+	private final DateFormat dateFormat = new SimpleDateFormat(stringDateFormat);
+
+	public String getFormattedDate(long value) {
 		Date date = new Date(value);
-		String stringDateFormat = "MMMM d, yyyy";
-		DateFormat dateFormat = new SimpleDateFormat(stringDateFormat);
-		String formattedDate = dateFormat.format(date).replaceAll(",", "th,");
-		return formattedDate;
+		return dateFormat.format(date).replaceAll(",", "th,");
 	}
 }

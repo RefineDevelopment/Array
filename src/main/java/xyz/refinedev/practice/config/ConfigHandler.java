@@ -13,9 +13,11 @@ import xyz.refinedev.practice.util.menu.MenuUpdateTask;
 import xyz.refinedev.practice.util.other.Description;
 import xyz.refinedev.practice.util.other.PiracyMeta;
 import xyz.refinedev.practice.util.other.TaskUtil;
+import xyz.refinedev.practice.profile.rank.TablistRank;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -232,14 +234,5 @@ public class ConfigHandler {
         config.set("UPDATE_NOTIFICATION", UPDATE_NOTIFICATION);
 
         config.save();
-    }
-
-
-    @Getter @Setter
-    @RequiredArgsConstructor
-    public static class TablistRank {
-
-        private final String permission;
-        private final int priority;
     }
 }

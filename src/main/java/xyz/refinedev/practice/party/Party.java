@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.duel.DuelRequest;
+import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.party.task.PartyInviteExpireTask;
@@ -31,7 +32,7 @@ public class Party extends Team {
     private final List<PartyInvite> invites;
     private final List<Player> banned;
 
-    private int limit;
+    private int limit = 10;
 
     private boolean isPublic;
     private boolean inTournament;
@@ -48,8 +49,6 @@ public class Party extends Team {
 
         if (player.hasPermission("array.donator")) {
             this.limit = 50;
-        } else {
-            this.limit = 10;
         }
 
         this.isPublic = false;
@@ -133,7 +132,7 @@ public class Party extends Team {
      * @param target The player being unbanned
      */
     public void unban(final Player target) {
-        broadcast(Locale.PARTY_UNBANNED.toString().replace("<target>", target.getName()));
+        this.broadcast(Locale.PARTY_UNBANNED.toString().replace("<target>", target.getName()));
         this.banned.remove(target);
     }
 
@@ -184,10 +183,11 @@ public class Party extends Team {
             }
         }
 
-        Player random = getTeamPlayers().get(0).getPlayer();
-        Profile profile1 = Profile.getByPlayer(random);
-        if (profile1.isInMatch()) {
-            profile1.getMatch().addSpectator(player, random);
+        if (this.isFighting()) {
+            Match match = this.getMatch();
+            if (match == null) return;
+
+            match.addSpectator(player, null);
         }
     }
 
@@ -348,6 +348,10 @@ public class Party extends Team {
 
     public boolean isFighting() {
         return this.getPlayers().stream().map(Profile::getByPlayer).anyMatch(profile -> profile.isInFight() || profile.isInTournament());
+    }
+
+    public Match getMatch() {
+        return this.getPlayers().stream().map(Profile::getByPlayer).filter(profile -> profile.isInFight() || profile.isInTournament()).map(Profile::getMatch).findAny().orElse(null);
     }
 
     public boolean isMember(UUID uuid) {

@@ -2,13 +2,10 @@ package xyz.refinedev.practice.events;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.events.impl.sumo.solo.SumoSolo;
-import xyz.refinedev.practice.events.impl.sumo.team.SumoTeam;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.location.LocationUtil;
@@ -25,17 +22,17 @@ public class EventManager {
 	private final BasicConfigurationFile config;
 
 	private Event activeEvent;
-	private Cooldown eventCooldown = new Cooldown(0);
+	private Cooldown cooldown = new Cooldown(0);
 
-	Location sumoSpawn1, sumoSpawn2, sumoSpectator;
-	Location bracketsSpawn1, bracketsSpawn2, bracketsSpectator;
-	Location gulagSpawn1, gulagSpawn2, gulagSpectator;
-	Location lmsSpawn, parkourSpawn, spleefSpawn, omaSpawn;
+	private Location sumoSpawn1, sumoSpawn2, sumoSpectator;
+	private Location bracketsSpawn1, bracketsSpawn2, bracketsSpectator;
+	private Location gulagSpawn1, gulagSpawn2, gulagSpectator;
+	private Location lmsSpawn, parkourSpawn, spleefSpawn, omaSpawn;
 
-	List<Location> oitcSpawns = new ArrayList<>();
-	Location oitcSpectator;
+	private List<Location> OITCSpawns = new ArrayList<>();
+	private Location OITCSpectator;
 
-	private String sumoKB = "Default", gulagKB = "Default", omaKB = "Default", spleefKB = "Default";
+	private String sumoKB = "default", gulagKB = "default", omaKB = "default", spleefKB = "default";
 
     public EventManager(Array plugin) {
         this.plugin = plugin;
@@ -98,7 +95,7 @@ public class EventManager {
 		if (bracketsSpectator != null) config.set(key + "BRACKETS.SPECTATOR", LocationUtil.serialize(bracketsSpectator));
 
 		if (gulagSpawn1 != null) config.set(key + "GULAG.SPAWN1", LocationUtil.serialize(gulagSpawn1));
-		if (gulagSpawn2 != null) config.set(key + "GULAG.SPAWN2", LocationUtil.serialize(gulagSpawn1));
+		if (gulagSpawn2 != null) config.set(key + "GULAG.SPAWN2", LocationUtil.serialize(gulagSpawn2));
 		if (gulagSpectator != null) config.set(key + "GULAG.SPECTATOR", LocationUtil.serialize(gulagSpectator));
 
 		if (lmsSpawn != null) config.set(key + "LMS.SPAWN", LocationUtil.serialize(lmsSpawn));
@@ -172,7 +169,7 @@ public class EventManager {
 				return parkourSpawn;
 			case LMS:
 				return lmsSpawn;
-			case OMA:
+			case JUGGERNAUT:
 				return omaSpawn;
 		}
 		return null;
@@ -190,7 +187,7 @@ public class EventManager {
 			case GULAG_TEAM:
 				return gulagSpectator;
 			case OITC:
-				return oitcSpectator;
+				return OITCSpectator;
 		}
 		return null;
 	}

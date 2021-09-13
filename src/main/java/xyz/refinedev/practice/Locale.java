@@ -341,7 +341,7 @@ public enum Locale {
     private String value;
     private List<String> listValue;
 
-    private final BasicConfigurationFile configFile = Array.getInstance().getMessagesConfig();
+    private static final BasicConfigurationFile configFile = Array.getInstance().getMessagesConfig();
 
     Locale(String path, String value) {
         this.path = path;
@@ -355,6 +355,22 @@ public enum Locale {
 
     public String toString() {
         return CC.translate(configFile.getConfiguration().getString(this.path)).replace("\uff5c", "┃");
+    }
+
+
+    public static void init() {
+        Arrays.stream(values()).forEach(language -> {
+            if (configFile.getString(language.getPath()) == null || configFile.getStringList(language.getPath()) == null) {
+                if (language.getListValue() != null) {
+                    configFile.set(language.getPath(), language.getListValue());
+                }
+
+                if (language.getValue() != null) {
+                    configFile.set(language.getPath(), language.getValue());
+                }
+            }
+        });
+        configFile.save();
     }
 
     public List<String> toList() {

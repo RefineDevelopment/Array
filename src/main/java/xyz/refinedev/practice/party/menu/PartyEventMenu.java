@@ -7,26 +7,17 @@ import xyz.refinedev.practice.party.menu.buttons.PartyEventButton;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
-import xyz.refinedev.practice.util.menu.custom.ButtonData;
-import xyz.refinedev.practice.util.menu.custom.button.CustomButton;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PartyEventMenu extends Menu {
-
-    private final List<ButtonData> customButtons = new ArrayList<>();
 
     private final Array plugin = Array.getInstance();
     private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("party_events");
 
     public PartyEventMenu() {
-        List<ButtonData> custom = plugin.getMenuManager().loadCustomButtons(config);
-        if (custom != null && !custom.isEmpty()) {
-            this.customButtons.addAll(custom);
-        }
+        this.loadMenu(config);
     }
 
     /**
@@ -66,9 +57,6 @@ public class PartyEventMenu extends Menu {
         } else {
             buttons.put(config.getInteger("BUTTONS.PARTY_SPLIT.HCF_DISABLED_SLOT"), new PartyEventButton(config, PartyEventType.PARTY_SPLIT));
             buttons.put(config.getInteger("BUTTONS.PARTY_SPLIT.HCF_DISABLED_SLOT"), new PartyEventButton(config, PartyEventType.PARTY_FFA));
-        }
-        for ( ButtonData customButton : customButtons ) {
-            buttons.put(customButton.getSlot(), new CustomButton(customButton));
         }
         return buttons;
     }

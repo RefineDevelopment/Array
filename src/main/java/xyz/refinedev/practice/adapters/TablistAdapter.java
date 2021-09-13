@@ -6,7 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
@@ -21,6 +20,7 @@ import xyz.refinedev.practice.pvpclasses.classes.Bard;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.other.PlayerUtil;
+import xyz.refinedev.practice.util.other.TrackUtil;
 import xyz.refinedev.tablist.adapter.TabAdapter;
 import xyz.refinedev.tablist.construct.TabEntry;
 import xyz.refinedev.tablist.util.Skin;
@@ -86,6 +86,9 @@ public class TablistAdapter implements TabAdapter {
                 final int y = i / 4;
 
                 Player tabPlayer = players.get(i);
+
+                if (tabPlayer == null) continue;
+
                 entries.add(new TabEntry(x, y, tabPlayer.getDisplayName(), tabPlayer.spigot().getPing(), Skin.getPlayer(tabPlayer)));
             }
 
@@ -423,19 +426,17 @@ public class TablistAdapter implements TabAdapter {
     
     public String replaceLobby(Player player, String toReplace) {
         return replaceStats(player, toReplace)
-                .replace("<in_fight>", String.valueOf(ArrayCache.getInFights()))
-                .replace("<in_queue>", String.valueOf(ArrayCache.getInQueues()))
-                .replace("<online_count>", String.valueOf(ArrayCache.getOnline()));
+                .replace("<in_fight>", String.valueOf(TrackUtil.getInFights()))
+                .replace("<in_queue>", String.valueOf(TrackUtil.getInQueues()))
+                .replace("<online_count>", String.valueOf(TrackUtil.getOnline()));
     }
 
     public String replaceStats(Player player, String toReplace) {
         Profile profile = Profile.getByPlayer(player);
         String eloFormat = config.getString("TABLIST.ELO_FORMAT");
-        if (toReplace == null) {
-            return "";
-        }
 
-        //Replace Kit Elo
+        if (toReplace == null) return "";
+
         for ( Kit kit : Kit.getKits()) {
             String kitName = kit.getName();
             int elo = profile.getStatisticsData().get(kit).getElo();
@@ -445,7 +446,6 @@ public class TablistAdapter implements TabAdapter {
             }
         }
 
-        //Replacing Profile Stats
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             return PlaceholderAPI.setPlaceholders(player, toReplace
                     .replace("<profile_global_elo>", String.valueOf(profile.getGlobalElo())
@@ -470,7 +470,6 @@ public class TablistAdapter implements TabAdapter {
         String armorClass = party.getKits().get(player.getUniqueId());
         List<TeamPlayer> teamPlayers = party.getTeamPlayers();
 
-        //Party Members
         for ( int i = 0; i < 25; i++ ) {
             String member = "<party_member_" + ((i + 1)) + ">";
             if (teamPlayers.size() <= i) {
@@ -495,8 +494,8 @@ public class TablistAdapter implements TabAdapter {
         Profile profile = Profile.getByPlayer(player);
         Match match = profile.getMatch();
 
-        int playera = PlayerUtil.getPing(match.getTeamPlayerA().getPlayer());
-        int playerb = PlayerUtil.getPing(match.getTeamPlayerB().getPlayer());
+        int playerAPing = PlayerUtil.getPing(match.getTeamPlayerA().getPlayer());
+        int playerBPing = PlayerUtil.getPing(match.getTeamPlayerB().getPlayer());
 
         return replaceTeamPlayer(player, replaceLobby(player, toReplace))
                 .replace("<match_kit>", match.getKit().getDisplayName())
@@ -504,8 +503,8 @@ public class TablistAdapter implements TabAdapter {
                 .replace("<match_duration>", match.getDuration())
                 .replace("<playerA_name>", match.getTeamPlayerA().getUsername())
                 .replace("<playerB_name>", match.getTeamPlayerB().getUsername())
-                .replace("<playerA_ping>", String.valueOf(playera))
-                .replace("<playerB_ping>", String.valueOf(playerb))
+                .replace("<playerA_ping>", String.valueOf(playerAPing))
+                .replace("<playerB_ping>", String.valueOf(playerBPing))
                 .replace("<player_count>", String.valueOf(match.getPlayers().size()))
                 .replace("<match_type>", "Solo");
     }
@@ -761,7 +760,7 @@ public class TablistAdapter implements TabAdapter {
                 .replace("<store>", plugin.getConfigHandler().getSTORE());
     }
 
-    private class TabComparator implements Comparator<Player> {
+    private static class TabComparator implements Comparator<Player> {
 
         @Override
         public int compare(Player o1, Player o2) {

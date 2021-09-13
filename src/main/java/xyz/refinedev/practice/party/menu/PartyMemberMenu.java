@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.party.menu;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -14,36 +15,36 @@ import xyz.refinedev.practice.util.menu.Menu;
 import java.beans.ConstructorProperties;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class PartyMemberMenu extends Menu {
-    Player target;
+
+    private final Player target;
 
     @Override
-    public String getTitle(final Player player) {
+    public String getTitle(Player player) {
         return "&cSelect an action for &9" + this.target.getName();
     }
 
     @Override
-    public Map<Integer, Button> getButtons(final Player player) {
-        final Map<Integer, Button> buttons=new HashMap<>();
+    public Map<Integer, Button> getButtons(Player player) {
+        final Map<Integer, Button> buttons = new HashMap<>();
         buttons.put(2, new SelectManageButton(PartyManageType.LEADER));
         buttons.put(4, new SelectManageButton(PartyManageType.KICK));
         buttons.put(6, new SelectManageButton(PartyManageType.BAN));
         return buttons;
     }
 
-    @ConstructorProperties({"target"})
-    public PartyMemberMenu(final Player target) {
-        this.target=target;
-    }
-
+    @RequiredArgsConstructor
     private class SelectManageButton extends Button {
+
         private final PartyManageType partyManageType;
 
         @Override
-        public ItemStack getButtonItem(final Player player) {
-            ArrayList<String> lore=new ArrayList<>();
+        public ItemStack getButtonItem(Player player) {
+            List<String> lore = new ArrayList<>();
             Player target = PartyMemberMenu.this.target;
             if (this.partyManageType == PartyManageType.LEADER) {
                 lore.add(CC.MENU_BAR);
@@ -77,29 +78,22 @@ public class PartyMemberMenu extends Menu {
         }
         
         @Override
-        public void clicked(final Player player, final ClickType clickType) {
-            final Profile profile = Profile.getByUuid(player.getUniqueId());
+        public void clicked(Player player, ClickType clickType) {
+            Profile profile = Profile.getByUuid(player.getUniqueId());
+
             if (profile.getParty() == null) {
                 player.sendMessage(CC.RED + "You are not in a party.");
                 return;
             }
             if (this.partyManageType == PartyManageType.LEADER) {
                 profile.getParty().leader(player, PartyMemberMenu.this.target);
-            }
-            else if (this.partyManageType == PartyManageType.MANAGE) {
+            } else if (this.partyManageType == PartyManageType.MANAGE) {
                 profile.getParty().leave(PartyMemberMenu.this.target, true);
-            }
-            else if (this.partyManageType == PartyManageType.BAN) {
+            } else if (this.partyManageType == PartyManageType.BAN) {
                 profile.getParty().leave(PartyMemberMenu.this.target, true);
                 profile.getParty().ban(PartyMemberMenu.this.target);
             }
-            Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
             player.closeInventory();
-        }
-        
-        @ConstructorProperties({ "partyManageType" })
-        public SelectManageButton(final PartyManageType partyManageType) {
-            this.partyManageType=partyManageType;
         }
     }
 }

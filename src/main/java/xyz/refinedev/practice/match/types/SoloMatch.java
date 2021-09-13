@@ -160,22 +160,19 @@ public class SoloMatch extends Match {
         UUID rematchKey = UUID.randomUUID();
 
         for (TeamPlayer teamPlayer : new TeamPlayer[]{getTeamPlayerA(), getTeamPlayerB()}) {
-            if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
-                Player player = teamPlayer.getPlayer();
-                if (player != null) {
-                    if (teamPlayer.isAlive()) {
-                        MatchSnapshot snapshot = new MatchSnapshot(teamPlayer);
-                        snapshot.setSwitchTo(getOpponentTeamPlayer(player));
+            if (teamPlayer.isDisconnected() || !teamPlayer.isAlive()) continue;
+            Player player = teamPlayer.getPlayer();
+            if (player == null) continue;
 
-                        getSnapshots().add(snapshot);
-                    }
-                }
-            }
+            MatchSnapshot matchSnapshot = new MatchSnapshot(teamPlayer);
+            matchSnapshot.setSwitchTo(this.getOpponentTeamPlayer(player));
+
+            this.getSnapshots().add(matchSnapshot);
         }
 
         if (getKit().getGameRules().isTimed()) {
-            TeamPlayer roundLoser = getTeamPlayer(getWinningPlayer());
-            TeamPlayer roundWinner = getOpponentTeamPlayer(getOpponentPlayer(getWinningPlayer()));
+            TeamPlayer roundLoser = this.getTeamPlayer(this.getWinningPlayer());
+            TeamPlayer roundWinner = this.getOpponentTeamPlayer(this.getOpponentPlayer(this.getWinningPlayer()));
             getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
             this.setState(MatchState.ENDING);
         }
@@ -183,34 +180,30 @@ public class SoloMatch extends Match {
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (TeamPlayer teamPlayer : new TeamPlayer[]{getTeamPlayerA(), getTeamPlayerB()}) {
-                    if (!teamPlayer.isDisconnected()) {
-                        Player player = teamPlayer.getPlayer();
-                        Player opponent = getOpponentPlayer(player);
+                for ( TeamPlayer teamPlayer : new TeamPlayer[]{getTeamPlayerA(), getTeamPlayerB()} ) {
+                    if (teamPlayer.isDisconnected() || teamPlayer.getPlayer() == null) continue;
+                    Player player = teamPlayer.getPlayer();
+                    Player opponent = getOpponentPlayer(player);
 
-                        if (player != null) {
+                    player.setFireTicks(0);
+                    player.updateInventory();
 
-                            player.setFireTicks(0);
-                            player.updateInventory();
+                    plugin.getKnockbackManager().resetKnockback(player);
 
-                            plugin.getKnockbackManager().resetKnockback(player);
+                    Profile profile = Profile.getByUuid(player.getUniqueId());
+                    profile.setState(ProfileState.IN_LOBBY);
+                    profile.setMatch(null);
+                    profile.handleVisibility();
 
-                            Profile profile = Profile.getByUuid(player.getUniqueId());
-                            profile.setState(ProfileState.IN_LOBBY);
-                            profile.setMatch(null);
-                            profile.handleVisibility();
-
-                            if (opponent != null && opponent.isOnline()) {
-                                profile.setRematchData(new RematchProcedure(rematchKey, player.getUniqueId(), opponent.getUniqueId(), getKit(), getArena()));
-                            }
-
-                            getEntities().forEach(Entity::remove);
-                            getDroppedItems().forEach(Entity::remove);
-
-                            profile.refreshHotbar();
-                            profile.teleportToSpawn();
-                        }
+                    if (opponent != null && opponent.isOnline()) {
+                        profile.setRematchData(new RematchProcedure(rematchKey, player.getUniqueId(), opponent.getUniqueId(), getKit(), getArena()));
                     }
+
+                    getEntities().forEach(Entity::remove);
+                    getDroppedItems().forEach(Entity::remove);
+
+                    profile.refreshHotbar();
+                    profile.teleportToSpawn();
                 }
             }
         }.runTaskLater(plugin, (getKit().getGameRules().isSumo() || getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : plugin.getConfigHandler().getTELEPORT_DELAY() * 20L);

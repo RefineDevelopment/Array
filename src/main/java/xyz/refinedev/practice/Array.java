@@ -3,11 +3,6 @@ package xyz.refinedev.practice;
 import com.google.gson.Gson;
 import com.lunarclient.bukkitapi.cooldown.LCCooldown;
 import com.lunarclient.bukkitapi.cooldown.LunarClientAPICooldown;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
-import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -39,11 +34,8 @@ import xyz.refinedev.practice.util.scoreboard.AssembleStyle;
 import xyz.refinedev.practice.util.scoreboard.ScoreboardHandler;
 import xyz.refinedev.tablist.TablistHandler;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Random;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -58,11 +50,11 @@ import java.util.concurrent.TimeUnit;
 @Getter
 public class Array extends JavaPlugin {
 
-    @Getter private static CommandService drink;
     @Getter private static Array instance;
     @Getter private static API api;
 
     public static Gson GSON = new Gson();
+    public static Random random = new Random();
 
     /*
      * All ours Configs
@@ -71,25 +63,21 @@ public class Array extends JavaPlugin {
                                    messagesConfig, scoreboardConfig, tablistConfig,  hotbarConfig, rateConfig;
 
     /*
-     * Mongo
-     */
-    private Executor mongoThread;
-    private MongoDatabase mongoDatabase;
-
-    /*
      * All Handlers
      */
-    private ScoreboardHandler scoreboardHandler;
+
     private ConfigHandler configHandler;
     private TablistHandler tablistHandler;
     private NameTagHandler nameTagHandler;
-
+    private ScoreboardHandler scoreboardHandler;
     /*
      * All Managers
      */
+    private ClanManager clanManager;
     private MenuManager menuManager;
     private RankManager rankManager;
     private EventManager eventManager;
+    private MongoManager mongoManager;
     private HotbarManager hotbarManager;
     private EffectRestorer effectRestorer;
     private RatingsManager ratingsManager;
@@ -104,7 +92,7 @@ public class Array extends JavaPlugin {
     /*
      * Essential Utilities
      */
-    public static Random random;
+    private CommandService drink;
     private EntityHider entityHider;
     private boolean disabling = false;
 
@@ -126,18 +114,15 @@ public class Array extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        random = new Random();
         api = new ArrayAPI();
         drink = Drink.get(this);
 
         System.setProperty("file.encoding", "UTF-8");
 
-        this.mongoThread = Executors.newSingleThreadExecutor();
-
         this.configHandler = new ConfigHandler(this);
         this.configHandler.init();
 
-        this.loadMessages();
+        Locale.init();
 
         if (!Description.getAuthor().contains("RefineDevelopment") || !Description.getName().contains("Array")
            || !Description.getAuthor().contains("Nick_0251") || !Description.getWebsite().equalsIgnoreCase("https://dsc.gg/refine")) {
@@ -146,7 +131,6 @@ public class Array extends JavaPlugin {
             this.logger("  &cPlease check your plugin.yml and try again.");
             this.logger("                 &cDisabling Array");
             this.logger(CC.CHAT_BAR);
-            System.exit(0);
             Bukkit.shutdown();
             return;
         }
@@ -157,7 +141,20 @@ public class Array extends JavaPlugin {
         this.rankManager = new RankManager(this);
         this.rankManager.init();
 
-        this.preload();
+        this.mongoManager = new MongoManager(this, mainConfig);
+        this.mongoManager.init();
+        this.mongoManager.loadCollections();
+
+        this.clanManager = new ClanManager(this);
+        this.clanManager.init();
+
+        //Static abuse be like
+        Kit.preload();
+        Profile.preload();
+        Arena.preload();
+        Match.preload();
+        Party.preLoad();
+        Queue.preLoad();
 
         this.menuManager = new MenuManager(this);
         this.menuManager.init();
@@ -193,43 +190,39 @@ public class Array extends JavaPlugin {
         this.effectRestorer.init();
 
         this.entityHider = new EntityHider(this);
-        this.preloadAdapters();
+        this.entityHider.init();
+
+        this.initExpansions();
     }
 
     @Override
     public void onDisable() {
-        //Stop all matches and remove the placed Blocks
         Match.getMatches().forEach(Match::cleanup);
 
-        //Save everything before disabling to prevent data loss
         Kit.getKits().forEach(Kit::save);
         Arena.getArenas().forEach(Arena::save);
         Profile.getProfiles().values().forEach(Profile::save);
-        Clan.getClans().forEach(Clan::save);
+        this.clanManager.getClans().forEach(clanManager::save);
+        this.killEffectManager.getKillEffects().forEach(killEffectManager::save);
 
-        //Save our Values to Config
+        this.mongoManager.shutdown();
+
         this.configHandler.save();
         this.eventManager.save();
         this.killEffectManager.exportConfig();
         this.pvpClassManager.onDisable();
 
-        //Clear out the PlayerList for Vanilla Tab
-        Profile.getPlayerList().clear();
         this.disabling = true;
     }
 
-    public void preload() {
-        this.preLoadMongo();
-        Kit.preload();
-        Profile.preload();
-        Clan.preload();
-        Arena.preload();
-        Match.preload();
-        Party.preLoad();
-        Queue.preLoad();
-    }
-
-    public void preloadAdapters() {
+    /**
+     * This method initializes and hooks
+     * into the APIs used by this plugin
+     * </p>
+     * A very important method to initialize this
+     * whole plugin.
+     */
+    public void initExpansions() {
         this.scoreboardHandler = new ScoreboardHandler(this, new ScoreboardAdapter());
         this.scoreboardHandler.setAssembleStyle(AssembleStyle.MODERN);
         this.scoreboardHandler.setTicks(2);
@@ -242,59 +235,29 @@ public class Array extends JavaPlugin {
         }
 
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new LeaderboardPlaceholders().register();
+            LeaderboardPlaceholders placeholders = new LeaderboardPlaceholders();
             this.logger("&7Found PlaceholderAPI, Registering Expansions....");
+            placeholders.register();
         } else {
             this.logger("&cPlaceholderAPI was NOT found, Holograms will NOT work!");
         }
 
         if (this.getServer().getPluginManager().isPluginEnabled("LunarClient-API")) {
-            this.logger("&7Found LunarClient-API, Registering Cooldowns....");
+            this.logger("&7Found LunarClient-API, Registering Cool-downs....");
             LunarClientAPICooldown.registerCooldown(new LCCooldown("Enderpearl", this.configHandler.getENDERPEARL_COOLDOWN(), TimeUnit.SECONDS, Material.ENDER_PEARL));
             LunarClientAPICooldown.registerCooldown(new LCCooldown("Bow", this.configHandler.getBOW_COOLDOWN(), TimeUnit.SECONDS, Material.BOW));
         }
     }
 
-    private void preLoadMongo() {
-        if (mainConfig.getBoolean("MONGO.URI-MODE")) {
-            MongoClient client = new MongoClient(new MongoClientURI(mainConfig.getString("MONGO.URI.CONNECTION_STRING")));
-            this.mongoDatabase = client.getDatabase(mainConfig.getString("MONGO.URI.DATABASE"));
-        } else {
-            MongoClient client;
-            if (mainConfig.getBoolean("MONGO.NORMAL.AUTHENTICATION.ENABLED")) {
-                MongoCredential credential = MongoCredential.createCredential(
-                        mainConfig.getString("MONGO.NORMAL.AUTHENTICATION.USERNAME"),
-                        mainConfig.getString("MONGO.NORMAL.DATABASE"),
-                        mainConfig.getString("MONGO.NORMAL.AUTHENTICATION.PASSWORD").toCharArray()
-                );
-
-                client = new MongoClient(new ServerAddress(mainConfig.getString("MONGO.NORMAL.HOST"),
-                        mainConfig.getInteger("MONGO.NORMAL.PORT")), Collections.singletonList(credential));
-            } else {
-                client = new MongoClient(mainConfig.getString("MONGO.NORMAL.HOST"),
-                        mainConfig.getInteger("MONGO.NORMAL.PORT"));
-            }
-            this.mongoDatabase = client.getDatabase(mainConfig.getString("MONGO.NORMAL.DATABASE"));
-        }
-    }
-
-    public void loadMessages() {
-        if (this.messagesConfig == null) return;
-
-        Arrays.stream(Locale.values()).forEach(language -> {
-            if (this.messagesConfig.getConfiguration().getString(language.getPath()) == null || this.messagesConfig.getConfiguration().getStringList(language.getPath()) == null) {
-
-                if (language.getListValue() != null) {
-                    this.messagesConfig.getConfiguration().set(language.getPath(), language.getListValue());
-                }
-
-                if (language.getValue() != null) {
-                    this.messagesConfig.getConfiguration().set(language.getPath(), language.getValue());
-                }
-            }
-
-        });
-        messagesConfig.save();
+    /**
+     * Runs the given runnable asynchronously
+     * This method is usually used in mongo and
+     * other non-spigot related tasks
+     *
+     * @param runnable {@link Runnable} the runnable
+     */
+    public void submitToThread(Runnable runnable) {
+        ForkJoinPool.commonPool().execute(runnable);
     }
 
     public void logger(String message) {

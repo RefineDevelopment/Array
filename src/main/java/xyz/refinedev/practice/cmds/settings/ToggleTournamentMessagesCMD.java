@@ -23,7 +23,7 @@ public class ToggleTournamentMessagesCMD {
         Profile profile = Profile.getByPlayer(player);
         SettingsMeta settings = profile.getSettings();
 
-        settings.setTmessagesEnabled(!settings.isTmessagesEnabled());
+        settings.setTournamentMessages(!settings.isTournamentMessages());
 
         String enabled = Locale.SETTINGS_ENABLED.toString().replace("<setting_name>", "Tournament Messages");
         String disabled = Locale.SETTINGS_DISABLED.toString().replace("<setting_name>", "Tournament Messages");

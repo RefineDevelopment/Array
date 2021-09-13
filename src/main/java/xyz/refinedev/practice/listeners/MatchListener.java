@@ -256,7 +256,7 @@ public class MatchListener implements Listener {
             profile.getMatch().getEntities().add(event.getItemDrop());
         }
 
-        if (profile.getSettings().isPreventSword()) {
+        if (profile.getSettings().isDropProtect()) {
             if (!PlayerUtil.hasOtherInventoryOpen(player) && heldSlot == 0 && (itemTypeName.contains("sword") || itemTypeName.contains("axe") || itemType == Material.BOW)) {
                 player.sendMessage(Locale.MATCH_SWORD_DROP.toString());
                 event.setCancelled(true);

@@ -2,10 +2,12 @@ package xyz.refinedev.practice.managers;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Sorts;
-import io.netty.util.concurrent.CompleteFuture;
+
 import lombok.Getter;
+
 import org.bson.Document;
 import org.bukkit.scheduler.BukkitRunnable;
+
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.events.leaderboards.GlobalLeaderboardsUpdateEvent;
 import xyz.refinedev.practice.api.events.leaderboards.KitLeaderboardsUpdateEvent;
@@ -19,7 +21,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Executor;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -34,7 +35,6 @@ import java.util.concurrent.Executor;
 public class LeaderboardsManager {
 
     private final Array plugin;
-    private final Executor mongoExecutor;
     private final MongoCollection<Document> profiles, clans;
 
     private final List<LeaderboardsAdapter> globalLeaderboards = new LinkedList<>();
@@ -44,9 +44,8 @@ public class LeaderboardsManager {
 
     public LeaderboardsManager(Array plugin) {
         this.plugin = plugin;
-        this.mongoExecutor = plugin.getMongoThread();
-        this.profiles = plugin.getMongoDatabase().getCollection("profiles");
-        this.clans = plugin.getMongoDatabase().getCollection("clans");
+        this.profiles = plugin.getMongoManager().getProfiles();
+        this.clans = plugin.getMongoManager().getClans();
     }
 
     public void init() {

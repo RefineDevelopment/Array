@@ -46,8 +46,8 @@ public class PiracyMeta {
             this.consoleLog("&7Twitter: &chttps://twitter.com/RefineDev");
             this.consoleLog("&7Contact: &crefinedevelopment@gmail.com");
             this.consoleLog("&7---------------&8[&cRefine-Licenses&8]&7----------------");
-            //plugin.getConfigHandler().setOUTDATED(false);
-            //plugin.getConfigHandler().setupEssentials();
+            plugin.getConfigHandler().setOUTDATED(false);
+            plugin.getConfigHandler().setupEssentials();
             TaskUtil.runTimerAsync(new PiracyTask(), 20, TimeUtil.parseTime("60m"));
         } else if (respo[0].equals("3") && Boolean.parseBoolean(respo[3])) {
             this.consoleLog("&aLicense valid!");
@@ -90,7 +90,7 @@ public class PiracyMeta {
             this.consoleLog("&cCould not verify your License, Shutting Down Server in 10 Seconds");
             Bukkit.getOnlinePlayers().forEach(player -> {
                 if (player.isOp()) {
-                    player.sendMessage("[" + plugin.getName() + "] &cCould not verify your License, Shutting Down Server in 10 Seconds");
+                    player.sendMessage("&c&l[" + plugin.getName() + "] &eCould not verify your License, Shutting Down Server in 10 Seconds");
                 }
             });
             TaskUtil.runLater(Bukkit::shutdown, 10 * 20L);
@@ -98,7 +98,7 @@ public class PiracyMeta {
     }
     
     public void consoleLog(String string) {
-        Bukkit.getConsoleSender().sendMessage(CC.translate( "[" + plugin.getName() + "] " + string));
+        Bukkit.getConsoleSender().sendMessage(CC.translate( string));
     }
 
     private String requestServerHTTPS(String productKey) throws IOException {

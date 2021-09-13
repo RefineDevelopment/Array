@@ -5,17 +5,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.clan.meta.ClanInvite;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.rank.RankType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.OptArg;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 import xyz.refinedev.practice.util.command.annotation.Text;
+import xyz.refinedev.practice.util.other.PlayerUtil;
 
 import java.util.UUID;
 
@@ -60,7 +59,7 @@ public class ClanCommands {
             return;
         }
 
-        Clan clan = Clan.getByName(name);
+        Clan clan = plugin.getClanManager().getByName(name);
 
         if (clan != null) {
             player.sendMessage(Locale.CLAN_NAME_ALREADYEXIST.toString().replace("<name>", name));
@@ -82,23 +81,23 @@ public class ClanCommands {
             return;
         }
 
-        if (ArrayCache.getUUID(text) == null && Clan.getByName(text) == null) {
+        if (PlayerUtil.getUUIDByName(text) == null && plugin.getClanManager().getByName(text) == null) {
             player.sendMessage(Locale.CLAN_DOESNT_EXIST.toString());
             return;
         }
 
-        if (Clan.getByLeader(ArrayCache.getUUID(text)) == null || Clan.getByName(text) == null) {
+        if (plugin.getClanManager().getByLeader(PlayerUtil.getUUIDByName(text)) == null || plugin.getClanManager().getByName(text) == null) {
             player.sendMessage(Locale.CLAN_DOESNT_EXIST.toString());
             return;
         }
 
-        if (Clan.getByLeader(ArrayCache.getUUID(text)) != null) {
-            clan = Clan.getByLeader(ArrayCache.getUUID(text));
+        if (plugin.getClanManager().getByLeader(PlayerUtil.getUUIDByName(text)) != null) {
+            clan = plugin.getClanManager().getByLeader(PlayerUtil.getUUIDByName(text));
         } else {
-            clan = Clan.getByName(text);
+            clan = plugin.getClanManager().getByName(text);
         }
 
-        ClanInvite clanInvite = clan.getInvite(player);
+        ClanInvite clanInvite = plugin.getClanManager().getInvite(clan, player);
 
         if (clanInvite == null && clan.getPassword() != null && password == null) {
             player.sendMessage(Locale.CLAN_PASSWORD_REQURED.toString().replace("<clan_name>", clan.getName()));
@@ -110,7 +109,7 @@ public class ClanCommands {
             return;
         }
 
-        clan.join(player, clanInvite);
+        plugin.getClanManager().join(clan, player, clanInvite);
     }
 
     @Command(name = "chat", desc = "Toggle clan chat mode for your profile")
@@ -154,7 +153,7 @@ public class ClanCommands {
             return;
         }
 
-        if (clan.getInvite(target) != null) {
+        if (plugin.getClanManager().getInvite(clan, target) != null) {
             player.sendMessage(Locale.CLAN_ALREADYINVITED.toString());
             return;
         }
@@ -164,7 +163,7 @@ public class ClanCommands {
             return;
         }
 
-        clan.invite(target);
+        plugin.getClanManager().invite(clan, target);
         clan.broadcast(Locale.CLAN_INVITED_BROADCAST.toString().replace("<invited>", plugin.getRankManager().getRankType().getRankAdapter().getFullName(target)));
     }
 
@@ -184,7 +183,7 @@ public class ClanCommands {
             return;
         }
 
-        clan.leave(player);
+        plugin.getClanManager().leave(clan, player);
     }
 
     @Command(name = "disband", desc = "Disband your Clan")
@@ -203,8 +202,8 @@ public class ClanCommands {
            return;
        }
 
-       clan.deleteClan();
-       Clan.getClans().forEach(Clan::save);
+       plugin.getClanManager().delete(clan);
+       plugin.getClanManager().getClans().forEach(plugin.getClanManager()::save);
     }
 
     @Command(name = "information", aliases = "info", desc = "View information about your Clan")
@@ -217,14 +216,14 @@ public class ClanCommands {
             return;
         }
 
-        clan.information(player);
+        plugin.getClanManager().information(clan, player);
     }
 
     @Command(name = "kick", desc = "Kick a player from your clan")
     public void kick(@Sender Player player, String target) {
         Profile profile = Profile.getByPlayer(player);
         Clan clan = profile.getClan();
-        UUID uuid = ArrayCache.getUUID(target);
+        UUID uuid = PlayerUtil.getUUIDByName(target);
         Profile targetProfile = Profile.getByUuid(uuid);
 
         if (clan == null) {
@@ -237,19 +236,19 @@ public class ClanCommands {
             return;
         }
 
-        if (!targetProfile.hasClan() || (targetProfile.hasClan() && !targetProfile.getClan().getUuid().equals(clan.getUuid()))) {
+        if (!targetProfile.hasClan() || (targetProfile.hasClan() && !targetProfile.getClan().getUniqueId().equals(clan.getUniqueId()))) {
             player.sendMessage(Locale.CLAN_NOT_PARTOF.toString());
             return;
         }
 
-        clan.kick(uuid);
+        plugin.getClanManager().kick(clan, uuid);
     }
 
     @Command(name = "kick", desc = "Kick a player from your clan")
     public void ban(@Sender Player player, String target) {
         Profile profile = Profile.getByPlayer(player);
         Clan clan = profile.getClan();
-        UUID uuid = ArrayCache.getUUID(target);
+        UUID uuid = PlayerUtil.getUUIDByName(target);
         Profile targetProfile = Profile.getByUuid(uuid);
 
         if (clan == null) {
@@ -262,12 +261,12 @@ public class ClanCommands {
             return;
         }
 
-        if (!targetProfile.hasClan() || (targetProfile.hasClan() && !targetProfile.getClan().getUuid().equals(clan.getUuid()))) {
+        if (!targetProfile.hasClan() || (targetProfile.hasClan() && !targetProfile.getClan().getUniqueId().equals(clan.getUniqueId()))) {
             player.sendMessage(Locale.CLAN_NOT_PARTOF.toString());
             return;
         }
 
-        clan.ban(uuid);
+        plugin.getClanManager().ban(clan, uuid);
     }
 
     @Command(name = "password", aliases = {"setpassword", "setpass", "pass"}, desc = "Set your clan's password")
@@ -323,7 +322,7 @@ public class ClanCommands {
     public void promote(@Sender Player player,  String target) {
         Profile profile = Profile.getByPlayer(player);
         Clan clan = profile.getClan();
-        UUID uuid = ArrayCache.getUUID(target);
+        UUID uuid = PlayerUtil.getUUIDByName(target);
         Profile targetProfile = Profile.getByUuid(uuid);
 
         if (clan == null) {
@@ -341,19 +340,19 @@ public class ClanCommands {
             return;
         }
 
-        if (!targetProfile.hasClan() || (targetProfile.hasClan() && !targetProfile.getClan().getUuid().equals(clan.getUuid()))) {
+        if (!targetProfile.hasClan() || (targetProfile.hasClan() && !targetProfile.getClan().getUniqueId().equals(clan.getUniqueId()))) {
             player.sendMessage(Locale.CLAN_NOT_PARTOF.toString());
             return;
         }
 
-        clan.promote(targetProfile.getClanProfile());
+        plugin.getClanManager().promote(clan, targetProfile.getClanProfile());
     }
 
     @Command(name = "demote", desc = "Demote a Captain to Member Role from your Clan")
     public void demote(@Sender Player player,  String target) {
         Profile profile = Profile.getByPlayer(player);
         Clan clan = profile.getClan();
-        UUID uuid = ArrayCache.getUUID(target);
+        UUID uuid = PlayerUtil.getUUIDByName(target);
         Profile targetProfile = Profile.getByUuid(uuid);
 
         if (clan == null) {
@@ -371,7 +370,7 @@ public class ClanCommands {
             return;
         }
 
-        if (!targetProfile.hasClan() || (targetProfile.hasClan() && !targetProfile.getClan().getUuid().equals(clan.getUuid()))) {
+        if (!targetProfile.hasClan() || (targetProfile.hasClan() && !targetProfile.getClan().getUniqueId().equals(clan.getUniqueId()))) {
             player.sendMessage(Locale.CLAN_NOT_PARTOF.toString());
             return;
         }
@@ -381,14 +380,14 @@ public class ClanCommands {
             return;
         }
 
-        clan.demote(targetProfile.getClanProfile());
+        plugin.getClanManager().demote(clan, targetProfile.getClanProfile());
     }
 
     @Command(name = "leader", desc = "Promote someone to Leader and demote yourself in your Clan")
-    public void leader(@Sender Player player,  String target) {
+    public void leader(@Sender Player player, String target) {
         Profile profile = Profile.getByPlayer(player);
         Clan clan = profile.getClan();
-        UUID uuid = ArrayCache.getUUID(target);
+        UUID uuid = PlayerUtil.getUUIDByName(target);
         Profile targetProfile = Profile.getByUuid(uuid);
 
         if (clan == null) {
@@ -401,7 +400,7 @@ public class ClanCommands {
             return;
         }
 
-        if (!targetProfile.hasClan() || (targetProfile.hasClan() && !targetProfile.getClan().getUuid().equals(clan.getUuid()))) {
+        if (!targetProfile.hasClan() || (targetProfile.hasClan() && !targetProfile.getClan().getUniqueId().equals(clan.getUniqueId()))) {
             player.sendMessage(Locale.CLAN_NOT_PARTOF.toString());
             return;
         }
@@ -411,7 +410,7 @@ public class ClanCommands {
             return;
         }
 
-        clan.leader(targetProfile.getClanProfile());
+        plugin.getClanManager().leader(clan, targetProfile.getClanProfile());
     }
 
 }

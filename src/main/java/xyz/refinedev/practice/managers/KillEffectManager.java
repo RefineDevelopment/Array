@@ -9,6 +9,7 @@ import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
@@ -36,10 +37,12 @@ public class KillEffectManager {
     private final MongoCollection<Document> collection;
 
     private final List<KillEffect> killEffects = new LinkedList<>();
+    private final Array plugin;
     private final BasicConfigurationFile config;
 
     public KillEffectManager(Array plugin) {
-        this.collection = plugin.getMongoDatabase().getCollection("killEffects");
+        this.plugin = plugin;
+        this.collection = plugin.getMongoManager().getKillEffects();
         this.config = plugin.getKillEffectsConfig();
     }
 
@@ -47,15 +50,19 @@ public class KillEffectManager {
      * Initiate and load are Kill Effects
      */
     public void init() {
-        for ( Document document : collection.find() ) {
-            if (document == null) {
-                this.importConfig();
-                return;
-            }
+        plugin.submitToThread(() -> {
+            for ( Document document : collection.find() ) {
+                if (document == null) {
+                    this.importConfig();
+                    return;
+                }
 
-            KillEffect killEffect = Array.GSON.fromJson(document.getString("killEffect"), KillEffect.class);
-            this.killEffects.add(killEffect);
-        }
+                KillEffect killEffect = Array.GSON.fromJson(document.getString("killEffect"), KillEffect.class);
+                synchronized (this.killEffects) {
+                    this.killEffects.add(killEffect);
+                }
+            }
+        });
     }
 
     /**
@@ -158,18 +165,15 @@ public class KillEffectManager {
      * Save a {@link KillEffect} to mongo
      *
      * @param killEffect {@link KillEffect} to save
-     * @param async {@link Boolean} should we run this task async
      */
-    public void save(KillEffect killEffect, boolean async) {
-        if (async) TaskUtil.runAsync(() -> this.save(killEffect, false));
-
+    public void save(KillEffect killEffect) {
         String serialized = Array.GSON.toJson(killEffect);
         Document document = new Document();
 
         document.put("killEffect", serialized);
         document.put("_id", killEffect.getUniqueId());
 
-        collection.replaceOne(Filters.eq("_id", killEffect.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
+        plugin.submitToThread(() -> collection.replaceOne(Filters.eq("_id", killEffect.getUniqueId().toString()), document, new ReplaceOptions().upsert(true)));
     }
 
     /**
@@ -212,7 +216,7 @@ public class KillEffectManager {
         killEffect.setLightning(true);
         killEffect.setDropsClear(true);
         killEffect.setDefaultEffect(true);
-        killEffect.setItemStack(new ItemBuilder(Material.PAPER).lore(Arrays.asList(" &fThis is the default kill effect", " &fThis will do nothing upon death.")).name("&aDefault").build());
+        killEffect.setItemStack(new ItemStack(Material.PAPER));
 
         this.killEffects.add(killEffect);
         return killEffect;

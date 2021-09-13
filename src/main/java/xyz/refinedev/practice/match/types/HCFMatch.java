@@ -105,15 +105,14 @@ public class HCFMatch extends Match {
     @Override
     public boolean onEnd() {
         for ( TeamPlayer teamPlayer : getTeamPlayers() ) {
-            if (!teamPlayer.isDisconnected() && teamPlayer.isAlive()) {
-                Player player = teamPlayer.getPlayer();
-                if (player == null) continue;
+            if (teamPlayer.isDisconnected() || !teamPlayer.isAlive()) continue;
+            Player player = teamPlayer.getPlayer();
+            if (player == null) continue;
 
-                Profile profile = Profile.getByUuid(player.getUniqueId());
-                profile.handleVisibility();
+            Profile profile = Profile.getByUuid(player.getUniqueId());
+            profile.handleVisibility();
 
-                this.getSnapshots().add(new MatchSnapshot(teamPlayer));
-            }
+            this.getSnapshots().add(new MatchSnapshot(teamPlayer));
         }
 
         new BukkitRunnable() {

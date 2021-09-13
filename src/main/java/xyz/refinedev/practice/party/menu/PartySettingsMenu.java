@@ -22,17 +22,29 @@ import java.util.Map;
 public class PartySettingsMenu extends Menu {
 
     public PartySettingsMenu() {
-        setAutoUpdate(true);
-        setUpdateAfterClick(true);
+        this.setAutoUpdate(true);
+        this.setUpdateAfterClick(true);
+        this.setPlaceholder(true);
+        this.setPlaceholderButton(Button.placeholder(Material.STAINED_GLASS_PANE, (byte) 8, ""));
     }
 
-    private final Button placeholder = Button.placeholder(Material.STAINED_GLASS_PANE, (byte) 8, "");
-
+    /**
+     * Get menu's title
+     *
+     * @param player {@link Player} viewing the menu
+     * @return {@link String} the title of the menu
+     */
     @Override
     public String getTitle(final Player player) {
         return "&7Party Settings";
     }
-    
+
+    /**
+     * Map of slots and buttons on that particular slot
+     *
+     * @param player {@link Player} player viewing the menu
+     * @return {@link Map}
+     */
     @Override
     public Map<Integer, Button> getButtons(final Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
@@ -40,10 +52,6 @@ public class PartySettingsMenu extends Menu {
         buttons.put(11, new SelectManageButton(PartyManageType.LIMIT));
         buttons.put(13, new SelectManageButton(PartyManageType.PUBLIC));
         buttons.put(15, new SelectManageButton(PartyManageType.MANAGE));
-
-        for (int i = 0; i < 27; i++) {
-            buttons.putIfAbsent(i, placeholder);
-        }
         return buttons;
     }
 
@@ -51,7 +59,13 @@ public class PartySettingsMenu extends Menu {
     private static class SelectManageButton extends Button {
 
         private final PartyManageType partyManageType;
-        
+
+        /**
+         * Get itemStack of the Button
+         *
+         * @param player {@link Player} viewing the menu
+         * @return {@link ItemStack}
+         */
         @Override
         public ItemStack getButtonItem(final Player player) {
             Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -89,7 +103,14 @@ public class PartySettingsMenu extends Menu {
                 }
             }
         }
-        
+
+        /**
+         * This method is called upon clicking an
+         * item on the menu
+         *
+         * @param player {@link Player} clicking
+         * @param clickType {@link ClickType}
+         */
         @Override
         public void clicked(final Player player, final ClickType clickType) {
             Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -143,6 +164,13 @@ public class PartySettingsMenu extends Menu {
             }
         }
 
+        /**
+         * Should the click update the menu
+         *
+         * @param player The player clicking
+         * @param clickType {@link ClickType}
+         * @return {@link Boolean}
+         */
         @Override
         public boolean shouldUpdate(final Player player, final ClickType clickType) {
             return true;

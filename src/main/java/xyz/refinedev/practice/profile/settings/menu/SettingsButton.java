@@ -132,8 +132,8 @@ public class SettingsButton extends Button {
             case TOGGLETOURNAMENTMESSAGES:
                 for ( String text : config.getStringList(key + "LORE" )) {
                     if (text.contains("<options>")) {
-                        lines.add((profile.getSettings().isTmessagesEnabled() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
-                        lines.add((!profile.getSettings().isTmessagesEnabled() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
+                        lines.add((profile.getSettings().isTournamentMessages() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
+                        lines.add((!profile.getSettings().isTournamentMessages() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
                         continue;
                     }
                     lines.add(CC.translate(text));
@@ -163,8 +163,8 @@ public class SettingsButton extends Button {
                 if (player.hasPermission("array.profile.dropprotect")) {
                     for ( String text : config.getStringList(key + "LORE_PERMISSION" )) {
                         if (text.contains("<options>")) {
-                            lines.add((profile.getSettings().isPreventSword() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
-                            lines.add((!profile.getSettings().isPreventSword() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
+                            lines.add((profile.getSettings().isDropProtect() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
+                            lines.add((!profile.getSettings().isDropProtect() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
                             continue;
                         }
                         lines.add(CC.translate(text));
@@ -236,7 +236,7 @@ public class SettingsButton extends Button {
                 break;
             case TOGGLETOURNAMENTMESSAGES:
                 Button.playSuccess(player);
-                profile.getSettings().setTmessagesEnabled(!profile.getSettings().isTmessagesEnabled());
+                profile.getSettings().setTournamentMessages(!profile.getSettings().isTournamentMessages());
                 break;
             case TOGGLETABSTYLE:
                 Button.playSuccess(player);
@@ -250,7 +250,7 @@ public class SettingsButton extends Button {
             case TOGGLEDROPPROTECT:
                 if (player.hasPermission("array.profile.dropprotect")) {
                     Button.playSuccess(player);
-                    profile.getSettings().setPreventSword(!profile.getSettings().isPreventSword());
+                    profile.getSettings().setDropProtect(!profile.getSettings().isDropProtect());
                 } else {
                     Button.playFail(player);
                     player.closeInventory();

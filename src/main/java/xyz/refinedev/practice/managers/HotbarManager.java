@@ -69,10 +69,6 @@ public class HotbarManager {
             HotbarItem hotbarItem = new HotbarItem(item, layout, builder.build(), slot);
             hotbarItem.setEnabled(config.getBoolean(path + "ENABLED"));
             if (command != null && !command.equalsIgnoreCase("")) {
-                if (!command.contains("/")) {
-                    plugin.logger("&cInvalid Command setup for " + item.name() + ".");
-                    return;
-                }
                 hotbarItem.setCommand(command);
             }
             items.add(hotbarItem);
@@ -104,10 +100,6 @@ public class HotbarManager {
             HotbarItem hotbarItem = new HotbarItem(HotbarType.CUSTOM, layout, builder.build(), slot);
             hotbarItem.setEnabled(config.getBoolean(path + "ENABLED"));
             if (command != null && !command.equalsIgnoreCase("")) {
-                if (!command.contains("/")) {
-                    plugin.logger("&cInvalid Command setup for " + key + ".");
-                    continue;
-                }
                 hotbarItem.setCommand(command);
             }
             this.items.add(hotbarItem);

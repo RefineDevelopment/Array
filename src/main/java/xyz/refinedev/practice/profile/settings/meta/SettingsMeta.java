@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.profile.settings.meta;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -11,7 +12,7 @@ import lombok.Data;
  * Project: Array
  */
 
-@Data
+@Getter @Setter
 public class SettingsMeta {
 
     private boolean
@@ -26,13 +27,14 @@ public class SettingsMeta {
     rankedPingFactor,
     unrankedPingFactor,
 
+    //Visual Settings
     pingScoreboard = true,
     cpsScoreboard = false,
     durationScoreboard = true,
-    tmessagesEnabled = true,
+    tournamentMessages= true,
     vanillaTab = false,
     showPlayers = false,
-    preventSword = false,
+    dropProtect = false,
 
     //Automatic settings for Profile
     showSpectator = true,

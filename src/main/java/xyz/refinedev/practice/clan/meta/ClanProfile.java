@@ -2,13 +2,15 @@ package xyz.refinedev.practice.clan.meta;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.clan.ClanRoleType;
 
 import java.util.UUID;
 
 
-@Data
+@Getter @Setter
 @AllArgsConstructor
 public class ClanProfile {
 

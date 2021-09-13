@@ -8,6 +8,8 @@ import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.arena.ArenaTypeProvider;
 import xyz.refinedev.practice.arena.meta.RatingType;
 import xyz.refinedev.practice.arena.meta.RatingTypeProvider;
+import xyz.refinedev.practice.clan.ClanProfileProvider;
+import xyz.refinedev.practice.clan.meta.ClanProfile;
 import xyz.refinedev.practice.cmds.*;
 import xyz.refinedev.practice.cmds.essentials.*;
 import xyz.refinedev.practice.cmds.event.EventCommands;
@@ -55,7 +57,7 @@ public class CommandsManager {
         drink.register(new ClanCommands(), "clan", "c");
         drink.register(new EventCommands(), "event", "events");
         drink.register(new SumoCommands(), "sumo");
-        drink.register(new KillEffectCommands(), "killeffect", "killeffects");
+        drink.register(new KillEffectCommands(), "killeffect", "killeffects", "ke");
 
         //These are standalone cmds which cannot have sub cmds
         drink.register(new ViewInvCommand(), "viewinv", "viewinventory", "inventory");
@@ -96,6 +98,7 @@ public class CommandsManager {
 
     public void registerProviders() {
         drink.bind(Arena.class).toProvider(new ArenaProvider());
+        drink.bind(ClanProfile.class).toProvider(new ClanProfileProvider());
         drink.bind(ArenaType.class).toProvider(new ArenaTypeProvider());
         drink.bind(Kit.class).toProvider(new KitProvider());
         drink.bind(Profile.class).toProvider(new ProfileProvider());

@@ -25,12 +25,12 @@ public class ToggleDropProtectCMD {
         Profile profile = Profile.getByPlayer(player);
         SettingsMeta settings = profile.getSettings();
 
-        settings.setPreventSword(!settings.isPreventSword());
+        settings.setDropProtect(!settings.isDropProtect());
 
         String enabled = Locale.SETTINGS_ENABLED.toString().replace("<setting_name>", "Drop Protect");
         String disabled = Locale.SETTINGS_DISABLED.toString().replace("<setting_name>", "Drop Protect");
 
-        player.sendMessage(settings.isPreventSword() ? enabled : disabled);
+        player.sendMessage(settings.isDropProtect() ? enabled : disabled);
     }
 
 }
