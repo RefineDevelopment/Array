@@ -1,27 +1,23 @@
-package xyz.refinedev.practice.api;
+package xyz.refinedev.practice.util.other;
 
-import lombok.Getter;
+import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.profile.Profile;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 /**
- * This Project is the property of Refine Development © 2021
+ * This Project is property of Refine Development © 2021
  * Redistribution of this Project is not allowed
  *
  * @author Drizzy
- * Created at 5/22/2021
+ * Created: 9/13/2021
  * Project: Array
  */
-public class ArrayCache {
 
-    @Getter private static final Map<String, UUID> playerCache = new HashMap<>();
+@UtilityClass
+public class TrackUtil {
 
-    public static int getInQueues() {
+    public int getInQueues() {
         int inQueues = 0;
 
         for ( Player player : Bukkit.getOnlinePlayers()) {
@@ -35,7 +31,7 @@ public class ArrayCache {
         return inQueues;
     }
 
-    public static int getInFights() {
+    public int getInFights() {
         int inFights = 0;
 
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -49,17 +45,7 @@ public class ArrayCache {
         return inFights;
     }
 
-    public static int getOnline() {
+    public int getOnline() {
         return Bukkit.getOnlinePlayers().size();
-    }
-
-    public static UUID getUUID(String name) {
-        UUID uuid = null;
-        if (playerCache.containsKey(name)) {
-            uuid = playerCache.get(name);
-        } else if (Bukkit.getOfflinePlayer(name) != null) {
-            return Bukkit.getOfflinePlayer(name).getUniqueId();
-        }
-        return uuid;
     }
 }

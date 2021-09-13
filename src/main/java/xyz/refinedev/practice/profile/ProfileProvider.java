@@ -2,13 +2,14 @@ package xyz.refinedev.practice.profile;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
+import xyz.refinedev.practice.util.other.PlayerUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -36,10 +37,10 @@ public class ProfileProvider extends DrinkProvider<Profile> {
     @Override
     public Profile provide(@NotNull CommandArg arg, @NotNull List<? extends Annotation> annotations) throws CommandExitMessage {
         String name = arg.get();
-        Profile profile = Profile.getByUuid(ArrayCache.getUUID(name));
+        UUID uuid = PlayerUtil.getUUIDByName(name);
 
-        if (ArrayCache.getUUID(name) != null) {
-            return profile;
+        if (uuid != null) {
+            return Profile.getByUuid(uuid);
         }
 
         throw new CommandExitMessage("A profile with that name does not exist!");

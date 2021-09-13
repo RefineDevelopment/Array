@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.events.Event;
 import xyz.refinedev.practice.match.Match;
@@ -25,6 +24,7 @@ import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TimeUtil;
+import xyz.refinedev.practice.util.other.TrackUtil;
 import xyz.refinedev.practice.util.scoreboard.AssembleAdapter;
 
 import java.util.ArrayList;
@@ -74,12 +74,13 @@ public class ScoreboardAdapter implements AssembleAdapter {
         lines.add(config.getStringOrDefault("SCOREBOARD.LINES", CC.SB_BAR));
         if (profile.isInLobby() || profile.isInQueue()) {
             config.getStringList("SCOREBOARD.LOBBY").forEach(line -> lines.add(CC.translate(line
-                    .replace("<online>", String.valueOf(ArrayCache.getOnline()))
-                    .replace("<in_fights>", String.valueOf(ArrayCache.getInFights()))
-                    .replace("<in_queues>", String.valueOf(ArrayCache.getInQueues()))
-                    .replace("%splitter%", "┃").replace("|", "┃").replace("|", "┃")
+                    .replace("<online>", String.valueOf(TrackUtil.getOnline()))
+                    .replace("<in_fights>", String.valueOf(TrackUtil.getInFights()))
+                    .replace("<in_queues>", String.valueOf(TrackUtil.getInQueues()))
                     .replace("<elo_league>", ChatColor.stripColor(profile.getDivision()))
-                    .replace("<global_elo>", String.valueOf(profile.getGlobalElo())))));
+                    .replace("<global_elo>", String.valueOf(profile.getGlobalElo())))
+                    .replace("%splitter%", "┃")
+                    .replace("|", "┃")));
 
             if (profile.getParty() != null && Tournament.getCurrentTournament() == null) {
                 Party party = profile.getParty();
@@ -137,7 +138,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                             .replace("%splitter%", "┃").replace("|", "┃")));
                 }
             } else if (Tournament.getCurrentTournament() != null) {
-                final Tournament tournament = Tournament.getCurrentTournament();
+                final Tournament<?> tournament = Tournament.getCurrentTournament();
                 final String round = tournament.getRound() > 0 ? String.valueOf(tournament.getRound()) : "&fStarting";
                 final String participantType = tournament.getType().equals(TournamentType.TEAM) ? "Parties" : "Players";
 

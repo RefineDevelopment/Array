@@ -1,21 +1,20 @@
 package xyz.refinedev.practice.util.other;
 
+import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.AsyncCatcher;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.api.ArrayCache;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -25,10 +24,6 @@ import java.util.stream.Collectors;
 public class PlayerUtil {
 
     private final Array plugin = Array.getInstance();
-
-    private static Field STATUS_PACKET_ID_FIELD;
-    private static Field STATUS_PACKET_STATUS_FIELD;
-    private static Field SPAWN_PACKET_ID_FIELD;
 
     public void reset(Player player) {
         AsyncCatcher.enabled = false;
@@ -94,7 +89,7 @@ public class PlayerUtil {
         return list.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    public CraftEntity getLastDamager(final Player p) {
+    public CraftEntity getLastAttacker(Player p) {
         final EntityLiving lastAttacker = ((CraftPlayer)p).getHandle().lastDamager;
         return (lastAttacker == null) ? null : lastAttacker.getBukkitEntity();
     }
@@ -105,79 +100,65 @@ public class PlayerUtil {
                 return p;
             }
         }
-        return Bukkit.getPlayer(ArrayCache.getUUID(name));
+        return Bukkit.getPlayer(getUUIDByName(name));
     }
 
+    @SuppressWarnings("deprecation")
+    public UUID getUUIDByName(String name) {
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
+        return offlinePlayer.getUniqueId();
+    }
+
+    @SuppressWarnings("deprecation")
+    public OfflinePlayer getPlayerByName(String name) {
+        return Bukkit.getOfflinePlayer(name);
+    }
+
+    @SneakyThrows
     public void animateDeath(Player player) {
-        int entityId = EntityUtils.getFakeEntityId();
-        PacketPlayOutNamedEntitySpawn spawnPacket = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
-        PacketPlayOutEntityStatus statusPacket = new PacketPlayOutEntityStatus();
+        int entityId=EntityUtils.getFakeEntityId();
+        PacketPlayOutNamedEntitySpawn spawnPacket=new PacketPlayOutNamedEntitySpawn(((CraftPlayer) player).getHandle());
+        PacketPlayOutEntityStatus statusPacket=new PacketPlayOutEntityStatus();
 
-        try {
-            SPAWN_PACKET_ID_FIELD.set(spawnPacket, entityId);
-            STATUS_PACKET_ID_FIELD.set(statusPacket, entityId);
-            STATUS_PACKET_STATUS_FIELD.set(statusPacket, (byte)3);
+        Field STATUS_PACKET_ID_FIELD;
+        Field STATUS_PACKET_STATUS_FIELD;
+        Field SPAWN_PACKET_ID_FIELD;
 
-            final int radius = MinecraftServer.getServer().getPlayerList().d();
-            final Set<Player> sentTo = new HashSet<>();
+        STATUS_PACKET_ID_FIELD=PacketPlayOutEntityStatus.class.getDeclaredField("a");
+        STATUS_PACKET_ID_FIELD.setAccessible(true);
+        STATUS_PACKET_STATUS_FIELD=PacketPlayOutEntityStatus.class.getDeclaredField("b");
+        STATUS_PACKET_STATUS_FIELD.setAccessible(true);
+        SPAWN_PACKET_ID_FIELD=PacketPlayOutNamedEntitySpawn.class.getDeclaredField("a");
+        SPAWN_PACKET_ID_FIELD.setAccessible(true);
 
-            for ( Entity entity : player.getNearbyEntities(radius,radius,radius)) {
 
-                if (!(entity instanceof Player)) {
-                    continue;
-                }
+        SPAWN_PACKET_ID_FIELD.set(spawnPacket, entityId);
+        STATUS_PACKET_ID_FIELD.set(statusPacket, entityId);
+        STATUS_PACKET_STATUS_FIELD.set(statusPacket, (byte) 3);
 
-                final Player watcher = (Player)entity;
+        final int radius = MinecraftServer.getServer().getPlayerList().d();
+        final Set<Player> sentTo = new HashSet<>();
 
-                if (watcher.getUniqueId().equals(player.getUniqueId())) {
-                    continue;
-                }
+        for ( Entity entity : player.getNearbyEntities(radius, radius, radius) ) {
 
-                ((CraftPlayer)watcher).getHandle().playerConnection.sendPacket(spawnPacket);
-                ((CraftPlayer)watcher).getHandle().playerConnection.sendPacket(statusPacket);
+            if (!(entity instanceof Player)) continue;
 
-                sentTo.add(watcher);
+            final Player watcher = (Player) entity;
+
+            if (watcher.getUniqueId().equals(player.getUniqueId())) {
+                continue;
             }
 
-            TaskUtil.runLater(() -> {
-                for (Player watcher : sentTo) {
-                    ((CraftPlayer)watcher).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(entityId));
-                }
-            }, 40L);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+            ((CraftPlayer) watcher).getHandle().playerConnection.sendPacket(spawnPacket);
+            ((CraftPlayer) watcher).getHandle().playerConnection.sendPacket(statusPacket);
 
-    public void removeItems(Inventory inventory, ItemStack item, int amount) {
-        for (int size = inventory.getSize(), slot = 0; slot < size; ++slot) {
-            ItemStack is = inventory.getItem(slot);
-            if (is != null && item.getType() == is.getType() && item.getDurability() == is.getDurability()) {
-                int newAmount = is.getAmount() - amount;
-                if (newAmount > 0) {
-                    is.setAmount(newAmount);
-                } else {
-                    inventory.setItem(slot, new ItemStack(Material.AIR));
-                    amount = -newAmount;
-                    if (amount == 0) {
-                        break;
-                    }
-                }
+            sentTo.add(watcher);
+        }
+
+        TaskUtil.runLater(() -> {
+            for ( Player watcher : sentTo ) {
+                ((CraftPlayer) watcher).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(entityId));
             }
-        }
-    }
-
-    static {
-        try {
-            STATUS_PACKET_ID_FIELD = PacketPlayOutEntityStatus.class.getDeclaredField("a");
-            STATUS_PACKET_ID_FIELD.setAccessible(true);
-            STATUS_PACKET_STATUS_FIELD = PacketPlayOutEntityStatus.class.getDeclaredField("b");
-            STATUS_PACKET_STATUS_FIELD.setAccessible(true);
-            SPAWN_PACKET_ID_FIELD = PacketPlayOutNamedEntitySpawn.class.getDeclaredField("a");
-            SPAWN_PACKET_ID_FIELD.setAccessible(true);
-        } catch (NoSuchFieldException ex) {
-            ex.printStackTrace();
-        }
-
+        }, 40L);
     }
 }

@@ -1,10 +1,10 @@
 TITLE: "&7Host Event"
-SIZE: 27
+SIZE: 36
 PAGINATED: false
 PLACEHOLDER: true
 PLACEHOLDER_BUTTON:
   NAME: ""
-  DATA: 0
+  DATA: 3
   LORE: []
 BUTTONS:
   SUMO:
@@ -13,9 +13,294 @@ BUTTONS:
     MATERIAL: LEASH
     ACTIVE_LORE:
       - ""
+      - "&c&lInformation"
+      - " &fKnockback everyone off the"
+      - " &fplatform until your are"
+      - " &fthe last player alive"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>&7/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fRound: &c<event_participant_A> &7vs &c<event_participant_B>"
+      - ""
+      - "&7&o(( Click to Join/Spectate ))"
     IDLE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fKnockback everyone off the"
+      - " &fplatform until your are"
+      - " &fthe last player alive"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host))"
+  BRACKETS:
+    NAME: "&c&lBrackets"
+    SLOT: 3
+    MATERIAL: WOOD_SWORD
+    ACTIVE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fFight through rounds and"
+      - " &fbeat your opponent in 1v1"
+      - " &fduels, last player wins!"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>&7/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fRound: &c<event_participant_A> &7vs &c<event_participant_B>"
+      - ""
+      - "&7&o(( Click to Join/Spectate ))"
+    IDLE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fFight through rounds and"
+      - " &fbeat your opponent in 1v1"
+      - " &fduels, last player wins!"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host))"
+  LMS:
+    NAME: "&c&lLMS"
+    SLOT: 4
+    MATERIAL: REDSTONE
+    ACTIVE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fFight for your life"
+      - " &fand kill everyone to"
+      - " &fbe the last man standing"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>&7/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fRound: &c<event_participant_A> &7vs &c<event_participant_B>"
+      - ""
+      - "&7&o(( Click to Join/Spectate ))"
+    IDLE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fFight for your life"
+      - " &fand kill everyone to"
+      - " &fbe the last man standing"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host))"
+  PARKOUR:
+    NAME: "&c&lParkour"
+    SLOT: 5
+    MATERIAL: LEASH
+    ACTIVE_LORE:
+      - ""
+      - "&c&lInformation"
       - " &fSplit your party into"
       - " &ftwo teams and the last"
       - " &fteam remaining wins!"
       - ""
-      - " &7&o(( Click to Host ))"
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>&7/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fRound: &c<event_participant_A> &7vs &c<event_participant_B>"
+      - ""
+      - "&7&o(( Click to Join/Spectate ))"
+    IDLE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fSplit your party into"
+      - " &ftwo teams and the last"
+      - " &fteam remaining wins!"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host))"
+  SUMO:
+    NAME: "&c&lSumo"
+    SLOT: 2
+    MATERIAL: LEASH
+    ACTIVE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fSplit your party into"
+      - " &ftwo teams and the last"
+      - " &fteam remaining wins!"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>&7/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fRound: &c<event_participant_A> &7vs &c<event_participant_B>"
+      - ""
+      - "&7&o(( Click to Join/Spectate ))"
+    IDLE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fSplit your party into"
+      - " &ftwo teams and the last"
+      - " &fteam remaining wins!"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host))"
+  SUMO:
+    NAME: "&c&lSumo"
+    SLOT: 2
+    MATERIAL: LEASH
+    ACTIVE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fSplit your party into"
+      - " &ftwo teams and the last"
+      - " &fteam remaining wins!"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>&7/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fRound: &c<event_participant_A> &7vs &c<event_participant_B>"
+      - ""
+      - "&7&o(( Click to Join/Spectate ))"
+    IDLE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fSplit your party into"
+      - " &ftwo teams and the last"
+      - " &fteam remaining wins!"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host))"
+  SUMO:
+    NAME: "&c&lSumo"
+    SLOT: 2
+    MATERIAL: LEASH
+    ACTIVE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fSplit your party into"
+      - " &ftwo teams and the last"
+      - " &fteam remaining wins!"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>&7/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fRound: &c<event_participant_A> &7vs &c<event_participant_B>"
+      - ""
+      - "&7&o(( Click to Join/Spectate ))"
+    IDLE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fSplit your party into"
+      - " &ftwo teams and the last"
+      - " &fteam remaining wins!"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host))"
+  SUMO:
+    NAME: "&c&lSumo"
+    SLOT: 2
+    MATERIAL: LEASH
+    ACTIVE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fSplit your party into"
+      - " &ftwo teams and the last"
+      - " &fteam remaining wins!"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>&7/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fRound: &c<event_participant_A> &7vs &c<event_participant_B>"
+      - ""
+      - "&7&o(( Click to Join/Spectate ))"
+    IDLE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fSplit your party into"
+      - " &ftwo teams and the last"
+      - " &fteam remaining wins!"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host))"
+  SUMO:
+    NAME: "&c&lSumo"
+    SLOT: 2
+    MATERIAL: LEASH
+    ACTIVE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fSplit your party into"
+      - " &ftwo teams and the last"
+      - " &fteam remaining wins!"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>&7/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fRound: &c<event_participant_A> &7vs &c<event_participant_B>"
+      - ""
+      - "&7&o(( Click to Join/Spectate ))"
+    IDLE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fSplit your party into"
+      - " &ftwo teams and the last"
+      - " &fteam remaining wins!"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host))"
+  SUMO:
+    NAME: "&c&lSumo"
+    SLOT: 2
+    MATERIAL: LEASH
+    ACTIVE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fSplit your party into"
+      - " &ftwo teams and the last"
+      - " &fteam remaining wins!"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>&7/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fRound: &c<event_participant_A> &7vs &c<event_participant_B>"
+      - ""
+      - "&7&o(( Click to Join/Spectate ))"
+    IDLE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fSplit your party into"
+      - " &ftwo teams and the last"
+      - " &fteam remaining wins!"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host))"
+  SUMO:
+    NAME: "&c&lSumo"
+    SLOT: 2
+    MATERIAL: LEASH
+    ACTIVE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fSplit your party into"
+      - " &ftwo teams and the last"
+      - " &fteam remaining wins!"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>&7/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fRound: &c<event_participant_A> &7vs &c<event_participant_B>"
+      - ""
+      - "&7&o(( Click to Join/Spectate ))"
+    IDLE_LORE:
+      - ""
+      - "&c&lInformation"
+      - " &fSplit your party into"
+      - " &ftwo teams and the last"
+      - " &fteam remaining wins!"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host))"

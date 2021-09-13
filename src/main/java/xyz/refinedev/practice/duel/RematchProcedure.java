@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
@@ -132,29 +131,32 @@ public class RematchProcedure {
         match = kit.createSoloKitMatch(null, new TeamPlayer(sender), new TeamPlayer(target), kit, arena, QueueType.UNRANKED);
 
         for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList() ) {
-            String opponentMessages = this.formatMessages(string, rank.getFullName(sender), rank.getFullName(target), senderProfile.getStatisticsData().get(kit).getElo(), targetProfile.getStatisticsData().get(kit).getElo(), QueueType.UNRANKED);
+            String opponentMessages = this.formatMessages(string, sender, target);
             sender.sendMessage(replaceOpponent(opponentMessages, sender));
             target.sendMessage(replaceOpponent(opponentMessages, target));
         }
         TaskUtil.run(match::start);
     }
 
-    private String formatMessages(String string, String player1, String player2, int player1Elo, int player2Elo, QueueType type) {
+    private String formatMessages(String string, Player sender, Player target) {
+        Profile senderProfile = Profile.getByUuid(sender.getUniqueId());
+        Profile targetProfile = Profile.getByUuid(target.getUniqueId());
+
         return string
-                .replace("<player1>", type == QueueType.RANKED ? player1 + CC.GRAY + " (" + player1Elo + ")" : player1)
-                .replace("<ranked>", type == QueueType.RANKED ? "&aTrue" : "&cFalse")
-                .replace("<player1_ping>", String.valueOf(PlayerUtil.getPing(Bukkit.getPlayer(ArrayCache.getUUID(player1)))))
-                .replace("<player2_ping>", String.valueOf(PlayerUtil.getPing(Bukkit.getPlayer(ArrayCache.getUUID(player2)))))
-                .replace("<player2>", type == QueueType.RANKED ? player2 + CC.GRAY + " (" + player2Elo + ")" : player2);
+                .replace("<ranked>","&cFalse")
+                .replace("<player1_ping>", String.valueOf(PlayerUtil.getPing(sender)))
+                .replace("<player2_ping>", String.valueOf(PlayerUtil.getPing(target)))
+                .replace("<player1>", senderProfile.getColouredName())
+                .replace("<player2>", targetProfile.getColouredName());
     }
 
     private String replaceOpponent(String opponent, Player player) {
         opponent = opponent
-                .replace("<opponent>", match.getOpponentPlayer(player).getDisplayName())
                 .replace("<opponent_ping>", String.valueOf(PlayerUtil.getPing(match.getOpponentPlayer(player))))
                 .replace("<player_ping>", String.valueOf(PlayerUtil.getPing(player)))
                 .replace("<arena>", this.arena.getDisplayName())
                 .replace("<kit>", this.kit.getDisplayName())
+                .replace("<opponent>", match.getOpponentPlayer(player).getDisplayName())
                 .replace("<player>", player.getDisplayName());
         return opponent;
     }

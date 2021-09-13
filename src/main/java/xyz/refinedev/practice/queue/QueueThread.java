@@ -106,9 +106,9 @@ public class QueueThread extends Thread {
                             this.match = queue.getKit().createSoloKitMatch(queue, firstMatchPlayer, secondMatchPlayer, kit, arena, queue.getType());
 
                             for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList() ) {
-                                String opponentMessages = this.formatMessages(firstPlayer, secondPlayer, string, rank.getFullName(firstPlayer), rank.getFullName(secondPlayer), firstProfile.getStatisticsData().get(kit).getElo(), secondProfile.getStatisticsData().get(kit).getElo(), queue.getType());
-                                firstPlayer.sendMessage(replaceOpponent(opponentMessages, firstPlayer));
-                                secondPlayer.sendMessage(replaceOpponent(opponentMessages, secondPlayer));
+                                String opponentMessages = this.formatMessages(string, firstPlayer, secondPlayer, queue.getType());
+                                firstPlayer.sendMessage(this.replaceOpponent(opponentMessages, firstPlayer));
+                                secondPlayer.sendMessage(this.replaceOpponent(opponentMessages, secondPlayer));
                             }
                             TaskUtil.run(match::start);
                         }
@@ -132,13 +132,19 @@ public class QueueThread extends Thread {
         }
     }
 
-    private String formatMessages(Player player1Player, Player player2Player, String string, String player1, String player2, int player1Elo, int player2Elo, QueueType type) {
+    private String formatMessages(String string, Player sender, Player target, QueueType type) {
+        Profile senderProfile = Profile.getByUuid(sender.getUniqueId());
+        Profile targetProfile = Profile.getByUuid(target.getUniqueId());
+
+        int senderELO = senderProfile.getStatisticsData().get(kit).getElo();
+        int targetELO = targetProfile.getStatisticsData().get(kit).getElo();
+
         return string
-                .replace("<player1>", type == QueueType.RANKED ? player1 + CC.GRAY + " (" + player1Elo + ")" : player1)
-                .replace("<match_type>", type == QueueType.RANKED ? "Ranked" : type == QueueType.CLAN ? "Clan" : "Unranked")
-                .replace("<player1_ping>", String.valueOf(PlayerUtil.getPing(player1Player)))
-                .replace("<player2_ping>", String.valueOf(PlayerUtil.getPing(player2Player)))
-                .replace("<player2>", type == QueueType.RANKED ? player2 + CC.GRAY + " (" + player2Elo + ")" : player2);
+                .replace("<ranked>", type == QueueType.RANKED ? "&aTrue" : "&cFalse")
+                .replace("<player1_ping>", String.valueOf(PlayerUtil.getPing(sender)))
+                .replace("<player2_ping>", String.valueOf(PlayerUtil.getPing(target)))
+                .replace("<player1>", type == QueueType.RANKED ? senderProfile.getColouredName() + CC.GRAY + " (" + senderELO + ")" : senderProfile.getColouredName())
+                .replace("<player2>", type == QueueType.RANKED ? targetProfile.getColouredName() + CC.GRAY + " (" + targetELO + ")" : targetProfile.getColouredName());
     }
 
     private String replaceOpponent(String opponent, Player player) {

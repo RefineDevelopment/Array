@@ -2,12 +2,12 @@ package xyz.refinedev.practice.clan;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.refinedev.practice.api.ArrayCache;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
+import xyz.refinedev.practice.util.other.PlayerUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -29,7 +29,7 @@ public class ClanProfileProvider extends DrinkProvider<ClanProfile> {
     @Override
     public ClanProfile provide(@NotNull CommandArg arg, @NotNull List<? extends Annotation> annotations) throws CommandExitMessage {
         String name = arg.get();
-        UUID uuid = ArrayCache.getUUID(name);
+        UUID uuid = PlayerUtil.getUUIDByName(name);
 
         if (uuid != null) {
             ClanProfile clanProfile = Profile.getByUuid(uuid).getClanProfile();
