@@ -13,11 +13,13 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.event.meta.EventTask;
 import xyz.refinedev.practice.event.meta.group.EventGroup;
 import xyz.refinedev.practice.event.meta.group.EventTeamPlayer;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
 import xyz.refinedev.practice.event.meta.player.EventPlayerState;
+import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.util.chat.Clickable;
@@ -228,6 +230,10 @@ public abstract class Event {
 		this.getPlayers().stream().map(Profile::getByPlayer).forEach(Profile::handleVisibility);
 	}
 
+	/**
+	 * Clear up the {@link Event} leftovers and remnants
+	 * and rollback the event arena to its original state
+	 */
 	public void cleanup() {
 		this.placedBlocks.forEach(l -> l.getBlock().setType(Material.AIR));
 		this.placedBlocks.clear();

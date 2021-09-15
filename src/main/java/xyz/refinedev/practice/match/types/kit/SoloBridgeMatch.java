@@ -179,7 +179,7 @@ public class SoloBridgeMatch extends SoloMatch {
      *
      * @param player {@link Player} the player entering the portal
      */
-    public void onPortalEnter(Player player) {
+    public void handlePortal(Player player) {
         TeamPlayer teamPlayer = this.getTeamPlayer(player);
 
         if (teamPlayer == null) return;

@@ -121,10 +121,10 @@ public class MatchListener implements Listener {
 
         if (match instanceof SoloBridgeMatch) {
             SoloBridgeMatch soloBridgeMatch = (SoloBridgeMatch) match;
-            soloBridgeMatch.onPortalEnter(player);
+            soloBridgeMatch.handlePortal(player);
         } else if (match instanceof TeamBridgeMatch) {
             TeamBridgeMatch teamBridgeMatch = (TeamBridgeMatch) match;
-            //teamBridgeMatch.onPortalEnter(player);
+            //teamBridgeMatch.handlePortal(player);
         }
     }
 
