@@ -120,7 +120,7 @@ HOTBAR_ITEMS:
     DURABILITY: 0
     SLOT: 2
     LAYOUT_TYPE: PARTY_LEADER
-    COMMAND: "party events"
+    COMMAND: "party event"
     LORE: []
   PARTY_SETTINGS:
     NAME: "&cParty Settings &7(Right-Click)"

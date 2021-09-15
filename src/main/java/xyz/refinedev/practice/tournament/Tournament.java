@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.tournament;
 
-import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;

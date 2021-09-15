@@ -31,7 +31,7 @@ import static com.comphenix.protocol.PacketType.Play.Server.*;
  * Entity hider which aims to fix spigot visibility
  * of projectiles, particle effects and sounds
  * </p>
- * Originally coded by Nick (I think) and recoded/improved
+ * Originally coded by Lipchya and recoded/improved
  * by DevDrizzy (Cleaned up code and Removed Excessive Reflection usage)
  *
  * @since 9/13/2021
@@ -54,7 +54,7 @@ public class EntityHider extends PacketAdapter implements Listener {
     @SneakyThrows
     public void init() {
         ProtocolLibrary.getProtocolManager().addPacketListener(this);
-        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
         itemOwner = EntityItem.class.getDeclaredField("f");
         itemOwner.setAccessible(true);
@@ -168,29 +168,28 @@ public class EntityHider extends PacketAdapter implements Listener {
             }
 
         } else {
-            //TODO: Clean this code up
-            Entity entity = this.getFromID(receiver.getWorld() , event.getPacket().getIntegers().read(0));
-            if(entity instanceof Player) {
-                Player player = ((Player)entity);
-                if(!receiver.canSee(player)) {
-                    event.setCancelled(true);
-                }
-            } else if(entity instanceof Projectile) {
-                Projectile projectile = ((Projectile)entity);
-                if(projectile.getShooter() instanceof Player ) {
-                    Player shooter = (Player) projectile.getShooter();
-                    if(!receiver.canSee(shooter)) {
-                        event.setCancelled(true);
-                    }
-                }
-            } else  if(entity instanceof Item) {
-                Item item = ((Item)entity);
+            Entity entity = this.getFromID(receiver.getWorld(), event.getPacket().getIntegers().read(0));
+            if (entity instanceof Player) {
+                Player player = (Player) entity;
+                if (receiver.canSee(player)) return;
+
+                event.setCancelled(true);
+            } else if (entity instanceof Projectile) {
+                Projectile projectile = (Projectile) entity;
+                if (!(projectile.getShooter() instanceof Player)) return;
+
+                Player shooter = (Player) projectile.getShooter();
+                if (receiver.canSee(shooter)) return;
+
+                event.setCancelled(true);
+            } else if (entity instanceof Item) {
+                Item item = (Item) entity;
+
                 Player dropper = getPlayerWhoDropped(item);
-                if (dropper != null) {
-                    if(!receiver.canSee(dropper)) {
-                        event.setCancelled(true);
-                    }
-                }
+                if (dropper == null) return;
+                if (receiver.canSee(dropper)) return;
+
+                event.setCancelled(true);
             }
         }
     }

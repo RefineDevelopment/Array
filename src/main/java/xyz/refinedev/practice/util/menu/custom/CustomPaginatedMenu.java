@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.util.menu.custom;
 
-import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.util.menu.Button;

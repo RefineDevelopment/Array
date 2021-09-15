@@ -6,10 +6,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.clan.Clan;
-import xyz.refinedev.practice.events.Event;
+import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
+import xyz.refinedev.practice.match.types.kit.BoxingMatch;
 import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
 import xyz.refinedev.practice.match.types.kit.TeamBridgeMatch;
 import xyz.refinedev.practice.party.Party;
@@ -185,6 +186,8 @@ public class ScoreboardAdapter implements AssembleAdapter {
                                 .replace("<blue_points_formatted>", this.getFormattedPoints(match.getTeamPlayerB().getPlayer()) + (match.getTeamPlayerB().getPlayer() == player ? " &7(You)" : "")))
                                 .replace("%splitter%", "┃")
                                 .replace("|", "┃")));
+                    } else if (match instanceof BoxingMatch) {
+
                     } else {
                         final TeamPlayer self = match.getTeamPlayer(player);
                         final TeamPlayer opponent = match.getOpponentTeamPlayer(player);

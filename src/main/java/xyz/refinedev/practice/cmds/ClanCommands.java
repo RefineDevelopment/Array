@@ -164,7 +164,7 @@ public class ClanCommands {
         }
 
         plugin.getClanManager().invite(clan, target);
-        clan.broadcast(Locale.CLAN_INVITED_BROADCAST.toString().replace("<invited>", plugin.getRankManager().getRankType().getRankAdapter().getFullName(target)));
+        clan.broadcast(Locale.CLAN_INVITED_BROADCAST.toString().replace("<invited>", plugin.getRankManager().getCoreType().getCoreAdapter().getFullName(target)));
     }
 
 

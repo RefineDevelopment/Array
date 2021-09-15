@@ -70,7 +70,7 @@ public enum Locale {
             "&c&m--------&7&m-------------------------------------&c&m--------")),
     PARTY_DONATOR("PARTY.DONATOR_MESSAGE", Arrays.asList(
             "&7You do not have permission to use Party Settings.",
-            "&7&oPlease upgrade your rank at &c&o<store>&7")),
+            "&7&oPlease upgrade your core at &c&o<store>&7")),
     PARTY_HELP("PARTY.HELP_MESSAGE", Arrays.asList(
             "&c&m--------&7&m-------------------------------------&c&m--------",
             "&cParty Commands",
@@ -81,7 +81,7 @@ public enum Locale {
             " &8\u2022 &c/party info &8(&7&oDisplays your party information&8)",
             " &8\u2022 &c/party join &8<&7leader&8> &8(&7&oJoin a party&8)",
             " &8\u2022 &c/party chat &8(&7&oToggle party chat&8)",
-            " &8\u2022 &c/party events &8(&7&oOpen Party Events Menu&8)",
+            " &8\u2022 &c/party event &8(&7&oOpen Party Events Menu&8)",
             " &8\u2022 &c/party settings &8(&7&oOpen Party Settings Menu&8)",
             " &8\u2022 &c/party open &8(&7&oOpen your party for others to join&8)",
             " &8\u2022 &c/party close &8(&7&oClose your party for others to join&8)",
@@ -148,7 +148,7 @@ public enum Locale {
     ERROR_NOT_IN_QUEUE("ERROR.NOT_IN_QUEUE", "&cYou are not in a queue!"),
     ERROR_MATCHNOSPEC("ERROR.MATCH_NOSPEC", "&cThis match contains a player that is not allowing spectators currently."),
     ERROR_NO_PERM("ERROR.NO_PERMISSION", "&cYou don't have permission to use this!"),
-    ERROR_FREE("ERROR.FREE", "&cThat player is not in any match or any events."),
+    ERROR_FREE("ERROR.FREE", "&cThat player is not in any match or any event."),
     ERROR_NO_ARENAS("ERROR.NO_ARENAS", "&cThere are no available arenas!"),
     ERROR_NOTMATCH("ERROR.NOT_IN_MATCH", "&cYou are not in any match."),
     ERROR_NOTABLE("ERROR.NOT_ABLE", "&cYou can not do this right now."),
@@ -157,13 +157,13 @@ public enum Locale {
     ERROR_NO_PARTY_TO_DUEL("ERROR.NO_PARTY_TO_DUEL", "&cYou don't have a party to duel with."),
     ERROR_TARGET_NO_PARTY("ERROR.TARGET_NO_PARTY", "&cThe dueled player does not have a party!"),
     ERROR_PLAYERNOTFOUND("ERROR.PLAYER_NOT_FOUND", "&cThat player does not exist or is not currently online."),
-    ERROR_SETTING_NOPERM("ERROR.SETTINGS_NO_PERM", Arrays.asList("&7You don't have permission to use this setting", "&7&oyou can upgrade your rank at &c&ostore.refinedev.xyz&7&o.")),
+    ERROR_SETTING_NOPERM("ERROR.SETTINGS_NO_PERM", Arrays.asList("&7You don't have permission to use this setting", "&7&oyou can upgrade your core at &c&ostore.refinedev.xyz&7&o.")),
 
     SETTINGS_ENABLED("SETTINGS.ENABLED", "&7You enabled &c<setting_name>&7 for your profile!"),
     SETTINGS_DISABLED("SETTINGS.DISABLED", "&7You disabled &c<setting_name>&7 for your profile!"),
 
     RANKED_DISABLED("RANKED.DISABLED", "&7Ranked has been disabled by an Admin!"),
-    RANKED_REQUIRED("RANKED.REQUIRED", Arrays.asList("&7You need to win at least &c10 Unranked Matches &7 to queue Ranked!", "&7&oYou can bypass this limit by upgrading your rank at &c&ostore.refinedev.xyz")),
+    RANKED_REQUIRED("RANKED.REQUIRED", Arrays.asList("&7You need to win at least &c10 Unranked Matches &7 to queue Ranked!", "&7&oYou can bypass this limit by upgrading your core at &c&ostore.refinedev.xyz")),
 
     HCF_CLASS_ENABLED("HCF.CLASS_ENABLED", "&cClass: &f<class> &aenabled!"),
     HCF_COOLDOWN("HCF.COOLDOWN", "&7You cannot use this for another <duration>!"),
@@ -235,7 +235,7 @@ public enum Locale {
     EVENT_PLAYER_LEAVE("EVENTS.PLAYER_LEAVE", "&8[&c-&8] &7You have successfully left the &c<event_name> Event&8!"),
     EVENT_NOTABLE_JOIN("EVENTS.NOT_ABLE_TO_JOIN", "&7You are not currently able to join the event!"),
     EVENT_ON_GOING("EVENTS.ON_GOING", "&7There is already an active &cEvent&7!"),
-    EVENT_COOLDOWN_ACTIVE("EVENTS.COOLDOWN_ACTIVE", "&7There is an active cooldown for events. (Expires in: <expire_time>)!"),
+    EVENT_COOLDOWN_ACTIVE("EVENTS.COOLDOWN_ACTIVE", "&7There is an active cooldown for event. (Expires in: <expire_time>)!"),
     EVENT_NO_COOLDOWN("EVENTS.NO_COOLDOWN", "&7There is no currently active &cEvent cooldown."),
     EVENT_COOLDOW_RESET("EVENTS.COOLDOWN_RESET", "&7Successfully reset the &cEvent &7cooldown."),
     EVENT_ALREADY_STARTED("EVENTS.ALREADY_STARTED", "&7This event has already!"),
@@ -309,7 +309,7 @@ public enum Locale {
 
     KILL_EFFECT_SELECTED("KILL_EFFECT.SELECTED", "&7Successfully equipped &c<kill_effect> &7for your profile!"),
     KILL_EFFECT_ALREADY_SELECTED("KILL_EFFECT.ALREADY_SELECTED", "&7You have already selected that kill effect!"),
-    KILL_EFFECT_NO_PERM("KILL_EFFECT.NO_PERMISSION", "&7You don't have permission to use this kill effect!\n&7&oPlease upgrade your rank at &c<store>&7&o!"),
+    KILL_EFFECT_NO_PERM("KILL_EFFECT.NO_PERMISSION", "&7You don't have permission to use this kill effect!\n&7&oPlease upgrade your core at &c<store>&7&o!"),
 
     QUEUE_JOIN_UNRANKED("QUEUE.JOIN_UNRANKED", "&7You have been added to the &c<queue_name> &7queue."),
     QUEUE_JOIN_RANKED("QUEUE.JOIN_RANKED", "&7You have been added to the &c<queue_name> &7queue. &c[<queue_elo>]"),

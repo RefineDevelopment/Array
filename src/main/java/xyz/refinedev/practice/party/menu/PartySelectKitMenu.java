@@ -1,11 +1,9 @@
 package xyz.refinedev.practice.party.menu;
 
 import lombok.RequiredArgsConstructor;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
@@ -70,7 +68,7 @@ public class PartySelectKitMenu extends Menu {
             }
 
             if (profile.getParty().getTeamPlayers().size() <= 1) {
-                player.sendMessage(CC.RED + "You do not have enough players in your party to start a party events.");
+                player.sendMessage(CC.RED + "You do not have enough players in your party to start a party event.");
                 return;
             }
 

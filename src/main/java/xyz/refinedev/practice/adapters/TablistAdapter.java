@@ -6,13 +6,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.events.Event;
+import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.FFAMatch;
-import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.pvpclasses.PvPClass;
@@ -277,51 +276,6 @@ public class TablistAdapter implements TabAdapter {
 
                     entries.add(finalEntry);
                 }
-            } else if (profile.getMatch().isTheBridgeMatch()) {
-                for ( int i = 0; i < 20; i++ ) {
-                    String string = config.getString("MATCH.BRIDGE.LEFT." + (i + 1));
-
-                    if (string == null) continue;
-
-                    TabEntry rawEntry = new TabEntry(0, i, CC.translate(replaceBridgeMatch(player, string)));
-                    TabEntry entry = checkSkin(player, rawEntry);
-                    TabEntry finalEntry = checkDot(entry);
-
-                    entries.add(finalEntry);
-                }
-                for ( int i = 0; i < 20; i++ ) {
-                    String string = config.getString("MATCH.BRIDGE.MIDDLE." + (i + 1));
-
-                    if (string == null) continue;
-
-                    TabEntry rawEntry = new TabEntry(1, i, CC.translate(replaceBridgeMatch(player, string)));
-                    TabEntry entry = checkSkin(player, rawEntry);
-                    TabEntry finalEntry = checkDot(entry);
-
-                    entries.add(finalEntry);
-                }
-                for ( int i = 0; i < 20; i++ ) {
-                    String string = config.getString("MATCH.BRIDGE.RIGHT." + (i + 1));
-
-                    if (string == null) continue;
-
-                    TabEntry rawEntry = new TabEntry(2, i, CC.translate(replaceBridgeMatch(player, string)));
-                    TabEntry entry = checkSkin(player, rawEntry);
-                    TabEntry finalEntry = checkDot(entry);
-
-                    entries.add(finalEntry);
-                }
-                for ( int i = 0; i < 20; i++ ) {
-                    String string = config.getString("MATCH.BRIDGE.FAR-RIGHT." + (i + 1));
-
-                    if (string == null) continue;
-
-                    TabEntry rawEntry = new TabEntry(3, i, CC.translate(replaceBridgeMatch(player, string)));
-                    TabEntry entry = checkSkin(player, rawEntry);
-                    TabEntry finalEntry = checkDot(entry);
-
-                    entries.add(finalEntry);
-                }
             } else if (profile.getMatch().isFreeForAllMatch()) {
                 for ( int i = 0; i < 20; i++ ) {
                     String string = config.getString("MATCH.FFA.LEFT." + (i + 1));
@@ -557,28 +511,12 @@ public class TablistAdapter implements TabAdapter {
                 .replace("<opponent_team_count>", String.valueOf(opponent.getPlayers().size())).replace("%splitter%", "┃").replace("|", "┃");
     }
 
-    public String replaceBridgeMatch(Player player, String toReplace) {
-        Profile profile = Profile.getByPlayer(player);
-        SoloBridgeMatch match = (SoloBridgeMatch) profile.getMatch();
-        TeamPlayer teamPlayer = match.getTeamPlayer(player);
-        TeamPlayer opponentPlayer = match.getTeamPlayer(player);
-
-        if (teamPlayer == null || opponentPlayer == null) return toReplace;
-
-        int yourPoints = match.getTeamPlayerA().equals(teamPlayer) ? match.getPlayerARounds() : match.getPlayerBRounds();
-        int opponentPoints = match.getTeamPlayerA().equals(opponentPlayer) ? match.getPlayerARounds() : match.getPlayerBRounds();
-
-        toReplace = toReplace
-                .replace("<your_points>", String.valueOf(yourPoints))
-                .replace("<opponent_points>", String.valueOf(opponentPoints));
-
-        return replaceSoloMatch(player, toReplace);
-    }
-
     public String replaceTeamPlayer(Player player, String toReplace) {
         Profile profile = Profile.getByPlayer(player);
+
         Match match = profile.getMatch();
         if (match == null) return toReplace;
+
         TeamPlayer teamPlayer = match.getTeamPlayer(player);
         if (teamPlayer == null) return toReplace;
 

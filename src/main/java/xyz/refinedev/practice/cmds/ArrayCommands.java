@@ -127,15 +127,18 @@ public class ArrayCommands {
     @Command(name = "update", aliases = "save", desc = "Update and Save all data related to Array")
     @Require("array.listeners.admin")
     public void update(@Sender CommandSender player) {
+        for ( Profile profile : Profile.getProfiles().values() ) {
+            profile.save();
+            profile.load();
+        }
+
         TaskUtil.runAsync(() -> {
-            Profile.getProfiles().values().forEach(Profile::save);
-            Profile.getProfiles().values().forEach(Profile::load);
             Kit.getKits().forEach(Kit::save);
             Arena.getArenas().forEach(Arena::save);
-
-            plugin.getLeaderboardsManager().loadGlobalLeaderboards();
-            Kit.getKits().forEach(plugin.getLeaderboardsManager()::loadKitLeaderboards);
         });
+
+        plugin.getLeaderboardsManager().loadGlobalLeaderboards();
+        Kit.getKits().forEach(plugin.getLeaderboardsManager()::loadKitLeaderboards);
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7&oReloaded all Stats and Leaderboards!"));
     }
 

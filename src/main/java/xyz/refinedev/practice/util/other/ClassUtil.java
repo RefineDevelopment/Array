@@ -1,13 +1,16 @@
 package xyz.refinedev.practice.util.other;
 
 import com.google.common.collect.ImmutableSet;
+import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import org.bukkit.event.Listener;
 import xyz.refinedev.practice.Array;
 
 import java.io.IOException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
@@ -25,10 +28,20 @@ import java.util.jar.JarFile;
 @UtilityClass
 public class ClassUtil {
 
+    private final Array plugin = Array.getInstance();
+
+    @SneakyThrows
+    public void registerListeners(String packageName) {
+        for ( Class<?> clazz : getClassesInPackage(packageName) ) {
+            if (Arrays.stream(clazz.getInterfaces()).noneMatch(t -> t.equals(Listener.class))) continue;
+            plugin.getServer().getPluginManager().registerEvents((Listener) clazz.newInstance(), plugin);
+        }
+    }
+
     public Collection<Class<?>> getClassesInPackage(String packageName) {
         JarFile jarFile;
         Collection<Class<?>> classes = new ArrayList<>();
-        CodeSource codeSource = Array.getInstance().getClass().getProtectionDomain().getCodeSource();
+        CodeSource codeSource = plugin.getClass().getProtectionDomain().getCodeSource();
         URL resource = codeSource.getLocation();
 
         String relPath = packageName.replace('.', '/');

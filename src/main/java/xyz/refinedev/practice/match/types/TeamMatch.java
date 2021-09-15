@@ -1,7 +1,6 @@
 package xyz.refinedev.practice.match.types;
 
 import com.comphenix.protocol.events.PacketContainer;
-import com.mysql.jdbc.profiler.ProfilerEvent;
 import lombok.Getter;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.ChatColor;

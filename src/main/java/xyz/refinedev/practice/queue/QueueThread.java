@@ -10,15 +10,14 @@ import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.rank.RankAdapter;
-import xyz.refinedev.practice.profile.rank.RankType;
+import xyz.refinedev.practice.hook.core.CoreAdapter;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
 public class QueueThread extends Thread {
 
-    public RankAdapter rank = Array.getInstance().getRankManager().getRankType().getRankAdapter();
+    public CoreAdapter rank = Array.getInstance().getRankManager().getCoreType().getCoreAdapter();
 
     private Arena arena;
     private Kit kit;

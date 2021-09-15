@@ -43,9 +43,9 @@ public class Kit {
 
     private static final Array plugin = Array.getInstance();
 
-    private final List<LeaderboardsAdapter> eloLeaderboards = new ArrayList<>();
-    private final List<LeaderboardsAdapter> winLeaderboards = new ArrayList<>();
     private final List<ItemStack> editorItems = new ArrayList<>();
+    private List<LeaderboardsAdapter> eloLeaderboards = new ArrayList<>();
+    private List<LeaderboardsAdapter> winLeaderboards = new ArrayList<>();
 
     private final KitGameRules gameRules = new KitGameRules();
     private KitInventory kitInventory = new KitInventory();

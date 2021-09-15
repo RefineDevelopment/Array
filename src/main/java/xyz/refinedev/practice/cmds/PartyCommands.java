@@ -113,7 +113,7 @@ public class PartyCommands {
         new PartySettingsMenu().openMenu(player);
     }
 
-    @Command(name = "event", aliases = "events", desc = "Open Party Events Menu")
+    @Command(name = "event", aliases = "event", desc = "Open Party Events Menu")
     public void partyEvents(@Sender Player player) {
         Profile profile = Profile.getByUuid(player.getUniqueId());
         if (profile.getParty() == null) {

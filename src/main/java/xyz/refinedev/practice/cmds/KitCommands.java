@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.statistics.StatisticsData;
 import xyz.refinedev.practice.queue.Queue;

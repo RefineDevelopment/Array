@@ -3,7 +3,6 @@ package xyz.refinedev.practice.listeners;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,8 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.events.profile.SpawnTeleportEvent;
-import xyz.refinedev.practice.events.Event;
-import xyz.refinedev.practice.match.MatchState;
+import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.other.PlayerUtil;
@@ -168,6 +166,7 @@ public class ProfileListener implements Listener {
         if (profile.isInLobby() || profile.isInQueue()) {
             event.setCancelled(true);
         }
+
         if (profile.isInEvent()) {
             Event profileEvent = profile.getEvent();
             if (profileEvent.isBracketsSolo() || profileEvent.isBracketsTeam() || profileEvent.isLMS()) return;
@@ -216,8 +215,14 @@ public class ProfileListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         event.setQuitMessage(null);
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByPlayer(player);
 
-        Profile profile = Profile.getByPlayer(event.getPlayer());
+        if (profile.isInEvent()) {
+            Event profileEvent = profile.getEvent();
+            profileEvent.handleLeave(player);
+        }
+
         TaskUtil.runAsync(profile::handleLeave);
     }
 
@@ -247,7 +252,7 @@ public class ProfileListener implements Listener {
      * @param event {@link ProjectileLaunchEvent}
      */
     @EventHandler (priority = EventPriority.LOW)
-    public void onPearlThrow(final ProjectileLaunchEvent event) {
+    public void onPearlThrow(ProjectileLaunchEvent event) {
         final ProjectileSource source = event.getEntity().getShooter();
         if (source instanceof Player) {
             final Player shooter = (Player) source;
@@ -268,7 +273,7 @@ public class ProfileListener implements Listener {
      * @param event {@link PotionSplashEvent}
      */
     @EventHandler (priority = EventPriority.LOW)
-    public void onPotionThrow(final PotionSplashEvent event) {
+    public void onPotionThrow(PotionSplashEvent event) {
         ProjectileSource source = event.getPotion().getShooter();
             if (source instanceof Player) {
                 final Player shooter=(Player) source;

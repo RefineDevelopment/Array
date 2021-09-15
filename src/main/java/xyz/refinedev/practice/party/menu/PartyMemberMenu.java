@@ -12,7 +12,6 @@ import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
 
-import java.beans.ConstructorProperties;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

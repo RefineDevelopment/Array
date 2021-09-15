@@ -15,9 +15,7 @@ import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
-import xyz.refinedev.practice.util.other.TaskUtil;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;

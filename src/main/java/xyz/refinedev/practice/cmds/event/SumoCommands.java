@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.events.EventManager;
+import xyz.refinedev.practice.event.EventManager;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Require;
@@ -23,7 +23,6 @@ public class SumoCommands {
 
     private final static Array plugin = Array.getInstance();
     private final EventManager manager = plugin.getEventManager();
-
 
     @Command(name = "", aliases = "help", desc = "View Sumo Commands")
     @Require("array.event.admin")

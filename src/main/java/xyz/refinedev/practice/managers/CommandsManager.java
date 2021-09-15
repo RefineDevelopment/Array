@@ -13,11 +13,12 @@ import xyz.refinedev.practice.clan.meta.ClanProfile;
 import xyz.refinedev.practice.cmds.*;
 import xyz.refinedev.practice.cmds.essentials.*;
 import xyz.refinedev.practice.cmds.event.EventCommands;
+import xyz.refinedev.practice.cmds.event.SpleefCommands;
 import xyz.refinedev.practice.cmds.event.SumoCommands;
 import xyz.refinedev.practice.cmds.settings.*;
 import xyz.refinedev.practice.cmds.standalone.*;
-import xyz.refinedev.practice.events.EventProvider;
-import xyz.refinedev.practice.events.EventType;
+import xyz.refinedev.practice.event.EventProvider;
+import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitProvider;
 import xyz.refinedev.practice.profile.Profile;
@@ -55,8 +56,9 @@ public class CommandsManager {
         drink.register(new PartyCommands(), "party", "p");
         drink.register(new TournamentCommands(), "tournament", "tourney");
         drink.register(new ClanCommands(), "clan", "c");
-        drink.register(new EventCommands(), "event", "events");
+        drink.register(new EventCommands(), "event", "event");
         drink.register(new SumoCommands(), "sumo");
+        drink.register(new SpleefCommands(), "spleef");
         drink.register(new KillEffectCommands(), "killeffect", "killeffects", "ke");
 
         //These are standalone cmds which cannot have sub cmds
@@ -90,8 +92,8 @@ public class CommandsManager {
         drink.register(new ToggleTournamentMessagesCMD(), "ttm", "toggletm", "toggletourneymessages", "toggletournamentmessages");
         drink.register(new TogglePlayersCMD(), "tpv", "toggleplayers", "toggleps", "togglevisibility", "togglehider");
         drink.register(new ToggleDropProtectCMD(), "tdp", "toggledropprotect", "toggledropp", "toggledprotect", "toggledp");
-        drink.register(new TogglePingScoreboardCMD(), "tpsb", "togglepingsb", "togglepingscoreboard");
-        drink.register(new ToggleCPSScoreboardCMD(), "tcpssb", "togglecpssb", "togglecps", "togglecpsscoreboard");
+        if (plugin.getConfigHandler().isPING_SCOREBOARD_SETTING()) drink.register(new TogglePingScoreboardCMD(), "tpsb", "togglepingsb", "togglepingscoreboard");
+        if (plugin.getConfigHandler().isCPS_SCOREBOARD_SETTING()) drink.register(new ToggleCPSScoreboardCMD(), "tcpssb", "togglecpssb", "togglecps", "togglecpsscoreboard");
 
         drink.registerCommands();
     }

@@ -123,10 +123,10 @@ public class MainMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
-            lore.add("&7Join/Host events here");
+            lore.add("&7Join/Host event here");
             lore.add("&7You need donator perms to host");
             lore.add("");
-            lore.add("&cClick to view events menu.");
+            lore.add("&cClick to view event menu.");
             return new ItemBuilder(Material.ENDER_PEARL)
                     .name("&c&lView Events")
                     .lore(lore)

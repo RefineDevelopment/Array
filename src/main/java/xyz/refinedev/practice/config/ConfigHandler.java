@@ -1,11 +1,11 @@
 package xyz.refinedev.practice.config;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.profile.rank.TablistRank;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.inventory.InventoryUtil;
 import xyz.refinedev.practice.util.location.LocationUtil;
@@ -13,11 +13,9 @@ import xyz.refinedev.practice.util.menu.MenuUpdateTask;
 import xyz.refinedev.practice.util.other.Description;
 import xyz.refinedev.practice.util.other.PiracyMeta;
 import xyz.refinedev.practice.util.other.TaskUtil;
-import xyz.refinedev.practice.profile.rank.TablistRank;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -53,7 +51,8 @@ public class ConfigHandler {
     private Sound MATCH_COUNTDOWN_SOUND, MATCH_START_SOUND;
 
     private boolean HCF_ENABLED, TAB_ENABLED, CORE_HOOK_ENABLED, JOIN_MESSAGE_ENABLED, DISCLAIMER_ENABLED, REMOVED_BOTTLES, NAMETAGS_ENABLED,
-                    RANKED_ENABLED, RATINGS_ENABLED, REQUIRE_KILLS, UPDATE_NOTIFICATION, LIMIT_PING, BRIDGE_CLEAR_BLOCKS, OUTDATED = false;
+                    RANKED_ENABLED, RATINGS_ENABLED, REQUIRE_KILLS, UPDATE_NOTIFICATION, LIMIT_PING, BRIDGE_CLEAR_BLOCKS, OUTDATED = false,
+                    PING_SCOREBOARD_SETTING, CPS_SCOREBOARD_SETTING;
 
     private int PING_LIMIT, REQUIRED_KILLS, FFA_SPAWN_RADIUS, ENDERPEARL_COOLDOWN,
                 BOW_COOLDOWN, TELEPORT_DELAY, MATCH_SPAWN_YLEVEL, MATCH_COUNTDOWN_TIMER;
@@ -85,8 +84,10 @@ public class ConfigHandler {
         RANKED_ENABLED = config.getBoolean(key + "ARENA_RATING");
         FFA_SPAWN_RADIUS = config.getInteger(key + "FFA_CIRCLE_RADIUS");
         TELEPORT_DELAY = config.getInteger(key + "TELEPORT_DELAY");
-        DISCLAIMER_ENABLED = config.getBoolean(key + "DISCLAIMER_MESSAGE_ENABLED");
         REMOVED_BOTTLES = config.getBoolean(key + "REMOVE_BOTTLES");
+        DISCLAIMER_ENABLED = config.getBoolean(key + "DISCLAIMER_MESSAGE_ENABLED");
+        PING_SCOREBOARD_SETTING = config.getBoolean(key + "PING_SCOREBOARD_SETTING");
+        CPS_SCOREBOARD_SETTING = config.getBoolean(key + "CPS_SCOREBOARD_SETTING");
 
         JOIN_MESSAGE_ENABLED = config.getBoolean("JOIN_MESSAGE.ENABLED");
         JOIN_MESSAGE.addAll(config.getStringList("JOIN_MESSAGE.MESSAGE"));
@@ -130,12 +131,13 @@ public class ConfigHandler {
             world.setDifficulty(Difficulty.HARD);
         }
 
-        TaskUtil.runTimerAsync(new MenuUpdateTask(), 30L, 10 * 20L);
+        TaskUtil.runTimerAsync(new MenuUpdateTask(), 15 * 20L, 15 * 20L);
     }
 
     public void loadTablistRanks() {
         this.tablistRanks = new ArrayList<>();
         BasicConfigurationFile config = plugin.getTablistConfig();
+
         ConfigurationSection configSection = config.getConfigurationSection("TABLIST.SORT_RANKS");
         if (configSection == null || configSection.getKeys(false).isEmpty()) return;
 

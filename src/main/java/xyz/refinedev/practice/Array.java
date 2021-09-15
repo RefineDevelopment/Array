@@ -12,11 +12,10 @@ import xyz.refinedev.practice.adapters.TablistAdapter;
 import xyz.refinedev.practice.api.API;
 import xyz.refinedev.practice.api.ArrayAPI;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.config.ConfigHandler;
-import xyz.refinedev.practice.events.EventManager;
+import xyz.refinedev.practice.event.EventManager;
 import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.leaderboards.external.LeaderboardPlaceholders;
+import xyz.refinedev.practice.hook.placeholderapi.LeaderboardPlaceholders;
 import xyz.refinedev.practice.managers.*;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.party.Party;
@@ -28,6 +27,7 @@ import xyz.refinedev.practice.util.command.CommandService;
 import xyz.refinedev.practice.util.command.Drink;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.nametags.NameTagHandler;
+import xyz.refinedev.practice.util.other.ClassUtil;
 import xyz.refinedev.practice.util.other.Description;
 import xyz.refinedev.practice.util.other.EntityHider;
 import xyz.refinedev.practice.util.scoreboard.AssembleStyle;
@@ -83,7 +83,6 @@ public class Array extends JavaPlugin {
     private RatingsManager ratingsManager;
     private CommandsManager commandsManager;
     private PvPClassManager pvpClassManager;
-    private ListenersManager listenersManager;
     private KnockbackManager knockbackManager;
     private DivisionsManager divisionsManager;
     private KillEffectManager killEffectManager;
@@ -100,15 +99,15 @@ public class Array extends JavaPlugin {
     public void onLoad() {
         instance = this;
 
+        rateConfig = new BasicConfigurationFile(this, "ratings", false);
         mainConfig = new BasicConfigurationFile(this, "config", false);
         arenasConfig = new BasicConfigurationFile(this, "arenas", false);
         kitsConfig = new BasicConfigurationFile(this, "kits", false);
-        eventsConfig = new BasicConfigurationFile(this, "events", false);
+        eventsConfig = new BasicConfigurationFile(this, "event", false);
         hotbarConfig = new BasicConfigurationFile(this, "hotbar", false);
         messagesConfig = new BasicConfigurationFile(this, "lang", false);
         tablistConfig = new BasicConfigurationFile(this, "tablist", false);
         scoreboardConfig = new BasicConfigurationFile(this, "scoreboard", false);
-        rateConfig = new BasicConfigurationFile(this, "ratings", false);
         killEffectsConfig = new BasicConfigurationFile(this, "killeffects", false);
     }
 
@@ -180,9 +179,6 @@ public class Array extends JavaPlugin {
         this.commandsManager= new CommandsManager(this, drink);
         this.commandsManager.init();
 
-        this.listenersManager = new ListenersManager(this);
-        this.listenersManager.init();
-
         this.pvpClassManager= new PvPClassManager(this);
         this.pvpClassManager.init();
 
@@ -193,6 +189,8 @@ public class Array extends JavaPlugin {
         this.entityHider.init();
 
         this.initExpansions();
+
+        ClassUtil.registerListeners("xyz.refinedev.practice.listeners");
     }
 
     @Override
@@ -238,8 +236,6 @@ public class Array extends JavaPlugin {
             LeaderboardPlaceholders placeholders = new LeaderboardPlaceholders();
             this.logger("&7Found PlaceholderAPI, Registering Expansions....");
             placeholders.register();
-        } else {
-            this.logger("&cPlaceholderAPI was NOT found, Holograms will NOT work!");
         }
 
         if (this.getServer().getPluginManager().isPluginEnabled("LunarClient-API")) {
@@ -252,7 +248,7 @@ public class Array extends JavaPlugin {
     /**
      * Runs the given runnable asynchronously
      * This method is usually used in mongo and
-     * other non-spigot related tasks
+     * other non-bukkit related tasks
      *
      * @param runnable {@link Runnable} the runnable
      */

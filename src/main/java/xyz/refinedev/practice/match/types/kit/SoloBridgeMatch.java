@@ -81,7 +81,7 @@ public class SoloBridgeMatch extends SoloMatch {
     public void onStart() {
         this.round++;
 
-        this.getPlayers().forEach(player -> Locale.MATCH_BRIDGE_SCORED.toList().stream().map(line -> line.replace("<round_number>", String.valueOf(this.getRound()))
+        this.getPlayers().forEach(player -> Locale.MATCH_ROUND_MESSAGE.toList().stream().map(line -> line.replace("<round_number>", String.valueOf(this.getRound()))
                 .replace("<your_points>", String.valueOf(this.getTeamPlayerA().equals(this.getTeamPlayer(player)) ? this.getPlayerARounds() : this.getPlayerBRounds()))
                 .replace("<their_points>", String.valueOf(this.getTeamPlayerB().equals(this.getTeamPlayer(player)) ? this.getPlayerBRounds() : this.getPlayerARounds()))
                 .replace("<arena>", this.getArena().getName())
@@ -115,11 +115,12 @@ public class SoloBridgeMatch extends SoloMatch {
             PlayerUtil.reset(deadPlayer);
             this.end();
         }
-        this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> {
-            if (deadPlayer.isOnline() && deadPlayer.isDead()) {
-                ((CraftPlayer)deadPlayer).getHandle().playerConnection.a(new PacketPlayInClientCommand(PacketPlayInClientCommand.EnumClientCommand.PERFORM_RESPAWN));
-            }
-        });
+
+        if (deadPlayer.isOnline() && deadPlayer.isDead()) {
+            this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> {
+                ((CraftPlayer) deadPlayer).getHandle().playerConnection.a(new PacketPlayInClientCommand(PacketPlayInClientCommand.EnumClientCommand.PERFORM_RESPAWN));
+            });
+        }
     }
 
     @Override
@@ -184,21 +185,24 @@ public class SoloBridgeMatch extends SoloMatch {
         if (teamPlayer == null) return;
         if (!isFighting()) return;
 
-        if (!LocationUtils.isTeamPortal(player)) {
-            if (getTeamPlayerA().equals(teamPlayer)) {
-                this.playerARounds += 1;
-            } else {
-                playerBRounds += 1;
-            }
-            if (this.canEnd()) {
-                this.end();
-                return;
-            }
-            this.start();
-        } else {
+        if (LocationUtils.isTeamPortal(player)) {
             player.sendMessage(Locale.MATCH_BRIDGE_WRONG_PORTAL.toString());
             player.teleport(teamPlayer.getPlayerSpawn());
+            return;
         }
+
+        if (getTeamPlayerA().equals(teamPlayer)) {
+            this.playerARounds += 1;
+        } else {
+            this.playerBRounds += 1;
+        }
+
+        if (this.canEnd()) {
+            this.end();
+            return;
+        }
+
+        TaskUtil.run(this::start);
     }
 
     /**

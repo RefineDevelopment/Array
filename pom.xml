@@ -106,11 +106,21 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--Tablist Handler-->
         <dependency>
             <groupId>xyz.refinedev.tablist</groupId>
             <artifactId>TablistAPI</artifactId>
             <version>1.4</version>
             <scope>compile</scope>
+        </dependency>
+
+        <!--Hologram Handler-->
+        <dependency>
+            <groupId>com.gmail.filoghost</groupId>
+            <artifactId>HolographicDisplays</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/api/HolographicDisplays.jar</systemPath>
         </dependency>
 
         <!--LunarAPI Support-->
@@ -153,6 +163,22 @@
             <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/core/MizuAPI.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>xyz.phoenix.dev</groupId>
+            <artifactId>PhoenixCore-API</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/core/Phoenix-API-1.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>club.vaxel.core</groupId>
+            <artifactId>Synth-API</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/core/Synth.jar</systemPath>
         </dependency>
 
         <dependency>

@@ -27,35 +27,22 @@ public class MatchStartTask extends BukkitRunnable {
         }
 
         final String replace = Locale.MATCH_COUNTDOWN.toString().replace("<seconds>", String.valueOf((seconds)));
-        if (match.getKit().getGameRules().isSumo() || match.getKit().getGameRules().isParkour()) {
-            if (seconds == 0) {
-                match.getPlayers().forEach(PlayerUtil::allowMovement);
-                match.setState(MatchState.FIGHTING);
-                match.setStartTimestamp(System.currentTimeMillis());
-                match.broadcastMessage(Locale.MATCH_ROUND.toString());
-                match.getPlayers().forEach(TitleAPI::clearTitle);
-                match.getPlayers().forEach(TitleAPI::sendMatchStart);
-                match.broadcastSound(Sound.NOTE_BASS);
-                cancel();
-                return;
+        if (seconds == 0) {
+            match.getPlayers().forEach(PlayerUtil::allowMovement);
+            match.setState(MatchState.FIGHTING);
+            match.setStartTimestamp(System.currentTimeMillis());
+            match.broadcastMessage(Locale.MATCH_STARTED.toString());
+            if (plugin.getConfigHandler().isDISCLAIMER_ENABLED()) {
+                match.broadcastMessage("");
+                Locale.MATCH_DISCLAIMER.toList().forEach(match::broadcastMessage);
             }
-        } else {
-            if (seconds == 0) {
-                match.getPlayers().forEach(PlayerUtil::allowMovement);
-                match.setState(MatchState.FIGHTING);
-                match.setStartTimestamp(System.currentTimeMillis());
-                match.broadcastMessage(Locale.MATCH_STARTED.toString());
-                if (plugin.getConfigHandler().isDISCLAIMER_ENABLED()) {
-                    match.broadcastMessage("");
-                    Locale.MATCH_DISCLAIMER.toList().forEach(match::broadcastMessage);
-                }
-                match.getPlayers().forEach(TitleAPI::clearTitle);
-                match.getPlayers().forEach(TitleAPI::sendMatchStart);
-                match.broadcastSound(Sound.NOTE_BASS);
-                cancel();
-                return;
-            }
+            match.getPlayers().forEach(TitleAPI::clearTitle);
+            match.getPlayers().forEach(TitleAPI::sendMatchStart);
+            match.broadcastSound(Sound.NOTE_BASS);
+            cancel();
+            return;
         }
+
         match.getPlayers().forEach(TitleAPI::clearTitle);
         match.getPlayers().forEach(TitleAPI::sendMatchCountdown);
         match.broadcastMessage(replace);

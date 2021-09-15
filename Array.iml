@@ -30,6 +30,15 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.bytebuddy:byte-buddy:1.10.16" level="project" />
     <orderEntry type="library" name="Maven: xyz.refinedev.tablist:TablistAPI:1.4" level="project" />
     <orderEntry type="module-library">
+      <library name="Maven: com.gmail.filoghost:HolographicDisplays:1.0-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/api/HolographicDisplays.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
       <library name="Maven: com.moonsworth:LunarClient-API:LATEST">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/api/LunarAPI.jar!/" />
@@ -69,6 +78,24 @@
       <library name="Maven: com.broustudio:Mizu-API:1.0-SNAPSHOT">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/core/MizuAPI.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: xyz.phoenix.dev:PhoenixCore-API:1.0-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/core/Phoenix-API-1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: club.vaxel.core:Synth-API:1.0-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/core/Synth.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

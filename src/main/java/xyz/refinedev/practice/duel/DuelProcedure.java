@@ -7,15 +7,14 @@ import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.rank.RankAdapter;
-import xyz.refinedev.practice.profile.rank.RankType;
+import xyz.refinedev.practice.hook.core.CoreAdapter;
 import xyz.refinedev.practice.util.chat.Clickable;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 
 @Data
 public class DuelProcedure {
 
-    public static RankAdapter rank = Array.getInstance().getRankManager().getRankType().getRankAdapter();
+    public static CoreAdapter rank = Array.getInstance().getRankManager().getCoreType().getCoreAdapter();
 
     private final Player sender;
     private final Player target;

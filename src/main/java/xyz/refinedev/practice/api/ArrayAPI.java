@@ -53,7 +53,7 @@ public class ArrayAPI implements API {
 
     @Override
     public String getDisplayName(Player player) {
-        return Array.getInstance().getRankManager().getRankType().getRankAdapter().getFullName(player);
+        return Array.getInstance().getRankManager().getCoreType().getCoreAdapter().getFullName(player);
     }
 
     @Override

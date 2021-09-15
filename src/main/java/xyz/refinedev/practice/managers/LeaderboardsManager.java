@@ -2,12 +2,10 @@ package xyz.refinedev.practice.managers;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Sorts;
-
 import lombok.Getter;
-
 import org.bson.Document;
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.events.leaderboards.GlobalLeaderboardsUpdateEvent;
 import xyz.refinedev.practice.api.events.leaderboards.KitLeaderboardsUpdateEvent;
@@ -37,8 +35,8 @@ public class LeaderboardsManager {
     private final Array plugin;
     private final MongoCollection<Document> profiles, clans;
 
-    private final List<LeaderboardsAdapter> globalLeaderboards = new LinkedList<>();
-    private final List<LeaderboardsAdapter> clanLeaderboards = new LinkedList<>();
+    private final List<LeaderboardsAdapter> globalLeaderboards = new ArrayList<>();
+    private final List<LeaderboardsAdapter> clanLeaderboards = new ArrayList<>();
 
     private BukkitRunnable globalTask, kitTask, clanTask;
 
@@ -60,9 +58,9 @@ public class LeaderboardsManager {
         clanTask = new ClanLeaderboardsTask(plugin);
 
         //Run the task async every 3 minute
-        globalTask.runTaskTimerAsynchronously(plugin, 180 * 20L, 180 * 20L);
-        kitTask.runTaskTimerAsynchronously(plugin, 180 * 20L, 180 * 20L);
-        clanTask.runTaskTimerAsynchronously(plugin, 180 * 20L, 180 * 20L);
+        globalTask.runTaskTimer(plugin, 180 * 20L, 180 * 20L);
+        kitTask.runTaskTimer(plugin, 180 * 20L, 180 * 20L);
+        clanTask.runTaskTimer(plugin, 180 * 20L, 180 * 20L);
     }
 
     /**
@@ -71,24 +69,24 @@ public class LeaderboardsManager {
      */
     public void loadGlobalLeaderboards() {
         GlobalLeaderboardsUpdateEvent event = new GlobalLeaderboardsUpdateEvent();
-        event.call();
+        Bukkit.getPluginManager().callEvent(event);
 
-        //Clear our previous leaderboards
+        if (event.isCancelled()) return;
         if (!this.globalLeaderboards.isEmpty()) this.globalLeaderboards.clear();
 
-        List<Document> top10 = profiles.find().sort(Sorts.descending("globalElo")).limit(10).into(new ArrayList<>());
-        for ( Document document : top10 ) {
-            LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
-            leaderboardsAdapter.setName(document.getString("name"));
-            leaderboardsAdapter.setUuid(UUID.fromString(document.getString("_id")));
-            leaderboardsAdapter.setElo(document.getInteger("globalElo"));
+        plugin.submitToThread(() -> {
+            List<Document> leaderboard = profiles.find().sort(Sorts.descending("globalElo")).limit(10).into(new ArrayList<>());
+            for ( Document document : leaderboard ) {
+                LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
+                leaderboardsAdapter.setName(document.getString("name"));
+                leaderboardsAdapter.setUuid(UUID.fromString(document.getString("_id")));
+                leaderboardsAdapter.setElo(document.getInteger("globalElo"));
 
-            //Sometimes the leaderboard entries are duplicated, this is what I am checking here
-            if (!this.globalLeaderboards.isEmpty()) {
-                this.globalLeaderboards.removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
+                synchronized (this.globalLeaderboards) {
+                    this.globalLeaderboards.add(leaderboardsAdapter);
+                }
             }
-            this.globalLeaderboards.add(leaderboardsAdapter);
-        }
+        });
     }
 
     /**
@@ -97,52 +95,50 @@ public class LeaderboardsManager {
      */
     public void loadKitLeaderboards(Kit kit) {
         KitLeaderboardsUpdateEvent event = new KitLeaderboardsUpdateEvent();
-        event.call();
+        Bukkit.getPluginManager().callEvent(event);
 
-        List<LeaderboardsAdapter> eloLB = kit.getEloLeaderboards();
-        List<LeaderboardsAdapter> winLB = kit.getWinLeaderboards();
+        if (event.isCancelled()) return;
 
         //Clear out the previous leaderboards
-        if (!eloLB.isEmpty()) eloLB.clear();
-        if (!winLB.isEmpty()) winLB.clear();
+        if (!kit.getEloLeaderboards().isEmpty()) kit.getEloLeaderboards().clear();
+        if (!kit.getWinLeaderboards().isEmpty()) kit.getWinLeaderboards().clear();
 
-        List<Document> elo = this.profiles.find().sort(Sorts.descending("kitStatistics." + kit.getName() + ".elo")).limit(10).into(new ArrayList<>());
-        for (Document document : elo) {
-            Document kitStatistics = (Document) document.get("kitStatistics");
-            if (kitStatistics.containsKey(kit.getName())) {
-                Document kitDocument = (Document) kitStatistics.get(kit.getName());
+        plugin.submitToThread(() -> {
+            List<Document> elo = this.profiles.find().sort(Sorts.descending("kitStatistics." + kit.getName() + ".elo")).limit(10).into(new ArrayList<>());
+            List<Document> won = this.profiles.find().sort(Sorts.descending("kitStatistics." + kit.getName() + ".won")).limit(10).into(new ArrayList<>());
 
-                LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
-                leaderboardsAdapter.setName(document.getString("name"));
-                leaderboardsAdapter.setUuid(UUID.fromString(document.getString("_id")));
-                leaderboardsAdapter.setElo(kitDocument.getInteger("elo"));
+            for ( Document document : elo ) {
+                Document kitStatistics = (Document) document.get("kitStatistics");
+                if (kitStatistics.containsKey(kit.getName())) {
+                    Document kitDocument = (Document) kitStatistics.get(kit.getName());
 
-                //Sometimes the leaderboard entries are duplicated, this is what I am checking here
-                if (!eloLB.isEmpty()) {
-                    eloLB.removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
+                    LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
+                    leaderboardsAdapter.setName(document.getString("name"));
+                    leaderboardsAdapter.setUuid(UUID.fromString(document.getString("_id")));
+                    leaderboardsAdapter.setElo(kitDocument.getInteger("elo"));
+
+                    synchronized (kit.getEloLeaderboards()) {
+                        kit.getEloLeaderboards().add(leaderboardsAdapter);
+                    }
                 }
-                eloLB.add(leaderboardsAdapter);
             }
-        }
 
-        List<Document> won = this.profiles.find().sort(Sorts.descending("kitStatistics." + kit.getName() + ".won")).limit(10).into(new ArrayList<>());
-        for (Document document : won) {
-            Document kitStatistics = (Document) document.get("kitStatistics");
-            if (kitStatistics.containsKey(kit.getName())) {
-                Document kitDocument = (Document) kitStatistics.get(kit.getName());
+            for ( Document document : won ) {
+                Document kitStatistics = (Document) document.get("kitStatistics");
+                if (kitStatistics.containsKey(kit.getName())) {
+                    Document kitDocument = (Document) kitStatistics.get(kit.getName());
 
-                LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
-                leaderboardsAdapter.setName(document.getString("name"));
-                leaderboardsAdapter.setUuid(UUID.fromString(document.getString("_id")));
-                leaderboardsAdapter.setElo(kitDocument.getInteger("won"));
+                    LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
+                    leaderboardsAdapter.setName(document.getString("name"));
+                    leaderboardsAdapter.setUuid(UUID.fromString(document.getString("_id")));
+                    leaderboardsAdapter.setElo(kitDocument.getInteger("won"));
 
-                //Sometimes the leaderboard entries are duplicated, this is what I am checking here
-                if (!winLB.isEmpty()) {
-                    winLB.removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
+                    synchronized (kit.getWinLeaderboards()) {
+                        kit.getWinLeaderboards().add(leaderboardsAdapter);
+                    }
                 }
-                winLB.add(leaderboardsAdapter);
             }
-        }
+        });
     }
 
     /**
@@ -150,21 +146,19 @@ public class LeaderboardsManager {
      * directly from mongo, this runs every 3 minutes
      */
     public void loadClanLeaderboards() {
-        List<Document> top10 = clans.find().sort(Sorts.descending("elo")).limit(10).into(new ArrayList<>());
+        plugin.submitToThread(() -> {
+            List<Document> leaderboard = clans.find().sort(Sorts.descending("elo")).limit(10).into(new ArrayList<>());
+            for ( Document document : leaderboard ) {
+                LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
+                leaderboardsAdapter.setName(document.getString("name"));
+                leaderboardsAdapter.setUuid(UUID.fromString(document.getString("_id")));
+                leaderboardsAdapter.setElo(document.getInteger("elo"));
 
-        for ( Document document : top10 ) {
-            LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
-            leaderboardsAdapter.setName(document.getString("name"));
-            leaderboardsAdapter.setUuid(UUID.fromString(document.getString("_id")));
-            leaderboardsAdapter.setElo(document.getInteger("elo"));
-
-            //Sometimes the leaderboard entries are duplicated, this is what I am checking here
-            if (!clanLeaderboards.isEmpty()) {
-                clanLeaderboards.removeIf(adapter -> adapter.getName().equalsIgnoreCase(leaderboardsAdapter.getName()));
+                synchronized (clanLeaderboards) {
+                    clanLeaderboards.add(leaderboardsAdapter);
+                }
             }
-
-            clanLeaderboards.add(leaderboardsAdapter);
-        }
+        });
     }
 
 }

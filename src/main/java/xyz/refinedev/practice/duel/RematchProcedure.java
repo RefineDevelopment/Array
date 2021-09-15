@@ -3,7 +3,6 @@ package xyz.refinedev.practice.duel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
@@ -12,7 +11,7 @@ import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.rank.RankAdapter;
+import xyz.refinedev.practice.hook.core.CoreAdapter;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.Clickable;
@@ -27,7 +26,7 @@ public class RematchProcedure {
 
     private final long timestamp = System.currentTimeMillis();
     private final Array plugin = Array.getInstance();
-    private final RankAdapter rank = plugin.getRankManager().getRankType().getRankAdapter();
+    private final CoreAdapter rank = plugin.getRankManager().getCoreType().getCoreAdapter();
 
     private final UUID key;
     private final UUID sender;

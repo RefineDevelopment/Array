@@ -15,7 +15,7 @@ import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.HCFMatch;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.rank.RankAdapter;
+import xyz.refinedev.practice.hook.core.CoreAdapter;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
@@ -35,7 +35,7 @@ import xyz.refinedev.practice.util.other.TaskUtil;
 public class DuelCommands {
 
     private final Array plugin = Array.getInstance();
-    private final RankAdapter rankAdapter = plugin.getRankManager().getRankType().getRankAdapter();
+    private final CoreAdapter coreAdapter= plugin.getRankManager().getCoreType().getCoreAdapter();
 
     private Match match;
     private Arena arena;
@@ -183,7 +183,7 @@ public class DuelCommands {
         } else {
             match = kit.createSoloKitMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena, QueueType.UNRANKED);
             for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList() ) {
-                String opponentMessages = this.formatMessages(target, player, string, rankAdapter.getFullName(player), rankAdapter.getFullName(target), senderProfile.getStatisticsData().get(request.getKit()).getElo(), receiverProfile.getStatisticsData().get(request.getKit()).getElo(), QueueType.UNRANKED);
+                String opponentMessages = this.formatMessages(target, player, string, coreAdapter.getFullName(player), coreAdapter.getFullName(target), senderProfile.getStatisticsData().get(request.getKit()).getElo(), receiverProfile.getStatisticsData().get(request.getKit()).getElo(), QueueType.UNRANKED);
                 player.sendMessage(replaceOpponent(opponentMessages, player));
                 target.sendMessage(replaceOpponent(opponentMessages, target));
             }

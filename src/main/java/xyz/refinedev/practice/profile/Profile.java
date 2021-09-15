@@ -27,9 +27,9 @@ import xyz.refinedev.practice.clan.meta.ClanProfile;
 import xyz.refinedev.practice.duel.DuelProcedure;
 import xyz.refinedev.practice.duel.DuelRequest;
 import xyz.refinedev.practice.duel.RematchProcedure;
-import xyz.refinedev.practice.events.Event;
-import xyz.refinedev.practice.events.meta.player.EventPlayer;
-import xyz.refinedev.practice.events.meta.player.EventPlayerState;
+import xyz.refinedev.practice.event.Event;
+import xyz.refinedev.practice.event.meta.player.EventPlayer;
+import xyz.refinedev.practice.event.meta.player.EventPlayerState;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.kit.kiteditor.KitEditor;
@@ -124,6 +124,7 @@ public class Profile {
         for (Kit kit : Kit.getKits()) {
             this.statisticsData.put(kit, new StatisticsData());
         }
+
         this.calculateGlobalElo();
         this.calculateTabRank();
     }
@@ -182,20 +183,25 @@ public class Profile {
     }
 
     /**
-     * Get a profile's rank color from the Core Hook
+     * Get a profile's core color from the Core Hook
      * in ChatColor format
      *
      * @return {@link ChatColor}
      */
     public ChatColor getColor() {
-        return plugin.getRankManager().getRankType().getRankAdapter().getRankColor(this.getPlayer());
+        return plugin.getRankManager().getCoreType().getCoreAdapter().getRankColor(this.getPlayer());
     }
 
     /**
      * Load the profile from the mongo database
      */
     public void load() {
-        try {
+        ProfileLoadEvent event = new ProfileLoadEvent(this);
+        plugin.getServer().getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) return;
+
+        plugin.submitToThread(() -> {
             Document document = collection.find(Filters.eq("_id", uuid.toString())).first();
 
             if (document == null) {
@@ -275,18 +281,19 @@ public class Profile {
                 }
 
                 statisticsData.get(kit).setLoadouts(kitInventory);
-
             }
-        } catch (Exception e) {
-            this.save();
-        }
-        new ProfileLoadEvent(this).call();
+        });
     }
 
     /**
      * Save the profile to the mongo database
      */
     public void save() {
+        ProfileSaveEvent event = new ProfileSaveEvent(this);
+        plugin.getServer().getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) return;
+
         Document document = new Document();
 
         document.put("_id", uuid.toString());
@@ -346,8 +353,7 @@ public class Profile {
 
         document.put("kitInventory", kitsDocument);
 
-        collection.replaceOne(Filters.eq("_id", uuid.toString()), document, new ReplaceOptions().upsert(true));
-        new ProfileSaveEvent(this).call();
+        plugin.submitToThread(() -> collection.replaceOne(Filters.eq("_id", uuid.toString()), document, new ReplaceOptions().upsert(true)));
     }
 
     /**
@@ -513,7 +519,7 @@ public class Profile {
     }
 
     public String getColouredName() {
-        return plugin.getRankManager().getRankType().getRankAdapter().getFullName(this.getPlayer());
+        return plugin.getRankManager().getCoreType().getCoreAdapter().getFullName(this.getPlayer());
     }
 
     /**
@@ -534,6 +540,9 @@ public class Profile {
             } else if (isInQueue()) {
                 player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.QUEUE, this));
             } else if (isInEvent()) {
+                if (this.getEvent().getEventPlayer(this.getUuid()).getState().equals(EventPlayerState.ELIMINATED)) {
+                    PlayerUtil.spectator(player);
+                }
                 player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.EVENT, this));
             } else if (isInMatch()) {
                 if (match.getTeamPlayer(player) != null && !match.getTeamPlayer(player).isAlive()) {

@@ -31,18 +31,18 @@ public final class ArmorEquipEvent extends PlayerEvent implements Cancellable {
     }
 
     /**
-     * Gets a list of handlers handling this events.
+     * Gets a list of handlers handling this event.
      *
-     * @return A list of handlers handling this events.
+     * @return A list of handlers handling this event.
      */
     public final static HandlerList getHandlerList() {
         return handlers;
     }
 
     /**
-     * Gets a list of handlers handling this events.
+     * Gets a list of handlers handling this event.
      *
-     * @return A list of handlers handling this events.
+     * @return A list of handlers handling this event.
      */
     @Override
     public final HandlerList getHandlers() {
@@ -50,18 +50,18 @@ public final class ArmorEquipEvent extends PlayerEvent implements Cancellable {
     }
 
     /**
-     * Gets if this events is cancelled.
+     * Gets if this event is cancelled.
      *
-     * @return If this events is cancelled
+     * @return If this event is cancelled
      */
     public final boolean isCancelled() {
         return cancel;
     }
 
     /**
-     * Sets if this events should be cancelled.
+     * Sets if this event should be cancelled.
      *
-     * @param cancel If this events should be cancelled.
+     * @param cancel If this event should be cancelled.
      */
     public final void setCancelled(final boolean cancel) {
         this.cancel = cancel;

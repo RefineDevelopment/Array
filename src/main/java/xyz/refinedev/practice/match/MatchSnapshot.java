@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.match;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;

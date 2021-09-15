@@ -31,6 +31,7 @@ import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
 import xyz.refinedev.practice.match.types.kit.TeamBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.BoxingMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.hotbar.HotbarItem;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
@@ -144,11 +145,12 @@ public class MatchListener implements Listener {
                 }
             }
 
-            if (match != null) {
-                match.getPlacedBlocks().add(event.getToBlock().getLocation());
-            } else {
+            if (match == null) {
                 event.setCancelled(true);
+                return;
             }
+
+            match.getPlacedBlocks().add(event.getToBlock().getLocation());
         }
     }
 
@@ -337,7 +339,9 @@ public class MatchListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onProjectileHitEvent(ProjectileHitEvent event) {
-        if (event.getEntity() instanceof Arrow && event.getEntity().getShooter() instanceof Player) {
+        if (!(event.getEntity().getShooter() instanceof Player)) return;
+
+        if (event.getEntity() instanceof Arrow) {
             Player shooter = (Player) event.getEntity().getShooter();
             Profile shooterProfile = Profile.getByUuid(shooter.getUniqueId());
 
@@ -345,7 +349,7 @@ public class MatchListener implements Listener {
                 shooterProfile.getMatch().getEntities().add(event.getEntity());
                 shooterProfile.getMatch().getTeamPlayer(shooter).handleHit();
             }
-        } else if (event.getEntity() instanceof Snowball && event.getEntity().getShooter() instanceof Player) {
+        } else if (event.getEntity() instanceof Snowball) {
             BlockIterator iterator = new BlockIterator(event.getEntity().getWorld(), event.getEntity().getLocation().toVector(), event.getEntity().getVelocity().normalize(), 0.0, 4);
             if (!iterator.hasNext()) return;
             Block hitBlock = iterator.next();
@@ -459,25 +463,27 @@ public class MatchListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        Player attacker;
+        if (!(event.getEntity() instanceof Player)) return;
+
+        Player damaged = (Player) event.getEntity();
+        Player attacker = null;
+
+        if (event.getDamager() instanceof Projectile) {
+            Projectile projectile = (Projectile) event.getDamager();
+            if (!(projectile.getShooter() instanceof Player)) {
+                event.setCancelled(true);
+                return;
+            }
+            attacker = (Player) projectile.getShooter();
+        }
+
         if (event.getDamager() instanceof Player) {
             attacker = (Player) event.getDamager();
-        } else {
-            if (!(event.getDamager() instanceof Projectile)) {
-                event.setCancelled(true);
-                return;
-            }
-            if (!(((Projectile) event.getDamager()).getShooter() instanceof Player)) {
-                event.setCancelled(true);
-                return;
-            }
-            attacker = (Player) ((Projectile) event.getDamager()).getShooter();
         }
 
         if (attacker == null) return;
         if (!(event.getEntity() instanceof Player)) return;
 
-        Player damaged = (Player) event.getEntity();
         Profile damagedProfile = Profile.getByUuid(damaged.getUniqueId());
         Profile attackerProfile = Profile.getByUuid(attacker.getUniqueId());
         if (attackerProfile.isSpectating() || damagedProfile.isSpectating()) {
@@ -510,8 +516,20 @@ public class MatchListener implements Listener {
         }
 
         if (match.isSoloMatch() || match.isFreeForAllMatch()) {
-            attackerProfile.getMatch().getTeamPlayer(attacker).handleHit();
-            damagedProfile.getMatch().getTeamPlayer(damaged).resetCombo();
+            Match teamMatch = attackerProfile.getMatch();
+            TeamPlayer attackedTeamPlayer = teamMatch.getTeamPlayer(attacker);
+            TeamPlayer damagedTeamPlayer = teamMatch.getTeamPlayer(damaged);
+
+            attackedTeamPlayer.handleHit();
+            damagedTeamPlayer.resetCombo();
+
+            if (match.isSoloMatch() && match instanceof BoxingMatch) {
+                if (attackedTeamPlayer.getHits() >= 100) {
+                    teamMatch.handleDeath(damaged);
+                }
+                event.setDamage(0);
+                return;
+            }
 
             if (!(event.getDamager() instanceof Arrow)) return;
             double health = Math.ceil(damaged.getHealth() - event.getFinalDamage()) / 2.0;

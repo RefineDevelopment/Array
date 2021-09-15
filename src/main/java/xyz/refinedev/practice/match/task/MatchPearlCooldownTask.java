@@ -8,9 +8,11 @@ import xyz.refinedev.practice.profile.Profile;
 
 public class MatchPearlCooldownTask extends BukkitRunnable {
 
+    private final Array plugin = Array.getInstance();
+
     @Override
     public void run() {
-        for (Player player : Array.getInstance().getServer().getOnlinePlayers()) {
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
             Profile profile = Profile.getByUuid(player.getUniqueId());
 
             if ((profile.isInFight() || profile.isInEvent()) && !profile.getEnderpearlCooldown().hasExpired()) {

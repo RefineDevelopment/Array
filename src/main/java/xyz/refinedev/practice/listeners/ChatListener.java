@@ -38,7 +38,7 @@ public class ChatListener implements Listener {
         clan.broadcast(Locale.CLAN_CHAT_FORMAT.toString()
                 .replace("<player_displayname>", player.getDisplayName())
                 .replace("<player_name>", player.getName())
-                .replace("<player_rankname>", plugin.getRankManager().getRankType().getRankAdapter().getFullName(player))
+                .replace("<player_rankname>", plugin.getRankManager().getCoreType().getCoreAdapter().getFullName(player))
                 .replace("<message>", chatMessage.replace("$", "")));
     }
 
@@ -56,7 +56,7 @@ public class ChatListener implements Listener {
         party.broadcast(Locale.PARTY_CHAT_FORMAT.toString()
                 .replace("<player_displayname>", player.getDisplayName())
                 .replace("<player_name>", player.getName())
-                .replace("<player_rankname>", plugin.getRankManager().getRankType().getRankAdapter().getFullName(player))
+                .replace("<player_rankname>", plugin.getRankManager().getCoreType().getCoreAdapter().getFullName(player))
                 .replace("<message>", chatMessage.replace("@", "")));
     }
 }

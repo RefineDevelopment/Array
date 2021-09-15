@@ -58,6 +58,8 @@ public class SettingsMenu extends Menu {
 
         for ( SettingsType type : SettingsType.values() ) {
             if (type.equals(SettingsType.TOGGLETABSTYLE) && !plugin.getConfigHandler().isTAB_ENABLED()) continue;
+            if (type.equals(SettingsType.TOGGLECPSONSCOREBOARD) && !plugin.getConfigHandler().isCPS_SCOREBOARD_SETTING()) continue;
+            if (type.equals(SettingsType.TOGGLEPINGONSCOREBOARD) && !plugin.getConfigHandler().isPING_SCOREBOARD_SETTING()) continue;
 
             buttons.put(config.getInteger(key + type.name() + ".SLOT"), new SettingsButton(type));
         }

@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.hook.SpigotType;
+import xyz.refinedev.practice.hook.spigot.SpigotType;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.util.other.TaskUtil;
 

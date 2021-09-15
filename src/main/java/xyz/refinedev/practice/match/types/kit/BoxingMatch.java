@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.match.types.kit;
 
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.team.TeamPlayer;
@@ -18,16 +19,23 @@ import xyz.refinedev.practice.queue.QueueType;
 
 public class BoxingMatch extends SoloMatch {
 
-    private final TeamPlayer playerA;
-    private final TeamPlayer playerB;
-
-    private String eloMessage;
-    private String specMessage;
-
     public BoxingMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
         super(queue, playerA, playerB, kit, arena, queueType);
+    }
 
-        this.playerA = playerA;
-        this.playerB = playerB;
+    @Override
+    public boolean canEnd() {
+        return !this.getPlayerA().isAlive() || !this.getPlayerB().isAlive() || this.getPlayerA().isDisconnected() || this.getPlayerA().getHits() >= 100 || this.getPlayerB().isDisconnected() || this.getPlayerB().getHits() >= 100;
+    }
+
+    @Override
+    public Player getWinningPlayer() {
+        if (!this.getPlayerA().isAlive() || this.getPlayerA().isDisconnected() || this.getPlayerBRounds() >= 100) {
+            return this.getPlayerB().getPlayer();
+        }
+        if (!this.getPlayerB().isAlive() || this.getPlayerB().isDisconnected() || this.getPlayerARounds() >= 100) {
+            return this.getPlayerA().getPlayer();
+        }
+        return null;
     }
 }
