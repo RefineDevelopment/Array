@@ -104,7 +104,7 @@ public class PartySelectKitMenu extends Menu {
                 Collections.shuffle(shuffled);
                 Collections.shuffle(shuffled);
 
-                match = new TeamMatch(teamA, teamB, this.kit, arena);
+                match = kit.createTeamKitMatch(teamA, teamB, this.kit, arena);
 
                 for (Player shuffledPlayer : shuffled) {
                     if (!teamA.getLeader().getUniqueId().equals(shuffledPlayer.getUniqueId())) {
@@ -124,7 +124,7 @@ public class PartySelectKitMenu extends Menu {
     }
 
     public boolean getCheck(PartyEventType type, Kit kit) {
-        if (type == PartyEventType.PARTY_FFA && kit.getGameRules().isSumo()) {
+        if (type == PartyEventType.PARTY_FFA && (kit.getGameRules().isSumo() || kit.getGameRules().isBoxing())) {
             return false;
         }
         return true;

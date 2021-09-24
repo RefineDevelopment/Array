@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.match.task;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
@@ -15,25 +16,26 @@ import xyz.refinedev.practice.profile.Profile;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class MatchBowCooldownTask extends BukkitRunnable {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin;
 
     @Override
     public void run() {
         for ( Player player : plugin.getServer().getOnlinePlayers()) {
             Profile profile = Profile.getByUuid(player.getUniqueId());
 
-            if ((profile.isInFight() || profile.isInEvent()) && !profile.getBowCooldown().hasExpired()) {
+            if ((profile.isInFight()) && !profile.getBowCooldown().hasExpired()) {
                 int seconds = Math.round(profile.getBowCooldown().getRemaining()) / 1_000;
 
                 player.setLevel(seconds);
                 player.setExp(profile.getBowCooldown().getRemaining() / (plugin.getConfigHandler().getBOW_COOLDOWN() * 1_000F));
             } else {
-                if (profile.isInFight() || profile.isInEvent()) {
+                if (profile.isInFight()) {
                     if (!profile.getBowCooldown().isNotified() && !profile.isInLobby()) {
                         profile.getBowCooldown().setNotified(true);
-                        player.sendMessage(Locale.MATCH_EPEARL_EXPIRE.toString());
+                        player.sendMessage(Locale.MATCH_BOW_COOLDOWN_EXPIRE.toString());
                     }
                 }
                 if (player.getLevel() > 0) player.setLevel(0);

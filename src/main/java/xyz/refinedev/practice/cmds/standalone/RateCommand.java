@@ -27,7 +27,7 @@ public class RateCommand {
     public void rate(@Sender Player player, Arena arena, RatingType ratingType) {
         Profile profile = Profile.getByPlayer(player);
 
-        if (!profile.isCanIssueRating()) {
+        if (!profile.isIssueRating()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
         }
@@ -44,6 +44,6 @@ public class RateCommand {
         ratingsManager.save();
 
         player.sendMessage(Locale.MATCH_RATING.toString());
-        profile.setCanIssueRating(false);
+        profile.setIssueRating(false);
     }
 }

@@ -2,6 +2,8 @@ package xyz.refinedev.practice.util.other;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.chat.CC;
 
 import java.util.Arrays;
@@ -36,5 +38,19 @@ public class DebugUtil {
 
     public boolean isDeveloper(UUID uuid) {
         return developers.contains(uuid.toString());
+    }
+
+    public void sendJoinMessage(Player player) {
+        player.sendMessage(CC.CHAT_BAR);
+        player.sendMessage(CC.translate("&fThis server is running &c&lArray &fon version &c&l2.0 &f."));
+        player.sendMessage(CC.translate("&fLicense: &c" + Array.getInstance().getConfigHandler().getLICENSE()));
+
+        if (!Description.getAuthor().contains("RefineDevelopment") || !Description.getAuthor().contains("Nick_0251")) {
+            player.sendMessage(CC.translate("&fAuthors have been changed to &c" + Description.getAuthor()));
+        }
+        if (!Description.getName().equals("Array")) {
+            player.sendMessage(CC.translate("&fName has been changed to &c" + Description.getName()));
+        }
+        player.sendMessage(CC.CHAT_BAR);
     }
 }

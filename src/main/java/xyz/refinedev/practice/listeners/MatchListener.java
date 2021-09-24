@@ -124,7 +124,7 @@ public class MatchListener implements Listener {
             soloBridgeMatch.handlePortal(player);
         } else if (match instanceof TeamBridgeMatch) {
             TeamBridgeMatch teamBridgeMatch = (TeamBridgeMatch) match;
-            //teamBridgeMatch.handlePortal(player);
+            teamBridgeMatch.handlePortal(player);
         }
     }
 
@@ -274,19 +274,19 @@ public class MatchListener implements Listener {
         Profile profile = Profile.getByPlayer(player);
         Match match = profile.getMatch();
 
-        if (profile.isInFight()) {
-            List<Item> entities = new ArrayList<>();
+        if (!profile.isInFight()) return;
 
-            event.getDrops().forEach(itemStack -> {
-                if (itemStack.getType() != Material.BOOK && itemStack.getType() != Material.ENCHANTED_BOOK && itemStack.getType() != Material.BLAZE_POWDER && itemStack.getType() != Material.GOLD_BARDING && itemStack.getType() != Material.DIAMOND_BARDING) {
-                    entities.add(event.getEntity().getLocation().getWorld().dropItemNaturally(event.getEntity().getLocation(), itemStack));
-                }
-            });
+        List<Item> entities = new ArrayList<>();
 
-            event.getDrops().clear();
-            match.getEntities().addAll(entities);
-            match.handleDeath(player, player.getKiller(), false);
-        }
+        event.getDrops().forEach(itemStack -> {
+            if (itemStack.getType() != Material.BOOK && itemStack.getType() != Material.ENCHANTED_BOOK && itemStack.getType() != Material.BLAZE_POWDER && itemStack.getType() != Material.GOLD_BARDING && itemStack.getType() != Material.DIAMOND_BARDING) {
+                entities.add(event.getEntity().getLocation().getWorld().dropItemNaturally(event.getEntity().getLocation(), itemStack));
+            }
+        });
+
+        event.getDrops().clear();
+        match.getEntities().addAll(entities);
+        match.handleDeath(player, player.getKiller(), false);
     }
 
     /**

@@ -346,6 +346,10 @@ public class Party extends Team {
         });
     }
 
+    public String getName() {
+        return this.getLeader().getUsername() + "'s Party";
+    }
+
     public boolean isFighting() {
         return this.getPlayers().stream().map(Profile::getByPlayer).anyMatch(profile -> profile.isInFight() || profile.isInTournament());
     }

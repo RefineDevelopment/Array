@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.arena.runnables;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -15,63 +14,71 @@ import xyz.refinedev.practice.util.location.CustomLocation;
  * @author Zonix
  */
 @Getter
-@AllArgsConstructor
-public class StandalonePasteRunnable implements Runnable {
+public class StandalonePasteRunnable extends DuplicateArenaRunnable {
 
-    private static final Array plugin = Array.getInstance();
+    private final Array plugin;
     private final StandaloneArena copiedArena;
 
     private int times;
-    private static int amount;
+    private int amount;
+    private int arenaId = 0;
+
+    public StandalonePasteRunnable(Array plugin, StandaloneArena copiedArena, int copyAmount) {
+        super(plugin, copiedArena, 1000, 1000, 500, 500);
+
+        this.plugin = plugin;
+        this.times = copyAmount;
+        this.copiedArena = copiedArena;
+    }
 
     @Override
     public void run() {
         amount = times;
-        this.duplicateArena(this.copiedArena, 10000, 10000);
+
+        while (--times > 0) {
+            arenaId++;
+            super.run();
+        }
+
+        this.message();
     }
 
-    private void duplicateArena(StandaloneArena arena, int offsetX, int offsetZ) {
+    @Override
+    public void onComplete() {
+        double minX = this.copiedArena.getMin().getX() + this.getOffsetX();
+        double minZ = this.copiedArena.getMin().getZ() + this.getOffsetZ();
+        double maxX = this.copiedArena.getMax().getX() + this.getOffsetX();
+        double maxZ = this.copiedArena.getMax().getZ() + this.getOffsetZ();
 
-        new DuplicateArenaRunnable(plugin, arena, offsetX, offsetZ, 500, 500) {
-            @Override
-            public void onComplete() {
-                double minX = arena.getMin().getX() + this.getOffsetX();
-                double minZ = arena.getMin().getZ() + this.getOffsetZ();
-                double maxX = arena.getMax().getX() + this.getOffsetX();
-                double maxZ = arena.getMax().getZ() + this.getOffsetZ();
+        double aX = this.copiedArena.getSpawn1().getX() + this.getOffsetX();
+        double aZ = this.copiedArena.getSpawn1().getZ() + this.getOffsetZ();
+        double bX = this.copiedArena.getSpawn2().getX() + this.getOffsetX();
+        double bZ = this.copiedArena.getSpawn2().getZ() + this.getOffsetZ();
 
-                double aX = arena.getSpawn1().getX() + this.getOffsetX();
-                double aZ = arena.getSpawn1().getZ() + this.getOffsetZ();
-                double bX = arena.getSpawn2().getX() + this.getOffsetX();
-                double bZ = arena.getSpawn2().getZ() + this.getOffsetZ();
+        CustomLocation min = new CustomLocation(this.copiedArena.getSpawn1().getWorld(), minX, this.copiedArena.getMin().getY(), minZ, this.copiedArena.getMin().getYaw(), this.copiedArena.getMin().getPitch());
+        CustomLocation max = new CustomLocation(this.copiedArena.getSpawn1().getWorld(), maxX, this.copiedArena.getMax().getY(), maxZ, this.copiedArena.getMax().getYaw(), this.copiedArena.getMax().getPitch());
+        CustomLocation a = new CustomLocation(this.copiedArena.getSpawn1().getWorld(), aX, this.copiedArena.getSpawn1().getY(), aZ, this.copiedArena.getSpawn1().getYaw(), this.copiedArena.getSpawn1().getPitch());
+        CustomLocation b = new CustomLocation(this.copiedArena.getSpawn1().getWorld(), bX, this.copiedArena.getSpawn2().getY(), bZ, this.copiedArena.getSpawn2().getYaw(), this.copiedArena.getSpawn2().getPitch());
 
-                CustomLocation min = new CustomLocation(arena.getSpawn1().getWorld(), minX, arena.getMin().getY(), minZ, arena.getMin().getYaw(), arena.getMin().getPitch());
-                CustomLocation max = new CustomLocation(arena.getSpawn1().getWorld(), maxX, arena.getMax().getY(), maxZ, arena.getMax().getYaw(), arena.getMax().getPitch());
-                CustomLocation a = new CustomLocation(arena.getSpawn1().getWorld(), aX, arena.getSpawn1().getY(), aZ, arena.getSpawn1().getYaw(), arena.getSpawn1().getPitch());
-                CustomLocation b = new CustomLocation(arena.getSpawn1().getWorld(), bX, arena.getSpawn2().getY(), bZ, arena.getSpawn2().getYaw(), arena.getSpawn2().getPitch());
+        Arena duplicate = new Arena(this.copiedArena.getName() + "#" + arenaId);
+        duplicate.setSpawn1(a.toBukkitLocation());
+        duplicate.setSpawn2(b.toBukkitLocation());
+        duplicate.setMax(max.toBukkitLocation());
+        duplicate.setMin(min.toBukkitLocation());
+        duplicate.setDisplayName(this.copiedArena.getDisplayName());
 
-                Arena duplicate = new Arena(arena.getName());
-                duplicate.setSpawn1(a.toBukkitLocation());
-                duplicate.setSpawn2(b.toBukkitLocation());
-                duplicate.setMax(max.toBukkitLocation());
-                duplicate.setMin(min.toBukkitLocation());
-                duplicate.setDisplayName(arena.getDisplayName());
-                arena.getDuplicates().add(duplicate);
-                Arena.getArenas().add(duplicate);
+        this.copiedArena.getDuplicates().add(duplicate);
+        Arena.getArenas().add(duplicate);
+    }
 
-                if (--times > 0) {
-                    duplicateArena(arena, (int) Math.round(maxX), (int) Math.round(maxZ));
-                } else {
-                    for (Player player : Bukkit.getOnlinePlayers()) {
-                        if (player.hasPermission("array.arena.admin") || player.isOp()) {
-                            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Finished pasting &c" + copiedArena.getName() + "&7's " + amount + " &7duplicate arenas."));
-                        }
-                    }
-                    plugin.logger("&8[&c&lArray&8] &7Finished pasting &c" + copiedArena.getName() + "&7's " + amount + " &7duplicate arenas.");
-                    Arena.setPasting(false);
-                    Arena.getArenas().forEach(Arena::save);
-                }
+    public void message() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.hasPermission("array.arena.admin") || player.isOp()) {
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Finished pasting &c" + copiedArena.getName() + "&7's " + amount + " &7duplicate arenas."));
             }
-        }.run();
+        }
+        plugin.logger("&8[&c&lArray&8] &7Finished pasting &c" + copiedArena.getName() + "&7's " + amount + " &7duplicate arenas.");
+        Arena.setPasting(false);
+        Arena.getArenas().forEach(Arena::save);
     }
 }

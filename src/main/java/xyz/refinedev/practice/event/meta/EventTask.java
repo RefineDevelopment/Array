@@ -11,13 +11,15 @@ import xyz.refinedev.practice.event.EventState;
 @RequiredArgsConstructor
 public abstract class EventTask extends BukkitRunnable {
 
+	private final Array plugin = Array.getInstance();
+
 	private int ticks;
 	private final Event event;
 	private final EventState eventState;
 
 	@Override
 	public void run() {
-		if (Array.getInstance().getEventManager().getActiveEvent() == null || !Array.getInstance().getEventManager().getActiveEvent().equals(this.event) || this.event.getState() != this.eventState) {
+		if (plugin.getEventManager().getActiveEvent() == null || !plugin.getEventManager().getActiveEvent().equals(this.event) || this.event.getState() != this.eventState) {
 			this.cancel();
 			return;
 		}

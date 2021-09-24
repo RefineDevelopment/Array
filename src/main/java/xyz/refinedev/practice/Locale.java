@@ -197,6 +197,7 @@ public enum Locale {
     MATCH_BOW_HIT("MATCH.BOW_HIT", "&c<damaged_name> &7is now at &c<damaged_health> &4\u2764"),
     MATCH_PEARL_COOLDOWN("MATCH.PEARL_COOLDOWN", "&cYou are on pearl cooldown for <cooldown>!"),
     MATCH_BOW_COOLDOWN("MATCH.BOW_COOLDOWN", "&cYou are on bow cooldown for <cooldown>!"),
+    MATCH_BOW_COOLDOWN_EXPIRE("MATCH_BOW_COOLDOWN_EXPIRE", "&aYour bow cooldown has expired!"),
     MATCH_BRIDGE_BLOCK("MATCH.BRIDGE_BLOCK_PLACE", "&cYou cannot place blocks here!"),
     MATCH_BRIDGE_WRONG_PORTAL("MATCH.BRIDGE_WRONG_PORTAL", "&cYou jumped in the wrong portal!"),
     MATCH_BRIDGE_SCORED("MATCH.BRIDGE_SCORED", "<relation_color_scored><scored_name> &fhas scored a Point!"),

@@ -95,7 +95,7 @@ public class RatingsManager {
      */
     public void sendRatingMessage(Player player, Arena arena) {
         Profile profile = Profile.getByPlayer(player);
-        profile.setCanIssueRating(true);
+        profile.setIssueRating(true);
 
         String key = "&7Click to rate &a" + arena.getDisplayName();
         Clickable clickable = new Clickable("&c&l[1⭐]", key + " &7as &cTerrible&7.", "/rate " + arena.getName() + " " + RatingType.TERRIBLE.name());

@@ -17,12 +17,14 @@ public class QueueListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
-        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+        Player player = event.getPlayer();
+        Profile profile = Profile.getByPlayer(player);
 
-        if (profile.getQueue() != null && profile.isInQueue()) {
-            Queue queue = profile.getQueue();
-            queue.removePlayer(profile.getQueueProfile());
-        }
+        if (profile.getQueue() == null) return;
+        if (!profile.isInQueue()) return;
+
+        Queue queue = profile.getQueue();
+        queue.removePlayer(profile.getQueueProfile());
     }
 
     /**
@@ -30,25 +32,14 @@ public class QueueListener implements Listener {
      *
      * Removing this is against our TOS and you are not allowed to remove it
      * at any cost, you are also not allowed to change its colors or add your own
-     * UUID to it. We will know if you tampered with this due to how our License System
-     * is setup. So don't try it otherwise it will result in a termination of your github access.
+     * UUID to it. Don't try it otherwise it will result in a termination of your github access.
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
         if (DebugUtil.isDeveloper(player.getUniqueId())) {
-            player.sendMessage(CC.CHAT_BAR);
-            player.sendMessage(CC.translate("&fThis server is running &c&lArray &fon version &c&l2.0 &f."));
-            player.sendMessage(CC.translate("&fLicense: &c" + Array.getInstance().getConfigHandler().getLICENSE()));
-
-            if (!Description.getAuthor().contains("RefineDevelopment") || !Description.getAuthor().contains("Nick_0251")) {
-                player.sendMessage(CC.translate("&fAuthors have been changed to &c" + Description.getAuthor()));
-            }
-            if (!Description.getName().equals("Array")) {
-                player.sendMessage(CC.translate("&fName has been changed to &c" + Description.getName()));
-            }
-            player.sendMessage(CC.CHAT_BAR);
+            DebugUtil.sendJoinMessage(player);
         }
     }
 

@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.event;
+package xyz.refinedev.practice.managers;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,6 +6,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.event.Event;
+import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.event.impl.spleef.Spleef;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
@@ -126,7 +128,7 @@ public class EventManager {
 				return true;
 			}
 			case SPLEEF: {
-				Spleef spleef = new Spleef(player);
+				Spleef spleef = new Spleef(plugin, player);
 				this.setActiveEvent(spleef);
 				return true;
 			}

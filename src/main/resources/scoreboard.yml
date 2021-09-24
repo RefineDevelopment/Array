@@ -49,11 +49,12 @@ SCOREBOARD:
       - " &fRival: &c<opponent_name>"
       - " &fDuration: &c<match_duration>"
       - " &fPing: &a<your_ping>ms &7%splitter% &c<opponent_ping>ms"
-    BOXING_ADDITION:
+    SOLO_BOXING_ADDITION:
       - ""
-      - "&c&lHits &r(<match_hit_difference>)"
-      - " &fYour Hits: &a"
-    BRIDGE_ADDITION:
+      - "&c&lHits &r(<hit_difference>)"
+      - " &fYour Hits: &a<your_hits>"
+      - " &fTheir Hits: &c<opponent_hits>"
+    SOLO_BRIDGE_ADDITION:
       - ""
       - "&c&lRound #<bridge_round>&7:"
       - " &cRed: &r<red_points_formatted>"
@@ -65,6 +66,14 @@ SCOREBOARD:
       - ""
       - " &fYour Team: &c<your_team_alive>/<your_team_count>"
       - " &fRival Team: &c<opponent_team_alive>/<opponent_team_count>"
+    TEAM_BRIDGE:
+      - "&c&lFight"
+      - " &fDuration: &c<match_duration>"
+      - " &fKit: &c<match_kit>"
+      - ""
+      - "&c&lRound #<bridge_round>&7:"
+      - " &cRed: &r<red_points_formatted>"
+      - " &9Blue: &r<blue_points_formatted>"
     HCF:
       - "&c&lFight"
       - " &fDuration: &c<match_duration>"
@@ -96,12 +105,20 @@ SCOREBOARD:
         - " &7vs"
         - " &c<playerB_name> &7(<playerB_ping>)"
         - ""
+      BOXING:
+        - "&c&lFight"
+        - " &fArena: &c<match_arena>"
+        - " &fKit: &c<match_kit>"
+        - ""
+        - "&c&lHits"
+        - " &fPlayerA Hits: &a<playerA_hits>"
+        - " &fPlayerB Hits: &c<playerB_hits>"
       BRIDGE:
         - "&c&lFight"
+        - " &fArena: &c<match_arena>"
         - " &fKit: &c<match_kit>"
-        - " &fDuration: &c<match_duration>"
         - ""
-        - " &c&lRound #<bridge_round>"
+        - "&c&lRound #<bridge_round>&7:"
         - " &cRed: &r<red_points_formatted>"
         - " &9Blue: &r<blue_points_formatted>"
       TEAM:
@@ -134,7 +151,7 @@ SCOREBOARD:
   EVENT:
     SOLO:
       WAITING:
-        - " &c&l<event_name> Event"
+        - "&c&l<event_name> Event"
         - ""
         - " &fHost: &c<event_host_name>"
         - " &fPlayers: &c<event_player_count>/<event_max_players>"

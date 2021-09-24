@@ -36,27 +36,27 @@ public class TeamTournament extends Tournament<Party> {
     }
 
     @Override
-    public void join(Party type) {
+    public void join(Party party) {
         Preconditions.checkState(getParticipatingCount() < getMaxPlayers(), "Can not join because max limit has exceeded!");
         Preconditions.checkState(getRound() == 0, "Can not join after tournament has started!");
-        this.getParties().add(type);
+        this.getParties().add(party);
 
-        type.setInTournament(true);
-        type.getPlayers().forEach(player -> player.playSound(player.getLocation(), Sound.NOTE_PLING, 20F, 15F));
+        party.setInTournament(true);
+        party.getPlayers().forEach(player -> player.playSound(player.getLocation(), Sound.NOTE_PLING, 20F, 15F));
         Bukkit.broadcastMessage(Locale.TOURNAMENT_JOIN.toString()
-                .replace("<joined>", type.getLeader().getUsername() + "'s Party")
+                .replace("<joined>", party.getName())
                 .replace("<participants_size>", String.valueOf(this.getParticipatingCount()))
                 .replace("<participants_max>", String.valueOf(this.getMaxPlayers())));
     }
 
     @Override
-    public void leave(Party type) {
+    public void leave(Party party) {
         Preconditions.checkState(getRound() == 0, "Can not leave after tournament has started!");
-        this.getParties().remove(type);
-        type.setInTournament(false);
+        this.getParties().remove(party);
+        party.setInTournament(false);
 
         Bukkit.broadcastMessage(Locale.TOURNAMENT_LEAVE.toString()
-                .replace("<left>", type.getLeader().getUsername() + "'s Party")
+                .replace("<left>", party.getName())
                 .replace("<participants_size>", String.valueOf(this.getParticipatingCount()))
                 .replace("<participants_max>", String.valueOf(this.getMaxPlayers())));
     }
@@ -118,10 +118,10 @@ public class TeamTournament extends Tournament<Party> {
         this.getParties().remove(participant);
 
         Bukkit.broadcastMessage(Locale.TOURNAMENT_ELIMINATED.toString()
-                .replace("<eliminated>", participant.getLeader().getUsername() + "'s Party")
+                .replace("<eliminated>", participant.getName())
                 .replace("<participants_count>", String.valueOf(getParticipatingCount()))
                 .replace("<participants_max>", String.valueOf(getMaxPlayers()))
-                .replace("<killer>", killer.getLeader().getUsername() + "'s Party"));
+                .replace("<killer>", killer.getName()));
     }
 
     @Override
@@ -131,7 +131,7 @@ public class TeamTournament extends Tournament<Party> {
 
         if (winner != null) {
             Bukkit.broadcastMessage(CC.CHAT_BAR);
-            Bukkit.broadcastMessage(Locale.TOURNAMENT_WON.toString().replace("<winner>", winner.getLeader().getUsername() + "'s Party"));
+            Bukkit.broadcastMessage(Locale.TOURNAMENT_WON.toString().replace("<winner>", winner.getName()));
             Bukkit.broadcastMessage(CC.CHAT_BAR);
         } else {
             Bukkit.broadcastMessage(Locale.TOURNAMENT_CANCELLED.toString());

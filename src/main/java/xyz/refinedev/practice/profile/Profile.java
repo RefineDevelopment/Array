@@ -45,6 +45,7 @@ import xyz.refinedev.practice.profile.statistics.StatisticsData;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueProfile;
 import xyz.refinedev.practice.tournament.Tournament;
+import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.InventoryUtil;
 import xyz.refinedev.practice.util.other.Cooldown;
 import xyz.refinedev.practice.util.other.PlayerUtil;
@@ -66,16 +67,10 @@ public class Profile {
     private final List<ClanInvite> clanInviteList = new ArrayList<>();
     private final List<Location> plates = new ArrayList<>();
 
-    /*
-     * Part of Profile
-     */
-    private String name;
     private final UUID uuid;
-    private int globalElo = 1000;
+    private String name;
+    private int globalElo = 1000, wins, losses, kills, deaths, xp;
 
-    /*
-     * Profile Meta
-     */
     private ProfileState state;
     private Party party;
     private Match match;
@@ -83,9 +78,6 @@ public class Profile {
     private Clan clan;
     private Event event;
 
-    /*
-     * Fight Meta
-     */
     private TablistRank tablistRank;
     private KillEffect killEffect;
     private ClanProfile clanProfile;
@@ -93,23 +85,16 @@ public class Profile {
     private DuelProcedure duelProcedure;
     private RematchProcedure rematchData;
 
-    /*
-     * Spectator Mode
-     */
     private Player spectating;
+    private boolean build;
 
-    /*
-     * Cooldowns
-     */
     private Cooldown enderpearlCooldown = new Cooldown(0);
     private Cooldown bowCooldown = new Cooldown(0);
 
-    /*
-     * Essential Meta
-     */
     private final SettingsMeta settings = new SettingsMeta();
     private final KitEditor kitEditor = new KitEditor();
-    private boolean canIssueRating = false;
+
+    private boolean issueRating = false;
     private Arena ratingArena;
 
     /**
@@ -567,6 +552,7 @@ public class Profile {
     }
 
     public void calculateTabRank() {
+        if (plugin.getConfigHandler().getTablistRanks() == null || plugin.getConfigHandler().getTablistRanks().isEmpty()) return;
         LinkedList<TablistRank> ranks = new LinkedList<>(plugin.getConfigHandler().getTablistRanks());
         ranks.sort(Comparator.comparingInt(TablistRank::getPriority));
 
@@ -617,17 +603,11 @@ public class Profile {
             if (party != null && party.containsPlayer(otherPlayer)) {
                 hide = false;
             }
-            if (plugin.getConfigHandler().isNAMETAGS_ENABLED()) {
-                TaskUtil.runAsync(() -> plugin.getNameTagHandler().reloadPlayer(player, otherPlayer));
-            }
         } else if (isInFight()) {
             TeamPlayer teamPlayer = match.getTeamPlayer(otherPlayer);
 
             if (teamPlayer != null && teamPlayer.isAlive()) {
                 hide = false;
-            }
-            if (plugin.getConfigHandler().isNAMETAGS_ENABLED()) {
-                TaskUtil.runAsync(() -> plugin.getNameTagHandler().reloadPlayer(player, otherPlayer));
             }
         } else if (isSpectating()) {
             if (event != null) {
@@ -641,9 +621,6 @@ public class Profile {
                     hide = false;
                 }
             }
-            if (plugin.getConfigHandler().isNAMETAGS_ENABLED()) {
-                TaskUtil.runAsync(() -> plugin.getNameTagHandler().reloadPlayer(player, otherPlayer));
-            }
         } else if (isInEvent()) {
             if (event != null) {
                 if (!event.getSpectators().contains(otherPlayer.getUniqueId())) {
@@ -653,9 +630,11 @@ public class Profile {
                     }
                 }
             }
-            if (plugin.getConfigHandler().isNAMETAGS_ENABLED()) {
-                TaskUtil.runAsync(() -> plugin.getNameTagHandler().reloadPlayer(player, otherPlayer));
-            }
+        }
+
+        if (plugin.getConfigHandler().isNAMETAGS_ENABLED()) {
+            plugin.getNameTagHandler().reloadPlayer(player, otherPlayer);
+            plugin.getNameTagHandler().reloadOthersFor(player);
         }
 
         if (hide) {
@@ -707,7 +686,8 @@ public class Profile {
     }
 
     public String getDivision() {
-        return plugin.getDivisionsManager().getDivisionByELO(globalElo).getDisplayName();
+        return CC.translate("&aDefault");
+        //return plugin.getDivisionsManager().getDivisionByELO(globalElo).getDisplayName();
     }
 
     public Integer getTotalWins() {

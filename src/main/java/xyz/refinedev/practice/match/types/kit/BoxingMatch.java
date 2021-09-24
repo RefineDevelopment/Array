@@ -30,10 +30,10 @@ public class BoxingMatch extends SoloMatch {
 
     @Override
     public Player getWinningPlayer() {
-        if (!this.getPlayerA().isAlive() || this.getPlayerA().isDisconnected() || this.getPlayerBRounds() >= 100) {
+        if (!this.getPlayerA().isAlive() || this.getPlayerA().isDisconnected() || this.getPlayerB().getHits() >= 100) {
             return this.getPlayerB().getPlayer();
         }
-        if (!this.getPlayerB().isAlive() || this.getPlayerB().isDisconnected() || this.getPlayerARounds() >= 100) {
+        if (!this.getPlayerB().isAlive() || this.getPlayerB().isDisconnected() || this.getPlayerA().getHits() >= 100) {
             return this.getPlayerA().getPlayer();
         }
         return null;

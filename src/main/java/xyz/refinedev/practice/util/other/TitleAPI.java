@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.util.other;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -16,11 +17,12 @@ import java.lang.reflect.Constructor;
  * Project: TitleAPI
  */
 
+@UtilityClass
 public class TitleAPI {
 
-    private final static BasicConfigurationFile configHandler = Array.getInstance().getMainConfig();
+    private final BasicConfigurationFile configHandler = Array.getInstance().getMainConfig();
 
-    public static void sendPacket(Player player, Object packet) {
+    public void sendPacket(Player player, Object packet) {
         try {
             Object handle = player.getClass().getMethod("getHandle").invoke(player);
             Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
@@ -30,7 +32,7 @@ public class TitleAPI {
         }
     }
 
-    public static Class<?> getNMSClass(String name) {
+    public Class<?> getNMSClass(String name) {
         String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         try {
             return Class.forName("net.minecraft.server." + version + "." + name);
@@ -40,7 +42,7 @@ public class TitleAPI {
         }
     }
 
-    public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {
+    public void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {
         if (player == null) return;
         try {
             Object e;
@@ -88,7 +90,7 @@ public class TitleAPI {
         }
     }
 
-    public static void sendMatchStart(Player player) {
+    public void sendMatchStart(Player player) {
         String path = "MATCH.TITLE.STARTED";
         if (!configHandler.contains(path)) return;
         if (!configHandler.getBoolean(path + "ENABLED")) return;
@@ -105,7 +107,7 @@ public class TitleAPI {
             sendTitle(player, fadeIn, stay, fadeOut, text, null);
         }
     }
-    public static void sendMatchCountdown(Player player) {
+    public void sendMatchCountdown(Player player) {
         String path = "MATCH.TITLE.COUNTDOWN";
         if (!configHandler.contains(path)) return;
         if (!configHandler.getBoolean(path + "ENABLED")) return;
@@ -122,7 +124,7 @@ public class TitleAPI {
             sendTitle(player, fadeIn, stay, fadeOut, text, null);
         }
     }
-    public static void sendMatchWinner(Player player) {
+    public void sendMatchWinner(Player player) {
         String path = "MATCH.TITLE.WINNER";
         if (!configHandler.contains(path)) return;
         if (!configHandler.getBoolean(path + "ENABLED")) return;
@@ -139,7 +141,7 @@ public class TitleAPI {
             sendTitle(player, fadeIn, stay, fadeOut, text, null);
         }
     }
-    public static void sendMatchLoser(Player player) {
+    public void sendMatchLoser(Player player) {
         String path = "MATCH.TITLE.LOSER";
         if (!configHandler.contains(path)) return;
         if (!configHandler.getBoolean(path + "ENABLED")) return;
@@ -157,7 +159,7 @@ public class TitleAPI {
         }
     }
 
-    public static void clearTitle(Player player) {
+    public void clearTitle(Player player) {
         sendTitle(player, 0, 0, 0, "", "");
     }
 }

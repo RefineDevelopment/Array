@@ -48,7 +48,7 @@ public class PiracyMeta {
             this.consoleLog("&7---------------&8[&cRefine-Licenses&8]&7----------------");
             plugin.getConfigHandler().setOUTDATED(false);
             plugin.getConfigHandler().setupEssentials();
-            TaskUtil.runTimerAsync(new PiracyTask(), 20, TimeUtil.parseTime("60m"));
+            TaskUtil.runTimerAsync(new PiracyTask(this), 20, TimeUtil.parseTime("60m"));
         } else if (respo[0].equals("3") && Boolean.parseBoolean(respo[3])) {
             this.consoleLog("&aLicense valid!");
             this.consoleLog("&7Response: &a" + respo[2]);
@@ -64,7 +64,7 @@ public class PiracyMeta {
             plugin.getConfigHandler().setOUTDATED(true);
             plugin.getConfigHandler().setNEW_VERSION(respo[1].split("#")[1]);
             plugin.getConfigHandler().setupEssentials();
-            TaskUtil.runTimerAsync(new PiracyTask(), 20, TimeUtil.parseTime("60m"));
+            TaskUtil.runTimerAsync(new PiracyTask(this), 20, TimeUtil.parseTime("60m"));
         } else {
             this.consoleLog("&cLicense is not valid!");
             this.consoleLog("&7Reason: &c" + respo[1]);

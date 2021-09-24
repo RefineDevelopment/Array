@@ -78,7 +78,7 @@ public abstract class DuplicateArenaRunnable extends BukkitRunnable {
         new WorldEditRunnable(this.copiedArena.getSpawn1().getWorld(), this.paste) {
             @Override
             public void finish() {
-                DuplicateArenaRunnable.this.onComplete();
+                onComplete();
             }
         }.runTaskTimer(this.plugin, 0L, 5L);
     }

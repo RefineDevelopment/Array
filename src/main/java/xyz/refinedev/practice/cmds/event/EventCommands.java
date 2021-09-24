@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.event.Event;
-import xyz.refinedev.practice.event.EventManager;
+import xyz.refinedev.practice.managers.EventManager;
 import xyz.refinedev.practice.event.EventState;
 import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.event.menu.EventSelectMenu;

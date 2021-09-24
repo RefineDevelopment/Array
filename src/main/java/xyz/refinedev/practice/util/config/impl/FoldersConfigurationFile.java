@@ -24,7 +24,7 @@ public class FoldersConfigurationFile extends AbstractConfigurationFile {
         this.folder = folder;
         this.file = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + folder + File.separator, name + FILE_EXTENSION);
 
-        if (saveResource) plugin.saveResource(folder + File.separator + name + ".yml", overwrite);
+        if (saveResource && !file.exists()) plugin.saveResource(folder + File.separator + name + ".yml", overwrite);
 
         this.configuration = YamlConfiguration.loadConfiguration(this.file);
 

@@ -10,8 +10,5 @@
         <module name="Array" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Array" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

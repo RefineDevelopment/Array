@@ -32,10 +32,24 @@ public class ClassUtil {
 
     @SneakyThrows
     public void registerListeners(String packageName) {
-        for ( Class<?> clazz : getClassesInPackage(packageName) ) {
-            if (Arrays.stream(clazz.getInterfaces()).noneMatch(t -> t.equals(Listener.class))) continue;
-            plugin.getServer().getPluginManager().registerEvents((Listener) clazz.newInstance(), plugin);
+        for (Class<?> clazz : getClassesInPackage(packageName)) {
+            if (isListener(clazz)) {
+                try {
+                    plugin.getServer().getPluginManager().registerEvents((Listener) clazz.newInstance(), plugin);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
         }
+    }
+
+    public boolean isListener(Class<?> clazz) {
+        for (Class<?> interfaze : clazz.getInterfaces()) {
+            if (interfaze == Listener.class) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Collection<Class<?>> getClassesInPackage(String packageName) {

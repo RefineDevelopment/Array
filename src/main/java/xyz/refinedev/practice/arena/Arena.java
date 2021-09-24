@@ -34,7 +34,8 @@ public class Arena {
     protected ItemStack displayIcon;
     protected int fallDeathHeight;
     protected Location spawn1, spawn2, min, max;
-    protected boolean active = false, disablePearls = false;
+    protected Cuboid redCuboid, blueCuboid, redPortal, bluePortal; //Added TheBridge Duplicate fields
+    protected boolean active, disablePearls = false;
 
     public Arena(String name) {
         this.name = name;
@@ -166,7 +167,51 @@ public class Arena {
                         duplicate.setMin(min);
                         duplicate.setKits(arena.getKits());
 
+
                         ((StandaloneArena) arena).getDuplicates().add(duplicate);
+
+                        arenas.add(duplicate);
+                    }
+                } else if (arena instanceof TheBridgeArena && configuration.contains(path + "duplicates")) {
+                    for (String duplicateId : configuration.getConfigurationSection(path + ".duplicates").getKeys(false)) {
+                        Location spawn1 = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".spawn1"));
+                        Location spawn2 = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".spawn2"));
+                        Location max = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".max"));
+                        Location min = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".min"));
+
+
+                        TheBridgeArena duplicate = new TheBridgeArena(arenaName);
+                        duplicate.setDisplayName(arena.getDisplayName());
+                        duplicate.setSpawn1(spawn1);
+                        duplicate.setSpawn2(spawn2);
+                        duplicate.setMax(max);
+                        duplicate.setMin(min);
+                        duplicate.setKits(arena.getKits());
+
+                        Location location1;
+                        Location location2;
+
+                        //If "redCuboid" location exist then init it
+                        location1 = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".redCuboid.location1"));
+                        location2 = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".redCuboid.location2"));
+                        duplicate.setRedCuboid(new Cuboid(location1, location2));
+
+                        //If "blueCuboid" location exist then init it
+                        location1 = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".blueCuboid.location1"));
+                        location2 = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".blueCuboid.location2"));
+                        duplicate.setBlueCuboid(new Cuboid(location1, location2));
+
+                        //If "bluePortal" location exist then init it
+                        location1 = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".bluePortal.location1"));
+                        location2 = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".bluePortal.location2"));
+                        duplicate.setBluePortal(new Cuboid(location1, location2));
+
+                        //If "redPortal" location exist then init it
+                        location1 = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".redPortal.location1"));
+                        location2 = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".redPortal.location2"));
+                        duplicate.setRedPortal(new Cuboid(location1, location2));
+
+                        ((TheBridgeArena) arena).getDuplicates().add(duplicate);
 
                         arenas.add(duplicate);
                     }

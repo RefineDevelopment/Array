@@ -11,6 +11,8 @@ import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.location.LocationUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -24,6 +26,8 @@ import java.io.IOException;
 
 @Getter @Setter
 public class TheBridgeArena extends Arena {
+
+    private final List<Arena> duplicates = new ArrayList<>();
 
     private Cuboid redCuboid;
     private Cuboid blueCuboid;
@@ -84,6 +88,36 @@ public class TheBridgeArena extends Arena {
         if (bluePortal != null) {
             configuration.set(path + ".bluePortal.location1", LocationUtil.serialize(bluePortal.getLowerCorner()));
             configuration.set(path + ".bluePortal.location2", LocationUtil.serialize(bluePortal.getUpperCorner()));
+        }
+
+        if (!duplicates.isEmpty()) {
+            int i = 0;
+
+            for (Arena duplicate : duplicates) {
+                i++;
+
+                configuration.set(path + ".duplicates." + i + ".spawn1", LocationUtil.serialize(duplicate.getSpawn1()));
+                configuration.set(path + ".duplicates." + i + ".spawn2", LocationUtil.serialize(duplicate.getSpawn2()));
+                configuration.set(path + ".duplicates." + i + ".max", LocationUtil.serialize(duplicate.getMax()));
+                configuration.set(path + ".duplicates." + i + ".min", LocationUtil.serialize(duplicate.getMin()));
+
+                if (duplicate.getRedCuboid() != null) {
+                    configuration.set(path + ".duplicates." + i + ".redCuboid.location1", LocationUtil.serialize(duplicate.getRedCuboid().getLowerCorner()));
+                    configuration.set(path + ".duplicates." + i + ".redCuboid.location2", LocationUtil.serialize(duplicate.getRedCuboid().getUpperCorner()));
+                }
+                if (duplicate.getRedPortal() != null) {
+                    configuration.set(path + ".duplicates." + i + ".redPortal.location1", LocationUtil.serialize(duplicate.getRedPortal().getLowerCorner()));
+                    configuration.set(path + ".duplicates." + i + ".redPortal.location2", LocationUtil.serialize(duplicate.getRedPortal().getUpperCorner()));
+                }
+                if (duplicate.getBlueCuboid() != null) {
+                    configuration.set(path + ".duplicates." + i + ".blueCuboid.location1", LocationUtil.serialize(duplicate.getBlueCuboid().getLowerCorner()));
+                    configuration.set(path + ".duplicates." + i + ".blueCuboid.location2", LocationUtil.serialize(duplicate.getBlueCuboid().getUpperCorner()));
+                }
+                if (duplicate.getBluePortal() != null) {
+                    configuration.set(path + ".duplicates." + i + ".bluePortal.location1", LocationUtil.serialize(duplicate.getBluePortal().getLowerCorner()));
+                    configuration.set(path + ".duplicates." + i + ".bluePortal.location2", LocationUtil.serialize(duplicate.getBluePortal().getUpperCorner()));
+                }
+            }
         }
 
         try {

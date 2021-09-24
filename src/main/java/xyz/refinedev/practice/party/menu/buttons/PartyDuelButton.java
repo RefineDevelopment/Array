@@ -36,7 +36,7 @@ public class PartyDuelButton extends Button {
         ItemStack itemStack = SkullCreator.itemFromUuid(party.getLeader().getUniqueId());
         ItemBuilder builder = new ItemBuilder(party.isFighting() ? new ItemStack(Material.SKULL) : itemStack);
 
-        builder.name(ChatColor.RED + party.getLeader().getUsername() + "'s Party");
+        builder.name(ChatColor.RED + party.getName());
         //If they are in a fight, then it displays their skull
         //as a wither skull
         if (party.isFighting()) builder.durability(1);

@@ -3,6 +3,7 @@ TABLIST:
   UPDATE_TICKS: 1
   VANILLA_TAB: true
   ELO_FORMAT: "&c<name> &7- &c<elo>"
+  USE_SORT_RANKS_OVER_CORE_HOOK: false
   HEADER:
     - ""
     - "&c&lRefine Practice"
@@ -16,12 +17,15 @@ TABLIST:
   SORT_RANKS:
     owner:
       permission: "array.tablist.owner"
+      prefix: "&c&o"
       priority: 10
     manager:
       permission: "array.tablist.manager"
+      prefix: "&4"
       priority: 9
     developer:
       permission: "array.tablist.developer"
+      prefix: "&b"
       priority: 8
     mod:
       permission: "array.tablist.mod"
@@ -41,8 +45,8 @@ TABLIST:
     media:
       permission: "array.tablist.media"
       priority: 2
-    diamond:
-      permission: "array.tablist.diamond"
+    donator:
+      permission: "array.tablist.donator"
       priority: 1
     default:
       permission: "none"
@@ -1071,7 +1075,7 @@ EVENT:
       18: " "
       19: " "
       20: " "
-  IN_GAME:
+  IN_FIGHT:
     LEFT:
       1: " "
       2: ""
@@ -1111,9 +1115,9 @@ EVENT:
       15: " "
       16: " "
       17: " "
-      18: "&c&lDiscord "
-      19: "<dot_discord>dsc.gg/arspot"
-      20: " "
+      18: ""
+      19: "&9&lDiscord"
+      20: "<skin_discord><discord>"
     RIGHT:
       1: " "
       2: " "
@@ -1132,9 +1136,9 @@ EVENT:
       15: " "
       16: " "
       17: " "
-      18: "&c&lYouTube "
-      19: "<dot_youtube>Arspot Network"
-      20: " "
+      18: ""
+      19: "&a&lWebsite"
+      20: "<skin_website><website>"
     FAR-RIGHT:
       1: " "
       2: " "

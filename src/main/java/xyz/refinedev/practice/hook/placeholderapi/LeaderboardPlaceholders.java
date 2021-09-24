@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.hook.placeholderapi;
 
+import lombok.RequiredArgsConstructor;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -9,9 +10,10 @@ import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
 import xyz.refinedev.practice.profile.Profile;
 
+@RequiredArgsConstructor
 public class LeaderboardPlaceholders extends PlaceholderExpansion {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin;
 
     @Override
     public String getIdentifier() {
@@ -33,10 +35,10 @@ public class LeaderboardPlaceholders extends PlaceholderExpansion {
         if (player == null) return "&7";
 
         if (identifier.contains("global")) {
-            String[] splitstring = identifier.split("_");
+            String[] splitString = identifier.split("_");
 
-            //We subtract 1 because of lists being in whole numbers instead of natural numbers
-            int number = Integer.parseInt(splitstring[1]) - 1;
+            //We subtract 1 because of lists starting with 0
+            int number = Integer.parseInt(splitString[1]) - 1;
 
             LeaderboardsAdapter leaderboardsAdapter;
             try {
@@ -57,17 +59,16 @@ public class LeaderboardPlaceholders extends PlaceholderExpansion {
         }
 
         if (identifier.contains("leaderboards")) {
-            String[] splitstring = identifier.split("_");
+            String[] splitString = identifier.split("_");
 
-            //We subtract 1 because of lists being in whole numbers instead of natural numbers
-            String kitname = splitstring[1];
-            int number = Integer.parseInt(splitstring[2]) - 1;
-            Kit kit = Kit.getByName(kitname);
+            //We subtract 1 because of lists starting with 0
+            String kitName = splitString[1];
+            int number = Integer.parseInt(splitString[2]) - 1;
+            Kit kit = Kit.getByName(kitName);
 
             if (kit == null) return "&7Error, That kit does not exist!";
 
             LeaderboardsAdapter leaderboardsAdapter;
-
             try {
                 leaderboardsAdapter = kit.getEloLeaderboards().get(number);
             } catch (Exception e) {

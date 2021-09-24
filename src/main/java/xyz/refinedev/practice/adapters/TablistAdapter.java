@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.adapters;
 
+import lombok.RequiredArgsConstructor;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -38,10 +39,11 @@ import java.util.stream.Collectors;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class TablistAdapter implements TabAdapter {
 
-    private final Array plugin = Array.getInstance();
-    private final BasicConfigurationFile config = plugin.getTablistConfig();
+    private final Array plugin;
+    private final BasicConfigurationFile config;
 
     /**
      * Get the tab header for a player
@@ -642,6 +644,10 @@ public class TablistAdapter implements TabAdapter {
                 .replace("<total_count>", String.valueOf(team.getPlayers().size()))
                 .replace("<alive_count>", String.valueOf(team.getAliveCount()))
                 .replace("%splitter%", "┃").replace("|", "┃");
+    }
+
+    public void replaceEvent(Player player, String toReplace) {
+
     }
     
     public TabEntry checkSkin(Player player, TabEntry entry) {

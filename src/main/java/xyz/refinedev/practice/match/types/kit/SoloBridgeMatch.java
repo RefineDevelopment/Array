@@ -8,11 +8,10 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
-import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
@@ -35,10 +34,8 @@ import java.util.concurrent.ThreadLocalRandom;
 @Getter @Setter
 public class SoloBridgeMatch extends SoloMatch {
 
-    private final Array plugin = Array.getInstance();
-
-    private int playerARounds = 0;
-    private int playerBRounds = 0;
+    private int playerAPoints = 0;
+    private int playerBPoints = 0;
 
     private int round = 0;
 
@@ -54,7 +51,6 @@ public class SoloBridgeMatch extends SoloMatch {
 
         teamPlayer.setAlive(true);
 
-        //TODO: Fix player move? maybe have already idk
         PlayerUtil.reset(player);
         PlayerUtil.denyMovement(player);
 
@@ -62,19 +58,19 @@ public class SoloBridgeMatch extends SoloMatch {
 
         if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
-        plugin.getKnockbackManager().kitKnockback(player, getKit());
+        this.getPlugin().getKnockbackManager().kitKnockback(player, getKit());
         player.setNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         Location spawn = getPlayerA().equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
-        player.teleport(spawn.add(0, plugin.getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
+        player.teleport(spawn.add(0, this.getPlugin().getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
 
         teamPlayer.setPlayerSpawn(spawn);
 
-        getKit().applyToPlayer(player);
+        this.getKit().applyToPlayer(player);
         this.giveBridgeKit(player);
 
-        plugin.getNameTagHandler().reloadPlayer(player);
-        plugin.getNameTagHandler().reloadOthersFor(player);
+        this.getPlugin().getNameTagHandler().reloadPlayer(player);
+        this.getPlugin().getNameTagHandler().reloadOthersFor(player);
     }
 
     @Override
@@ -82,8 +78,8 @@ public class SoloBridgeMatch extends SoloMatch {
         this.round++;
 
         this.getPlayers().forEach(player -> Locale.MATCH_ROUND_MESSAGE.toList().stream().map(line -> line.replace("<round_number>", String.valueOf(this.getRound()))
-                .replace("<your_points>", String.valueOf(this.getTeamPlayerA().equals(this.getTeamPlayer(player)) ? this.getPlayerARounds() : this.getPlayerBRounds()))
-                .replace("<their_points>", String.valueOf(this.getTeamPlayerB().equals(this.getTeamPlayer(player)) ? this.getPlayerBRounds() : this.getPlayerARounds()))
+                .replace("<your_points>", String.valueOf(this.getTeamPlayerA().equals(this.getTeamPlayer(player)) ? this.getPlayerAPoints() : this.getPlayerBPoints()))
+                .replace("<their_points>", String.valueOf(this.getTeamPlayerB().equals(this.getTeamPlayer(player)) ? this.getPlayerBPoints() : this.getPlayerAPoints()))
                 .replace("<arena>", this.getArena().getName())
                 .replace("<kit>", this.getKit().getName())
                 .replace("<ping>", String.valueOf(getPlayerA().getPing()))).forEach(player::sendMessage));
@@ -91,15 +87,15 @@ public class SoloBridgeMatch extends SoloMatch {
 
     @Override
     public boolean canEnd() {
-        return this.getPlayerA().isDisconnected() || this.getPlayerARounds() == 3 || this.getPlayerB().isDisconnected() || this.getPlayerBRounds() == 3;
+        return this.getPlayerA().isDisconnected() || this.getPlayerAPoints() == 3 || this.getPlayerB().isDisconnected() || this.getPlayerBPoints() == 3;
     }
 
     @Override
     public Player getWinningPlayer() {
-        if (this.getPlayerA().isDisconnected() || this.getPlayerBRounds() == 3) {
+        if (this.getPlayerA().isDisconnected() || this.getPlayerBPoints() == 3) {
             return this.getPlayerB().getPlayer();
         }
-        if (this.getPlayerB().isDisconnected() || this.getPlayerARounds() == 3) {
+        if (this.getPlayerB().isDisconnected() || this.getPlayerAPoints() == 3) {
             return this.getPlayerA().getPlayer();
         }
         return null;
@@ -117,9 +113,7 @@ public class SoloBridgeMatch extends SoloMatch {
         }
 
         if (deadPlayer.isOnline() && deadPlayer.isDead()) {
-            this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> {
-                ((CraftPlayer) deadPlayer).getHandle().playerConnection.a(new PacketPlayInClientCommand(PacketPlayInClientCommand.EnumClientCommand.PERFORM_RESPAWN));
-            });
+            this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> ((CraftPlayer) deadPlayer).getHandle().playerConnection.a(new PacketPlayInClientCommand(PacketPlayInClientCommand.EnumClientCommand.PERFORM_RESPAWN)));
         }
     }
 
@@ -136,6 +130,7 @@ public class SoloBridgeMatch extends SoloMatch {
         }
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
+        profile.handleVisibility();
         profile.refreshHotbar();
 
         TaskUtil.runLaterAsync(() -> {
@@ -144,15 +139,12 @@ public class SoloBridgeMatch extends SoloMatch {
         }, 2L);
     }
 
+    //TODO: Move kill effects to listener based
     @Override
     public void handleKillEffect(Player deadPlayer, Player killerPlayer) {
         if (killerPlayer == null) return;
         Profile profile = Profile.getByPlayer(killerPlayer);
         KillEffect killEffect = profile.getKillEffect();
-
-        if (killEffect == null) {
-            killEffect = plugin.getKillEffectManager().getDefault();
-        }
 
         if (killEffect.getEffect() != null) {
             EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 0.0f);
@@ -161,10 +153,6 @@ public class SoloBridgeMatch extends SoloMatch {
         }
 
         if (killEffect.isAnimateDeath()) PlayerUtil.animateDeath(deadPlayer);
-
-        if (killEffect.isDropsClear()) {
-            this.getEntities().forEach(Entity::remove);
-        }
 
         if (!killEffect.getKillEffectSounds().isEmpty()) {
             float randomPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
@@ -192,9 +180,9 @@ public class SoloBridgeMatch extends SoloMatch {
         }
 
         if (getTeamPlayerA().equals(teamPlayer)) {
-            this.playerARounds += 1;
+            this.playerAPoints+= 1;
         } else {
-            this.playerBRounds += 1;
+            this.playerBPoints+= 1;
         }
 
         if (this.canEnd()) {
@@ -210,16 +198,16 @@ public class SoloBridgeMatch extends SoloMatch {
      *
      * @param viewer {@link Player} viewer
      * @param target {@link Player} target
-     * @return {@link ChatColor} color
+     * @return       {@link ChatColor} color
      */
     @Override
-    public org.bukkit.ChatColor getRelationColor(Player viewer, Player target) {
+    public ChatColor getRelationColor(Player viewer, Player target) {
         if (target == getPlayerB().getPlayer()) {
-            return org.bukkit.ChatColor.BLUE;
+            return ChatColor.BLUE;
         } else if (target == getPlayerA().getPlayer()) {
-            return org.bukkit.ChatColor.RED;
+            return ChatColor.RED;
         }
-        return org.bukkit.ChatColor.AQUA;
+        return ChatColor.AQUA;
     }
 
     /**

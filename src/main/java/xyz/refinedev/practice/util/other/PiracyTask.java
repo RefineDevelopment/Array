@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.util.other;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 
@@ -12,7 +13,10 @@ import xyz.refinedev.practice.Array;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class PiracyTask extends BukkitRunnable {
+
+    private final PiracyMeta meta;
 
     /**
      * When an object implementing interface <code>Runnable</code> is used
@@ -27,6 +31,6 @@ public class PiracyTask extends BukkitRunnable {
      */
     @Override
     public void run() {
-        new PiracyMeta(Array.getInstance(), Array.getInstance().getConfigHandler().getLICENSE()).hiddenVerify();
+        meta.hiddenVerify();
     }
 }

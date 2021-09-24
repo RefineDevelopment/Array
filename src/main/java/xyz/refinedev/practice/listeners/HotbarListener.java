@@ -16,10 +16,10 @@ public class HotbarListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getItem() == null || !event.getAction().name().contains("RIGHT")) return;
-        final Player player = event.getPlayer();
+        Player player = event.getPlayer();
 
-        final HotbarType hotbarType = plugin.getHotbarManager().fromItemStack(event.getItem());
-        final HotbarItem hotbarItem = plugin.getHotbarManager().getItem(event.getItem());
+        HotbarType hotbarType = plugin.getHotbarManager().fromItemStack(event.getItem());
+        HotbarItem hotbarItem = plugin.getHotbarManager().getItem(event.getItem());
 
         if (hotbarType == null || hotbarItem == null) return;
 

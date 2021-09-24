@@ -13,7 +13,7 @@ import xyz.refinedev.practice.api.API;
 import xyz.refinedev.practice.api.ArrayAPI;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.config.ConfigHandler;
-import xyz.refinedev.practice.event.EventManager;
+import xyz.refinedev.practice.managers.EventManager;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.hook.placeholderapi.LeaderboardPlaceholders;
 import xyz.refinedev.practice.managers.*;
@@ -103,7 +103,7 @@ public class Array extends JavaPlugin {
         mainConfig = new BasicConfigurationFile(this, "config", false);
         arenasConfig = new BasicConfigurationFile(this, "arenas", false);
         kitsConfig = new BasicConfigurationFile(this, "kits", false);
-        eventsConfig = new BasicConfigurationFile(this, "event", false);
+        eventsConfig = new BasicConfigurationFile(this, "events", false);
         hotbarConfig = new BasicConfigurationFile(this, "hotbar", false);
         messagesConfig = new BasicConfigurationFile(this, "lang", false);
         tablistConfig = new BasicConfigurationFile(this, "tablist", false);
@@ -144,7 +144,7 @@ public class Array extends JavaPlugin {
         this.mongoManager.init();
         this.mongoManager.loadCollections();
 
-        this.clanManager = new ClanManager(this);
+        this.clanManager = new ClanManager(this, mongoManager.getClans());
         this.clanManager.init();
 
         //Static abuse be like
@@ -176,10 +176,10 @@ public class Array extends JavaPlugin {
         this.knockbackManager = new KnockbackManager(this);
         this.knockbackManager.init();
 
-        this.commandsManager= new CommandsManager(this, drink);
+        this.commandsManager = new CommandsManager(this, drink);
         this.commandsManager.init();
 
-        this.pvpClassManager= new PvPClassManager(this);
+        this.pvpClassManager = new PvPClassManager(this);
         this.pvpClassManager.init();
 
         this.effectRestorer = new EffectRestorer(this);
@@ -221,19 +221,22 @@ public class Array extends JavaPlugin {
      * whole plugin.
      */
     public void initExpansions() {
-        this.scoreboardHandler = new ScoreboardHandler(this, new ScoreboardAdapter());
-        this.scoreboardHandler.setAssembleStyle(AssembleStyle.MODERN);
+        ScoreboardAdapter scoreboardAdapter = new ScoreboardAdapter(this, scoreboardConfig);
+
+        this.scoreboardHandler = new ScoreboardHandler(this, scoreboardAdapter);
+        this.scoreboardHandler.setAssembleStyle(AssembleStyle.KOHI);
         this.scoreboardHandler.setTicks(2);
 
         this.nameTagHandler = new NameTagHandler(this);
         this.nameTagHandler.init();
 
         if (this.configHandler.isTAB_ENABLED()) {
-            this.tablistHandler = new TablistHandler(new TablistAdapter(), this, tablistConfig.getInteger("TABLIST.UPDATE_TICKS") * 20L);
+            TablistAdapter tablistAdapter = new TablistAdapter(this, tablistConfig);
+            this.tablistHandler = new TablistHandler(tablistAdapter, this, tablistConfig.getInteger("TABLIST.UPDATE_TICKS") * 20L);
         }
 
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            LeaderboardPlaceholders placeholders = new LeaderboardPlaceholders();
+            LeaderboardPlaceholders placeholders = new LeaderboardPlaceholders(this);
             this.logger("&7Found PlaceholderAPI, Registering Expansions....");
             placeholders.register();
         }

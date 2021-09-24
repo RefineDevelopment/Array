@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.util.other;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.entity.EntityType;
 
 import java.util.EnumMap;
@@ -14,12 +15,13 @@ import java.util.Map;
  * Project: Array
  */
 
-public final class EntityUtils {
+@UtilityClass
+public class EntityUtils {
 
-    private static final Map<EntityType, String> displayNames = new EnumMap<>(EntityType.class);
-    private static int currentFakeEntityId = -1;
+    private final Map<EntityType, String> displayNames = new EnumMap<>(EntityType.class);
+    private int currentFakeEntityId = -1;
 
-    public static int getFakeEntityId() {
+    public int getFakeEntityId() {
         return currentFakeEntityId--;
     }
 
@@ -86,21 +88,17 @@ public final class EntityUtils {
         displayNames.put(EntityType.ZOMBIE, "Zombie");
     }
 
-    // Static utility class -- cannot be created.
-    private EntityUtils() {
-    }
-
     /**
      * Gets the display name of a given entity type.
      *
      * @param type The entity type to lookup.
      * @return The display name of the provided entity type.
      */
-    public static String getName(EntityType type) {
+    public String getName(EntityType type) {
         return (displayNames.get(type));
     }
 
-    public static EntityType parse(String input) {
+    public EntityType parse(String input) {
         for (Map.Entry<EntityType, String> entry : displayNames.entrySet()) {
             if (entry.getValue().replace(" ", "").equalsIgnoreCase(input)) {
                 return entry.getKey();

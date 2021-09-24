@@ -7,6 +7,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -342,7 +343,7 @@ public class SoloMatch extends Match {
         }
 
         if (killEffect.isDropsClear()) {
-            this.getEntities().forEach(Entity::remove);
+            this.getDroppedItems().forEach(Item::remove);
         }
 
         if (killEffect.isAnimateDeath()) PlayerUtil.animateDeath(deadPlayer);

@@ -20,9 +20,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DivisionsManager {
 
-    private final List<Division> divisions = new ArrayList<>();
     private final Array plugin;
     private final BasicConfigurationFile config;
+
+    private final List<Division> divisions = new ArrayList<>();
 
     public void init() {
 

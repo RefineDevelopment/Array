@@ -136,9 +136,7 @@ public class ConfigHandler {
 
     public void loadTablistRanks() {
         this.tablistRanks = new ArrayList<>();
-        BasicConfigurationFile config = plugin.getTablistConfig();
-
-        ConfigurationSection configSection = config.getConfigurationSection("TABLIST.SORT_RANKS");
+        ConfigurationSection configSection = plugin.getTablistConfig().getConfigurationSection("TABLIST.SORT_RANKS");
         if (configSection == null || configSection.getKeys(false).isEmpty()) return;
 
         for ( String key : configSection.getKeys(false) ) {

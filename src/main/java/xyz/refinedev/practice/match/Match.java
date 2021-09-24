@@ -98,8 +98,8 @@ public abstract class Match {
     public static void preload() {
         final Array plugin = Array.getInstance();
 
-        new MatchPearlCooldownTask().runTaskTimerAsynchronously(plugin, 2L, 2L);
-        new MatchBowCooldownTask().runTaskTimerAsynchronously(plugin, 2L, 2L);
+        new MatchPearlCooldownTask(plugin).runTaskTimerAsynchronously(plugin, 2L, 2L);
+        new MatchBowCooldownTask(plugin).runTaskTimerAsynchronously(plugin, 2L, 2L);
         new MatchSnapshotCleanupTask().runTaskTimerAsynchronously(plugin, 20L * 5, 20L * 5);
 
         TaskUtil.runTimer(() -> Bukkit.getWorlds().forEach(world -> {
@@ -235,7 +235,7 @@ public abstract class Match {
 
         if (plugin.getConfigHandler().isRATINGS_ENABLED()) {
             this.getPlayers().stream().map(Profile::getByPlayer).forEach(profile ->  {
-                profile.setCanIssueRating(true);
+                profile.setIssueRating(true);
                 profile.setRatingArena(arena);
                 plugin.getRatingsManager().sendRatingMessage(profile.getPlayer(), this.getArena());
             });

@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.kit;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -8,7 +10,7 @@ import org.bukkit.potion.PotionEffect;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter @Setter
 public class KitInventory {
 
     private String customName = "Default";

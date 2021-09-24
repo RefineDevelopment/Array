@@ -1,14 +1,16 @@
 package xyz.refinedev.practice.match.task;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.profile.Profile;
 
+@RequiredArgsConstructor
 public class MatchPearlCooldownTask extends BukkitRunnable {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin;
 
     @Override
     public void run() {

@@ -13,13 +13,12 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.event.meta.EventTask;
 import xyz.refinedev.practice.event.meta.group.EventGroup;
 import xyz.refinedev.practice.event.meta.group.EventTeamPlayer;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
 import xyz.refinedev.practice.event.meta.player.EventPlayerState;
-import xyz.refinedev.practice.match.Match;
+import xyz.refinedev.practice.managers.EventManager;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.util.chat.Clickable;
@@ -33,8 +32,8 @@ public abstract class Event {
 
 	private String Event_Prefix;
 
-	private final Array plugin = Array.getInstance();
-	private final EventManager eventManager = plugin.getEventManager();
+	private final Array plugin;
+	private final EventManager eventManager;
 
 	private final Map<UUID, EventPlayer> eventPlayers = new HashMap<>();
 	private final Map<UUID, EventTeamPlayer> eventTeamPlayers = new HashMap<>();
@@ -85,11 +84,10 @@ public abstract class Event {
 		List<Player> players = new ArrayList<>();
 
 		for (EventPlayer eventPlayer : this.isTeam() ? this.eventTeamPlayers.values() : this.eventPlayers.values()) {
-			final Player player = eventPlayer.getPlayer();
+			Player player = eventPlayer.getPlayer();
+			if (player == null) continue;
 
-			if (player != null) {
-				players.add(player);
-			}
+			players.add(player);
 		}
 
 		return players;
@@ -125,10 +123,10 @@ public abstract class Event {
 
 		this.onJoin(player);
 
-		final Profile profile = Profile.getByUuid(player.getUniqueId());
-
+		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setEvent(this);
 		profile.setState(ProfileState.IN_EVENT);
+		profile.handleVisibility();
 		profile.refreshHotbar();
 
 		if (isFreeForAll()) {
@@ -136,17 +134,6 @@ public abstract class Event {
 		} else {
 			player.teleport(eventManager.getSpectator(this));
 		}
-
-		TaskUtil.runAsync(() -> {
-			for (Player otherPlayer : getPlayers()) {
-				Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
-				otherProfile.handleVisibility(otherPlayer, player);
-				profile.handleVisibility(player, otherPlayer);
-
-				plugin.getNameTagHandler().reloadPlayer(player);
-				plugin.getNameTagHandler().reloadOthersFor(player);
-			}
-		});
 	}
 
 	public void handleDeath(Player player) {
@@ -169,17 +156,9 @@ public abstract class Event {
 		this.onLeave(player);
 
 		Profile profile = Profile.getByPlayer(player);
-
-		TaskUtil.runAsync(() -> {
-				for (Player otherPlayer : getPlayers()) {
-					Profile otherProfile = Profile.getByUuid(otherPlayer.getUniqueId());
-					otherProfile.handleVisibility(otherPlayer, player);
-					profile.handleVisibility(player, otherPlayer);
-
-					plugin.getNameTagHandler().reloadPlayer(player);
-					plugin.getNameTagHandler().reloadOthersFor(player);
-				}
-		});
+		profile.setState(ProfileState.IN_LOBBY);
+		profile.setEvent(null);
+		profile.teleportToSpawn();
 
 		if (state == EventState.WAITING) {
 			broadcastMessage(Locale.EVENT_LEAVE.toString()
@@ -190,10 +169,6 @@ public abstract class Event {
 		}
 		player.sendMessage(Locale.EVENT_PLAYER_LEAVE.toString().replace("<event_name>", getName()));
 
-		profile.setState(ProfileState.IN_LOBBY);
-		profile.setEvent(null);
-		profile.refreshHotbar();
-		profile.teleportToSpawn();
 	}
 
 	public void end() {
@@ -334,8 +309,6 @@ public abstract class Event {
 		Profile profile = Profile.getByUuid(player.getUniqueId());
 		profile.setEvent(null);
 		profile.setState(ProfileState.IN_LOBBY);
-		profile.refreshHotbar();
-		profile.handleVisibility();
 		profile.teleportToSpawn();
 	}
 

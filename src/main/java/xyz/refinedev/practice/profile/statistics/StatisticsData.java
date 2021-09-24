@@ -13,6 +13,8 @@ import xyz.refinedev.practice.util.chat.CC;
 
 import java.util.*;
 
+
+//TODO: Recode this
 @Getter @Setter
 public class StatisticsData {
 
@@ -46,8 +48,8 @@ public class StatisticsData {
         }
     }
 
-    public HashMap<Integer, ItemStack> getKitItems() {
-        HashMap<Integer, ItemStack> toReturn = new HashMap<>();
+    public Map<Integer, ItemStack> getKitItems() {
+        Map<Integer, ItemStack> toReturn = new HashMap<>();
 
         List<KitInventory> reversedLoadouts = new ArrayList<>(Arrays.asList(this.loadouts));
 
@@ -55,18 +57,16 @@ public class StatisticsData {
 
         for (int i = 0; i < this.loadouts.length; i++) {
             for (KitInventory loadout : reversedLoadouts) {
-                if (loadout != null) {
-                    final ItemStack itemStack = new ItemStack(Material.ENCHANTED_BOOK);
-                    final ItemMeta itemMeta = itemStack.getItemMeta();
+                if (loadout == null) continue;
+                ItemStack itemStack = new ItemStack(Material.ENCHANTED_BOOK);
+                ItemMeta itemMeta = itemStack.getItemMeta();
 
-                    itemMeta.setDisplayName(CC.translate(loadout.getCustomName() + CC.GRAY + " (Right-Click)"));
-                    itemMeta.setLore(Arrays.asList(ChatColor.GRAY + "Right click this book", ChatColor.GRAY + "to receive the kit."));
-                    itemStack.setItemMeta(itemMeta);
+                itemMeta.setDisplayName(CC.translate(loadout.getCustomName() + CC.GRAY + " (Right-Click)"));
+                itemMeta.setLore(Arrays.asList(ChatColor.GRAY + "Right click this book", ChatColor.GRAY + "to receive the kit."));
+                itemStack.setItemMeta(itemMeta);
 
-                    if (!toReturn.containsValue(itemStack)) {
-                        toReturn.put(i, itemStack);
-                    }
-
+                if (!toReturn.containsValue(itemStack)) {
+                    toReturn.put(i, itemStack);
                 }
             }
         }

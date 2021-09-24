@@ -42,8 +42,8 @@ public class SumoSolo extends Event {
     private EventPlayer roundPlayerA;
     private EventPlayer roundPlayerB;
 
-    public SumoSolo(Player host) {
-        super("Sumo", new PlayerSnapshot(host.getUniqueId(), host.getName()), 100, EventType.SUMO_SOLO);
+    public SumoSolo(Array plugin, Player host) {
+        super(plugin, plugin.getEventManager(),"Sumo", new PlayerSnapshot(host.getUniqueId(), host.getName()), 100, EventType.SUMO_SOLO);
 
         this.setEvent_Prefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
     }

@@ -13,6 +13,7 @@ import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.SoloMatch;
 import xyz.refinedev.practice.match.types.TeamMatch;
+import xyz.refinedev.practice.match.types.kit.BoxingMatch;
 import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
 import xyz.refinedev.practice.match.types.kit.TeamBridgeMatch;
 import xyz.refinedev.practice.queue.Queue;
@@ -255,7 +256,7 @@ public class Kit {
         } else if (gameRules.isMlgRush()) {
             //
         } else if (gameRules.isBoxing()) {
-            //
+            return new BoxingMatch(queue, playerA, playerB, kit, arena, queueType);
         }
         return new SoloMatch(queue, playerA, playerB, kit, arena, queueType);
     }

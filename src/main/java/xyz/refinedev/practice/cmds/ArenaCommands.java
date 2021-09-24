@@ -12,8 +12,8 @@ import xyz.refinedev.practice.arena.impl.SharedArena;
 import xyz.refinedev.practice.arena.impl.StandaloneArena;
 import xyz.refinedev.practice.arena.impl.TheBridgeArena;
 import xyz.refinedev.practice.arena.meta.Rating;
-import xyz.refinedev.practice.arena.runnables.BridgePasteRunnable;
 import xyz.refinedev.practice.arena.runnables.StandalonePasteRunnable;
+import xyz.refinedev.practice.arena.runnables.TheBridgePasteRunnable;
 import xyz.refinedev.practice.arena.selection.Selection;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
@@ -168,11 +168,10 @@ public class ArenaCommands {
 
         Arena.setPasting(true);
 
-        //Can't run it asynchronous cuz duh
         if (arena.getType() == ArenaType.THEBRIDGE) {
-            TaskUtil.run(new BridgePasteRunnable((TheBridgeArena) arena, amount));
+            TaskUtil.run(new TheBridgePasteRunnable(plugin, (TheBridgeArena) arena, amount));
         } else {
-            TaskUtil.run(new StandalonePasteRunnable((StandaloneArena) arena, amount));
+            TaskUtil.run(new StandalonePasteRunnable(plugin, (StandaloneArena) arena, amount));
         }
 
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Pasting...."));
