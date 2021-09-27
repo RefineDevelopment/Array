@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.cmds.standalone;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.match.MatchSnapshot;
 import xyz.refinedev.practice.match.menu.MatchDetailsMenu;
 import xyz.refinedev.practice.util.chat.CC;
@@ -18,20 +20,17 @@ import java.util.UUID;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class ViewInvCommand {
+
+    private final Array plugin;
 
     @Command(name = "", desc = "Open match details menu", usage = "<uuid>")
     public void viewInventory(@Sender Player player, String id) {
-        MatchSnapshot cachedInventory;
-
-        try {
-            cachedInventory = MatchSnapshot.getByUuid(UUID.fromString(id));
-        } catch (Exception e) {
-            cachedInventory = MatchSnapshot.getByName(id);
-        }
+        MatchSnapshot cachedInventory = plugin.getMatchManager().getByString(id);
 
         if (cachedInventory == null) {
-            player.sendMessage(CC.RED + "ID provided for the inventory has been expired.");
+            player.sendMessage(CC.RED + "That inventory does not exist or has been expired.");
             return;
         }
 

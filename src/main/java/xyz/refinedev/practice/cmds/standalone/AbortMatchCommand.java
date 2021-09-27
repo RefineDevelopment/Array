@@ -23,7 +23,7 @@ public class AbortMatchCommand {
     @Command(name = "", usage = "<target>", desc = "Cancel a player's Match")
     @Require("array.staff.match")
     public void cancelMatch(@Sender CommandSender player, Player target) {
-        Profile profile = Profile.getByPlayer(target);
+        Profile profile = plugin.getProfileManager().getByPlayer(target);
         if (!profile.isInFight()) {
             player.sendMessage(Locale.MATCH_NOT_IN.toString());
             return;

@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.match.MatchSnapshot;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.util.chat.CC;
@@ -23,6 +24,8 @@ import java.util.*;
 //TODO: Recode this
 @AllArgsConstructor
 public class MatchDetailsMenu extends Menu {
+    
+    private final Array plugin = Array.getInstance();
 
     private final MatchSnapshot snapshot;
     private final MatchSnapshot opponent;
@@ -94,24 +97,16 @@ public class MatchDetailsMenu extends Menu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
-            if (opponent != null) {
-                new MatchDetailsMenu(opponent, snapshot).openMenu(player);
-            } else {
-                MatchSnapshot cachedInventory;
-
-                try {
-                    cachedInventory = MatchSnapshot.getByUuid(switchTo.getUniqueId());
-                } catch (Exception e) {
-                    cachedInventory = MatchSnapshot.getByName(switchTo.getUniqueId().toString());
-                }
+            if (opponent == null) {
+                MatchSnapshot cachedInventory = plugin.getMatchManager().getByString(switchTo.getUniqueId().toString());
 
                 if (cachedInventory == null) {
                     player.sendMessage(CC.RED + "Couldn't find an inventory for that ID.");
                     return;
                 }
-
                 new MatchDetailsMenu(cachedInventory, null).openMenu(player);
             }
+            new MatchDetailsMenu(opponent, snapshot).openMenu(player);
         }
 
     }

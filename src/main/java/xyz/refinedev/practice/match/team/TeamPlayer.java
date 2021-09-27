@@ -130,7 +130,7 @@ public class TeamPlayer {
     }
 
     public Profile getProfile() {
-        return Profile.getByUuid(uniqueId);
+        return plugin.getProfileManager().getByUUID(uniqueId);
     }
 
 }

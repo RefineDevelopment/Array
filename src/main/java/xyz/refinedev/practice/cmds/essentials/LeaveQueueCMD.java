@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.cmds.essentials;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.queue.QueueProfile;
@@ -16,11 +18,14 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class LeaveQueueCMD {
+
+    private final Array plugin;
 
     @Command(name = "", desc = "Leave your current queue.")
     public void leave(@Sender Player player) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         QueueProfile queueProfile = profile.getQueueProfile();
 
         if (!profile.isInQueue()) {

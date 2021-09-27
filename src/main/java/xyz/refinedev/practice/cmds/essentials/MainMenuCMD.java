@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.cmds.essentials;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.menu.MainMenu;
@@ -16,11 +18,14 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class MainMenuCMD {
+
+    private final Array plugin;
 
     @Command(name = "", desc = "Open Main Menu")
     public void onCMD(@Sender Player player) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         if (!profile.isInLobby()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;

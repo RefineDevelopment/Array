@@ -68,7 +68,7 @@ public class SoloTournament extends Tournament<Player> {
      */
     @Override
     public void leave(Player player) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         if (profile.getMatch() != null) {
             profile.getMatch().handleDeath(player);
         }

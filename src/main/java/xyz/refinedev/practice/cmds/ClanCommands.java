@@ -1,6 +1,6 @@
 package xyz.refinedev.practice.cmds;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
@@ -53,7 +53,7 @@ public class ClanCommands {
             return;
         }
 
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         if (profile.hasClan()) {
             player.sendMessage(Locale.CLAN_ALREADY_PARTOF.toString().replace("<clan_name>", profile.getClan().getName()));
             return;
@@ -73,7 +73,7 @@ public class ClanCommands {
 
     @Command(name = "accept", aliases = "join", usage = "<clan/leader> [password]", desc = "Join a Clan using its leader or name")
     public void accept(@Sender Player player, String text, @OptArg() String password) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         Clan clan;
 
         if (profile.hasClan()) {
@@ -114,7 +114,7 @@ public class ClanCommands {
 
     @Command(name = "chat", desc = "Toggle clan chat mode for your profile")
     public void clanCaht(@Sender Player player) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         if (profile.getClan() == null) {
             player.sendMessage(CC.translate(Locale.CLAN_DONOTHAVE.toString()));
             return;
@@ -129,8 +129,8 @@ public class ClanCommands {
 
     @Command(name = "invite", usage = "<target>", desc = "Invite a player to your Clan")
     public void invite(@Sender Player player, Player target) {
-        Profile profile = Profile.getByPlayer(player);
-        Profile targetProfile = Profile.getByPlayer(target);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile targetProfile = plugin.getProfileManager().getByPlayer(target);
         Clan clan = profile.getClan();
 
         if (clan == null) {
@@ -164,13 +164,13 @@ public class ClanCommands {
         }
 
         plugin.getClanManager().invite(clan, target);
-        clan.broadcast(Locale.CLAN_INVITED_BROADCAST.toString().replace("<invited>", plugin.getRankManager().getCoreType().getCoreAdapter().getFullName(target)));
+        clan.broadcast(Locale.CLAN_INVITED_BROADCAST.toString().replace("<invited>", plugin.getCoreHandler().getCoreType().getCoreAdapter().getFullName(target)));
     }
 
 
     @Command(name = "leave", aliases = "resign", desc = "Leave your current clan")
     public void leave(@Sender Player player) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
 
         if (profile.getClan() == null) {
             player.sendMessage(Locale.CLAN_DONOTHAVE.toString());
@@ -188,7 +188,7 @@ public class ClanCommands {
 
     @Command(name = "disband", desc = "Disband your Clan")
     public void disband(@Sender Player player) {
-       Profile profile = Profile.getByPlayer(player);
+       Profile profile = plugin.getProfileManager().getByPlayer(player);
        ClanProfile clanProfile = profile.getClanProfile();
        Clan clan = profile.getClan();
 
@@ -208,7 +208,7 @@ public class ClanCommands {
 
     @Command(name = "information", aliases = "info", desc = "View information about your Clan")
     public void information(@Sender Player player) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         Clan clan = profile.getClan();
 
         if (clan == null) {
@@ -221,10 +221,10 @@ public class ClanCommands {
 
     @Command(name = "kick", desc = "Kick a player from your clan")
     public void kick(@Sender Player player, String target) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         Clan clan = profile.getClan();
         UUID uuid = PlayerUtil.getUUIDByName(target);
-        Profile targetProfile = Profile.getByUuid(uuid);
+        Profile targetProfile = plugin.getProfileManager().getByUUID(uuid);
 
         if (clan == null) {
             player.sendMessage(Locale.CLAN_DONOTHAVE.toString());
@@ -246,10 +246,10 @@ public class ClanCommands {
 
     @Command(name = "kick", desc = "Kick a player from your clan")
     public void ban(@Sender Player player, String target) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         Clan clan = profile.getClan();
         UUID uuid = PlayerUtil.getUUIDByName(target);
-        Profile targetProfile = Profile.getByUuid(uuid);
+        Profile targetProfile = plugin.getProfileManager().getByUUID(uuid);
 
         if (clan == null) {
             player.sendMessage(Locale.CLAN_DONOTHAVE.toString());
@@ -271,7 +271,7 @@ public class ClanCommands {
 
     @Command(name = "password", aliases = {"setpassword", "setpass", "pass"}, desc = "Set your clan's password")
     public void password(@Sender Player player, String password) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         Clan clan = profile.getClan();
 
         if (clan == null) {
@@ -300,7 +300,7 @@ public class ClanCommands {
 
     @Command(name = "description", aliases = {"desc", "setdesc", "setdescription"}, desc = "Set your clan's description")
     public void description(@Sender Player player, @Text String description) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         Clan clan = profile.getClan();
 
         if (clan == null) {
@@ -320,10 +320,10 @@ public class ClanCommands {
 
     @Command(name = "promote", desc = "Promote a member of your clan to Captain")
     public void promote(@Sender Player player,  String target) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         Clan clan = profile.getClan();
         UUID uuid = PlayerUtil.getUUIDByName(target);
-        Profile targetProfile = Profile.getByUuid(uuid);
+        Profile targetProfile = plugin.getProfileManager().getByUUID(uuid);
 
         if (clan == null) {
             player.sendMessage(Locale.CLAN_DONOTHAVE.toString());
@@ -350,10 +350,10 @@ public class ClanCommands {
 
     @Command(name = "demote", desc = "Demote a Captain to Member Role from your Clan")
     public void demote(@Sender Player player,  String target) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         Clan clan = profile.getClan();
         UUID uuid = PlayerUtil.getUUIDByName(target);
-        Profile targetProfile = Profile.getByUuid(uuid);
+        Profile targetProfile = plugin.getProfileManager().getByUUID(uuid);
 
         if (clan == null) {
             player.sendMessage(Locale.CLAN_DONOTHAVE.toString());
@@ -385,10 +385,10 @@ public class ClanCommands {
 
     @Command(name = "leader", desc = "Promote someone to Leader and demote yourself in your Clan")
     public void leader(@Sender Player player, String target) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         Clan clan = profile.getClan();
         UUID uuid = PlayerUtil.getUUIDByName(target);
-        Profile targetProfile = Profile.getByUuid(uuid);
+        Profile targetProfile = plugin.getProfileManager().getByUUID(uuid);
 
         if (clan == null) {
             player.sendMessage(Locale.CLAN_DONOTHAVE.toString());

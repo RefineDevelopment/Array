@@ -26,7 +26,7 @@ public class RematchProcedure {
 
     private final long timestamp = System.currentTimeMillis();
     private final Array plugin = Array.getInstance();
-    private final CoreAdapter rank = plugin.getRankManager().getCoreType().getCoreAdapter();
+    private final CoreAdapter rank = plugin.getCoreHandler().getCoreType().getCoreAdapter();
 
     private final UUID key;
     private final UUID sender;
@@ -43,12 +43,10 @@ public class RematchProcedure {
         Player sender = plugin.getServer().getPlayer(this.sender);
         Player target = plugin.getServer().getPlayer(this.target);
 
-        if (!sender.isOnline() || !target.isOnline()) {
-            return;
-        }
+        if (!sender.isOnline() || !target.isOnline()) return;
 
-        Profile senderProfile = Profile.getByUuid(sender.getUniqueId());
-        Profile targetProfile = Profile.getByUuid(target.getUniqueId());
+        Profile senderProfile = plugin.getProfileManager().getByUUID(sender.getUniqueId());
+        Profile targetProfile = plugin.getProfileManager().getByUUID(target.getUniqueId());
 
         if (senderProfile.getRematchData() == null || targetProfile.getRematchData() == null || !senderProfile.getRematchData().getKey().equals(targetProfile.getRematchData().getKey())) {
             return;
@@ -77,12 +75,12 @@ public class RematchProcedure {
         this.sent = true;
         targetProfile.getRematchData().receive = true;
 
-        senderProfile.checkForHotbarUpdate();
-        targetProfile.checkForHotbarUpdate();
+        plugin.getProfileManager().checkForHotbarUpdate(senderProfile);
+        plugin.getProfileManager().checkForHotbarUpdate(targetProfile);
 
         TaskUtil.runLaterAsync(() -> {
-            senderProfile.checkForHotbarUpdate();
-            targetProfile.checkForHotbarUpdate();
+            plugin.getProfileManager().checkForHotbarUpdate(senderProfile);
+            plugin.getProfileManager().checkForHotbarUpdate(targetProfile);
         }, 15 * 20);
     }
 
@@ -94,8 +92,8 @@ public class RematchProcedure {
             return;
         }
 
-        Profile senderProfile = Profile.getByUuid(sender.getUniqueId());
-        Profile targetProfile = Profile.getByUuid(target.getUniqueId());
+        Profile senderProfile = plugin.getProfileManager().getByUUID(sender.getUniqueId());
+        Profile targetProfile = plugin.getProfileManager().getByUUID(target.getUniqueId());
 
         if (senderProfile.getRematchData() == null || targetProfile.getRematchData() == null || !senderProfile.getRematchData().getKey().equals(targetProfile.getRematchData().getKey())) {
             return;
@@ -138,15 +136,15 @@ public class RematchProcedure {
     }
 
     private String formatMessages(String string, Player sender, Player target) {
-        Profile senderProfile = Profile.getByUuid(sender.getUniqueId());
-        Profile targetProfile = Profile.getByUuid(target.getUniqueId());
+        Profile senderProfile = plugin.getProfileManager().getByUUID(sender.getUniqueId());
+        Profile targetProfile = plugin.getProfileManager().getByUUID(target.getUniqueId());
 
         return string
                 .replace("<ranked>","&cFalse")
                 .replace("<player1_ping>", String.valueOf(PlayerUtil.getPing(sender)))
                 .replace("<player2_ping>", String.valueOf(PlayerUtil.getPing(target)))
-                .replace("<player1>", senderProfile.getColouredName())
-                .replace("<player2>", targetProfile.getColouredName());
+                .replace("<player1>", plugin.getProfileManager().getColouredName(senderProfile)
+                .replace("<player2>", plugin.getProfileManager().getColouredName(targetProfile)));
     }
 
     private String replaceOpponent(String opponent, Player player) {

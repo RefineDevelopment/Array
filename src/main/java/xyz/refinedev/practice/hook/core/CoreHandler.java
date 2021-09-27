@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.managers;
+package xyz.refinedev.practice.hook.core;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,19 +16,20 @@ import xyz.refinedev.practice.hook.core.CoreType;
 
 @Getter
 @RequiredArgsConstructor
-public class RankManager {
+public class CoreHandler {
 
     private final Array plugin;
     private CoreType coreType;
 
     public void init() {
-        this.coreType= CoreType.get();
+        if (!plugin.getConfigHandler().isCORE_HOOK_ENABLED()) return;
+        this.coreType = CoreType.get();
 
         if (coreType.equals(CoreType.DEFAULT)) {
-            plugin.logger("&7No compatible Core was found, Defaulting to Green Color!");
+            plugin.logger("&7No compatible Core was found, defaulting to &aGreen &7color!");
             return;
         }
-        plugin.logger("&aFound " + coreType.getName() + ", implementing core hook...");
+        plugin.logger("&7Found &c" + coreType.getName() + "&7, Implementing Core Hook...");
     }
 
 

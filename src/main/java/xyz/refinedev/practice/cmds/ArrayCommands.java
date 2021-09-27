@@ -20,6 +20,8 @@ import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Require;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 import xyz.refinedev.practice.util.command.annotation.Text;
+import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
+import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.other.Description;
 import xyz.refinedev.practice.util.other.TaskUtil;
@@ -121,6 +123,10 @@ public class ArrayCommands {
         plugin.getTablistConfig().reload();
         plugin.getScoreboardConfig().reload();
 
+        for ( FoldersConfigurationFile config : plugin.getMenuManager().getConfigs().values() ) {
+            config.reload();
+        }
+
         player.sendMessage(CC.translate("&8[&c&lArray&8] &aSuccessfully reloaded all configurations."));
     }
 
@@ -145,7 +151,7 @@ public class ArrayCommands {
     @Command(name = "spawn", aliases = "reset", desc = "Reset your profile and Teleport to Spawn")
     @Require("array.listeners.admin")
     public void spawn(@Sender Player player) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         if (profile.isBusy()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
@@ -174,7 +180,7 @@ public class ArrayCommands {
     @Command(name = "refill", aliases = "cheat", desc = "Refill your Inventory with Soup or Potions Quitely")
     @Require("array.listeners.admin")
     public void refill(@Sender Player player) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         if (profile.isInFight()) {
             if (player.getInventory().contains(Material.POTION)) {
                 while (player.getInventory().firstEmpty() != -1) {
@@ -269,7 +275,7 @@ public class ArrayCommands {
             Kit kitType = Kit.getByName(type);
             if (kitType != null) {
                 Player target = Bukkit.getPlayer(reach);
-                Profile profile = Profile.getByPlayer(target);
+                Profile profile = plugin.getProfileManager().getByPlayer(target);
                 for ( KitInventory kitInventory : profile.getStatisticsData().get(kitType).getLoadouts() ) {
                     profile.getStatisticsData().get(kitType).deleteKit(kitInventory);
                 }
@@ -279,7 +285,7 @@ public class ArrayCommands {
                 if (type.equalsIgnoreCase("all")) {
                     for ( Kit kit : Kit.getKits() ) {
                         Player target = Bukkit.getPlayer(reach);
-                        Profile profile = Profile.getByPlayer(target);
+                        Profile profile = plugin.getProfileManager().getByPlayer(target);
                         for ( KitInventory kitInventory : profile.getStatisticsData().get(kit).getLoadouts() ) {
                             profile.getStatisticsData().get(kit).deleteKit(kitInventory);
                         }

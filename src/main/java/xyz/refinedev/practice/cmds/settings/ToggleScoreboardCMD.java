@@ -20,7 +20,7 @@ public class ToggleScoreboardCMD {
 
     @Command(name = "", desc = "Toggle your scoreboard")
     public void toggle(@Sender Player player) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         SettingsMeta settings = profile.getSettings();
 
         settings.setScoreboardEnabled(!settings.isScoreboardEnabled());

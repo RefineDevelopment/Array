@@ -1,5 +1,6 @@
-package xyz.refinedev.practice.util.menu;
+package xyz.refinedev.practice.listeners;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,9 +13,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
+@RequiredArgsConstructor
 public class MenuListener implements Listener {
+
+    private final Array plugin;
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onButtonPress(InventoryClickEvent event) {
@@ -26,7 +33,6 @@ public class MenuListener implements Listener {
                 if ((event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT)) {
                     event.setCancelled(true);
                 }
-
                 return;
             }
 
@@ -88,27 +94,17 @@ public class MenuListener implements Listener {
 
             Menu.currentlyOpenedMenus.remove(player.getName());
         }
-        player.setMetadata("editorglitch", new FixedMetadataValue(Array.getInstance(), true));
+        player.setMetadata("editorglitch", new FixedMetadataValue(plugin, true));
     }
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
 
         if (player.hasMetadata("editorglitch")) {
-            player.removeMetadata("editorglitch", Array.getInstance());
-
-            for ( ItemStack it : player.getInventory().getContents()) {
-                if (it != null) {
-                    ItemMeta meta = it.getItemMeta();
-                    if (meta != null && meta.hasDisplayName()) {
-
-                        if (meta.getDisplayName().contains("§b§c§d§e")) {
-                            player.getInventory().remove(it);
-                        }
-                    }
-                }
-            }
+            player.removeMetadata("editorglitch", plugin);
+            plugin.getProfileManager().refreshHotbar(profile);
         }
     }
 

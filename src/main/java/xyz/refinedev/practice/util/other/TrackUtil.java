@@ -21,7 +21,7 @@ public class TrackUtil {
         int inQueues = 0;
 
         for ( Player player : Bukkit.getOnlinePlayers()) {
-            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
             if (profile.isInQueue()) {
                 inQueues++;
@@ -35,7 +35,7 @@ public class TrackUtil {
         int inFights = 0;
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
             if (profile.isInFight() || profile.isInEvent()) {
                 inFights++;

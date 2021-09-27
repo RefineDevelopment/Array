@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.cmds.essentials;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.kit.kiteditor.menu.KitEditorSelectKitMenu;
 import xyz.refinedev.practice.profile.Profile;
@@ -16,16 +18,19 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class KitEditorCMD {
+
+    private final Array plugin;
 
     @Command(name = "", desc = "Open the kit editor via command")
     public void kitEditor(@Sender Player player) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
 
-        if (profile.isInLobby() || profile.isInQueue()) {
-            new KitEditorSelectKitMenu().openMenu(player);
-        } else {
+        if (!profile.isInLobby() || profile.isBusy()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
+            return;
         }
+         new KitEditorSelectKitMenu().openMenu(player);
     }
 }

@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.listeners;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,12 +14,15 @@ import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.other.DebugUtil;
 import xyz.refinedev.practice.util.other.Description;
 
+@RequiredArgsConstructor
 public class QueueListener implements Listener {
+
+    private final Array plugin;
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
 
         if (profile.getQueue() == null) return;
         if (!profile.isInQueue()) return;

@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.match.task;
+package xyz.refinedev.practice.task;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
@@ -15,7 +15,7 @@ public class MatchPearlCooldownTask extends BukkitRunnable {
     @Override
     public void run() {
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
             if ((profile.isInFight() || profile.isInEvent()) && !profile.getEnderpearlCooldown().hasExpired()) {
                 int seconds = Math.round(profile.getEnderpearlCooldown().getRemaining()) / 1_000;

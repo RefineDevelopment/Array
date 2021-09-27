@@ -65,7 +65,7 @@ public class Clan {
 
         this.maxMembers = 25;
 
-        Profile profile = Profile.getByUuid(leader);
+        Profile profile = plugin.getProfileManager().getByUUID(leader);
         profile.setClan(this);
     }
 

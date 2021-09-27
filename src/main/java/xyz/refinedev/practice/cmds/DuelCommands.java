@@ -35,7 +35,7 @@ import xyz.refinedev.practice.util.other.TaskUtil;
 public class DuelCommands {
 
     private final Array plugin = Array.getInstance();
-    private final CoreAdapter coreAdapter= plugin.getRankManager().getCoreType().getCoreAdapter();
+    private final CoreAdapter coreAdapter= plugin.getCoreHandler().getCoreType().getCoreAdapter();
 
     private Match match;
     private Arena arena;
@@ -43,8 +43,8 @@ public class DuelCommands {
 
     @Command(name = "", desc = "Duel a player", usage = "<player>")
     public void duel(@Sender Player player, Player target) {
-        Profile senderProfile = Profile.getByUuid(player.getUniqueId());
-        Profile receiverProfile = Profile.getByUuid(target.getUniqueId());
+        Profile senderProfile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile receiverProfile = plugin.getProfileManager().getByUUID(target.getUniqueId());
 
         if (player.getUniqueId().equals(target.getUniqueId())) {
             player.sendMessage(CC.RED + "You cannot duel yourself.");
@@ -78,8 +78,8 @@ public class DuelCommands {
 
     @Command(name = "accept", usage = "<player> <target>", desc = "Accept a duel pending request")
     public void duelAccept(@Sender Player player, Player target) {
-        Profile senderProfile = Profile.getByUuid(player.getUniqueId());
-        Profile receiverProfile = Profile.getByUuid(target.getUniqueId());
+        Profile senderProfile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile receiverProfile = plugin.getProfileManager().getByUUID(target.getUniqueId());
 
         if (senderProfile.isBusy()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());

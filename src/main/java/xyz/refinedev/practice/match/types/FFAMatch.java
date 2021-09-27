@@ -59,19 +59,19 @@ public class FFAMatch extends Match {
 
         if (getKit().getGameRules().isStickSpawn() || getKit().getGameRules().isSumo() || getKit().getGameRules().isParkour()) PlayerUtil.denyMovement(player);
 
-        if (!getKit().getGameRules().isNoItems() || !getKit().getGameRules().isSumo()) TaskUtil.runLater(() -> Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
+        if (!getKit().getGameRules().isNoItems() || !getKit().getGameRules().isSumo()) TaskUtil.runLater(() -> plugin.getProfileManager().getByUUID(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
 
         if (getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
 
         if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
-        plugin.getKnockbackManager().kitKnockback(player, getKit());
+        plugin.getSpigotHandler().kitKnockback(player, getKit());
         player.setNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         Team team = getTeam(player);
 
         for (Player enemy : team.getPlayers()) {
-            Profile enemyProfile = Profile.getByPlayer(enemy);
+            Profile enemyProfile = plugin.getProfileManager().getByPlayer(enemy);
             enemyProfile.handleVisibility();
         }
 
@@ -103,7 +103,7 @@ public class FFAMatch extends Match {
             Player player = teamPlayer.getPlayer();
             if (player == null) continue;
 
-            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
             profile.handleVisibility();
 
             this.getSnapshots().add(new MatchSnapshot(teamPlayer));
@@ -124,9 +124,9 @@ public class FFAMatch extends Match {
                     player.setFireTicks(0);
                     player.updateInventory();
 
-                    plugin.getKnockbackManager().resetKnockback(player);
+                    plugin.getSpigotHandler().resetKnockback(player);
 
-                    Profile profile = Profile.getByUuid(player.getUniqueId());
+                    Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
                     profile.setState(ProfileState.IN_LOBBY);
                     profile.setMatch(null);
                     profile.handleVisibility();
@@ -146,7 +146,7 @@ public class FFAMatch extends Match {
     @Override
     public void handleKillEffect(Player deadPlayer, Player killerPlayer) {
         if (killerPlayer == null) return;
-        Profile profile = Profile.getByPlayer(killerPlayer);
+        Profile profile = plugin.getProfileManager().getByPlayer(killerPlayer);
         KillEffect killEffect = profile.getKillEffect();
         if (killEffect == null) {
             killEffect = plugin.getKillEffectManager().getDefault();
@@ -183,7 +183,7 @@ public class FFAMatch extends Match {
         PlayerUtil.reset(deadPlayer);
 
         for ( Player otherPlayer : getAllPlayers() ) {
-            Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(otherPlayer.getUniqueId());
             TaskUtil.runLater(() -> profile.handleVisibility(otherPlayer, deadPlayer), 2L);
         }
 
@@ -194,18 +194,18 @@ public class FFAMatch extends Match {
             if (!teamPlayer.isDisconnected()) {
                 deadPlayer.teleport(getMidSpawn());
 
-                Profile profile = Profile.getByUuid(deadPlayer.getUniqueId());
+                Profile profile = plugin.getProfileManager().getByUUID(deadPlayer.getUniqueId());
                 profile.refreshHotbar();
                 profile.setState(ProfileState.SPECTATING);
             }
             TaskUtil.runLater(() -> {
                 //Handle match players' visibility
-                this.getPlayers().forEach(player -> Profile.getByUuid(player.getUniqueId()).handleVisibility(player, deadPlayer));
+                this.getPlayers().forEach(player -> plugin.getProfileManager().getByUUID(player.getUniqueId()).handleVisibility(player, deadPlayer));
 
                 //Then handle spectator visibility
                 this.getSpectators().forEach(spectator -> {
-                    if (Profile.getByPlayer(spectator).getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
-                    if (Profile.getByPlayer(deadPlayer).getSettings().isShowSpectator()) deadPlayer.showPlayer(spectator);
+                    if (plugin.getProfileManager().getByPlayer(spectator).getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
+                    if (plugin.getProfileManager().getByPlayer(deadPlayer).getSettings().isShowSpectator()) deadPlayer.showPlayer(spectator);
                 });
             }, 8L);
         }

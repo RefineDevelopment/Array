@@ -56,7 +56,7 @@ public class KitEditorSelectKitMenu extends Menu {
         public void clicked(Player player, ClickType clickType) {
             player.closeInventory();
 
-            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
             profile.getKitEditor().setSelectedKit(kit);
             profile.getKitEditor().setPreviousState(profile.getState());
 

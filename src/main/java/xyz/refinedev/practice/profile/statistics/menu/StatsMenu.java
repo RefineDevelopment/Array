@@ -33,7 +33,7 @@ public class StatsMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
-            Profile profile = Profile.getByUuid(target.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(target.getUniqueId());
             String elo = kit.getGameRules().isRanked() ? Integer.toString(profile.getStatisticsData().get(kit).getElo()) : "N/A";
 
             config.getStringList("MENUS.STATISTICS.KIT_LORE").forEach(line -> {
@@ -58,7 +58,7 @@ public class StatsMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
-            Profile profile = Profile.getByUuid(target.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(target.getUniqueId());
 
             config.getStringList("MENUS.STATISTICS.GLOBAL_LORE").forEach(line -> {
                 lore.add(line

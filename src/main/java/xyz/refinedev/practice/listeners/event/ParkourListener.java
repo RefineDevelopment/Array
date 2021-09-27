@@ -1,5 +1,7 @@
 package xyz.refinedev.practice.listeners.event;
 
+import org.bukkit.event.Listener;
+
 /**
  * This Project is property of Refine Development © 2021
  * Redistribution of this Project is not allowed
@@ -9,5 +11,5 @@ package xyz.refinedev.practice.listeners.event;
  * Project: Array
  */
 
-public class ParkourListener {
+public class ParkourListener implements Listener {
 }

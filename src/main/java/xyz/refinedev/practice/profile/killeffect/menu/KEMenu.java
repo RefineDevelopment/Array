@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class KEMenu extends Menu {
 
     private final Array plugin = Array.getInstance();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("kill_effects");
+    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("profile_killeffects");
 
     /**
      * Get menu's title

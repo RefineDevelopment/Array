@@ -1,6 +1,6 @@
 package xyz.refinedev.practice.pvpclasses.classes;
 
-import org.apache.commons.lang.time.DurationFormatUtils;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -73,7 +73,7 @@ public class Archer extends PvPClass implements Listener {
                 Player damaged = (Player) event.getEntity();
                 Player shooter = (Player) source;
 
-                if (!Profile.getByUuid(damaged.getUniqueId()).getMatch().isHCFMatch()) {
+                if (!plugin.getProfileManager().getByUUID(damaged.getUniqueId()).getMatch().isHCFMatch()) {
                     return;
                 }
 
@@ -144,7 +144,7 @@ public class Archer extends PvPClass implements Listener {
         UUID uuid = player.getUniqueId();
         Action action = event.getAction();
 
-        if (Profile.getByUuid(uuid).getMatch() != null && !Profile.getByUuid(uuid).getMatch().isHCFMatch()) {
+        if (plugin.getProfileManager().getByUUID(uuid).getMatch() != null && !plugin.getProfileManager().getByUUID(uuid).getMatch().isHCFMatch()) {
             return;
         }
 

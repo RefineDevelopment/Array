@@ -165,155 +165,180 @@ DIVISIONS:
    ENABLED: true
    #If set to false, the division will be based on elo
    #and XP will be turned off completely as it won't have any purpose
-   XP_BASED: false
+   XP-BASED: false
    RANKS:
      SILVER_1:
-       Display_Name: "&7Silver I"
-       ELO-Min: 0
+       DISPLAY_NAME: "&7Silver I"
+       DEFAULT: true
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 0
        XP-LEVEL: 1
      SILVER_2:
-       Display_Name: "&7Silver II"
-       ELO-Min: 0
+       DISPLAY_NAME: "&7Silver II"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 1000
        XP-LEVEL: 2
      SILVER_3:
-       Display_Name: "&7Silver III"
-       ELO-Min: 0
+       DISPLAY_NAME: "&7Silver III"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 2000
        XP-LEVEL: 3
      SILVER_4:
-       Display_Name: "&7Silver IV"
-       ELO-Min: 0
+       DISPLAY_NAME: "&7Silver IV"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 3000
        XP-LEVEL: 4
      SILVER_5:
-       Display_Name: "&7Silver V"
-       ELO-Min: 0
+       DISPLAY_NAME: "&7Silver V"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 4000
        XP-LEVEL: 5
      GOLD_1:
-       Display_Name: "&6Gold I"
-       ELO-Min: 0
+       DISPLAY_NAME: "&6Gold I"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 5000
        XP-LEVEL: 6
      GOLD_2:
-       Display_Name: "&6Gold II"
-       ELO-Min: 0
+       DISPLAY_NAME: "&6Gold II"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 7000
        XP-LEVEL: 7
      GOLD_3:
-       Display_Name: "&6Gold III"
-       ELO-Min: 0
+       DISPLAY_NAME: "&6Gold III"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 8000
        XP-LEVEL: 8
      DIAMOND_1:
-       Display_Name: "&bDiamond I"
-       ELO-Min: 0
+       DISPLAY_NAME: "&bDiamond I"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 9000
        XP-LEVEL: 9
      DIAMOND_2:
-       Display_Name: "&bDiamond II"
-       ELO-Min: 0
+       DISPLAY_NAME: "&bDiamond II"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 10000
        XP-LEVEL: 10
      DIAMOND_3:
-       Display_Name: "&bDiamond III"
-       ELO-Min: 0
+       DISPLAY_NAME: "&bDiamond III"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 11000
        XP-LEVEL: 11
      EMERALD_1:
-       Display_Name: "&aEmerald I"
-       ELO-Min: 0
+       DISPLAY_NAME: "&aEmerald I"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 12000
        XP-LEVEL: 12
      EMERALD_2:
-       Display_Name: "&aEmerald II"
-       ELO-Min: 0
+       DISPLAY_NAME: "&aEmerald II"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 13000
        XP-LEVEL: 13
      EMERALD_3:
-       Display_Name: "&aEmerald III"
-       ELO-Min: 0
+       DISPLAY_NAME: "&aEmerald III"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 14000
        XP-LEVEL: 14
      EMERALD_4:
-       Display_Name: "&aEmerald IV"
-       ELO-Min: 0
+       DISPLAY_NAME: "&aEmerald IV"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 16000
        XP-LEVEL: 15
      EMERALD_5:
-       Display_Name: "&aEmerald V"
-       ELO-Min: 0
+       DISPLAY_NAME: "&aEmerald V"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 20000
        XP-LEVEL: 16
      AMETHYST_1:
-       Display_Name: "&2Amethyst I"
-       ELO-Min: 0
+       DISPLAY_NAME: "&2Amethyst I"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 24000
        XP-LEVEL: 17
      AMETHYST_2:
-       Display_Name: "&2Amethyst II"
-       ELO-Min: 0
+       DISPLAY_NAME: "&2Amethyst II"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 26000
        XP-LEVEL: 18
      AMETHYST_3:
-       Display_Name: "&2Amethyst III"
-       ELO-Min: 0
+       DISPLAY_NAME: "&2Amethyst III"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 36000
        XP-LEVEL: 19
      PLATINUM_1:
-       Display_Name: "&ePlatinum I"
-       ELO-Min: 0
+       DISPLAY_NAME: "&ePlatinum I"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 46000
        XP-LEVEL: 20
      PLATINUM_2:
-       Display_Name: "&ePlatinum II"
-       ELO-Min: 0
+       DISPLAY_NAME: "&ePlatinum II"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 56000
        XP-LEVEL: 21
      PLATINUM_3:
-       Display_Name: "&ePlatinum III"
-       ELO-Min: 0
+       DISPLAY_NAME: "&ePlatinum III"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 76000
        XP-LEVEL: 22
      PLATINUM_4:
-       Display_Name: "&ePlatinum IV"
-       ELO-Min: 0
+       DISPLAY_NAME: "&ePlatinum IV"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 86000
        XP-LEVEL: 23
      PLATINUM_5:
-       Display_Name: "&ePlatinum V"
-       ELO-Min: 0
+       DISPLAY_NAME: "&ePlatinum V"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 100000
        XP-LEVEL: 24
      MASTER:
-       Display_Name: "&cMaster"
-       ELO-Min: 0
+       DISPLAY_NAME: "&cMaster"
+       DEFAULT: false
+       ELO-Min: 0 0
        ELO-Max: 1000
        XP-AMOUNT: 200000
        XP-LEVEL: 25

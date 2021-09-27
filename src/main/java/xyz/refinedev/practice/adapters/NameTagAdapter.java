@@ -36,8 +36,8 @@ public class NameTagAdapter extends NameTagProvider {
     @Override
     public NameTagInfo fetchNameTag(Player target, Player viewer) {
         if (plugin.getConfigHandler().isNAMETAGS_ENABLED()) {
-            Profile targetProfile = Profile.getByPlayer(target);
-            Profile viewerProfile = Profile.getByPlayer(viewer);
+            Profile targetProfile = plugin.getProfileManager().getByPlayer(target);
+            Profile viewerProfile = plugin.getProfileManager().getByPlayer(viewer);
 
             if (viewerProfile.isInLobby() || viewerProfile.isInQueue()) {
                 return this.getNormalColor(viewerProfile, targetProfile);

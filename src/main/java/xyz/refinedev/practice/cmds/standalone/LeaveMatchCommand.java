@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.cmds.standalone;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.profile.Profile;
@@ -17,12 +19,15 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class LeaveMatchCommand {
+
+    private final Array plugin;
 
     @Command(name = "", desc = "Cancel your on-going match")
     @Require("array.profile.forfeit")
     public void forfeitMatch(@Sender Player player) {
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
         if (profile.isInFight()) {
             Match match = profile.getMatch();
@@ -30,6 +35,5 @@ public class LeaveMatchCommand {
         } else {
             player.sendMessage(Locale.ERROR_NOTMATCH.toString());
         }
-
     }
 }

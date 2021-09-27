@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.rank.TablistRank;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
@@ -127,9 +128,11 @@ public class ConfigHandler {
                 Material.SNOW_BLOCK
         ).forEach(InventoryUtil::removeCrafting);
 
-        for ( World world : Array.getInstance().getServer().getWorlds() ) {
+        for ( World world : plugin.getServer().getWorlds() ) {
             world.setDifficulty(Difficulty.HARD);
         }
+
+        ((CraftServer) plugin.getServer()).getHandle().getServer().setAllowFlight(true);
 
         TaskUtil.runTimerAsync(new MenuUpdateTask(), 15 * 20L, 15 * 20L);
     }

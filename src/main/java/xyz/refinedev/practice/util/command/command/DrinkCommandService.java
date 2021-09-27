@@ -2,7 +2,7 @@ package xyz.refinedev.practice.util.command.command;
 
 import com.google.common.base.Preconditions;
 import lombok.Getter;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

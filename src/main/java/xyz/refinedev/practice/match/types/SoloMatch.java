@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.match.types;
 
-import com.comphenix.protocol.events.PacketContainer;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -25,14 +24,11 @@ import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
-import xyz.refinedev.practice.profile.killeffect.KillEffect;
-import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
 import xyz.refinedev.practice.util.elo.EloUtil;
-import xyz.refinedev.practice.util.other.EffectUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 import xyz.refinedev.practice.util.other.TitleAPI;
@@ -41,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Getter @Setter
 public class SoloMatch extends Match {
@@ -60,11 +55,11 @@ public class SoloMatch extends Match {
     /**
      * Construct a solo match with the specified details
      *
-     * @param playerA {@link TeamPlayer} first player of the message
-     * @param playerB {@link TeamPlayer} second player of the message
-     * @param queue {@link Queue} if match is started from queue, then we provide it
-     * @param kit {@link Kit} The kit that will be given to all players in the match
-     * @param arena {@link Arena} The arena that will be used in the match
+     * @param playerA   {@link TeamPlayer} first player of the message
+     * @param playerB   {@link TeamPlayer} second player of the message
+     * @param queue     {@link Queue} if match is started from queue, then we provide it
+     * @param kit       {@link Kit} The kit that will be given to all players in the match
+     * @param arena     {@link Arena} The arena that will be used in the match
      * @param queueType {@link QueueType} if we are connecting from queue then we provide it, otherwise its Unranked
      */
     public SoloMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
@@ -107,13 +102,13 @@ public class SoloMatch extends Match {
 
         if (getKit().getGameRules().isStickSpawn() || getKit().getGameRules().isSumo() || getKit().getGameRules().isParkour()) PlayerUtil.denyMovement(player);
 
-        if (!getKit().getGameRules().isNoItems() || !getKit().getGameRules().isSumo()) TaskUtil.runLater(() -> Profile.getByUuid(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
+        if (!getKit().getGameRules().isNoItems() || !getKit().getGameRules().isSumo()) TaskUtil.runLater(() -> plugin.getProfileManager().getByUUID(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
 
         if (getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
 
         if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
-        plugin.getKnockbackManager().kitKnockback(player, getKit());
+        plugin.getSpigotHandler().kitKnockback(player, getKit());
         player.setNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         Location spawn = playerA.equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
@@ -189,22 +184,20 @@ public class SoloMatch extends Match {
                     player.setFireTicks(0);
                     player.updateInventory();
 
-                    plugin.getKnockbackManager().resetKnockback(player);
+                    plugin.getSpigotHandler().resetKnockback(player);
 
-                    Profile profile = Profile.getByUuid(player.getUniqueId());
+                    Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
                     profile.setState(ProfileState.IN_LOBBY);
                     profile.setMatch(null);
-                    profile.handleVisibility();
 
                     if (opponent != null && opponent.isOnline()) {
                         profile.setRematchData(new RematchProcedure(rematchKey, player.getUniqueId(), opponent.getUniqueId(), getKit(), getArena()));
                     }
 
                     getEntities().forEach(Entity::remove);
-                    getDroppedItems().forEach(Entity::remove);
+                    getDroppedItems().forEach(Item::remove);
 
-                    profile.refreshHotbar();
-                    profile.teleportToSpawn();
+                    plugin.getProfileManager().teleportToSpawn(profile);
                 }
             }
         }.runTaskLater(plugin, (getKit().getGameRules().isSumo() || getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : plugin.getConfigHandler().getTELEPORT_DELAY() * 20L);
@@ -215,15 +208,15 @@ public class SoloMatch extends Match {
         TeamPlayer winningTeamPlayer = getTeamPlayer(winningPlayer);
         TeamPlayer losingTeamPlayer = getTeamPlayer(losingPlayer);
 
-        Profile winningProfile = Profile.getByUuid(winningPlayer.getUniqueId());
-        Profile losingProfile = Profile.getByUuid(losingPlayer.getUniqueId());
+        Profile winningProfile = plugin.getProfileManager().getByUUID(winningPlayer.getUniqueId());
+        Profile losingProfile = plugin.getProfileManager().getByUUID(losingPlayer.getUniqueId());
 
         if (getQueueType() == QueueType.UNRANKED) {
-            winningProfile.getStatisticsData().get(getKit()).incrementWon();
-            TaskUtil.runAsync(winningProfile::save);
+            winningProfile.getStatisticsData().get(this.getKit()).incrementWon();
+            plugin.getProfileManager().save(winningProfile);
 
-            losingProfile.getStatisticsData().get(getKit()).incrementLost();
-            TaskUtil.runAsync(losingProfile::save);
+            losingProfile.getStatisticsData().get(this.getKit()).incrementLost();
+            plugin.getProfileManager().save(losingProfile);
         }
 
         if (getQueueType() == QueueType.RANKED) {
@@ -233,17 +226,17 @@ public class SoloMatch extends Match {
             int newWinnerElo = EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
             int newLoserElo = EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
 
-            winningProfile.getStatisticsData().get(getKit()).setElo(newWinnerElo);
-            losingProfile.getStatisticsData().get(getKit()).setElo(newLoserElo);
+            winningProfile.getStatisticsData().get(this.getKit()).setElo(newWinnerElo);
+            losingProfile.getStatisticsData().get(this.getKit()).setElo(newLoserElo);
 
-            winningProfile.getStatisticsData().get(getKit()).incrementWon();
-            losingProfile.getStatisticsData().get(getKit()).incrementLost();
+            winningProfile.getStatisticsData().get(this.getKit()).incrementWon();
+            losingProfile.getStatisticsData().get(this.getKit()).incrementLost();
 
-            winningProfile.calculateGlobalElo();
-            TaskUtil.runAsync(winningProfile::save);
+            plugin.getProfileManager().calculateGlobalElo(winningProfile);
+            plugin.getProfileManager().save(winningProfile);
 
-            losingProfile.calculateGlobalElo();
-            TaskUtil.runAsync(losingProfile::save);
+            plugin.getProfileManager().calculateGlobalElo(losingProfile);
+            plugin.getProfileManager().save(losingProfile);
 
             int winnerEloChange = newWinnerElo - oldWinnerElo;
             int loserEloChange = oldLoserElo - newLoserElo;
@@ -272,6 +265,7 @@ public class SoloMatch extends Match {
 
             winningClan.setWins(winningClan.getWins() + 1);
             winningClan.setWinStreak(winningClan.getWinStreak() + 1);
+
             losingClan.setLosses(losingClan.getLosses() + 1);
             losingClan.setWinStreak(0);
 
@@ -291,7 +285,7 @@ public class SoloMatch extends Match {
 
         if (!(getSpectators().size() <= 0)) {
             List<Player> specs = new ArrayList<>(getSpectators());
-            int i=0;
+            int i = 0;
             for ( Player spectator : getSpectators() ) {
                 if (getSpectators().size() >= 1) {
                     if (!specs.contains(spectator)) specs.add(spectator);
@@ -318,42 +312,6 @@ public class SoloMatch extends Match {
     @Override
     public boolean canEnd() {
         return !playerA.isAlive() || !playerB.isAlive() || playerA.isDisconnected() || playerB.isDisconnected();
-    }
-
-    @Override
-    public void handleKillEffect(Player deadPlayer, Player killerPlayer) {
-        if (killerPlayer == null) return;
-        Profile profile = Profile.getByPlayer(killerPlayer);
-        KillEffect killEffect = profile.getKillEffect();
-        if (killEffect == null) {
-            killEffect = plugin.getKillEffectManager().getDefault();
-        }
-
-        if (killEffect.getEffect() != null) {
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 0.0f);
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 1.0f, 0.0f);
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 1.0f);
-        }
-
-        if (killEffect.isLightning()) {
-            for ( Player player : this.getPlayers() ) {
-                PacketContainer packetContainer = this.createLightningPacket(deadPlayer.getLocation());
-                this.sendLightningPacket(player, packetContainer);
-            }
-        }
-
-        if (killEffect.isDropsClear()) {
-            this.getDroppedItems().forEach(Item::remove);
-        }
-
-        if (killEffect.isAnimateDeath()) PlayerUtil.animateDeath(deadPlayer);
-
-        if (!killEffect.getKillEffectSounds().isEmpty()) {
-            float randomPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
-            for ( KillEffectSound killEffectSound : killEffect.getKillEffectSounds()) {
-                this.getPlayers().forEach(player -> player.playSound(deadPlayer.getLocation(), killEffectSound.getSound(), killEffectSound.getPitch(), randomPitch));
-            }
-        }
     }
 
     @Override
@@ -503,8 +461,8 @@ public class SoloMatch extends Match {
         TitleAPI.sendMatchLoser(deadPlayer);
 
         for ( Player otherPlayer : getPlayers() ) {
-            Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
-            TaskUtil.runLater(() -> profile.handleVisibility(otherPlayer, deadPlayer), 2L);
+            Profile profile = plugin.getProfileManager().getByUUID(otherPlayer.getUniqueId());
+            TaskUtil.runLater(() -> plugin.getProfileManager().handleVisibility(profile, deadPlayer), 2L);
         }
 
         if (this.canEnd()) {
@@ -514,23 +472,18 @@ public class SoloMatch extends Match {
             if (!roundLoser.isDisconnected()) {
                 deadPlayer.teleport(getMidSpawn());
 
-                Profile profile = Profile.getByUuid(deadPlayer.getUniqueId());
-                profile.refreshHotbar();
+                Profile profile = plugin.getProfileManager().getByUUID(deadPlayer.getUniqueId());
                 profile.setState(ProfileState.SPECTATING);
+                plugin.getProfileManager().refreshHotbar(profile);
+                plugin.getProfileManager().handleVisibility(profile);
             }
-            TaskUtil.runLater(() -> {
-                //Then handle spectator visibility
-                this.getSpectators().forEach(spectator -> {
-                    if (Profile.getByPlayer(spectator).getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
-                    if (Profile.getByPlayer(deadPlayer).getSettings().isShowSpectator()) deadPlayer.showPlayer(spectator);
-                });
-            }, 8L);
         }
     }
 
     @Override
     public void onRespawn(Player player) {
-        Profile.getByPlayer(player).teleportToSpawn();
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        plugin.getProfileManager().teleportToSpawn(profile);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.listeners;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,25 +21,26 @@ import xyz.refinedev.practice.profile.Profile;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class ChatListener implements Listener {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin;
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         String chatMessage = event.getMessage();
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         Clan clan = profile.getClan();
 
-        if (clan == null) return;
         if (!profile.getSettings().isClanChat() && !chatMessage.startsWith("$") && !chatMessage.startsWith(".")) return;
+        if (clan == null) return;
 
         event.setCancelled(true);
         clan.broadcast(Locale.CLAN_CHAT_FORMAT.toString()
                 .replace("<player_displayname>", player.getDisplayName())
                 .replace("<player_name>", player.getName())
-                .replace("<player_rankname>", plugin.getRankManager().getCoreType().getCoreAdapter().getFullName(player))
+                .replace("<player_rankname>", plugin.getCoreHandler().getCoreType().getCoreAdapter().getFullName(player))
                 .replace("<message>", chatMessage.replace("$", "")));
     }
 
@@ -46,7 +48,7 @@ public class ChatListener implements Listener {
     public void onPartyChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         String chatMessage = event.getMessage();
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         Party party = profile.getParty();
 
         if (!chatMessage.startsWith("@") && !profile.getSettings().isPartyChat()) return;
@@ -56,7 +58,7 @@ public class ChatListener implements Listener {
         party.broadcast(Locale.PARTY_CHAT_FORMAT.toString()
                 .replace("<player_displayname>", player.getDisplayName())
                 .replace("<player_name>", player.getName())
-                .replace("<player_rankname>", plugin.getRankManager().getCoreType().getCoreAdapter().getFullName(player))
+                .replace("<player_rankname>", plugin.getCoreHandler().getCoreType().getCoreAdapter().getFullName(player))
                 .replace("<message>", chatMessage.replace("@", "")));
     }
 }

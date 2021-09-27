@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.cmds.standalone;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.duel.RematchProcedure;
 import xyz.refinedev.practice.profile.Profile;
@@ -16,17 +18,21 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class RematchCommand {
+
+    private final Array plugin;
 
     @Command(name = "", desc = "Rematch a Player")
     public void rematch(@Sender Player player) {
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
         if (profile.getRematchData() == null) {
             player.sendMessage(Locale.ERROR_NOREMATCH.toString());
             return;
         }
-        profile.checkForHotbarUpdate();
+
+        plugin.getProfileManager().checkForHotbarUpdate(profile);
 
         RematchProcedure rematchProcedure = profile.getRematchData();
 

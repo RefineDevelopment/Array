@@ -113,7 +113,7 @@ public class Queue {
 
         this.playerQueueTime.put(player.getUniqueId(), System.currentTimeMillis());
 
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         profile.setQueue(this);
         profile.setQueueProfile(queueProfile);
         profile.setState(ProfileState.IN_QUEUE);
@@ -155,7 +155,7 @@ public class Queue {
             player.sendMessage(Locale.QUEUE_LEAVE.toString().replace("<queue_name>", this.getQueueName()));
         }
 
-        Profile profile = Profile.getByUuid(queueProfile.getUuid());
+        Profile profile = plugin.getProfileManager().getByUUID(queueProfile.getUuid());
         profile.setQueue(null);
         profile.setQueueProfile(null);
         profile.setState(ProfileState.IN_LOBBY);

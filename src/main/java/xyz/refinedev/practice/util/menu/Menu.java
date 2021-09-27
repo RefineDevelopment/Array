@@ -23,7 +23,7 @@ import java.util.Map;
 @Getter @Setter
 public abstract class Menu {
 
-    private final Array plugin= Array.getInstance();
+    private final Array plugin = Array.getInstance();
 
     private final List<ButtonData> customButtons = new ArrayList<>();
 
@@ -88,8 +88,8 @@ public abstract class Menu {
     public void openMenu(Player player) {
         this.buttons = this.getButtons(player);
 
-        for ( ButtonData customButton : getCustomButtons() ) {
-            if (customButtons.isEmpty()) return;
+        for ( ButtonData customButton : customButtons ) {
+            if (customButton == null) return;
             this.buttons.put(customButton.getSlot(), new CustomButton(customButton));
         }
 

@@ -28,7 +28,7 @@ import java.util.List;
 public class KEButton extends Button {
 
     private final Array plugin = Array.getInstance();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("kill_effects");
+    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("profile_killeffects");
     private final KillEffect killEffect;
 
     /**
@@ -39,7 +39,7 @@ public class KEButton extends Button {
      */
     @Override
     public ItemStack getButtonItem(Player player) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         ItemBuilder itemBuilder = new ItemBuilder(killEffect.getItemStack());
         List<String> lore = new ArrayList<>();
 
@@ -79,7 +79,7 @@ public class KEButton extends Button {
      * @param clickType {@link ClickType}
      */
     public void clicked(Player player, ClickType clickType) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
 
         if (profile.isSelected(killEffect)) {
             Button.playFail(player);

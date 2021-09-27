@@ -37,7 +37,7 @@ public class KitLeaderboardsButton extends Button {
         lore.add(CC.MENU_BAR);
         int position = 1;
         for (LeaderboardsAdapter leaderboardsAdapter : this.kit.getEloLeaderboards()) {
-            Profile profile = Profile.getByUuid(leaderboardsAdapter.getUuid());
+            Profile profile = plugin.getProfileManager().getByUUID(leaderboardsAdapter.getUuid());
 
             lore.add(Locale.LEADERBOARDS_KIT_FORMAT.toString()
                     .replace("<leaderboards_pos>", String.valueOf(position))

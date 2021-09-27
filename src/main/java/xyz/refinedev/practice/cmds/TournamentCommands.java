@@ -45,7 +45,7 @@ public class TournamentCommands {
             return;
         }
 
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         if (profile.isBusy()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
@@ -73,7 +73,7 @@ public class TournamentCommands {
             return;
         }
 
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
 
         if (Tournament.getCurrentTournament() instanceof TeamTournament) {
             if (profile.getParty() == null) {

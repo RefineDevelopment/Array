@@ -74,6 +74,11 @@ public class SumoCommands {
     @Command(name = "tp", aliases = "teleport", desc = "Teleport to Sumo's Spawn Location")
     @Require("array.event.admin")
     public void teleport(@Sender Player player) {
+        if (manager.getSumoSpectator() == null || manager.getSumoSpawn1() == null || manager.getSumoSpawn2() == null) {
+            player.sendMessage("&cCould not teleport, spawn points are not setup");
+            return;
+        }
+
         player.teleport(manager.getSumoSpectator());
         player.sendMessage(Locale.EVENT_TELEPORT.toString().replace("<event_name>", "Sumo"));
     }

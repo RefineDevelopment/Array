@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.match.task;
+package xyz.refinedev.practice.task;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Sound;

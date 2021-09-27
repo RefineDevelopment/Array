@@ -38,7 +38,7 @@ public class PartyClassSelectMenu extends PaginatedMenu {
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         Party party = profile.getParty();
 
         //Maybe they left?, shouldn't happen but just checking
@@ -63,7 +63,7 @@ public class PartyClassSelectMenu extends PaginatedMenu {
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
             
-            Profile profile = Profile.getByUuid(uuid);
+            Profile profile = plugin.getProfileManager().getByUUID(uuid);
             Party party = profile.getParty();
             String pvpClass = party.getKits().get(uuid);
 
@@ -87,8 +87,8 @@ public class PartyClassSelectMenu extends PaginatedMenu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
-            Profile profile = Profile.getByUuid(uuid);
-            Party party = Profile.getByPlayer(player).getParty();
+            Profile profile = plugin.getProfileManager().getByUUID(uuid);
+            Party party = plugin.getProfileManager().getByPlayer(player).getParty();
 
             if (party != null) {
                 if (party.getLeader().getUniqueId().equals(player.getUniqueId())) {

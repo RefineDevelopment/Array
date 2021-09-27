@@ -56,8 +56,8 @@ public class PartyDuelButton extends Button {
 
     @Override
     public void clicked(Player player, ClickType clickType) {
-        Profile senderProfile = Profile.getByUuid(player.getUniqueId());
-        Profile receiverProfile = Profile.getByUuid(this.party.getLeader().getPlayer().getUniqueId());
+        Profile senderProfile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile receiverProfile = plugin.getProfileManager().getByUUID(this.party.getLeader().getPlayer().getUniqueId());
 
         player.closeInventory();
 

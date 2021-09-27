@@ -163,11 +163,11 @@ public class HotbarManager {
 
                 for ( HotbarItem item : partyItems ) {
                     if (item.getLayout().equals(HotbarLayout.PARTY_LEADER)) {
-                        if (profile.getParty().isLeader(profile.getUuid())) {
+                        if (profile.getParty().isLeader(profile.getUniqueId())) {
                             toReturn[item.getSlot()] = item.getItem();
                         }
                     } else if (item.getLayout().equals(HotbarLayout.PARTY_MEMBER)) {
-                        if (!profile.getParty().isLeader(profile.getUuid())) {
+                        if (!profile.getParty().isLeader(profile.getUniqueId())) {
                             toReturn[item.getSlot()] = item.getItem();
                         }
                     } else if (item.getLayout().equals(HotbarLayout.PARTY)) {
@@ -189,7 +189,7 @@ public class HotbarManager {
                 eventItems.addAll(getCustomItems().stream().filter(item -> item.getLayout().equals(HotbarLayout.EVENT) || item.getLayout().equals(HotbarLayout.EVENT_SPECTATE) || item.getLayout().equals(HotbarLayout.EVENT_WAITING)).collect(Collectors.toList()));
 
                 Event event = profile.getEvent();
-                EventPlayer eventPlayer = event.getEventPlayer(profile.getUuid());
+                EventPlayer eventPlayer = event.getEventPlayer(profile.getUniqueId());
 
                 for ( HotbarItem item : eventItems ) {
                     switch (item.getLayout()) {
@@ -210,7 +210,7 @@ public class HotbarManager {
                             break;
                         }
                         case EVENT: {
-                            if (!event.isFighting(profile.getUuid())) {
+                            if (!event.isFighting(profile.getUniqueId())) {
                                 toReturn[item.getSlot()] = item.getItem();
                             }
                             break;

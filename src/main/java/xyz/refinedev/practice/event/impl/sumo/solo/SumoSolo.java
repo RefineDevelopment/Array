@@ -60,12 +60,12 @@ public class SumoSolo extends Event {
 
     @Override
     public void onJoin(Player player) {
-        this.getPlugin().getKnockbackManager().knockback(player, this.getEventManager().getSumoKB());
+        this.getPlugin().getSpigotHandler().knockback(player, this.getEventManager().getSumoKB());
     }
 
     @Override
     public void onLeave(Player player) {
-        this.getPlugin().getKnockbackManager().resetKnockback(player);
+        this.getPlugin().getSpigotHandler().resetKnockback(player);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class SumoSolo extends Event {
             if (player != null) {
                 player.teleport(this.getEventManager().getSpectator(this));
 
-                Profile profile = Profile.getByUuid(player.getUniqueId());
+                Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
                 if (profile.isInEvent() && profile.getEvent().isSumoSolo()) {
                     profile.refreshHotbar();
@@ -94,7 +94,7 @@ public class SumoSolo extends Event {
             if (player != null) {
                 player.teleport(this.getEventManager().getSpectator(this));
 
-                Profile profile = Profile.getByUuid(player.getUniqueId());
+                Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
                 if (profile.isInEvent() && profile.getEvent().isSumoSolo()) {
                     profile.refreshHotbar();

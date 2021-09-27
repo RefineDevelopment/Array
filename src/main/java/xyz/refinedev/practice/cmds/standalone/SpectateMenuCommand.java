@@ -20,7 +20,7 @@ public class SpectateMenuCommand {
 
     @Command(name = "", desc = "Open spectate menu")
     public void spectateMenu(@Sender Player player) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         if (profile.getMatch() == null) {
             player.sendMessage(Locale.MATCH_NOT_IN_SELF.toString());
             return;

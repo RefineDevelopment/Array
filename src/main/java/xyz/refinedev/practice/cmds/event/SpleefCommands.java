@@ -64,7 +64,7 @@ public class SpleefCommands {
     @Require("array.event.admin")
     public void teleport(@Sender Player player) {
         if (manager.getSpleefSpawn() == null) {
-            player.sendMessage(CC.RED + "Error, The teleport location is not setup properly!");
+            player.sendMessage("&cCould not teleport, spawn points are not setup");
             return;
         }
 

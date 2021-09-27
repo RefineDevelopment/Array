@@ -78,7 +78,7 @@ public class PartyMemberMenu extends Menu {
         
         @Override
         public void clicked(Player player, ClickType clickType) {
-            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
             if (profile.getParty() == null) {
                 player.sendMessage(CC.RED + "You are not in a party.");

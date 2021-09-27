@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.listeners;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -8,9 +9,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.chat.CC;
 
+@RequiredArgsConstructor
 public class JoinMessageListener implements Listener {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin;
 
     @EventHandler(priority = EventPriority.LOW)
     public void onJoin(PlayerJoinEvent event) {

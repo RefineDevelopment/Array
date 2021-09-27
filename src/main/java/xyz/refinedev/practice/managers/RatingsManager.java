@@ -94,7 +94,7 @@ public class RatingsManager {
      * @param arena {@link Arena} the arena being rated
      */
     public void sendRatingMessage(Player player, Arena arena) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         profile.setIssueRating(true);
 
         String key = "&7Click to rate &a" + arena.getDisplayName();

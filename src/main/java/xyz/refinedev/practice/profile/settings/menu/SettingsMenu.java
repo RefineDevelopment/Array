@@ -22,7 +22,7 @@ import java.util.Map;
 public class SettingsMenu extends Menu {
 
     private final Array plugin = Array.getInstance();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("settings");
+    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("profile_settings");
 
     /**
      * Get menu's title

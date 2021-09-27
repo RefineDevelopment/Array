@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.cmds.standalone;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
@@ -16,12 +18,15 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class FlyCommand {
+
+    private final Array plugin;
 
     @Command(name = "", desc = "Allow Donators to Fly")
     @Require("array.profile.fly")
     public void fly(@Sender Player player) {
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
         if (profile.isInLobby() || profile.isInQueue()) {
             if (player.getAllowFlight()) {

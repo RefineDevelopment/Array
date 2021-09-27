@@ -60,7 +60,7 @@ public class PartySelectKitMenu extends Menu {
         public void clicked(Player player, ClickType clickType) {
             player.closeInventory();
 
-            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
             if (profile.getParty() == null) {
                 player.sendMessage(CC.RED + "You are not in a party.");

@@ -30,7 +30,7 @@ public class ButtonData {
     private final Array plugin = Array.getInstance();
 
     private final List<ActionData> actions = new ArrayList<>();
-    private int slot;
+    private int slot = 0;
     private ItemStack item;
 
     public void handleClick(Player player, ClickType clickType) {

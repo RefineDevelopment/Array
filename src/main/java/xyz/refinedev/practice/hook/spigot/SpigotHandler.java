@@ -1,10 +1,9 @@
-package xyz.refinedev.practice.managers;
+package xyz.refinedev.practice.hook.spigot;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.hook.spigot.SpigotType;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
@@ -19,7 +18,7 @@ import xyz.refinedev.practice.util.other.TaskUtil;
 
 @Getter
 @RequiredArgsConstructor
-public class KnockbackManager {
+public class SpigotHandler {
 
     private final Array plugin;
     private SpigotType spigotType;
@@ -33,7 +32,7 @@ public class KnockbackManager {
             return;
         }
         plugin.getServer().getPluginManager().registerEvents(this.spigotType.getListener(), plugin);
-        plugin.logger("&aFound " + spigotType.getName() + ", implementing knockback...");
+        plugin.logger("&7Found &c" + spigotType.getName() + "&7, Implementing Knockback...");
     }
 
     /**
@@ -53,7 +52,7 @@ public class KnockbackManager {
      * @param kit The kit whose knockback profile we are getting
      */
     public void kitKnockback(Player player, Kit kit) {
-        plugin.getKnockbackManager().knockback(player, kit.getKnockbackProfile());
+        plugin.getSpigotHandler().knockback(player, kit.getKnockbackProfile());
     }
 
     /**

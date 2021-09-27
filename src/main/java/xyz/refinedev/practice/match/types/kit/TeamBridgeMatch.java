@@ -8,12 +8,10 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
-import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
@@ -67,7 +65,7 @@ public class TeamBridgeMatch extends TeamMatch {
         if (this.getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
         if (this.getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
-        this.getPlugin().getKnockbackManager().kitKnockback(player, getKit());
+        this.getPlugin().getSpigotHandler().kitKnockback(player, getKit());
         player.setNoDamageTicks(this.getKit().getGameRules().getHitDelay());
 
         Location spawn = this.getTeamA().containsPlayer(player) ? this.getArena().getSpawn1() : this.getArena().getSpawn2();
@@ -134,11 +132,11 @@ public class TeamBridgeMatch extends TeamMatch {
         if (teamPlayer.isDisconnected()) return;
 
         for ( Player other : this.getPlayers() ) {
-            Profile otherProfile = Profile.getByUuid(other.getUniqueId());
+            Profile otherProfile = plugin.getProfileManager().getByUUID(other.getUniqueId());
             otherProfile.handleVisibility();
         }
 
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         profile.handleVisibility();
         profile.refreshHotbar();
 
@@ -151,7 +149,7 @@ public class TeamBridgeMatch extends TeamMatch {
     @Override
     public void handleKillEffect(Player deadPlayer, Player killerPlayer) {
         if (killerPlayer == null) return;
-        Profile profile = Profile.getByPlayer(killerPlayer);
+        Profile profile = plugin.getProfileManager().getByPlayer(killerPlayer);
         KillEffect killEffect = profile.getKillEffect();
 
         if (killEffect.getEffect() != null) {

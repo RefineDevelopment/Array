@@ -69,7 +69,7 @@ public class PartyEventButton extends Button {
      */
     @Override
     public void clicked(Player player, ClickType clickType) {
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         Party party = profile.getParty();
 
         player.closeInventory();

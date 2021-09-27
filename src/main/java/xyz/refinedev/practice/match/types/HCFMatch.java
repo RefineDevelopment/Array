@@ -71,7 +71,7 @@ public class HCFMatch extends Match {
 
         teamPlayer.setPlayerSpawn(spawn);
 
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         Party party = profile.getParty();
         String kit = party.getKits().get(player.getUniqueId());
 
@@ -99,7 +99,7 @@ public class HCFMatch extends Match {
 
     @Override
     public void onStart() {
-        this.getPlayers().forEach(player -> plugin.getKnockbackManager().kitKnockback(player, Kit.getHCFTeamFight()));
+        this.getPlayers().forEach(player -> plugin.getSpigotHandler().kitKnockback(player, Kit.getHCFTeamFight()));
     }
 
     @Override
@@ -109,7 +109,7 @@ public class HCFMatch extends Match {
             Player player = teamPlayer.getPlayer();
             if (player == null) continue;
 
-            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
             profile.handleVisibility();
 
             this.getSnapshots().add(new MatchSnapshot(teamPlayer));
@@ -145,9 +145,9 @@ public class HCFMatch extends Match {
                     player.updateInventory();
                     player.getActivePotionEffects().clear();
 
-                    plugin.getKnockbackManager().resetKnockback(player);
+                    plugin.getSpigotHandler().resetKnockback(player);
 
-                    Profile profile = Profile.getByUuid(player.getUniqueId());
+                    Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
                     profile.setState(ProfileState.IN_LOBBY);
                     profile.setMatch(null);
                     profile.refreshHotbar();
@@ -179,7 +179,7 @@ public class HCFMatch extends Match {
     @Override
     public void handleKillEffect(Player deadPlayer, Player killerPlayer) {
         if (killerPlayer == null) return;
-        Profile profile = Profile.getByPlayer(killerPlayer);
+        Profile profile = plugin.getProfileManager().getByPlayer(killerPlayer);
         KillEffect killEffect = profile.getKillEffect();
 
         if (killEffect == null) {
@@ -221,7 +221,7 @@ public class HCFMatch extends Match {
         PlayerUtil.reset(deadPlayer);
 
         for ( Player otherPlayer : getPlayers() ) {
-            Profile profile = Profile.getByUuid(otherPlayer.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(otherPlayer.getUniqueId());
             TaskUtil.runLater(() -> profile.handleVisibility(otherPlayer, deadPlayer), 2L);
         }
 
@@ -232,15 +232,15 @@ public class HCFMatch extends Match {
             if (!teamPlayer.isDisconnected()) {
                 deadPlayer.teleport(getMidSpawn());
 
-                Profile profile = Profile.getByUuid(deadPlayer.getUniqueId());
+                Profile profile = plugin.getProfileManager().getByUUID(deadPlayer.getUniqueId());
                 profile.refreshHotbar();
                 profile.setState(ProfileState.SPECTATING);
             }
             TaskUtil.runLater(() -> {
                 //Then handle spectator visibility
                 this.getSpectators().forEach(spectator -> {
-                    if (Profile.getByPlayer(spectator).getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
-                    if (Profile.getByPlayer(deadPlayer).getSettings().isShowSpectator()) deadPlayer.showPlayer(spectator);
+                    if (plugin.getProfileManager().getByPlayer(spectator).getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
+                    if (plugin.getProfileManager().getByPlayer(deadPlayer).getSettings().isShowSpectator()) deadPlayer.showPlayer(spectator);
                 });
             }, 8L);
         }

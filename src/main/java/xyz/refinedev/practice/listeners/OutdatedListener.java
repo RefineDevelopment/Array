@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.listeners;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,9 +18,10 @@ import xyz.refinedev.practice.util.other.Description;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class OutdatedListener implements Listener {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin;
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {

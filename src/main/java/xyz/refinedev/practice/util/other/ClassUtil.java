@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import org.bukkit.event.Listener;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.managers.CommandsManager;
 
 import java.io.IOException;
 import java.net.URL;
@@ -30,17 +31,25 @@ public class ClassUtil {
 
     private final Array plugin = Array.getInstance();
 
-    @SneakyThrows
     public void registerListeners(String packageName) {
         for (Class<?> clazz : getClassesInPackage(packageName)) {
             if (isListener(clazz)) {
                 try {
                     plugin.getServer().getPluginManager().registerEvents((Listener) clazz.newInstance(), plugin);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
+        plugin.logger("&7Registering listeners...");
+    }
+
+    ///TODO: Change to reflection
+    public void registerCommands(String packageName) {
+        CommandsManager commandsManager = new CommandsManager(plugin, plugin.getDrink());
+        commandsManager.init();
+
+        plugin.logger("&7Registering commands...");
     }
 
     public boolean isListener(Class<?> clazz) {

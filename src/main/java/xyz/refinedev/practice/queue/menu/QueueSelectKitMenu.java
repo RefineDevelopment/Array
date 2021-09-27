@@ -53,13 +53,13 @@ public class QueueSelectKitMenu extends Menu {
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
             
-            this.getLore().forEach(lines -> lore.add(CC.translate(this.replace(Profile.getByPlayer(player), lines))));
+            this.getLore().forEach(lines -> lore.add(CC.translate(this.replace(plugin.getProfileManager().getByPlayer(player), lines))));
             return new ItemBuilder(queue.getKit().getDisplayIcon()).name(queue.getKit().getDisplayName()).lore(lore).clearFlags().build();
         }
 
         @Override
         public void clicked(Player player, ClickType clickType) {
-            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
             player.closeInventory();
             if (profile.isBusy()) {

@@ -52,7 +52,7 @@ public class CommandsManager {
         drink.register(new ArenaCommands(), "arena", "arenas");
         drink.register(new KitCommands(), "kit", "kits");
         drink.register(new DuelCommands(), "duel");
-        drink.register(new RematchCommand(), "rematch");
+        drink.register(new RematchCommand(plugin), "rematch");
         drink.register(new PartyCommands(), "party", "p");
         drink.register(new TournamentCommands(), "tournament", "tourney");
         drink.register(new ClanCommands(), "clan", "c");
@@ -62,27 +62,27 @@ public class CommandsManager {
         drink.register(new KillEffectCommands(), "killeffect", "killeffects", "ke");
 
         //These are standalone cmds which cannot have sub cmds
-        drink.register(new ViewInvCommand(), "viewinv", "viewinventory", "inventory");
-        drink.register(new SpectateCommand(), "spec", "spectate");
+        drink.register(new ViewInvCommand(plugin), "viewinv", "viewinventory", "inventory");
+        drink.register(new SpectateCommand(plugin), "spec", "spectate");
         drink.register(new StopSpecCommand(), "stopspec", "leavespec", "leave spec", "leave spectator", "stop spectating", "stopspectating");
-        drink.register(new LeaveMatchCommand(), "forfeit", "abort", "abortmatch", "match abort", "match forfeit", "leave", "suicide");
+        drink.register(new LeaveMatchCommand(plugin), "forfeit", "abort", "abortmatch", "match abort", "match forfeit", "leave", "suicide");
         drink.register(new AbortMatchCommand(), "cancelmatch", "forfeitmatch", "abortmatch");
         drink.register(new SettingsCommand(), "settings", "preferences", "practicesettings", "pracsettings");
-        drink.register(new MapCommand(), "map");
-        if (plugin.getConfigHandler().isRATINGS_ENABLED()) drink.register(new RateCommand(), "rate");
-        drink.register(new FlyCommand(), "fly", "flight");
+        drink.register(new MapCommand(plugin), "map");
+        if (plugin.getConfigHandler().isRATINGS_ENABLED()) drink.register(new RateCommand(plugin), "rate");
+        drink.register(new FlyCommand(plugin), "fly", "flight");
         drink.register(new LeaderboardsCommand(), "leaderboards", "lb", "leaderboard");
-        drink.register(new OpenMenu(), "openmenu", "menu", "menus");
+        drink.register(new OpenMenuCMD(plugin), "openmenu", "menu", "menus");
         drink.register(new StatsCommand(), "stats", "elo", "statistics");
         drink.register(new SpectateMenuCommand(), "specmenu", "spectatemenu");
 
         //Essentials Commands
-        drink.register(new UnrankedQueueCMD(), "unrankedqueue", "queue", "queue unranked");
-        drink.register(new RankedQueueCMD(), "rankedqueue", "queue ranked");
-        drink.register(new ClanQueueCMD(), "clanqueue", "queue clan");
-        drink.register(new LeaveQueueCMD(), "leavequeue", "queue leave");
-        drink.register(new KitEditorCMD() ,"kiteditor", "editkit");
-        drink.register(new MainMenuCMD(), "mainmenu", "menu main");
+        drink.register(new UnrankedQueueCMD(plugin), "unrankedqueue", "queue", "queue unranked");
+        drink.register(new RankedQueueCMD(plugin), "rankedqueue", "queue ranked");
+        drink.register(new ClanQueueCMD(plugin), "clanqueue", "queue clan");
+        drink.register(new LeaveQueueCMD(plugin), "leavequeue", "queue leave");
+        drink.register(new KitEditorCMD(plugin) ,"kiteditor", "editkit");
+        drink.register(new MainMenuCMD(plugin), "mainmenu", "menu main");
 
         //Settings Commands
         drink.register(new ToggleScoreboardCMD(), "tsb", "togglescoreboard");

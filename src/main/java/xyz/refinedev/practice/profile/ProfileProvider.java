@@ -40,7 +40,7 @@ public class ProfileProvider extends DrinkProvider<Profile> {
         UUID uuid = PlayerUtil.getUUIDByName(name);
 
         if (uuid != null) {
-            return Profile.getByUuid(uuid);
+            return this.getPlugin().getProfileManager().getByUUID(uuid);
         }
 
         throw new CommandExitMessage("A profile with that name does not exist!");
@@ -54,6 +54,6 @@ public class ProfileProvider extends DrinkProvider<Profile> {
     @Override
     public List<String> getSuggestions(@NotNull String prefix) {
         final String finalPrefix = prefix;
-        return Profile.getProfiles().values().stream().map(Profile::getName).filter(s -> finalPrefix.length() == 0 || s.startsWith(finalPrefix)).collect(Collectors.toList());
+        return this.getPlugin().getProfileManager().getProfiles().values().stream().map(Profile::getName).filter(s -> finalPrefix.length() == 0 || s.startsWith(finalPrefix)).collect(Collectors.toList());
     }
 }

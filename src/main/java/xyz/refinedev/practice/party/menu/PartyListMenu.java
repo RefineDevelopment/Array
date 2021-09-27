@@ -25,7 +25,7 @@ public class PartyListMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(final Player player) {
         final Map<Integer, Button> buttons =new HashMap<>();
-        final Profile profile = Profile.getByUuid(player.getUniqueId());
+        final Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         profile.getParty().getPlayers().forEach(pplayer -> buttons.put(buttons.size(), new PartyDisplayButton(pplayer)));
         return buttons;
     }
@@ -48,8 +48,8 @@ public class PartyListMenu extends Menu {
         @Override
         public void clicked(final Player player, final ClickType clickType) {
             Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
-            final Profile senderProfile = Profile.getByUuid(player.getUniqueId());
-            final Profile receiverProfile = Profile.getByUuid(this.pplayer.getUniqueId());
+            final Profile senderProfile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            final Profile receiverProfile = plugin.getProfileManager().getByUUID(this.pplayer.getUniqueId());
             if (!player.getUniqueId().equals(senderProfile.getParty().getLeader().getPlayer().getUniqueId())) {
                 player.sendMessage(CC.RED + "You can only manage players as a leader.");
                 return;

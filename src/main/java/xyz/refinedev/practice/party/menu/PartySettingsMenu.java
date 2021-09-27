@@ -68,7 +68,7 @@ public class PartySettingsMenu extends Menu {
          */
         @Override
         public ItemStack getButtonItem(final Player player) {
-            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
             List<String> lore = new ArrayList<>();
 
             switch (partyManageType) {
@@ -113,7 +113,7 @@ public class PartySettingsMenu extends Menu {
          */
         @Override
         public void clicked(final Player player, final ClickType clickType) {
-            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
             Party party = profile.getParty();
 
             if (party == null) {

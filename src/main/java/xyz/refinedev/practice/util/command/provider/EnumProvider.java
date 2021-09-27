@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.util.command.provider;
 
 import com.google.common.collect.Lists;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;

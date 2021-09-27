@@ -1,7 +1,6 @@
 package xyz.refinedev.practice.arena.meta;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import xyz.refinedev.practice.arena.Arena;
 
 /**
@@ -13,7 +12,7 @@ import xyz.refinedev.practice.arena.Arena;
  * Project: Array
  */
 
-@Data
+@Getter @Setter
 @RequiredArgsConstructor
 public class Rating {
 

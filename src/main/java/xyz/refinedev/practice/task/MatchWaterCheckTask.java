@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.match.task;
+package xyz.refinedev.practice.task;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
@@ -29,7 +29,7 @@ public class MatchWaterCheckTask extends BukkitRunnable {
 
         for (Player player : match.getAlivePlayers()) {
             if (player == null) continue;
-            Profile profile = Profile.getByPlayer(player);
+            Profile profile = plugin.getProfileManager().getByPlayer(player);
             if (!profile.isInFight()) continue;
             if (this.caught.contains(player.getUniqueId())) continue;
 

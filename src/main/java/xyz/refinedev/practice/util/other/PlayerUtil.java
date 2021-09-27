@@ -13,8 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.spigotmc.AsyncCatcher;
-import xyz.refinedev.practice.Array;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -23,11 +21,7 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class PlayerUtil {
 
-    private final Array plugin = Array.getInstance();
-
     public void reset(Player player) {
-        AsyncCatcher.enabled = false;
-
         player.getActivePotionEffects().clear();
         player.setHealth(20.0D);
         player.setFoodLevel(20);
@@ -47,8 +41,6 @@ public class PlayerUtil {
     }
 
     public void spectator(Player player) {
-        AsyncCatcher.enabled = false;
-
         player.setAllowFlight(true);
         player.setFlying(true);
         player.setGameMode(GameMode.CREATIVE);
@@ -57,8 +49,6 @@ public class PlayerUtil {
     }
 
     public void denyMovement(Player player) {
-        AsyncCatcher.enabled = false;
-
         player.setWalkSpeed(0.0F);
         player.setFlySpeed(0.0F);
         player.setFoodLevel(0);
@@ -67,8 +57,6 @@ public class PlayerUtil {
     }
 
     public void allowMovement(Player player) {
-        AsyncCatcher.enabled = false;
-
         player.setWalkSpeed(0.2F);
         player.setFlySpeed(0.2F);
         player.setFoodLevel(20);
@@ -116,19 +104,19 @@ public class PlayerUtil {
 
     @SneakyThrows
     public void animateDeath(Player player) {
-        int entityId=EntityUtils.getFakeEntityId();
-        PacketPlayOutNamedEntitySpawn spawnPacket=new PacketPlayOutNamedEntitySpawn(((CraftPlayer) player).getHandle());
-        PacketPlayOutEntityStatus statusPacket=new PacketPlayOutEntityStatus();
+        int entityId = EntityUtils.getFakeEntityId();
+        PacketPlayOutNamedEntitySpawn spawnPacket = new PacketPlayOutNamedEntitySpawn(((CraftPlayer) player).getHandle());
+        PacketPlayOutEntityStatus statusPacket = new PacketPlayOutEntityStatus();
 
         Field STATUS_PACKET_ID_FIELD;
         Field STATUS_PACKET_STATUS_FIELD;
         Field SPAWN_PACKET_ID_FIELD;
 
-        STATUS_PACKET_ID_FIELD=PacketPlayOutEntityStatus.class.getDeclaredField("a");
+        STATUS_PACKET_ID_FIELD = PacketPlayOutEntityStatus.class.getDeclaredField("a");
         STATUS_PACKET_ID_FIELD.setAccessible(true);
-        STATUS_PACKET_STATUS_FIELD=PacketPlayOutEntityStatus.class.getDeclaredField("b");
+        STATUS_PACKET_STATUS_FIELD = PacketPlayOutEntityStatus.class.getDeclaredField("b");
         STATUS_PACKET_STATUS_FIELD.setAccessible(true);
-        SPAWN_PACKET_ID_FIELD=PacketPlayOutNamedEntitySpawn.class.getDeclaredField("a");
+        SPAWN_PACKET_ID_FIELD = PacketPlayOutNamedEntitySpawn.class.getDeclaredField("a");
         SPAWN_PACKET_ID_FIELD.setAccessible(true);
 
 

@@ -69,7 +69,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
     public List<String> getLines(Player player) {
         List<String> lines = new ArrayList<>();
 
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
         if (!profile.getSettings().isScoreboardEnabled()) {
             return lines;
@@ -102,7 +102,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 Clan clan = profile.getClan();
 
                 config.getStringList("SCOREBOARD.CLAN").forEach(line -> lines.add(CC.translate(line
-                        .replace("<clan_leader>", Profile.getByUuid(clan.getLeader().getUuid()).getName())
+                        .replace("<clan_leader>", plugin.getProfileManager().getByUUID(clan.getLeader().getUuid()).getName())
                         .replace("<clan_members_online>", String.valueOf(clan.getOnlineMembers().size()))
                         .replace("<clan_members_total>", String.valueOf(clan.getAllMembers().size()))
                         .replace("<clan_elo>",String.valueOf(clan.getElo()))
@@ -134,7 +134,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                             .replace("<queue_duration>", queue.getDuration(player))
                             .replace("<queue_range>", this.getEloRangeFormat(profile))
                             .replace("<queue_name>", queue.getQueueName()))
-                            .replace("<clan_leader>", Profile.getByUuid(clan.getLeader().getUuid()).getName())
+                            .replace("<clan_leader>", plugin.getProfileManager().getByUUID(clan.getLeader().getUuid()).getName())
                             .replace("<clan_members_online>", String.valueOf(clan.getOnlineMembers().size()))
                             .replace("<clan_members_total>", String.valueOf(clan.getAllMembers().size()))
                             .replace("<clan_elo>",String.valueOf(clan.getElo()))
@@ -529,7 +529,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
 
 
     public String getFormattedPoints(Player player) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
         Match match = profile.getMatch();
         int points = 0;
 

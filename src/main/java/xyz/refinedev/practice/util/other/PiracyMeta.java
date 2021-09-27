@@ -34,45 +34,42 @@ public class PiracyMeta {
     private static final String OS = System.getProperty("os.name").toLowerCase();
 
     public void verify() {
-        this.consoleLog("&7---------------&8[&cRefine-Licenses&8]&7----------------");
-        this.consoleLog("&7Verifying your license...");
-        this.consoleLog(" ");
+        plugin.consoleLog("&c------------------------------------------------");
+        plugin.consoleLog("&7Verifying your license...");
+        plugin.consoleLog(" ");
         String[] respo = isValid();
         if (respo[0].equals("2") && Boolean.parseBoolean(respo[3])) {
-            this.consoleLog("&aLicense valid!");
-            this.consoleLog("&7Response: &a" + respo[2]);
-            this.consoleLog(" ");
-            this.consoleLog("&7Discord: &chttps://dsc.gg/refine");
-            this.consoleLog("&7Twitter: &chttps://twitter.com/RefineDev");
-            this.consoleLog("&7Contact: &crefinedevelopment@gmail.com");
-            this.consoleLog("&7---------------&8[&cRefine-Licenses&8]&7----------------");
+            plugin.consoleLog("&aLicense valid!");
+            plugin.consoleLog("&cResponse: &7" + respo[2]);
+            plugin.consoleLog(" ");
+
             plugin.getConfigHandler().setOUTDATED(false);
             plugin.getConfigHandler().setupEssentials();
+
             TaskUtil.runTimerAsync(new PiracyTask(this), 20, TimeUtil.parseTime("60m"));
         } else if (respo[0].equals("3") && Boolean.parseBoolean(respo[3])) {
-            this.consoleLog("&aLicense valid!");
-            this.consoleLog("&7Response: &a" + respo[2]);
-            this.consoleLog(" ");
-            this.consoleLog("&eVERSION OUTDATED");
-            this.consoleLog("&eYour version: &f" + plugin.getDescription().getVersion());
-            this.consoleLog("&aLatest version: &f" + respo[1].split("#")[1]);
-            this.consoleLog(" ");
-            this.consoleLog("&7Discord: &chttps://dsc.gg/refine");
-            this.consoleLog("&7Twitter: &chttps://twitter.com/RefineDev");
-            this.consoleLog("&7Contact: &crefinedevelopment@gmail.com");
-            this.consoleLog("&7---------------&8[&cRefine-Licenses&8]&7----------------");
+            plugin.consoleLog("&aLicense valid!");
+            plugin.consoleLog("&7Response: &7" + respo[2]);
+            plugin.consoleLog(" ");
+            plugin.consoleLog("&eVERSION OUTDATED");
+            plugin.consoleLog("&eYour version: &f" + plugin.getDescription().getVersion());
+            plugin.consoleLog("&aLatest version: &f" + respo[1].split("#")[1]);
+
             plugin.getConfigHandler().setOUTDATED(true);
             plugin.getConfigHandler().setNEW_VERSION(respo[1].split("#")[1]);
             plugin.getConfigHandler().setupEssentials();
+
             TaskUtil.runTimerAsync(new PiracyTask(this), 20, TimeUtil.parseTime("60m"));
         } else {
-            this.consoleLog("&cLicense is not valid!");
-            this.consoleLog("&7Reason: &c" + respo[1]);
-            this.consoleLog(" ");
-            this.consoleLog("&7Discord: &chttps://dsc.gg/refine");
-            this.consoleLog("&7Twitter: &chttps://twitter.com/RefineDev");
-            this.consoleLog("&7Contact: &crefinedevelopment@gmail.com");
-            this.consoleLog("&7---------------&8[&cRefine-Licenses&8]&7----------------");
+            plugin.consoleLog("&cLicense is not valid!");
+            plugin.consoleLog("&cReason: &7" + respo[1]);
+            plugin.consoleLog(" ");
+            plugin.consoleLog("&7Discord: &chttps://dsc.gg/refine");
+            plugin.consoleLog("&7Twitter: &chttps://twitter.com/RefineDev");
+            plugin.consoleLog("&7Contact: &crefinedevelopment@gmail.com");
+            plugin.consoleLog("");
+            plugin.consoleLog("&7Failed to initialize &cArray &7successfully!");
+            plugin.consoleLog("&c------------------------------------------------");
             System.exit(0);
             Bukkit.shutdown();
         }
@@ -81,13 +78,13 @@ public class PiracyMeta {
     public void hiddenVerify() {
         String[] respo = isValid();
         if (respo[0].equals("3") && Boolean.parseBoolean(respo[3])) {
-            this.consoleLog("&eVERSION OUTDATED");
-            this.consoleLog("&eYour version: &f" + plugin.getDescription().getVersion());
-            this.consoleLog("&aLatest version: &f" + respo[1].split("#")[1]);
+            plugin.consoleLog("&eVERSION OUTDATED");
+            plugin.consoleLog("&eYour version: &f" + plugin.getDescription().getVersion());
+            plugin.consoleLog("&aLatest version: &f" + respo[1].split("#")[1]);
             plugin.getConfigHandler().setOUTDATED(true);
             plugin.getConfigHandler().setNEW_VERSION(respo[1].split("#")[1]);
         } else if (!respo[0].equals("2") && !Boolean.parseBoolean(respo[3])) {
-            this.consoleLog("&cCould not verify your License, Shutting Down Server in 10 Seconds");
+            plugin.consoleLog("&cCould not verify your License, Shutting Down Server in 10 Seconds");
             Bukkit.getOnlinePlayers().forEach(player -> {
                 if (player.isOp()) {
                     player.sendMessage("&c&l[" + plugin.getName() + "] &eCould not verify your License, Shutting Down Server in 10 Seconds");
@@ -95,10 +92,6 @@ public class PiracyMeta {
             });
             TaskUtil.runLater(Bukkit::shutdown, 10 * 20L);
         }
-    }
-    
-    public void consoleLog(String string) {
-        Bukkit.getConsoleSender().sendMessage(CC.translate( string));
     }
 
     private String requestServerHTTPS(String productKey) throws IOException {

@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.cmds.essentials;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
@@ -19,13 +20,14 @@ import xyz.refinedev.practice.util.other.PlayerUtil;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class RankedQueueCMD {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin;
 
     @Command(name = "", desc = "Open ranked queue menu")
     public void queue(@Sender Player player) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
 
         if (!plugin.getConfigHandler().isRANKED_ENABLED()) {
             player.sendMessage(Locale.RANKED_DISABLED.toString());

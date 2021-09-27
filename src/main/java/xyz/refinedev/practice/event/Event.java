@@ -123,7 +123,7 @@ public abstract class Event {
 
 		this.onJoin(player);
 
-		Profile profile = Profile.getByUuid(player.getUniqueId());
+		Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 		profile.setEvent(this);
 		profile.setState(ProfileState.IN_EVENT);
 		profile.handleVisibility();
@@ -155,7 +155,7 @@ public abstract class Event {
 
 		this.onLeave(player);
 
-		Profile profile = Profile.getByPlayer(player);
+		Profile profile = plugin.getProfileManager().getByPlayer(player);
 		profile.setState(ProfileState.IN_LOBBY);
 		profile.setEvent(null);
 		profile.teleportToSpawn();
@@ -192,7 +192,7 @@ public abstract class Event {
 			Player player = eventPlayer.getPlayer();
 			if (player == null) return;
 
-			Profile profile = Profile.getByUuid(player.getUniqueId());
+			Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 			profile.setState(ProfileState.IN_LOBBY);
 			profile.setEvent(null);
 			profile.refreshHotbar();
@@ -285,7 +285,7 @@ public abstract class Event {
 	public void addSpectator(Player player) {
 		this.getSpectators().add(player.getUniqueId());
 
-		Profile profile = Profile.getByUuid(player.getUniqueId());
+		Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 		profile.setEvent(this);
 		profile.setState(ProfileState.SPECTATING);
 		profile.refreshHotbar();
@@ -306,10 +306,14 @@ public abstract class Event {
 			this.getEventPlayers().remove(player.getUniqueId());
 		}
 
-		Profile profile = Profile.getByUuid(player.getUniqueId());
+		Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 		profile.setEvent(null);
 		profile.setState(ProfileState.IN_LOBBY);
 		profile.teleportToSpawn();
+	}
+
+	public boolean isSpectating(UUID uuid) {
+		return this.spectators.contains(uuid);
 	}
 
 	public boolean isSumoSolo() {

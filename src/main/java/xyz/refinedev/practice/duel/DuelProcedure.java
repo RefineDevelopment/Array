@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.duel;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
@@ -11,10 +13,11 @@ import xyz.refinedev.practice.hook.core.CoreAdapter;
 import xyz.refinedev.practice.util.chat.Clickable;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 
-@Data
+@Getter @Setter
+@RequiredArgsConstructor
 public class DuelProcedure {
 
-    public static CoreAdapter rank = Array.getInstance().getRankManager().getCoreType().getCoreAdapter();
+    public static CoreAdapter rank = Array.getInstance().getCoreHandler().getCoreType().getCoreAdapter();
 
     private final Player sender;
     private final Player target;
@@ -23,6 +26,9 @@ public class DuelProcedure {
     private Kit kit;
     private Arena arena;
 
+    /**
+     * Send the duel request to the target
+     */
     public void send() {
         if (!sender.isOnline() || !target.isOnline()) {
             return;
@@ -32,7 +38,7 @@ public class DuelProcedure {
         request.setKit(kit);
         request.setArena(arena);
 
-        Profile senderProfile = Profile.getByPlayer(sender);
+        Profile senderProfile = plugin.getProfileManager().getByPlayer(sender);
 
         senderProfile.setDuelProcedure(null);
         senderProfile.getSentDuelRequests().put(target.getUniqueId(), request);

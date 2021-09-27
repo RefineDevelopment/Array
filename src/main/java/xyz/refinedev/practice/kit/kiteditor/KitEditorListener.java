@@ -1,6 +1,6 @@
 package xyz.refinedev.practice.kit.kiteditor;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,7 +20,7 @@ public class KitEditorListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
-        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(event.getPlayer().getUniqueId());
 
         if (profile.getKitEditor().isRenaming()) {
             event.setCancelled(true);
@@ -52,7 +52,7 @@ public class KitEditorListener implements Listener {
     public void onInventoryClickEvent(InventoryClickEvent event) {
         if (event.getWhoClicked() instanceof Player) {
             Player player = (Player) event.getWhoClicked();
-            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
             if (event.getClickedInventory() != null && event.getClickedInventory() instanceof CraftingInventory) {
                 if (player.getGameMode() != GameMode.CREATIVE) {

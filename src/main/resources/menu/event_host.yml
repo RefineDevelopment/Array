@@ -11,7 +11,7 @@ PLACEHOLDER: true
 PLACEHOLDER_BUTTON:
   NAME: ''
   MATERIAL: STAINED_GLASS_PANE
-  DATA: 0
+  DATA: 7
   LORE: []
 BUTTONS:
   SUMO:
@@ -123,7 +123,7 @@ BUTTONS:
   SPLEEF:
     NAME: '&c&lSpleef'
     SLOT: 6
-    MATERIAL: DIAMOND_SHOVEL
+    MATERIAL: DIAMOND_SPADE
     ACTIVE_LORE:
       - ''
       - '&c&lInformation'
@@ -149,7 +149,7 @@ BUTTONS:
   OITC:
     NAME: '&c&lOne in the Chamber'
     SLOT: 7
-    MATERIAL: LEASH
+    MATERIAL: BOW
     ACTIVE_LORE:
       - ''
       - '&c&lInformation'
@@ -229,7 +229,7 @@ BUTTONS:
   GULAG:
     NAME: '&c&lGulag'
     SLOT: 14
-    MATERIAL: IRON_BARS
+    MATERIAL: IRON_FENCE
     ACTIVE_LORE:
       - ''
       - '&c&lInformation'
@@ -262,7 +262,7 @@ BUTTONS:
       - '&c&lInformation'
       - ' &fCapture the koth point'
       - ' &fwith your team, the last'
-      - ' &fteam standing until timer wins!'
+      - ' &fteam standing until timer ends, wins!'
       - ''
       - '&c&lStatus'
       - ' &fState: &c<event_state>'
@@ -276,7 +276,7 @@ BUTTONS:
       - '&c&lInformation'
       - ' &fCapture the koth point'
       - ' &fwith your team, the last'
-      - ' &fteam standing until timer wins!'
+      - ' &fteam standing until timer ends wins!'
       - ''
       - '&7&o(( Left-Click to Join ))'
       - '&7&o(( Right-Click to Host ))'

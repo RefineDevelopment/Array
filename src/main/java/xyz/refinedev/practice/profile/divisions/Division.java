@@ -19,6 +19,7 @@ public class Division {
 
     private final String name;
     private String displayName = "&aDefault";
+    private boolean defaultDivision;
 
     private int minElo = 0;
     private int maxElo = 0;

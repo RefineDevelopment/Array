@@ -42,7 +42,7 @@ public class LocationUtils {
     }
 
     public static boolean isTeamPortal(Player player) {
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         SoloBridgeMatch match = (SoloBridgeMatch) profile.getMatch();
         TheBridgeArena arena = (TheBridgeArena) match.getArena();
 

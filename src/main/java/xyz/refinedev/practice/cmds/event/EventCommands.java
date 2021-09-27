@@ -44,7 +44,7 @@ public class EventCommands {
 
     @Command(name = "teamselect", aliases = "teams", desc = "Choose a Team for your Event")
     public void teamSelect(@Sender Player player) {
-        final Profile profile = Profile.getByPlayer(player);
+        final Profile profile = plugin.getProfileManager().getByPlayer(player);
         final Event activeEvent = eventManager.getActiveEvent();
 
         if (activeEvent == null) {
@@ -62,7 +62,7 @@ public class EventCommands {
         new EventTeamMenu(activeEvent).openMenu(player);
     }
 
-    @Command(name = "host", aliases = "start", usage = "<event>", desc = "Host an Event")
+    /*@Command(name = "host", aliases = "start", usage = "<event>", desc = "Host an Event")
     public void host(@Sender Player player, EventType type) {
         if (eventManager.getActiveEvent() != null) {
             player.sendMessage(Locale.EVENT_ON_GOING.toString());
@@ -74,7 +74,7 @@ public class EventCommands {
         }
 
         Bukkit.getOnlinePlayers().stream().map(Profile::getByPlayer).filter(profile -> profile.isInLobby() && !profile.getKitEditor().isActive()).forEach(Profile::refreshHotbar);
-    }
+    }*/
 
     @Command(name = "cancel", aliases = "stop", desc = "Cancel an ongoing event")
     @Require("array.event.admin")
@@ -91,7 +91,7 @@ public class EventCommands {
 
     @Command(name = "join", aliases = "participate", desc = "Join an active event")
     public void join(@Sender Player player) {
-        final Profile profile = Profile.getByUuid(player.getUniqueId());
+        final Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         final Event event =  eventManager.getActiveEvent();
 
         if (profile.isBusy() || profile.getParty() != null) {
@@ -117,7 +117,7 @@ public class EventCommands {
 
     @Command(name = "leave", aliases = "quit", desc = "Leave an active event")
     public void leave(@Sender Player player) {
-        final Profile profile = Profile.getByUuid(player.getUniqueId());
+        final Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         final Event event = eventManager.getActiveEvent();
         if (event == null) {
             player.sendMessage(Locale.ERROR_NOTACTIVE.toString());

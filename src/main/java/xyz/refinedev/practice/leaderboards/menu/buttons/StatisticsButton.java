@@ -26,7 +26,7 @@ public class StatisticsButton extends Button {
     @Override
     public ItemStack getButtonItem(Player player) {
         List<String> lore = new ArrayList<>();
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
         lore.add(CC.MENU_BAR);
         for ( Kit kit : Kit.getKits() ) {

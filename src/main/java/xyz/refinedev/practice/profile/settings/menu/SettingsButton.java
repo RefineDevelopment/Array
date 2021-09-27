@@ -31,7 +31,7 @@ import java.util.List;
 public class SettingsButton extends Button {
 
     private final Array plugin = Array.getInstance();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("settings");
+    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("profile_settings");
 
     private final SettingsType type;
 
@@ -45,7 +45,7 @@ public class SettingsButton extends Button {
      */
     @Override
     public ItemStack getButtonItem(Player player) {
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         List<String> lines = new ArrayList<>();
 
         key += type.name() + ".";
@@ -192,7 +192,7 @@ public class SettingsButton extends Button {
      */
     @Override
     public void clicked(Player player, ClickType clickType) {
-        final Profile profile = Profile.getByUuid(player.getUniqueId());
+        final Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         switch (type) {
             case TOGGLESCOREBOARD:
                 Button.playSuccess(player);

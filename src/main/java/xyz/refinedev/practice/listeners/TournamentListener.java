@@ -26,7 +26,7 @@ public class TournamentListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent event) {
-        Profile profile = Profile.getByPlayer(event.getPlayer());
+        Profile profile = plugin.getProfileManager().getByPlayer(event.getPlayer());
         Tournament tournament = Tournament.getCurrentTournament();
         if (tournament != null) return;
 
@@ -53,11 +53,11 @@ public class TournamentListener implements Listener {
             }
             if (match.isTeamMatch()) {
                 UUID loserUUID = match.getOpponentTeam(match.getWinningTeam()).getLeader().getUniqueId();
-                Profile loserProfile = Profile.getByUuid(loserUUID);
+                Profile loserProfile = plugin.getProfileManager().getByUUID(loserUUID);
                 Party looserParty = loserProfile.getParty();
 
                 UUID winnerUUID = match.getWinningTeam().getLeader().getUniqueId();
-                Profile winnerProfile = Profile.getByUuid(winnerUUID);
+                Profile winnerProfile = plugin.getProfileManager().getByUUID(winnerUUID);
                 Party winnerParty = winnerProfile.getParty();
 
                 tournament.eliminateParticipant(looserParty, winnerParty);

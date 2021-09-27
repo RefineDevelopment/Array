@@ -145,7 +145,7 @@ public class Party extends Team {
         /*
          * Update their Party
          */
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         profile.setParty(this);
 
         this.kits.put(player.getUniqueId(), getRandomClass());
@@ -178,7 +178,7 @@ public class Party extends Team {
         for (TeamPlayer teamPlayer : this.getTeamPlayers()) {
             Player otherPlayer = teamPlayer.getPlayer();
             if (otherPlayer != null) {
-                Profile teamProfile = Profile.getByUuid(teamPlayer.getUniqueId());
+                Profile teamProfile = plugin.getProfileManager().getByUUID(teamPlayer.getUniqueId());
                 teamProfile.handleVisibility(otherPlayer, player);
             }
         }
@@ -199,7 +199,7 @@ public class Party extends Team {
      */
     public void leave(Player player, boolean kick) {
 
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         profile.setParty(null);
         this.getTeamPlayers().removeIf(member -> member.getUniqueId().equals(player.getUniqueId()));
         this.getPlayers().removeIf(member -> member.getUniqueId().equals(player.getUniqueId()));
@@ -255,7 +255,7 @@ public class Party extends Team {
         for (TeamPlayer teamPlayer : this.getTeamPlayers()) {
             Player otherPlayer = teamPlayer.getPlayer();
             if (otherPlayer != null) {
-                Profile otherProfile = Profile.getByUuid(teamPlayer.getUniqueId());
+                Profile otherProfile = plugin.getProfileManager().getByUUID(teamPlayer.getUniqueId());
                 otherProfile.handleVisibility(otherPlayer, player);
             }
         }
@@ -270,8 +270,8 @@ public class Party extends Team {
      * @param target The New Leader of the Party
      */
     public void leader(Player player, Player target) {
-        Profile profile = Profile.getByUuid(player.getUniqueId());
-        Profile targetProfile = Profile.getByUuid(target.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile targetProfile = plugin.getProfileManager().getByUUID(target.getUniqueId());
 
         for (TeamPlayer teamPlayer : this.getTeamPlayers()) {
             if (teamPlayer.getPlayer().equals(targetProfile.getPlayer())) {
@@ -295,11 +295,11 @@ public class Party extends Team {
     public void disband() {
         this.broadcast(Locale.PARTY_DISBANDED.toString());
 
-        Profile leaderProfile = Profile.getByUuid(this.getLeader().getUniqueId());
+        Profile leaderProfile = plugin.getProfileManager().getByUUID(this.getLeader().getUniqueId());
         leaderProfile.getSentDuelRequests().values().removeIf(DuelRequest::isParty);
 
         this.getPlayers().forEach(player -> {
-            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
             profile.setParty(null);
 
             if (profile.isInFight()) profile.getMatch().handleDeath(player, this.getLeader().getPlayer(), true);

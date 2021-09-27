@@ -52,7 +52,7 @@ public class PvPClassManager implements Listener {
 
         TaskUtil.runTimer(() -> {
             for(Player player : this.plugin.getServer().getOnlinePlayers()){
-                Profile profile = Profile.getByUuid(player.getUniqueId());
+                Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
                 Match match = profile.getMatch();
                 if (match != null && match.isHCFMatch()) {
                     TaskUtil.run(() -> attemptEquip(player));
@@ -72,7 +72,7 @@ public class PvPClassManager implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Profile profile = Profile.getByUuid(event.getEntity().getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(event.getEntity().getUniqueId());
         if (profile.isInMatch() && profile.getMatch().isHCFMatch()) {
             setEquippedClass(event.getEntity(), null);
         }
@@ -80,7 +80,7 @@ public class PvPClassManager implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onArmorChange(ArmorEquipEvent event) {
-        Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(event.getPlayer().getUniqueId());
         Match match = profile.getMatch();
         if (match != null && match.isHCFMatch()) {
             Bukkit.getScheduler().runTask(Array.getInstance(), () -> {
@@ -145,7 +145,7 @@ public class PvPClassManager implements Listener {
      * @param pvpClass the class to equip or null to un-equip active
      */
     public void setEquippedClass(Player player, PvPClass pvpClass) {
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         Match match = profile.getMatch();
         if (match != null && match.isHCFMatch()) {
             if (pvpClass == null) {

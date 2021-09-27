@@ -20,7 +20,7 @@ public class StopSpecCommand {
 
     @Command(name = "", desc = "Stop spectating")
     public void stopSpec(@Sender Player player) {
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
         if (profile.isInFight() && !profile.getMatch().getTeamPlayer(player).isAlive()) {
             profile.getMatch().getTeamPlayer(player).setDisconnected(true);

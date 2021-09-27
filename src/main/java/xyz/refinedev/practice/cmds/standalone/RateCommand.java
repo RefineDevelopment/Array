@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.cmds.standalone;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
@@ -21,11 +22,14 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class RateCommand {
+
+    private final Array plugin;
 
     @Command(name = "", desc = "Rate an Arena", usage = "<arena> <rating>")
     public void rate(@Sender Player player, Arena arena, RatingType ratingType) {
-        Profile profile = Profile.getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
 
         if (!profile.isIssueRating()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());

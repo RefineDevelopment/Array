@@ -21,7 +21,6 @@ import xyz.refinedev.practice.profile.hotbar.HotbarItem;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
 import xyz.refinedev.practice.util.location.Circle;
 import xyz.refinedev.practice.util.other.PlayerSnapshot;
-import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.List;
 import java.util.UUID;
@@ -57,12 +56,12 @@ public class Spleef extends Event {
 
     @Override
     public void onJoin(Player player) {
-        this.getPlugin().getKnockbackManager().knockback(player, this.getEventManager().getSpleefKB());
+        this.getPlugin().getSpigotHandler().knockback(player, this.getEventManager().getSpleefKB());
     }
 
     @Override
     public void onLeave(Player player) {
-        this.getPlugin().getKnockbackManager().resetKnockback(player);
+        this.getPlugin().getSpigotHandler().resetKnockback(player);
     }
 
     @Override
@@ -90,7 +89,7 @@ public class Spleef extends Event {
 
     @Override
     public void onDeath(Player player) {
-        Profile profile = Profile.getByUuid(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         profile.handleVisibility();
         profile.refreshHotbar();
 

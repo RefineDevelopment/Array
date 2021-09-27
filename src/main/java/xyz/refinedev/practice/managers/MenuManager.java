@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.managers;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -35,10 +36,11 @@ import java.util.stream.Collectors;
  * Project: Array
  */
 
+@Getter
 @RequiredArgsConstructor
 public class MenuManager {
 
-    private final String[] configNames = {"settings", "party_events", "kill_effects", "general", "event_host"};
+    private final String[] configNames = {"profile_settings", "party_events", "profile_killeffects", "general", "event_host"};
 
     private final Map<String, FoldersConfigurationFile> configs = new HashMap<>();
     private final List<MenuData> menuData = new ArrayList<>();

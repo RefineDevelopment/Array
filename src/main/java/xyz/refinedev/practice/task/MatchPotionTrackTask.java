@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.match.task;
+package xyz.refinedev.practice.task;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
@@ -23,7 +23,7 @@ public class MatchPotionTrackTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        Profile shooterData = Profile.getByPlayer(shooter);
+        Profile shooterData = plugin.getProfileManager().getByPlayer(shooter);
 
         if (shooterData.isInFight()) {
             int potions = 0;

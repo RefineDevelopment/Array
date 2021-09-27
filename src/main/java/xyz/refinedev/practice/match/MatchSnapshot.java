@@ -16,9 +16,6 @@ import java.util.UUID;
 @Getter @Setter
 public class MatchSnapshot {
 
-    @Getter
-    private static Map<UUID, MatchSnapshot> snapshots = new HashMap<>();
-
     private UUID uniqueID = UUID.randomUUID();
     private TeamPlayer teamPlayer;
 
@@ -47,20 +44,6 @@ public class MatchSnapshot {
         effects = player.getActivePotionEffects();
     }
 
-    public static MatchSnapshot getByUuid(UUID uuid) {
-        return snapshots.get(uuid);
-    }
-
-    public static MatchSnapshot getByName(String name) {
-        for (MatchSnapshot details : snapshots.values()) {
-            if (details.getTeamPlayer().getUsername().equalsIgnoreCase(name)) {
-                return details;
-            }
-        }
-
-        return null;
-    }
-
     public int getRemainingPotions() {
         int amount = 0;
 
@@ -74,8 +57,7 @@ public class MatchSnapshot {
     }
 
     public boolean shouldDisplayRemainingPotions() {
-        return this.getRemainingPotions() > 0 || this.teamPlayer.getPotionsThrown() > 0 ||
-                this.teamPlayer.getPotionsMissed() > 0;
+        return this.getRemainingPotions() > 0 || this.teamPlayer.getPotionsThrown() > 0 || this.teamPlayer.getPotionsMissed() > 0;
     }
 
 }

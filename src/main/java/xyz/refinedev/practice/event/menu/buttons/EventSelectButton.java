@@ -56,6 +56,15 @@ public class EventSelectButton extends Button {
             return itemBuilder.build();
         }
 
+        if (event.isFighting()) {
+            if (event.getRemainingPlayers().size() == 0) {
+                itemBuilder.amount(1);
+            } else {
+                itemBuilder.amount(event.getRemainingPlayers().size());
+            }
+        }
+
+
         List<String> lore = new ArrayList<>();
 
         config.getStringList(path + "ACTIVE_LORE").forEach(line -> {

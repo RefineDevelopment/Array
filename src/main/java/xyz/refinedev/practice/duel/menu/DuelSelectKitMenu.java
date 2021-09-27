@@ -30,7 +30,7 @@ public class DuelSelectKitMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        boolean party = Profile.getByUuid(player.getUniqueId()).getParty() != null;
+        boolean party = plugin.getProfileManager().getByUUID(player.getUniqueId()).getParty() != null;
 
         if (party) {
             if (Array.getInstance().getConfigHandler().isHCF_ENABLED()) {
@@ -62,7 +62,7 @@ public class DuelSelectKitMenu extends Menu {
     @Override
     public void onClose(Player player) {
         if (!isClosedByMenu()) {
-            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
             profile.setDuelProcedure(null);
         }
     }
@@ -85,7 +85,7 @@ public class DuelSelectKitMenu extends Menu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
-            Profile profile = Profile.getByUuid(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
 
                 if (profile.getDuelProcedure() == null) {

@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.cmds.standalone;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.chat.CC;
@@ -17,11 +18,14 @@ import xyz.refinedev.practice.util.menu.Menu;
  * Project: Array
  */
 
-public class OpenMenu {
+@RequiredArgsConstructor
+public class OpenMenuCMD {
+
+    private final Array plugin;
 
     @Command(name = "", desc = "Open a menu by name")
     public void openMenu(@Sender Player player, @Text String name) {
-        Menu menu = Array.getInstance().getMenuManager().findMenu(name);
+        Menu menu = plugin.getMenuManager().findMenu(name);
         if (menu == null) {
             player.sendMessage(CC.translate("&cInvalid Menu!"));
             return;

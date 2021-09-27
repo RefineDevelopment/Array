@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.queue;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
@@ -10,14 +11,14 @@ import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.hook.core.CoreAdapter;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
+@RequiredArgsConstructor
 public class QueueThread extends Thread {
 
-    public CoreAdapter rank = Array.getInstance().getRankManager().getCoreType().getCoreAdapter();
+    private final Array plugin;
 
     private Arena arena;
     private Kit kit;
@@ -35,11 +36,11 @@ public class QueueThread extends Thread {
                     }
 
                     for (QueueProfile firstQueueProfile : queue.getPlayers()) {
-                        final Player firstPlayer = Bukkit.getPlayer(firstQueueProfile.getUuid());
+                        Player firstPlayer = Bukkit.getPlayer(firstQueueProfile.getUuid());
 
                         if (firstPlayer == null) continue;
 
-                        final Profile firstProfile = Profile.getByUuid(firstQueueProfile.getUuid());
+                        Profile firstProfile = plugin.getProfileManager().getByUUID(firstQueueProfile.getUuid());
 
                         for (QueueProfile secondQueueProfile : queue.getPlayers()) {
                             if (firstQueueProfile.equals(secondQueueProfile)) {
@@ -47,7 +48,7 @@ public class QueueThread extends Thread {
                             }
 
                             Player secondPlayer = Bukkit.getPlayer(secondQueueProfile.getUuid());
-                            Profile secondProfile = Profile.getByUuid(secondQueueProfile.getUuid());
+                            Profile secondProfile = plugin.getProfileManager().getByUUID(secondQueueProfile.getUuid());
 
                             if (secondPlayer == null) continue;
 
@@ -132,18 +133,21 @@ public class QueueThread extends Thread {
     }
 
     private String formatMessages(String string, Player sender, Player target, QueueType type) {
-        Profile senderProfile = Profile.getByUuid(sender.getUniqueId());
-        Profile targetProfile = Profile.getByUuid(target.getUniqueId());
+        Profile senderProfile = plugin.getProfileManager().getByUUID(sender.getUniqueId());
+        Profile targetProfile = plugin.getProfileManager().getByUUID(target.getUniqueId());
 
         int senderELO = senderProfile.getStatisticsData().get(kit).getElo();
         int targetELO = targetProfile.getStatisticsData().get(kit).getElo();
+
+        String senderName = plugin.getProfileManager().getColouredName(senderProfile);
+        String targetName = plugin.getProfileManager().getColouredName(targetProfile);
 
         return string
                 .replace("<ranked>", type == QueueType.RANKED ? "&aTrue" : "&cFalse")
                 .replace("<player1_ping>", String.valueOf(PlayerUtil.getPing(sender)))
                 .replace("<player2_ping>", String.valueOf(PlayerUtil.getPing(target)))
-                .replace("<player1>", type == QueueType.RANKED ? senderProfile.getColouredName() + CC.GRAY + " (" + senderELO + ")" : senderProfile.getColouredName())
-                .replace("<player2>", type == QueueType.RANKED ? targetProfile.getColouredName() + CC.GRAY + " (" + targetELO + ")" : targetProfile.getColouredName());
+                .replace("<player1>", type == QueueType.RANKED ? senderName + CC.GRAY + " (" + senderELO + ")" : senderName)
+                .replace("<player2>", type == QueueType.RANKED ? targetName + CC.GRAY + " (" + targetELO + ")" : targetName);
     }
 
     private String replaceOpponent(String opponent, Player player) {
