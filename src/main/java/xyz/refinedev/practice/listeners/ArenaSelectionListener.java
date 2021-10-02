@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.listeners;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -9,10 +10,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.selection.Selection;
 import xyz.refinedev.practice.util.chat.CC;
 
+@RequiredArgsConstructor
 public class ArenaSelectionListener implements Listener {
+
+    private final Array plugin;
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerInteractEvent(PlayerInteractEvent event) {

@@ -4,8 +4,10 @@ import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
+import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
@@ -31,8 +33,12 @@ import java.util.LinkedList;
 
 public class TeamTournament extends Tournament<Party> {
 
-    public TeamTournament(String host, int teamSize, Kit kit) {
-        super(host, TournamentType.TEAM, teamSize, 4, 100, kit);
+    private final Array plugin;
+
+    public TeamTournament(Array plugin, String host, int teamSize, Kit kit) {
+        super(host, TournamentType.TEAM, teamSize, 4, EventTeamSize.DOUBLES.getMaxParticipants(), kit);
+
+        this.plugin = plugin;
     }
 
     @Override
@@ -82,6 +88,7 @@ public class TeamTournament extends Tournament<Party> {
 
         Bukkit.broadcastMessage(Locale.TOURNAMENT_ROUND.toString().replace("<round>", String.valueOf(getRound())));
         this.setState(TournamentState.FIGHTING);
+
         TaskUtil.runTimer(new BukkitRunnable() {
             @Override
             public void run() {
@@ -136,6 +143,6 @@ public class TeamTournament extends Tournament<Party> {
         } else {
             Bukkit.broadcastMessage(Locale.TOURNAMENT_CANCELLED.toString());
         }
-        TaskUtil.runLater(() -> setCurrentTournament(null), 20 * 30L);
+        plugin.getTournamentManager().setCurrentTournament(null);
     }
 }

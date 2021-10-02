@@ -1,7 +1,9 @@
 package xyz.refinedev.practice.tournament;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.util.chat.Clickable;
 
@@ -14,16 +16,12 @@ import xyz.refinedev.practice.util.chat.Clickable;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class TournamentTask extends BukkitRunnable {
 
+    private final Array plugin;
+    private final Tournament tournament;
     private int countdown = 60;
-
-    public TournamentTask() {
-        Bukkit.broadcastMessage(Locale.TOURNAMENT_BROADCAST.toString()
-                .replace("<host_name>", Tournament.getCurrentTournament().getHost())
-                .replace("<kit>", Tournament.getCurrentTournament().getKit().getDisplayName())
-                .replace("<tournament_type>", Tournament.getCurrentTournament().getType().name()));
-    }
 
     @Override
     public void run() {
@@ -35,13 +33,12 @@ public class TournamentTask extends BukkitRunnable {
             }
         }
         if (countdown <= 0) {
-            Tournament.getCurrentTournament().setTask(null);
             this.cancel();
-            if (Tournament.getCurrentTournament().getParticipatingCount() < Tournament.getCurrentTournament().getParticipantsToStart()) {
-                Tournament.getCurrentTournament().end(null);
-                Tournament.setCurrentTournament(null);
+            if (tournament.getParticipatingCount() < tournament.getParticipantsToStart()) {
+                tournament.end(null);
+                plugin.getTournamentManager().setCurrentTournament(null);
             } else {
-                Tournament.getCurrentTournament().start();
+                tournament.start();
             }
         }
     }

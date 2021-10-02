@@ -5,6 +5,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.match.Match;
+import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
 
 /**
@@ -19,28 +22,35 @@ import xyz.refinedev.practice.profile.Profile;
 @RequiredArgsConstructor
 public class MatchPotionTrackTask extends BukkitRunnable {
 
-    private final Player shooter;
+    private final Array plugin;
+    private final Match match;
 
     @Override
     public void run() {
-        Profile shooterData = plugin.getProfileManager().getByPlayer(shooter);
+        for ( Player shooter : match.getPlayers() ) {
+            Profile shooterProfile = plugin.getProfileManager().getByPlayer(shooter);
+            TeamPlayer teamPlayer = match.getTeamPlayer(shooter);
 
-        if (shooterData.isInFight()) {
-            int potions = 0;
-            for ( ItemStack item : shooter.getInventory().getContents()) {
-                if (item == null)
-                    continue;
-                if (item.getType() == Material.AIR)
-                    continue;
-                if (item.getType() != Material.POTION)
-                    continue;
-                if (item.getDurability() != (short) 16421)
-                    continue;
-                potions++;
+            if (teamPlayer == null)  continue;
+
+            if (match.isEnding()) {
+                this.cancel();
+                return;
+            } else if (!match.isFighting()) {
+                return;
             }
-            shooterData.getMatch().getTeamPlayer(shooter).setPotions(potions);
-        } else {
-            cancel();
+
+            if (shooterProfile.isInFight()) {
+                int potions = 0;
+                for ( ItemStack item : shooter.getInventory().getContents() ) {
+                    if (item == null) continue;
+                    if (item.getType() == Material.AIR) continue;
+                    if (item.getType() != Material.POTION) continue;
+                    if (item.getDurability() != (short) 16421) continue;
+                    potions++;
+                }
+                teamPlayer.setPotions(potions);
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ package xyz.refinedev.practice.queue;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
@@ -14,6 +15,8 @@ import java.util.*;
 
 @Getter
 public class Queue {
+
+    private final Array plugin = Array.getInstance();
 
     @Getter private static final List<Queue> queues = new ArrayList<>();
     @Getter private static final Map<Kit, Queue> queueMap = new HashMap<>();
@@ -41,7 +44,7 @@ public class Queue {
     }
 
     public static void preLoad() {
-        new QueueThread().start();
+        new QueueThread(Array.getInstance()).start();
     }
 
     /**
@@ -117,7 +120,8 @@ public class Queue {
         profile.setQueue(this);
         profile.setQueueProfile(queueProfile);
         profile.setState(ProfileState.IN_QUEUE);
-        profile.refreshHotbar();
+
+        plugin.getProfileManager().refreshHotbar(profile);
 
         switch (type) {
             case UNRANKED: {
@@ -159,6 +163,7 @@ public class Queue {
         profile.setQueue(null);
         profile.setQueueProfile(null);
         profile.setState(ProfileState.IN_LOBBY);
-        profile.refreshHotbar();
+
+        plugin.getProfileManager().refreshHotbar(profile);
     }
 }

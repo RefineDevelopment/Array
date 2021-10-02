@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.party.enums.PartyManageType;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
@@ -20,6 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PartyMemberMenu extends Menu {
 
+    private final Array plugin = this.getPlugin();
     private final Player target;
 
     @Override

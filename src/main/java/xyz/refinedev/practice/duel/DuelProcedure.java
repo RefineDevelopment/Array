@@ -17,7 +17,8 @@ import xyz.refinedev.practice.util.other.PlayerUtil;
 @RequiredArgsConstructor
 public class DuelProcedure {
 
-    public static CoreAdapter rank = Array.getInstance().getCoreHandler().getCoreType().getCoreAdapter();
+    private final Array plugin = Array.getInstance();
+    private final CoreAdapter rank = plugin.getCoreHandler().getCoreType().getCoreAdapter();
 
     private final Player sender;
     private final Player target;

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
@@ -25,6 +26,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PartySelectKitMenu extends Menu {
 
+    private final Array plugin = this.getPlugin();
     private final PartyEventType partyEventType;
 
     @Override

@@ -42,7 +42,8 @@ public class RankedQueueCMD {
         if (!player.hasPermission("array.profile.ranked")) {
             if (plugin.getConfigHandler().isREQUIRE_KILLS()) {
                 if (profile.getTotalWins() < plugin.getConfigHandler().getREQUIRED_KILLS()) {
-                    Locale.RANKED_REQUIRED.toList().forEach(player::sendMessage);
+                    int i = plugin.getConfigHandler().getREQUIRED_KILLS() - profile.getTotalWins();
+                    Locale.RANKED_REQUIRED.toList().forEach(line -> player.sendMessage(line.replace("<match_limit>", String.valueOf(i))));
                     return;
                 }
             }

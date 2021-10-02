@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.cmds.event;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
@@ -19,10 +20,11 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class SumoCommands {
 
-    private final static Array plugin = Array.getInstance();
-    private final EventManager manager = plugin.getEventManager();
+    private final Array plugin;
+    private final EventManager manager;
 
     @Command(name = "", aliases = "help", desc = "View Sumo Commands")
     @Require("array.event.admin")

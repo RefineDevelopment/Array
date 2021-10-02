@@ -14,8 +14,8 @@ import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.SoloMatch;
 import xyz.refinedev.practice.match.types.TeamMatch;
 import xyz.refinedev.practice.match.types.kit.BoxingMatch;
-import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
-import xyz.refinedev.practice.match.types.kit.TeamBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
@@ -73,7 +73,7 @@ public class Kit {
         kits.remove(this);
 
         Queue.getQueues().remove(rankedQueue);
-        if (rankedQueue != null )Queue.getQueues().remove(unrankedQueue);
+        if (rankedQueue != null) Queue.getQueues().remove(unrankedQueue);
         if (clanQueue != null) Queue.getQueues().remove(clanQueue);
 
         plugin.getKitsConfig().set("kits." + getName(), null);

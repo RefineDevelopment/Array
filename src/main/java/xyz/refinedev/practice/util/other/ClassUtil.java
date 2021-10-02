@@ -35,7 +35,7 @@ public class ClassUtil {
         for (Class<?> clazz : getClassesInPackage(packageName)) {
             if (isListener(clazz)) {
                 try {
-                    plugin.getServer().getPluginManager().registerEvents((Listener) clazz.newInstance(), plugin);
+                    plugin.getServer().getPluginManager().registerEvents((Listener) clazz.getDeclaredConstructor().newInstance(plugin), plugin);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

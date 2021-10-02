@@ -64,9 +64,6 @@ public class Clan {
         this.bannedPlayers = new ArrayList<>();
 
         this.maxMembers = 25;
-
-        Profile profile = plugin.getProfileManager().getByUUID(leader);
-        profile.setClan(this);
     }
 
     /**

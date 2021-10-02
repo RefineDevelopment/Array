@@ -20,10 +20,6 @@ public class GlobalLeaderboardsTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (!plugin.isEnabled()) {
-            cancel();
-            return;
-        }
         plugin.getLeaderboardsManager().loadGlobalLeaderboards();
     }
 }

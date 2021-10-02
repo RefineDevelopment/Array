@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.cmds.standalone;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
@@ -16,22 +18,17 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class StopSpecCommand {
+
+    private final Array plugin;
 
     @Command(name = "", desc = "Stop spectating")
     public void stopSpec(@Sender Player player) {
         Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-
-        if (profile.isInFight() && !profile.getMatch().getTeamPlayer(player).isAlive()) {
-            profile.getMatch().getTeamPlayer(player).setDisconnected(true);
-            profile.setState(ProfileState.IN_LOBBY);
-            profile.setMatch(null);
-            return;
-        }
-
         if (profile.isSpectating()) {
             profile.setSpectating(null);
-            if (profile.getMatch() != null) {
+            if (profile.isInMatch()) {
                 profile.getMatch().removeSpectator(player);
             } else if (profile.isInEvent()) {
                 profile.getEvent().removeSpectator(player);

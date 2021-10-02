@@ -13,7 +13,7 @@ import lombok.Setter;
  */
 
 @Getter @Setter
-public class SettingsMeta {
+public class Settings {
 
     private boolean
 

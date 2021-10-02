@@ -3,6 +3,7 @@ package xyz.refinedev.practice.util.other;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.Profile;
 
 /**
@@ -21,7 +22,7 @@ public class TrackUtil {
         int inQueues = 0;
 
         for ( Player player : Bukkit.getOnlinePlayers()) {
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = Array.getInstance().getProfileManager().getByUUID(player.getUniqueId());
 
             if (profile.isInQueue()) {
                 inQueues++;
@@ -35,7 +36,7 @@ public class TrackUtil {
         int inFights = 0;
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = Array.getInstance().getProfileManager().getByUUID(player.getUniqueId());
 
             if (profile.isInFight() || profile.isInEvent()) {
                 inFights++;

@@ -34,11 +34,10 @@ import xyz.refinedev.practice.profile.divisions.Division;
 import xyz.refinedev.practice.profile.hotbar.HotbarLayout;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
 import xyz.refinedev.practice.profile.rank.TablistRank;
-import xyz.refinedev.practice.profile.settings.meta.SettingsMeta;
+import xyz.refinedev.practice.profile.settings.meta.Settings;
 import xyz.refinedev.practice.profile.statistics.StatisticsData;
 import xyz.refinedev.practice.task.ProfileHotbarTask;
 import xyz.refinedev.practice.task.ProfileQueryTask;
-import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.InventoryUtil;
 import xyz.refinedev.practice.util.other.Cooldown;
 import xyz.refinedev.practice.util.other.PlayerUtil;
@@ -105,13 +104,12 @@ public class ProfileManager {
             profile.setDeaths(document.getInteger("deaths"));
             profile.setGlobalElo(document.getInteger("globalElo"));
             profile.setExperience(document.getInteger("experience"));
-
-            profile.setSettings(Array.GSON.fromJson("settings", SettingsMeta.class));
+            profile.setSettings(Array.GSON.fromJson("settings", Settings.class));
 
             String killEffectString = document.getString("killEffect");
             if (killEffectString != null) {
                 UUID killEffectUniqueId = UUID.fromString(killEffectString);
-                profile.setKillEffect(plugin.getKillEffectManager().getByUUID(killEffectUniqueId));
+                profile.setKillEffect(killEffectUniqueId);
             }
 
             String clanString = document.getString("clan");
@@ -187,7 +185,7 @@ public class ProfileManager {
         document.put("deaths", profile.getDeaths());
 
         if (profile.getKillEffect() != null)
-            document.put("killEffect", profile.getKillEffect().getUniqueId().toString());
+            document.put("killEffect", profile.getKillEffect().toString());
 
         if (profile.hasClan())
             document.put("clan", profile.getClan().getUniqueId().toString());

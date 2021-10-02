@@ -1,9 +1,11 @@
 package xyz.refinedev.practice.cmds;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.statistics.StatisticsData;
@@ -29,8 +31,10 @@ import java.util.stream.Collectors;
  * Created at 5/21/2021
  * Project: Array
  */
-
+@RequiredArgsConstructor
 public class KitCommands {
+
+    private final Array plugin;
 
     @Command(name = "", aliases = "help", desc = "View Kit Commands")
     @Require("array.kit.admin")
@@ -121,12 +125,10 @@ public class KitCommands {
         kit.save();
 
         //Add it to profile's statistics data
-        TaskUtil.runAsync(() -> {
-            for ( Profile profile : Profile.getProfiles().values() ) {
-                profile.getStatisticsData().put(kit, new StatisticsData());
-                profile.save();
-            }
-        });
+        for ( Profile profile : plugin.getProfileManager().getProfiles().values() ) {
+            profile.getStatisticsData().put(kit, new StatisticsData());
+            plugin.getProfileManager().save(profile);
+        }
 
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully created a new kit &c" + kit.getDisplayName() + "&7."));
     }

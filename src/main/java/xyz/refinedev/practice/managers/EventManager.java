@@ -43,7 +43,7 @@ public class EventManager {
     }
 
     public void setActiveEvent(Event event) {
-		plugin.getServer().getOnlinePlayers().stream().map(Profile::getByPlayer).filter(profile -> profile.isInLobby() && !profile.getKitEditor().isActive()).forEach(Profile::refreshHotbar);
+		plugin.getServer().getOnlinePlayers().stream().map(plugin.getProfileManager()::getByPlayer).filter(profile -> profile.isInLobby() && !profile.getKitEditor().isActive()).forEach(plugin.getProfileManager()::refreshHotbar);
 
 		if (this.activeEvent != null) {
 			this.activeEvent.setEventTask(null);
@@ -61,26 +61,26 @@ public class EventManager {
 	public void init() {
 		String key = "EVENTS.";
 
-		if (config.getString(key + "SUMO.SPAWN1") != null) this.sumoSpawn1 = LocationUtil.deserialize(config.getString(key + "SUMO.SPAWN1"));
-		if (config.getString(key + "SUMO.SPAWN2") != null) this.sumoSpawn2 = LocationUtil.deserialize(config.getString(key + "SUMO.SPAWN2"));
-		if (config.getString(key + "SUMO.SPECTATOR") != null) this.sumoSpectator = LocationUtil.deserialize(config.getString(key + "SUMO.SPECTATOR"));
-		if (config.getString(key + "SUMO.KNOCKBACK") != null) this.sumoKB = config.getString(key + "SUMO.KNOCKBACK");
+		if (config.contains(key + "SUMO.SPAWN1")) this.sumoSpawn1 = LocationUtil.deserialize(config.getString(key + "SUMO.SPAWN1"));
+		if (config.contains(key + "SUMO.SPAWN2")) this.sumoSpawn2 = LocationUtil.deserialize(config.getString(key + "SUMO.SPAWN2"));
+		if (config.contains(key + "SUMO.SPECTATOR")) this.sumoSpectator = LocationUtil.deserialize(config.getString(key + "SUMO.SPECTATOR"));
+		if (config.contains(key + "SUMO.KNOCKBACK")) this.sumoKB = config.getString(key + "SUMO.KNOCKBACK");
 
-		if (config.getString(key + "BRACKETS.SPAWN1") != null) this.bracketsSpawn1 = LocationUtil.deserialize(config.getString(key + "BRACKETS.SPAWN1"));
-		if (config.getString(key + "BRACKETS.SPAWN2") != null) this.bracketsSpawn2 = LocationUtil.deserialize(config.getString(key + "BRACKETS.SPAWN2"));
-		if (config.getString(key + "BRACKETS.SPECTATOR") != null) this.bracketsSpectator = LocationUtil.deserialize(config.getString(key + "BRACKETS.SPECTATOR"));
+		if (config.contains(key + "BRACKETS.SPAWN1")) this.bracketsSpawn1 = LocationUtil.deserialize(config.getString(key + "BRACKETS.SPAWN1"));
+		if (config.contains(key + "BRACKETS.SPAWN2")) this.bracketsSpawn2 = LocationUtil.deserialize(config.getString(key + "BRACKETS.SPAWN2"));
+		if (config.contains(key + "BRACKETS.SPECTATOR")) this.bracketsSpectator = LocationUtil.deserialize(config.getString(key + "BRACKETS.SPECTATOR"));
 
-		if (config.getString(key + "GULAG.SPAWN1") != null) this.gulagSpawn1 = LocationUtil.deserialize(config.getString(key + "GULAG.SPAWN1"));
-		if (config.getString(key + "GULAG.SPAWN2") != null) this.gulagSpawn2 = LocationUtil.deserialize(config.getString(key + "GULAG.SPAWN2"));
-		if (config.getString(key + "GULAG.SPECTATOR") != null) this.gulagSpectator = LocationUtil.deserialize(config.getString(key + "GULAG.SPECTATOR"));
-		if (config.getString(key + "GULAG.KNOCKBACK") != null) this.gulagKB = config.getString(key + "GULAG.KNOCKBACK");
+		if (config.contains(key + "GULAG.SPAWN1")) this.gulagSpawn1 = LocationUtil.deserialize(config.getString(key + "GULAG.SPAWN1"));
+		if (config.contains(key + "GULAG.SPAWN2")) this.gulagSpawn2 = LocationUtil.deserialize(config.getString(key + "GULAG.SPAWN2"));
+		if (config.contains(key + "GULAG.SPECTATOR")) this.gulagSpectator = LocationUtil.deserialize(config.getString(key + "GULAG.SPECTATOR"));
+		if (config.contains(key + "GULAG.KNOCKBACK")) this.gulagKB = config.getString(key + "GULAG.KNOCKBACK");
 
-		if (config.getString(key + "LMS.SPAWN") != null) this.lmsSpawn = LocationUtil.deserialize(config.getString(key + "LMS.SPAWN"));
+		if (config.contains(key + "LMS.SPAWN")) this.lmsSpawn = LocationUtil.deserialize(config.getString(key + "LMS.SPAWN"));
 
-		if (config.getString(key + "PARKOUR.SPAWN") != null) this.parkourSpawn = LocationUtil.deserialize(config.getString(key + "PARKOUR.SPAWN"));
+		if (config.contains(key + "PARKOUR.SPAWN")) this.parkourSpawn = LocationUtil.deserialize(config.getString(key + "PARKOUR.SPAWN"));
 
-		if (config.getString(key + "SPLEEF.SPAWN") != null) this.spleefSpawn = LocationUtil.deserialize(config.getString(key + "SPLEEF.SPAWN"));
-		if (config.getString(key + "SPLEEF.KNOCKBACK") != null) this.spleefKB = config.getString(key + "SPLEEF.KNOCKBACK");
+		if (config.contains(key + "SPLEEF.SPAWN")) this.spleefSpawn = LocationUtil.deserialize(config.getString(key + "SPLEEF.SPAWN"));
+		if (config.contains(key + "SPLEEF.KNOCKBACK")) this.spleefKB = config.getString(key + "SPLEEF.KNOCKBACK");
 
 
 		config.save();

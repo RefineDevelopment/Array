@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.profile.Profile;
@@ -24,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 public class KitEditorMenu extends Menu {
+
+    private final Array plugin = this.getPlugin();
 
     private static final int[] ITEM_POSITIONS = new int[]{
             20, 21, 22, 23, 24, 25, 26, 29, 30, 31, 32, 33, 34, 35, 38, 39, 40, 41, 42, 43, 44, 47, 48, 49, 50, 51, 52,
@@ -122,7 +125,7 @@ public class KitEditorMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private static class CurrentKitButton extends Button {
+    private class CurrentKitButton extends Button {
 
         @Override
         public ItemStack getButtonItem(Player player) {
@@ -165,7 +168,7 @@ public class KitEditorMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private static class LoadDefaultKitButton extends Button {
+    private class LoadDefaultKitButton extends Button {
 
         @Override
         public ItemStack getButtonItem(Player player) {
@@ -197,7 +200,7 @@ public class KitEditorMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private static class SaveButton extends Button {
+    private class SaveButton extends Button {
 
         @Override
         public ItemStack getButtonItem(Player player) {
@@ -219,14 +222,14 @@ public class KitEditorMenu extends Menu {
                 profile.getKitEditor().getSelectedKitInventory().setContents(player.getInventory().getContents());
             }
 
-            profile.refreshHotbar();
+            plugin.getProfileManager().refreshHotbar(profile);
 
             new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(player);
         }
     }
 
     @AllArgsConstructor
-    private static class CancelButton extends Button {
+    private class CancelButton extends Button {
 
         @Override
         public ItemStack getButtonItem(Player player) {
@@ -253,7 +256,7 @@ public class KitEditorMenu extends Menu {
 
     }
 
-    private static class InfiniteItemButton extends DisplayButton {
+    private class InfiniteItemButton extends DisplayButton {
 
         InfiniteItemButton(ItemStack itemStack) {
             super(itemStack, false);

@@ -55,7 +55,7 @@ public class LeaderboardPlaceholders extends PlaceholderExpansion {
                     .replace("<leaderboards_pos>", String.valueOf(number + 1))
                     .replace("<leaderboards_name>", leaderboardsAdapter.getName())
                     .replace("<leaderboards_elo>", String.valueOf(leaderboardsAdapter.getElo()))
-                    .replace("<leaderboards_division>", ChatColor.stripColor(profile.getDivision()));
+                    .replace("<leaderboards_division>", plugin.getProfileManager().getDivision(profile).getDisplayName());
         }
 
         if (identifier.contains("leaderboards")) {
@@ -83,7 +83,7 @@ public class LeaderboardPlaceholders extends PlaceholderExpansion {
                     .replace("<leaderboards_pos>", String.valueOf(number + 1))
                     .replace("<leaderboards_name>", leaderboardsAdapter.getName())
                     .replace("<leaderboards_elo>", String.valueOf(leaderboardsAdapter.getElo()))
-                    .replace("<leaderboards_division>", profile.getDivision());
+                    .replace("<leaderboards_division>", plugin.getProfileManager().getDivision(profile).getDisplayName());
 
         }
         if (identifier.contains("clan")) {

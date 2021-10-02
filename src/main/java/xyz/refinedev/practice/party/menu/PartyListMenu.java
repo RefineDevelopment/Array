@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
@@ -17,21 +18,24 @@ import java.util.List;
 import java.util.Map;
 
 public class PartyListMenu extends Menu {
+
+    private final Array plugin = this.getPlugin();
+
     @Override
-    public String getTitle(final Player player) {
+    public String getTitle(Player player) {
         return "&cClick to Manage a Member";
     }
     
     @Override
-    public Map<Integer, Button> getButtons(final Player player) {
-        final Map<Integer, Button> buttons =new HashMap<>();
-        final Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+    public Map<Integer, Button> getButtons(Player player) {
+        Map<Integer, Button> buttons = new HashMap<>();
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         profile.getParty().getPlayers().forEach(pplayer -> buttons.put(buttons.size(), new PartyDisplayButton(pplayer)));
         return buttons;
     }
 
     @AllArgsConstructor
-    public static class PartyDisplayButton extends Button {
+    public class PartyDisplayButton extends Button {
 
         private final Player pplayer;
         
@@ -46,10 +50,12 @@ public class PartyListMenu extends Menu {
         }
         
         @Override
-        public void clicked(final Player player, final ClickType clickType) {
-            Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
-            final Profile senderProfile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-            final Profile receiverProfile = plugin.getProfileManager().getByUUID(this.pplayer.getUniqueId());
+        public void clicked(Player player, ClickType clickType) {
+            Profile senderProfile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile receiverProfile = plugin.getProfileManager().getByUUID(this.pplayer.getUniqueId());
+
+            player.closeInventory();
+
             if (!player.getUniqueId().equals(senderProfile.getParty().getLeader().getPlayer().getUniqueId())) {
                 player.sendMessage(CC.RED + "You can only manage players as a leader.");
                 return;

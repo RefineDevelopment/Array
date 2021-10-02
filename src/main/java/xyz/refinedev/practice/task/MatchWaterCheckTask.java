@@ -6,6 +6,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.profile.Profile;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MatchWaterCheckTask extends BukkitRunnable {
 
+    private final Array plugin;
     private final Match match;
     private final List<UUID> caught = new ArrayList<>();
 

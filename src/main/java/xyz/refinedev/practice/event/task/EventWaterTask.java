@@ -6,6 +6,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.EventState;
 import xyz.refinedev.practice.profile.Profile;
@@ -22,6 +23,7 @@ import xyz.refinedev.practice.profile.Profile;
 @RequiredArgsConstructor
 public class EventWaterTask extends BukkitRunnable {
 
+    private final Array plugin;
     private final Event event;
 
     @Override

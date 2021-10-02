@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.party.menu;
 
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.party.menu.buttons.PartyDuelButton;
 import xyz.refinedev.practice.profile.Profile;
@@ -11,8 +12,12 @@ import java.util.*;
 
 public class PartyDuelMenu extends PaginatedMenu {
 
-    {setPlaceholder(true);
-     setAutoUpdate(true);}
+    private final Array plugin = this.getPlugin();
+
+    public PartyDuelMenu() {
+        this.setPlaceholder(true);
+        this.setAutoUpdate(true);
+    }
 
     @Override
     public String getPrePaginatedTitle(Player player) {
@@ -22,6 +27,7 @@ public class PartyDuelMenu extends PaginatedMenu {
     @Override
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
+
         List<Party> parties = new ArrayList<>(Party.getParties());
         int index = 0;
 

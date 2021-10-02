@@ -41,13 +41,13 @@ public class GlobalLeaderboardsButton extends Button {
                     .replace("<leaderboards_pos>", String.valueOf(position))
                     .replace("<leaderboards_name>", leaderboardsAdapter.getName())
                     .replace("<leaderboards_elo>", String.valueOf(leaderboardsAdapter.getElo()))
-                    .replace("<leaderboards_division>", ChatColor.stripColor(profile.getDivision())));
+                    .replace("<leaderboards_division>", plugin.getProfileManager().getDivision(profile).getDisplayName()));
             ++position;
         }
         lore.add(CC.MENU_BAR);
 
         return new ItemBuilder(Material.SUGAR)
-                .name(Locale.LEADERBOARDS_GLOBAL_HEADER.toString())
+                .name("&aGlobal Leaderboards")
                 .clearFlags()
                 .lore(lore)
                 .build();

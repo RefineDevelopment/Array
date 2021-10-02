@@ -78,10 +78,10 @@ public class SumoSolo extends Event {
             if (player != null) {
                 player.teleport(this.getEventManager().getSpectator(this));
 
-                Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+                Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
 
                 if (profile.isInEvent() && profile.getEvent().isSumoSolo()) {
-                    profile.refreshHotbar();
+                    this.getPlugin().getProfileManager().refreshHotbar(profile);
                 }
             }
 
@@ -94,10 +94,10 @@ public class SumoSolo extends Event {
             if (player != null) {
                 player.teleport(this.getEventManager().getSpectator(this));
 
-                Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+                Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
 
                 if (profile.isInEvent() && profile.getEvent().isSumoSolo()) {
-                    profile.refreshHotbar();
+                    this.getPlugin().getProfileManager().refreshHotbar(profile);
                 }
             }
 
@@ -168,7 +168,7 @@ public class SumoSolo extends Event {
     @Override
     public void handleStart() {
         this.setEventTask(new SumoSoloStartTask(this));
-        waterTask = new EventWaterTask(this);
+        waterTask = new EventWaterTask(this.getPlugin(), this);
         waterTask.runTaskTimer(Array.getInstance(), 20L, 20L);
     }
 

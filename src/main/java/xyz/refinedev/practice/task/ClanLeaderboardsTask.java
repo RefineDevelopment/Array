@@ -20,10 +20,6 @@ public class ClanLeaderboardsTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (!plugin.isEnabled()) {
-            cancel();
-            return;
-        }
         plugin.getLeaderboardsManager().loadClanLeaderboards();
     }
 }

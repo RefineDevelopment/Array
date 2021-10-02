@@ -1,13 +1,13 @@
-package xyz.refinedev.practice.match.types.kit;
+package xyz.refinedev.practice.tournament.menu;
 
 /**
  * This Project is property of Refine Development © 2021
  * Redistribution of this Project is not allowed
  *
  * @author Drizzy
- * Created at 7/14/2021
+ * Created: 9/28/2021
  * Project: Array
  */
 
-public class BedwarsMatch {
+public class TeamTournamentMenu {
 }

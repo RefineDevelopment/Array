@@ -35,7 +35,7 @@ import java.util.UUID;
  */
 
 public class Spleef extends Event {
-    
+
     private BukkitRunnable waterTask;
 
     public Spleef(Array plugin, Player host) {
@@ -89,9 +89,9 @@ public class Spleef extends Event {
 
     @Override
     public void onDeath(Player player) {
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        profile.handleVisibility();
-        profile.refreshHotbar();
+        Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
+        this.getPlugin().getProfileManager().handleVisibility(profile);
+        this.getPlugin().getProfileManager().refreshHotbar(profile);
 
         this.broadcastMessage(Locale.EVENT_DIED.toString().replace("<eliminated_name>", player.getName()));
 
@@ -104,7 +104,7 @@ public class Spleef extends Event {
     @Override
     public void handleStart() {
         this.setEventTask(new SpleefStartTask(this));
-        waterTask = new EventWaterTask(this);
+        waterTask = new EventWaterTask(this.getPlugin(), this);
         waterTask.runTaskTimer(this.getPlugin(), 20L, 20L);
     }
 

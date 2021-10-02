@@ -1,5 +1,6 @@
-package xyz.refinedev.practice.kit.kiteditor;
+package xyz.refinedev.practice.listeners;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -11,12 +12,16 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.kit.kiteditor.menu.KitManagementMenu;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 
+@RequiredArgsConstructor
 public class KitEditorListener implements Listener {
+
+    private final Array plugin;
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent event) {

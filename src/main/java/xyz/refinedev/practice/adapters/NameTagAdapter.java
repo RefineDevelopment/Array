@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.adapters;
 
+import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
@@ -20,10 +21,12 @@ import xyz.refinedev.practice.util.nametags.provider.NameTagProvider;
 
 public class NameTagAdapter extends NameTagProvider {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin;
 
-    public NameTagAdapter() {
+    public NameTagAdapter(Array plugin) {
         super("Main", 1);
+
+        this.plugin = plugin;
     }
 
     /**
@@ -73,7 +76,7 @@ public class NameTagAdapter extends NameTagProvider {
         if (targetProfile.getParty() != null && targetProfile.getParty().containsPlayer(viewer)) {
             return createNameTag(plugin.getConfigHandler().getPartyColor().toString(), "");
         }
-        String color = plugin.getConfigHandler().getDefaultColor().equals("<rank_color>") ? targetProfile.getColor().toString() : ChatColor.valueOf(plugin.getConfigHandler().getDefaultColor()).toString();
+        String color = plugin.getConfigHandler().getDefaultColor().equals("<rank_color>") ? plugin.getProfileManager().getColor(targetProfile).toString() : ChatColor.valueOf(plugin.getConfigHandler().getDefaultColor()).toString();
         return createNameTag(color, "");
     }
 

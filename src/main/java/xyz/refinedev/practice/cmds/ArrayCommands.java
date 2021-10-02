@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.cmds;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -35,9 +36,10 @@ import xyz.refinedev.practice.util.other.TaskUtil;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class ArrayCommands {
     
-    private final Array plugin = Array.getInstance();
+    private final Array plugin;
     private final String[] HELP_MESSAGE = {
             CC.CHAT_BAR,
             CC.translate("&cArray &7» Essential Commands"),
@@ -133,9 +135,9 @@ public class ArrayCommands {
     @Command(name = "update", aliases = "save", desc = "Update and Save all data related to Array")
     @Require("array.listeners.admin")
     public void update(@Sender CommandSender player) {
-        for ( Profile profile : Profile.getProfiles().values() ) {
-            profile.save();
-            profile.load();
+        for ( Profile profile : plugin.getProfileManager().getProfiles().values() ) {
+            plugin.getProfileManager().save(profile);
+            plugin.getProfileManager().load(profile);
         }
 
         TaskUtil.runAsync(() -> {
@@ -156,7 +158,7 @@ public class ArrayCommands {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
         }
-        profile.teleportToSpawn();
+        plugin.getProfileManager().teleportToSpawn(profile);
     }
 
     @Command(name = "version", aliases = "ver", desc = "View Array's Build Version")
@@ -205,7 +207,7 @@ public class ArrayCommands {
                 stats.setLost(0);
             });
             profile.setGlobalElo(1000);
-            profile.save();
+            plugin.getProfileManager().save(profile);
         });
 
         player.sendMessage(CC.translate("&aSuccessfully wiped statistics of " + profile.getName() + "."));
@@ -241,11 +243,11 @@ public class ArrayCommands {
         if (reach.equalsIgnoreCase("global")) {
             Kit kitType = Kit.getByName(type);
             if (kitType != null) {
-                for ( Profile profile : Profile.getProfiles().values() ) {
+                for ( Profile profile : plugin.getProfileManager().getProfiles().values() ) {
                     for ( KitInventory kitInventory : profile.getStatisticsData().get(kitType).getLoadouts() ) {
                         profile.getStatisticsData().get(kitType).deleteKit(kitInventory);
                     }
-                    profile.save();
+                    plugin.getProfileManager().save(profile);
                     if (profile.getPlayer().isOnline()) {
                         profile.getPlayer().kickPlayer("Please re-log due to your kit loadouts being reset by an Admin.");
                     }
@@ -253,11 +255,11 @@ public class ArrayCommands {
             } else {
                 if (type.equalsIgnoreCase("all")) {
                     for ( Kit kit : Kit.getKits() ) {
-                        for ( Profile profile : Profile.getProfiles().values() ) {
+                        for ( Profile profile : plugin.getProfileManager().getProfiles().values() ) {
                             for ( KitInventory kitInventory : profile.getStatisticsData().get(kit).getLoadouts() ) {
                                 profile.getStatisticsData().get(kit).deleteKit(kitInventory);
                             }
-                            profile.save();
+                            plugin.getProfileManager().save(profile);
                             if (profile.getPlayer().isOnline()) {
                                 profile.getPlayer().kickPlayer("Please re-log due to your kit loadouts being reset by an Admin.");
                             }
@@ -279,7 +281,7 @@ public class ArrayCommands {
                 for ( KitInventory kitInventory : profile.getStatisticsData().get(kitType).getLoadouts() ) {
                     profile.getStatisticsData().get(kitType).deleteKit(kitInventory);
                 }
-                profile.save();
+                plugin.getProfileManager().save(profile);
                 player.sendMessage(CC.translate("&8[&cArray&8] &7Successfully deleted kitloadouts for &c" + reach));
             } else {
                 if (type.equalsIgnoreCase("all")) {
@@ -289,7 +291,7 @@ public class ArrayCommands {
                         for ( KitInventory kitInventory : profile.getStatisticsData().get(kit).getLoadouts() ) {
                             profile.getStatisticsData().get(kit).deleteKit(kitInventory);
                         }
-                        profile.save();
+                        plugin.getProfileManager().save(profile);
                     }
                 } else {
                     player.sendMessage(CC.translate("&7Invalid Type!"));

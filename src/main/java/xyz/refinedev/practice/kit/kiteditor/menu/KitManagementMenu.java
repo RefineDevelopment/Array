@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitInventory;
@@ -21,7 +22,8 @@ import java.util.Map;
 
 public class KitManagementMenu extends Menu {
 
-    private static final Button PLACEHOLDER = Button.placeholder(Material.STAINED_GLASS_PANE, (byte) 7, " ");
+    private final Array plugin = this.getPlugin();
+    private final Button PLACEHOLDER = Button.placeholder(Material.STAINED_GLASS_PANE, (byte) 7, " ");
 
     private final Kit kit;
 
@@ -102,7 +104,7 @@ public class KitManagementMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private static class CreateKitButton extends Button {
+    private class CreateKitButton extends Button {
 
         private final int index;
 
@@ -143,7 +145,7 @@ public class KitManagementMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private static class RenameKitButton extends Button {
+    private class RenameKitButton extends Button {
 
         private final KitInventory kitInventory;
 
@@ -174,7 +176,7 @@ public class KitManagementMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private static class LoadKitButton extends Button {
+    private class LoadKitButton extends Button {
 
         private final int index;
 

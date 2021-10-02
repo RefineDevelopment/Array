@@ -72,7 +72,7 @@ public class FFAMatch extends Match {
 
         for (Player enemy : team.getPlayers()) {
             Profile enemyProfile = plugin.getProfileManager().getByPlayer(enemy);
-            enemyProfile.handleVisibility();
+            plugin.getProfileManager().handleVisibility(enemyProfile);
         }
 
         plugin.getNameTagHandler().reloadPlayer(player);
@@ -104,7 +104,7 @@ public class FFAMatch extends Match {
             if (player == null) continue;
 
             Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-            profile.handleVisibility();
+            plugin.getProfileManager().handleVisibility(profile);
 
             this.getSnapshots().add(new MatchSnapshot(teamPlayer));
         }
@@ -129,9 +129,9 @@ public class FFAMatch extends Match {
                     Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
                     profile.setState(ProfileState.IN_LOBBY);
                     profile.setMatch(null);
-                    profile.handleVisibility();
-                    profile.refreshHotbar();
-                    profile.teleportToSpawn();
+                    plugin.getProfileManager().handleVisibility(profile);
+                    plugin.getProfileManager().refreshHotbar(profile);
+                    plugin.getProfileManager().teleportToSpawn(profile);
                 }
             }
         }.runTaskLater(plugin, (getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : plugin.getConfigHandler().getTELEPORT_DELAY() * 20L);
@@ -140,39 +140,7 @@ public class FFAMatch extends Match {
 
     @Override
     public boolean canEnd() {
-        return getAlivePlayers().size() == 1;
-    }
-
-    @Override
-    public void handleKillEffect(Player deadPlayer, Player killerPlayer) {
-        if (killerPlayer == null) return;
-        Profile profile = plugin.getProfileManager().getByPlayer(killerPlayer);
-        KillEffect killEffect = profile.getKillEffect();
-        if (killEffect == null) {
-            killEffect = plugin.getKillEffectManager().getDefault();
-        }
-
-        if (killEffect.getEffect() != null) {
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 0.0f);
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 1.0f, 0.0f);
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 1.0f);
-        }
-
-        if (killEffect.isLightning()) {
-            for ( Player player : this.getPlayers() ) {
-                PacketContainer packetContainer = this.createLightningPacket(deadPlayer.getLocation());
-                this.sendLightningPacket(player, packetContainer);
-            }
-        }
-
-        if (killEffect.isAnimateDeath()) PlayerUtil.animateDeath(deadPlayer);
-
-        if (!killEffect.getKillEffectSounds().isEmpty()) {
-            float randomPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
-            for ( KillEffectSound killEffectSound : killEffect.getKillEffectSounds()) {
-                this.getPlayers().forEach(player -> player.playSound(deadPlayer.getLocation(), killEffectSound.getSound(), killEffectSound.getPitch(), randomPitch));
-            }
-        }
+        return getAlivePlayers().size() < 1;
     }
 
     @Override
@@ -182,9 +150,9 @@ public class FFAMatch extends Match {
         this.getSnapshots().add(new MatchSnapshot(teamPlayer));
         PlayerUtil.reset(deadPlayer);
 
-        for ( Player otherPlayer : getAllPlayers() ) {
+        for ( Player otherPlayer : getPlayers() ) {
             Profile profile = plugin.getProfileManager().getByUUID(otherPlayer.getUniqueId());
-            TaskUtil.runLater(() -> profile.handleVisibility(otherPlayer, deadPlayer), 2L);
+            TaskUtil.runLater(() -> plugin.getProfileManager().handleVisibility(profile, deadPlayer), 2L);
         }
 
         if (this.canEnd()) {
@@ -195,19 +163,10 @@ public class FFAMatch extends Match {
                 deadPlayer.teleport(getMidSpawn());
 
                 Profile profile = plugin.getProfileManager().getByUUID(deadPlayer.getUniqueId());
-                profile.refreshHotbar();
                 profile.setState(ProfileState.SPECTATING);
+                plugin.getProfileManager().refreshHotbar(profile);
+                plugin.getProfileManager().handleVisibility(profile);
             }
-            TaskUtil.runLater(() -> {
-                //Handle match players' visibility
-                this.getPlayers().forEach(player -> plugin.getProfileManager().getByUUID(player.getUniqueId()).handleVisibility(player, deadPlayer));
-
-                //Then handle spectator visibility
-                this.getSpectators().forEach(spectator -> {
-                    if (plugin.getProfileManager().getByPlayer(spectator).getSettings().isShowSpectator()) spectator.showPlayer(deadPlayer);
-                    if (plugin.getProfileManager().getByPlayer(deadPlayer).getSettings().isShowSpectator()) deadPlayer.showPlayer(spectator);
-                });
-            }, 8L);
         }
     }
 

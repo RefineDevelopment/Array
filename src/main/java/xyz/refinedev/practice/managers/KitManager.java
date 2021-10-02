@@ -2,6 +2,7 @@ package xyz.refinedev.practice.managers;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.configuration.ConfigurationSection;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.queue.Queue;
@@ -30,7 +31,15 @@ public class KitManager {
     private final List<Kit> kits = new ArrayList<>();
 
     public void init() {
+        ConfigurationSection configurationSection = config.getConfigurationSection("kits");
+        if (configurationSection == null || configurationSection.getKeys(false).isEmpty()) return;
 
+        for ( String kitName : configurationSection.getKeys(false) ) {
+            Kit kit = new Kit(kitName);
+
+            this.load(kit);
+            this.setupQueue(kit);
+        }
     }
 
     public void load(Kit kit) {
@@ -41,6 +50,11 @@ public class KitManager {
 
     }
 
+    /**
+     * Setup the {@link Kit}'s queue
+     *
+     * @param kit {@link Kit} whose queue is being setup
+     */
     public void setupQueue(Kit kit) {
         if (!kit.isEnabled()) return;
         kit.setUnrankedQueue(new Queue(kit, QueueType.UNRANKED));
@@ -53,10 +67,12 @@ public class KitManager {
         }
     }
 
-    public void shutdownQueue(Kit kit) {
-
-    }
-
+    /**
+     * Get a {@link Kit} by its name
+     *
+     * @param name {@link String} name of the kit
+     * @return {@link Kit} Queried kit
+     */
     public Kit getByName(String name) {
         for (Kit kit : kits) {
             if (kit.getName().equalsIgnoreCase(name)) {

@@ -209,7 +209,7 @@ public class SettingsButton extends Button {
                 } else {
                     Button.playFail(player);
                     player.closeInventory();
-                    Locale.ERROR_SETTING_NOPERM.toList().forEach(player::sendMessage);
+                    Locale.ERROR_SETTING_NOPERM.toList().forEach(line -> player.sendMessage(line.replace("<store>", plugin.getConfigHandler().getSTORE())));
                 }
                 break;
             case TOGGLESPECTATORS:
@@ -227,7 +227,7 @@ public class SettingsButton extends Button {
                 } else {
                     Button.playFail(player);
                     player.closeInventory();
-                    Locale.ERROR_SETTING_NOPERM.toList().forEach(player::sendMessage);
+                    Locale.ERROR_SETTING_NOPERM.toList().forEach(line -> player.sendMessage(line.replace("<store>", plugin.getConfigHandler().getSTORE())));
                 }
                 break;
             case TOGGLEPINGONSCOREBOARD:
@@ -245,7 +245,7 @@ public class SettingsButton extends Button {
             case TOGGLESHOWPLAYERS:
                 Button.playSuccess(player);
                 profile.getSettings().setShowPlayers(!profile.getSettings().isShowPlayers());
-                profile.handleVisibility();
+                plugin.getProfileManager().handleVisibility(profile);
                 break;
             case TOGGLEDROPPROTECT:
                 if (player.hasPermission("array.profile.dropprotect")) {
@@ -254,11 +254,11 @@ public class SettingsButton extends Button {
                 } else {
                     Button.playFail(player);
                     player.closeInventory();
-                    Locale.ERROR_SETTING_NOPERM.toList().forEach(player::sendMessage);
+                    Locale.ERROR_SETTING_NOPERM.toList().forEach(line -> player.sendMessage(line.replace("<store>", plugin.getConfigHandler().getSTORE())));
                 }
 
         }
-        TaskUtil.runAsync(profile::save);
+        plugin.getProfileManager().save(profile);
     }
 
     /**

@@ -157,16 +157,16 @@ public enum Locale {
     ERROR_NO_PARTY_TO_DUEL("ERROR.NO_PARTY_TO_DUEL", "&cYou don't have a party to duel with."),
     ERROR_TARGET_NO_PARTY("ERROR.TARGET_NO_PARTY", "&cThe dueled player does not have a party!"),
     ERROR_PLAYERNOTFOUND("ERROR.PLAYER_NOT_FOUND", "&cThat player does not exist or is not currently online."),
-    ERROR_SETTING_NOPERM("ERROR.SETTINGS_NO_PERM", Arrays.asList("&7You don't have permission to use this setting", "&7&oyou can upgrade your core at &c&ostore.refinedev.xyz&7&o.")),
+    ERROR_SETTING_NOPERM("ERROR.SETTINGS_NO_PERM", Arrays.asList("&7You don't have permission to use this setting", "&7&oyou can upgrade your core at &c&o<store>&7&o.")),
 
     SETTINGS_ENABLED("SETTINGS.ENABLED", "&7You enabled &c<setting_name>&7 for your profile!"),
     SETTINGS_DISABLED("SETTINGS.DISABLED", "&7You disabled &c<setting_name>&7 for your profile!"),
 
-    RANKED_DISABLED("RANKED.DISABLED", "&7Ranked has been disabled by an Admin!"),
-    RANKED_REQUIRED("RANKED.REQUIRED", Arrays.asList("&7You need to win at least &c10 Unranked Matches &7 to queue Ranked!", "&7&oYou can bypass this limit by upgrading your core at &c&ostore.refinedev.xyz")),
+    RANKED_DISABLED("RANKED.DISABLED", "&cRanked has been disabled by an Admin!"),
+    RANKED_REQUIRED("RANKED.REQUIRED", Arrays.asList("&7You need to win at least &c<match_limit> Unranked Matches &7to queue Ranked!", "&7&oYou can bypass this limit by upgrading your rank at &c&o<store>")),
 
     HCF_CLASS_ENABLED("HCF.CLASS_ENABLED", "&cClass: &f<class> &aenabled!"),
-    HCF_COOLDOWN("HCF.COOLDOWN", "&7You cannot use this for another <duration>!"),
+    HCF_COOLDOWN("HCF.COOLDOWN", "&cYou cannot use this for another <duration>!"),
     HCF_ARCHER_RANGE("HCF.ARCHER_RANGE", "&cRange: &f<range>"),
     HCF_ARCHER_MARKED("HCF.ARCHER_MARKED_SHOOTER", "&7You Marked &c<damaged> &7for &c10 seconds &c<damagedhealth> &4❤"),
     HCF_ARCHER_DAMAGEMARKED("HCF.ARCHER_MARKED_DAMAGED", "&7Marked! &c<shooter> &7has shot &cyou &7and &cmarked &7you (+25% damage) for &c10 seconds&7. &8(&c<distance> blocks away&8)"),
@@ -176,16 +176,14 @@ public enum Locale {
     HCF_ROUGE_BACKSTABBED("HCF.ROUGE_BEENBACKSTABBED", "&c<attacker> &ehas backstabbed you!"),
     HCF_ROUGE_BACKSTABBER("HCF.ROGUE_HAVEBACKSTABBED", "&eYou have backstabbed &c<target>&e."),
 
-    MATCH_HCF_STARTMESSAGE("MATCH.HCF_START_MESSAGE", Arrays.asList("", "&c&lHCF Match&7!", "", "&7Pick between &cBard&7, &cArcher&7, &cRogue&7 and &cDiamond", "&7Kits and Fight to the death to &cWin!", "")),
+    MATCH_HCF_STARTMESSAGE("MATCH.HCF_START_MESSAGE", Arrays.asList("&c&lHCF Match&7!", "", "&7Pick between &cBard&7, &cArcher&7, &cRogue&7 and &cDiamond", "&7Kits and Fight to the death to &cWin!", "")),
     MATCH_TEAM_STARTMESSAGE("MATCH.TEAM_START_MESSAGE", Arrays.asList("&c&lMatch Found!", "", "&fYou are playing on &c<arena>&f on a &cTeam Match!")),
     MATCH_SOLO_STARTMESSAGE("MATCH.SOLO_START_MESSAGE", Arrays.asList("&c&lMatch Found!", "", "&fYou are playing on &c<arena>&f with &fPlayers: &c<player1> &7vs &c<player2>")),
     MATCH_ROUND_MESSAGE("MATCH.ROUND_MESSAGE", Arrays.asList(" &c&lRound #<round_number>", "  &fYour Points: &c<your_points>", "  &fTheir Points: &c<their_points>")),
     MATCH_DISCLAIMER("MATCH.DISCLAIMER_MESSAGE", Collections.singletonList("&c&lReminder: &fButterfly clicking is &cdiscouraged &fand could result in a &cban. Use at your own risk.")),
-    MATCH_COUNTDOWN("MATCH.COUNTDOWN", "&fStarting in &c<seconds>&f..."),
-    MATCH_ROUND_COUNTDOWN("MATCH.ROUND_COUNTDOWN", "&c<seconds>&f..."),
+    MATCH_COUNTDOWN("MATCH.COUNTDOWN", "&c<seconds>&f..."),
     MATCH_STARTED("MATCH.STARTED", "&aMatch Started!"),
-    MATCH_ROUND("MATCH.ROUND_STARTED", "&aThe Round has Started!"),
-    MATCH_SPECTATE("MATCH.SPECTATE_JOIN", "&c<spectator> &eis now spectating your match!"),
+    MATCH_SPECTATE("MATCH.SPECTATE_JOIN", "&b<spectator> &eis now spectating your match!"),
     MATCH_STOPSPEC("MATCH.SPECTATE_LEAVE", "&c<spectator> &eis no longer spectating your match!"),
     MATCH_CHECKPOINT("MATCH.CHECKPOINT_ACCQUIRED", "&aCheckpoint Accquired!"),
     MATCH_DISCONNECTED("MATCH.PARTICIPANT_DISCONNECTED", "<relation_color><participant_name> &7has disconnected."),
@@ -201,7 +199,6 @@ public enum Locale {
     MATCH_BRIDGE_BLOCK("MATCH.BRIDGE_BLOCK_PLACE", "&cYou cannot place blocks here!"),
     MATCH_BRIDGE_WRONG_PORTAL("MATCH.BRIDGE_WRONG_PORTAL", "&cYou jumped in the wrong portal!"),
     MATCH_BRIDGE_SCORED("MATCH.BRIDGE_SCORED", "<relation_color_scored><scored_name> &fhas scored a Point!"),
-    MATCH_BRIDGE_WON("MATCH.BRIDGE_WON_ROUND", Arrays.asList("", "&c<winner_name> &7has won this round!", "")),
     MATCH_INVENTORY_MESSAGE("MATCH.INVENTORY_MESSAGE", Arrays.asList("&c&m--------&7&m-------------------------------------&c&m--------", "&c&lMatch Details &7(Click name to view inventory)", "", "<inventories>", "<elo_changes>", "&c&m--------&7&m-------------------------------------&c&m--------")),
     MATCH_INVENTORY_HOVER("MATCH.INVENTORY_HOVER", "&7Click to view &c<inventory_name>'s &7inventory."),
     MATCH_INVENTORY_WINNER("MATCH.INVENTORY_SOLO_WINNER", "&aWinner: "),
@@ -312,6 +309,8 @@ public enum Locale {
     KILL_EFFECT_ALREADY_SELECTED("KILL_EFFECT.ALREADY_SELECTED", "&7You have already selected that kill effect!"),
     KILL_EFFECT_NO_PERM("KILL_EFFECT.NO_PERMISSION", "&7You don't have permission to use this kill effect!\n&7&oPlease upgrade your core at &c<store>&7&o!"),
 
+    XP_ADD("PROFILE.XP_ADD", "&7[&cXP&7] &fYou have been awarded &c<xp>&f!"),
+
     QUEUE_JOIN_UNRANKED("QUEUE.JOIN_UNRANKED", "&7You have been added to the &c<queue_name> &7queue."),
     QUEUE_JOIN_RANKED("QUEUE.JOIN_RANKED", "&7You have been added to the &c<queue_name> &7queue. &c[<queue_elo>]"),
     QUEUE_JOIN_CLAN("QUEUE.JOIN_CLAN", "&7You have been added to the &c<queue_name> &7queue. &c[<clan_elo>]"),
@@ -330,13 +329,8 @@ public enum Locale {
     KITEDITOR_RENAMING("KITEDITOR_RENAMING", "&7Renaming &c<old_name>&7, Enter the new name now..."),
 
     LEADERBOARDS_KIT_FORMAT("LEADERBOARDS.KIT_FORMAT", "&c<leaderboards_pos> &7&l\uff5c &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
-    LEADERBOARDS_KIT_HEADER("LEADERBOARDS.KIT_HEADER", "&c<kit_name> &7\uff5c &fTop 10"),
-
     LEADERBOARDS_GLOBAL_FORMAT("LEADERBOARDS.GLOBAL_FORMAT", "&c<leaderboards_pos> &7&l\uff5c &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
-    LEADERBOARDS_GLOBAL_HEADER("LEADERBOARDS.GLOBAL_HEADER", "&cGlobal &7\uff5c &fTop 10"),
-
-    LEADERBOARDS_CLAN_FORMAT("LEADERBOARDS.CLAN_FORMAT", "&c<leaderboards_pos> &7&l\uff5c &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
-    LEADERBOARDS_CLAN_HEADER("LEADERBOARDS.CLAN_HEADER", "&cClans &7\uff5c &fTop 10");
+    LEADERBOARDS_CLAN_FORMAT("LEADERBOARDS.CLAN_FORMAT", "&c<leaderboards_pos> &7&l\uff5c &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)");
 
     private final String path;
     private String value;

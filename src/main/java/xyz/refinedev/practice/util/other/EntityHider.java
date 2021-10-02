@@ -43,7 +43,7 @@ import static com.comphenix.protocol.PacketType.Play.Server.*;
  * Entity hider which aims to fix spigot visibility
  * of projectiles, particle effects and sounds
  * </p>
- * Originally coded by Lipchya and recoded/improved
+ * Originally coded by Lipchya and cleaned/improved
  * by DevDrizzy (Cleaned up code and Removed Excessive Reflection usage)
  *
  * @since 9/13/2021

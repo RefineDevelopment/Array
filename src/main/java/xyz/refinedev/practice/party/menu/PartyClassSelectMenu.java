@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
@@ -27,7 +28,11 @@ import java.util.stream.Collectors;
 
 public class PartyClassSelectMenu extends PaginatedMenu {
 
-    {this.setAutoUpdate(true);}
+    private final Array plugin = this.getPlugin();
+
+    public PartyClassSelectMenu() {
+        this.setAutoUpdate(true);
+    }
 
     @Override
     public String getPrePaginatedTitle(Player player) {
@@ -41,9 +46,11 @@ public class PartyClassSelectMenu extends PaginatedMenu {
         Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         Party party = profile.getParty();
 
+        List<UUID> uuids = party.getPlayers().stream().map(Player::getUniqueId).collect(Collectors.toList());
+
         //Maybe they left?, shouldn't happen but just checking
         for (UUID uuid : new ArrayList<>(party.getKits().keySet())) {
-            if (!party.getPlayers().stream().map(Player::getUniqueId).collect(Collectors.toList()).contains(uuid)) {
+            if (!uuids.contains(uuid)) {
                 party.getKits().remove(uuid);
             }
         }
@@ -55,7 +62,7 @@ public class PartyClassSelectMenu extends PaginatedMenu {
     }
 
     @RequiredArgsConstructor
-    public static class MemberDisplayButton extends Button {
+    public class MemberDisplayButton extends Button {
 
         private final UUID uuid;
 

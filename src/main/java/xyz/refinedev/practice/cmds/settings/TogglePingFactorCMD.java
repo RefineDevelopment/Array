@@ -1,9 +1,11 @@
 package xyz.refinedev.practice.cmds.settings;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.settings.meta.SettingsMeta;
+import xyz.refinedev.practice.profile.settings.meta.Settings;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Require;
 import xyz.refinedev.practice.util.command.annotation.Sender;
@@ -16,14 +18,16 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
  * Created at 7/7/2021
  * Project: Array
  */
-
+@RequiredArgsConstructor
 public class TogglePingFactorCMD {
+
+    private final Array plugin;
 
     @Command(name = "", desc = "Toggle Ping Factor for your Profile")
     @Require("array.profile.pingfactor")
     public void toggle(@Sender Player player) {
         Profile profile = plugin.getProfileManager().getByPlayer(player);
-        SettingsMeta settings = profile.getSettings();
+        Settings settings = profile.getSettings();
 
         settings.setPingFactor(!settings.isPingFactor());
 

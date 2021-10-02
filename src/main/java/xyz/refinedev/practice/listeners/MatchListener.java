@@ -30,8 +30,8 @@ import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.MatchState;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
-import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
-import xyz.refinedev.practice.match.types.kit.TeamBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.match.types.kit.BoxingMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.hotbar.HotbarItem;
@@ -141,7 +141,6 @@ public class MatchListener implements Listener {
             Match match = null;
 
             for ( Match filterMatch : Match.getMatches() ) {
-                if (filterMatch == null) continue;
                 if (filterMatch.getPlacedBlocks().contains(event.getBlock().getLocation())) {
                     match = filterMatch;
                 }

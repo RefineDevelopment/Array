@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
@@ -34,6 +35,8 @@ import java.util.List;
  */
 
 public class PartyEventButton extends Button {
+
+    private final Array plugin = this.getPlugin();
 
     private final FoldersConfigurationFile config;
     private final PartyEventType partyEventType;

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.profile.Profile;
@@ -17,6 +18,8 @@ import java.util.Map;
 
 @AllArgsConstructor
 public class DuelSelectArenaMenu extends PaginatedMenu {
+
+    private final Array plugin = this.getPlugin();
 
     @Override
     public String getPrePaginatedTitle(Player player) {

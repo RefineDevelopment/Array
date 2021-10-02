@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.cmds.event;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -27,10 +28,11 @@ import java.util.stream.Collectors;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class EventCommands {
 
-    private final Array plugin = Array.getInstance();
-    private final EventManager eventManager = plugin.getEventManager();
+    private final Array plugin;
+    private final EventManager eventManager;
 
     @Command(name = "", aliases = "help", desc = "View Event Commands")
     public void help(@Sender CommandSender sender) {
@@ -73,7 +75,7 @@ public class EventCommands {
             return;
         }
 
-        Bukkit.getOnlinePlayers().stream().map(Profile::getByPlayer).filter(profile -> profile.isInLobby() && !profile.getKitEditor().isActive()).forEach(Profile::refreshHotbar);
+        Bukkit.getOnlinePlayers().stream().map(plugin.getProfileManager()::getByPlayer).filter(profile -> profile.isInLobby() && !profile.getKitEditor().isActive()).forEach(Profile::refreshHotbar);
     }*/
 
     @Command(name = "cancel", aliases = "stop", desc = "Cancel an ongoing event")
@@ -85,7 +87,7 @@ public class EventCommands {
             return;
         }
 
-        Profile.getProfiles().values().stream().filter(profile -> !profile.getKitEditor().isActive()).filter(Profile::isInLobby).forEach(Profile::refreshHotbar);
+        plugin.getProfileManager().getProfiles().values().stream().filter(profile -> !profile.getKitEditor().isActive()).filter(Profile::isInLobby).forEach(plugin.getProfileManager()::refreshHotbar);
         event.end();
     }
 

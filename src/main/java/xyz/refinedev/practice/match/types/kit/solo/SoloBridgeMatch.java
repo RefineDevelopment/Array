@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.match.types.kit;
+package xyz.refinedev.practice.match.types.kit.solo;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -45,7 +45,6 @@ public class SoloBridgeMatch extends SoloMatch {
     @Override
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
-
         if (teamPlayer.isDisconnected()) return;
 
         teamPlayer.setAlive(true);
@@ -54,7 +53,6 @@ public class SoloBridgeMatch extends SoloMatch {
         PlayerUtil.denyMovement(player);
 
         if (getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
-
         if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
         this.getPlugin().getSpigotHandler().kitKnockback(player, getKit());
@@ -124,41 +122,18 @@ public class SoloBridgeMatch extends SoloMatch {
         if (teamPlayer.isDisconnected()) return;
 
         for ( Player other : this.getPlayers() ) {
-            Profile otherProfile = plugin.getProfileManager().getByUUID(other.getUniqueId());
-            otherProfile.handleVisibility();
+            Profile otherProfile = this.getPlugin().getProfileManager().getByUUID(other.getUniqueId());
+            this.getPlugin().getProfileManager().handleVisibility(otherProfile, player);
         }
 
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        profile.handleVisibility();
-        profile.refreshHotbar();
+        Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
+        this.getPlugin().getProfileManager().handleVisibility(profile);
+        this.getPlugin().getProfileManager().refreshHotbar(profile);
 
         TaskUtil.runLater(() -> {
             this.setupPlayer(player);
             PlayerUtil.allowMovement(player);
         }, 2L);
-    }
-
-    //TODO: Move kill effects to listener based
-    @Override
-    public void handleKillEffect(Player deadPlayer, Player killerPlayer) {
-        if (killerPlayer == null) return;
-        Profile profile = plugin.getProfileManager().getByPlayer(killerPlayer);
-        KillEffect killEffect = profile.getKillEffect();
-
-        if (killEffect.getEffect() != null) {
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 0.0f);
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 1.0f, 0.0f);
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 1.0f);
-        }
-
-        if (killEffect.isAnimateDeath()) PlayerUtil.animateDeath(deadPlayer);
-
-        if (!killEffect.getKillEffectSounds().isEmpty()) {
-            float randomPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
-            for ( KillEffectSound killEffectSound : killEffect.getKillEffectSounds()) {
-                this.getPlayers().forEach(player -> player.playSound(deadPlayer.getLocation(), killEffectSound.getSound(), killEffectSound.getPitch(), randomPitch));
-            }
-        }
     }
 
     /**
@@ -170,18 +145,18 @@ public class SoloBridgeMatch extends SoloMatch {
         TeamPlayer teamPlayer = this.getTeamPlayer(player);
 
         if (teamPlayer == null) return;
-        if (!isFighting()) return;
+        if (!this.isFighting()) return;
 
-        if (LocationUtils.isTeamPortal(player)) {
+        if (LocationUtils.isTeamPortalSolo(player)) {
             player.sendMessage(Locale.MATCH_BRIDGE_WRONG_PORTAL.toString());
             player.teleport(teamPlayer.getPlayerSpawn());
             return;
         }
 
         if (getTeamPlayerA().equals(teamPlayer)) {
-            this.playerAPoints+= 1;
+            this.playerAPoints++;
         } else {
-            this.playerBPoints+= 1;
+            this.playerBPoints++;
         }
 
         if (this.canEnd()) {

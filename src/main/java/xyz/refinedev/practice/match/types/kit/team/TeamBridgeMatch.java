@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.match.types.kit;
+package xyz.refinedev.practice.match.types.kit.team;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,10 +8,10 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
@@ -20,15 +20,10 @@ import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.TeamMatch;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.killeffect.KillEffect;
-import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.location.LocationUtils;
-import xyz.refinedev.practice.util.other.EffectUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -41,6 +36,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Getter @Setter
 public class TeamBridgeMatch extends TeamMatch {
+
+    private final Array plugin = this.getPlugin();
 
     private int teamAPoints = 0;
     private int teamBPoints = 0;
@@ -133,45 +130,17 @@ public class TeamBridgeMatch extends TeamMatch {
 
         for ( Player other : this.getPlayers() ) {
             Profile otherProfile = plugin.getProfileManager().getByUUID(other.getUniqueId());
-            otherProfile.handleVisibility();
+            plugin.getProfileManager().handleVisibility(otherProfile);
         }
 
         Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        profile.handleVisibility();
-        profile.refreshHotbar();
+        plugin.getProfileManager().handleVisibility(profile);
+        plugin.getProfileManager().refreshHotbar(profile);
 
         TaskUtil.runLaterAsync(() -> {
             this.setupPlayer(player);
             PlayerUtil.allowMovement(player);
         }, 2L);
-    }
-
-    @Override
-    public void handleKillEffect(Player deadPlayer, Player killerPlayer) {
-        if (killerPlayer == null) return;
-        Profile profile = plugin.getProfileManager().getByPlayer(killerPlayer);
-        KillEffect killEffect = profile.getKillEffect();
-
-        if (killEffect.getEffect() != null) {
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 0.0f);
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 1.0f, 0.0f);
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 1.0f);
-        }
-
-        if (this.canEnd()) {
-            if (killEffect.isAnimateDeath()) PlayerUtil.animateDeath(deadPlayer);
-
-            if (killEffect.isDropsClear()) {
-                this.getDroppedItems().forEach(Item::remove);
-            }
-        }
-
-        if (!killEffect.getKillEffectSounds().isEmpty()) {
-            float randomPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
-            for ( KillEffectSound killEffectSound : killEffect.getKillEffectSounds()) {
-                this.getPlayers().forEach(player -> player.playSound(deadPlayer.getLocation(), killEffectSound.getSound(), killEffectSound.getPitch(), randomPitch));
-            }
-        }
     }
 
     /**
@@ -185,7 +154,7 @@ public class TeamBridgeMatch extends TeamMatch {
         if (teamPlayer == null) return;
         if (!isFighting()) return;
 
-        if (LocationUtils.isTeamPortal(player)) {
+        if (LocationUtils.isTeamPortalTeam(player)) {
             player.sendMessage(Locale.MATCH_BRIDGE_WRONG_PORTAL.toString());
             player.teleport(teamPlayer.getPlayerSpawn());
             return;

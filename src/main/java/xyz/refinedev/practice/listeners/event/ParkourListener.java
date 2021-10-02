@@ -11,5 +11,5 @@ import org.bukkit.event.Listener;
  * Project: Array
  */
 
-public class ParkourListener implements Listener {
+public class ParkourListener {
 }

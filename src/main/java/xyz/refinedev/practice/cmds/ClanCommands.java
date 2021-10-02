@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.cmds;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -27,9 +28,10 @@ import java.util.UUID;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class ClanCommands {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin;
 
     @Command(name = "", desc = "View Clan Commands")
     public void clan(@Sender CommandSender player) {
@@ -67,6 +69,9 @@ public class ClanCommands {
         }
 
         clan = new Clan(name, player.getUniqueId(), UUID.randomUUID());
+        plugin.getClanManager().getClans().add(clan);
+        profile.setClan(clan);
+
         player.sendMessage(Locale.CLAN_CREATED.toString().replace("<name>", name));
     }
 

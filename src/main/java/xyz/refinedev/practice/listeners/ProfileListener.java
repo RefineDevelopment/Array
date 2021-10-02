@@ -12,10 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
@@ -179,7 +176,7 @@ public class ProfileListener implements Listener {
         }
 
         UUID uuid = event.getUniqueId();
-        Profile profile = new Profile(uuid);
+        Profile profile = new Profile(plugin, uuid);
 
         try {
             plugin.getProfileManager().load(profile);
@@ -187,6 +184,7 @@ public class ProfileListener implements Listener {
             e.printStackTrace();
             event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
             event.setKickMessage(CC.RED + "Failed to init your profile, Please contact an Administrator!");
+            return;
         }
         plugin.getProfileManager().getProfiles().put(uuid, profile);
     }
@@ -231,6 +229,28 @@ public class ProfileListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onWorldChange(PlayerChangedWorldEvent event) {
         event.getPlayer().setSprinting(true);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onKill(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        Player killer = player.getKiller();
+        if (killer == null) return;
+
+        Profile profile = plugin.getProfileManager().getByUUID(killer.getUniqueId());
+        if (!profile.isInFight() && !profile.isInEvent()) return;
+
+        profile.setKills(profile.getKills() + 1);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        if (!profile.isInFight() && !profile.isInEvent()) return;
+
+        profile.setDeaths(profile.getDeaths() + 1);
     }
 
     /**

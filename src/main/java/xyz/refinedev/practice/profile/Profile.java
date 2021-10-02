@@ -1,10 +1,13 @@
 package xyz.refinedev.practice.profile;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.clan.meta.ClanInvite;
@@ -20,17 +23,19 @@ import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.history.MatchHistory;
 import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.profile.rank.TablistRank;
-import xyz.refinedev.practice.profile.settings.meta.SettingsMeta;
+import xyz.refinedev.practice.profile.settings.meta.Settings;
 import xyz.refinedev.practice.profile.statistics.StatisticsData;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueProfile;
-import xyz.refinedev.practice.tournament.Tournament;
 import xyz.refinedev.practice.util.other.Cooldown;
 
 import java.util.*;
 
 @Getter @Setter
+@RequiredArgsConstructor
 public class Profile {
+
+    private final Array plugin;
 
     private final Map<UUID, DuelRequest> sentDuelRequests = new HashMap<>();
     private final Map<Kit, StatisticsData> statisticsData = new LinkedHashMap<>();
@@ -42,10 +47,11 @@ public class Profile {
 
     private final UUID uniqueId;
     private String name;
+    private UUID killEffect;
     private int globalElo = 1000;
     private int kills, deaths, experience;
+    private ProfileState state = ProfileState.IN_LOBBY;
 
-    private ProfileState state;
     private Party party;
     private Match match;
     private Queue queue;
@@ -53,37 +59,19 @@ public class Profile {
     private Event event;
 
     private TablistRank tablistRank;
-    private KillEffect killEffect;
     private ClanProfile clanProfile;
     private QueueProfile queueProfile;
     private DuelProcedure duelProcedure;
     private RematchProcedure rematchData;
 
+    private Arena ratingArena;
     private Player spectating;
-    private boolean build, silent;
+    private boolean build, silent, issueRating;
 
     private Cooldown enderpearlCooldown, bowCooldown, visibilityCooldown;
 
-    private KitEditor kitEditor;
-    private SettingsMeta settings;
-
-    private boolean issueRating;
-    private Arena ratingArena;
-
-    /**
-     * The main constructor for the Profile
-     *
-     * @param uniqueId The {@link UUID} of the Player
-     */
-    public Profile(UUID uniqueId) {
-        this.uniqueId = uniqueId;
-        this.state = ProfileState.IN_LOBBY;
-        this.kitEditor = new KitEditor();
-
-        for (Kit kit : Kit.getKits()) {
-            this.statisticsData.put(kit, new StatisticsData());
-        }
-    }
+    private KitEditor kitEditor = new KitEditor();
+    private Settings settings = new Settings();
 
     /**
      * Get's vanilla tablist priority checking
@@ -101,7 +89,14 @@ public class Profile {
      * @param killEffect {@link KillEffect}
      */
     public boolean isSelected(KillEffect killEffect) {
-        return this.killEffect != null && this.killEffect.getUniqueId().equals(killEffect.getUniqueId());
+        return this.killEffect != null && this.killEffect.equals(killEffect.getUniqueId());
+    }
+
+    public void setExperience(int experience) {
+        this.experience = experience;
+
+        if (this.getPlayer() == null) return;
+        this.getPlayer().sendMessage(Locale.XP_ADD.toString().replace("<xp>", String.valueOf(experience)));
     }
 
     public Integer getTotalWins() {
@@ -141,7 +136,7 @@ public class Profile {
     }
 
     public boolean isInTournament() {
-       return Tournament.getCurrentTournament() != null && Tournament.getCurrentTournament().isParticipating(this.uniqueId);
+       return plugin.getTournamentManager().getCurrentTournament() != null && plugin.getTournamentManager().getCurrentTournament().isParticipating(this.uniqueId);
     }
 
     public boolean isInSomeSortOfFight() {

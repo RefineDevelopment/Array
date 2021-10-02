@@ -89,6 +89,7 @@ public class Array extends JavaPlugin {
     private PvPClassManager pvpClassManager;
     private DivisionsManager divisionsManager;
     private KillEffectManager killEffectManager;
+    private TournamentManager tournamentManager;
     private LeaderboardsManager leaderboardsManager;
 
     /*
@@ -116,7 +117,7 @@ public class Array extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        api = new ArrayAPI();
+        api = new ArrayAPI(this);
         drink = Drink.get(this);
 
         System.setProperty("file.encoding", "UTF-8");
@@ -150,6 +151,9 @@ public class Array extends JavaPlugin {
         this.coreHandler = new CoreHandler(this);
         this.coreHandler.init();
 
+        this.killEffectManager = new KillEffectManager(this);
+        this.killEffectManager.init();
+
         //Static abuse be like
         Kit.preload();
 
@@ -167,6 +171,8 @@ public class Array extends JavaPlugin {
         this.eventManager = new EventManager(this);
         this.eventManager.init();
 
+        this.tournamentManager = new TournamentManager(this);
+
         this.hotbarManager = new HotbarManager(this);
         this.hotbarManager.init();
 
@@ -176,10 +182,7 @@ public class Array extends JavaPlugin {
         this.ratingsManager = new RatingsManager(this);
         this.ratingsManager.init();
 
-        this.killEffectManager = new KillEffectManager(this);
-        this.killEffectManager.init();
-
-        this.spigotHandler= new SpigotHandler(this);
+        this.spigotHandler = new SpigotHandler(this);
         this.spigotHandler.init();
 
         this.pvpClassManager = new PvPClassManager(this);
@@ -207,6 +210,7 @@ public class Array extends JavaPlugin {
 
         Kit.getKits().forEach(Kit::save);
         Arena.getArenas().forEach(Arena::save);
+
         this.clanManager.getClans().forEach(clanManager::save);
         this.profileManager.getProfiles().values().forEach(profileManager::save);
         this.killEffectManager.getKillEffects().forEach(killEffectManager::save);

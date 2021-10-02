@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.api;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.Profile;
@@ -12,7 +13,11 @@ import xyz.refinedev.practice.profile.Profile;
  * Created at 5/22/2021
  * Project: Array
  */
+
+@RequiredArgsConstructor
 public class ArrayAPI implements API {
+
+    private final Array plugin;
 
     @Override
     public boolean isInLobby(Player player) {
@@ -48,7 +53,7 @@ public class ArrayAPI implements API {
     @Override
     public void handleVisibility(Player player) {
         Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        profile.handleVisibility();
+        plugin.getProfileManager().handleVisibility(profile);
     }
 
     @Override

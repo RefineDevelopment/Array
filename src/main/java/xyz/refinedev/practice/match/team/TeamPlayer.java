@@ -23,51 +23,40 @@ public class TeamPlayer {
     private final UUID uniqueId;
     private final String username;
 
-    private Location playerSpawn;
-    private Location parkourCheckpoint;
+    private Location playerSpawn, parkourCheckpoint;
 
     private boolean alive = true;
     private boolean disconnected;
 
-    private int elo;
-    private int potionsThrown;
-    private int potionsMissed;
-    private int potions;
-    private int hits;
-    private int combo;
-    private int longestCombo;
+    private int elo, potionsThrown, potionsMissed, potions, hits, combo, longestCombo;
 
     public TeamPlayer(Player player) {
-        this.uniqueId= player.getUniqueId();
+        this.uniqueId = player.getUniqueId();
         this.username = player.getName();
+
         int pots = 0;
+
         for (ItemStack item : player.getInventory().getContents()) {
-            if (item == null)
-                continue;
-            if (item.getType() == Material.AIR)
-                continue;
-            if (item.getType() != Material.POTION)
-                continue;
-            if (item.getDurability() != (short)16421)
-                continue;
+            if (item == null) continue;
+            if (item.getType() == Material.AIR) continue;
+            if (item.getType() != Material.POTION) continue;
+            if (item.getDurability() != (short)16421) continue;
             pots++;
         }
         this.potions = pots;
     }
 
     public TeamPlayer(UUID uniqueId, String username) {
-        this.uniqueId=uniqueId;
+        this.uniqueId = uniqueId;
         this.username = username;
+
         int pots = 0;
+
         for (ItemStack item : Bukkit.getPlayer(uniqueId).getInventory().getContents()) {
-            if (item == null)
-                continue;
-            if (item.getType() == Material.AIR)
-                continue;
-            if (item.getType() != Material.POTION)
-                continue;
-            if (item.getDurability() != (short)16421)
-                continue;
+            if (item == null) continue;
+            if (item.getType() == Material.AIR) continue;
+            if (item.getType() != Material.POTION) continue;
+            if (item.getDurability() != (short)16421) continue;
             pots++;
         }
         this.potions = pots;
@@ -88,10 +77,9 @@ public class TeamPlayer {
     }
 
     public int getCps() {
-        if (cpsMap.get(uniqueId) == null) {
-            return 0;
-        }
+        if (cpsMap.get(uniqueId) == null) return 0;
         cpsMap.get(uniqueId).removeIf(count -> count < System.currentTimeMillis() - 1000L);
+
         return cpsMap.get(uniqueId).size();
     }
 
@@ -127,10 +115,6 @@ public class TeamPlayer {
 
     public void resetCombo() {
         combo = 0;
-    }
-
-    public Profile getProfile() {
-        return plugin.getProfileManager().getByUUID(uniqueId);
     }
 
 }

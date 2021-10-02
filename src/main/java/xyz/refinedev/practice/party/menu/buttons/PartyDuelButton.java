@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.party.Party;
@@ -29,6 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PartyDuelButton extends Button {
 
+    private final Array plugin = this.getPlugin();
     private final Party party;
 
     @Override
@@ -57,7 +59,7 @@ public class PartyDuelButton extends Button {
     @Override
     public void clicked(Player player, ClickType clickType) {
         Profile senderProfile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        Profile receiverProfile = plugin.getProfileManager().getByUUID(this.party.getLeader().getPlayer().getUniqueId());
+        Profile receiverProfile = plugin.getProfileManager().getByUUID(this.party.getLeader().getUniqueId());
 
         player.closeInventory();
 
@@ -65,7 +67,7 @@ public class PartyDuelButton extends Button {
             player.sendMessage(Locale.PARTY_NOTLEADER.toString());
             return;
         }
-        if (senderProfile.cannotSendDuelRequest(player)) {
+        if (plugin.getProfileManager().cannotSendDuelRequest(senderProfile, player)) {
             player.sendMessage(Locale.DUEL_ALREADYSENT.toString());
             return;
         }

@@ -97,9 +97,11 @@ public class QueueThread extends Thread {
                             if (queue.getType() == QueueType.RANKED) {
                                 firstMatchPlayer.setElo(firstProfile.getStatisticsData().get(queue.getKit()).getElo());
                                 secondMatchPlayer.setElo(secondProfile.getStatisticsData().get(queue.getKit()).getElo());
-                                secondProfile.calculateGlobalElo();
-                                firstProfile.calculateGlobalElo();
+
+                                plugin.getProfileManager().calculateGlobalElo(secondProfile);
+                                plugin.getProfileManager().calculateGlobalElo(firstProfile);
                             }
+
                             kit = queue.getKit();
 
                             // Create match

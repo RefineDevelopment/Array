@@ -21,6 +21,8 @@ import java.util.Map;
 @AllArgsConstructor
 public class DuelSelectKitMenu extends Menu {
 
+    private final Array plugin = this.getPlugin();
+
     @Override
     public String getTitle(Player player) {
         return "&7Select a kit";
@@ -68,7 +70,7 @@ public class DuelSelectKitMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private static class SelectKitButton extends Button {
+    private class SelectKitButton extends Button {
 
         private final Kit kit;
 
@@ -88,26 +90,23 @@ public class DuelSelectKitMenu extends Menu {
             Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
 
-                if (profile.getDuelProcedure() == null) {
-                    player.sendMessage(CC.RED + "Could not find duel procedure.");
-                    return;
-                }
+            if (profile.getDuelProcedure() == null) {
+                player.sendMessage(CC.RED + "Could not find duel data.");
+                return;
+            }
 
-                Arena arena = Arena.getRandom(kit);
-                // Update duel procedure
-                profile.getDuelProcedure().setKit(kit);
-                profile.getDuelProcedure().setArena(arena);
+            Arena arena = Arena.getRandom(kit);
 
-                // Set closed by menu
-                Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
+            profile.getDuelProcedure().setKit(kit);
+            profile.getDuelProcedure().setArena(arena);
 
-                // Force close inventory
-                player.closeInventory();
-                if (player.hasPermission("array.donator")) {
-                    new DuelSelectArenaMenu().openMenu(player);
-                } else {
-                    profile.getDuelProcedure().send();
-                }
+            player.closeInventory();
+
+            if (player.hasPermission("array.donator")) {
+                new DuelSelectArenaMenu().openMenu(player);
+            } else {
+                profile.getDuelProcedure().send();
+            }
         }
 
     }

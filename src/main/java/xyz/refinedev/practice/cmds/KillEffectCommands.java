@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.cmds;
 
 import com.mongodb.client.model.Filters;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Effect;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,9 +26,10 @@ import java.util.UUID;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class KillEffectCommands {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin;
 
     private final String[] HELP_MESSAGE = {
             CC.CHAT_BAR,

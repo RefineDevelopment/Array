@@ -185,8 +185,8 @@ public class MatchManager {
 
         this.cleanup(match);
 
-        if (match.getMatchWaterCheck() != null) {
-            match.getMatchWaterCheck().cancel();
+        if (match.getWaterTask() != null) {
+            match.getWaterTask().cancel();
         }
 
         MatchEndEvent event = new MatchEndEvent(match);
@@ -286,7 +286,7 @@ public class MatchManager {
     public void handleKillEffect(Match match, Player deadPlayer, Player killerPlayer) {
         if (killerPlayer == null) return;
         Profile profile = plugin.getProfileManager().getByPlayer(killerPlayer);
-        KillEffect killEffect = profile.getKillEffect();
+        KillEffect killEffect = plugin.getKillEffectManager().getByUUID(profile.getKillEffect());
 
         deadPlayer.teleport(deadPlayer.getLocation().add(0.0, 1.0, 0.0));
 

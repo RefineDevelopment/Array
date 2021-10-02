@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.cmds;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
@@ -32,10 +33,12 @@ import xyz.refinedev.practice.util.other.TaskUtil;
  * Project: Array
  */
 
+//TODO: Recode this and party menus
+@RequiredArgsConstructor
 public class DuelCommands {
 
-    private final Array plugin = Array.getInstance();
-    private final CoreAdapter coreAdapter= plugin.getCoreHandler().getCoreType().getCoreAdapter();
+    private final Array plugin;
+    private final CoreAdapter coreAdapter = Array.getInstance().getCoreHandler().getCoreType().getCoreAdapter();
 
     private Match match;
     private Arena arena;
@@ -62,7 +65,7 @@ public class DuelCommands {
             player.sendMessage(CC.RED + "That player is not accepting any duel requests at the moment.");
             return;
         }
-        if (senderProfile.cannotSendDuelRequest(player)) {
+        if (plugin.getProfileManager().cannotSendDuelRequest(senderProfile, player)) {
             player.sendMessage(CC.RED + "You have already sent that player a duel request.");
             return;
         }
@@ -86,7 +89,7 @@ public class DuelCommands {
             return;
         }
 
-        if (!receiverProfile.isPendingDuelRequest(player)) {
+        if (!plugin.getProfileManager().isPendingDuelRequest(receiverProfile, player)) {
             player.sendMessage(Locale.DUEL_NOT_PENDING.toString());
             return;
         }
@@ -136,15 +139,15 @@ public class DuelCommands {
                     player.sendMessage(CC.RED + "The arena you were dueled was a build arena and all arenas are busy.");
                     return;
                 }
-                boolean foundarena = false;
+                boolean found = false;
                 for ( Arena duplicate : sarena.getDuplicates() ) {
                     if (!duplicate.isActive()) {
                         arena = duplicate;
-                        foundarena = true;
+                        found = true;
                         break;
                     }
                 }
-                if (!foundarena) {
+                if (!found) {
                     player.sendMessage(CC.RED + "The arena you were dueled was a build arena and all arenas are busy.");
                     return;
                 }

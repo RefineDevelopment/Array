@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
@@ -16,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 public class KitEditorSelectKitMenu extends Menu {
+
+    private final Array plugin = this.getPlugin();
 
     @Override
     public String getTitle(Player player) {
@@ -38,7 +41,7 @@ public class KitEditorSelectKitMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private static class KitDisplayButton extends Button {
+    private class KitDisplayButton extends Button {
 
         private final Kit kit;
 

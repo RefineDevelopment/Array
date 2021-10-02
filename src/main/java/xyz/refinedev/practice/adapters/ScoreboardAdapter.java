@@ -3,7 +3,6 @@ package xyz.refinedev.practice.adapters;
 import lombok.RequiredArgsConstructor;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.clan.Clan;
@@ -12,8 +11,8 @@ import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.kit.BoxingMatch;
-import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
-import xyz.refinedev.practice.match.types.kit.TeamBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.pvpclasses.PvPClass;
@@ -81,12 +80,12 @@ public class ScoreboardAdapter implements AssembleAdapter {
                     .replace("<online>", String.valueOf(TrackUtil.getOnline()))
                     .replace("<in_fights>", String.valueOf(TrackUtil.getInFights()))
                     .replace("<in_queues>", String.valueOf(TrackUtil.getInQueues()))
-                    .replace("<elo_league>", ChatColor.stripColor(profile.getDivision()))
+                    .replace("<elo_league>", plugin.getProfileManager().getDivision(profile).getDisplayName())
                     .replace("<global_elo>", String.valueOf(profile.getGlobalElo())))
                     .replace("%splitter%", "┃")
                     .replace("|", "┃")));
 
-            if (profile.getParty() != null && Tournament.getCurrentTournament() == null) {
+            if (profile.getParty() != null && plugin.getTournamentManager().getCurrentTournament() == null) {
                 Party party = profile.getParty();
                 String armorClass = party.getKits().get(player.getUniqueId());
 
@@ -141,8 +140,8 @@ public class ScoreboardAdapter implements AssembleAdapter {
                             .replace("<clan_name>", clan.getName())
                             .replace("%splitter%", "┃").replace("|", "┃")));
                 }
-            } else if (Tournament.getCurrentTournament() != null) {
-                Tournament<?> tournament = Tournament.getCurrentTournament();
+            } else if (plugin.getTournamentManager().getCurrentTournament() != null) {
+                Tournament<?> tournament = plugin.getTournamentManager().getCurrentTournament();
                 String round = tournament.getRound() > 0 ? String.valueOf(tournament.getRound()) : "&fStarting";
                 String participantType = tournament.getType().equals(TournamentType.TEAM) ? "Parties" : "Players";
 
@@ -194,8 +193,18 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 }
 
                 if (match instanceof BoxingMatch) {
+                    int hitDifference = self.getHits() - opponent.getHits();
+                    String hits;
+                    if (hitDifference < 0) {
+                        hits = CC.RED + hitDifference;
+                    } else if (hitDifference == 0) {
+                        hits = CC.YELLOW + hitDifference;
+                    } else {
+                        hits = CC.GREEN + hitDifference;
+                    }
+
                     config.getStringList("MATCH.SOLO_BOXING_ADDITION").forEach(line -> lines.add(CC.translate(line
-                                //.replace("<hit_difference>", boxingMatch.getDifference(self))
+                                .replace("<hit_difference>", hits)
                                 .replace("<your_hits>", String.valueOf(self.getHits()))
                                 .replace("<opponent_hits>", String.valueOf(opponent.getHits())))));
                 }

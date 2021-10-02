@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.leaderboards.menu.buttons;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -24,8 +25,7 @@ import java.util.List;
  * Project: Array
  */
 
-
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class KitLeaderboardsButton extends Button {
 
     private final Kit kit;
@@ -37,20 +37,20 @@ public class KitLeaderboardsButton extends Button {
         lore.add(CC.MENU_BAR);
         int position = 1;
         for (LeaderboardsAdapter leaderboardsAdapter : this.kit.getEloLeaderboards()) {
-            Profile profile = plugin.getProfileManager().getByUUID(leaderboardsAdapter.getUuid());
+            Profile profile = this.getPlugin().getProfileManager().getByUUID(leaderboardsAdapter.getUuid());
+            position++;
 
             lore.add(Locale.LEADERBOARDS_KIT_FORMAT.toString()
                     .replace("<leaderboards_pos>", String.valueOf(position))
                     .replace("<leaderboards_name>", leaderboardsAdapter.getName())
                     .replace("<leaderboards_elo>", String.valueOf(leaderboardsAdapter.getElo()))
-                    .replace("<leaderboards_division>", ChatColor.stripColor(profile.getDivision())));
-            ++position;
+                    .replace("<leaderboards_division>", this.getPlugin().getProfileManager().getDivision(profile).getDisplayName()));
         }
         lore.add(CC.MENU_BAR);
 
         return new ItemBuilder(this.kit.getDisplayIcon())
                 .clearFlags()
-                .name(Locale.LEADERBOARDS_KIT_HEADER.toString().replace("<kit_name>", this.kit.getDisplayName()))
+                .name("Top 10 | <kit_name>".replace("<kit_name>", this.kit.getDisplayName()))
                 .lore(lore)
                 .build();
     }

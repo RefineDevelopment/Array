@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
@@ -34,8 +35,12 @@ import java.util.LinkedList;
 
 public class SoloTournament extends Tournament<Player> {
 
-    public SoloTournament(String host, Kit kit) {
-        super(host, TournamentType.SOLO, 1, 2,100, kit);
+    private final Array plugin;
+
+    public SoloTournament(Array plugin, String host, int maxPlayers, Kit kit) {
+        super(host, TournamentType.SOLO, 1, 2, maxPlayers, kit);
+
+        this.plugin = plugin;
     }
 
     /**
@@ -51,7 +56,6 @@ public class SoloTournament extends Tournament<Player> {
 
         TeamPlayer teamPlayer = new TeamPlayer(player);
         this.getTeamPlayers().put(player.getUniqueId(), teamPlayer);
-        this.getPlayers().add(player.getUniqueId());
 
         Button.playSuccess(player);
         Bukkit.broadcastMessage(Locale.TOURNAMENT_JOIN.toString()
@@ -69,11 +73,12 @@ public class SoloTournament extends Tournament<Player> {
     @Override
     public void leave(Player player) {
         Profile profile = plugin.getProfileManager().getByPlayer(player);
+
         if (profile.getMatch() != null) {
             profile.getMatch().handleDeath(player);
         }
+
         this.getTeamPlayers().remove(player.getUniqueId());
-        this.getPlayers().remove(player.getUniqueId());
 
         if (!this.getState().equals(TournamentState.FIGHTING)) {
             Bukkit.broadcastMessage(Locale.TOURNAMENT_LEAVE.toString()
@@ -92,7 +97,7 @@ public class SoloTournament extends Tournament<Player> {
     public void start() {
         this.setStarted(true);
 
-        if (getPlayers().isEmpty()) {
+        if (this.getTeamPlayers().isEmpty()) {
             this.end(null);
             return;
         }
@@ -123,7 +128,7 @@ public class SoloTournament extends Tournament<Player> {
 
                 TeamPlayer playerA = teamShuffle.poll();
                 if (teamShuffle.isEmpty()) {
-                    playerA.getPlayer().sendMessage(CC.translate("&7We couldn't find an opponent for you, please wait for the next round!"));
+                    playerA.getPlayer().sendMessage(CC.translate("&cWe couldn't find an opponent for you, please wait for the next round!"));
                     return;
                 }
 
@@ -154,7 +159,6 @@ public class SoloTournament extends Tournament<Player> {
     @Override
     public void eliminateParticipant(Player player, Player killer) {
         this.getTeamPlayers().remove(player.getUniqueId());
-        this.getPlayers().remove(player.getUniqueId());
 
         Bukkit.broadcastMessage(Locale.TOURNAMENT_ELIMINATED.toString()
                 .replace("<eliminated>", player.getName())
@@ -173,7 +177,6 @@ public class SoloTournament extends Tournament<Player> {
     public void end(Player winner) {
         this.setState(TournamentState.ENDED);
 
-        this.getPlayers().clear();
         this.getTeamPlayers().clear();
 
         if (winner != null){
@@ -183,6 +186,6 @@ public class SoloTournament extends Tournament<Player> {
         } else {
             Bukkit.broadcastMessage(Locale.TOURNAMENT_CANCELLED.toString());
         }
-        setCurrentTournament(null);
+        plugin.getTournamentManager().setCurrentTournament(null);
     }
 }

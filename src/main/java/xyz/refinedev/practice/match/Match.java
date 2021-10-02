@@ -1,8 +1,5 @@
 package xyz.refinedev.practice.match;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -16,7 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
-import org.jetbrains.annotations.Nullable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.api.events.match.*;
@@ -29,8 +25,8 @@ import xyz.refinedev.practice.match.types.FFAMatch;
 import xyz.refinedev.practice.match.types.HCFMatch;
 import xyz.refinedev.practice.match.types.SoloMatch;
 import xyz.refinedev.practice.match.types.TeamMatch;
-import xyz.refinedev.practice.match.types.kit.SoloBridgeMatch;
-import xyz.refinedev.practice.match.types.kit.TeamBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.profile.killeffect.KillEffect;
@@ -44,7 +40,7 @@ import xyz.refinedev.practice.util.chat.ChatHelper;
 import xyz.refinedev.practice.util.location.LightningUtil;
 import xyz.refinedev.practice.util.other.*;
 
-import java.lang.reflect.InvocationTargetException;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -71,8 +67,7 @@ public abstract class Match {
     private final QueueType queueType;
 
     public MatchState state = MatchState.STARTING;
-    public BukkitTask task;
-    private BukkitTask matchWaterCheck;
+    public BukkitTask task, waterTask, potionTask;
 
     private long startTimestamp;
 
@@ -177,11 +172,11 @@ public abstract class Match {
      */
     public void initiateTasks() {
         if (kit.getGameRules().isWaterKill() || kit.getGameRules().isParkour() || kit.getGameRules().isSumo()) {
-            this.matchWaterCheck = new MatchWaterCheckTask(this).runTaskTimer(plugin, 20L, 20L);
+            this.waterTask = new MatchWaterCheckTask(plugin, this).runTaskTimer(plugin, 20L, 20L);
         }
 
         this.task = new MatchStartTask(this).runTaskTimer(plugin, 20L, 20L);
-        this.getPlayers().forEach(player -> new MatchPotionTrackTask(player).runTaskTimerAsynchronously(plugin, 0L, 5L));
+        this.potionTask = new MatchPotionTrackTask(plugin, this).runTaskTimerAsynchronously(plugin, 0L, 5L);
     }
 
     /**
@@ -247,7 +242,8 @@ public abstract class Match {
 
         this.cleanup();
 
-        if (matchWaterCheck != null) matchWaterCheck.cancel();
+        if (waterTask != null) waterTask.cancel();
+        potionTask.cancel();
 
         MatchEndEvent event = new MatchEndEvent(this);
         event.call();
@@ -385,7 +381,7 @@ public abstract class Match {
     public void handleKillEffect(Player deadPlayer, Player killerPlayer) {
         if (killerPlayer == null) return;
         Profile profile = plugin.getProfileManager().getByPlayer(killerPlayer);
-        KillEffect killEffect = profile.getKillEffect();
+        KillEffect killEffect = plugin.getKillEffectManager().getByUUID(profile.getKillEffect());
         if (killEffect == null) {
             killEffect = plugin.getKillEffectManager().getDefault();
         }
@@ -415,32 +411,6 @@ public abstract class Match {
                 this.getPlayers().forEach(player -> player.playSound(deadPlayer.getLocation(), killEffectSound.getSound(), killEffectSound.getPitch(), randomPitch));
             }
         }
-    }
-
-    /**
-     * Lightning through Protocol Lib cuz we care about the
-     * environment
-     *
-     * @param location {@link Location} where the lightning should spawn
-     * @return {@link PacketContainer}
-     */
-    public PacketContainer createLightningPacket(Location location) {
-        PacketContainer lightningPacket = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
-
-        lightningPacket.getModifier().writeDefaults();
-        lightningPacket.getIntegers().write(0, 128);
-        lightningPacket.getIntegers().write(4, 1);
-        lightningPacket.getIntegers().write(1, (int)(location.getX() * 32.0));
-        lightningPacket.getIntegers().write(2, (int)(location.getY() * 32.0));
-        lightningPacket.getIntegers().write(3, (int)(location.getZ() * 32.0));
-
-        return lightningPacket;
-    }
-
-    public void sendLightningPacket(Player target, PacketContainer packet) {
-        try {
-            ProtocolLibrary.getProtocolManager().sendServerPacket(target, packet);
-        } catch (InvocationTargetException ignored) {}
     }
 
     /**
@@ -780,7 +750,7 @@ public abstract class Match {
      * @return {@link Boolean}
      */
     public boolean isHCFMatch() {
-        return false;
+        return this.isTeamMatch() && this instanceof HCFMatch;
     }
 
     /**
@@ -791,7 +761,7 @@ public abstract class Match {
      * @return {@link Boolean}
      */
     public boolean isTheBridgeMatch() {
-        return this instanceof SoloBridgeMatch || this instanceof TeamBridgeMatch;
+        return this.isSoloMatch() && (this instanceof SoloBridgeMatch || this instanceof TeamBridgeMatch);
     }
 
     /**

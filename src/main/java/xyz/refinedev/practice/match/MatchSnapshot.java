@@ -16,22 +16,23 @@ import java.util.UUID;
 @Getter @Setter
 public class MatchSnapshot {
 
-    private UUID uniqueID = UUID.randomUUID();
+    private UUID uniqueID;
     private TeamPlayer teamPlayer;
-
     private transient TeamPlayer switchTo;
+
     private int health;
     private int hunger;
     private ItemStack[] armor;
     private ItemStack[] contents;
     private Collection<PotionEffect> effects;
-    private long created = System.currentTimeMillis();
+    private long created;
 
     public MatchSnapshot(TeamPlayer teamPlayer) {
         this(teamPlayer, null);
     }
 
     public MatchSnapshot(TeamPlayer teamPlayer, TeamPlayer switchTo) {
+        this.uniqueID = UUID.randomUUID();
         this.teamPlayer = teamPlayer;
         this.switchTo = switchTo;
 
@@ -42,6 +43,8 @@ public class MatchSnapshot {
         armor = player.getInventory().getArmorContents();
         contents = player.getInventory().getContents();
         effects = player.getActivePotionEffects();
+
+        this.created = System.currentTimeMillis();
     }
 
     public int getRemainingPotions() {

@@ -126,8 +126,9 @@ public abstract class Event {
 		Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 		profile.setEvent(this);
 		profile.setState(ProfileState.IN_EVENT);
-		profile.handleVisibility();
-		profile.refreshHotbar();
+		
+		plugin.getProfileManager().handleVisibility(profile);
+		plugin.getProfileManager().refreshHotbar(profile);
 
 		if (isFreeForAll()) {
 			player.teleport(eventManager.getSpawn(this));
@@ -158,7 +159,8 @@ public abstract class Event {
 		Profile profile = plugin.getProfileManager().getByPlayer(player);
 		profile.setState(ProfileState.IN_LOBBY);
 		profile.setEvent(null);
-		profile.teleportToSpawn();
+		
+		plugin.getProfileManager().teleportToSpawn(profile);
 
 		if (state == EventState.WAITING) {
 			broadcastMessage(Locale.EVENT_LEAVE.toString()
@@ -195,14 +197,14 @@ public abstract class Event {
 			Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 			profile.setState(ProfileState.IN_LOBBY);
 			profile.setEvent(null);
-			profile.refreshHotbar();
-			profile.teleportToSpawn();
+			plugin.getProfileManager().refreshHotbar(profile);
+			plugin.getProfileManager().teleportToSpawn(profile);
 		}
 
 		TaskUtil.run(this::cleanup);
 
 		this.getSpectatorsList().forEach(this::removeSpectator);
-		this.getPlayers().stream().map(Profile::getByPlayer).forEach(Profile::handleVisibility);
+		this.getPlayers().stream().map(plugin.getProfileManager()::getByPlayer).forEach(plugin.getProfileManager()::handleVisibility);
 	}
 
 	/**
@@ -288,8 +290,8 @@ public abstract class Event {
 		Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 		profile.setEvent(this);
 		profile.setState(ProfileState.SPECTATING);
-		profile.refreshHotbar();
-		profile.handleVisibility();
+		plugin.getProfileManager().refreshHotbar(profile);
+		plugin.getProfileManager().handleVisibility(profile);
 
 		if (isFreeForAll()) {
 			player.teleport(getEventManager().getSpawn(this));
@@ -309,7 +311,7 @@ public abstract class Event {
 		Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 		profile.setEvent(null);
 		profile.setState(ProfileState.IN_LOBBY);
-		profile.teleportToSpawn();
+		plugin.getProfileManager().teleportToSpawn(profile);
 	}
 
 	public boolean isSpectating(UUID uuid) {

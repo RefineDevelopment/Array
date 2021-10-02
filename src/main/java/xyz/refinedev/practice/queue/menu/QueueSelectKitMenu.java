@@ -36,7 +36,7 @@ public class QueueSelectKitMenu extends Menu {
         Map<Integer, Button> buttons = new HashMap<>();
         
         int i = 0;
-        for (final Queue queue : Queue.getQueues()) {
+        for (Queue queue : Queue.getQueues()) {
             if (queue.getType() == this.queueType) {
                 buttons.put(i++, new SelectKitButton(queue));
             }

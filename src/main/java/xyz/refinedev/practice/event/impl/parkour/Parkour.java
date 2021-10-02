@@ -70,7 +70,7 @@ public class Parkour extends Event {
     @Override
     public void handleStart() {
         this.setEventTask(new ParkourRoundStartTask(this));
-        waterTask = new EventWaterTask(this);
+        waterTask = new EventWaterTask(this.getPlugin(), this);
         waterTask.runTaskTimer(this.getPlugin(), 20L, 20L);
     }
 

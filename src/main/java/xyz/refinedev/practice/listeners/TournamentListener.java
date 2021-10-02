@@ -1,10 +1,12 @@
 package xyz.refinedev.practice.listeners;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.events.match.MatchEndEvent;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.party.Party;
@@ -22,12 +24,15 @@ import java.util.UUID;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class TournamentListener implements Listener {
+
+    private final Array plugin;
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent event) {
         Profile profile = plugin.getProfileManager().getByPlayer(event.getPlayer());
-        Tournament tournament = Tournament.getCurrentTournament();
+        Tournament tournament = plugin.getTournamentManager().getCurrentTournament();
         if (tournament != null) return;
 
         if (!profile.hasParty() && profile.isInTournament()) {
@@ -42,7 +47,7 @@ public class TournamentListener implements Listener {
     @EventHandler
     public void onMatchEndEvent(MatchEndEvent event) {
         Match match = event.getMatch();
-        Tournament tournament = Tournament.getCurrentTournament();
+        Tournament tournament = plugin.getTournamentManager().getCurrentTournament();
 
         if (tournament == null) return;
 
@@ -62,6 +67,7 @@ public class TournamentListener implements Listener {
 
                 tournament.eliminateParticipant(looserParty, winnerParty);
             }
+
             //Remove the match
             tournament.getMatches().remove(match);
             //If matches have ended then pick last remaining team as winner
@@ -70,7 +76,6 @@ public class TournamentListener implements Listener {
                     tournament.end(tournament.getTeamPlayers().keySet().stream().findAny());
                     //Otherwise cancel the tournament (this shouldn't happen unless everyone leaves)
                 } else if (tournament.getTeamPlayers().isEmpty()) {
-                    System.out.println("Players were null!");
                     tournament.end(null);
                 } else {
                     //If the matches are not empty then move the next stage!

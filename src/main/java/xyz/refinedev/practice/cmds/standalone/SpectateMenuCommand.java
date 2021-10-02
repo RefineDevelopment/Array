@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.cmds.standalone;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.match.menu.MatchSpectateMenu;
 import xyz.refinedev.practice.profile.Profile;
@@ -16,7 +18,10 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class SpectateMenuCommand {
+
+    private final Array plugin;
 
     @Command(name = "", desc = "Open spectate menu")
     public void spectateMenu(@Sender Player player) {

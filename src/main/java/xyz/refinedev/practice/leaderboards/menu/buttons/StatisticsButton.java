@@ -2,6 +2,7 @@ package xyz.refinedev.practice.leaderboards.menu.buttons;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
@@ -23,6 +24,8 @@ import java.util.List;
 
 public class StatisticsButton extends Button {
 
+    private final Array plugin = this.getPlugin();
+
     @Override
     public ItemStack getButtonItem(Player player) {
         List<String> lore = new ArrayList<>();
@@ -36,7 +39,7 @@ public class StatisticsButton extends Button {
         }
         lore.add(CC.MENU_BAR);
         lore.add("&aGlobal ELO: &f" + profile.getGlobalElo());
-        lore.add("&aGlobal League: &f" + profile.getDivision());
+        lore.add("&aGlobal League: &f" + plugin.getProfileManager().getDivision(profile));
         lore.add(CC.MENU_BAR);
 
         return new ItemBuilder(SkullCreator.itemFromUuid(player.getUniqueId()))

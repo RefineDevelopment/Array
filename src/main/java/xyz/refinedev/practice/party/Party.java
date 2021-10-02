@@ -142,9 +142,6 @@ public class Party extends Team {
      * @param player The player joining the party
      */
     public void join(final Player player) {
-        /*
-         * Update their Party
-         */
         Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         profile.setParty(this);
 
@@ -153,34 +150,16 @@ public class Party extends Team {
         plugin.getNameTagHandler().reloadPlayer(player);
         plugin.getNameTagHandler().reloadOthersFor(player);
 
-        /*
-         * Clear Their Invite
-         */
         this.invites.removeIf(invite -> invite.getUuid().equals(player.getUniqueId()));
-
-        /*
-         * Add to List
-         */
         this.getTeamPlayers().add(new TeamPlayer(player));
 
-        /*
-         * Broadcast join message to the party
-         */
         this.broadcast(Locale.PARTY_PLAYER_JOINED.toString().replace("<joiner>", player.getName()));
 
-        this.getPlayers().stream().map(Profile::getByPlayer).forEach(pp -> {
-            if (pp.isInLobby() || pp.isInQueue()) {
-                pp.refreshHotbar();
-                pp.handleVisibility();
-            }
-        });
+        for (Player teamPlayer : this.getPlayers()) {
+            Profile teamProfile = plugin.getProfileManager().getByUUID(teamPlayer.getUniqueId());
 
-        for (TeamPlayer teamPlayer : this.getTeamPlayers()) {
-            Player otherPlayer = teamPlayer.getPlayer();
-            if (otherPlayer != null) {
-                Profile teamProfile = plugin.getProfileManager().getByUUID(teamPlayer.getUniqueId());
-                teamProfile.handleVisibility(otherPlayer, player);
-            }
+            plugin.getProfileManager().handleVisibility(teamProfile, player);
+            plugin.getProfileManager().refreshHotbar(teamProfile);
         }
 
         if (this.isFighting()) {
@@ -198,9 +177,9 @@ public class Party extends Team {
      * @param kick If the leave is a forced kick or not
      */
     public void leave(Player player, boolean kick) {
-
         Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         profile.setParty(null);
+
         this.getTeamPlayers().removeIf(member -> member.getUniqueId().equals(player.getUniqueId()));
         this.getPlayers().removeIf(member -> member.getUniqueId().equals(player.getUniqueId()));
         this.kits.remove(player.getUniqueId());
@@ -212,11 +191,8 @@ public class Party extends Team {
         }
 
         if (profile.isInLobby() || profile.isInQueue()) {
-            plugin.getNameTagHandler().reloadPlayer(player);
-            plugin.getNameTagHandler().reloadOthersFor(player);
-
-            profile.handleVisibility();
-            profile.refreshHotbar();
+            plugin.getProfileManager().handleVisibility(profile);
+            plugin.getProfileManager().refreshHotbar(profile);
         }
 
         /*
@@ -225,40 +201,23 @@ public class Party extends Team {
         if (profile.isInFight()) {
             profile.getMatch().handleDeath(player, null, true);
 
-            if (profile.getMatch().isTeamMatch() || profile.getMatch().isHCFMatch()) {
-                for (final TeamPlayer secondTeamPlayer : this.getTeamPlayers()) {
-                    if (secondTeamPlayer.isDisconnected()) {
-                        continue;
-                    }
-                    if (secondTeamPlayer.getUniqueId().equals(player.getUniqueId())) {
-                        continue;
-                    }
-                    final Player secondPlayer = secondTeamPlayer.getPlayer();
-                    if (secondPlayer != null) {
-                        player.hidePlayer(secondPlayer);
-                    }
-                    plugin.getNameTagHandler().reloadPlayer(player);
-                    plugin.getNameTagHandler().reloadOthersFor(player);
-                }
-            }
-
             if (profile.isSpectating()) {
                 profile.getMatch().removeSpectator(player);
             }
+
             profile.setState(ProfileState.IN_LOBBY);
             profile.setMatch(null);
-            profile.refreshHotbar();
-            profile.handleVisibility();
-            profile.teleportToSpawn();
+
+            plugin.getProfileManager().teleportToSpawn(profile);
         }
 
-        for (TeamPlayer teamPlayer : this.getTeamPlayers()) {
-            Player otherPlayer = teamPlayer.getPlayer();
-            if (otherPlayer != null) {
-                Profile otherProfile = plugin.getProfileManager().getByUUID(teamPlayer.getUniqueId());
-                otherProfile.handleVisibility(otherPlayer, player);
-            }
+        for (Player teamPlayer : this.getPlayers()) {
+            Profile teamProfile = plugin.getProfileManager().getByUUID(teamPlayer.getUniqueId());
+
+            plugin.getProfileManager().handleVisibility(teamProfile, player);
+            plugin.getProfileManager().refreshHotbar(teamProfile);
         }
+
         plugin.getNameTagHandler().reloadPlayer(player);
         plugin.getNameTagHandler().reloadOthersFor(player);
     }
@@ -282,10 +241,10 @@ public class Party extends Team {
         this.broadcast(Locale.PARTY_PROMOTED.toString().replace("<promoted>", target.getName()));
 
         if (player.isOnline() && profile.isInLobby()) {
-            profile.refreshHotbar();
+            plugin.getProfileManager().refreshHotbar(profile);
         }
         if (targetProfile.isInLobby()) {
-            targetProfile.refreshHotbar();
+            plugin.getProfileManager().refreshHotbar(targetProfile);
         }
     }
 
@@ -298,29 +257,22 @@ public class Party extends Team {
         Profile leaderProfile = plugin.getProfileManager().getByUUID(this.getLeader().getUniqueId());
         leaderProfile.getSentDuelRequests().values().removeIf(DuelRequest::isParty);
 
-        this.getPlayers().forEach(player -> {
+        for ( Player player : this.getPlayers() ) {
             Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
             profile.setParty(null);
 
-            if (profile.isInFight()) profile.getMatch().handleDeath(player, this.getLeader().getPlayer(), true);
+            if (profile.isInFight()) {
+                profile.getMatch().handleDeath(player, null, true);
+            }
 
             if (profile.isInLobby() || profile.isInQueue()) {
-                profile.refreshHotbar();
-                profile.handleVisibility();
-                profile.teleportToSpawn();
                 plugin.getNameTagHandler().reloadPlayer(player);
                 plugin.getNameTagHandler().reloadOthersFor(player);
             }
-        });
+        }
 
         parties.remove(this);
         this.disbanded = true;
-
-        for (Player partyPlayer : this.getPlayers()) {
-            for ( Player player : Bukkit.getOnlinePlayers() ) {
-                plugin.getNameTagHandler().reloadPlayer(partyPlayer, player);
-            }
-        }
     }
 
     /**
@@ -351,11 +303,11 @@ public class Party extends Team {
     }
 
     public boolean isFighting() {
-        return this.getPlayers().stream().map(Profile::getByPlayer).anyMatch(profile -> profile.isInFight() || profile.isInTournament());
+        return this.getPlayers().stream().map(plugin.getProfileManager()::getByPlayer).anyMatch(profile -> profile.isInFight() || profile.isInTournament());
     }
 
     public Match getMatch() {
-        return this.getPlayers().stream().map(Profile::getByPlayer).filter(profile -> profile.isInFight() || profile.isInTournament()).map(Profile::getMatch).findAny().orElse(null);
+        return this.getPlayers().stream().map(plugin.getProfileManager()::getByPlayer).filter(profile -> profile.isInFight() || profile.isInTournament()).map(Profile::getMatch).findAny().orElse(null);
     }
 
     public boolean isMember(UUID uuid) {

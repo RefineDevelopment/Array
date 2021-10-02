@@ -46,7 +46,7 @@ public class ClanLeaderboardsButton extends Button {
         lore.add(CC.MENU_BAR);
 
         return new ItemBuilder(Material.GOLD_SWORD)
-                .name(Locale.LEADERBOARDS_CLAN_HEADER.toString())
+                .name("&cClan Leaderboards")
                 .clearFlags()
                 .lore(lore)
                 .build();

@@ -34,14 +34,13 @@ public class NameTagHandler {
     private static int teamCreateIndex = 1;
 
     public void init() {
-        initiated = true;
+        this.initiated = true;
 
-        thread = new NametagThread();
-        thread.start();
+        this.thread = new NametagThread();
+        this.thread.start();
 
         this.plugin.getServer().getPluginManager().registerEvents(new NameTagListener(), this.plugin);
-
-        this.registerProvider(new NameTagAdapter());
+        this.registerProvider(new NameTagAdapter(this.plugin));
     }
 
     public void registerProvider(NameTagProvider newProvider) {

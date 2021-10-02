@@ -16,7 +16,7 @@ import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,11 +32,11 @@ import java.util.UUID;
 @Getter
 public class KillEffectManager {
 
-    private final MongoCollection<Document> collection;
-
-    private final List<KillEffect> killEffects = new LinkedList<>();
     private final Array plugin;
+    private final MongoCollection<Document> collection;
     private final BasicConfigurationFile config;
+
+    private final List<KillEffect> killEffects = new ArrayList<>();
 
     public KillEffectManager(Array plugin) {
         this.plugin = plugin;
@@ -121,7 +121,7 @@ public class KillEffectManager {
             this.killEffects.add(killEffect);
         }
 
-        if (killEffects.stream().noneMatch(KillEffect::isDefaultEffect)) {
+        if (killEffects.stream().noneMatch(KillEffect::isDefaultEffect) || killEffects.isEmpty()) {
             this.createDefault();
         }
     }
@@ -148,7 +148,6 @@ public class KillEffectManager {
             config.set(path + "ICON.DATA", killEffect.getItemStack().getDurability());
 
             for ( KillEffectSound sound : killEffect.getKillEffectSounds() ) {
-                if (sound == null) continue;
                 String soundPath = path + "SOUND." + sound.getKey();
 
                 config.set(soundPath + "TYPE", sound.getSound().name());

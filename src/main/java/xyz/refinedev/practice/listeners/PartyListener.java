@@ -9,7 +9,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.tournament.Tournament;
 import xyz.refinedev.practice.util.chat.CC;
 
 import java.util.List;
@@ -41,8 +40,8 @@ public class PartyListener implements Listener {
         }
         party.leave(player, false);
 
-        if (Tournament.getCurrentTournament() == null || !Tournament.getCurrentTournament().isParticipating(player.getUniqueId())) return;
+        if (plugin.getTournamentManager().getCurrentTournament() == null || !plugin.getTournamentManager().getCurrentTournament().isParticipating(player.getUniqueId())) return;
 
-        Tournament.getCurrentTournament().leave(party);
+        plugin.getTournamentManager().getCurrentTournament().leave(party);
     }
 }

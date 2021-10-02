@@ -16,7 +16,6 @@ import xyz.refinedev.practice.task.GlobalLeaderboardsTask;
 import xyz.refinedev.practice.task.KitLeaderboardsTask;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -61,6 +60,12 @@ public class LeaderboardsManager {
         globalTask.runTaskTimer(plugin, 180 * 20L, 180 * 20L);
         kitTask.runTaskTimer(plugin, 180 * 20L, 180 * 20L);
         clanTask.runTaskTimer(plugin, 180 * 20L, 180 * 20L);
+    }
+
+    public void shutdown() {
+        globalTask.cancel();
+        kitTask.cancel();
+        clanTask.cancel();
     }
 
     /**

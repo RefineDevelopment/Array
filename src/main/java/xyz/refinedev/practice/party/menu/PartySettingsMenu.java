@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.party.enums.PartyManageType;
@@ -20,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 public class PartySettingsMenu extends Menu {
+
+    private final Array plugin = this.getPlugin();
 
     public PartySettingsMenu() {
         this.setAutoUpdate(true);
@@ -56,7 +59,7 @@ public class PartySettingsMenu extends Menu {
     }
 
     @AllArgsConstructor
-    private static class SelectManageButton extends Button {
+    private class SelectManageButton extends Button {
 
         private final PartyManageType partyManageType;
 

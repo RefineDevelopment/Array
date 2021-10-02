@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.cmds;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -32,9 +33,10 @@ import xyz.refinedev.practice.util.other.TaskUtil;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class ArenaCommands {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin;
 
     @Command(name = "", aliases = "help", desc = "View Arena Commands")
     @Require("array.arena.admin")

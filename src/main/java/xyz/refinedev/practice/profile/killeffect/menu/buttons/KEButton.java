@@ -94,7 +94,7 @@ public class KEButton extends Button {
         }
 
         Button.playSuccess(player);
-        profile.setKillEffect(killEffect);
+        profile.setKillEffect(killEffect.getUniqueId());
         player.sendMessage(Locale.KILL_EFFECT_SELECTED.toString().replace("<kill_effect>", killEffect.getName()));
     }
 

@@ -48,33 +48,32 @@ public class CommandsManager {
         this.registerProviders();
 
         //These are the cmds which have proper sub cmds in them
-        drink.register(new ArrayCommands(), "array", "practice");
-        drink.register(new ArenaCommands(), "arena", "arenas");
-        drink.register(new KitCommands(), "kit", "kits");
-        drink.register(new DuelCommands(), "duel");
+        drink.register(new ArrayCommands(plugin), "array", "practice");
+        drink.register(new ArenaCommands(plugin), "arena", "arenas");
+        drink.register(new KitCommands(plugin), "kit", "kits");
+        drink.register(new DuelCommands(plugin), "duel");
         drink.register(new RematchCommand(plugin), "rematch");
-        drink.register(new PartyCommands(), "party", "p");
-        drink.register(new TournamentCommands(), "tournament", "tourney");
-        drink.register(new ClanCommands(), "clan", "c");
-        drink.register(new EventCommands(), "event", "event");
-        drink.register(new SumoCommands(), "sumo");
-        drink.register(new SpleefCommands(), "spleef");
-        drink.register(new KillEffectCommands(), "killeffect", "killeffects", "ke");
+        drink.register(new PartyCommands(plugin), "party", "p");
+        drink.register(new TournamentCommands(plugin), "tournament", "tourney");
+        drink.register(new ClanCommands(plugin), "clan", "c");
+        drink.register(new EventCommands(plugin, plugin.getEventManager()), "event", "event");
+        drink.register(new SumoCommands(plugin, plugin.getEventManager()), "sumo");
+        drink.register(new SpleefCommands(plugin, plugin.getEventManager()), "spleef");
+        drink.register(new KillEffectCommands(plugin), "killeffect", "killeffects", "ke");
 
         //These are standalone cmds which cannot have sub cmds
         drink.register(new ViewInvCommand(plugin), "viewinv", "viewinventory", "inventory");
         drink.register(new SpectateCommand(plugin), "spec", "spectate");
-        drink.register(new StopSpecCommand(), "stopspec", "leavespec", "leave spec", "leave spectator", "stop spectating", "stopspectating");
+        drink.register(new StopSpecCommand(plugin), "stopspec", "leavespec", "leave spec", "leave spectator", "stop spectating", "stopspectating");
         drink.register(new LeaveMatchCommand(plugin), "forfeit", "abort", "abortmatch", "match abort", "match forfeit", "leave", "suicide");
-        drink.register(new AbortMatchCommand(), "cancelmatch", "forfeitmatch", "abortmatch");
+        drink.register(new AbortMatchCommand(plugin), "cancelmatch", "forfeitmatch", "abortmatch");
         drink.register(new SettingsCommand(), "settings", "preferences", "practicesettings", "pracsettings");
         drink.register(new MapCommand(plugin), "map");
-        if (plugin.getConfigHandler().isRATINGS_ENABLED()) drink.register(new RateCommand(plugin), "rate");
         drink.register(new FlyCommand(plugin), "fly", "flight");
         drink.register(new LeaderboardsCommand(), "leaderboards", "lb", "leaderboard");
         drink.register(new OpenMenuCMD(plugin), "openmenu", "menu", "menus");
         drink.register(new StatsCommand(), "stats", "elo", "statistics");
-        drink.register(new SpectateMenuCommand(), "specmenu", "spectatemenu");
+        drink.register(new SpectateMenuCommand(plugin), "specmenu", "spectatemenu");
 
         //Essentials Commands
         drink.register(new UnrankedQueueCMD(plugin), "unrankedqueue", "queue", "queue unranked");
@@ -85,15 +84,20 @@ public class CommandsManager {
         drink.register(new MainMenuCMD(plugin), "mainmenu", "menu main");
 
         //Settings Commands
-        drink.register(new ToggleScoreboardCMD(), "tsb", "togglescoreboard");
-        drink.register(new ToggleDuelCMD(), "tdr", "toggleduels", "toggledr", "toggleduelrequests");
-        drink.register(new TogglePingFactorCMD(), "tpf", "togglepf", "togglepingfactor");
-        drink.register(new ToggleSpectatorsCMD(), "tsp", "togglesp", "togglespec", "togglespectators");
-        drink.register(new ToggleTournamentMessagesCMD(), "ttm", "toggletm", "toggletourneymessages", "toggletournamentmessages");
-        drink.register(new TogglePlayersCMD(), "tpv", "toggleplayers", "toggleps", "togglevisibility", "togglehider");
-        drink.register(new ToggleDropProtectCMD(), "tdp", "toggledropprotect", "toggledropp", "toggledprotect", "toggledp");
-        if (plugin.getConfigHandler().isPING_SCOREBOARD_SETTING()) drink.register(new TogglePingScoreboardCMD(), "tpsb", "togglepingsb", "togglepingscoreboard");
-        if (plugin.getConfigHandler().isCPS_SCOREBOARD_SETTING()) drink.register(new ToggleCPSScoreboardCMD(), "tcpssb", "togglecpssb", "togglecps", "togglecpsscoreboard");
+        drink.register(new ToggleScoreboardCMD(plugin), "tsb", "togglescoreboard");
+        drink.register(new ToggleDuelCMD(plugin), "tdr", "toggleduels", "toggledr", "toggleduelrequests");
+        drink.register(new TogglePingFactorCMD(plugin), "tpf", "togglepf", "togglepingfactor");
+        drink.register(new ToggleSpectatorsCMD(plugin), "tsp", "togglesp", "togglespec", "togglespectators");
+        drink.register(new ToggleTournamentMessagesCMD(plugin), "ttm", "toggletm", "toggletourneymessages", "toggletournamentmessages");
+        drink.register(new TogglePlayersCMD(plugin), "tpv", "toggleplayers", "toggleps", "togglevisibility", "togglehider");
+        drink.register(new ToggleDropProtectCMD(plugin), "tdp", "toggledropprotect", "toggledropp", "toggledprotect", "toggledp");
+
+        if (plugin.getConfigHandler().isPING_SCOREBOARD_SETTING())
+            drink.register(new TogglePingScoreboardCMD(plugin), "tpsb", "togglepingsb", "togglepingscoreboard");
+        if (plugin.getConfigHandler().isCPS_SCOREBOARD_SETTING())
+            drink.register(new ToggleCPSScoreboardCMD(plugin), "tcpssb", "togglecpssb", "togglecps", "togglecpsscoreboard");
+        if (plugin.getConfigHandler().isRATINGS_ENABLED())
+            drink.register(new RateCommand(plugin), "rate");
 
         drink.registerCommands();
     }

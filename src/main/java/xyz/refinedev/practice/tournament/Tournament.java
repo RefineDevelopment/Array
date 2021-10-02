@@ -25,8 +25,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Getter @Setter
 public abstract class Tournament<T> {
 
-    @Getter @Setter private static Tournament currentTournament;
-
     //Used for Team Tournaments
     //Credits to Nick for Filtering
     private final List<Party> parties = new ArrayList<Party>(){
@@ -52,15 +50,10 @@ public abstract class Tournament<T> {
         }
     };
 
-    //Used for Solo Tournaments
     private final Map<UUID, TeamPlayer> teamPlayers = new ConcurrentHashMap<>();
-    private final List<UUID> players = new ArrayList<>();
-
-    //Used for monitoring the tournament matches
     private final List<Match> matches = new ArrayList<>();
 
     private TournamentType type;
-    private TournamentTask task;
     private TournamentState state = TournamentState.WAITING;
 
     private boolean started;
@@ -75,12 +68,12 @@ public abstract class Tournament<T> {
     /**
      * Original constructor for a tournament
      *
-     * @param host The host of the tournament
-     * @param tournamentType {@link TournamentType}
-     * @param individualSize players per team or 1 if its solo
+     * @param host                The host of the tournament
+     * @param tournamentType      {@link TournamentType}
+     * @param individualSize      players per team or 1 if its solo
      * @param participantsToStart the amount of participants needed to start
-     * @param maxPlayers maximum players allowed in a tournament
-     * @param kit the kit of the tournament
+     * @param maxPlayers          maximum players allowed in a tournament
+     * @param kit                 the kit of the tournament
      */
     public Tournament(String host, TournamentType tournamentType, int individualSize, int participantsToStart, int maxPlayers, Kit kit) {
         this.host = host;
@@ -89,11 +82,6 @@ public abstract class Tournament<T> {
         this.participantsToStart = participantsToStart;
         this.maxPlayers = maxPlayers;
         this.kit = kit;
-
-        currentTournament = this;
-
-        this.task = new TournamentTask();
-        TaskUtil.runTimer(task, 20, 20);
     }
 
     /**
@@ -103,7 +91,7 @@ public abstract class Tournament<T> {
      * @return {@link Boolean}
      */
     public boolean isParticipating(UUID uuid) {
-       return this.players.contains(uuid);
+       return this.teamPlayers.containsKey(uuid);
     }
 
     /**
@@ -139,7 +127,7 @@ public abstract class Tournament<T> {
      * @return {@link Boolean}
      */
     public int getParticipatingCount() {
-        return this.players.size();
+        return this.teamPlayers.size();
     }
 
     /**

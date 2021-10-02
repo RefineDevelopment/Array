@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.cmds;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
@@ -23,7 +24,10 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class PartyCommands {
+
+    private final Array plugin;
     
     @Command(name = "", desc = "View Party Commands")
     public void party(@Sender CommandSender player) {
@@ -42,7 +46,7 @@ public class PartyCommands {
             return;
         }
         profile.setParty(new Party(player));
-        profile.refreshHotbar();
+        plugin.getProfileManager().refreshHotbar(profile);
         player.sendMessage(Locale.PARTY_CREATED.toString());
     }
 

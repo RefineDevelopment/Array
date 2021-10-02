@@ -25,7 +25,7 @@ import java.util.Scanner;
 @RequiredArgsConstructor
 public class PiracyMeta {
 
-    private final String authorization = "ee3272d7caa7b8e917a6c17fa02610ce2cc1d4da";
+    private final String authorization = "7d598a9332c47c6db1c7f6edf30b2b1da451d664";
 
     private final Array plugin;
     private final String productKey;
