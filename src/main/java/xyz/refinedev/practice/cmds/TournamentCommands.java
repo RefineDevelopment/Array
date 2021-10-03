@@ -1,11 +1,13 @@
 package xyz.refinedev.practice.cmds;
 
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.tournament.Tournament;
 import xyz.refinedev.practice.tournament.TournamentType;
@@ -33,10 +35,17 @@ public class TournamentCommands {
     @Command(name = "host", aliases = "start", desc = "Start a tournament")
     @Require("array.tournament.host")
     public void host(@Sender Player player, Kit kit, TournamentType type) {
-        if (type.equals(TournamentType.SOLO)) {
-            new SoloTournament(plugin, player.getName(), 100, kit);
-        } else {
-            new TeamTournament(plugin, player.getName(), EventTeamSize.DOUBLES.getMaxTeamPlayers(), kit);
+        switch (type) {
+            case SOLO: {
+                SoloTournament tournament = new SoloTournament(plugin, player.getName(), 100, kit);
+                plugin.getTournamentManager().setCurrentTournament(tournament);
+                break;
+            }
+            case TEAM: {
+               TeamTournament tournament = new TeamTournament(plugin, player.getName(), EventTeamSize.DOUBLES.getMaxTeamPlayers(), kit);
+                plugin.getTournamentManager().setCurrentTournament(tournament);
+                break;
+            }
         }
         this.join(player);
 
@@ -44,52 +53,75 @@ public class TournamentCommands {
 
     @Command(name = "join", desc = "Join the on-going tournament")
     public void join(@Sender Player player) {
-        if (plugin.getTournamentManager().getCurrentTournament() == null) {
-            player.sendMessage(CC.translate("&7There is no active tournament currently, please use /tournament host to start one!"));
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Tournament<?> tournament = plugin.getTournamentManager().getCurrentTournament();
+
+        if (tournament == null) {
+            player.sendMessage(CC.translate("&cThere is no active tournament currently, please use /tournament host to start one!"));
             return;
         }
-        if (plugin.getTournamentManager().getCurrentTournament().isParticipating(player.getUniqueId())) {
-            player.sendMessage(CC.translate("&7You are already participating in a tournament!"));
+        if (tournament.isParticipating(player.getUniqueId())) {
+            player.sendMessage(CC.translate("&cYou are already participating in a tournament!"));
             return;
         }
 
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
         if (profile.isBusy()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
-        } else if (profile.getParty() != null && profile.getParty().isFighting()) {
+        } else if (profile.hasParty() && profile.getParty().isFighting()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
         }
         
-        if (plugin.getTournamentManager().getCurrentTournament() instanceof TeamTournament) {
-            player.chat("/party create");
-            plugin.getTournamentManager().getCurrentTournament().join(profile.getParty());
-        } else {
-            plugin.getTournamentManager().getCurrentTournament().join(player);
+        if (tournament instanceof TeamTournament) {
+            TeamTournament teamTournament = (TeamTournament) tournament;
+            Party party = profile.getParty();
+
+            if (!profile.hasParty()) {
+                player.chat("/party create");
+            }
+            if (party.getPlayers().size() < teamTournament.getIndividualSize()) {
+                player.sendMessage(CC.RED + "Your party does not have enough players to join this tournament!");
+                return;
+            }
+
+            teamTournament.join(party);
+        } else if (tournament instanceof SoloTournament) {
+            SoloTournament soloTournament = (SoloTournament) tournament;
+            soloTournament.join(player);
         }
-        
     }
 
     @Command(name = "leave", aliases = "quit", desc = "Leave the on-going tournament")
     public void leave(@Sender Player player) {
-        if (plugin.getTournamentManager().getCurrentTournament() == null) {
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Tournament<?> tournament = plugin.getTournamentManager().getCurrentTournament();
+
+        if (tournament == null) {
             player.sendMessage(CC.translate("&cThere is no active tournament currently, please use /tournament host to start one!"));
             return;
         }
-        if (!plugin.getTournamentManager().getCurrentTournament().isParticipating(player.getUniqueId())) {
-            player.sendMessage(CC.translate("&cYou are not participating in any tournament!"));
+        if (tournament.isParticipating(player.getUniqueId())) {
+            player.sendMessage(CC.translate("&cYou are already participating in a tournament!"));
             return;
         }
 
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        //TODO: Check if the player leaves the party, then remove him from the tournament correctly
+        if (tournament instanceof TeamTournament) {
+            TeamTournament teamTournament = (TeamTournament) tournament;
 
-        if (plugin.getTournamentManager().getCurrentTournament() instanceof TeamTournament) {
-            if (profile.getParty() == null) {
-                player.sendMessage(Locale.ERROR_NOTABLE.toString());
+            if (profile.isInMatch()) {
+                profile.getMatch().handleDeath(player, null, true);
             }
-            plugin.getTournamentManager().getCurrentTournament().leave(profile.getParty());
-        } else {
-            plugin.getTournamentManager().getCurrentTournament().leave(player);
+
+            teamTournament.getTeamPlayers().remove(player.getUniqueId());
+        } else if (tournament instanceof SoloTournament) {
+            SoloTournament soloTournament = (SoloTournament) tournament;
+            soloTournament.leave(player);
         }
+
+        Bukkit.broadcastMessage(Locale.TOURNAMENT_LEAVE.toString()
+                .replace("<left>", player.getName())
+                .replace("<participants_size>", String.valueOf(tournament.getParticipatingCount()))
+                .replace("<participants_max>", String.valueOf(tournament.getMaxPlayers())));
     }
 }

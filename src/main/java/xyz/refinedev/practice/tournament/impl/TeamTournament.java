@@ -48,7 +48,10 @@ public class TeamTournament extends Tournament<Party> {
         this.getParties().add(party);
 
         party.setInTournament(true);
-        party.getPlayers().forEach(player -> player.playSound(player.getLocation(), Sound.NOTE_PLING, 20F, 15F));
+        party.getTeamPlayers().forEach(teamPlayer -> {
+            teamPlayer.getPlayer().playSound(teamPlayer.getPlayer().getLocation(), Sound.NOTE_PLING, 20F, 15F);
+            this.getTeamPlayers().put(teamPlayer.getUniqueId(), teamPlayer);
+        });
         Bukkit.broadcastMessage(Locale.TOURNAMENT_JOIN.toString()
                 .replace("<joined>", party.getName())
                 .replace("<participants_size>", String.valueOf(this.getParticipatingCount()))
@@ -59,7 +62,11 @@ public class TeamTournament extends Tournament<Party> {
     public void leave(Party party) {
         Preconditions.checkState(getRound() == 0, "Can not leave after tournament has started!");
         this.getParties().remove(party);
+
         party.setInTournament(false);
+        party.getTeamPlayers().forEach(teamPlayer -> {
+            this.getTeamPlayers().remove(teamPlayer.getUniqueId(), teamPlayer);
+        });
 
         Bukkit.broadcastMessage(Locale.TOURNAMENT_LEAVE.toString()
                 .replace("<left>", party.getName())

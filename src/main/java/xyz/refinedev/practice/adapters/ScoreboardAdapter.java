@@ -205,6 +205,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
 
                     config.getStringList("MATCH.SOLO_BOXING_ADDITION").forEach(line -> lines.add(CC.translate(line
                                 .replace("<hit_difference>", hits)
+                                .replace("<your_combo>", self.getCombo() == 0 ? "" : String.valueOf(self.getCombo()))
                                 .replace("<your_hits>", String.valueOf(self.getHits()))
                                 .replace("<opponent_hits>", String.valueOf(opponent.getHits())))));
                 }

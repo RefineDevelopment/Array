@@ -51,8 +51,8 @@ public class SoloTournament extends Tournament<Player> {
      */
     @Override
     public void join(Player player) {
-        Preconditions.checkState(getParticipatingCount() < getMaxPlayers(), "Can not join because max limit has exceeded!");
-        Preconditions.checkState(getRound() == 0, "Can not join after tournament has started!");
+        Preconditions.checkState(this.getParticipatingCount() < getMaxPlayers(), "Can not join because max limit has exceeded!");
+        Preconditions.checkState(this.getRound() == 0, "Can not join after tournament has started!");
 
         TeamPlayer teamPlayer = new TeamPlayer(player);
         this.getTeamPlayers().put(player.getUniqueId(), teamPlayer);
@@ -74,7 +74,7 @@ public class SoloTournament extends Tournament<Player> {
     public void leave(Player player) {
         Profile profile = plugin.getProfileManager().getByPlayer(player);
 
-        if (profile.getMatch() != null) {
+        if (profile.isInMatch()) {
             profile.getMatch().handleDeath(player);
         }
 

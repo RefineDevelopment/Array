@@ -52,7 +52,7 @@ SCOREBOARD:
     SOLO_BOXING_ADDITION:
       - ""
       - "&c&lHits &r(<hit_difference>)"
-      - " &fYour Hits: &a<your_hits>"
+      - " &fYour Hits: &a<your_hits> &e(<your_combo> Combo)"
       - " &fTheir Hits: &c<opponent_hits>"
     SOLO_BRIDGE_ADDITION:
       - ""
