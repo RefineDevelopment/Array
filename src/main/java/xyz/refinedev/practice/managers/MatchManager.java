@@ -20,11 +20,19 @@ import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.MatchSnapshot;
 import xyz.refinedev.practice.match.MatchState;
+import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
+import xyz.refinedev.practice.match.types.SoloMatch;
+import xyz.refinedev.practice.match.types.TeamMatch;
+import xyz.refinedev.practice.match.types.kit.BoxingMatch;
+import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
+import xyz.refinedev.practice.queue.Queue;
+import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.task.MatchBowCooldownTask;
 import xyz.refinedev.practice.task.MatchPearlCooldownTask;
 import xyz.refinedev.practice.task.MatchSnapshotCleanupTask;
@@ -543,5 +551,28 @@ public class MatchManager {
             return null;
         }
         return snapshotMap.get(uuid);
+    }
+
+
+    public Match createSoloKitMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
+        if (kit.getGameRules().isBridge()) {
+            return new SoloBridgeMatch(queue, playerA, playerB, kit, arena, queueType);
+        } else if (kit.getGameRules().isBedwars()) {
+            //
+        } else if (kit.getGameRules().isMlgRush()) {
+            //
+        } else if (kit.getGameRules().isBoxing()) {
+            return new BoxingMatch(queue, playerA, playerB, kit, arena, queueType);
+        }
+        return new SoloMatch(queue, playerA, playerB, kit, arena, queueType);
+    }
+
+    public Match createTeamKitMatch(Team teamA, Team teamB, Kit kit, Arena arena) {
+        if (kit.getGameRules().isBridge()) {
+            return new TeamBridgeMatch(teamA, teamB, kit, arena);
+        } else if (kit.getGameRules().isBedwars()) {
+            //
+        }
+        return new TeamMatch(teamA, teamB, kit, arena);
     }
 }

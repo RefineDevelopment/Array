@@ -12,6 +12,8 @@ import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.tournament.Tournament;
+import xyz.refinedev.practice.tournament.impl.SoloTournament;
+import xyz.refinedev.practice.tournament.impl.TeamTournament;
 
 import java.util.UUID;
 
@@ -31,16 +33,22 @@ public class TournamentListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent event) {
-        Profile profile = plugin.getProfileManager().getByPlayer(event.getPlayer());
-        Tournament tournament = plugin.getTournamentManager().getCurrentTournament();
-        if (tournament != null) return;
+        Player player = event.getPlayer();
+        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Tournament<?> tournament = plugin.getTournamentManager().getCurrentTournament();
+        if (tournament == null) return;
 
-        if (!profile.hasParty() && profile.isInTournament()) {
-            tournament.leave(event.getPlayer());
-        } else if (profile.hasParty() && profile.getParty().isInTournament()) {
+        if (tournament instanceof SoloTournament) {
+            SoloTournament soloTournament = (SoloTournament) tournament;
+            if (soloTournament.isParticipating(player.getUniqueId())) {
+                soloTournament.leave(player);
+            }
+        } else if (tournament instanceof TeamTournament) {
             if (tournament.isFighting()) return;
-            Party party = profile.getParty();
-            tournament.leave(party);
+            TeamTournament teamTournament = (TeamTournament) tournament;
+            if (profile.hasParty() && teamTournament.isParticipating(player.getUniqueId())) {
+                teamTournament.leave(profile.getParty());
+            }
         }
     }
 

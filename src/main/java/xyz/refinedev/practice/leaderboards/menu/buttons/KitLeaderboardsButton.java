@@ -38,13 +38,13 @@ public class KitLeaderboardsButton extends Button {
         int position = 1;
         for (LeaderboardsAdapter leaderboardsAdapter : this.kit.getEloLeaderboards()) {
             Profile profile = this.getPlugin().getProfileManager().getByUUID(leaderboardsAdapter.getUuid());
-            position++;
 
             lore.add(Locale.LEADERBOARDS_KIT_FORMAT.toString()
                     .replace("<leaderboards_pos>", String.valueOf(position))
                     .replace("<leaderboards_name>", leaderboardsAdapter.getName())
                     .replace("<leaderboards_elo>", String.valueOf(leaderboardsAdapter.getElo()))
                     .replace("<leaderboards_division>", this.getPlugin().getProfileManager().getDivision(profile).getDisplayName()));
+            position++;
         }
         lore.add(CC.MENU_BAR);
 

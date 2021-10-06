@@ -2,7 +2,6 @@ package xyz.refinedev.practice.profile.rank;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -14,7 +13,6 @@ import lombok.Setter;
  */
 
 @Getter
-@Setter
 @RequiredArgsConstructor
 public class TablistRank {
 

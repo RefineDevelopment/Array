@@ -4,13 +4,36 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c41a8b3-4728-4d1b-a454-565d875f3ead" name="Default Changelist" comment="[+] Huge Cleanup, started work on BattleRush and Bedwars&#10;[/] Updated The EntityHider&#10;[/] Changed how match death is handled&#10;[/] Changed how kill effects are handled">
+    <list default="true" id="3c41a8b3-4728-4d1b-a454-565d875f3ead" name="Default Changelist" comment="[/] Fixed Tournament Bugs Ik will be there">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/menu/profile_leaderboards.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Array.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Array.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/adapters/ScoreboardAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/adapters/ScoreboardAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/TournamentCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/TournamentCommands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/tournament/impl/SoloTournament.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/tournament/impl/SoloTournament.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/tournament/impl/TeamTournament.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/tournament/impl/TeamTournament.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/scoreboard.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/scoreboard.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/KitCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/KitCommands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/PartyCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/PartyCommands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/kit/Kit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/kit/Kit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/leaderboards/menu/buttons/ClanLeaderboardsButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/leaderboards/menu/buttons/ClanLeaderboardsButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/leaderboards/menu/buttons/GlobalLeaderboardsButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/leaderboards/menu/buttons/GlobalLeaderboardsButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/leaderboards/menu/buttons/KitLeaderboardsButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/leaderboards/menu/buttons/KitLeaderboardsButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/leaderboards/menu/buttons/StatisticsButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/leaderboards/menu/buttons/StatisticsButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/PartyListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/PartyListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/TournamentListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/TournamentListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/KillEffectManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/KillEffectManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/KitManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/KitManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/PartyManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/PartyManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/ProfileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/ProfileManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/QueueManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/QueueManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/Match.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/Party.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/Party.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/PartyMemberMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/PartyMemberMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/menu/KEMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/menu/KEMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/rank/TablistRank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/rank/TablistRank.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/Queue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/Queue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/QueueProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/QueueProfile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/QueueThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/QueueThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/menu/QueueSelectKitMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/menu/QueueSelectKitMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/config/impl/BasicConfigurationFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/config/impl/BasicConfigurationFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/ClassUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/ClassUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -211,7 +234,21 @@
       <option name="project" value="LOCAL" />
       <updated>1633197465764</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="[/] Fixed Tournament Bugs Ik will be there">
+      <created>1633255763453</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1633255763453</updated>
+    </task>
+    <task id="LOCAL-00013" summary="[/] Fixed Tournament Bugs Ik will be there">
+      <created>1633255783761</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1633255783761</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -241,7 +278,8 @@
     <MESSAGE value="[+] Non Static Abused Profiles (cuz we cool)" />
     <MESSAGE value="[+] More Non-Static Abuse and code cleanup" />
     <MESSAGE value="[+] Huge Cleanup, started work on BattleRush and Bedwars&#10;[/] Updated The EntityHider&#10;[/] Changed how match death is handled&#10;[/] Changed how kill effects are handled" />
-    <option name="LAST_COMMIT_MESSAGE" value="[+] Huge Cleanup, started work on BattleRush and Bedwars&#10;[/] Updated The EntityHider&#10;[/] Changed how match death is handled&#10;[/] Changed how kill effects are handled" />
+    <MESSAGE value="[/] Fixed Tournament Bugs Ik will be there" />
+    <option name="LAST_COMMIT_MESSAGE" value="[/] Fixed Tournament Bugs Ik will be there" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

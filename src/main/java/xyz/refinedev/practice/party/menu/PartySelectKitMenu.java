@@ -37,7 +37,7 @@ public class PartySelectKitMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        for (Kit kit : Kit.getKits()) {
+        for (Kit kit : plugin.getKitManager().getKits()) {
             if (kit.isEnabled() && kit.isParty()) {
                 if (this.getCheck(partyEventType, kit)) {
                     buttons.put(buttons.size(), new SelectKitButton(this.partyEventType, kit));
@@ -106,7 +106,7 @@ public class PartySelectKitMenu extends Menu {
                 Collections.shuffle(shuffled);
                 Collections.shuffle(shuffled);
 
-                match = kit.createTeamKitMatch(teamA, teamB, this.kit, arena);
+                match = plugin.getMatchManager().createTeamKitMatch(teamA, teamB, this.kit, arena);
 
                 for (Player shuffledPlayer : shuffled) {
                     if (!teamA.getLeader().getUniqueId().equals(shuffledPlayer.getUniqueId())) {

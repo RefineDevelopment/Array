@@ -64,7 +64,7 @@ public class KitCommands {
         player.sendMessage(CC.translate("&cArray &7» All Kits"));
         player.sendMessage(CC.CHAT_BAR);
 
-        for ( Kit kit : Kit.getKits() ) {
+        for ( Kit kit : plugin.getKitManager().getKits() ) {
             if (kit == null) {
                 player.sendMessage(CC.translate(""));
                 player.sendMessage(CC.translate("&7&oThere are no kits setup."));
@@ -80,15 +80,15 @@ public class KitCommands {
     @Command(name = "setdesc", usage = "<kit> <description>",  aliases = {"desc", "setdescription"}, desc = "Set a kit's description")
     public void kitDescription(@Sender Player player, Kit kit, @Text String description) {
         kit.setKitDescription(Arrays.stream(description.split(", ")).map(s -> s.replace("#%&$", ",")).collect(Collectors.toList()));
-        kit.save();
+        plugin.getKitManager().save(kit);
 
         player.sendMessage(CC.translate("&aSuccessfully updated kit's description!"));
     }
 
     @Command(name = "save", aliases = "export", desc = "Export all Kits to Config")
     public void kitSave(@Sender CommandSender player) {
-        Kit.getKits().forEach(Kit::save);
-        player.sendMessage(CC.translate("&8[&c&lArray&8] &7You saved &c" + Kit.getKits().size() +  " the kits!"));
+        plugin.getKitManager().getKits().forEach(plugin.getKitManager()::save);
+        player.sendMessage(CC.translate("&8[&c&lArray&8] &7You saved &c" + plugin.getKitManager().getKits().size() +  " the kits!"));
     }
 
     @Command(name = "setdisplayname", aliases = "setdname", usage = "<kit> <displayname>", desc = "Set a Kit's Display name")
@@ -100,13 +100,14 @@ public class KitCommands {
     @Command(name = "seticon", aliases = "icon", usage = "<kit>", desc = "Set a Kit's icon")
     public void kitIcon(@Sender Player player, Kit kit) {
         ItemStack item = player.getItemInHand();
+
         if (item == null) {
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7Please hold a valid item in your hand!"));
         } else if (kit == null) {
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7That kit does not exist."));
         } else {
             kit.setDisplayIcon(item);
-            kit.save();
+            plugin.getKitManager().save(kit);
         }
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully updated &c" + kit.getDisplayName() + "'s &7icon"));
     }
@@ -114,15 +115,17 @@ public class KitCommands {
     @Command(name = "create", desc = "Create a kit", usage = "<name>")
     @Require("array.kit.admin")
     public void kitCreate(@Sender CommandSender player, String kitName) {
-        if (Kit.getByName(kitName) != null) {
+        if (plugin.getKitManager().getByName(kitName) != null) {
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7A kit with that name already exists."));
             return;
         }
 
-        Kit kit = new Kit(kitName);
+        Kit kit = new Kit(plugin, kitName);
         kit.setEnabled(true);
         kit.getGameRules().setRanked(true);
-        kit.save();
+        
+        plugin.getKitManager().save(kit);
+        plugin.getKitManager().setupQueue(kit);
 
         //Add it to profile's statistics data
         for ( Profile profile : plugin.getProfileManager().getProfiles().values() ) {
@@ -135,8 +138,7 @@ public class KitCommands {
 
     @Command(name = "delete", aliases = "kit remove", usage = "<kit>", desc = "Delete a Kit")
     public void kitDelete(@Sender CommandSender player, Kit kit) {
-        kit.delete();
-        Kit.getKits().forEach(Kit::save);
+        plugin.getKitManager().delete(kit);
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Removed the kit &c" + kit.getName() + "&7."));
     }
 
@@ -155,7 +157,7 @@ public class KitCommands {
     @Command(name = "knockback", aliases = {"setknockback", "kb", "setkb"}, usage = "<kit> <knockback>", desc = "Set a Kit's Knockback Profile")
     public void kitKnockback(@Sender CommandSender player, Kit kit, String profile) {
         kit.setKnockbackProfile(profile);
-        kit.save();
+        plugin.getKitManager().save(kit);
 
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Updated knockback profile ffor &c" + kit.getName() +  " &7to &c" + profile));
     }
@@ -171,7 +173,7 @@ public class KitCommands {
         kit.getKitInventory().setArmor(player.getInventory().getArmorContents());
         kit.getKitInventory().setContents(player.getInventory().getContents());
 
-        kit.save();
+        plugin.getKitManager().save(kit);
 
         player.sendMessage(CC.translate("&8[&c&lArray&8] &aYou updated the kit's inventory."));
     }
@@ -203,7 +205,7 @@ public class KitCommands {
             kit.getEditorItems().add(content);
         }
 
-        kit.save();
+        plugin.getKitManager().save(kit);
         player.sendMessage(CC.translate("&8[&c&lArray&8] &aYou updated the kit's editor inventory."));
     }
 
@@ -214,23 +216,18 @@ public class KitCommands {
 
         if (kit.isEnabled()) {
             if (kit.getUnrankedQueue() == null)  {
-                Queue queue = new Queue(kit, QueueType.UNRANKED);
+                Queue queue = new Queue(plugin, kit, QueueType.UNRANKED);
                 kit.setUnrankedQueue(queue);
             }
             if (kit.getRankedQueue() == null) {
-                Queue queue = new Queue(kit, QueueType.RANKED);
+                Queue queue = new Queue(plugin, kit, QueueType.RANKED);
                 kit.setRankedQueue(queue);
             }
             sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &aenabled &7the kit &c" + kit.getDisplayName()));
         } else {
-            if (kit.getUnrankedQueue() != null) {
-                Queue.getQueues().remove(kit.getUnrankedQueue());
-                Queue.getQueueMap().remove(kit, kit.getUnrankedQueue());
-            }
-            if (kit.getRankedQueue() != null) {
-                Queue.getQueues().remove(kit.getRankedQueue());
-                Queue.getQueueMap().remove(kit, kit.getRankedQueue());
-            }
+            if (kit.getUnrankedQueue() != null) plugin.getQueueManager().getQueueMap().remove(kit, kit.getUnrankedQueue());
+            if (kit.getRankedQueue() != null) plugin.getQueueManager().getQueueMap().remove(kit, kit.getRankedQueue());
+
             sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &cdisabled &7the kit &c" + kit.getDisplayName()));
         }
     }
@@ -238,7 +235,7 @@ public class KitCommands {
     @Command(name = "hitdelay", aliases = "sethitdelay", usage = "<kit> <amount>", desc = "Set a Kit's Hit Delay")
     public void kitHitDelay(@Sender CommandSender player, Kit kit, Integer integ) {
         kit.getGameRules().setHitDelay(integ);
-        kit.save();
+        plugin.getKitManager().save(kit);
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Updated &c" + kit.getName() + " &7hit delay set to &c" + integ));
     }
 
@@ -284,7 +281,9 @@ public class KitCommands {
             }
             case "clan": {
                 kit.getGameRules().setClan(!kit.getGameRules().isClan());
-                if (kit.getClanQueue() == null && kit.getGameRules().isClan()) new Queue(kit, QueueType.CLAN);
+                if (kit.getClanQueue() == null && kit.getGameRules().isClan()) {
+                    kit.setClanQueue(new Queue(plugin, kit, QueueType.CLAN));
+                }
                 player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isClan() ? "&aenabled " : "&cdisabled ") + "&7clan mode for &c" + kit.getDisplayName()));
                 break;
             }

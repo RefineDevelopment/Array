@@ -1,13 +1,16 @@
 package xyz.refinedev.practice.queue;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.UUID;
 
-@Data
+@Getter @Setter
+@RequiredArgsConstructor
 public class QueueProfile {
 
-    private final UUID uuid;
+    private final UUID uniqueId;
     private long start = System.currentTimeMillis();
 
     private int elo;

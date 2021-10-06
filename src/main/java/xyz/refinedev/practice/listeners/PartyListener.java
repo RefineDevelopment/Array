@@ -9,6 +9,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.tournament.Tournament;
+import xyz.refinedev.practice.tournament.impl.TeamTournament;
 import xyz.refinedev.practice.util.chat.CC;
 
 import java.util.List;
@@ -30,7 +32,7 @@ public class PartyListener implements Listener {
         List<Player> partyPlayers = party.getPlayers().stream().filter(p -> !p.getUniqueId().equals(player.getUniqueId())).collect(Collectors.toList());
 
         if (partyPlayers.isEmpty()) {
-            party.disband();
+            plugin.getPartyManager().disband(party);
             return;
         }
 
@@ -40,8 +42,12 @@ public class PartyListener implements Listener {
         }
         party.leave(player, false);
 
-        if (plugin.getTournamentManager().getCurrentTournament() == null || !plugin.getTournamentManager().getCurrentTournament().isParticipating(player.getUniqueId())) return;
+        Tournament<?> tournament = plugin.getTournamentManager().getCurrentTournament();
+        if (tournament == null) return;
+        if (!(tournament instanceof TeamTournament)) return;
+        if (!tournament.isParticipating(player.getUniqueId())) return;
 
-        plugin.getTournamentManager().getCurrentTournament().leave(party);
+        TeamTournament teamTournament = (TeamTournament) tournament;
+        teamTournament.leave(party);
     }
 }

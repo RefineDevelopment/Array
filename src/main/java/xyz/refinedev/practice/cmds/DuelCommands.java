@@ -178,13 +178,13 @@ public class DuelCommands {
                     teamB.getTeamPlayers().add(new TeamPlayer(partyMember));
                 }
             }
-            if (request.getKit().equals(Kit.getHCFTeamFight())) {
+            if (request.getKit().equals(plugin.getKitManager().getTeamFight())) {
                 match = new HCFMatch(teamA, teamB, arena);
             } else {
-                match = kit.createTeamKitMatch(teamA, teamB, request.getKit(), arena);
+                match = plugin.getMatchManager().createTeamKitMatch(teamA, teamB, request.getKit(), arena);
             }
         } else {
-            match = kit.createSoloKitMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena, QueueType.UNRANKED);
+            match = plugin.getMatchManager().createSoloKitMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena, QueueType.UNRANKED);
             for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList() ) {
                 String opponentMessages = this.formatMessages(target, player, string, coreAdapter.getFullName(player), coreAdapter.getFullName(target), senderProfile.getStatisticsData().get(request.getKit()).getElo(), receiverProfile.getStatisticsData().get(request.getKit()).getElo(), QueueType.UNRANKED);
                 player.sendMessage(replaceOpponent(opponentMessages, player));

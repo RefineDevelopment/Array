@@ -28,7 +28,7 @@ public class QueueThread extends Thread {
     public void run() {
         while (true) {
             try {
-                for (Queue queue : Queue.getQueues()) {
+                for (Queue queue : plugin.getQueueManager().getQueueMap().values()) {
                     queue.getPlayers().forEach(QueueProfile::tickRange);
 
                     if (queue.getPlayers().size() < 2) {
@@ -36,23 +36,20 @@ public class QueueThread extends Thread {
                     }
 
                     for (QueueProfile firstQueueProfile : queue.getPlayers()) {
-                        Player firstPlayer = Bukkit.getPlayer(firstQueueProfile.getUuid());
+                        Player firstPlayer = Bukkit.getPlayer(firstQueueProfile.getUniqueId());
 
                         if (firstPlayer == null) continue;
 
-                        Profile firstProfile = plugin.getProfileManager().getByUUID(firstQueueProfile.getUuid());
+                        Profile firstProfile = plugin.getProfileManager().getByUUID(firstQueueProfile.getUniqueId());
 
                         for (QueueProfile secondQueueProfile : queue.getPlayers()) {
-                            if (firstQueueProfile.equals(secondQueueProfile)) {
-                                continue;
-                            }
+                            if (firstQueueProfile.equals(secondQueueProfile)) continue;
 
-                            Player secondPlayer = Bukkit.getPlayer(secondQueueProfile.getUuid());
-                            Profile secondProfile = plugin.getProfileManager().getByUUID(secondQueueProfile.getUuid());
+                            Player secondPlayer = Bukkit.getPlayer(secondQueueProfile.getUniqueId());
+                            Profile secondProfile = plugin.getProfileManager().getByUUID(secondQueueProfile.getUniqueId());
 
                             if (secondPlayer == null) continue;
 
-                            //Ping factor code (either by nick or joe idk)
                             if (firstProfile.getSettings().isPingFactor() || secondProfile.getSettings().isPingFactor()) {
                                 if (PlayerUtil.getPing(firstPlayer) >= PlayerUtil.getPing(secondPlayer)) {
                                     if (PlayerUtil.getPing(firstPlayer) - PlayerUtil.getPing(secondPlayer) >= 50) {
@@ -105,7 +102,7 @@ public class QueueThread extends Thread {
                             kit = queue.getKit();
 
                             // Create match
-                            this.match = queue.getKit().createSoloKitMatch(queue, firstMatchPlayer, secondMatchPlayer, kit, arena, queue.getType());
+                            this.match = plugin.getMatchManager().createSoloKitMatch(queue, firstMatchPlayer, secondMatchPlayer, kit, arena, queue.getType());
 
                             for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList() ) {
                                 String opponentMessages = this.formatMessages(string, firstPlayer, secondPlayer, queue.getType());

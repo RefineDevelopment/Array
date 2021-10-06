@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import xyz.refinedev.practice.Array;
@@ -92,6 +93,10 @@ public class ProfileManager {
 
         if (event.isCancelled()) return;
 
+        for ( Kit kit : Kit.getKits() ) {
+            profile.getStatisticsData().put(kit, new StatisticsData());
+        }
+
         plugin.submitToThread(() -> {
             Document document = collection.find(Filters.eq("_id", profile.getUniqueId().toString())).first();
 
@@ -100,11 +105,14 @@ public class ProfileManager {
                 return;
             }
 
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(profile.getUniqueId());
+            profile.setName(offlinePlayer.getName());
+
             profile.setKills(document.getInteger("kills"));
             profile.setDeaths(document.getInteger("deaths"));
             profile.setGlobalElo(document.getInteger("globalElo"));
             profile.setExperience(document.getInteger("experience"));
-            profile.setSettings(Array.GSON.fromJson("settings", Settings.class));
+            profile.setSettings(Array.GSON.fromJson(document.getString("settings"), Settings.class));
 
             String killEffectString = document.getString("killEffect");
             if (killEffectString != null) {
@@ -179,6 +187,7 @@ public class ProfileManager {
         Document document = new Document();
 
         document.put("_id", profile.getUniqueId().toString());
+        document.put("name", profile.getName());
         document.put("globalElo", profile.getGlobalElo());
         document.put("experience", profile.getExperience());
         document.put("kills", profile.getKills());

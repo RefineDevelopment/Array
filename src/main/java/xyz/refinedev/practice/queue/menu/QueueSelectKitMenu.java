@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class QueueSelectKitMenu extends Menu {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin = this.getPlugin();
     private final QueueType queueType;
 
     @Override
@@ -35,10 +35,9 @@ public class QueueSelectKitMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
         
-        int i = 0;
-        for (Queue queue : Queue.getQueues()) {
+        for (Queue queue : plugin.getQueueManager().getQueueMap().values()) {
             if (queue.getType() == this.queueType) {
-                buttons.put(i++, new SelectKitButton(queue));
+                buttons.put(buttons.size(), new SelectKitButton(queue));
             }
         }
         return buttons;
@@ -69,15 +68,15 @@ public class QueueSelectKitMenu extends Menu {
 
             switch (queueType) {
                 case UNRANKED: {
-                    this.queue.addPlayer(player, 0);
+                    plugin.getQueueManager().addPlayer(queue, player, 0);
                     break;
                 }
                 case RANKED: {
-                    this.queue.addPlayer(player, profile.getStatisticsData().get(this.queue.getKit()).getElo());
+                    plugin.getQueueManager().addPlayer(queue, player, profile.getStatisticsData().get(this.queue.getKit()).getElo());
                     break;
                 }
                 case CLAN: {
-                    this.queue.addPlayer(player, profile.getClan().getElo());
+                    plugin.getQueueManager().addPlayer(queue, player, profile.getClan().getElo());
                     break;
                 }
             }

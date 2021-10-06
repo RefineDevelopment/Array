@@ -22,24 +22,15 @@ import java.util.List;
  * Project: Array
  */
 
+//TODO: Open a new menu or probably profile menu
 public class StatisticsButton extends Button {
-
-    private final Array plugin = this.getPlugin();
 
     @Override
     public ItemStack getButtonItem(Player player) {
         List<String> lore = new ArrayList<>();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
         lore.add(CC.MENU_BAR);
-        for ( Kit kit : Kit.getKits() ) {
-            if (kit.getGameRules().isRanked() && kit.isEnabled()) {
-                lore.add("&c" + kit.getName() + ": &f" + profile.getStatisticsData().get(kit).getElo());
-            }
-        }
-        lore.add(CC.MENU_BAR);
-        lore.add("&aGlobal ELO: &f" + profile.getGlobalElo());
-        lore.add("&aGlobal League: &f" + plugin.getProfileManager().getDivision(profile));
+        lore.add("&eClick here to view your statistics");
         lore.add(CC.MENU_BAR);
 
         return new ItemBuilder(SkullCreator.itemFromUuid(player.getUniqueId()))

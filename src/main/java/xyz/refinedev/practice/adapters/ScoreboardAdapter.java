@@ -18,7 +18,7 @@ import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.pvpclasses.PvPClass;
 import xyz.refinedev.practice.pvpclasses.classes.Bard;
 import xyz.refinedev.practice.queue.Queue;
-import xyz.refinedev.practice.queue.QueueType;
+import xyz.refinedev.practice.queue.QueueProfile;
 import xyz.refinedev.practice.tournament.Tournament;
 import xyz.refinedev.practice.tournament.TournamentType;
 import xyz.refinedev.practice.util.chat.CC;
@@ -111,34 +111,41 @@ public class ScoreboardAdapter implements AssembleAdapter {
             }
             if (profile.isInQueue()) {
                 Queue queue = profile.getQueue();
-                if (queue.getType() == QueueType.UNRANKED) {
-                    config.getStringList("SCOREBOARD.UNRANKED_QUEUE").forEach(line -> lines.add(CC.translate(line
-                            .replace("<queue_kit>", queue.getKit().getDisplayName())
-                            .replace("<queue_duration>", queue.getDuration(player))
-                            .replace("<queue_name>", queue.getQueueName()))
-                            .replace("%splitter%", "┃").replace("|", "┃")));
+                QueueProfile queueProfile = profile.getQueueProfile();
 
-                } else if (queue.getType() == QueueType.RANKED) {
-                    config.getStringList("SCOREBOARD.RANKED_QUEUE").forEach(line -> lines.add(CC.translate(line
-                            .replace("<queue_kit>", queue.getKit().getDisplayName())
-                            .replace("<queue_duration>", queue.getDuration(player))
-                            .replace("<queue_range>", this.getEloRangeFormat(profile))
-                            .replace("<queue_name>", queue.getQueueName()))
-                            .replace("%splitter%", "┃").replace("|", "┃")));
-
-                } else if (queue.getType() == QueueType.CLAN) {
-                    Clan clan = profile.getClan();
-                    config.getStringList("SCOREBOARD.CLAN_QUEUE").forEach(line -> lines.add(CC.translate(line
-                            .replace("<queue_kit>", queue.getKit().getDisplayName())
-                            .replace("<queue_duration>", queue.getDuration(player))
-                            .replace("<queue_range>", this.getEloRangeFormat(profile))
-                            .replace("<queue_name>", queue.getQueueName()))
-                            .replace("<clan_leader>", plugin.getProfileManager().getByUUID(clan.getLeader().getUuid()).getName())
-                            .replace("<clan_members_online>", String.valueOf(clan.getOnlineMembers().size()))
-                            .replace("<clan_members_total>", String.valueOf(clan.getAllMembers().size()))
-                            .replace("<clan_elo>",String.valueOf(clan.getElo()))
-                            .replace("<clan_name>", clan.getName())
-                            .replace("%splitter%", "┃").replace("|", "┃")));
+                switch (queue.getType()) {
+                    case UNRANKED: {
+                        config.getStringList("SCOREBOARD.UNRANKED_QUEUE").forEach(line -> lines.add(CC.translate(line
+                                .replace("<queue_kit>", queue.getKit().getDisplayName())
+                                .replace("<queue_duration>", TimeUtil.millisToTimer(queueProfile.getPassed()))
+                                .replace("<queue_name>", queue.getQueueName()))
+                                .replace("%splitter%", "┃").replace("|", "┃")));
+                        break;
+                    }
+                    case RANKED: {
+                        config.getStringList("SCOREBOARD.RANKED_QUEUE").forEach(line -> lines.add(CC.translate(line
+                                .replace("<queue_kit>", queue.getKit().getDisplayName())
+                                .replace("<queue_duration>", TimeUtil.millisToTimer(queueProfile.getPassed()))
+                                .replace("<queue_range>", this.getEloRangeFormat(profile))
+                                .replace("<queue_name>", queue.getQueueName()))
+                                .replace("%splitter%", "┃").replace("|", "┃")));
+                        break;
+                    }
+                    case CLAN: {
+                        Clan clan = profile.getClan();
+                        config.getStringList("SCOREBOARD.CLAN_QUEUE").forEach(line -> lines.add(CC.translate(line
+                                .replace("<queue_kit>", queue.getKit().getDisplayName())
+                                .replace("<queue_duration>", TimeUtil.millisToTimer(queueProfile.getPassed()))
+                                .replace("<queue_range>", this.getEloRangeFormat(profile))
+                                .replace("<queue_name>", queue.getQueueName()))
+                                .replace("<clan_leader>", plugin.getProfileManager().getByUUID(clan.getLeader().getUuid()).getName())
+                                .replace("<clan_members_online>", String.valueOf(clan.getOnlineMembers().size()))
+                                .replace("<clan_members_total>", String.valueOf(clan.getAllMembers().size()))
+                                .replace("<clan_elo>",String.valueOf(clan.getElo()))
+                                .replace("<clan_name>", clan.getName())
+                                .replace("%splitter%", "┃").replace("|", "┃")));
+                        break;
+                    }
                 }
             } else if (plugin.getTournamentManager().getCurrentTournament() != null) {
                 Tournament<?> tournament = plugin.getTournamentManager().getCurrentTournament();

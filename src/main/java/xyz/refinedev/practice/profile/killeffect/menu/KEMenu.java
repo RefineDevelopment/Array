@@ -8,9 +8,7 @@ import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -24,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class KEMenu extends Menu {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin = this.getPlugin();
     private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("profile_killeffects");
 
     /**
@@ -57,7 +55,10 @@ public class KEMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        for ( KillEffect killEffect : plugin.getKillEffectManager().getKillEffects().stream().sorted(Comparator.comparing(KillEffect::getPriority)).collect(Collectors.toList())) {
+        List<KillEffect> killEffects = new ArrayList<>(plugin.getKillEffectManager().getKillEffects());
+        killEffects.sort(Comparator.comparing(KillEffect::getPriority));
+
+        for ( KillEffect killEffect : killEffects) {
             buttons.put(buttons.size(), new KEButton(killEffect));
         }
         return buttons;

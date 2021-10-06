@@ -24,24 +24,32 @@ import java.util.List;
 
 public class ClanLeaderboardsButton extends Button {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin = this.getPlugin();
 
     @Override
-    public ItemStack getButtonItem(final Player player) {
-        final List<String> lore = new ArrayList<>();
+    public ItemStack getButtonItem(Player player) {
+        List<String> lore = new ArrayList<>();
+
+        if (plugin.getLeaderboardsManager().getClanLeaderboards().isEmpty()) {
+            lore.add(CC.MENU_BAR);
+            lore.add("&cThere are no clans!");
+            lore.add(CC.MENU_BAR);
+
+            return new ItemBuilder(Material.GOLD_SWORD)
+                    .name("&cClan Leaderboards")
+                    .clearFlags()
+                    .lore(lore)
+                    .build();
+        }
 
         int position = 1;
         lore.add(CC.MENU_BAR);
         for ( LeaderboardsAdapter leaderboardsAdapter : plugin.getLeaderboardsManager().getClanLeaderboards()) {
-            if (leaderboardsAdapter == null) {
-                lore.add(CC.translate("&cThere are no clans!"));
-                continue;
-            }
             lore.add(Locale.LEADERBOARDS_CLAN_FORMAT.toString()
                     .replace("<leaderboards_pos>", String.valueOf(position))
                     .replace("<leaderboards_name>", leaderboardsAdapter.getName())
                     .replace("<leaderboards_elo>", String.valueOf(leaderboardsAdapter.getElo())));
-            ++position;
+            position++;
         }
         lore.add(CC.MENU_BAR);
 

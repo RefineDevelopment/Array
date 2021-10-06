@@ -6,6 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.party.enums.PartyManageType;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
@@ -31,22 +33,22 @@ public class PartyMemberMenu extends Menu {
 
     @Override
     public Map<Integer, Button> getButtons(Player player) {
-        final Map<Integer, Button> buttons = new HashMap<>();
-        buttons.put(2, new SelectManageButton(PartyManageType.LEADER));
-        buttons.put(4, new SelectManageButton(PartyManageType.KICK));
-        buttons.put(6, new SelectManageButton(PartyManageType.BAN));
+        Map<Integer, Button> buttons = new HashMap<>();
+        buttons.put(2, new SelectManageButton(target, PartyManageType.LEADER));
+        buttons.put(4, new SelectManageButton(target, PartyManageType.KICK));
+        buttons.put(6, new SelectManageButton(target, PartyManageType.BAN));
         return buttons;
     }
 
     @RequiredArgsConstructor
     private class SelectManageButton extends Button {
 
+        private final Player target;
         private final PartyManageType partyManageType;
 
         @Override
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
-            Player target = PartyMemberMenu.this.target;
             if (this.partyManageType == PartyManageType.LEADER) {
                 lore.add(CC.MENU_BAR);
                 lore.add("&7Click here to make &c" + target.getName());
@@ -81,20 +83,30 @@ public class PartyMemberMenu extends Menu {
         @Override
         public void clicked(Player player, ClickType clickType) {
             Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Party party = profile.getParty();
 
-            if (profile.getParty() == null) {
-                player.sendMessage(CC.RED + "You are not in a party.");
+            player.closeInventory();
+
+            if (party == null) {
+                player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
                 return;
             }
-            if (this.partyManageType == PartyManageType.LEADER) {
-                profile.getParty().leader(player, PartyMemberMenu.this.target);
-            } else if (this.partyManageType == PartyManageType.MANAGE) {
-                profile.getParty().leave(PartyMemberMenu.this.target, true);
-            } else if (this.partyManageType == PartyManageType.BAN) {
-                profile.getParty().leave(PartyMemberMenu.this.target, true);
-                profile.getParty().ban(PartyMemberMenu.this.target);
+
+            switch (this.partyManageType) {
+                case LEADER: {
+                    plugin.getPartyManager().leader(this.target, party);
+                    break;
+                }
+                case KICK: {
+                    plugin.getPartyManager().kick(this.target, party);
+                    break;
+                }
+                case BAN: {
+                    plugin.getPartyManager().ban(this.target, party);
+                    plugin.getPartyManager().kick(this.target, party);
+                    break;
+                }
             }
-            player.closeInventory();
         }
     }
 }

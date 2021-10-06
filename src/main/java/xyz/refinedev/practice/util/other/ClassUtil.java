@@ -1,17 +1,17 @@
 package xyz.refinedev.practice.util.other;
 
 import com.google.common.collect.ImmutableSet;
-import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import org.bukkit.event.Listener;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.managers.CommandsManager;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
@@ -35,9 +35,13 @@ public class ClassUtil {
         for (Class<?> clazz : getClassesInPackage(packageName)) {
             if (isListener(clazz)) {
                 try {
-                    plugin.getServer().getPluginManager().registerEvents((Listener) clazz.getDeclaredConstructor().newInstance(plugin), plugin);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    Constructor<?> constructor = clazz.getDeclaredConstructor(Array.class);
+                    constructor.setAccessible(true);
+                    Listener listener = (Listener) constructor.newInstance(plugin);
+                    plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+                    // production code should handle these exceptions more gracefully
+                } catch (ReflectiveOperationException x) {
+                    x.printStackTrace();
                 }
             }
         }

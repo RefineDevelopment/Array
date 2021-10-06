@@ -26,11 +26,11 @@ import java.util.List;
 
 public class GlobalLeaderboardsButton extends Button {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin = this.getPlugin();
 
     @Override
-    public ItemStack getButtonItem(final Player player) {
-        final List<String> lore = new ArrayList<>();
+    public ItemStack getButtonItem(Player player) {
+        List<String> lore = new ArrayList<>();
 
         int position = 1;
         lore.add(CC.MENU_BAR);
@@ -42,7 +42,7 @@ public class GlobalLeaderboardsButton extends Button {
                     .replace("<leaderboards_name>", leaderboardsAdapter.getName())
                     .replace("<leaderboards_elo>", String.valueOf(leaderboardsAdapter.getElo()))
                     .replace("<leaderboards_division>", plugin.getProfileManager().getDivision(profile).getDisplayName()));
-            ++position;
+            position++;
         }
         lore.add(CC.MENU_BAR);
 

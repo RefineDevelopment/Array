@@ -88,22 +88,6 @@ public abstract class Match {
         matches.add(this);
     }
 
-    /**
-     * Preload all normal match tasks
-     */
-    public static void preload() {
-        final Array plugin = Array.getInstance();
-
-        new MatchPearlCooldownTask(plugin).runTaskTimerAsynchronously(plugin, 2L, 2L);
-        new MatchBowCooldownTask(plugin).runTaskTimerAsynchronously(plugin, 2L, 2L);
-        new MatchSnapshotCleanupTask(plugin).runTaskTimerAsynchronously(plugin, 20L * 5, 20L * 5);
-
-        TaskUtil.runTimer(() -> Bukkit.getWorlds().forEach(world -> {
-            world.setStorm(false);
-            world.setThundering(false);
-        }), 20, 20);
-    }
-
 
     /**
      * Clear up the {@link Match} leftovers and remnants

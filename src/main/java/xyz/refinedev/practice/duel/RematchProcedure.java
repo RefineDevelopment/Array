@@ -125,7 +125,7 @@ public class RematchProcedure {
         arena.setActive(true);
 
 
-        match = kit.createSoloKitMatch(null, new TeamPlayer(sender), new TeamPlayer(target), kit, arena, QueueType.UNRANKED);
+        match = plugin.getMatchManager().createSoloKitMatch(null, new TeamPlayer(sender), new TeamPlayer(target), kit, arena, QueueType.UNRANKED);
 
         for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList() ) {
             String opponentMessages = this.formatMessages(string, sender, target);

@@ -14,15 +14,11 @@ import xyz.refinedev.practice.api.ArrayAPI;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.config.ConfigHandler;
 import xyz.refinedev.practice.hook.core.CoreHandler;
-import xyz.refinedev.practice.hook.spigot.SpigotHandler;
-import xyz.refinedev.practice.managers.EventManager;
-import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.hook.placeholderapi.LeaderboardPlaceholders;
+import xyz.refinedev.practice.hook.spigot.SpigotHandler;
 import xyz.refinedev.practice.managers.*;
 import xyz.refinedev.practice.match.Match;
-import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.pvpclasses.bard.EffectRestorer;
-import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.CommandService;
 import xyz.refinedev.practice.util.command.Drink;
@@ -77,10 +73,13 @@ public class Array extends JavaPlugin {
     /*
      * All Managers
      */
+    private KitManager kitManager;
     private ClanManager clanManager;
     private MenuManager menuManager;
     private EventManager eventManager;
     private MatchManager matchManager;
+    private PartyManager partyManager;
+    private QueueManager queueManager;
     private MongoManager mongoManager;
     private HotbarManager hotbarManager;
     private EffectRestorer effectRestorer;
@@ -102,6 +101,7 @@ public class Array extends JavaPlugin {
     @Override
     public void onLoad() {
         instance = this;
+        this.saveDefaultConfig();
 
         rateConfig = new BasicConfigurationFile(this, "ratings", false);
         mainConfig = new BasicConfigurationFile(this, "config", false);
@@ -151,19 +151,25 @@ public class Array extends JavaPlugin {
         this.coreHandler = new CoreHandler(this);
         this.coreHandler.init();
 
-        this.killEffectManager = new KillEffectManager(this);
+        this.killEffectManager = new KillEffectManager(this, this.mongoManager.getKillEffects(), this.killEffectsConfig);
         this.killEffectManager.init();
 
-        //Static abuse be like
-        Kit.preload();
+        this.kitManager = new KitManager(this, kitsConfig);
+        this.kitManager.init();
 
         this.profileManager = new ProfileManager(this, mongoManager.getProfiles());
         this.profileManager.init();
 
         Arena.preload();
-        Match.preload();
-        Party.preLoad();
-        Queue.preLoad();
+
+        this.matchManager = new MatchManager(this);
+        this.matchManager.init();
+
+        this.partyManager = new PartyManager(this);
+        this.partyManager.init();
+
+        this.queueManager = new QueueManager(this);
+        this.queueManager.init();
 
         this.menuManager = new MenuManager(this);
         this.menuManager.init();
@@ -207,10 +213,9 @@ public class Array extends JavaPlugin {
     @Override
     public void onDisable() {
         Match.getMatches().forEach(Match::cleanup);
-
-        Kit.getKits().forEach(Kit::save);
         Arena.getArenas().forEach(Arena::save);
 
+        this.kitManager.getKits().forEach(kitManager::save);
         this.clanManager.getClans().forEach(clanManager::save);
         this.profileManager.getProfiles().values().forEach(profileManager::save);
         this.killEffectManager.getKillEffects().forEach(killEffectManager::save);
@@ -219,6 +224,7 @@ public class Array extends JavaPlugin {
         this.eventManager.save();
         this.killEffectManager.exportConfig();
         this.pvpClassManager.onDisable();
+        this.queueManager.shutdown();
 
         this.disabling = true;
 

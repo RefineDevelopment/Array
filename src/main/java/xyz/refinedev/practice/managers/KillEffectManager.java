@@ -4,6 +4,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.bson.Document;
 import org.bukkit.Effect;
 import org.bukkit.Material;
@@ -30,6 +31,7 @@ import java.util.UUID;
  */
 
 @Getter
+@RequiredArgsConstructor
 public class KillEffectManager {
 
     private final Array plugin;
@@ -37,12 +39,6 @@ public class KillEffectManager {
     private final BasicConfigurationFile config;
 
     private final List<KillEffect> killEffects = new ArrayList<>();
-
-    public KillEffectManager(Array plugin) {
-        this.plugin = plugin;
-        this.collection = plugin.getMongoManager().getKillEffects();
-        this.config = plugin.getKillEffectsConfig();
-    }
 
     /**
      * Initiate and load are Kill Effects
@@ -131,8 +127,6 @@ public class KillEffectManager {
      */
     public void exportConfig() {
         for ( KillEffect killEffect : killEffects ) {
-            if (killEffect == null) return;
-
             String path = "KILL_EFFECTS." + killEffect.getName() + ".";
 
             config.set(path + "NAME", killEffect.getDisplayName());
@@ -140,12 +134,12 @@ public class KillEffectManager {
             config.set(path + "PERMISSION.STRING", killEffect.getPermission());
             config.set(path + "EFFECT.TYPE", killEffect.getEffect() == null ? "None" : killEffect.getEffect().name());
             config.set(path + "EFFECT.DATA", killEffect.getData());
+            config.set(path + "ICON.MATERIAL", killEffect.getItemStack().getType().name());
+            config.set(path + "ICON.DATA", killEffect.getItemStack().getDurability());
             config.set(path + "DEFAULT", killEffect.isDefaultEffect());
             config.set(path + "ANIMATE_DEATH", killEffect.isAnimateDeath());
             config.set(path + "LIGHTNING", killEffect.isLightning());
             config.set(path + "CLEAR_ITEMS", killEffect.isDropsClear());
-            config.set(path + "ICON.MATERIAL", killEffect.getItemStack().getType().name());
-            config.set(path + "ICON.DATA", killEffect.getItemStack().getDurability());
 
             for ( KillEffectSound sound : killEffect.getKillEffectSounds() ) {
                 String soundPath = path + "SOUND." + sound.getKey();
