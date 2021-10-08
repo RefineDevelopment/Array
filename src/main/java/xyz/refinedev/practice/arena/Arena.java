@@ -4,48 +4,51 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.arena.impl.SharedArena;
-import xyz.refinedev.practice.arena.impl.StandaloneArena;
-import xyz.refinedev.practice.arena.impl.TheBridgeArena;
-import xyz.refinedev.practice.arena.meta.Rating;
-import xyz.refinedev.practice.arena.meta.cuboid.Cuboid;
+import xyz.refinedev.practice.arena.rating.Rating;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
-import xyz.refinedev.practice.util.location.LocationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This Project is property of Refine Development © 2021
+ * Redistribution of this Project is not allowed
+ *
+ * @author Drizzy
+ * Created at 7/12/2021
+ * Project: Array
+ */
+
 @Getter @Setter
-public class Arena {
+public abstract class Arena {
 
-    @Getter private static final List<Arena> arenas = new ArrayList<>();
-    @Getter @Setter public static boolean pasting = false;
+    private final Array plugin;
+    private List<Kit> kits = new ArrayList<>();
 
-    private List<String> kits = new ArrayList<>();
+    private final String name;
+    private String displayName;
+    private Location spawn1, spawn2, min, max;
 
-    protected final String name;
-    protected Rating rating;
-    protected String displayName;
-    protected ItemStack displayIcon;
-    protected int fallDeathHeight;
-    protected Location spawn1, spawn2, min, max;
-    protected Cuboid redCuboid, blueCuboid, redPortal, bluePortal; //Added TheBridge Duplicate fields
-    protected boolean active, disablePearls = false;
+    private ArenaType type;
+    private Rating rating = new Rating(this, 0, 0, 0,0, 0);
+    private ItemStack displayIcon = new ItemStack(Material.PAPER);
 
-    public Arena(String name) {
+    private int fallDeathHeight;
+    private boolean active, duplicate, disablePearls;
+
+    public Arena(Array plugin, String name, ArenaType arenaType) {
+        this.plugin = plugin;
         this.name = name;
-        this.active = false;
-        this.rating = new Rating(this);
+        this.type = arenaType;
         this.displayName = CC.RED + name;
-        this.displayIcon = new ItemStack(Material.PAPER);
+
+        plugin.getArenaManager().getArenas().add(this);
     }
 
-    public static void preload() {
+    /*public void preload() {
         FileConfiguration configuration = Array.getInstance().getArenasConfig().getConfiguration();
 
         if (configuration.contains("arenas")) {
@@ -61,15 +64,15 @@ public class Arena {
 
                 switch (arenaType) {
                     case STANDALONE: {
-                        arena = new StandaloneArena(arenaName);
+                        arena = new StandaloneArena(plugin, arenaName);
                         break;
                     }
                     case SHARED: {
-                        arena = new SharedArena(arenaName);
+                        arena = new SharedArena(plugin, arenaName);
                         break;
                     }
-                    case THEBRIDGE: {
-                        arena = new TheBridgeArena(arenaName);
+                    case BRIDGE: {
+                        arena = new TheBridgeArena(plugin, arenaName);
                         break;
                     }
                     default: {
@@ -159,7 +162,7 @@ public class Arena {
                         Location min = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".min"));
 
 
-                        Arena duplicate = new Arena(arenaName);
+                        StandaloneArena duplicate = new StandaloneArena(plugin, arenaName);
                         duplicate.setDisplayName(arena.getDisplayName());
                         duplicate.setSpawn1(spawn1);
                         duplicate.setSpawn2(spawn2);
@@ -167,6 +170,7 @@ public class Arena {
                         duplicate.setMin(min);
                         duplicate.setKits(arena.getKits());
 
+                        duplicate.setDuplicate(true);
 
                         ((StandaloneArena) arena).getDuplicates().add(duplicate);
 
@@ -180,7 +184,7 @@ public class Arena {
                         Location min = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".min"));
 
 
-                        TheBridgeArena duplicate = new TheBridgeArena(arenaName);
+                        TheBridgeArena duplicate = new TheBridgeArena(plugin, arenaName);
                         duplicate.setDisplayName(arena.getDisplayName());
                         duplicate.setSpawn1(spawn1);
                         duplicate.setSpawn2(spawn2);
@@ -211,6 +215,8 @@ public class Arena {
                         location2 = LocationUtil.deserialize(configuration.getString(path + ".duplicates." + duplicateId + ".redPortal.location2"));
                         duplicate.setRedPortal(new Cuboid(location1, location2));
 
+                        duplicate.setDuplicate(true);
+
                         ((TheBridgeArena) arena).getDuplicates().add(duplicate);
 
                         arenas.add(duplicate);
@@ -219,85 +225,34 @@ public class Arena {
                 arenas.add(arena);
             }
         }
-    }
-
-    public static Arena getByName(String name) {
-        for (Arena arena : arenas) {
-            if (arena.getType() != ArenaType.DUPLICATE && arena.getName() != null && arena.getName().equalsIgnoreCase(name)) return arena;
-        }
-
-        return null;
-    }
-
-    public ItemStack getDisplayIcon() {
-        return this.displayIcon.clone();
-    }
-
-    public static Arena getRandom(Kit kit) {
-        List<Arena> _arenas = new ArrayList<>();
-
-        for (Arena arena : arenas) {
-            if (!arena.isSetup() || !arena.getKits().contains(kit.getName())) continue;
-
-            if ((arena.getType() == ArenaType.STANDALONE || arena.getType() == ArenaType.DUPLICATE || arena.getType() == ArenaType.SHARED) && kit.getGameRules().isBridge()) continue;
-
-            if (!arena.isActive() && (arena.getType() == ArenaType.STANDALONE || arena.getType() == ArenaType.DUPLICATE)) {
-                _arenas.add(arena);
-            } else if (!kit.getGameRules().isBuild() && !kit.getGameRules().isBridge() && arena.getType() == ArenaType.SHARED) {
-                _arenas.add(arena);
-            } else if (kit.getGameRules().isBridge() && arena.getType() == ArenaType.THEBRIDGE) {
-                _arenas.add(arena);
-            }
-        }
-
-        if (_arenas.isEmpty()) {
-            return null;
-        }
-
-        return _arenas.get(Array.random.nextInt(_arenas.size()));
-    }
-
-    public ArenaType getType() {
-        return ArenaType.DUPLICATE;
-    }
-
-    public boolean isSetup() {
-        return spawn1 != null && spawn2 != null && max != null && min != null;
-    }
+    }*/
 
     public int getMaxBuildHeight() {
         int highest = (int) (Math.max(spawn1.getY(), spawn2.getY()));
         return highest + 5;
     }
 
-    public Location getSpawn1() {
-        if (spawn1 == null) return null;
-
-        return spawn1.clone();
-    }
-
-    public Location getSpawn2() {
-        if (spawn2 == null) return null;
-
-        return spawn2.clone();
-    }
-
     public int getFallDeathHeight() {
         return this.getSpawn1().getBlockY() - this.fallDeathHeight;
     }
 
-
     public void setActive(boolean active) {
-        if (getType() != ArenaType.SHARED) this.active = active;
+        if (this.getType() != ArenaType.SHARED) this.active = active;
     }
 
-    public void save() {
-        //This is override in the types and are not use for Duplicate Arenas which is the default type of
-        //arena in the main class
+    public boolean isStandalone() {
+        return this.type == ArenaType.STANDALONE;
     }
 
-    public void delete() {
-        //This is override in the types and are not use for Duplicate Arenas which is the default type of
-        //arena in the main class
+    public boolean isBridge() {
+        return this.type == ArenaType.BRIDGE;
     }
+
+    public boolean isShared() {
+        return this.type == ArenaType.SHARED;
+    }
+
+    public abstract void save();
+
+    public abstract boolean isSetup();
 }

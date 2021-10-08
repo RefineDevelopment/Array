@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.arena.meta.cuboid;
+package xyz.refinedev.practice.arena.cuboid;
 
 import lombok.Data;
 import org.bukkit.Bukkit;

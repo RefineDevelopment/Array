@@ -225,7 +225,7 @@ public class PvPClassManager implements Listener {
         List<Color> colors = Arrays.asList(Color.fromRGB(6717235), Color.fromRGB(3361970), Color.fromRGB(5000268), Color.fromRGB(1644825));
         Collections.shuffle(colors);
 
-        double chance = Array.random.nextDouble();
+        double chance = Array.RANDOM.nextDouble();
 
         if (chance <= 0.7D) {
             Color color = colors.get(0);

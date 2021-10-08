@@ -187,7 +187,8 @@ public class MatchManager {
                 Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
                 profile.setIssueRating(true);
                 profile.setRatingArena(arena);
-                plugin.getRatingsManager().sendRatingMessage(player, arena);
+
+                plugin.getArenaManager().sendRatingMessage(player, arena);
             }
         }
 

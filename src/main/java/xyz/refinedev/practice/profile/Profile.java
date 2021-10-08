@@ -92,8 +92,8 @@ public class Profile {
         return this.killEffect != null && this.killEffect.equals(killEffect.getUniqueId());
     }
 
-    public void setExperience(int experience) {
-        this.experience = experience;
+    public void addExperience(int experience) {
+        this.setExperience(experience);
 
         if (this.getPlayer() == null) return;
         this.getPlayer().sendMessage(Locale.XP_ADD.toString().replace("<xp>", String.valueOf(experience)));

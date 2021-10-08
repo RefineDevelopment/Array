@@ -64,7 +64,7 @@ public class LeaderboardPlaceholders extends PlaceholderExpansion {
             //We subtract 1 because of lists starting with 0
             String kitName = splitString[1];
             int number = Integer.parseInt(splitString[2]) - 1;
-            Kit kit = Kit.getByName(kitName);
+            Kit kit = plugin.getKitManager().getByName(kitName);
 
             if (kit == null) return "&7Error, That kit does not exist!";
 

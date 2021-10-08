@@ -221,11 +221,11 @@ public class ClanManager {
         OfflinePlayer leader = Bukkit.getOfflinePlayer(clan.getLeader().getUuid());
 
         List<String> invite = new ArrayList<>();
-        invite.add(CC.translate("&8[&cClan&8] &7You have been invited to join &c" + leader.getName() + "'s &7clan!"));
-        invite.add(CC.translate("&8[&cClan&8] &a(Click here to Join)"));
+        invite.add(Locale.CLAN_INVITED.toString().replace("<leader>", leader.getName()));
+        invite.add(Locale.CLAN_CLICK_TO_JOIN.toString());
 
         for ( String string : invite ) {
-            Clickable message = new Clickable(string, "Click to Join", "/clan join " + leader.getName());
+            Clickable message = new Clickable(string, Locale.CLAN_INVITE_HOVER.toString(), "/clan join " + leader.getName());
             message.sendToPlayer(target);
         }
     }

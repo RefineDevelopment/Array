@@ -35,25 +35,23 @@ import java.util.List;
  * Project: Array
  */
 
-
 @Getter @Setter
 public class Kit {
 
     private final Array plugin;
 
-    private final List<ItemStack> editorItems = new ArrayList<>();
-    private List<LeaderboardsAdapter> eloLeaderboards = new ArrayList<>();
-    private List<LeaderboardsAdapter> winLeaderboards = new ArrayList<>();
+    private final List<LeaderboardsAdapter> eloLeaderboards = new ArrayList<>();
+    private final List<LeaderboardsAdapter> winLeaderboards = new ArrayList<>();
 
     private final KitGameRules gameRules = new KitGameRules();
-    private KitInventory kitInventory = new KitInventory();
+    private final KitInventory kitInventory = new KitInventory();
+    private final List<ItemStack> editorItems = new ArrayList<>();
 
     private final String name;
     private boolean enabled;
-    private String knockbackProfile;
     private List<String> kitDescription;
     private ItemStack displayIcon;
-    private String displayName;
+    private String displayName, knockbackProfile;
     private Queue unrankedQueue, rankedQueue, clanQueue;
 
     public Kit(Array plugin, String name) {
@@ -72,7 +70,7 @@ public class Kit {
     }
 
     public boolean isParty() {
-        return (!gameRules.isDisablePartyFFA() && !gameRules.isParkour() && !gameRules.isBridge() && !gameRules.isDisablePartySplit() && isEnabled());
+        return (!this.gameRules.isDisablePartyFFA() && !this.gameRules.isParkour() && !this.gameRules.isBridge() && !this.gameRules.isDisablePartySplit() && this.isEnabled());
     }
 
     public void applyToPlayer(Player player) {

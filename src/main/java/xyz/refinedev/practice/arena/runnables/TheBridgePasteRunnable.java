@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.impl.TheBridgeArena;
-import xyz.refinedev.practice.arena.meta.cuboid.Cuboid;
+import xyz.refinedev.practice.arena.cuboid.Cuboid;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.location.CustomLocation;
 
@@ -99,7 +99,7 @@ public class TheBridgePasteRunnable extends DuplicateArenaRunnable{
         Cuboid redCuboid = new Cuboid(world, cuboidRedX1, cuboidRedY1, cuboidRedZ1, cuboidRedX2, cuboidRedY2, cuboidRedZ2);
         Cuboid blueCuboid = new Cuboid(world, cuboidBlueX1, cuboidBlueY1, cuboidBlueZ1, cuboidBlueX2, cuboidBlueY2, cuboidBlueZ2);
 
-        Arena duplicate = new Arena(this.copiedArena.getName() + "#" + arenaId);
+        TheBridgeArena duplicate = new TheBridgeArena(plugin, this.copiedArena.getName() + "#" + arenaId);
 
         duplicate.setSpawn1(a.toBukkitLocation());
         duplicate.setSpawn2(b.toBukkitLocation());
@@ -113,8 +113,10 @@ public class TheBridgePasteRunnable extends DuplicateArenaRunnable{
         duplicate.setBlueCuboid(blueCuboid);
         duplicate.setDisplayName(this.copiedArena.getDisplayName());
 
+        duplicate.setDuplicate(true);
+
         this.copiedArena.getDuplicates().add(duplicate);
-        Arena.getArenas().add(duplicate);
+        plugin.getArenaManager().getArenas().add(duplicate);
     }
 
     public void message() {
@@ -125,6 +127,6 @@ public class TheBridgePasteRunnable extends DuplicateArenaRunnable{
         }
         plugin.logger("&8[&c&lArray&8] &7Finished pasting &c" + copiedArena.getName() + "&7's " + amount + " &7duplicate arenas.");
         Arena.setPasting(false);
-        Arena.getArenas().forEach(Arena::save);
+        plugin.getArenaManager().getArenas().forEach(Arena::save);
     }
 }

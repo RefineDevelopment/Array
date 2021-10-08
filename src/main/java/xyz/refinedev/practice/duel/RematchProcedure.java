@@ -112,7 +112,7 @@ public class RematchProcedure {
         Arena arena = this.arena;
 
         if (arena.isActive()) {
-            arena = Arena.getRandom(kit);
+            arena = plugin.getArenaManager().getByKit(kit);
             sender.sendMessage(CC.translate("&7The arena was not available, finding a new arena..."));
             target.sendMessage(CC.translate("&7The arena was not available, finding a new arena..."));
         }

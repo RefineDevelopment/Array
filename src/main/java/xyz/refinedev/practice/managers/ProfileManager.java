@@ -82,7 +82,7 @@ public class ProfileManager {
 
     /**
      * Load the profile from the mongo
-     * database, mainly asynchronously.
+     * database, usually asynchronously.
      * The method heavily uses mongo and google's GSON
      *
      * @param profile {@link Profile} being loaded
@@ -93,7 +93,7 @@ public class ProfileManager {
 
         if (event.isCancelled()) return;
 
-        for ( Kit kit : Kit.getKits() ) {
+        for ( Kit kit : plugin.getKitManager().getKits() ) {
             profile.getStatisticsData().put(kit, new StatisticsData());
         }
 
@@ -130,8 +130,8 @@ public class ProfileManager {
             for ( String key : kitStatistics.keySet() ) {
                 Document kitDocument = (Document) kitStatistics.get(key);
 
-                Kit kit = Kit.getByName(key);
-                if (kit == null) return;
+                Kit kit = plugin.getKitManager().getByName(key);
+                if (kit == null) continue;
 
                 StatisticsData statisticsData = new StatisticsData();
                 Integer elo = kitDocument.getInteger("elo");
@@ -147,8 +147,8 @@ public class ProfileManager {
 
             Document kitsDocument = (Document) document.get("kitInventory");
             for ( String key : kitsDocument.keySet() ) {
-                Kit kit = Kit.getByName(key);
-                if (kit == null) return;
+                Kit kit = plugin.getKitManager().getByName(key);
+                if (kit == null) continue;
 
                 String jsonString = kitsDocument.getString(key);
                 JsonArray kitsArray = JsonParser.parseString(jsonString).getAsJsonArray();
@@ -306,7 +306,7 @@ public class ProfileManager {
             player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.EVENT, profile));
         } else if (profile.isInMatch()) {
             Match match = profile.getMatch();
-            if (match.getTeamPlayer(player) != null && !match.getTeamPlayer(player).isAlive()) {
+            if (match.getTeamPlayer(player) != null && !match.getTeamPlayer(player).isAlive() && match.isTeamMatch()) {
                 player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.MATCH_SPECTATE, profile));
             }
             if (profile.getState().equals(ProfileState.SPECTATING)) {
@@ -314,13 +314,6 @@ public class ProfileManager {
             }
         }
         player.updateInventory();
-
-        if (!plugin.getDivisionsManager().isXPBased()) return;
-        //Just to make it look cool, we just apply the experience to the player's hotbar
-        if (profile.getState().equals(ProfileState.IN_LOBBY)) {
-            player.setLevel(this.getDivision(profile).getXpLevel());
-            player.setExp((float) (profile.getExperience() % 100) / 100.0f);
-        }
     }
 
     /**
@@ -339,12 +332,14 @@ public class ProfileManager {
             boolean activeEvent = plugin.getEventManager().getActiveEvent() != null && plugin.getEventManager().getActiveEvent().isWaiting();
             int eventSlot = player.getInventory().first(plugin.getHotbarManager().getHotbarItem(HotbarType.EVENT_JOIN).getItem());
 
-            if ((eventSlot == -1 && activeEvent) || (eventSlot != -1 && !activeEvent)) {
+            if (eventSlot == -1 && activeEvent) {
+                update = true;
+            } else if (eventSlot != -1 && !activeEvent) {
                 update = true;
             }
 
             if (update) {
-                TaskUtil.run(() -> this.refreshHotbar(profile));
+                this.refreshHotbar(profile);
             }
         }
     }
@@ -364,6 +359,13 @@ public class ProfileManager {
 
         if (!event.isCancelled() && event.getLocation() != null) {
             player.teleport(event.getLocation());
+        }
+
+        if (!plugin.getDivisionsManager().isXPBased()) return;
+        //Just to make it look cool, we just apply the experience to the player's hotbar
+        if (profile.getState().equals(ProfileState.IN_LOBBY)) {
+            player.setLevel(this.getDivision(profile).getXpLevel());
+            player.setExp((float) (profile.getExperience() % 100) / 100.0f);
         }
     }
 
@@ -411,7 +413,7 @@ public class ProfileManager {
                 } else if (!rematchData.getKey().equals(profile.getRematchData().getKey())) {
                     profile.setRematchData(null);
                     return true;
-                } else if (rematchData.isReceive()) {
+                } else if (rematchData.isReceive() || rematchData.isSent()) {
                     int requestSlot = player.getInventory().first(plugin.getHotbarManager().getHotbarItem(HotbarType.REMATCH_REQUEST).getItem());
                     return requestSlot != -1;
                 }

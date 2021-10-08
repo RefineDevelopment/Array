@@ -38,7 +38,7 @@ public class KitProvider extends DrinkProvider<Kit> {
     @Override
     public Kit provide(@NotNull CommandArg arg, @NotNull List<? extends Annotation> annotations) throws CommandExitMessage {
         String name = arg.get();
-        Kit kit = Kit.getByName(name);
+        Kit kit = this.getPlugin().getKitManager().getByName(name);
         if (kit != null) {
             return kit;
         }
@@ -52,7 +52,7 @@ public class KitProvider extends DrinkProvider<Kit> {
 
     @Override
     public List<String> getSuggestions(@NotNull String prefix) {
-        return Kit.getKits().stream().map(Kit::getName).filter(Objects::nonNull).filter(s -> prefix.length() == 0 || s.startsWith(prefix)).collect(Collectors.toList());
+        return this.getPlugin().getKitManager().getKits().stream().map(Kit::getName).filter(Objects::nonNull).filter(s -> prefix.length() == 0 || s.startsWith(prefix)).collect(Collectors.toList());
     }
 
 }

@@ -311,7 +311,7 @@ public class EntityHider {
 
                 } else if (type == NAMED_SOUND_EFFECT) {
                     String sound = event.getPacket().getStrings().read(0);
-                    if (!sound.equals("random.bow") && !sound.equals("random.bowhit") && !sound.equals("random.pop") && !sound.equals("game.player.hurt"))
+                    if (!sound.equals("RANDOM.bow") && !sound.equals("RANDOM.bowhit") && !sound.equals("RANDOM.pop") && !sound.equals("game.player.hurt"))
                         return;
 
                     int x = event.getPacket().getIntegers().read(0);
@@ -350,7 +350,7 @@ public class EntityHider {
                         boolean pass = false;
 
                         switch (sound) {
-                            case "random.bow": {
+                            case "RANDOM.bow": {
                                 ItemStack hand = player.getItemInHand();
                                 if (hand == null) break;
                                 if (hand.getType() == Material.POTION || hand.getType() == Material.BOW || hand.getType() == Material.ENDER_PEARL) {
@@ -358,7 +358,7 @@ public class EntityHider {
                                 }
                                 break;
                             }
-                            case "random.bowhit": {
+                            case "RANDOM.bowhit": {
                                 if (entity instanceof Arrow) {
                                     pass = true;
                                     break;

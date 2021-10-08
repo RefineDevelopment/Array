@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.managers;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
@@ -32,16 +33,12 @@ import java.util.stream.Collectors;
  */
 
 @Getter
+@RequiredArgsConstructor
 public class HotbarManager {
 
     private final Array plugin;
     private final BasicConfigurationFile config;
     private final List<HotbarItem> items = new ArrayList<>();
-
-    public HotbarManager(Array plugin) {
-        this.plugin = plugin;
-        this.config = plugin.getHotbarConfig();
-    }
 
     public void init() {
         for ( HotbarType item : HotbarType.values() ) {

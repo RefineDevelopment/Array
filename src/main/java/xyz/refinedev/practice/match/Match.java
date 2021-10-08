@@ -183,10 +183,10 @@ public abstract class Match {
             }
         }
 
-        snapshots.forEach(matchInventory -> {
-            matchInventory.setCreated(System.currentTimeMillis());
-            plugin.getMatchManager().getSnapshotMap().put(matchInventory.getTeamPlayer().getUniqueId(), matchInventory);
-        });
+        for ( MatchSnapshot snapshot : snapshots ) {
+            snapshot.setCreated(System.currentTimeMillis());
+            plugin.getMatchManager().getSnapshotMap().put(snapshot.getTeamPlayer().getUniqueId(), snapshot);
+        }
 
         for ( Player player : this.getPlayers() ) {
             plugin.getSpigotHandler().resetKnockback(player);
@@ -217,20 +217,22 @@ public abstract class Match {
         }
 
         if (plugin.getConfigHandler().isRATINGS_ENABLED()) {
-            this.getPlayers().stream().map(plugin.getProfileManager()::getByPlayer).forEach(profile ->  {
+            for ( Profile profile : this.getPlayers().stream().map(plugin.getProfileManager()::getByPlayer).collect(Collectors.toList()) ) {
                 profile.setIssueRating(true);
                 profile.setRatingArena(arena);
-                plugin.getRatingsManager().sendRatingMessage(profile.getPlayer(), this.getArena());
-            });
+                plugin.getArenaManager().sendRatingMessage(profile.getPlayer(), this.getArena());
+            }
         }
 
         this.cleanup();
 
-        if (waterTask != null) waterTask.cancel();
+        if (waterTask != null) {
+            waterTask.cancel();
+        }
         potionTask.cancel();
 
         MatchEndEvent event = new MatchEndEvent(this);
-        event.call();
+        plugin.getServer().getPluginManager().callEvent(event);
 
         matches.remove(this);
     }
@@ -270,7 +272,7 @@ public abstract class Match {
 
         if (resetCooldown) {
             Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-            profile.setEnderpearlCooldown(new Cooldown(0L));
+            plugin.getProfileManager().setEnderpearlCooldown(profile, new Cooldown(0L));
         }
         EnderPearl pearl = this.pearlMap.get(player.getUniqueId());
         if (pearl != null) pearl.remove();
@@ -440,6 +442,21 @@ public abstract class Match {
     public void broadcastSound(Sound sound) {
         getPlayers().forEach(player -> player.playSound(player.getLocation(), sound, 1.0F, 1.0F));
         getSpectators().forEach(player -> player.playSound(player.getLocation(), sound, 1.0F, 1.0F));
+    }
+
+    /**
+     * Get {@link MatchSnapshot} of a specific player
+     * from this match instance
+     *
+     * @param player The player whose match snapshot we are fetching
+     * @return {@link MatchSnapshot}
+     */
+    public MatchSnapshot getSnapshotOfPlayer(Player player) {
+        for (MatchSnapshot snapshot : this.getSnapshots()) {
+            if (!(player == null ? snapshot.getTeamPlayer().isDisconnected() : snapshot.getTeamPlayer().getUniqueId().equals(player.getUniqueId()))) continue;
+            return snapshot;
+        }
+        return null;
     }
 
     /**

@@ -66,8 +66,9 @@ public abstract class Menu {
                 Material material = Material.valueOf(config.getString("PLACEHOLDER_BUTTON.MATERIAL"));
                 itemBuilder = new ItemBuilder(material);
                 itemBuilder.name(config.getString("PLACEHOLDER_BUTTON.NAME"));
-                if (config.getInteger("PLACEHOLDER_BUTTON.DATA") != 0)
+                if (config.getInteger("PLACEHOLDER_BUTTON.DATA") != 0) {
                     itemBuilder.durability(config.getInteger("PLACEHOLDER_BUTTON.DATA"));
+                }
                 itemBuilder.lore(config.getStringList("PLACEHOLDER_BUTTON.LORE"));
                 itemBuilder.clearFlags();
             } catch (Exception e) {

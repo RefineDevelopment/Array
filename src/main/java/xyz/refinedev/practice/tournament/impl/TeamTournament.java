@@ -110,7 +110,7 @@ public class TeamTournament extends Tournament<Party> {
                 }
                 Team teamB = teamShuffle.poll();
 
-                Arena arena = Arena.getRandom(getKit());
+                Arena arena = plugin.getArenaManager().getByKit(getKit());
 
                 if (arena == null) {
                     teamB.broadcast(CC.translate("&cTried to start a match but there are no available arenas."));

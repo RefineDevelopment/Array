@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.Event;
+import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.event.menu.EventSizeMenu;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
@@ -31,7 +32,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EventSelectButton extends Button {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin = this.getPlugin();
     private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("event_host");
     private final EventType eventType;
 
@@ -116,14 +117,15 @@ public class EventSelectButton extends Button {
      * @param clickType {@link ClickType}
      */
     public void clicked(Player player, ClickType clickType) {
+        player.closeInventory();
+
         if (eventType.getName().contains("Solo") || eventType.getName().contains("Team")) {
-            EventSizeMenu menu = new EventSizeMenu();
+            EventSizeMenu menu = new EventSizeMenu(eventType);
             menu.openMenu(player);
             Button.playSuccess(player);
             return;
         }
-        if (!plugin.getEventManager().hostByType(player, eventType)) {
-            player.closeInventory();
+        if (!plugin.getEventManager().hostByType(player, eventType, EventTeamSize.SOLO)) {
             Button.playFail(player);
         }
     }

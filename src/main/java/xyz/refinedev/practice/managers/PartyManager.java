@@ -38,8 +38,8 @@ public class PartyManager {
     private final List<Party> parties = new ArrayList<>();
 
     public void init() {
-        new PartyInviteExpireTask().runTaskTimer(plugin, 100L, 100L);
-        new PartyPublicTask().runTaskTimer(plugin, 1000L, 1000L);
+        new PartyInviteExpireTask(plugin).runTaskTimer(plugin, 100L, 100L);
+        new PartyPublicTask(plugin).runTaskTimer(plugin, 1000L, 1000L);
     }
 
     /**

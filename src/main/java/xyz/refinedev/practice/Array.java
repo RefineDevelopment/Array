@@ -52,17 +52,11 @@ public class Array extends JavaPlugin {
     @Getter private static API api;
 
     public static Gson GSON = GsonFactory.getPrettyGson();
-    public static Random random = new Random();
+    public static Random RANDOM = new Random();
 
-    /*
-     * All ours Configs
-     */
     private BasicConfigurationFile mainConfig, arenasConfig, kitsConfig, eventsConfig, killEffectsConfig,
-                                   messagesConfig, scoreboardConfig, tablistConfig,  hotbarConfig, rateConfig;
+                                   messagesConfig, scoreboardConfig, tablistConfig,  hotbarConfig;
 
-    /*
-     * All Handlers
-     */
     private CoreHandler coreHandler;
     private ConfigHandler configHandler;
     private SpigotHandler spigotHandler;
@@ -70,20 +64,17 @@ public class Array extends JavaPlugin {
     private NameTagHandler nameTagHandler;
     private ScoreboardHandler scoreboardHandler;
 
-    /*
-     * All Managers
-     */
     private KitManager kitManager;
     private ClanManager clanManager;
     private MenuManager menuManager;
     private EventManager eventManager;
     private MatchManager matchManager;
+    private ArenaManager arenaManager;
     private PartyManager partyManager;
     private QueueManager queueManager;
     private MongoManager mongoManager;
     private HotbarManager hotbarManager;
     private EffectRestorer effectRestorer;
-    private RatingsManager ratingsManager;
     private ProfileManager profileManager;
     private PvPClassManager pvpClassManager;
     private DivisionsManager divisionsManager;
@@ -91,26 +82,22 @@ public class Array extends JavaPlugin {
     private TournamentManager tournamentManager;
     private LeaderboardsManager leaderboardsManager;
 
-    /*
-     * Essential Utilities
-     */
     private CommandService drink;
     private EntityHider entityHider;
-    private boolean disabling = false;
+    private boolean disabling;
 
     @Override
     public void onLoad() {
         instance = this;
         this.saveDefaultConfig();
 
-        rateConfig = new BasicConfigurationFile(this, "ratings", false);
         mainConfig = new BasicConfigurationFile(this, "config", false);
-        arenasConfig = new BasicConfigurationFile(this, "arenas", false);
         kitsConfig = new BasicConfigurationFile(this, "kits", false);
         eventsConfig = new BasicConfigurationFile(this, "events", false);
         hotbarConfig = new BasicConfigurationFile(this, "hotbar", false);
-        messagesConfig = new BasicConfigurationFile(this, "lang", false);
+        arenasConfig = new BasicConfigurationFile(this, "arenas", false);
         tablistConfig = new BasicConfigurationFile(this, "tablist", false);
+        messagesConfig = new BasicConfigurationFile(this, "lang", false);
         scoreboardConfig = new BasicConfigurationFile(this, "scoreboard", false);
         killEffectsConfig = new BasicConfigurationFile(this, "killeffects", false);
     }
@@ -119,8 +106,6 @@ public class Array extends JavaPlugin {
     public void onEnable() {
         api = new ArrayAPI(this);
         drink = Drink.get(this);
-
-        System.setProperty("file.encoding", "UTF-8");
 
         this.configHandler = new ConfigHandler(this);
         this.configHandler.init();
@@ -151,7 +136,7 @@ public class Array extends JavaPlugin {
         this.coreHandler = new CoreHandler(this);
         this.coreHandler.init();
 
-        this.killEffectManager = new KillEffectManager(this, this.mongoManager.getKillEffects(), this.killEffectsConfig);
+        this.killEffectManager = new KillEffectManager(this);
         this.killEffectManager.init();
 
         this.kitManager = new KitManager(this, kitsConfig);
@@ -160,7 +145,8 @@ public class Array extends JavaPlugin {
         this.profileManager = new ProfileManager(this, mongoManager.getProfiles());
         this.profileManager.init();
 
-        Arena.preload();
+        this.arenaManager = new ArenaManager(this, arenasConfig);
+        this.arenaManager.init();
 
         this.matchManager = new MatchManager(this);
         this.matchManager.init();
@@ -179,14 +165,11 @@ public class Array extends JavaPlugin {
 
         this.tournamentManager = new TournamentManager(this);
 
-        this.hotbarManager = new HotbarManager(this);
+        this.hotbarManager = new HotbarManager(this, hotbarConfig);
         this.hotbarManager.init();
 
         this.leaderboardsManager = new LeaderboardsManager(this);
         this.leaderboardsManager.init();
-
-        this.ratingsManager = new RatingsManager(this);
-        this.ratingsManager.init();
 
         this.spigotHandler = new SpigotHandler(this);
         this.spigotHandler.init();
@@ -213,8 +196,8 @@ public class Array extends JavaPlugin {
     @Override
     public void onDisable() {
         Match.getMatches().forEach(Match::cleanup);
-        Arena.getArenas().forEach(Arena::save);
 
+        this.arenaManager.getArenas().forEach(Arena::save);
         this.kitManager.getKits().forEach(kitManager::save);
         this.clanManager.getClans().forEach(clanManager::save);
         this.profileManager.getProfiles().values().forEach(profileManager::save);

@@ -134,7 +134,7 @@ public class SoloTournament extends Tournament<Player> {
 
                 TeamPlayer playerB = teamShuffle.poll();
 
-                Arena arena = Arena.getRandom(getKit());
+                Arena arena = plugin.getArenaManager().getByKit(getKit());
 
                 if (arena == null) {
                     playerA.getPlayer().sendMessage(CC.translate("&cTried to start a match but there are no available arenas."));

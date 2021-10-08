@@ -95,7 +95,7 @@ public class DuelSelectKitMenu extends Menu {
                 return;
             }
 
-            Arena arena = Arena.getRandom(kit);
+            Arena arena = plugin.getArenaManager().getByKit(kit);
 
             profile.getDuelProcedure().setKit(kit);
             profile.getDuelProcedure().setArena(arena);

@@ -1,14 +1,13 @@
 package xyz.refinedev.practice.arena.selection;
 
 import lombok.Data;
-import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.arena.meta.cuboid.Cuboid;
+import xyz.refinedev.practice.arena.cuboid.Cuboid;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 
 import java.util.Arrays;
@@ -29,8 +28,8 @@ public class  Selection {
 				.build();
 	}
 
-	@NonNull private Location point1;
-	@NonNull private Location point2;
+	private Location point1;
+	private Location point2;
 
 	/**
 	 * Private, so that we can create a new instance in the Selection#createOrGetSelection method.

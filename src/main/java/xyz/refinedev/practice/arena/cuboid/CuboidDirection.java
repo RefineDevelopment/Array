@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.arena.meta.cuboid;
+package xyz.refinedev.practice.arena.cuboid;
 
 /**
  * Represents directions that can be applied to certain faces and actions of a Cuboid

@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.arena.meta;
+package xyz.refinedev.practice.arena.rating;
 
 /**
  * This Project is property of Refine Development © 2021

@@ -12,41 +12,39 @@ import xyz.refinedev.practice.util.location.LocationUtil;
 @Getter @Setter
 public class SharedArena extends Arena {
     
-    private final BasicConfigurationFile config = Array.getInstance().getArenasConfig();
+    private final Array plugin;
 
-    public SharedArena(String name) {
-        super(name);
-    }
+    public SharedArena(Array plugin, String name) {
+        super(plugin, name, ArenaType.SHARED);
 
-    @Override
-    public ArenaType getType() {
-        return ArenaType.SHARED;
+        this.plugin = plugin;
     }
 
     @Override
     public void save() {
+        BasicConfigurationFile config = plugin.getArenasConfig();
         String path = "arenas." + getName();
 
         config.set(path, null);
         config.set(path + ".type", getType().name());
         config.set(path + ".display-name", CC.untranslate(getDisplayName()));
-        config.set(path + ".icon.material", displayIcon.getType().name());
-        config.set(path + ".icon.durability", displayIcon.getDurability());
-        config.set(path + ".disable-pearls", disablePearls);
+        config.set(path + ".icon.material", this.getDisplayIcon().getType().name());
+        config.set(path + ".icon.durability", this.getDisplayIcon().getDurability());
+        config.set(path + ".disable-pearls", this.isDisablePearls());
 
-        if (spawn1 != null) config.set(path + ".spawn1", LocationUtil.serialize(spawn1));
-        if (spawn2 != null) config.set(path + ".spawn2", LocationUtil.serialize(spawn2));
-        if (max != null) config.set(path + ".max", LocationUtil.serialize(max));
-        if (min != null) config.set(path + ".min", LocationUtil.serialize(min));
+        if (this.getSpawn1() != null) config.set(path + ".spawn1", LocationUtil.serialize(this.getSpawn1()));
+        if (this.getSpawn2() != null) config.set(path + ".spawn2", LocationUtil.serialize(this.getSpawn2()));
+
+        if (this.getMax() != null) config.set(path + ".max", LocationUtil.serialize(this.getMax()));
+        if (this.getMin() != null) config.set(path + ".min", LocationUtil.serialize(this.getMin()));
 
         config.set(path + ".kits", getKits());
         config.save();
     }
 
     @Override
-    public void delete() {
-        config.set("arenas." + getName(), null);
-        config.save();
+    public boolean isSetup() {
+        return this.getSpawn1() != null && this.getSpawn2() != null;
     }
 
 }

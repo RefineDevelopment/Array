@@ -6,6 +6,8 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.kit.KitGameRules;
+import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
@@ -53,6 +55,13 @@ public class KitManager {
         }
     }
 
+    /**
+     * Load a {@link Kit} from the config
+     * This method sets up the kit's icon,
+     * {@link KitGameRules} and {@link KitInventory}
+     *
+     * @param kit The {@link Kit} being loaded
+     */
     public void load(Kit kit) {
         String path = "kits." + kit.getName();
 
@@ -124,6 +133,11 @@ public class KitManager {
         }
     }
 
+    /**
+     * Save the {@link Kit} to config
+     *
+     * @param kit The {@link Kit} being saved
+     */
     public void save(Kit kit) {
         String path = "kits." + kit.getName();
         
@@ -169,7 +183,6 @@ public class KitManager {
 
         config.save();
     }
-
 
     /**
      * Delete a kit from the config and server

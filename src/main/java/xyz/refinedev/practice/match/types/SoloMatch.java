@@ -24,6 +24,7 @@ import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
+import xyz.refinedev.practice.profile.history.MatchHistory;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
@@ -33,10 +34,7 @@ import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 import xyz.refinedev.practice.util.other.TitleAPI;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Getter @Setter
 public class SoloMatch extends Match {
@@ -133,7 +131,7 @@ public class SoloMatch extends Match {
      */
     @Override
     public void onStart() {
-        if (getKit().getGameRules().isTimed()) {
+        if (this.getKit().getGameRules().isTimed()) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -194,9 +192,6 @@ public class SoloMatch extends Match {
                         profile.setRematchData(new RematchProcedure(rematchKey, player.getUniqueId(), opponent.getUniqueId(), getKit(), getArena()));
                     }
 
-                    getEntities().forEach(Entity::remove);
-                    getDroppedItems().forEach(Item::remove);
-
                     plugin.getProfileManager().teleportToSpawn(profile);
                 }
             }
@@ -212,6 +207,12 @@ public class SoloMatch extends Match {
         Profile losingProfile = plugin.getProfileManager().getByUUID(losingPlayer.getUniqueId());
 
         if (getQueueType() == QueueType.UNRANKED) {
+            MatchHistory winnerProfileMatchHistory = new MatchHistory(plugin, new Date(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit(), true, false, 0, 0);
+            MatchHistory loserProfileMatchHistory = new MatchHistory(plugin, new Date(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit(), false, false, 0, 0);
+
+            winningProfile.getUnrankedMatchHistory().add(winnerProfileMatchHistory);
+            losingProfile.getUnrankedMatchHistory().add(loserProfileMatchHistory);
+
             winningProfile.getStatisticsData().get(this.getKit()).incrementWon();
             plugin.getProfileManager().save(winningProfile);
 
@@ -225,6 +226,12 @@ public class SoloMatch extends Match {
 
             int newWinnerElo = EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
             int newLoserElo = EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
+
+            MatchHistory winnerProfileMatchHistory = new MatchHistory(plugin, new Date(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit(), true, true, newWinnerElo, newLoserElo);
+            MatchHistory loserProfileMatchHistory = new MatchHistory(plugin, new Date(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit(), false, true, newWinnerElo, newLoserElo);
+
+            winningProfile.getRankedMatchHistory().add(winnerProfileMatchHistory);
+            losingProfile.getRankedMatchHistory().add(loserProfileMatchHistory);
 
             winningProfile.getStatisticsData().get(this.getKit()).setElo(newWinnerElo);
             losingProfile.getStatisticsData().get(this.getKit()).setElo(newLoserElo);
@@ -462,7 +469,7 @@ public class SoloMatch extends Match {
 
         for ( Player otherPlayer : getPlayers() ) {
             Profile profile = plugin.getProfileManager().getByUUID(otherPlayer.getUniqueId());
-            TaskUtil.runLater(() -> plugin.getProfileManager().handleVisibility(profile, deadPlayer), 2L);
+            TaskUtil.runLater(() -> plugin.getProfileManager().handleVisibility(profile, deadPlayer), 4L);
         }
 
         if (this.canEnd()) {

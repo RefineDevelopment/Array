@@ -151,7 +151,7 @@ public class DuelCommands {
                     player.sendMessage(CC.RED + "The arena you were dueled was a build arena and all arenas are busy.");
                     return;
                 }
-            } else if (arena.getType().equals(ArenaType.THEBRIDGE)) {
+            } else if (arena.getType().equals(ArenaType.BRIDGE)) {
                 player.sendMessage(CC.RED + "The arena you were dueled was a build arena and all arenas are busy.");
                 return;
             }

@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.managers.EventManager;
 import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.util.chat.CC;
@@ -43,7 +44,7 @@ public class SpleefCommands {
     @Command(name = "host", desc = "Start a Spleef Event")
     @Require("array.event.admin")
     public void host(@Sender Player player) {
-        manager.hostByType(player, EventType.SPLEEF);
+        manager.hostByType(player, EventType.SPLEEF, EventTeamSize.SOLO);
     }
 
     @Command(name = "knockback", aliases = {"setkb", "kb"}, usage = "<knockback>", desc = "Set Spleef's Knockback")

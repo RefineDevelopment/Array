@@ -92,6 +92,9 @@ public enum Locale {
             " &8\u2022 &c/party promote &8<&7profile&8> &8(&7&oTransfers Ownership of your party&8)",
             "&c&m--------&7&m-------------------------------------&c&m--------")),
 
+    CLAN_INVITED("CLAN.INVITED", "&7[&cClan&7] &7You have been invited to join &c<leader>'s &7clan."),
+    CLAN_CLICK_TO_JOIN("CLAN.CLICK_TO_JOIN", "&7[&cClan&7] &c(Click to accept)"),
+    CLAN_INVITE_HOVER("CLAN.INVITE_HOVER", "&aClick to to accept this clan invite"),
     CLAN_NAME_LENGTH("CLAN.NAME_LENGTH", "&7[&cClan&7] &7Clan names must be greater than or equal to 2 characters long and less than or equal to 8 characters long."),
     CLAN_NAME_LETTER("CLAN.NAME_LETTER", "&7[&cClan&7] &7Clan names must only contain alpha characters (letters only)."),
     CLAN_ALREADY_PARTOF("CLAN.ALREADY_PARTOF", "&7[&cClan&7] &7You are already part of &c<clan_name> &7Clan!"),
@@ -213,6 +216,7 @@ public enum Locale {
     MATCH_RATING("MATCH.RATING", "&aThanks for rating the map! We have recorded your rating."),
     MATCH_NOT_IN("MATCH.NOT_IN_FIGHT", "&cThat player is currently not in a match!"),
     MATCH_NOT_IN_SELF("MATCH.NOT_IN_SELF", "&cYou are not in a match!"),
+    MATCH_RATING_MESSAGE("MATCH.RATING_MESSAGE", "&aPlease give us feedback on the Arena, How was it?"),
 
     TOURNAMENT_ROUND("TOURNAMENT.ROUND_MESSAGE", "&7[&9&lRound&7] &c<round> &7has started!"),
     TOURNAMENT_BROADCAST("TOURNAMENT.BROADCAST", "&7[&c&lTournament&7] &c<host_name> &fis hosting a &c<kit> &7Tournament! &7(<tournament_type>)"),

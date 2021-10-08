@@ -12,7 +12,7 @@ import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.arena.impl.SharedArena;
 import xyz.refinedev.practice.arena.impl.StandaloneArena;
 import xyz.refinedev.practice.arena.impl.TheBridgeArena;
-import xyz.refinedev.practice.arena.meta.Rating;
+import xyz.refinedev.practice.arena.rating.Rating;
 import xyz.refinedev.practice.arena.runnables.StandalonePasteRunnable;
 import xyz.refinedev.practice.arena.runnables.TheBridgePasteRunnable;
 import xyz.refinedev.practice.arena.selection.Selection;
@@ -75,43 +75,40 @@ public class ArenaCommands {
             return;
         }
 
-        Arena arena;
-
-        Arena duplicate = Arena.getByName(name);
-        if (Arena.getArenas().contains(duplicate) && duplicate != null && type.equals(ArenaType.DUPLICATE)) {
+        Arena duplicate = plugin.getArenaManager().getByName(name);
+        if (duplicate != null && plugin.getArenaManager().getArenas().contains(duplicate) && type.equals(ArenaType.DUPLICATE)) {
             if (duplicate.getType() != ArenaType.STANDALONE) {
                 player.sendMessage(CC.translate("&8[&c&lArray&8] &7You can't convert a Shared arena to a duped one."));
                 return;
             }
 
-            arena = new Arena(name);
-
+            StandaloneArena standaloneArena = new StandaloneArena(plugin, name);
             StandaloneArena sarena = (StandaloneArena) duplicate;
-            sarena.getDuplicates().add(arena);
+            sarena.getDuplicates().add(standaloneArena);
 
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7Saved a duplicate arena from &c" + name + "&8(&7#&c" + sarena.getDuplicates().size() + "&8)"));
             player.sendMessage(CC.translate("&8[&cTIP&8] &7Please note the &cDuplicate ID&7 of the arena for later use to setup its spawn points. " + "&8(&7#&c" + sarena.getDuplicates().size() + "&8)"));
         } else {
-            if (Arena.getArenas().contains(duplicate)) {
+            if (plugin.getArenaManager().getArenas().contains(duplicate)) {
                 player.sendMessage(CC.translate("&8[&c&lArray&8] &7An arena with that name already exists!"));
                 return;
             }
 
+            Arena arena;
             switch (type) {
                 case SHARED:
-                    arena = new SharedArena(name);
+                    arena = new SharedArena(plugin, name);
                     break;
-                case THEBRIDGE:
-                    arena = new TheBridgeArena(name);
+                case BRIDGE:
+                    arena = new TheBridgeArena(plugin, name);
                     break;
                 default:
-                    arena = new StandaloneArena(name);
+                    arena = new StandaloneArena(plugin, name);
             }
             arena.setActive(false);
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully created an Arena called &c" + name + "&7 of type &c" + type));
         }
-        Arena.getArenas().add(arena);
-        Arena.getArenas().forEach(Arena::save);
+        plugin.getArenaManager().getArenas().forEach(Arena::save);
     }
 
     @Command(name = "", usage = "<arena> <int>",desc = "Set an arena's fall death height")
@@ -124,8 +121,8 @@ public class ArenaCommands {
     @Command(name = "save", aliases = "export", desc = "Save Arenas to Config")
     @Require("array.arena.admin")
     public void arenaSave(@Sender CommandSender sender) {
-        Arena.getArenas().forEach(Arena::save);
-        sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully saved &c" + Arena.getArenas().size() + " &7arenas!"));
+        plugin.getArenaManager().getArenas().forEach(Arena::save);
+        sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully saved &c" + plugin.getArenaManager().getArenas().size() + " &7arenas!"));
     }
 
     @Command(name = "remove", aliases = "delete", desc = "Remove an Arena", usage = "<arena>")
@@ -137,8 +134,8 @@ public class ArenaCommands {
                 return;
             }
 
-            arena.delete();
-            Arena.getArenas().remove(arena);
+            plugin.getArenaManager().delete(arena);
+            plugin.getArenaManager().getArenas().remove(arena);
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully removed the arena &c" + arena.getDisplayName()));
         }
     }
@@ -152,32 +149,31 @@ public class ArenaCommands {
             return;
         }
 
-        
         if (amount > 15) {
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7That amount is too high, you can only place &c15 &7arenas at a time due to performance issues."));
             return;
         }
 
-        if (Arena.pasting) {
+        if (plugin.getArenaManager().isPasting()) {
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7The grid is already pasting arenas, please wait!"));
             return;
         }
 
-        if (arena.getType() == ArenaType.SHARED || arena.getType() == ArenaType.DUPLICATE || arena.getType() == ArenaType.THEBRIDGE) {
+        if (arena.getType() == ArenaType.SHARED || arena.isDuplicate() || arena.getType() == ArenaType.BRIDGE) {
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7You can't paste that type of Arena!"));
             return;
         }
 
-        Arena.setPasting(true);
+        plugin.getArenaManager().setPasting(true);
 
-        if (arena.getType() == ArenaType.THEBRIDGE) {
+        if (arena.getType() == ArenaType.BRIDGE) {
             TaskUtil.run(new TheBridgePasteRunnable(plugin, (TheBridgeArena) arena, amount));
         } else {
             TaskUtil.run(new StandalonePasteRunnable(plugin, (StandaloneArena) arena, amount));
         }
 
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Pasting...."));
-        Arena.getArenas().forEach(Arena::save);
+        plugin.getArenaManager().getArenas().forEach(Arena::save);
     }
 
     @Command(name = "reload", aliases = "refresh", desc = "Reload arenas")
@@ -186,8 +182,8 @@ public class ArenaCommands {
         long st = System.currentTimeMillis();
 
         Match.getMatches().forEach(Match::cleanup);
-        Arena.getArenas().clear();
-        Arena.preload();
+        plugin.getArenaManager().getArenas().clear();
+        plugin.getArenaManager().init();
 
         long et = System.currentTimeMillis();
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Arenas were reloaded in &c" + (et - st) + " ms&7."));
@@ -200,7 +196,7 @@ public class ArenaCommands {
         player.sendMessage(CC.translate( "&cArray &7» All Arenas"));
         player.sendMessage(CC.CHAT_BAR);
 
-        if (Arena.getArenas().isEmpty()) {
+        if (plugin.getArenaManager().getArenas().isEmpty()) {
             player.sendMessage("");
             player.sendMessage(CC.GRAY + CC.ITALIC + "There are no arenas setup.");
             player.sendMessage("");
@@ -208,21 +204,21 @@ public class ArenaCommands {
             return;
         }
 
-        for (Arena arena : Arena.getArenas()) {
+        for (Arena arena : plugin.getArenaManager().getArenas()) {
 
             String type;
             switch (arena.getType()) {
                 case STANDALONE:
                     type = "Standalone";
                     break;
-                case THEBRIDGE:
+                case BRIDGE:
                     type = "TheBridge";
                     break;
                 default:
                     type = "Shared";
             }
 
-            if (arena.getType().equals(ArenaType.DUPLICATE)) continue;
+            if (arena.isDuplicate()) continue;
 
             if (arena.getType().equals(ArenaType.STANDALONE)) {
                 StandaloneArena standaloneArena = (StandaloneArena) arena;
@@ -255,11 +251,11 @@ public class ArenaCommands {
         Rating rating = arena.getRating();
         int total = rating.getAverage() + rating.getGood() + rating.getDecent() + rating.getOkay() + rating.getAverage() + rating.getTerrible();
 
-        String terrible = plugin.getRatingsManager().getBar(rating.getTerrible(), total);
-        String average = plugin.getRatingsManager().getBar(rating.getAverage(), total);
-        String okay = plugin.getRatingsManager().getBar(rating.getOkay(), total);
-        String decent = plugin.getRatingsManager().getBar(rating.getDecent(), total);
-        String good = plugin.getRatingsManager().getBar(rating.getGood(), total);
+        String terrible = plugin.getArenaManager().getBar(rating.getTerrible(), total);
+        String average = plugin.getArenaManager().getBar(rating.getAverage(), total);
+        String okay = plugin.getArenaManager().getBar(rating.getOkay(), total);
+        String decent = plugin.getArenaManager().getBar(rating.getDecent(), total);
+        String good = plugin.getArenaManager().getBar(rating.getGood(), total);
 
         sender.sendMessage(CC.CHAT_BAR);
         sender.sendMessage(CC.translate("&cArray &7» " + arena.getDisplayName() + "'s Ratings"));
@@ -296,7 +292,7 @@ public class ArenaCommands {
     @Require("array.arena.setup")
     public void arenaSpawn(@Sender Player player, Arena arena, int pos) {
         
-        if (arena.getType() != ArenaType.THEBRIDGE) {
+        if (arena.getType() != ArenaType.BRIDGE) {
             Location loc=player.getLocation().clone();
 
             if (pos == 1) {
@@ -319,7 +315,7 @@ public class ArenaCommands {
     @Require("array.arena.setup")
     public void arenaBridgeSpawn(@Sender Player player, Arena arena, String pos) {
         
-        if (arena.getType() == ArenaType.THEBRIDGE) {
+        if (arena.getType() == ArenaType.BRIDGE) {
             Location loc = player.getLocation().clone();
 
             if (pos.equals("red")) {
@@ -363,7 +359,7 @@ public class ArenaCommands {
             return;
         }
 
-        if (arena.getType() != ArenaType.THEBRIDGE) {
+        if (arena.getType() != ArenaType.BRIDGE) {
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7That arena is not a &cTheBridge &7arena."));
             return;
         }
@@ -399,7 +395,7 @@ public class ArenaCommands {
             return;
         }
 
-        if (arena.getType() != ArenaType.THEBRIDGE) {
+        if (arena.getType() != ArenaType.BRIDGE) {
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7That arena is not a &cTheBridge &7arena."));
             return;
         }
@@ -484,8 +480,9 @@ public class ArenaCommands {
             return;
         }
 
-        if (!arena.getKits().contains(kit.getName()))
-            arena.getKits().add(kit.getName());
+        if (!arena.getKits().contains(kit)) {
+            arena.getKits().add(kit);
+        }
 
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully added the kit &c" + kit.getName() + "&7 to &c" + arena.getName()));
         arena.save();
@@ -494,14 +491,14 @@ public class ArenaCommands {
     @Command(name = "addbuildkits", aliases = "kits addbuild", usage = "<arena>", desc = "Add build kits to an arena")
     @Require("array.arena.kit")
     public void arenaBuildKit(@Sender CommandSender player, Arena arena) {
-        for ( Kit kit : Kit.getKits() ) {
+        for ( Kit kit : plugin.getKitManager().getKits() ) {
             if (kit == null) {
                 player.sendMessage(CC.translate("&8[&c&lArray&8] &7There are no kits setup."));
                 return;
             }
             if (kit.getGameRules().isBuild()) {
-                if (!arena.getKits().contains(kit.getName())) {
-                    arena.getKits().add(kit.getName());
+                if (!arena.getKits().contains(kit)) {
+                    arena.getKits().add(kit);
                 }
                 player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully added the kit &c" + kit.getName() + "&7 to &c" + arena.getName()));
             }
@@ -518,7 +515,7 @@ public class ArenaCommands {
             return;
         }
 
-        for ( Kit kit : Kit.getKits() ) {
+        for ( Kit kit : plugin.getKitManager().getKits() ) {
             if (kit == null) {
                 player.sendMessage(CC.translate("&8[&c&lArray&8] &7There are no kits."));
                 return;
@@ -527,7 +524,10 @@ public class ArenaCommands {
                 return;
             }
 
-            if (!arena.getKits().contains(kit.getName())) arena.getKits().add(kit.getName());
+            if (!arena.getKits().contains(kit.getName())) {
+                arena.getKits().add(kit);
+            }
+
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully added the kit &c" + kit.getName() + "&7 to &c" + arena.getName() + "&7."));
         }
         arena.save();
@@ -563,14 +563,14 @@ public class ArenaCommands {
         player.sendMessage(CC.translate( "&cArray &7» " + arena.getName() + "'s kits"));
         player.sendMessage(CC.CHAT_BAR);
 
-        for ( String string : arena.getKits() ) {
-            Kit kit = Kit.getByName(string);
-            if (kit == null) {
-                player.sendMessage("");
-                player.sendMessage(CC.GRAY + CC.ITALIC + "There are no kits for this arena.");
-                player.sendMessage("");
-                return;
-            }
+        if (arena.getKits().isEmpty()) {
+            player.sendMessage("");
+            player.sendMessage(CC.GRAY + CC.ITALIC + "There are no kits for this arena.");
+            player.sendMessage("");
+            return;
+        }
+
+        for ( Kit kit : arena.getKits() ) {
             player.sendMessage(CC.GRAY + " • " + kit.getName());
         }
 

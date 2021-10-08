@@ -1,8 +1,10 @@
 package xyz.refinedev.practice.task;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.util.chat.Clickable;
@@ -19,11 +21,14 @@ import java.util.List;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class PartyPublicTask extends BukkitRunnable {
+
+    private final Array plugin;
 
     @Override
     public void run() {
-        for (Party party : Party.getParties()) {
+        for (Party party : plugin.getPartyManager().getParties()) {
             if (party == null || party.isDisbanded() || party.getPlayers().isEmpty() || party.getLeader() == null ) return;
 
             if (party.isPublic()) {

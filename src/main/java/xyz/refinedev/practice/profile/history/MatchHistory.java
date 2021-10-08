@@ -22,28 +22,31 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class MatchHistory {
 
+    private final Array plugin;
+
     private final Date date;
     private final MatchSnapshot playerSnapshot;
     private final MatchSnapshot opponentSnapshot;
 
     private final Kit kit;
-    private boolean won;
-    private boolean ranked;
+    private final boolean won;
+    private final boolean ranked;
 
-    private int winnerChangedELO;
-    private int looserChangedELO;
+    private final int winnerChangedELO;
+    private final int looserChangedELO;
 
     /**
      * Generate a match history using a {@link Document}
      *
      * @param document The match history document from mongo
      */
-    public MatchHistory(Document document) {
+    public MatchHistory(Array plugin, Document document) {
+        this.plugin = plugin;
         this.date = document.getDate("date");
         this.playerSnapshot = Array.GSON.fromJson(document.getString("player"), MatchSnapshot.class);
         this.opponentSnapshot = Array.GSON.fromJson(document.getString("opponent"), MatchSnapshot.class);
 
-        this.kit = Kit.getByName(document.getString("kit"));
+        this.kit = plugin.getKitManager().getByName(document.getString("kit"));
         this.won = document.getBoolean("won");
         this.ranked = document.getBoolean("ranked");
 

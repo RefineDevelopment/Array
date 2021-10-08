@@ -60,7 +60,8 @@ public class StandalonePasteRunnable extends DuplicateArenaRunnable {
         CustomLocation a = new CustomLocation(this.copiedArena.getSpawn1().getWorld(), aX, this.copiedArena.getSpawn1().getY(), aZ, this.copiedArena.getSpawn1().getYaw(), this.copiedArena.getSpawn1().getPitch());
         CustomLocation b = new CustomLocation(this.copiedArena.getSpawn1().getWorld(), bX, this.copiedArena.getSpawn2().getY(), bZ, this.copiedArena.getSpawn2().getYaw(), this.copiedArena.getSpawn2().getPitch());
 
-        Arena duplicate = new Arena(this.copiedArena.getName() + "#" + arenaId);
+        StandaloneArena duplicate = new StandaloneArena(plugin, this.copiedArena.getName() + "#" + arenaId);
+        duplicate.setDuplicate(true);
         duplicate.setSpawn1(a.toBukkitLocation());
         duplicate.setSpawn2(b.toBukkitLocation());
         duplicate.setMax(max.toBukkitLocation());
@@ -68,7 +69,7 @@ public class StandalonePasteRunnable extends DuplicateArenaRunnable {
         duplicate.setDisplayName(this.copiedArena.getDisplayName());
 
         this.copiedArena.getDuplicates().add(duplicate);
-        Arena.getArenas().add(duplicate);
+        plugin.getArenaManager().getArenas().add(duplicate);
     }
 
     public void message() {
@@ -78,7 +79,7 @@ public class StandalonePasteRunnable extends DuplicateArenaRunnable {
             }
         }
         plugin.logger("&8[&c&lArray&8] &7Finished pasting &c" + copiedArena.getName() + "&7's " + amount + " &7duplicate arenas.");
-        Arena.setPasting(false);
-        Arena.getArenas().forEach(Arena::save);
+        plugin.getArenaManager().setPasting(false);
+        plugin.getArenaManager().getArenas().forEach(Arena::save);
     }
 }

@@ -75,10 +75,10 @@ public class QueueThread extends Thread {
                                 if (firstClan == secondClan) continue;
                             }
 
-                            if (Arena.getArenas().isEmpty()) continue;
+                            if (plugin.getArenaManager().getArenas().isEmpty()) continue;
 
                             // Find arena
-                            arena = Arena.getRandom(queue.getKit());
+                            arena = plugin.getArenaManager().getByKit(queue.getKit());
 
                             if (arena == null || !arena.isSetup() || arena.isActive()) continue;
 

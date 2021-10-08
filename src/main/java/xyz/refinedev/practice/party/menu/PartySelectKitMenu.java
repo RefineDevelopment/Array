@@ -75,7 +75,7 @@ public class PartySelectKitMenu extends Menu {
             }
 
             Party party = profile.getParty();
-            Arena arena = Arena.getRandom(this.kit);
+            Arena arena = plugin.getArenaManager().getByKit(this.kit);
 
             if (arena == null) {
                 player.sendMessage(CC.RED + "There are no available arenas.");
@@ -102,7 +102,7 @@ public class PartySelectKitMenu extends Menu {
                 Team teamB = new Team(new TeamPlayer(party.getPlayers().get(1)));
 
                 List<Player> shuffled = new ArrayList<>(party.getPlayers());
-                //Shuffling twice cuz noobs saying its not random
+                //Shuffling twice cuz noobs saying its not RANDOM
                 Collections.shuffle(shuffled);
                 Collections.shuffle(shuffled);
 

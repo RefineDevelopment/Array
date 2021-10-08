@@ -4,7 +4,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.bson.Document;
 import org.bukkit.Effect;
 import org.bukkit.Material;
@@ -31,7 +30,6 @@ import java.util.UUID;
  */
 
 @Getter
-@RequiredArgsConstructor
 public class KillEffectManager {
 
     private final Array plugin;
@@ -39,6 +37,12 @@ public class KillEffectManager {
     private final BasicConfigurationFile config;
 
     private final List<KillEffect> killEffects = new ArrayList<>();
+
+    public KillEffectManager(Array plugin) {
+        this.plugin = plugin;
+        this.collection = plugin.getMongoManager().getKillEffects();
+        this.config = plugin.getKillEffectsConfig();
+    }
 
     /**
      * Initiate and load are Kill Effects
@@ -161,8 +165,8 @@ public class KillEffectManager {
         String serialized = Array.GSON.toJson(killEffect);
         Document document = new Document();
 
-        document.put("killEffect", serialized);
         document.put("_id", killEffect.getUniqueId());
+        document.put("killEffect", serialized);
 
         plugin.submitToThread(() -> collection.replaceOne(Filters.eq("_id", killEffect.getUniqueId().toString()), document, new ReplaceOptions().upsert(true)));
     }

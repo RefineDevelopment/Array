@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.arena.meta;
+package xyz.refinedev.practice.arena.rating;
 
 import lombok.*;
 import xyz.refinedev.practice.arena.Arena;
@@ -13,16 +13,17 @@ import xyz.refinedev.practice.arena.Arena;
  */
 
 @Getter @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class Rating {
 
     private final Arena arena;
-    protected int terrible;
-    protected int average;
-    protected int decent;
-    protected int okay;
-    protected int good;
+    private int terrible, average, decent, okay, good;
 
+    /**
+     * Increment the rating integer for the arena
+     *
+     * @param type {@link RatingType} the type of rating to be incremented
+     */
     public void recordVote(RatingType type) {
         switch (type) {
             case TERRIBLE: {

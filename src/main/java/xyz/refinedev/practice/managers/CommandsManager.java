@@ -6,7 +6,7 @@ import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.ArenaProvider;
 import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.arena.ArenaTypeProvider;
-import xyz.refinedev.practice.arena.meta.RatingType;
+import xyz.refinedev.practice.arena.rating.RatingType;
 import xyz.refinedev.practice.arena.meta.RatingTypeProvider;
 import xyz.refinedev.practice.clan.ClanProfileProvider;
 import xyz.refinedev.practice.clan.meta.ClanProfile;

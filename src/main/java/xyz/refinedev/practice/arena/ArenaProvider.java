@@ -52,7 +52,7 @@ public class ArenaProvider extends DrinkProvider<Arena> {
     @Override
     public List<String> getSuggestions(@NotNull String prefix) {
         final String finalPrefix = prefix;
-        return Arena.getArenas().stream().filter(arena -> !arena.getType().equals(ArenaType.DUPLICATE)).map(Arena::getName).filter(s -> finalPrefix.length() == 0 || s.startsWith(finalPrefix)).collect(Collectors.toList());
+        return plugin.getArenaManager().getArenas().stream().filter(arena -> !arena.isDuplicate()).map(Arena::getName).filter(s -> finalPrefix.length() == 0 || s.startsWith(finalPrefix)).collect(Collectors.toList());
     }
 }
 

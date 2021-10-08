@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.event.Event;
+import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.event.impl.spleef.Spleef;
 import xyz.refinedev.practice.profile.Profile;
@@ -108,7 +109,7 @@ public class EventManager {
 		config.save();
 	}
 
-	public boolean hostByType(Player player, EventType type) {
+	public boolean hostByType(Player player, EventType type, EventTeamSize size) {
 		if (!player.hasPermission("*") && !player.isOp() && !player.hasPermission("array.event." + type.getName().toLowerCase())) {
 			player.sendMessage(Locale.EVENT_NO_PERMISSION.toString().replace("<store>", plugin.getConfigHandler().getSTORE()));
 			return false;

@@ -38,13 +38,13 @@ public class TournamentManager {
      *
      * @param kit kit to create the tournament with
      */
-    public void createTournament(Player player, Kit kit, int playersToPlay, TournamentType tournamentType) {
+    public void createTournament(Player player, Kit kit, int max, TournamentType tournamentType) {
         switch (tournamentType) {
             case SOLO: {
-                this.currentTournament = new SoloTournament(plugin, player.getName(), playersToPlay, kit);
+                this.currentTournament = new SoloTournament(plugin, player.getName(), max, kit);
             }
             case TEAM: {
-                this.currentTournament = new TeamTournament(plugin, player.getName(), playersToPlay, kit);
+                this.currentTournament = new TeamTournament(plugin, player.getName(), max, kit);
             }
         }
 

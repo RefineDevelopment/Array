@@ -40,7 +40,7 @@ BUTTONS:
       - ' &fthe last player alive'
       - ''
       - '&7&o(( Left-Click to Join ))'
-      - '&7&o(( Right-Click to Host ))'
+      - '&7&o(( Right-Click to Select Size ))'
   BRACKETS:
     NAME: '&c&lBrackets'
     SLOT: 3
@@ -67,7 +67,7 @@ BUTTONS:
       - ' &fduels. The last player wins'
       - ''
       - '&7&o(( Left-Click to Join ))'
-      - '&7&o(( Right-Click to Host ))'
+      - '&7&o(( Right-Click to Select Size ))'
   LMS:
     NAME: '&c&lLMS'
     SLOT: 4
@@ -252,7 +252,7 @@ BUTTONS:
       - ' &f1v1 Duels with guns!'
       - ''
       - '&7&o(( Left-Click to Join ))'
-      - '&7&o(( Right-Click to Host ))'
+      - '&7&o(( Right-Click to Select Size ))'
   KOTH:
     NAME: '&c&lKoTH'
     SLOT: 15

@@ -32,7 +32,7 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
 
         Map<Integer, Button> buttons = new HashMap<>();
 
-        for ( Arena arena : Arena.getArenas()) {
+        for ( Arena arena : plugin.getArenaManager().getArenas()) {
             if (!arena.isSetup()) {
                 continue;
             }
@@ -49,9 +49,8 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
                     continue;
                 }
 
-                if (arena.getType() == ArenaType.DUPLICATE) {
-                    continue;
-                }
+                if (arena.isDuplicate()) continue;
+
 
             buttons.put(buttons.size(), new SelectArenaButton(arena));
         }

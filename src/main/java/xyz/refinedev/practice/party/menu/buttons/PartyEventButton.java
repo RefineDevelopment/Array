@@ -97,7 +97,7 @@ public class PartyEventButton extends Button {
             return;
         }
 
-        Arena arena = Arena.getRandom(Kit.getHCFTeamFight());
+        Arena arena = plugin.getArenaManager().getByKit(plugin.getKitManager().getTeamFight());
 
         if (arena == null) {
             player.sendMessage(Locale.ERROR_NO_ARENAS.toString());

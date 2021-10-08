@@ -142,7 +142,7 @@ public class ArrayCommands {
 
         TaskUtil.runAsync(() -> {
             Kit.getKits().forEach(Kit::save);
-            Arena.getArenas().forEach(Arena::save);
+            plugin.getArenaManager().getArenas().forEach(Arena::save);
         });
 
         plugin.getLeaderboardsManager().loadGlobalLeaderboards();
@@ -241,7 +241,7 @@ public class ArrayCommands {
     @Require("array.listeners.admin")
     public void clearLoadouts(@Sender CommandSender player, String type, String reach) {
         if (reach.equalsIgnoreCase("global")) {
-            Kit kitType = Kit.getByName(type);
+            Kit kitType = plugin.getKitManager().getByName(type);
             if (kitType != null) {
                 for ( Profile profile : plugin.getProfileManager().getProfiles().values() ) {
                     for ( KitInventory kitInventory : profile.getStatisticsData().get(kitType).getLoadouts() ) {
@@ -274,7 +274,7 @@ public class ArrayCommands {
         } else if (Bukkit.getPlayer(reach) == null || !Bukkit.getPlayer(reach).isOnline()) {
             player.sendMessage(CC.translate("&8[&cArray&8] &7That player is offline or does not exist."));
         } else {
-            Kit kitType = Kit.getByName(type);
+            Kit kitType = plugin.getKitManager().getByName(type);
             if (kitType != null) {
                 Player target = Bukkit.getPlayer(reach);
                 Profile profile = plugin.getProfileManager().getByPlayer(target);

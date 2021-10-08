@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum EventTeamSize {
 
+    SOLO(0, 100, 1),
     DOUBLES(50, 100, 2),
     TRIPLES(25, 75,3),
     QUADS(15, 60, 4);

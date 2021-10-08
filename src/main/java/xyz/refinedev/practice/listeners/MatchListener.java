@@ -678,7 +678,7 @@ public class MatchListener implements Listener {
 
                     event.setCancelled(true);
                 } else {
-                    profile.setEnderpearlCooldown(new Cooldown(16000L));
+                    plugin.getProfileManager().setEnderpearlCooldown(profile, new Cooldown(16000L));
                     profile.getMatch().onPearl(shooter, enderPearl);
                 }
             }
@@ -701,7 +701,7 @@ public class MatchListener implements Listener {
 
                     event.setCancelled(true);
                 } else {
-                    profile.setBowCooldown(new Cooldown(TimeUtil.parseTime(plugin.getConfigHandler().getBOW_COOLDOWN() + "s")));
+                    plugin.getProfileManager().setBowCooldown(profile, new Cooldown(TimeUtil.parseTime(plugin.getConfigHandler().getBOW_COOLDOWN() + "s")));
                 }
             }
         }
