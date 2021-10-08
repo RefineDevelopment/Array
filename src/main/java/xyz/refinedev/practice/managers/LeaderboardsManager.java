@@ -5,6 +5,7 @@ import com.mongodb.client.model.Sorts;
 import lombok.Getter;
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.events.leaderboards.GlobalLeaderboardsUpdateEvent;
@@ -48,7 +49,7 @@ public class LeaderboardsManager {
     public void init() {
         //Load the leaderboards so that they aren't empty until the
         //the task is ran after 3 minutes
-        Kit.getKits().forEach(this::loadKitLeaderboards);
+        plugin.getKitManager().getKits().forEach(this::loadKitLeaderboards);
         this.loadClanLeaderboards();
         this.loadGlobalLeaderboards();
 
@@ -62,6 +63,10 @@ public class LeaderboardsManager {
         clanTask.runTaskTimer(plugin, 180 * 20L, 180 * 20L);
     }
 
+    /**
+     * Cancel all leaderboard tasks
+     * This method is usually called on {@link JavaPlugin#onDisable()}
+     */
     public void shutdown() {
         globalTask.cancel();
         kitTask.cancel();

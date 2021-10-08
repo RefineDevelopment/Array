@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.managers;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -9,8 +10,10 @@ import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.event.EventType;
+import xyz.refinedev.practice.event.impl.parkour.Parkour;
 import xyz.refinedev.practice.event.impl.spleef.Spleef;
-import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.event.impl.sumo.solo.SumoSolo;
+import xyz.refinedev.practice.event.impl.sumo.team.SumoTeam;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.menu.Button;
@@ -20,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
+@RequiredArgsConstructor
 public class EventManager {
 
 	private final Array plugin;
@@ -37,11 +41,6 @@ public class EventManager {
 	private Location OITCSpectator;
 
 	private String sumoKB = "default", gulagKB = "default", omaKB = "default", spleefKB = "default";
-
-    public EventManager(Array plugin) {
-        this.plugin = plugin;
-        this.config = plugin.getEventsConfig();
-    }
 
     public void setActiveEvent(Event event) {
 		plugin.getServer().getOnlinePlayers().stream().map(plugin.getProfileManager()::getByPlayer).filter(profile -> profile.isInLobby() && !profile.getKitEditor().isActive()).forEach(plugin.getProfileManager()::refreshHotbar);
@@ -115,22 +114,36 @@ public class EventManager {
 			return false;
 		}
 
+		if (this.getActiveEvent() != null) {
+			player.sendMessage(Locale.EVENT_ON_GOING.toString());
+			return false;
+		}
+		if (!this.getCooldown().hasExpired()) {
+			player.sendMessage(Locale.EVENT_COOLDOWN_ACTIVE.toString().replace("<expire_time>", this.getCooldown().getTimeLeft()));
+			return false;
+		}
+
 		Button.playNeutral(player);
 
 		switch (type) {
-			case PARKOUR: {
-
-				return true;
-			}
-			case KOTH: {
-				return true;
-			}
-			case LMS: {
+			case SUMO: {
+				if (size.equals(EventTeamSize.SOLO)) {
+					SumoSolo sumoSolo = new SumoSolo(plugin, player);
+					this.setActiveEvent(sumoSolo);
+					return true;
+				}
+				SumoTeam sumoTeam = new SumoTeam(plugin, player, size);
+				this.setActiveEvent(sumoTeam);
 				return true;
 			}
 			case SPLEEF: {
 				Spleef spleef = new Spleef(plugin, player);
 				this.setActiveEvent(spleef);
+				return true;
+			}
+			case PARKOUR: {
+				Parkour parkour = new Parkour(plugin, player);
+				this.setActiveEvent(parkour);
 				return true;
 			}
 		}
@@ -139,14 +152,11 @@ public class EventManager {
 
 	public Location getSpawn1(Event event) {
 		switch (event.getType()) {
-			case SUMO_SOLO:
-			case SUMO_TEAM:
+			case SUMO:
 				return sumoSpawn1;
-			case BRACKETS_SOLO:
-			case BRACKETS_TEAM:
+			case BRACKETS:
 				return bracketsSpawn1;
-			case GULAG_SOLO:
-			case GULAG_TEAM:
+			case GULAG:
 				return gulagSpawn1;
 		}
 		return null;
@@ -154,14 +164,11 @@ public class EventManager {
 
 	public Location getSpawn2(Event event) {
 		switch (event.getType()) {
-			case SUMO_SOLO:
-			case SUMO_TEAM:
+			case SUMO:
 				return sumoSpawn2;
-			case BRACKETS_SOLO:
-			case BRACKETS_TEAM:
+			case BRACKETS:
 				return bracketsSpawn2;
-			case GULAG_SOLO:
-			case GULAG_TEAM:
+			case GULAG:
 				return gulagSpawn2;
 		}
 		return null;
@@ -183,14 +190,11 @@ public class EventManager {
 
 	public Location getSpectator(Event event) {
 		switch (event.getType()) {
-			case SUMO_SOLO:
-			case SUMO_TEAM:
+			case SUMO:
 				return sumoSpectator;
-			case BRACKETS_SOLO:
-			case BRACKETS_TEAM:
+			case BRACKETS:
 				return bracketsSpectator;
-			case GULAG_SOLO:
-			case GULAG_TEAM:
+			case GULAG:
 				return gulagSpectator;
 			case OITC:
 				return OITCSpectator;

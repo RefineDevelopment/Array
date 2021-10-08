@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
@@ -23,6 +24,7 @@ import xyz.refinedev.practice.util.menu.Button;
 @RequiredArgsConstructor
 public class EventSizeButton extends Button {
 
+    private final Array plugin = this.getPlugin();
     private final EventType eventType;
     private final EventTeamSize teamSize;
     private final FoldersConfigurationFile config;
@@ -39,8 +41,8 @@ public class EventSizeButton extends Button {
         Material material = Material.valueOf(config.getString(path + "MATERIAL"));
         ItemBuilder itemBuilder = new ItemBuilder(material);
         itemBuilder.name(config.getString(path + "NAME"));
-        if (config.contains(path + "DURABILITY")) {
-            itemBuilder.durability(config.getInteger(path + "DURABILITY"));
+        if (config.contains(path + "DATA")) {
+            itemBuilder.durability(config.getInteger(path + "DATA"));
         }
         return itemBuilder.build();
     }
@@ -53,6 +55,9 @@ public class EventSizeButton extends Button {
      * @param clickType {@link ClickType}
      */
     public void clicked(Player player, ClickType clickType) {
-
+        player.closeInventory();
+        if (!plugin.getEventManager().hostByType(player, eventType, teamSize)) {
+            Button.playFail(player);
+        }
     }
 }

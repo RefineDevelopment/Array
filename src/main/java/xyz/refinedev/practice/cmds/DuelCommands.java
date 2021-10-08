@@ -14,7 +14,7 @@ import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
-import xyz.refinedev.practice.match.types.HCFMatch;
+import xyz.refinedev.practice.match.types.kit.TeamFightMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.hook.core.CoreAdapter;
 import xyz.refinedev.practice.queue.QueueType;
@@ -179,7 +179,7 @@ public class DuelCommands {
                 }
             }
             if (request.getKit().equals(plugin.getKitManager().getTeamFight())) {
-                match = new HCFMatch(teamA, teamB, arena);
+                match = new TeamFightMatch(teamA, teamB, arena);
             } else {
                 match = plugin.getMatchManager().createTeamKitMatch(teamA, teamB, request.getKit(), arena);
             }

@@ -28,7 +28,7 @@ public class QueueThread extends Thread {
     public void run() {
         while (true) {
             try {
-                for (Queue queue : plugin.getQueueManager().getQueueMap().values()) {
+                for (Queue queue : plugin.getQueueManager().getQueues()) {
                     queue.getPlayers().forEach(QueueProfile::tickRange);
 
                     if (queue.getPlayers().size() < 2) {

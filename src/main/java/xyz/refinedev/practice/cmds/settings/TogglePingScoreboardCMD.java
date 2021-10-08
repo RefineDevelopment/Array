@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.settings.meta.Settings;
+import xyz.refinedev.practice.profile.settings.ProfileSettings;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 
@@ -25,7 +25,7 @@ public class TogglePingScoreboardCMD {
     @Command(name = "", desc = "Toggle Ping on Scoreboard for your Profile")
     public void toggle(@Sender Player player) {
         Profile profile = plugin.getProfileManager().getByPlayer(player);
-        Settings settings = profile.getSettings();
+        ProfileSettings settings = profile.getSettings();
 
         settings.setPingScoreboard(!settings.isPingScoreboard());
 

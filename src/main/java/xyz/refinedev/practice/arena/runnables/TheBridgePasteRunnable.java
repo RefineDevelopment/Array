@@ -5,7 +5,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.arena.impl.TheBridgeArena;
+import xyz.refinedev.practice.arena.impl.BridgeArena;
 import xyz.refinedev.practice.arena.cuboid.Cuboid;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.location.CustomLocation;
@@ -22,13 +22,13 @@ import xyz.refinedev.practice.util.location.CustomLocation;
 public class TheBridgePasteRunnable extends DuplicateArenaRunnable{
 
     private final Array plugin;
-    private final TheBridgeArena copiedArena;
+    private final BridgeArena copiedArena;
 
     private int times;
     private int amount;
     private int arenaId = 0;
 
-    public TheBridgePasteRunnable(Array plugin, TheBridgeArena copiedArena, int copyAmount) {
+    public TheBridgePasteRunnable(Array plugin, BridgeArena copiedArena, int copyAmount) {
         super(plugin, copiedArena, 1000, 1000, 500, 500);
 
         this.plugin = plugin;
@@ -99,7 +99,7 @@ public class TheBridgePasteRunnable extends DuplicateArenaRunnable{
         Cuboid redCuboid = new Cuboid(world, cuboidRedX1, cuboidRedY1, cuboidRedZ1, cuboidRedX2, cuboidRedY2, cuboidRedZ2);
         Cuboid blueCuboid = new Cuboid(world, cuboidBlueX1, cuboidBlueY1, cuboidBlueZ1, cuboidBlueX2, cuboidBlueY2, cuboidBlueZ2);
 
-        TheBridgeArena duplicate = new TheBridgeArena(plugin, this.copiedArena.getName() + "#" + arenaId);
+        BridgeArena duplicate = new BridgeArena(plugin, this.copiedArena.getName() + "#" + arenaId);
 
         duplicate.setSpawn1(a.toBukkitLocation());
         duplicate.setSpawn2(b.toBukkitLocation());
@@ -126,7 +126,7 @@ public class TheBridgePasteRunnable extends DuplicateArenaRunnable{
             }
         }
         plugin.logger("&8[&c&lArray&8] &7Finished pasting &c" + copiedArena.getName() + "&7's " + amount + " &7duplicate arenas.");
-        Arena.setPasting(false);
+        plugin.getArenaManager().setPasting(false);
         plugin.getArenaManager().getArenas().forEach(Arena::save);
     }
 }

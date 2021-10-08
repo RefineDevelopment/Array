@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.match.types;
+package xyz.refinedev.practice.match.types.kit;
 
 import lombok.Getter;
 import org.bukkit.Location;
@@ -9,20 +9,21 @@ import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.managers.PvPClassManager;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
+import xyz.refinedev.practice.match.types.TeamMatch;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 
 @Getter
-public class HCFMatch extends TeamMatch {
+public class TeamFightMatch extends TeamMatch {
 
     private final Array plugin = Array.getInstance();
 
     private final Team teamA;
     private final Team teamB;
 
-    public HCFMatch(Team teamA, Team teamB, Arena arena) {
-        super(teamA, teamB, Kit.getHCFTeamFight(), arena);
+    public TeamFightMatch(Team teamA, Team teamB, Arena arena) {
+        super(teamA, teamB, Array.getInstance().getKitManager().getTeamFight(), arena);
 
         this.teamA = teamA;
         this.teamB = teamB;
@@ -38,7 +39,7 @@ public class HCFMatch extends TeamMatch {
 
         PlayerUtil.reset(player);
 
-        player.setNoDamageTicks(Kit.getHCFTeamFight().getGameRules().getHitDelay());
+        player.setNoDamageTicks(this.getKit().getGameRules().getHitDelay());
 
         Team team = getTeam(player);
 
@@ -75,7 +76,7 @@ public class HCFMatch extends TeamMatch {
 
     @Override
     public void onStart() {
-        this.getPlayers().forEach(player -> plugin.getSpigotHandler().kitKnockback(player, Kit.getHCFTeamFight()));
+        this.getPlayers().forEach(player -> plugin.getSpigotHandler().kitKnockback(player, this.getKit()));
     }
 
 }

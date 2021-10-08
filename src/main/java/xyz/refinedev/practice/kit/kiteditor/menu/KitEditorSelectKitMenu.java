@@ -29,7 +29,7 @@ public class KitEditorSelectKitMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        Kit.getKits().forEach(kit -> {
+        plugin.getKitManager().getKits().forEach(kit -> {
             if (kit.isEnabled()) {
                 if (kit.getGameRules().isEditable()) {
                     buttons.put(buttons.size(), new KitDisplayButton(kit));

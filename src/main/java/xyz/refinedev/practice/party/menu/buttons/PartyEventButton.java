@@ -7,11 +7,10 @@ import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
-import xyz.refinedev.practice.match.types.HCFMatch;
+import xyz.refinedev.practice.match.types.kit.TeamFightMatch;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.party.enums.PartyEventType;
 import xyz.refinedev.practice.party.menu.PartySelectKitMenu;
@@ -110,7 +109,7 @@ public class PartyEventButton extends Button {
         List<Player> players = new ArrayList<>(party.getPlayers());
         Collections.shuffle(players);
 
-        Match match = new HCFMatch(teamA, teamB, arena);
+        Match match = new TeamFightMatch(teamA, teamB, arena);
 
         //Add players to the newly created teams
         for ( Player otherPlayer : players ) {

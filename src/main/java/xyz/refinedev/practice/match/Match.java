@@ -22,7 +22,7 @@ import xyz.refinedev.practice.kit.KitGameRules;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.FFAMatch;
-import xyz.refinedev.practice.match.types.HCFMatch;
+import xyz.refinedev.practice.match.types.kit.TeamFightMatch;
 import xyz.refinedev.practice.match.types.SoloMatch;
 import xyz.refinedev.practice.match.types.TeamMatch;
 import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
@@ -746,12 +746,12 @@ public abstract class Match {
 
     /**
      * This method is returns true if the
-     * current match related to {@link HCFMatch}
+     * current match related to {@link TeamFightMatch}
      *
      * @return {@link Boolean}
      */
     public boolean isHCFMatch() {
-        return this.isTeamMatch() && this instanceof HCFMatch;
+        return this.isTeamMatch() && this instanceof TeamFightMatch;
     }
 
     /**

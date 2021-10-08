@@ -16,7 +16,7 @@ import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.arena.cuboid.Cuboid;
 import xyz.refinedev.practice.arena.impl.SharedArena;
 import xyz.refinedev.practice.arena.impl.StandaloneArena;
-import xyz.refinedev.practice.arena.impl.TheBridgeArena;
+import xyz.refinedev.practice.arena.impl.BridgeArena;
 import xyz.refinedev.practice.arena.rating.Rating;
 import xyz.refinedev.practice.arena.rating.RatingType;
 import xyz.refinedev.practice.kit.Kit;
@@ -30,6 +30,8 @@ import xyz.refinedev.practice.util.location.LocationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -73,7 +75,7 @@ public class ArenaManager {
                     break;
                 }
                 case BRIDGE: {
-                    TheBridgeArena bridgeArena = new TheBridgeArena(plugin, name);
+                    BridgeArena bridgeArena = new BridgeArena(plugin, name);
                     this.load(bridgeArena);
                     this.calculateRatings(bridgeArena);
                     this.loadDuplicates(bridgeArena);
@@ -81,6 +83,7 @@ public class ArenaManager {
                 }
             }
         }
+        plugin.logger("&7Loaded &c" + arenas.size() + " &7Arena(s)!");
     }
 
     /**
@@ -107,8 +110,13 @@ public class ArenaManager {
             arena.setDisplayIcon(new ItemStack(Material.PAPER));
         }
 
+        if (config.contains(path + ".kits") && !config.getStringList(path + ".kits").isEmpty()) {
+            List<String> kitNames = config.getStringList(path + ".kits");
+            arena.setKits(kitNames.stream().map(plugin.getKitManager()::getByName).filter(Objects::nonNull).collect(Collectors.toList()));
+        }
+
         if (arena.isBridge()) {
-            TheBridgeArena bridgeArena = (TheBridgeArena) arena;
+            BridgeArena bridgeArena = (BridgeArena) arena;
 
             Location location1;
             Location location2;
@@ -129,6 +137,7 @@ public class ArenaManager {
             location2 = LocationUtil.deserialize(config.getString(path + ".redPortal.location2"));
             bridgeArena.setRedPortal(new Cuboid(location1, location2));
         }
+        this.arenas.add(arena);
     }
 
     /**
@@ -166,14 +175,14 @@ public class ArenaManager {
                 break;
             }
             case BRIDGE: {
-                TheBridgeArena bridgeArena = (TheBridgeArena) arena;
+                BridgeArena bridgeArena = (BridgeArena) arena;
                 for (String duplicateId : section.getKeys(false)) {
                     Location spawn1 = LocationUtil.deserialize(section.getString("." + duplicateId + ".spawn1"));
                     Location spawn2 = LocationUtil.deserialize(section.getString("." + duplicateId + ".spawn2"));
                     Location max = LocationUtil.deserialize(section.getString("." + duplicateId + ".max"));
                     Location min = LocationUtil.deserialize(section.getString("." + duplicateId + ".min"));
 
-                    TheBridgeArena duplicate = new TheBridgeArena(plugin, arena.getName() + "#" + duplicateId);
+                    BridgeArena duplicate = new BridgeArena(plugin, arena.getName() + "#" + duplicateId);
                     duplicate.setDisplayName(arena.getDisplayName());
                     duplicate.setSpawn1(spawn1);
                     duplicate.setSpawn2(spawn2);

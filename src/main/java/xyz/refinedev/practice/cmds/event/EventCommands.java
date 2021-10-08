@@ -16,6 +16,7 @@ import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Require;
 import xyz.refinedev.practice.util.command.annotation.Sender;
+import xyz.refinedev.practice.util.other.Cooldown;
 
 import java.util.stream.Collectors;
 
@@ -34,14 +35,14 @@ public class EventCommands {
     private final Array plugin;
     private final EventManager eventManager;
 
-    @Command(name = "", aliases = "help", desc = "View Event Commands")
-    public void help(@Sender CommandSender sender) {
-        Locale.EVENT_HELP.toList().forEach(sender::sendMessage);
-    }
-
-    @Command(name = "host", aliases = "menu", desc = "Open Event Host Menu")
+    @Command(name = "", aliases = {"menu, host"}, desc = "Open Event Host Menu")
     public void host(@Sender Player player) {
         new EventSelectMenu().openMenu(player);
+    }
+
+    @Command(name = "help", desc = "View Event Commands")
+    public void help(@Sender CommandSender sender) {
+        Locale.EVENT_HELP.toList().forEach(sender::sendMessage);
     }
 
     @Command(name = "teamselect", aliases = "teams", desc = "Choose a Team for your Event")
@@ -165,5 +166,12 @@ public class EventCommands {
                     .replace("<event_name>", event.getName());
 
         }).collect(Collectors.toList()).forEach(sender::sendMessage);
+    }
+
+    @Command(name = "cooldown", aliases = "resetcooldown", desc = "Reset the event cooldown")
+    @Require("array.event.admin")
+    public void cooldown(@Sender CommandSender sender) {
+        eventManager.setCooldown(new Cooldown(0));
+        sender.sendMessage(Locale.EVENT_COOLDOW_RESET.toString());
     }
 }

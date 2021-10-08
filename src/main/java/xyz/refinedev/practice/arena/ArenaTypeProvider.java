@@ -2,6 +2,7 @@ package xyz.refinedev.practice.arena;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
@@ -53,7 +54,8 @@ public class ArenaTypeProvider extends DrinkProvider<ArenaType> {
 
     @Override
     public List<String> getSuggestions(@NotNull String prefix) {
-        return Arrays.stream(ArenaType.values()).map(Enum::name).collect(Collectors.toList());
+        final String finalPrefix = prefix;
+        return Arrays.stream(ArenaType.values()).map(ArenaType::name).filter(s -> finalPrefix.length() == 0 || s.startsWith(finalPrefix)).collect(Collectors.toList());
     }
 
 }

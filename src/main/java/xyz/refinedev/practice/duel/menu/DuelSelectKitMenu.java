@@ -36,14 +36,14 @@ public class DuelSelectKitMenu extends Menu {
 
         if (party) {
             if (Array.getInstance().getConfigHandler().isHCF_ENABLED()) {
-                for ( Kit kit : Kit.getKits() ) {
+                for ( Kit kit : plugin.getKitManager().getKits() ) {
                     if (kit.isEnabled() || kit.getName().equalsIgnoreCase("HCFTeamFight")) {
                         if (!kit.getGameRules().isTimed() && !kit.getGameRules().isBridge())
                             buttons.put(buttons.size(), new SelectKitButton(kit));
                     }
                 }
             } else {
-                for ( Kit kit : Kit.getKits() ) {
+                for ( Kit kit : plugin.getKitManager().getKits() ) {
                     if (kit.isEnabled() && !kit.getName().equalsIgnoreCase("HCFTeamFight")) {
                         if (!kit.getGameRules().isTimed() && !kit.getGameRules().isBridge())
                             buttons.put(buttons.size(), new SelectKitButton(kit));
@@ -51,7 +51,7 @@ public class DuelSelectKitMenu extends Menu {
                 }
             }
         } else {
-            for ( Kit kit : Kit.getKits() ) {
+            for ( Kit kit : plugin.getKitManager().getKits() ) {
                 if (kit.isEnabled() && !kit.getName().equalsIgnoreCase("HCFTeamFight")) {
                     buttons.put(buttons.size(), new SelectKitButton(kit));
                 }

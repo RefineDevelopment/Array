@@ -21,18 +21,29 @@ import java.util.Map;
  * Project: Array
  */
 
-@RequiredArgsConstructor
 public class EventTeamMenu extends PaginatedMenu {
 
     private final Event event;
 
-    {setAutoUpdate(true);}
-    
+    public EventTeamMenu(Event event) {
+        this.event = event;
+
+        this.setAutoUpdate(true);
+    }
+
+    /**
+     * @param player player viewing the inventory
+     * @return title of the inventory before the page number is added
+     */
     @Override
     public String getPrePaginatedTitle(Player player) {
         return CC.translate("&7Select a Team");
     }
 
+    /**
+     * @param player player viewing the inventory
+     * @return a map of button that will be paginated and spread across pages
+     */
     @Override
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
@@ -40,5 +51,10 @@ public class EventTeamMenu extends PaginatedMenu {
             buttons.put(buttons.size(), new EventTeamButton(event, eventGroup));
         }
         return buttons;
+    }
+
+    @Override
+    public int getMaxItemsPerPage(Player player) {
+        return 27;
     }
 }

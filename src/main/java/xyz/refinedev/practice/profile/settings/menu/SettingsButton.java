@@ -8,12 +8,11 @@ import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.settings.SettingsType;
+import xyz.refinedev.practice.profile.settings.ProfileSettingsType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
-import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ public class SettingsButton extends Button {
     private final Array plugin = Array.getInstance();
     private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("profile_settings");
 
-    private final SettingsType type;
+    private final ProfileSettingsType type;
 
     private String key = "BUTTONS.";
 

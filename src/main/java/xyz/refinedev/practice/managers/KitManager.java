@@ -41,6 +41,7 @@ public class KitManager {
         ConfigurationSection configurationSection = config.getConfigurationSection("kits");
         if (configurationSection == null || configurationSection.getKeys(false).isEmpty()) return;
 
+
         for ( String kitName : configurationSection.getKeys(false) ) {
             Kit kit = new Kit(plugin, kitName);
 
@@ -51,8 +52,8 @@ public class KitManager {
         if (plugin.getConfigHandler().isHCF_ENABLED()) {
             teamFight = new Kit(plugin,"HCFTeamFight");
             teamFight.setDisplayIcon(new ItemBuilder(Material.BEACON).clearEnchantments().clearFlags().build());
-            this.save(teamFight);
         }
+        plugin.logger("&7Loaded &c" + kits.size() + " &7Kit(s)!");
     }
 
     /**
@@ -192,8 +193,9 @@ public class KitManager {
     public void delete(Kit kit) {
         kits.remove(kit);
 
-        if (kit.getRankedQueue() != null) plugin.getQueueManager().getQueueMap().remove(kit, kit.getRankedQueue());
-        if (kit.getClanQueue() != null) plugin.getQueueManager().getQueueMap().remove(kit, kit.getClanQueue());
+        if (kit.isEnabled()) plugin.getQueueManager().getQueues().remove(kit.getUnrankedQueue());
+        if (kit.getRankedQueue() != null) plugin.getQueueManager().getQueues().remove(kit.getRankedQueue());
+        if (kit.getClanQueue() != null) plugin.getQueueManager().getQueues().remove(kit.getClanQueue());
 
         config.set("kits." + kit.getName(), null);
         config.save();
@@ -206,13 +208,17 @@ public class KitManager {
      */
     public void setupQueue(Kit kit) {
         if (!kit.isEnabled()) return;
-        kit.setUnrankedQueue(new Queue(plugin, kit, QueueType.UNRANKED));
+
+        Queue unranked = new Queue(plugin, kit, QueueType.UNRANKED);
+        kit.setUnrankedQueue(unranked);
 
         if (kit.getGameRules().isRanked()) {
-            kit.setRankedQueue(new Queue(plugin, kit, QueueType.RANKED));
+            Queue ranked = new Queue(plugin, kit, QueueType.RANKED);
+            kit.setRankedQueue(ranked);
         }
         if (kit.getGameRules().isClan()) {
-            kit.setClanQueue(new Queue(plugin, kit, QueueType.CLAN));
+            Queue clan = new Queue(plugin, kit, QueueType.CLAN);
+            kit.setRankedQueue(clan);
         }
     }
 

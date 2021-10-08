@@ -36,7 +36,7 @@ public class Queue {
         this.type = type;
         this.uuid = UUID.randomUUID();
 
-        plugin.getQueueManager().getQueueMap().put(kit, this);
+        plugin.getQueueManager().getQueues().add(this);
     }
 
     /**

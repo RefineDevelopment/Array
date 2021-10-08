@@ -6,15 +6,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueProfile;
 import xyz.refinedev.practice.queue.QueueThread;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -31,7 +30,7 @@ import java.util.UUID;
 public class QueueManager {
 
     private final Array plugin;
-    private final Map<Kit, Queue> queueMap = new LinkedHashMap<>();
+    private final List<Queue> queues = new ArrayList<>();
 
     private QueueThread thread;
 
@@ -46,7 +45,6 @@ public class QueueManager {
     public void shutdown() {
         this.thread.stop();
     }
-
 
     /**
      * Add a player to a certain queue
@@ -118,7 +116,7 @@ public class QueueManager {
      * @return {@link Queue}
      */
     public Queue getByUuid(UUID uuid) {
-        for (Queue queue : queueMap.values()) {
+        for (Queue queue : queues) {
             if (queue.getUuid().equals(uuid)) {
                 return queue;
             }

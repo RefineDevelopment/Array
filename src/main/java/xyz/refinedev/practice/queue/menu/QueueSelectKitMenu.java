@@ -35,7 +35,7 @@ public class QueueSelectKitMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
         
-        for (Queue queue : plugin.getQueueManager().getQueueMap().values()) {
+        for (Queue queue : plugin.getQueueManager().getQueues()) {
             if (queue.getType() == this.queueType) {
                 buttons.put(buttons.size(), new SelectKitButton(queue));
             }

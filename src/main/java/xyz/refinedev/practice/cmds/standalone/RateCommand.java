@@ -7,7 +7,6 @@ import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.rating.Rating;
 import xyz.refinedev.practice.arena.rating.RatingType;
-import xyz.refinedev.practice.managers.RatingsManager;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
@@ -43,9 +42,6 @@ public class RateCommand {
 
         Rating rating = arena.getRating();
         rating.recordVote(ratingType);
-
-        RatingsManager ratingsManager = Array.getInstance().getRatingsManager();
-        ratingsManager.save();
 
         player.sendMessage(Locale.MATCH_RATING.toString());
         profile.setIssueRating(false);

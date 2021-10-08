@@ -34,41 +34,4 @@ public class MatchHistory {
 
     private final int winnerChangedELO;
     private final int looserChangedELO;
-
-    /**
-     * Generate a match history using a {@link Document}
-     *
-     * @param document The match history document from mongo
-     */
-    public MatchHistory(Array plugin, Document document) {
-        this.plugin = plugin;
-        this.date = document.getDate("date");
-        this.playerSnapshot = Array.GSON.fromJson(document.getString("player"), MatchSnapshot.class);
-        this.opponentSnapshot = Array.GSON.fromJson(document.getString("opponent"), MatchSnapshot.class);
-
-        this.kit = plugin.getKitManager().getByName(document.getString("kit"));
-        this.won = document.getBoolean("won");
-        this.ranked = document.getBoolean("ranked");
-
-        this.winnerChangedELO = document.getInteger("winnerELO");
-        this.looserChangedELO = document.getInteger("looserELO");
-    }
-
-    /**
-     * Get the whole history in a {@link Document} mainly
-     * for mongo and saving in mongo
-     *
-     * @return {@link Document}
-     */
-    public Document toBson() {
-        return new Document()
-                .append("date", date)
-                .append("player", Array.GSON.toJson(playerSnapshot))
-                .append("opponent", Array.GSON.toJson(opponentSnapshot))
-                .append("kit", kit.getName())
-                .append("won", won)
-                .append("ranked", ranked)
-                .append("winnerELO", winnerChangedELO)
-                .append("looserELO", looserChangedELO);
-    }
 }

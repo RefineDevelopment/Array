@@ -82,12 +82,13 @@ public class KitEditorMenu extends Menu {
     @Override
     public void onOpen(Player player) {
         if (!isClosedByMenu()) {
-            PlayerUtil.reset(player);
+            //PlayerUtil.reset(player);
 
             Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
             profile.getKitEditor().setActive(true);
 
             if (profile.getKitEditor().getSelectedKit() != null) {
+                player.getInventory().clear();
                 player.getInventory().setContents(profile.getKitEditor().getSelectedKitInventory().getContents());
             }
 

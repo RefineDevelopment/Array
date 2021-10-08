@@ -6,7 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.arena.impl.TheBridgeArena;
+import xyz.refinedev.practice.arena.impl.BridgeArena;
 import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
 import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
@@ -46,7 +46,7 @@ public class LocationUtils {
     public boolean isTeamPortalSolo(Player player) {
         Profile profile = Array.getInstance().getProfileManager().getByUUID(player.getUniqueId());
         SoloBridgeMatch match = (SoloBridgeMatch) profile.getMatch();
-        TheBridgeArena arena = (TheBridgeArena) match.getArena();
+        BridgeArena arena = (BridgeArena) match.getArena();
 
         if (match.getTeamPlayerA().getPlayer() == player) {
             return arena.getRedPortal().contains(player.getLocation());
@@ -58,7 +58,7 @@ public class LocationUtils {
     public boolean isTeamPortalTeam(Player player) {
         Profile profile = Array.getInstance().getProfileManager().getByUUID(player.getUniqueId());
         TeamBridgeMatch match = (TeamBridgeMatch) profile.getMatch();
-        TheBridgeArena arena = (TheBridgeArena) match.getArena();
+        BridgeArena arena = (BridgeArena) match.getArena();
 
         if (match.getTeamA().containsPlayer(player)) {
             return arena.getRedPortal().contains(player.getLocation());

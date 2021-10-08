@@ -2,6 +2,7 @@ package xyz.refinedev.practice.event.meta.player;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.util.other.PlayerSnapshot;
 import xyz.refinedev.practice.util.other.PlayerUtil;
@@ -11,6 +12,7 @@ import xyz.refinedev.practice.util.other.PlayerUtil;
 public class EventPlayer extends PlayerSnapshot {
 
 	private EventPlayerState state = EventPlayerState.WAITING;
+	private Location lastLocation;
 	private int roundWins = 0;
 
 	public EventPlayer(Player player) {

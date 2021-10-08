@@ -23,8 +23,8 @@ import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.history.MatchHistory;
 import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.profile.rank.TablistRank;
-import xyz.refinedev.practice.profile.settings.meta.Settings;
-import xyz.refinedev.practice.profile.statistics.StatisticsData;
+import xyz.refinedev.practice.profile.settings.ProfileSettings;
+import xyz.refinedev.practice.profile.statistics.ProfileStatistics;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueProfile;
 import xyz.refinedev.practice.util.other.Cooldown;
@@ -38,7 +38,7 @@ public class Profile {
     private final Array plugin;
 
     private final Map<UUID, DuelRequest> sentDuelRequests = new HashMap<>();
-    private final Map<Kit, StatisticsData> statisticsData = new LinkedHashMap<>();
+    private final Map<Kit, ProfileStatistics> statisticsData = new LinkedHashMap<>();
     private final List<ClanInvite> clanInviteList = new ArrayList<>();
     private final List<Location> plates = new ArrayList<>();
 
@@ -68,10 +68,10 @@ public class Profile {
     private Player spectating;
     private boolean build, silent, issueRating;
 
-    private Cooldown enderpearlCooldown, bowCooldown, visibilityCooldown;
+    private Cooldown enderpearlCooldown = new Cooldown(0), bowCooldown = new Cooldown(0), visibilityCooldown;
 
     private KitEditor kitEditor = new KitEditor();
-    private Settings settings = new Settings();
+    private ProfileSettings settings = new ProfileSettings();
 
     /**
      * Get's vanilla tablist priority checking
@@ -100,11 +100,11 @@ public class Profile {
     }
 
     public Integer getTotalWins() {
-        return this.statisticsData.values().stream().mapToInt(StatisticsData::getWon).sum();
+        return this.statisticsData.values().stream().mapToInt(ProfileStatistics::getWon).sum();
     }
 
     public Integer getTotalLost() {
-        return this.statisticsData.values().stream().mapToInt(StatisticsData::getLost).sum();
+        return this.statisticsData.values().stream().mapToInt(ProfileStatistics::getLost).sum();
     }
 
     public Player getPlayer() {
@@ -140,7 +140,7 @@ public class Profile {
     }
 
     public boolean isInSomeSortOfFight() {
-        return (state == ProfileState.IN_FIGHT && match != null) || (state == ProfileState.IN_EVENT) || (state == ProfileState.IN_BRAWL);
+        return (state == ProfileState.IN_FIGHT && match != null) || (state == ProfileState.IN_EVENT);
     }
 
     public boolean isBusy() {

@@ -35,10 +35,11 @@ import xyz.refinedev.practice.profile.divisions.Division;
 import xyz.refinedev.practice.profile.hotbar.HotbarLayout;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
 import xyz.refinedev.practice.profile.rank.TablistRank;
-import xyz.refinedev.practice.profile.settings.meta.Settings;
-import xyz.refinedev.practice.profile.statistics.StatisticsData;
+import xyz.refinedev.practice.profile.settings.ProfileSettings;
+import xyz.refinedev.practice.profile.statistics.ProfileStatistics;
 import xyz.refinedev.practice.task.ProfileHotbarTask;
 import xyz.refinedev.practice.task.ProfileQueryTask;
+import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.InventoryUtil;
 import xyz.refinedev.practice.util.other.Cooldown;
 import xyz.refinedev.practice.util.other.PlayerUtil;
@@ -94,7 +95,7 @@ public class ProfileManager {
         if (event.isCancelled()) return;
 
         for ( Kit kit : plugin.getKitManager().getKits() ) {
-            profile.getStatisticsData().put(kit, new StatisticsData());
+            profile.getStatisticsData().put(kit, new ProfileStatistics());
         }
 
         plugin.submitToThread(() -> {
@@ -112,7 +113,7 @@ public class ProfileManager {
             profile.setDeaths(document.getInteger("deaths"));
             profile.setGlobalElo(document.getInteger("globalElo"));
             profile.setExperience(document.getInteger("experience"));
-            profile.setSettings(Array.GSON.fromJson(document.getString("settings"), Settings.class));
+            profile.setSettings(Array.GSON.fromJson(document.getString("settings"), ProfileSettings.class));
 
             String killEffectString = document.getString("killEffect");
             if (killEffectString != null) {
@@ -133,16 +134,16 @@ public class ProfileManager {
                 Kit kit = plugin.getKitManager().getByName(key);
                 if (kit == null) continue;
 
-                StatisticsData statisticsData = new StatisticsData();
+                ProfileStatistics profileStatistics= new ProfileStatistics();
                 Integer elo = kitDocument.getInteger("elo");
 
                 if (elo != null) {
-                    statisticsData.setElo(kitDocument.getInteger("elo") == null ? 1000 : kitDocument.getInteger("elo"));
+                    profileStatistics.setElo(kitDocument.getInteger("elo") == null ? 1000 : kitDocument.getInteger("elo"));
                 }
-                statisticsData.setWon(kitDocument.getInteger("won"));
-                statisticsData.setLost(kitDocument.getInteger("lost"));
+                profileStatistics.setWon(kitDocument.getInteger("won"));
+                profileStatistics.setLost(kitDocument.getInteger("lost"));
 
-                profile.getStatisticsData().put(kit, statisticsData);
+                profile.getStatisticsData().put(kit, profileStatistics);
             }
 
             Document kitsDocument = (Document) document.get("kitInventory");
@@ -202,7 +203,7 @@ public class ProfileManager {
         document.put("settings", Array.GSON.toJson(profile.getSettings()));
 
         Document kitStatisticsDocument = new Document();
-        for ( Map.Entry<Kit, StatisticsData> entry : profile.getStatisticsData().entrySet() ) {
+        for ( Map.Entry<Kit, ProfileStatistics> entry : profile.getStatisticsData().entrySet() ) {
             Document kitDocument = new Document();
 
             kitDocument.put("elo", entry.getValue().getElo());
@@ -215,7 +216,7 @@ public class ProfileManager {
         document.put("kitStatistics", kitStatisticsDocument);
 
         Document kitsDocument = new Document();
-        for ( Map.Entry<Kit, StatisticsData> entry : profile.getStatisticsData().entrySet() ) {
+        for ( Map.Entry<Kit, ProfileStatistics> entry : profile.getStatisticsData().entrySet() ) {
             JsonArray kitsArray = new JsonArray();
 
             for ( int i = 0; i < 4; i++ ) {
@@ -339,6 +340,7 @@ public class ProfileManager {
             }
 
             if (update) {
+                player.sendMessage(CC.translate("&cRefreshing hotbar"));
                 this.refreshHotbar(profile);
             }
         }

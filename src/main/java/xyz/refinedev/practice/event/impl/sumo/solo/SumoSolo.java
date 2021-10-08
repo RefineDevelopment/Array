@@ -9,6 +9,7 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.EventState;
+import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.event.impl.sumo.solo.task.SumoSoloRoundEndTask;
 import xyz.refinedev.practice.event.impl.sumo.solo.task.SumoSoloRoundStartTask;
@@ -43,7 +44,7 @@ public class SumoSolo extends Event {
     private EventPlayer roundPlayerB;
 
     public SumoSolo(Array plugin, Player host) {
-        super(plugin, plugin.getEventManager(),"Sumo", new PlayerSnapshot(host.getUniqueId(), host.getName()), 100, EventType.SUMO_SOLO);
+        super(plugin, plugin.getEventManager(),"Sumo", new PlayerSnapshot(host.getUniqueId(), host.getName()), 100, EventType.SUMO, EventTeamSize.SOLO);
 
         this.setEvent_Prefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
     }

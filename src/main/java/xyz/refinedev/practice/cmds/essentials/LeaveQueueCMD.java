@@ -33,6 +33,6 @@ public class LeaveQueueCMD {
             return;
         }
 
-        profile.getQueue().removePlayer(queueProfile);
+        plugin.getQueueManager().removePlayer(profile.getQueue(), queueProfile);
     }
 }

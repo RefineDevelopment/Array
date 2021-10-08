@@ -16,6 +16,7 @@ import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.listeners.GHeadListener;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.menu.WorldsMenu;
+import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Require;
@@ -141,12 +142,12 @@ public class ArrayCommands {
         }
 
         TaskUtil.runAsync(() -> {
-            Kit.getKits().forEach(Kit::save);
+            plugin.getKitManager().getKits().forEach(plugin.getKitManager()::save);
             plugin.getArenaManager().getArenas().forEach(Arena::save);
         });
 
         plugin.getLeaderboardsManager().loadGlobalLeaderboards();
-        Kit.getKits().forEach(plugin.getLeaderboardsManager()::loadKitLeaderboards);
+        plugin.getKitManager().getKits().forEach(plugin.getLeaderboardsManager()::loadKitLeaderboards);
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7&oReloaded all Stats and Leaderboards!"));
     }
 
@@ -222,16 +223,16 @@ public class ArrayCommands {
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7You have set the &cnew &7lobby &cspawn &7!"));
     }
 
-
-
-
-
-
-
-
-
-
-
+    @Command(name = "debug", desc = "ntohing")
+    public void debug(@Sender CommandSender sender) {
+        for ( Queue queue : plugin.getQueueManager().getQueues() ) {
+            if (queue == null) {
+                sender.sendMessage(CC.translate("&cNo Queues found"));
+                return;
+            }
+            sender.sendMessage("- " + queue.getQueueName());
+        }
+    }
 
     /**
      * THIS IS THE WORST CODE I HAVE EVER WRITTEN IN THE PAST 10 MONTHS
@@ -254,7 +255,7 @@ public class ArrayCommands {
                 }
             } else {
                 if (type.equalsIgnoreCase("all")) {
-                    for ( Kit kit : Kit.getKits() ) {
+                    for ( Kit kit : plugin.getKitManager().getKits() ) {
                         for ( Profile profile : plugin.getProfileManager().getProfiles().values() ) {
                             for ( KitInventory kitInventory : profile.getStatisticsData().get(kit).getLoadouts() ) {
                                 profile.getStatisticsData().get(kit).deleteKit(kitInventory);
@@ -285,7 +286,7 @@ public class ArrayCommands {
                 player.sendMessage(CC.translate("&8[&cArray&8] &7Successfully deleted kitloadouts for &c" + reach));
             } else {
                 if (type.equalsIgnoreCase("all")) {
-                    for ( Kit kit : Kit.getKits() ) {
+                    for ( Kit kit : plugin.getKitManager().getKits() ) {
                         Player target = Bukkit.getPlayer(reach);
                         Profile profile = plugin.getProfileManager().getByPlayer(target);
                         for ( KitInventory kitInventory : profile.getStatisticsData().get(kit).getLoadouts() ) {

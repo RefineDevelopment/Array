@@ -62,8 +62,8 @@ public class EventSelectMenu extends Menu {
         Map<Integer, Button> buttons = new HashMap<>();
 
         for ( EventType eventType : EventType.values() ) {
-            String path = "BUTTONS." + eventType.getEventName().toUpperCase() + ".";
-            buttons.put(config.getInteger(path + "SLOT"), new EventSelectButton(eventType));
+            String path = "BUTTONS." + eventType.name() + ".";
+            buttons.put(config.getInteger(path + "SLOT"), new EventSelectButton(config, eventType));
         }
         return buttons;
     }

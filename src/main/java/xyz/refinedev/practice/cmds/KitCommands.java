@@ -8,7 +8,7 @@ import org.bukkit.potion.PotionEffect;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.statistics.StatisticsData;
+import xyz.refinedev.practice.profile.statistics.ProfileStatistics;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
@@ -16,7 +16,6 @@ import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Require;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 import xyz.refinedev.practice.util.command.annotation.Text;
-import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -129,7 +128,7 @@ public class KitCommands {
 
         //Add it to profile's statistics data
         for ( Profile profile : plugin.getProfileManager().getProfiles().values() ) {
-            profile.getStatisticsData().put(kit, new StatisticsData());
+            profile.getStatisticsData().put(kit, new ProfileStatistics());
             plugin.getProfileManager().save(profile);
         }
 
@@ -225,8 +224,9 @@ public class KitCommands {
             }
             sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &aenabled &7the kit &c" + kit.getDisplayName()));
         } else {
-            if (kit.getUnrankedQueue() != null) plugin.getQueueManager().getQueueMap().remove(kit, kit.getUnrankedQueue());
-            if (kit.getRankedQueue() != null) plugin.getQueueManager().getQueueMap().remove(kit, kit.getRankedQueue());
+            if (kit.getUnrankedQueue() != null) plugin.getQueueManager().getQueues().remove(kit.getUnrankedQueue());
+            if (kit.getRankedQueue() != null) plugin.getQueueManager().getQueues().remove(kit.getRankedQueue());
+            if (kit.getClanQueue() != null) plugin.getQueueManager().getQueues().remove(kit.getClanQueue());
 
             sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &cdisabled &7the kit &c" + kit.getDisplayName()));
         }

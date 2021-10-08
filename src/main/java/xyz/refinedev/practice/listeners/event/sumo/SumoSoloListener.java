@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.listeners.event;
+package xyz.refinedev.practice.listeners.event.sumo;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;

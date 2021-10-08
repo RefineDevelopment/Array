@@ -24,7 +24,7 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.api.events.match.MatchPlayerSetupEvent;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.arena.impl.TheBridgeArena;
+import xyz.refinedev.practice.arena.impl.BridgeArena;
 import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.MatchState;
@@ -82,8 +82,8 @@ public class MatchListener implements Listener {
             return;
         }
 
-        if (arena instanceof TheBridgeArena) {
-            TheBridgeArena standaloneArena = (TheBridgeArena) arena;
+        if (arena instanceof BridgeArena) {
+            BridgeArena standaloneArena = (BridgeArena) arena;
             if (standaloneArena.getBlueCuboid() != null && standaloneArena.getBlueCuboid().contains(block)) {
                 player.sendMessage(Locale.MATCH_BRIDGE_BLOCK.toString());
                 event.setCancelled(true);

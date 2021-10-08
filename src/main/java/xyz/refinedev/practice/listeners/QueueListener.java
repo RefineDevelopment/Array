@@ -28,7 +28,7 @@ public class QueueListener implements Listener {
         if (!profile.isInQueue()) return;
 
         Queue queue = profile.getQueue();
-        queue.removePlayer(profile.getQueueProfile());
+        plugin.getQueueManager().removePlayer(queue, profile.getQueueProfile());
     }
 
     /**

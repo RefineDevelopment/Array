@@ -16,11 +16,12 @@ import java.util.*;
 
 //TODO: Recode this
 @Getter @Setter
-public class StatisticsData {
+public class ProfileStatistics {
 
     private int elo = 1000;
     private int won = 0;
     private int lost = 0;
+
     private KitInventory[] loadouts = new KitInventory[4];
 
     public void incrementWon() {

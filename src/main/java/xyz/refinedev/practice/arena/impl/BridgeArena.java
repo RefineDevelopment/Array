@@ -6,12 +6,14 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.arena.cuboid.Cuboid;
+import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.location.LocationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -24,14 +26,14 @@ import java.util.List;
 
 
 @Getter @Setter
-public class TheBridgeArena extends Arena {
+public class BridgeArena extends Arena {
 
     private final Array plugin;
-    private final List<TheBridgeArena> duplicates = new ArrayList<>();
+    private final List<BridgeArena> duplicates = new ArrayList<>();
 
     private Cuboid redCuboid, blueCuboid, redPortal, bluePortal;
 
-    public TheBridgeArena(Array plugin, String name) {
+    public BridgeArena(Array plugin, String name) {
         super(plugin, name, ArenaType.BRIDGE);
 
         this.plugin = plugin;
@@ -43,15 +45,11 @@ public class TheBridgeArena extends Arena {
 
         BasicConfigurationFile config = plugin.getArenasConfig();
         config.set(path, null);
-        config.set(path + ".type", getType().name());
-        config.set(path + ".display-name", CC.untranslate(getDisplayName()));
-        config.set(path + ".icon.material", this.getDisplayIcon().getType().name());
-        config.set(path + ".icon.durability", this.getDisplayIcon().getDurability());
-        config.set(path + ".disable-pearls", this.isDisablePearls());
+        config.set(path + ".type", this.getType().name());
+        config.set(path + ".display-name", CC.untranslate(this.getDisplayName()));
 
         if (this.getSpawn1() != null) config.set(path + ".spawn1", LocationUtil.serialize(this.getSpawn1()));
         if (this.getSpawn2() != null) config.set(path + ".spawn2", LocationUtil.serialize(this.getSpawn2()));
-
         if (this.getMax() != null) config.set(path + ".max", LocationUtil.serialize(this.getMax()));
         if (this.getMin() != null) config.set(path + ".min", LocationUtil.serialize(this.getMin()));
 
@@ -72,12 +70,18 @@ public class TheBridgeArena extends Arena {
             config.set(path + ".bluePortal.location2", LocationUtil.serialize(bluePortal.getUpperCorner()));
         }
 
+        config.set(path + ".disable-pearls", this.isDisablePearls());
+        config.set(path + ".fall-death-height", this.getFallDeathHeight());
+        config.set(path + ".icon.material", this.getDisplayIcon().getType().name());
+        config.set(path + ".icon.durability", this.getDisplayIcon().getDurability());
+        config.set(path + ".kits", getKits().stream().map(Kit::getName).collect(Collectors.toList()));
+
         config.set(path + ".kits", getKits());
 
         if (!duplicates.isEmpty()) {
             int i = 0;
 
-            for (TheBridgeArena duplicate : duplicates) {
+            for ( BridgeArena duplicate : duplicates) {
                 i++;
 
                 config.set(path + ".duplicates." + i + ".spawn1", LocationUtil.serialize(duplicate.getSpawn1()));

@@ -37,7 +37,7 @@ public class ArenaProvider extends DrinkProvider<Arena> {
     @Override
     public Arena provide(@NotNull CommandArg arg, @NotNull List<? extends Annotation> annotations) throws CommandExitMessage {
         String name = arg.get();
-        Arena arena = Arena.getByName(name);
+        Arena arena = this.getPlugin().getArenaManager().getByName(name);
         if (arena != null) {
             return arena;
         }
@@ -52,7 +52,7 @@ public class ArenaProvider extends DrinkProvider<Arena> {
     @Override
     public List<String> getSuggestions(@NotNull String prefix) {
         final String finalPrefix = prefix;
-        return plugin.getArenaManager().getArenas().stream().filter(arena -> !arena.isDuplicate()).map(Arena::getName).filter(s -> finalPrefix.length() == 0 || s.startsWith(finalPrefix)).collect(Collectors.toList());
+        return this.getPlugin().getArenaManager().getArenas().stream().filter(arena -> !arena.isDuplicate()).map(Arena::getName).filter(s -> finalPrefix.length() == 0 || s.startsWith(finalPrefix)).collect(Collectors.toList());
     }
 }
 

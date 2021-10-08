@@ -47,6 +47,7 @@ public abstract class Event {
 	private final PlayerSnapshot host;
 	private final int maxPlayers;
 	private final EventType type;
+	private final EventTeamSize size;
 
 	private EventTask eventTask;
 	private Cooldown cooldown;
@@ -290,6 +291,7 @@ public abstract class Event {
 		Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 		profile.setEvent(this);
 		profile.setState(ProfileState.SPECTATING);
+
 		plugin.getProfileManager().refreshHotbar(profile);
 		plugin.getProfileManager().handleVisibility(profile);
 
@@ -319,19 +321,19 @@ public abstract class Event {
 	}
 
 	public boolean isSumoSolo() {
-		return this.getType().equals(EventType.SUMO_SOLO);
+		return this.getType().equals(EventType.SUMO) && this.size.equals(EventTeamSize.SOLO);
 	}
 
 	public boolean isSumoTeam() {
-		return this.getType().equals(EventType.SUMO_TEAM);
+		return this.getType().equals(EventType.SUMO) && !this.size.equals(EventTeamSize.SOLO);
 	}
 
 	public boolean isBracketsSolo() {
-		return this.getType().equals(EventType.BRACKETS_SOLO);
+		return this.getType().equals(EventType.BRACKETS) && this.size.equals(EventTeamSize.SOLO);
 	}
 
 	public boolean isBracketsTeam() {
-		return this.getType().equals(EventType.BRACKETS_TEAM);
+		return this.getType().equals(EventType.BRACKETS) && !this.size.equals(EventTeamSize.SOLO);
 	}
 
 	public boolean isLMS() {
@@ -339,11 +341,11 @@ public abstract class Event {
 	}
 
 	public boolean isGulagSolo() {
-		return this.getType().equals(EventType.GULAG_SOLO);
+		return this.getType().equals(EventType.GULAG) && this.size.equals(EventTeamSize.SOLO);
 	}
 
 	public boolean isGulagTeam() {
-		return this.getType().equals(EventType.GULAG_TEAM);
+		return this.getType().equals(EventType.GULAG) && !this.size.equals(EventTeamSize.SOLO);
 	}
 
 	public boolean isSpleef() {

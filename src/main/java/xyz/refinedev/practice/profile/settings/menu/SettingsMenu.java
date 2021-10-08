@@ -2,7 +2,7 @@ package xyz.refinedev.practice.profile.settings.menu;
 
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.profile.settings.SettingsType;
+import xyz.refinedev.practice.profile.settings.ProfileSettingsType;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
@@ -56,10 +56,10 @@ public class SettingsMenu extends Menu {
         Map<Integer, Button> buttons = new HashMap<>();
         String key = "BUTTONS.";
 
-        for ( SettingsType type : SettingsType.values() ) {
-            if (type.equals(SettingsType.TOGGLETABSTYLE) && !plugin.getConfigHandler().isTAB_ENABLED()) continue;
-            if (type.equals(SettingsType.TOGGLECPSONSCOREBOARD) && !plugin.getConfigHandler().isCPS_SCOREBOARD_SETTING()) continue;
-            if (type.equals(SettingsType.TOGGLEPINGONSCOREBOARD) && !plugin.getConfigHandler().isPING_SCOREBOARD_SETTING()) continue;
+        for ( ProfileSettingsType type : ProfileSettingsType.values() ) {
+            if (type.equals(ProfileSettingsType.TOGGLETABSTYLE) && !plugin.getConfigHandler().isTAB_ENABLED()) continue;
+            if (type.equals(ProfileSettingsType.TOGGLECPSONSCOREBOARD) && !plugin.getConfigHandler().isCPS_SCOREBOARD_SETTING()) continue;
+            if (type.equals(ProfileSettingsType.TOGGLEPINGONSCOREBOARD) && !plugin.getConfigHandler().isPING_SCOREBOARD_SETTING()) continue;
 
             buttons.put(config.getInteger(key + type.name() + ".SLOT"), new SettingsButton(type));
         }

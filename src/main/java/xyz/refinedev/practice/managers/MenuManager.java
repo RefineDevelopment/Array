@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MenuManager {
 
-    private final String[] configNames = {"profile_settings", "party_events", "profile_killeffects", "general", "event_host"};
+    private final String[] configNames = {"profile_settings", "profile_killeffects", "party_events", "general", "event_size", "event_host"};
 
     private final Map<String, FoldersConfigurationFile> configs = new HashMap<>();
     private final List<MenuData> menuData = new ArrayList<>();
@@ -127,31 +127,31 @@ public class MenuManager {
      */
     public List<ButtonData> loadCustomButtons(FoldersConfigurationFile config) {
         List<ButtonData> customButtons = new ArrayList<>();
-        ConfigurationSection configurationSection = config.getConfigurationSection("CUSTOM_BUTTONS");
-        if (configurationSection == null || configurationSection.getKeys(false).isEmpty()) return null;
+        ConfigurationSection section = config.getConfigurationSection("CUSTOM_BUTTONS");
+        if (section == null || section.getKeys(false).isEmpty()) return null;
 
-        for ( String key : configurationSection.getKeys(false) ){
+        for ( String key : section.getKeys(false) ){
             ButtonData buttonData = new ButtonData();
 
             Material material;
             try {
-                material = Material.valueOf(configurationSection.getString(key + ".MATERIAL"));
+                material = Material.valueOf(section.getString(key + ".MATERIAL"));
             } catch (Exception e) {
                 System.out.println("Button " + key + "'s Material is invalid, ignoring button...");
                 continue;
             }
             ItemBuilder itemBuilder = new ItemBuilder(material);
-            itemBuilder.name(configurationSection.getString(key + ".NAME"));
+            itemBuilder.name(section.getString(key + ".NAME"));
             itemBuilder.clearFlags();
-            if (configurationSection.getInt(key + ".DATA") != 0) {
-                itemBuilder.durability(configurationSection.getInt(key + ".DATA"));
+            if (section.getInt(key + ".DATA") != 0) {
+                itemBuilder.durability(section.getInt(key + ".DATA"));
             }
-            if (configurationSection.getStringList(key + ".LORE") != null && !configurationSection.getStringList(key + ".LORE").isEmpty()) {
-                itemBuilder.lore(configurationSection.getStringList(key + ".LORE"));
+            if (section.getStringList(key + ".LORE") != null && !section.getStringList(key + ".LORE").isEmpty()) {
+                itemBuilder.lore(section.getStringList(key + ".LORE"));
             }
             ItemStack itemStack = itemBuilder.build();
             buttonData.setItem(itemStack);
-            buttonData.setSlot(configurationSection.getInt(key + ".SLOT"));
+            buttonData.setSlot(section.getInt(key + ".SLOT"));
 
             buttonData.getActions().addAll(this.loadActionData(key, config));
 

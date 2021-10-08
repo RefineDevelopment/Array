@@ -11,7 +11,7 @@ import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.arena.impl.SharedArena;
 import xyz.refinedev.practice.arena.impl.StandaloneArena;
-import xyz.refinedev.practice.arena.impl.TheBridgeArena;
+import xyz.refinedev.practice.arena.impl.BridgeArena;
 import xyz.refinedev.practice.arena.rating.Rating;
 import xyz.refinedev.practice.arena.runnables.StandalonePasteRunnable;
 import xyz.refinedev.practice.arena.runnables.TheBridgePasteRunnable;
@@ -100,7 +100,7 @@ public class ArenaCommands {
                     arena = new SharedArena(plugin, name);
                     break;
                 case BRIDGE:
-                    arena = new TheBridgeArena(plugin, name);
+                    arena = new BridgeArena(plugin, name);
                     break;
                 default:
                     arena = new StandaloneArena(plugin, name);
@@ -167,7 +167,7 @@ public class ArenaCommands {
         plugin.getArenaManager().setPasting(true);
 
         if (arena.getType() == ArenaType.BRIDGE) {
-            TaskUtil.run(new TheBridgePasteRunnable(plugin, (TheBridgeArena) arena, amount));
+            TaskUtil.run(new TheBridgePasteRunnable(plugin, (BridgeArena) arena, amount));
         } else {
             TaskUtil.run(new StandalonePasteRunnable(plugin, (StandaloneArena) arena, amount));
         }
@@ -364,7 +364,7 @@ public class ArenaCommands {
             return;
         }
 
-        TheBridgeArena bridgeArena = (TheBridgeArena) arena;
+        BridgeArena bridgeArena = (BridgeArena) arena;
 
         if (color.equalsIgnoreCase("blue")) {
             Selection selection = Selection.createOrGetSelection(player);
@@ -400,7 +400,7 @@ public class ArenaCommands {
             return;
         }
 
-        TheBridgeArena bridgeArena = (TheBridgeArena) arena;
+        BridgeArena bridgeArena = (BridgeArena) arena;
 
         if (color.equalsIgnoreCase("blue")) {
             Selection selection = Selection.createOrGetSelection(player);

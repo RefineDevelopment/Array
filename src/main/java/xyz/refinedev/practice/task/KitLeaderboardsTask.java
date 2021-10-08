@@ -21,6 +21,6 @@ public class KitLeaderboardsTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        Kit.getKits().forEach(plugin.getLeaderboardsManager()::loadKitLeaderboards);
+        plugin.getKitManager().getKits().forEach(plugin.getLeaderboardsManager()::loadKitLeaderboards);
     }
 }

@@ -33,7 +33,7 @@ import java.util.List;
 public class EventSelectButton extends Button {
 
     private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("event_host");
+    private final FoldersConfigurationFile config;
     private final EventType eventType;
 
     /**
@@ -44,7 +44,7 @@ public class EventSelectButton extends Button {
      */
     @Override
     public ItemStack getButtonItem(Player player) {
-        String path = "BUTTONS." + eventType.getEventName().toUpperCase() + ".";
+        String path = "BUTTONS." + eventType.name() + ".";
 
         Material material = Material.valueOf(config.getString(path + "MATERIAL"));
         ItemBuilder itemBuilder = new ItemBuilder(material);
@@ -119,7 +119,7 @@ public class EventSelectButton extends Button {
     public void clicked(Player player, ClickType clickType) {
         player.closeInventory();
 
-        if (eventType.getName().contains("Solo") || eventType.getName().contains("Team")) {
+        if (eventType.equals(EventType.SUMO) || eventType.equals(EventType.GULAG) || eventType.equals(EventType.BRACKETS)) {
             EventSizeMenu menu = new EventSizeMenu(eventType);
             menu.openMenu(player);
             Button.playSuccess(player);

@@ -394,7 +394,7 @@ public class TablistAdapter implements TabAdapter {
 
         if (toReplace == null) return "";
 
-        for ( Kit kit : Kit.getKits()) {
+        for ( Kit kit : plugin.getKitManager().getKits()) {
             String kitName = kit.getName();
             int elo = profile.getStatisticsData().get(kit).getElo();
 

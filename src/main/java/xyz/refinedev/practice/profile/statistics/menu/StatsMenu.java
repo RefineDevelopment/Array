@@ -16,7 +16,7 @@ public class StatsMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
         buttons.put(0, new GlobalStatsButton());
-        for ( Kit kit : Kit.getKits()) {
+        for ( Kit kit : plugin.getKitManager().getKits()) {
             if (kit.isEnabled()) {
                 buttons.put(buttons.size(), new KitStatsButton(kit));
             }

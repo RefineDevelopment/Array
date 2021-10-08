@@ -20,7 +20,7 @@ public class LeaderboardsMenu extends Menu {
     }
 
     @Override
-    public String getTitle(final Player player) {
+    public String getTitle(Player player) {
         return "&7Leaderboards";
     }
     
@@ -35,8 +35,8 @@ public class LeaderboardsMenu extends Menu {
         int y = 3;
         int x = 1;
 
-        for ( Kit kit : Kit.getKits()) {
-            if (kit.getGameRules().isRanked() && kit.isEnabled() && !kit.getName().equalsIgnoreCase("HCFTeamFight")) {
+        for ( Kit kit : this.getPlugin().getKitManager().getKits()) {
+            if (kit.getGameRules().isRanked() && kit.isEnabled() && !kit.equals(this.getPlugin().getKitManager().getTeamFight())) {
                 buttons.put(getSlot(x++, y), new KitLeaderboardsButton(kit));
                 if (x == 8) {
                     y++;

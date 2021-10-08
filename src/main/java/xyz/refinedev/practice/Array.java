@@ -139,6 +139,10 @@ public class Array extends JavaPlugin {
         this.killEffectManager = new KillEffectManager(this);
         this.killEffectManager.init();
 
+        this.queueManager = new QueueManager(this);
+
+        this.queueManager.init();
+
         this.kitManager = new KitManager(this, kitsConfig);
         this.kitManager.init();
 
@@ -154,13 +158,10 @@ public class Array extends JavaPlugin {
         this.partyManager = new PartyManager(this);
         this.partyManager.init();
 
-        this.queueManager = new QueueManager(this);
-        this.queueManager.init();
-
         this.menuManager = new MenuManager(this);
         this.menuManager.init();
 
-        this.eventManager = new EventManager(this);
+        this.eventManager = new EventManager(this, eventsConfig);
         this.eventManager.init();
 
         this.tournamentManager = new TournamentManager(this);
@@ -207,6 +208,7 @@ public class Array extends JavaPlugin {
         this.eventManager.save();
         this.killEffectManager.exportConfig();
         this.pvpClassManager.onDisable();
+        this.leaderboardsManager.shutdown();
         this.queueManager.shutdown();
 
         this.disabling = true;

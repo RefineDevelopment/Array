@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.profile.settings.meta;
+package xyz.refinedev.practice.profile.settings;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +13,7 @@ import lombok.Setter;
  */
 
 @Getter @Setter
-public class Settings {
+public class ProfileSettings {
 
     private boolean
 

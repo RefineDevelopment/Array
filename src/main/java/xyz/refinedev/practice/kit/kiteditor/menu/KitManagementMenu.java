@@ -29,8 +29,8 @@ public class KitManagementMenu extends Menu {
 
     public KitManagementMenu(Kit kit) {
         this.kit = kit;
-        setPlaceholder(true);
-        setUpdateAfterClick(false);
+        this.setPlaceholder(true);
+        this.setUpdateAfterClick(false);
     }
 
     @Override

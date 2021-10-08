@@ -37,10 +37,10 @@ public class PartyListener implements Listener {
         }
 
         if (party.isLeader(player.getUniqueId())) {
-            party.leader(player, partyPlayers.get(0));
+            plugin.getPartyManager().leader(partyPlayers.get(0), party);
             party.broadcast(CC.translate("&b" + party.getLeader().getUsername() + " &ehas been randomly promoted to leader because the previous leader left."));
         }
-        party.leave(player, false);
+        plugin.getPartyManager().leave(player, party);
 
         Tournament<?> tournament = plugin.getTournamentManager().getCurrentTournament();
         if (tournament == null) return;

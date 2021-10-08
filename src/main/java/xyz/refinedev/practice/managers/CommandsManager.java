@@ -7,12 +7,13 @@ import xyz.refinedev.practice.arena.ArenaProvider;
 import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.arena.ArenaTypeProvider;
 import xyz.refinedev.practice.arena.rating.RatingType;
-import xyz.refinedev.practice.arena.meta.RatingTypeProvider;
+import xyz.refinedev.practice.arena.rating.RatingTypeProvider;
 import xyz.refinedev.practice.clan.ClanProfileProvider;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
 import xyz.refinedev.practice.cmds.*;
 import xyz.refinedev.practice.cmds.essentials.*;
 import xyz.refinedev.practice.cmds.event.EventCommands;
+import xyz.refinedev.practice.cmds.event.ParkourCommands;
 import xyz.refinedev.practice.cmds.event.SpleefCommands;
 import xyz.refinedev.practice.cmds.event.SumoCommands;
 import xyz.refinedev.practice.cmds.settings.*;
@@ -56,9 +57,10 @@ public class CommandsManager {
         drink.register(new PartyCommands(plugin), "party", "p");
         drink.register(new TournamentCommands(plugin), "tournament", "tourney");
         drink.register(new ClanCommands(plugin), "clan", "c");
-        drink.register(new EventCommands(plugin, plugin.getEventManager()), "event", "event");
+        drink.register(new EventCommands(plugin, plugin.getEventManager()), "event", "events");
         drink.register(new SumoCommands(plugin, plugin.getEventManager()), "sumo");
         drink.register(new SpleefCommands(plugin, plugin.getEventManager()), "spleef");
+        drink.register(new ParkourCommands(plugin, plugin.getEventManager()), "parkour");
         drink.register(new KillEffectCommands(plugin), "killeffect", "killeffects", "ke");
 
         //These are standalone cmds which cannot have sub cmds
@@ -109,8 +111,8 @@ public class CommandsManager {
         drink.bind(Kit.class).toProvider(new KitProvider());
         drink.bind(Profile.class).toProvider(new ProfileProvider());
         drink.bind(EventType.class).toProvider(new EventProvider());
-        drink.bind(RatingType.class).toProvider(new RatingTypeProvider());
         drink.bind(TournamentType.class).toProvider(new TournamentTypeProvider());
         drink.bind(KillEffect.class).toProvider(new KillEffectProvider());
+        drink.bind(RatingType.class).toProvider(new RatingTypeProvider());
     }
 }
