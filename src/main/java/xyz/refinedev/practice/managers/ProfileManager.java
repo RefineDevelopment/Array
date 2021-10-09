@@ -64,7 +64,7 @@ public class ProfileManager {
     private final Array plugin;
     private final MongoCollection<Document> collection;
 
-    private final Map<UUID, Profile> profiles = new LinkedHashMap<>();
+    private final Map<UUID, Profile> profiles = new HashMap<>();
 
     /**
      * This method merely just initiates
@@ -78,7 +78,7 @@ public class ProfileManager {
         profileQueryTask.runTaskTimerAsynchronously(plugin, 3600L, 3600L);
 
         ProfileHotbarTask profileHotbarTask = new ProfileHotbarTask(this);
-        profileHotbarTask.runTaskTimerAsynchronously(plugin, 60L, 60L);
+        profileHotbarTask.runTaskTimer(plugin, 60L, 60L);
     }
 
     /**
@@ -290,6 +290,7 @@ public class ProfileManager {
         if (player == null) return;
 
         PlayerUtil.reset(player);
+        player.sendMessage(CC.translate("&cRefreshing hotbar"));
 
         if (profile.isInLobby()) {
             if (profile.hasParty()) {

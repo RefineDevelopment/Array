@@ -56,7 +56,7 @@ public class SumoTeam extends Event {
     private EventGroup roundTeamB;
 
     public SumoTeam(Array plugin, Player host, EventTeamSize size) {
-        super(plugin, plugin.getEventManager(),"Sumo", new PlayerSnapshot(host.getUniqueId(), host.getName()), size.getMaxParticipants(), EventType.SUMO_TEAM);
+        super(plugin, plugin.getEventManager(),"Sumo", new PlayerSnapshot(host.getUniqueId(), host.getName()), size.getMaxParticipants(), EventType.SUMO, size);
 
         this.plugin = plugin;
 

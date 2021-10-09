@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import xyz.refinedev.practice.util.events.BaseEvent;
 
-
 @Getter @Setter
 @RequiredArgsConstructor
 public class SpawnTeleportEvent extends BaseEvent implements Cancellable {

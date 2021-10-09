@@ -134,21 +134,19 @@ public class ParkourListener implements Listener {
     public void onButton(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        EventPlayer eventPlayer = profile.getEvent().getEventPlayer(player.getUniqueId());
         Block block = event.getClickedBlock();
         Action action = event.getAction();
 
         if (event.getClickedBlock() == null) return;
         if (!profile.isInEvent() || !profile.getEvent().isParkour()) return;
         if (profile.getEvent().getState().equals(EventState.ROUND_ENDING)) return;
-        if (!eventPlayer.getState().equals(EventPlayerState.WAITING)) return;
-        if (!action.equals(Action.PHYSICAL)) return;
-
-        if (profile.getPlates().contains(block.getLocation())) {
-            return;
-        }
 
         Parkour parkour = (Parkour) profile.getEvent();
+        EventPlayer eventPlayer = profile.getEvent().getEventPlayer(player.getUniqueId());
+
+        if (!eventPlayer.getState().equals(EventPlayerState.WAITING)) return;
+        if (!action.equals(Action.PHYSICAL)) return;
+        if (profile.getPlates().contains(block.getLocation())) return;
 
         switch (block.getType()) {
             case GOLD_PLATE: {

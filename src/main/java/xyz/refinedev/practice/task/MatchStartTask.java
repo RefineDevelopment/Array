@@ -36,14 +36,14 @@ public class MatchStartTask extends BukkitRunnable {
                 match.broadcastMessage("");
                 Locale.MATCH_DISCLAIMER.toList().forEach(match::broadcastMessage);
             }
-            match.getPlayers().forEach(TitleAPI::clearTitle);
+            //match.getPlayers().forEach(TitleAPI::clearTitle);
             match.getPlayers().forEach(TitleAPI::sendMatchStart);
             match.broadcastSound(Sound.NOTE_BASS);
             cancel();
             return;
         }
 
-        match.getPlayers().forEach(TitleAPI::clearTitle);
+        //match.getPlayers().forEach(TitleAPI::clearTitle);
         match.getPlayers().forEach(TitleAPI::sendMatchCountdown);
         match.broadcastMessage(replace);
         match.broadcastSound(Sound.NOTE_PLING);

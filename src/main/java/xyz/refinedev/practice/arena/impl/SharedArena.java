@@ -38,7 +38,7 @@ public class SharedArena extends Arena {
         if (this.getMin() != null) config.set(path + ".min", LocationUtil.serialize(this.getMin()));
 
         config.set(path + ".disable-pearls", this.isDisablePearls());
-        config.set(path + ".fall-death-height", this.getFallDeathHeight());
+        config.set(path + ".fall-death-height", this.getDeathHeight());
         config.set(path + ".icon.material", this.getDisplayIcon().getType().name());
         config.set(path + ".icon.durability", this.getDisplayIcon().getDurability());
         config.set(path + ".kits", this.getKits().stream().map(Kit::getName).collect(Collectors.toList()));

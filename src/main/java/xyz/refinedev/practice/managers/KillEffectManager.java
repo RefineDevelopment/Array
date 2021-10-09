@@ -165,7 +165,7 @@ public class KillEffectManager {
         String serialized = Array.GSON.toJson(killEffect);
         Document document = new Document();
 
-        document.put("_id", killEffect.getUniqueId());
+        document.put("_id", killEffect.getUniqueId().toString());
         document.put("killEffect", serialized);
 
         plugin.submitToThread(() -> collection.replaceOne(Filters.eq("_id", killEffect.getUniqueId().toString()), document, new ReplaceOptions().upsert(true)));
@@ -209,7 +209,7 @@ public class KillEffectManager {
     public KillEffect createDefault() {
         KillEffect killEffect = new KillEffect(UUID.randomUUID(), "&aDefault");
         killEffect.setLightning(true);
-        killEffect.setDropsClear(true);
+        killEffect.setDropsClear(false);
         killEffect.setDefaultEffect(true);
         killEffect.setItemStack(new ItemStack(Material.PAPER));
 

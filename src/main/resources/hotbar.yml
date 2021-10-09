@@ -190,7 +190,7 @@ HOTBAR_ITEMS:
     ENABLED: true
     MATERIAL: INK_SACK
     DURABILITY: 1
-    SLOT: 8
+    SLOT: 0
     LAYOUT_TYPE: MATCH_SPECTATE
     COMMAND: "specmenu"
     LORE: []

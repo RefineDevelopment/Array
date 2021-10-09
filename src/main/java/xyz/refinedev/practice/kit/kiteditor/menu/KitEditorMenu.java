@@ -82,16 +82,14 @@ public class KitEditorMenu extends Menu {
     @Override
     public void onOpen(Player player) {
         if (!isClosedByMenu()) {
-            //PlayerUtil.reset(player);
+            PlayerUtil.reset(player);
 
             Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
             profile.getKitEditor().setActive(true);
 
             if (profile.getKitEditor().getSelectedKit() != null) {
-                player.getInventory().clear();
                 player.getInventory().setContents(profile.getKitEditor().getSelectedKitInventory().getContents());
             }
-
             player.updateInventory();
         }
     }
@@ -102,8 +100,14 @@ public class KitEditorMenu extends Menu {
         profile.getKitEditor().setActive(false);
 
         if (!profile.isInFight()) {
-            this.getPlugin().getProfileManager().refreshHotbar(profile);
+           TaskUtil.run(() -> this.getPlugin().getProfileManager().refreshHotbar(profile));
         }
+
+        Menu openMenu = Menu.currentlyOpenedMenus.get(player.getName());
+        if (openMenu == null) return;
+
+        openMenu.setClosedByMenu(false);
+        Menu.currentlyOpenedMenus.remove(player.getName());
     }
 
     @AllArgsConstructor
@@ -189,6 +193,7 @@ public class KitEditorMenu extends Menu {
 
             Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
+            player.setItemOnCursor(null);
             player.getInventory().setContents(profile.getKitEditor().getSelectedKit().getKitInventory().getContents());
             player.updateInventory();
         }
@@ -224,7 +229,6 @@ public class KitEditorMenu extends Menu {
             }
 
             plugin.getProfileManager().refreshHotbar(profile);
-
             new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(player);
         }
     }

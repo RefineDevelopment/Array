@@ -289,7 +289,7 @@ public class MatchListener implements Listener {
 
         event.getDrops().clear();
         match.getEntities().addAll(entities);
-        match.handleDeath(player);
+        match.handleDeath(player, player.getKiller(), false);
     }
 
     /**
@@ -448,7 +448,6 @@ public class MatchListener implements Listener {
         if (!profile.isInFight()) return;
         if (match.isEnding()) return;
 
-        //Some cool math calculations
         if (event.getFrom().getBlockY() - 1 > event.getTo().getBlockY() && match.getArena().getFallDeathHeight() >= event.getTo().getBlockY()) {
             if (match.getKit().getGameRules().isVoidSpawn()) {
                 TeamPlayer teamPlayer = match.getTeamPlayer(player);

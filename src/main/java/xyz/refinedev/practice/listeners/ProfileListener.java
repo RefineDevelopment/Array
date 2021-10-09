@@ -17,12 +17,9 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.api.events.profile.SpawnTeleportEvent;
 import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.other.PlayerUtil;
-import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.UUID;
 
@@ -271,26 +268,7 @@ public class ProfileListener implements Listener {
         event.setCancelled(true);
         profile.getKitEditor().setActive(false);
         plugin.getProfileManager().refreshHotbar(profile);
-    }
-
-    /**
-     * This is the patch for the Kit Editor Bug
-     * when you can exit the editor with F6
-     *
-     * @param event {@link PotionSplashEvent}
-     */
-    @EventHandler (priority = EventPriority.LOW)
-    public void onPotionThrow(PotionSplashEvent event) {
-        ProjectileSource source = event.getPotion().getShooter();
-        if (!(source instanceof Player)) return;
-        
-        Player shooter = (Player) source;
-        Profile profile = plugin.getProfileManager().getByUUID(shooter.getUniqueId());
-        if (!profile.isInLobby() && !profile.isInQueue()) return;
-        
-        event.setCancelled(true);
-        profile.getKitEditor().setActive(false);
-        plugin.getProfileManager().refreshHotbar(profile);
+        shooter.sendMessage("&cYou have been caught glitching");
     }
 
     /**
@@ -308,6 +286,7 @@ public class ProfileListener implements Listener {
         event.setCancelled(true);
         profile.getKitEditor().setActive(false);
         plugin.getProfileManager().refreshHotbar(profile);
+        player.sendMessage("&cYou have been caught glitching");
     }
 
 }

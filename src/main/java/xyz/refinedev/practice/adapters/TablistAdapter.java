@@ -529,7 +529,6 @@ public class TablistAdapter implements TabAdapter {
                 .replace("<profile_cps>", String.valueOf(teamPlayer.getCps()))
                 .replace("<profile_hits>", String.valueOf(teamPlayer.getHits()))
                 .replace("<profile_ping>", String.valueOf(teamPlayer.getPing()))
-                .replace("<profile_potions>", String.valueOf(teamPlayer.getPotions()))
                 .replace("<profile_pot_accuracy>", String.valueOf(teamPlayer.getPotionAccuracy()));
     }
 

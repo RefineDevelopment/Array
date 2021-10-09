@@ -1,13 +1,13 @@
 package xyz.refinedev.practice.api.events.match;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import xyz.refinedev.practice.match.Match;
+import xyz.refinedev.practice.util.events.BaseEvent;
 
 @Getter
-public class MatchEndEvent extends MatchEvent {
+@RequiredArgsConstructor
+public class MatchEndEvent extends BaseEvent {
 
-    public MatchEndEvent(final Match match) {
-        super(match);
-    }
-
+    private final Match match;
 }

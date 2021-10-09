@@ -56,7 +56,6 @@ public abstract class Match {
     private final List<MatchSnapshot> snapshots = new ArrayList<>();
     private final List<UUID> spectatorList = new ArrayList<>();
     private final List<Entity> entities = new ArrayList<>();
-    private final List<Item> droppedItems = new ArrayList<>();
     private final List<Location> placedBlocks = new ArrayList<>();
     private final List<BlockState> changedBlocks = new ArrayList<>();
 
@@ -67,7 +66,7 @@ public abstract class Match {
     private final QueueType queueType;
 
     public MatchState state = MatchState.STARTING;
-    public BukkitTask task, waterTask, potionTask;
+    public BukkitTask task, waterTask;
 
     private long startTimestamp;
 
@@ -104,7 +103,6 @@ public abstract class Match {
         }
         this.arena.setActive(false);
         this.entities.forEach(Entity::remove);
-        this.droppedItems.forEach(Item::remove);
     }
 
     /**
@@ -160,7 +158,6 @@ public abstract class Match {
         }
 
         this.task = new MatchStartTask(this).runTaskTimer(plugin, 20L, 20L);
-        this.potionTask = new MatchPotionTrackTask(plugin, this).runTaskTimerAsynchronously(plugin, 0L, 5L);
     }
 
     /**
@@ -200,17 +197,18 @@ public abstract class Match {
             this.removePearl(player, true);
         }
 
-        for ( TeamPlayer gamePlayer : getTeamPlayers()) {
+        for ( TeamPlayer gamePlayer : this.getTeamPlayers()) {
+            if (gamePlayer == null) return;
             Player player = gamePlayer.getPlayer();
             if (gamePlayer.isDisconnected() || player == null) continue;
-            for ( BaseComponent[] components : generateEndComponents(player) ) {
+            for ( BaseComponent[] components :  this.generateEndComponents(player) ) {
                 player.spigot().sendMessage(components);
             }
         }
 
-        for (Player player : getSpectators()) {
-            if (player == null) continue;
-            for (BaseComponent[] components : generateEndComponents(player)) {
+        for (Player player : this.getSpectators()) {
+            if (player == null) return;
+            for (BaseComponent[] components : this.generateEndComponents(player)) {
                 player.spigot().sendMessage(components);
             }
             this.removeSpectator(player);
@@ -229,7 +227,6 @@ public abstract class Match {
         if (waterTask != null) {
             waterTask.cancel();
         }
-        potionTask.cancel();
 
         MatchEndEvent event = new MatchEndEvent(this);
         plugin.getServer().getPluginManager().callEvent(event);
@@ -269,11 +266,11 @@ public abstract class Match {
      */
     public void removePearl(Player player, boolean resetCooldown) {
         if (player == null) return;
-
         if (resetCooldown) {
             Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
             plugin.getProfileManager().setEnderpearlCooldown(profile, new Cooldown(0L));
         }
+
         EnderPearl pearl = this.pearlMap.get(player.getUniqueId());
         if (pearl != null) pearl.remove();
     }
@@ -385,7 +382,7 @@ public abstract class Match {
         }
 
         if (killEffect.isDropsClear()) {
-            this.getDroppedItems().forEach(Item::remove);
+            this.getEntities().forEach(Entity::remove);
         }
 
         if (killEffect.isAnimateDeath())

@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
@@ -29,13 +30,10 @@ public class KitEditorSelectKitMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        plugin.getKitManager().getKits().forEach(kit -> {
-            if (kit.isEnabled()) {
-                if (kit.getGameRules().isEditable()) {
-                    buttons.put(buttons.size(), new KitDisplayButton(kit));
-                }
-            }
-        });
+        for (Kit kit : plugin.getKitManager().getKits()) {
+            if (!kit.isEnabled()) continue;
+            buttons.put(buttons.size(), new KitDisplayButton(kit));
+        }
 
         return buttons;
     }
@@ -49,7 +47,7 @@ public class KitEditorSelectKitMenu extends Menu {
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
             lore.add("");
-            lore.add("&cClick to edit this kit.");
+            lore.add(kit.getGameRules().isEditable() ? "&cClick to edit this kit." : "&cYou can not edit this kit.");
             return new ItemBuilder(kit.getDisplayIcon())
                     .name(kit.getDisplayName()).lore(lore)
                     .build();
@@ -58,6 +56,10 @@ public class KitEditorSelectKitMenu extends Menu {
         @Override
         public void clicked(Player player, ClickType clickType) {
             player.closeInventory();
+            if (!this.kit.getGameRules().isEditable()) {
+                player.sendMessage(CC.translate("&cYou can not edit this kit"));
+                return;
+            }
 
             Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
             profile.getKitEditor().setSelectedKit(kit);

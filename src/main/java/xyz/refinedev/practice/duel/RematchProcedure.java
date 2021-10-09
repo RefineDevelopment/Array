@@ -78,7 +78,7 @@ public class RematchProcedure {
         plugin.getProfileManager().checkForHotbarUpdate(senderProfile);
         plugin.getProfileManager().checkForHotbarUpdate(targetProfile);
 
-        TaskUtil.runLaterAsync(() -> {
+        TaskUtil.runLater(() -> {
             plugin.getProfileManager().checkForHotbarUpdate(senderProfile);
             plugin.getProfileManager().checkForHotbarUpdate(targetProfile);
         }, 15 * 20);

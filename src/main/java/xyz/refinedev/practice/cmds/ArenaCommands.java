@@ -113,7 +113,7 @@ public class ArenaCommands {
 
     @Command(name = "", usage = "<arena> <int>",desc = "Set an arena's fall death height")
     public void fallDeathHeight(@Sender CommandSender sender, Arena arena, int amount) {
-        arena.setFallDeathHeight(amount);
+        arena.setDeathHeight(amount);
         sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully set &c" + arena.getDisplayName() + "'s &7fall death height to &c" + amount + "&7."));
         sender.sendMessage(CC.translate("&8[&cTIP&8] &7&oPlease bare in mind, this amount is subtracted from the y-level of your spawn 1 to get the y level for death height."));
     }

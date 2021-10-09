@@ -2,7 +2,6 @@ package xyz.refinedev.practice.arena.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.configuration.file.FileConfiguration;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.ArenaType;
@@ -11,7 +10,6 @@ import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.location.LocationUtil;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,7 +41,7 @@ public class StandaloneArena extends Arena {
         if (this.getMin() != null) config.set(path + ".min", LocationUtil.serialize(this.getMin()));
 
         config.set(path + ".disable-pearls", this.isDisablePearls());
-        config.set(path + ".fall-death-height", this.getFallDeathHeight());
+        config.set(path + ".fall-death-height", this.getDeathHeight());
         config.set(path + ".icon.material", this.getDisplayIcon().getType().name());
         config.set(path + ".icon.durability", this.getDisplayIcon().getDurability());
         config.set(path + ".kits", getKits().stream().map(Kit::getName).collect(Collectors.toList()));

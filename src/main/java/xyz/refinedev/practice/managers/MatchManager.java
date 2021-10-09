@@ -67,9 +67,9 @@ public class MatchManager {
     private final List<Match> matches = new ArrayList<>();
 
     public void init() {
-        new MatchPearlCooldownTask(plugin).runTaskTimerAsynchronously(plugin, 2L, 2L);
-        new MatchBowCooldownTask(plugin).runTaskTimerAsynchronously(plugin, 2L, 2L);
-        new MatchSnapshotCleanupTask(plugin).runTaskTimerAsynchronously(plugin, 20L * 5, 20L * 5);
+        new MatchPearlCooldownTask(plugin).runTaskTimerAsynchronously(plugin, 10L, 10L);
+        new MatchBowCooldownTask(plugin).runTaskTimerAsynchronously(plugin, 10L, 10L);
+        new MatchSnapshotCleanupTask(plugin).runTaskTimerAsynchronously(plugin, 200L, 200L);
 
         Bukkit.getWorlds().forEach(world -> {
             world.setGameRuleValue("doWeatherCycle", "false");
@@ -316,7 +316,7 @@ public class MatchManager {
         }
 
         if (killEffect.isDropsClear()) {
-            match.getDroppedItems().forEach(Item::remove);
+            match.getEntities().forEach(Entity::remove);
         }
 
         if (killEffect.isAnimateDeath())
@@ -450,7 +450,6 @@ public class MatchManager {
 
         match.getArena().setActive(false);
         match.getEntities().forEach(Entity::remove);
-        match.getDroppedItems().forEach(Item::remove);
     }
 
     /**
@@ -542,8 +541,10 @@ public class MatchManager {
     }
 
     public MatchSnapshot getByString(String name) {
-        UUID uuid = UUID.fromString(name);
-        if (snapshotMap.get(uuid) == null) {
+        try {
+            UUID uuid = UUID.fromString(name);
+            return snapshotMap.get(uuid);
+        } catch (Exception e) {
             for ( MatchSnapshot snapshot : snapshotMap.values()) {
                 TeamPlayer teamPlayer = snapshot.getTeamPlayer();
                 if (teamPlayer.getUsername().equalsIgnoreCase(name))
@@ -551,7 +552,6 @@ public class MatchManager {
             }
             return null;
         }
-        return snapshotMap.get(uuid);
     }
 
 

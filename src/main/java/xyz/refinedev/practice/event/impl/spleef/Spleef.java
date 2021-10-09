@@ -9,6 +9,7 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.EventState;
+import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.event.impl.spleef.task.SpleefRoundEndTask;
 import xyz.refinedev.practice.event.impl.spleef.task.SpleefRoundStartTask;
@@ -39,7 +40,7 @@ public class Spleef extends Event {
     private BukkitRunnable waterTask;
 
     public Spleef(Array plugin, Player host) {
-        super(plugin, plugin.getEventManager(),"Spleef", new PlayerSnapshot(host.getUniqueId(), host.getName()), 100, EventType.SPLEEF);
+        super(plugin, plugin.getEventManager(),"Spleef", new PlayerSnapshot(host.getUniqueId(), host.getName()), 100, EventType.SPLEEF, EventTeamSize.SOLO);
 
         this.setEvent_Prefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
     }

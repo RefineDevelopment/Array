@@ -66,8 +66,7 @@ public class KitEditorListener implements Listener {
                 }
             }
 
-            if (!profile.isInSomeSortOfFight() && player.getGameMode() == GameMode.SURVIVAL) {
-                if (!profile.isInEvent()) {
+            if (!(profile.isInSomeSortOfFight() || player.getGameMode() != GameMode.SURVIVAL || profile.isInBrackets() || profile.isInLMS())) {
                     Inventory clicked = event.getClickedInventory();
                     if (profile.getKitEditor().isActive()) {
                         if (clicked == null) {
@@ -89,7 +88,6 @@ public class KitEditorListener implements Listener {
                             event.setCancelled(true);
                         }
                     }
-                }
             }
         }
     }

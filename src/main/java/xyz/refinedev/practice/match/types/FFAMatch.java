@@ -4,10 +4,12 @@ import com.comphenix.protocol.events.PacketContainer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
@@ -19,6 +21,7 @@ import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.queue.QueueType;
+import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
 import xyz.refinedev.practice.util.location.Circle;
 import xyz.refinedev.practice.util.other.EffectUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
@@ -66,7 +69,7 @@ public class FFAMatch extends Match {
         if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
         plugin.getSpigotHandler().kitKnockback(player, getKit());
-        player.setNoDamageTicks(getKit().getGameRules().getHitDelay());
+        player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         Team team = getTeam(player);
 
@@ -140,7 +143,7 @@ public class FFAMatch extends Match {
 
     @Override
     public boolean canEnd() {
-        return getAlivePlayers().size() < 1;
+        return this.getAlivePlayers().size() <= 1;
     }
 
     @Override
@@ -158,14 +161,14 @@ public class FFAMatch extends Match {
         if (this.canEnd()) {
             this.end();
         } else {
-            PlayerUtil.spectator(deadPlayer);
             if (!teamPlayer.isDisconnected()) {
-                deadPlayer.teleport(getMidSpawn());
+                deadPlayer.teleport(this.getMidSpawn());
 
                 Profile profile = plugin.getProfileManager().getByUUID(deadPlayer.getUniqueId());
-                profile.setState(ProfileState.SPECTATING);
                 plugin.getProfileManager().refreshHotbar(profile);
-                plugin.getProfileManager().handleVisibility(profile);
+                profile.setState(ProfileState.SPECTATING);
+
+                PlayerUtil.spectator(deadPlayer);
             }
         }
     }
@@ -270,7 +273,28 @@ public class FFAMatch extends Match {
 
     @Override
     public List<BaseComponent[]> generateEndComponents(Player player) {
-        return null;
+        List<BaseComponent[]> componentsList = new ArrayList<>();
+
+        for ( String line : Locale.MATCH_INVENTORY_MESSAGE.toList() ) {
+            if (line.equalsIgnoreCase("<inventories>")) {
+
+                BaseComponent[] winners = generateInventoriesComponents(Locale.MATCH_INVENTORY_WINNERS.toString(), this.getTeamPlayer(this.getWinningPlayer()));
+                BaseComponent[] losers = generateInventoriesComponents(Locale.MATCH_INVENTORY_LOSERS.toString(), this.team.getDeadTeamPlayers());
+
+                componentsList.add(winners);
+                componentsList.add(losers);
+
+                continue;
+            }
+
+            if (line.equalsIgnoreCase("<elo_changes>")) {
+                continue;
+            }
+
+            componentsList.add(new ChatComponentBuilder("").parse(line).create());
+        }
+
+        return componentsList;
     }
 
     @Override

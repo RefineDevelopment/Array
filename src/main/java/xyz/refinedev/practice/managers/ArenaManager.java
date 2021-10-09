@@ -100,7 +100,7 @@ public class ArenaManager {
         if (config.contains(path + ".max")) arena.setMax(LocationUtil.deserialize(config.getString(path + ".max")));
         if (config.contains(path + ".min")) arena.setMin(LocationUtil.deserialize(config.getString(path + ".min")));
         if (config.contains(path + ".disable-pearls")) arena.setDisablePearls(config.getBoolean(path + ".disable-pearls"));
-        if (config.contains(path + ".fall-death-height")) arena.setFallDeathHeight(config.getInteger(path + ".fall-death-height", 25));
+        if (config.contains(path + ".fall-death-height")) arena.setDeathHeight(config.getInteger(path + ".fall-death-height", 25));
 
         if (config.contains(path + ".icon-material")) {
             ItemBuilder itemBuilder = new ItemBuilder(Material.valueOf(config.getString(path + ".icon.material")));
@@ -137,7 +137,6 @@ public class ArenaManager {
             location2 = LocationUtil.deserialize(config.getString(path + ".redPortal.location2"));
             bridgeArena.setRedPortal(new Cuboid(location1, location2));
         }
-        this.arenas.add(arena);
     }
 
     /**

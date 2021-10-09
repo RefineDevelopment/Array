@@ -94,18 +94,6 @@ public class MenuListener implements Listener {
 
             Menu.currentlyOpenedMenus.remove(player.getName());
         }
-        player.setMetadata("editorglitch", new FixedMetadataValue(plugin, true));
-    }
-
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
-
-        if (player.hasMetadata("editorglitch")) {
-            player.removeMetadata("editorglitch", plugin);
-            plugin.getProfileManager().refreshHotbar(profile);
-        }
     }
 
 }

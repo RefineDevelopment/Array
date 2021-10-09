@@ -139,6 +139,14 @@ public class Profile {
        return plugin.getTournamentManager().getCurrentTournament() != null && plugin.getTournamentManager().getCurrentTournament().isParticipating(this.uniqueId);
     }
 
+    public boolean isInBrackets() {
+        return event != null && (event.isBracketsSolo() || event.isBracketsTeam());
+    }
+
+    public boolean isInLMS() {
+        return event != null && event.isLMS();
+    }
+
     public boolean isInSomeSortOfFight() {
         return (state == ProfileState.IN_FIGHT && match != null) || (state == ProfileState.IN_EVENT);
     }

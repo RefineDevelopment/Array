@@ -72,7 +72,7 @@ public class TeamMatch extends Match {
         if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
         plugin.getSpigotHandler().kitKnockback(player, getKit());
-        player.setNoDamageTicks(getKit().getGameRules().getHitDelay());
+        player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         Team team = getTeam(player);
 
@@ -191,14 +191,14 @@ public class TeamMatch extends Match {
         if (this.canEnd()) {
             this.end();
         } else {
-            PlayerUtil.spectator(deadPlayer);
             if (!teamPlayer.isDisconnected()) {
-                deadPlayer.teleport(getMidSpawn());
+                deadPlayer.teleport(this.getMidSpawn());
 
                 Profile profile = plugin.getProfileManager().getByUUID(deadPlayer.getUniqueId());
-                profile.setState(ProfileState.SPECTATING);
                 plugin.getProfileManager().refreshHotbar(profile);
-                plugin.getProfileManager().handleVisibility(profile);
+                profile.setState(ProfileState.SPECTATING);
+
+                PlayerUtil.spectator(deadPlayer);
             }
         }
     }

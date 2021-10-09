@@ -301,9 +301,9 @@ public class ScoreboardAdapter implements AssembleAdapter {
                         .replace("<match_kit>", match.getKit().getDisplayName())
                         .replace("<match_arena>", match.getArena().getDisplayName())
                         .replace("<match_type>", "FFA")
-                        .replace("<total_count>", String.valueOf(team.getPlayers().size()))
+                        .replace("<player_count>", String.valueOf(team.getPlayers().size()))
                         .replace("<your_name>", player.getName())
-                        .replace("<alive_count>", String.valueOf(team.getAliveCount())))
+                        .replace("<players_alive>", String.valueOf(team.getAliveCount())))
                         .replace("%splitter%", "┃").replace("|", "┃")));
 
             }

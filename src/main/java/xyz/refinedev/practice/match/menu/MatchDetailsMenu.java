@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.match.menu;
 
+import com.google.common.base.Preconditions;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.bukkit.Material;
@@ -37,6 +38,8 @@ public class MatchDetailsMenu extends Menu {
 
     @Override
     public Map<Integer, Button> getButtons(Player player) {
+        Preconditions.checkNotNull(snapshot, "Snapshot can not be null!");
+
         Map<Integer, Button> buttons = new HashMap<>();
         ItemStack[] fixedContents = InventoryUtil.fixInventoryOrder(snapshot.getContents());
 
@@ -97,16 +100,25 @@ public class MatchDetailsMenu extends Menu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
+            if (opponent != null) {
+                new MatchDetailsMenu(opponent, snapshot).openMenu(player);
+            }
+
+            MatchSnapshot cachedInventory;
             if (opponent == null) {
-                MatchSnapshot cachedInventory = plugin.getMatchManager().getByString(switchTo.getUniqueId().toString());
+                try {
+                    cachedInventory = plugin.getMatchManager().getByString(switchTo.getUniqueId().toString());
+                } catch (Exception e) {
+                    player.sendMessage(CC.RED + "Couldn't find an inventory for that ID.");
+                    return;
+                }
 
                 if (cachedInventory == null) {
                     player.sendMessage(CC.RED + "Couldn't find an inventory for that ID.");
                     return;
                 }
-                new MatchDetailsMenu(cachedInventory, null).openMenu(player);
+                new MatchDetailsMenu(cachedInventory, snapshot).openMenu(player);
             }
-            new MatchDetailsMenu(opponent, snapshot).openMenu(player);
         }
 
     }

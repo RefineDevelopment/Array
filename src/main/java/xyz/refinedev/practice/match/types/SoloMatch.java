@@ -107,7 +107,7 @@ public class SoloMatch extends Match {
         if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
         plugin.getSpigotHandler().kitKnockback(player, getKit());
-        player.setNoDamageTicks(getKit().getGameRules().getHitDelay());
+        player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         Location spawn = playerA.equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
 
@@ -207,11 +207,11 @@ public class SoloMatch extends Match {
         Profile losingProfile = plugin.getProfileManager().getByUUID(losingPlayer.getUniqueId());
 
         if (getQueueType() == QueueType.UNRANKED) {
-            MatchHistory winnerProfileMatchHistory = new MatchHistory(plugin, new Date(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit(), true, false, 0, 0);
-            MatchHistory loserProfileMatchHistory = new MatchHistory(plugin, new Date(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit(), false, false, 0, 0);
+            //MatchHistory winnerProfileMatchHistory = new MatchHistory(plugin, new Date(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit(), true, false, 0, 0);
+            //MatchHistory loserProfileMatchHistory = new MatchHistory(plugin, new Date(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit(), false, false, 0, 0);
 
-            winningProfile.getUnrankedMatchHistory().add(winnerProfileMatchHistory);
-            losingProfile.getUnrankedMatchHistory().add(loserProfileMatchHistory);
+            //winningProfile.getUnrankedMatchHistory().add(winnerProfileMatchHistory);
+            //losingProfile.getUnrankedMatchHistory().add(loserProfileMatchHistory);
 
             winningProfile.getStatisticsData().get(this.getKit()).incrementWon();
             plugin.getProfileManager().save(winningProfile);
@@ -227,11 +227,11 @@ public class SoloMatch extends Match {
             int newWinnerElo = EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
             int newLoserElo = EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
 
-            MatchHistory winnerProfileMatchHistory = new MatchHistory(plugin, new Date(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit(), true, true, newWinnerElo, newLoserElo);
-            MatchHistory loserProfileMatchHistory = new MatchHistory(plugin, new Date(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit(), false, true, newWinnerElo, newLoserElo);
+            //MatchHistory winnerProfileMatchHistory = new MatchHistory(plugin, new Date(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit(), true, true, newWinnerElo, newLoserElo);
+            //MatchHistory loserProfileMatchHistory = new MatchHistory(plugin, new Date(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit(), false, true, newWinnerElo, newLoserElo);
 
-            winningProfile.getRankedMatchHistory().add(winnerProfileMatchHistory);
-            losingProfile.getRankedMatchHistory().add(loserProfileMatchHistory);
+            //winningProfile.getRankedMatchHistory().add(winnerProfileMatchHistory);
+            //losingProfile.getRankedMatchHistory().add(loserProfileMatchHistory);
 
             winningProfile.getStatisticsData().get(this.getKit()).setElo(newWinnerElo);
             losingProfile.getStatisticsData().get(this.getKit()).setElo(newLoserElo);

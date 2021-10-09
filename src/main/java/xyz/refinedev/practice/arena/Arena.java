@@ -36,7 +36,7 @@ public abstract class Arena {
     private Rating rating = new Rating(this, 0, 0, 0,0, 0);
     private ItemStack displayIcon = new ItemStack(Material.PAPER);
 
-    private int fallDeathHeight;
+    private int deathHeight;
     private boolean active, duplicate, disablePearls;
 
     public Arena(Array plugin, String name, ArenaType arenaType) {
@@ -54,7 +54,7 @@ public abstract class Arena {
     }
 
     public int getFallDeathHeight() {
-        return this.getSpawn1() == null ? 0 : this.getSpawn1().getBlockY() - this.fallDeathHeight;
+        return this.getSpawn1() == null ? 0 : this.getSpawn1().getBlockY() - this.deathHeight;
     }
 
     public void setActive(boolean active) {

@@ -28,38 +28,16 @@ public class TeamPlayer {
     private boolean alive = true;
     private boolean disconnected;
 
-    private int elo, potionsThrown, potionsMissed, potions, hits, combo, longestCombo;
+    private int elo, potionsThrown, potionsMissed, hits, combo, longestCombo;
 
     public TeamPlayer(Player player) {
         this.uniqueId = player.getUniqueId();
         this.username = player.getName();
-
-        int pots = 0;
-
-        for (ItemStack item : player.getInventory().getContents()) {
-            if (item == null) continue;
-            if (item.getType() == Material.AIR) continue;
-            if (item.getType() != Material.POTION) continue;
-            if (item.getDurability() != (short)16421) continue;
-            pots++;
-        }
-        this.potions = pots;
     }
 
     public TeamPlayer(UUID uniqueId, String username) {
         this.uniqueId = uniqueId;
         this.username = username;
-
-        int pots = 0;
-
-        for (ItemStack item : Bukkit.getPlayer(uniqueId).getInventory().getContents()) {
-            if (item == null) continue;
-            if (item.getType() == Material.AIR) continue;
-            if (item.getType() != Material.POTION) continue;
-            if (item.getDurability() != (short)16421) continue;
-            pots++;
-        }
-        this.potions = pots;
     }
 
     public Player getPlayer() {

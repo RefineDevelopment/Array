@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
@@ -30,26 +31,24 @@ public class NameTagAdapter extends NameTagProvider {
     }
 
     /**
-     * Get the Target's NameTag for Viewer
+     * Get the Target's Nametag for Viewer
      *
-     * @param target The player whose NameTag is being fetched
-     * @param viewer The player who is viewing the NameTag
+     * @param target The player whose nametag is being fetched
+     * @param viewer The player who is viewing the nametag
      * @return {@link NameTagInfo}
      */
     @Override
     public NameTagInfo fetchNameTag(Player target, Player viewer) {
-        if (plugin.getConfigHandler().isNAMETAGS_ENABLED()) {
             Profile targetProfile = plugin.getProfileManager().getByPlayer(target);
             Profile viewerProfile = plugin.getProfileManager().getByPlayer(viewer);
 
-            if (viewerProfile.isInLobby() || viewerProfile.isInQueue()) {
+            if ((plugin.getConfigHandler().isNAMETAGS_ENABLED()) && viewerProfile.isInLobby() || viewerProfile.isInQueue()) {
                 return this.getNormalColor(viewerProfile, targetProfile);
             } else if (viewerProfile.isInFight() || viewerProfile.isSpectating()) {
                 return this.getFightColor(viewerProfile, targetProfile);
             } else if (viewerProfile.isInEvent()) {
                 return this.getEventColor(viewerProfile, targetProfile);
             }
-        }
         return createNameTag("", "");
     }
 
@@ -83,12 +82,9 @@ public class NameTagAdapter extends NameTagProvider {
     public NameTagInfo getEventColor(Profile viewerProfile, Profile targetProfile) {
         Player viewer = viewerProfile.getPlayer();
         Player target = targetProfile.getPlayer();
+        Event event = targetProfile.getEvent();
 
-        if (viewerProfile.isInEvent()) {
-            EventPlayer targetEventPlayer = viewerProfile.getEvent().getEventPlayer(target.getUniqueId());
-            if (targetEventPlayer != null) {
-                return createNameTag(viewerProfile.getEvent().getRelationColor(viewer, target).toString(), "");
-            }
+        if (targetProfile.isInEvent()) {
             return createNameTag(plugin.getConfigHandler().getEventColor().toString(), "");
         }
         return createNameTag("", "");
