@@ -5,8 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.managers.PvPClassManager;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.TeamMatch;

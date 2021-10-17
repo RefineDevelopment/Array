@@ -2,9 +2,6 @@ package xyz.refinedev.practice.leaderboards.menu.buttons;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;

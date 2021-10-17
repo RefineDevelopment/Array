@@ -69,7 +69,5 @@ public abstract class Arena {
         return this.type == ArenaType.SHARED;
     }
 
-    public abstract void save();
-
     public abstract boolean isSetup();
 }

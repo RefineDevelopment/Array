@@ -2,7 +2,6 @@ package xyz.refinedev.practice.task;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.scheduler.BukkitRunnable;
-import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.profile.Profile;
 

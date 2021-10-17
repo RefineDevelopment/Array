@@ -9,7 +9,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.EventState;
-import xyz.refinedev.practice.profile.Profile;
 
 /**
  * This Project is property of Refine Development © 2021

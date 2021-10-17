@@ -2,15 +2,8 @@ package xyz.refinedev.practice.managers;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.profile.Profile;
@@ -20,9 +13,6 @@ import xyz.refinedev.practice.pvpclasses.classes.Bard;
 import xyz.refinedev.practice.pvpclasses.classes.Rogue;
 import xyz.refinedev.practice.pvpclasses.events.ArmorClassEquipEvent;
 import xyz.refinedev.practice.pvpclasses.events.ArmorClassUnequipEvent;
-import xyz.refinedev.practice.util.events.ArmorEquipEvent;
-import xyz.refinedev.practice.util.inventory.InventoryUtil;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.*;

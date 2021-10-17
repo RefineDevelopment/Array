@@ -10,13 +10,13 @@ import xyz.refinedev.practice.arena.impl.StandaloneArena;
 import xyz.refinedev.practice.duel.DuelProcedure;
 import xyz.refinedev.practice.duel.DuelRequest;
 import xyz.refinedev.practice.duel.menu.DuelSelectKitMenu;
+import xyz.refinedev.practice.hook.core.CoreAdapter;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.kit.TeamFightMatch;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.hook.core.CoreAdapter;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
@@ -151,9 +151,6 @@ public class DuelCommands {
                     player.sendMessage(CC.RED + "The arena you were dueled was a build arena and all arenas are busy.");
                     return;
                 }
-            } else if (arena.getType().equals(ArenaType.BRIDGE)) {
-                player.sendMessage(CC.RED + "The arena you were dueled was a build arena and all arenas are busy.");
-                return;
             }
         }
 

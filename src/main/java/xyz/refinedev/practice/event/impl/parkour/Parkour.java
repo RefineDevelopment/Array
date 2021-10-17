@@ -13,7 +13,6 @@ import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.event.impl.parkour.task.ParkourRoundEndTask;
 import xyz.refinedev.practice.event.impl.parkour.task.ParkourRoundStartTask;
 import xyz.refinedev.practice.event.meta.group.EventGroup;
-import xyz.refinedev.practice.event.meta.group.EventTeamPlayer;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
 import xyz.refinedev.practice.event.task.EventWaterTask;
 import xyz.refinedev.practice.profile.Profile;

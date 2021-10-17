@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.event.impl.parkour.task;
 
-import org.bukkit.entity.Player;
 import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.task.EventRoundEndTask;
 

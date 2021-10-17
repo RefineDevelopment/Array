@@ -3,7 +3,6 @@ package xyz.refinedev.practice.hook.core;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.hook.core.CoreType;
 
 /**
  * This Project is property of Refine Development © 2021

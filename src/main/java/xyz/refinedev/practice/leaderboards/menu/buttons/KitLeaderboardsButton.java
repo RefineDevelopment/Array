@@ -1,8 +1,6 @@
 package xyz.refinedev.practice.leaderboards.menu.buttons;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Locale;

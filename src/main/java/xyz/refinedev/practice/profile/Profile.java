@@ -68,7 +68,7 @@ public class Profile {
     private Player spectating;
     private boolean build, silent, issueRating;
 
-    private Cooldown enderpearlCooldown = new Cooldown(0), bowCooldown = new Cooldown(0), visibilityCooldown;
+    private Cooldown enderpearlCooldown = new Cooldown(0), bowCooldown = new Cooldown(0), visibilityCooldown = new Cooldown(0);
 
     private KitEditor kitEditor = new KitEditor();
     private ProfileSettings settings = new ProfileSettings();

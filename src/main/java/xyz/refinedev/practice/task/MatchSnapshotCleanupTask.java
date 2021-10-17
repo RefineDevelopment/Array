@@ -3,7 +3,6 @@ package xyz.refinedev.practice.task;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.match.MatchSnapshot;
 
 @RequiredArgsConstructor
 public class MatchSnapshotCleanupTask extends BukkitRunnable {

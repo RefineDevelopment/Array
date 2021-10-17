@@ -1,11 +1,9 @@
 package xyz.refinedev.practice.match.types.kit;
 
 import lombok.Getter;
-import net.minecraft.server.v1_8_R3.PacketPlayInClientCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -21,7 +19,7 @@ import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.task.MatchRespawnTask;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
-import xyz.refinedev.practice.util.location.LocationUtils;
+import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
@@ -110,8 +108,8 @@ public class BattleRushMatch extends SoloMatch {
     public void onStart() {
         this.round++;
 
-        this.playerAPortals = LocationUtils.getNearbyPortalLocations(this.getArena().getSpawn1());
-        this.playerBPortals = LocationUtils.getNearbyPortalLocations(this.getArena().getSpawn2());
+        this.playerAPortals = LocationUtil.getNearbyPortalLocations(this.getArena().getSpawn1());
+        this.playerBPortals = LocationUtil.getNearbyPortalLocations(this.getArena().getSpawn2());
 
         new BukkitRunnable() {
             @Override
@@ -189,7 +187,7 @@ public class BattleRushMatch extends SoloMatch {
         if (teamPlayer == null) return;
         if (!this.isFighting()) return;
 
-        if (LocationUtils.isSelfPortal(player)) {
+        if (LocationUtil.isSelfPortal(player)) {
             player.sendMessage(Locale.MATCH_WRONG_PORTAL.toString());
             return;
         }

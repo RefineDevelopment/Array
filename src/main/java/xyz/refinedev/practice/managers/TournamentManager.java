@@ -8,13 +8,11 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.tournament.Tournament;
 import xyz.refinedev.practice.tournament.TournamentTask;
 import xyz.refinedev.practice.tournament.TournamentType;
 import xyz.refinedev.practice.tournament.impl.SoloTournament;
 import xyz.refinedev.practice.tournament.impl.TeamTournament;
-import xyz.refinedev.practice.util.other.TaskUtil;
 
 /**
  * This Project is property of Refine Development © 2021

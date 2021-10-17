@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.arena.rating;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import xyz.refinedev.practice.arena.Arena;
 
 /**

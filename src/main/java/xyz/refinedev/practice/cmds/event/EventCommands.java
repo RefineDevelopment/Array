@@ -1,17 +1,15 @@
 package xyz.refinedev.practice.cmds.event;
 
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.event.Event;
-import xyz.refinedev.practice.managers.EventManager;
 import xyz.refinedev.practice.event.EventState;
-import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.event.menu.EventSelectMenu;
 import xyz.refinedev.practice.event.menu.EventTeamMenu;
+import xyz.refinedev.practice.managers.EventManager;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Require;

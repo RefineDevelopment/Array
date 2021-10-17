@@ -3,7 +3,6 @@ package xyz.refinedev.practice.event.impl.parkour.task;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.EventState;
-import xyz.refinedev.practice.event.impl.parkour.Parkour;
 import xyz.refinedev.practice.event.meta.EventTask;
 import xyz.refinedev.practice.util.other.Cooldown;
 import xyz.refinedev.practice.util.other.PlayerUtil;

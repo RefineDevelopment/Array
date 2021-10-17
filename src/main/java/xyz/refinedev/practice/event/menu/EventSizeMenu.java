@@ -1,11 +1,9 @@
 package xyz.refinedev.practice.event.menu;
 
-import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.event.EventType;
-import xyz.refinedev.practice.event.menu.buttons.EventSelectButton;
 import xyz.refinedev.practice.event.menu.buttons.EventSizeButton;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.menu.Button;

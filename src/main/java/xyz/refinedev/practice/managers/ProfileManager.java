@@ -317,7 +317,7 @@ public class ProfileManager {
         if (player == null) return;
 
         PlayerUtil.reset(player);
-        player.sendMessage(CC.translate("&cRefreshing hotbar"));
+        //player.sendMessage(CC.translate("&cRefreshing hotbar"));
 
         if (profile.isInLobby()) {
             if (profile.hasParty()) {

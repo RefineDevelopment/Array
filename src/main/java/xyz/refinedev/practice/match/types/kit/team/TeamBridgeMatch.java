@@ -2,12 +2,10 @@ package xyz.refinedev.practice.match.types.kit.team;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.server.v1_8_R3.PacketPlayInClientCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -22,7 +20,7 @@ import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.TeamMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
-import xyz.refinedev.practice.util.location.LocationUtils;
+import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
@@ -91,8 +89,8 @@ public class TeamBridgeMatch extends TeamMatch {
     public void onStart() {
         this.round++;
 
-        this.teamAPortals = LocationUtils.getNearbyPortalLocations(this.getArena().getSpawn1());
-        this.teamBPortals = LocationUtils.getNearbyPortalLocations(this.getArena().getSpawn2());
+        this.teamAPortals = LocationUtil.getNearbyPortalLocations(this.getArena().getSpawn1());
+        this.teamBPortals = LocationUtil.getNearbyPortalLocations(this.getArena().getSpawn2());
 
         this.getPlayers().forEach(player -> Locale.MATCH_ROUND_MESSAGE.toList().stream().map(line -> line.replace("<round_number>", String.valueOf(this.getRound()))
                 .replace("<your_points>", String.valueOf(this.getTeamA().containsPlayer(player) ? this.getTeamAPoints() : this.getTeamBPoints()))
@@ -164,7 +162,7 @@ public class TeamBridgeMatch extends TeamMatch {
         if (teamPlayer == null) return;
         if (!this.isFighting()) return;
 
-        if (LocationUtils.isTeamPortalTeam(player)) {
+        if (LocationUtil.isTeamPortalTeam(player)) {
             player.sendMessage(Locale.MATCH_WRONG_PORTAL.toString());
             return;
         }

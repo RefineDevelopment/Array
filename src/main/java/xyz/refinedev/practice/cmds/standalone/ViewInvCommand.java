@@ -9,8 +9,6 @@ import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 
-import java.util.UUID;
-
 /**
  * This Project is the property of Refine Development © 2021
  * Redistribution of this Project is not allowed

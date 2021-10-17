@@ -3,7 +3,6 @@ package xyz.refinedev.practice.hook.spigot;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.event.Listener;
-import xyz.refinedev.practice.hook.spigot.KnockbackType;
 import xyz.refinedev.practice.hook.spigot.types.Default;
 import xyz.refinedev.practice.hook.spigot.types.atomspigot.AtomSpigot;
 import xyz.refinedev.practice.hook.spigot.types.atomspigot.AtomSpigotRestorer;

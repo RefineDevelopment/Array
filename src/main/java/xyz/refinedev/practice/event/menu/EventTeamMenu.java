@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.event.menu;
 
-import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.menu.buttons.EventTeamButton;

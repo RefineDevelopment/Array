@@ -20,7 +20,7 @@ import xyz.refinedev.practice.event.task.EventWaterTask;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.hotbar.HotbarItem;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
-import xyz.refinedev.practice.util.location.Circle;
+import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.other.PlayerSnapshot;
 
 import java.util.List;
@@ -72,7 +72,7 @@ public class Spleef extends Event {
         int i = 0;
         for (Player player : this.getRemainingPlayers()) {
             Location midSpawn = this.getPlugin().getEventManager().getSpawn(this);
-            List<Location> circleLocations = Circle.getCircle(midSpawn, this.getPlugin().getConfigHandler().getFFA_SPAWN_RADIUS(), this.getPlayers().size());
+            List<Location> circleLocations = LocationUtil.getCircle(midSpawn, this.getPlugin().getConfigHandler().getFFA_SPAWN_RADIUS(), this.getPlayers().size());
 
             Location center = midSpawn.clone();
             Location loc = circleLocations.get(i);

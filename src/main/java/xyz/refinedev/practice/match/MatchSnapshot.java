@@ -9,8 +9,6 @@ import org.bukkit.potion.PotionEffect;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 @Getter @Setter

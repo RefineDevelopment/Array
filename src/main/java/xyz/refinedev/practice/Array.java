@@ -11,7 +11,6 @@ import xyz.refinedev.practice.adapters.ScoreboardAdapter;
 import xyz.refinedev.practice.adapters.TablistAdapter;
 import xyz.refinedev.practice.api.API;
 import xyz.refinedev.practice.api.ArrayAPI;
-import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.config.ConfigHandler;
 import xyz.refinedev.practice.hook.core.CoreHandler;
 import xyz.refinedev.practice.hook.placeholderapi.LeaderboardPlaceholders;
@@ -198,7 +197,7 @@ public class Array extends JavaPlugin {
     public void onDisable() {
         Match.getMatches().forEach(Match::cleanup);
 
-        this.arenaManager.getArenas().forEach(plugin.getArenaManager()::save);
+        this.arenaManager.getArenas().forEach(arenaManager::save);
         this.kitManager.getKits().forEach(kitManager::save);
         this.clanManager.getClans().forEach(clanManager::save);
         this.profileManager.getProfiles().values().forEach(profileManager::save);

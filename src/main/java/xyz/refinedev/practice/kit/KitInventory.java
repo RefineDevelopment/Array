@@ -2,7 +2,6 @@ package xyz.refinedev.practice.kit;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;

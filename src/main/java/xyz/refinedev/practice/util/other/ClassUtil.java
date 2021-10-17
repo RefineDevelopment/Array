@@ -8,7 +8,6 @@ import xyz.refinedev.practice.managers.CommandsManager;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;

@@ -21,7 +21,7 @@ import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
-import xyz.refinedev.practice.util.location.LocationUtils;
+import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
@@ -102,8 +102,8 @@ public class SoloBridgeMatch extends SoloMatch {
     public void onStart() {
         this.round++;
 
-        this.playerAPortals = LocationUtils.getNearbyPortalLocations(this.getArena().getSpawn1());
-        this.playerBPortals = LocationUtils.getNearbyPortalLocations(this.getArena().getSpawn2());
+        this.playerAPortals = LocationUtil.getNearbyPortalLocations(this.getArena().getSpawn1());
+        this.playerBPortals = LocationUtil.getNearbyPortalLocations(this.getArena().getSpawn2());
 
         this.getPlayers().forEach(player -> Locale.MATCH_ROUND_MESSAGE.toList().stream().map(line -> line.replace("<round_number>", String.valueOf(this.getRound()))
                 .replace("<your_points>", String.valueOf(this.getTeamPlayerA().equals(this.getTeamPlayer(player)) ? this.getPlayerAPoints() : this.getPlayerBPoints()))
@@ -175,7 +175,7 @@ public class SoloBridgeMatch extends SoloMatch {
         if (teamPlayer == null) return;
         if (!this.isFighting()) return;
 
-        if (LocationUtils.isTeamPortalSolo(player)) {
+        if (LocationUtil.isTeamPortalSolo(player)) {
             player.sendMessage(Locale.MATCH_WRONG_PORTAL.toString());
             return;
         }

@@ -11,7 +11,6 @@ import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.FFAMatch;
-import xyz.refinedev.practice.match.types.TeamMatch;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.party.enums.PartyEventType;
 import xyz.refinedev.practice.profile.Profile;

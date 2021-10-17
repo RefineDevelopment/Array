@@ -3,6 +3,7 @@ package xyz.refinedev.practice.util.location;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
+import xyz.refinedev.practice.arena.cuboid.Cuboid;
 
 public class KothPoint {
 

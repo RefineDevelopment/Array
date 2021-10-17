@@ -3,7 +3,6 @@ package xyz.refinedev.practice.clan;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
-import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;

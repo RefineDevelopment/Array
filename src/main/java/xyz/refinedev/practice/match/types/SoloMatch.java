@@ -33,7 +33,10 @@ import xyz.refinedev.practice.util.other.TaskUtil;
 import xyz.refinedev.practice.util.other.TitleAPI;
 import xyz.refinedev.practice.util.other.XPUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 @Getter @Setter
 public class SoloMatch extends Match {

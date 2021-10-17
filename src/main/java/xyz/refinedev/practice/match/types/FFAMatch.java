@@ -1,10 +1,8 @@
 package xyz.refinedev.practice.match.types;
 
-import com.comphenix.protocol.events.PacketContainer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -18,23 +16,18 @@ import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
-import xyz.refinedev.practice.profile.killeffect.KillEffect;
-import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
-import xyz.refinedev.practice.util.location.Circle;
-import xyz.refinedev.practice.util.other.EffectUtil;
+import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class FFAMatch extends Match {
 
-    private final Array plugin = Array.getInstance();
-
+    private final Array plugin = this.getPlugin();
     private final Team team;
 
     public FFAMatch(Team team, Kit kit, Arena arena) {
@@ -61,11 +54,9 @@ public class FFAMatch extends Match {
         PlayerUtil.reset(player);
 
         if (getKit().getGameRules().isStickSpawn() || getKit().getGameRules().isSumo() || getKit().getGameRules().isParkour()) PlayerUtil.denyMovement(player);
-
         if (!getKit().getGameRules().isNoItems() || !getKit().getGameRules().isSumo()) TaskUtil.runLater(() -> plugin.getProfileManager().getByUUID(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
 
         if (getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
-
         if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
         plugin.getSpigotHandler().kitKnockback(player, getKit());
@@ -88,7 +79,7 @@ public class FFAMatch extends Match {
         for ( Player player : getPlayers() ) {
             Location midSpawn = this.getMidSpawn();
 
-            List<Location> circleLocations = Circle.getCircle(midSpawn, plugin.getConfigHandler().getFFA_SPAWN_RADIUS(), this.getPlayers().size());
+            List<Location> circleLocations = LocationUtil.getCircle(midSpawn, plugin.getConfigHandler().getFFA_SPAWN_RADIUS(), this.getPlayers().size());
             Location center = midSpawn.clone();
             Location loc = circleLocations.get(i);
             Location target = loc.setDirection(center.subtract(loc).toVector());
@@ -117,6 +108,7 @@ public class FFAMatch extends Match {
             public void run() {
                 for ( TeamPlayer firstTeamPlayer : team.getTeamPlayers() ) {
                     if (firstTeamPlayer.isDisconnected()) continue;
+
                     Player player = firstTeamPlayer.getPlayer();
                     if (player == null) continue;
 
@@ -132,8 +124,7 @@ public class FFAMatch extends Match {
                     Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
                     profile.setState(ProfileState.IN_LOBBY);
                     profile.setMatch(null);
-                    plugin.getProfileManager().handleVisibility(profile);
-                    plugin.getProfileManager().refreshHotbar(profile);
+
                     plugin.getProfileManager().teleportToSpawn(profile);
                 }
             }
