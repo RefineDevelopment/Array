@@ -12,6 +12,7 @@ import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.TeamMatch;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.util.inventory.TeamFightUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 
 @Getter
@@ -55,18 +56,18 @@ public class TeamFightMatch extends TeamMatch {
         switch (kit) {
             case "bard":
             case "Bard":
-                PvPClassManager.giveBardKit(player);
+                TeamFightUtil.giveBardKit(player);
                 break;
             case "archer":
             case "Archer":
-                PvPClassManager.giveArcherKit(player);
+                TeamFightUtil.giveArcherKit(player);
                 break;
             case "rogue":
             case "Rogue":
-                PvPClassManager.giveRogueKit(player);
+                TeamFightUtil.giveRogueKit(player);
                 break;
             default:
-                PvPClassManager.giveDiamondKit(player);
+                TeamFightUtil.giveDiamondKit(player);
                 break;
         }
 

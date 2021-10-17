@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.party.Party;
-import xyz.refinedev.practice.party.menu.PartyClassSelectMenu;
+import xyz.refinedev.practice.party.menu.PartyPvPClassMenu;
 import xyz.refinedev.practice.party.menu.PartyDuelMenu;
 import xyz.refinedev.practice.party.menu.PartyEventMenu;
 import xyz.refinedev.practice.party.menu.PartySettingsMenu;
@@ -148,7 +148,7 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
-        new PartyClassSelectMenu().openMenu(player);
+        new PartyPvPClassMenu().openMenu(player);
     }
 
     @Command(name = "info", aliases = "information", desc = "View Information about your Party")

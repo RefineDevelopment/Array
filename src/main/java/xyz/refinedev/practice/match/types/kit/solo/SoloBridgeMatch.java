@@ -2,46 +2,66 @@ package xyz.refinedev.practice.match.types.kit.solo;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.server.v1_8_R3.PacketPlayInClientCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffectType;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.kit.KitGameRules;
 import xyz.refinedev.practice.match.MatchSnapshot;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.SoloMatch;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.killeffect.KillEffect;
-import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.location.LocationUtils;
-import xyz.refinedev.practice.util.other.EffectUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.List;
 
+//TODO: Add KitEditor for Bridge Kit
 @Getter @Setter
 public class SoloBridgeMatch extends SoloMatch {
 
     private int playerAPoints = 0;
     private int playerBPoints = 0;
 
+    private List<Location> playerAPortals , playerBPortals;
+
     private int round = 0;
 
+    /**
+     * Construct a solo bridge match with the specified details
+     *
+     * @param playerA   {@link TeamPlayer} first player of the message
+     * @param playerB   {@link TeamPlayer} second player of the message
+     * @param queue     {@link Queue} if match is started from queue, then we provide it
+     * @param kit       {@link Kit} The kit that will be given to all players in the match
+     * @param arena     {@link Arena} The arena that will be used in the match
+     * @param queueType {@link QueueType} if we are connecting from queue then we provide it, otherwise its Unranked
+     */
     public SoloBridgeMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
         super(queue, playerA, playerB, kit, arena, queueType);
     }
 
+    /**
+     * Setup the player according to {@link Kit},
+     * {@link KitGameRules} and {@link Arena}
+     * <p>
+     * This also teleports the player to the specified arena,
+     * set's their parkour checkpoint if kit is parkour and
+     * gives special potion effects if specified
+     *
+     * @param player {@link Player} being setup
+     */
     @Override
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
@@ -50,7 +70,11 @@ public class SoloBridgeMatch extends SoloMatch {
         teamPlayer.setAlive(true);
 
         PlayerUtil.reset(player);
-        PlayerUtil.denyMovement(player);
+        if (!player.hasMetadata("noDenyMove")) {
+            PlayerUtil.denyMovement(player);
+        } else {
+            player.removeMetadata("noDenyMove", this.getPlugin());
+        }
 
         if (getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
         if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
@@ -58,7 +82,7 @@ public class SoloBridgeMatch extends SoloMatch {
         this.getPlugin().getSpigotHandler().kitKnockback(player, getKit());
         player.setNoDamageTicks(getKit().getGameRules().getHitDelay());
 
-        Location spawn = getPlayerA().equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
+        Location spawn = this.getPlayerA().equals(teamPlayer) ? this.getArena().getSpawn1() : this.getArena().getSpawn2();
         player.teleport(spawn.add(0, this.getPlugin().getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
 
         teamPlayer.setPlayerSpawn(spawn);
@@ -70,9 +94,16 @@ public class SoloBridgeMatch extends SoloMatch {
         this.getPlugin().getNameTagHandler().reloadOthersFor(player);
     }
 
+    /**
+     * Execute start tasks through this method
+     * This method is called as soon as the match is started
+     */
     @Override
     public void onStart() {
         this.round++;
+
+        this.playerAPortals = LocationUtils.getNearbyPortalLocations(this.getArena().getSpawn1());
+        this.playerBPortals = LocationUtils.getNearbyPortalLocations(this.getArena().getSpawn2());
 
         this.getPlayers().forEach(player -> Locale.MATCH_ROUND_MESSAGE.toList().stream().map(line -> line.replace("<round_number>", String.valueOf(this.getRound()))
                 .replace("<your_points>", String.valueOf(this.getTeamPlayerA().equals(this.getTeamPlayer(player)) ? this.getPlayerAPoints() : this.getPlayerBPoints()))
@@ -109,31 +140,28 @@ public class SoloBridgeMatch extends SoloMatch {
             this.end();
         }
 
-        if (deadPlayer.isOnline() && deadPlayer.isDead()) {
-            this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> ((CraftPlayer) deadPlayer).getHandle().playerConnection.a(new PacketPlayInClientCommand(PacketPlayInClientCommand.EnumClientCommand.PERFORM_RESPAWN)));
-        }
+        this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(this.getPlugin(), () -> PlayerUtil.forceRespawn(deadPlayer));
     }
 
     @Override
     public void onRespawn(Player player) {
         TeamPlayer teamPlayer = this.getTeamPlayer(player);
 
-        if (!isFighting()) return;
+        if (!this.isFighting()) return;
         if (teamPlayer.isDisconnected()) return;
 
-        for ( Player other : this.getPlayers() ) {
-            Profile otherProfile = this.getPlugin().getProfileManager().getByUUID(other.getUniqueId());
-            this.getPlugin().getProfileManager().handleVisibility(otherProfile, player);
+        for ( Player otherPlayer : this.getPlayers() ) {
+            Profile otherProfile = this.getPlugin().getProfileManager().getByPlayer(otherPlayer);
+            this.getPlugin().getProfileManager().handleVisibility(otherProfile);
         }
 
         Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
-        this.getPlugin().getProfileManager().handleVisibility(profile);
         this.getPlugin().getProfileManager().refreshHotbar(profile);
+        this.getPlugin().getProfileManager().handleVisibility(profile);
 
-        TaskUtil.runLater(() -> {
-            this.setupPlayer(player);
-            PlayerUtil.allowMovement(player);
-        }, 2L);
+        player.setMetadata("noDenyMove", new FixedMetadataValue(this.getPlugin(), true));
+
+        TaskUtil.runLater(() -> this.setupPlayer(player), 2L);
     }
 
     /**
@@ -148,8 +176,7 @@ public class SoloBridgeMatch extends SoloMatch {
         if (!this.isFighting()) return;
 
         if (LocationUtils.isTeamPortalSolo(player)) {
-            player.sendMessage(Locale.MATCH_BRIDGE_WRONG_PORTAL.toString());
-            player.teleport(teamPlayer.getPlayerSpawn());
+            player.sendMessage(Locale.MATCH_WRONG_PORTAL.toString());
             return;
         }
 

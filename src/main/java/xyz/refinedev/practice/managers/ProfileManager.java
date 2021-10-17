@@ -31,7 +31,8 @@ import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
-import xyz.refinedev.practice.profile.divisions.Division;
+import xyz.refinedev.practice.profile.divisions.ProfileDivision;
+import xyz.refinedev.practice.profile.history.ProfileHistory;
 import xyz.refinedev.practice.profile.hotbar.HotbarLayout;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
 import xyz.refinedev.practice.profile.rank.TablistRank;
@@ -165,7 +166,20 @@ public class ProfileManager {
                     kitInventory[kitObject.get("index").getAsInt()] = loadout;
                 }
 
-                profile.getStatisticsData().get(kit).setLoadouts(kitInventory);
+                profile.getStatisticsData().get(kit).setKitInventories(kitInventory);
+            }
+
+            if (document.getList("unrankedHistory", String.class) != null) {
+                List<String> history = document.getList("unrankedHistory", String.class);
+                for ( String matchHistory : history ) {
+                    profile.getUnrankedMatchHistory().add(Array.GSON.fromJson(matchHistory, ProfileHistory.class));
+                }
+            }
+            if (document.getList("rankedHistory", String.class) != null) {
+                List<String> history = document.getList("rankedHistory", String.class);
+                for ( String matchHistory : history ) {
+                    profile.getRankedMatchHistory().add(Array.GSON.fromJson(matchHistory, ProfileHistory.class));
+                }
             }
         });
 
@@ -235,8 +249,21 @@ public class ProfileManager {
         }
 
         document.put("kitInventory", kitsDocument);
-        document.put("unrankedHistory", Array.GSON.toJson(profile.getUnrankedMatchHistory()));
-        document.put("rankedHistory", Array.GSON.toJson(profile.getRankedMatchHistory()));
+
+        if (!profile.getUnrankedMatchHistory().isEmpty()) {
+            List<String> history = new ArrayList<>();
+            for ( ProfileHistory matchHistory : profile.getUnrankedMatchHistory() ) {
+                history.add(Array.GSON.toJson(matchHistory));
+            }
+            document.put("unrankedHistory", history);
+        }
+        if (!profile.getRankedMatchHistory().isEmpty()) {
+            List<String> history = new ArrayList<>();
+            for ( ProfileHistory matchHistory : profile.getRankedMatchHistory() ) {
+                history.add(Array.GSON.toJson(matchHistory));
+            }
+            document.put("rankedHistory", history);
+        }
 
         plugin.submitToThread(() -> collection.replaceOne(Filters.eq("_id", profile.getUniqueId().toString()), document, new ReplaceOptions().upsert(true)));
     }
@@ -527,9 +554,9 @@ public class ProfileManager {
      * by ELO or experience
      *
      * @param profile {@link Profile} whose division we are getting
-     * @return {@link Division}
+     * @return {@link ProfileDivision}
      */
-    public Division getDivision(Profile profile) {
+    public ProfileDivision getDivision(Profile profile) {
         if (plugin.getDivisionsManager().isXPBased()) {
             return plugin.getDivisionsManager().getDivisionByXP(profile.getExperience());
         }

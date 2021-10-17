@@ -1,9 +1,8 @@
 package xyz.refinedev.practice.util.other;
 
 import lombok.experimental.UtilityClass;
-import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.MatchSnapshot;
-import xyz.refinedev.practice.profile.history.MatchHistory;
+import xyz.refinedev.practice.profile.history.ProfileHistory;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -20,10 +19,10 @@ public class XPUtil {
     /**
      * Returns the experience to add to the profile
      *
-     * @param history       {@link MatchHistory} the kit used in the profile's match
+     * @param history       {@link ProfileHistory} the kit used in the profile's match
      * @return              {@link Integer} experience
      */
-    public int handleExperience(MatchHistory history) {
+    public int handleExperience(ProfileHistory history) {
         //Initial experience
         int experience = 100;
         MatchSnapshot matchSnapshot = history.isWon() ? history.getPlayerSnapshot() : history.getOpponentSnapshot();

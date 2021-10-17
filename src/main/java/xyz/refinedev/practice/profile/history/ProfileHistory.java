@@ -2,6 +2,7 @@ package xyz.refinedev.practice.profile.history;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.bson.Document;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
@@ -18,20 +19,20 @@ import java.util.Date;
  * Project: Array
  */
 
-@Getter
+@Getter @Setter
 @RequiredArgsConstructor
-public class MatchHistory {
+public class ProfileHistory {
 
     private final Array plugin;
 
-    private final Date date;
+    private final long date;
     private final MatchSnapshot playerSnapshot;
     private final MatchSnapshot opponentSnapshot;
 
     private final Kit kit;
-    private final boolean won;
-    private final boolean ranked;
+    private boolean won;
+    private boolean ranked;
 
-    private final int winnerChangedELO;
-    private final int looserChangedELO;
+    private int winnerChangedELO;
+    private int looserChangedELO;
 }

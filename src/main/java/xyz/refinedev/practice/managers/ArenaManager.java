@@ -13,10 +13,8 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.ArenaType;
-import xyz.refinedev.practice.arena.cuboid.Cuboid;
 import xyz.refinedev.practice.arena.impl.SharedArena;
 import xyz.refinedev.practice.arena.impl.StandaloneArena;
-import xyz.refinedev.practice.arena.impl.BridgeArena;
 import xyz.refinedev.practice.arena.rating.Rating;
 import xyz.refinedev.practice.arena.rating.RatingType;
 import xyz.refinedev.practice.kit.Kit;
@@ -25,7 +23,6 @@ import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.Clickable;
 import xyz.refinedev.practice.util.chat.ProgressBar;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.location.LocationUtil;
 
 import java.util.ArrayList;
@@ -74,13 +71,6 @@ public class ArenaManager {
                     this.loadDuplicates(standaloneArena);
                     break;
                 }
-                case BRIDGE: {
-                    BridgeArena bridgeArena = new BridgeArena(plugin, name);
-                    this.load(bridgeArena);
-                    this.calculateRatings(bridgeArena);
-                    this.loadDuplicates(bridgeArena);
-                    break;
-                }
             }
         }
         plugin.logger("&7Loaded &c" + arenas.size() + " &7Arena(s)!");
@@ -92,7 +82,7 @@ public class ArenaManager {
      * @param arena {@link Arena} the arena being loaded
      */
     public void load(Arena arena) {
-        String path = "arenas." + arena.getName() + ".";
+        String path = "arenas." + arena.getName();
 
         if (config.contains(path + ".display-name")) arena.setDisplayName(CC.translate(config.getString(path + ".display-name")));
         if (config.contains(path + ".spawn1")) arena.setSpawn1(LocationUtil.deserialize(config.getString(path + ".spawn1")));
@@ -100,42 +90,20 @@ public class ArenaManager {
         if (config.contains(path + ".max")) arena.setMax(LocationUtil.deserialize(config.getString(path + ".max")));
         if (config.contains(path + ".min")) arena.setMin(LocationUtil.deserialize(config.getString(path + ".min")));
         if (config.contains(path + ".disable-pearls")) arena.setDisablePearls(config.getBoolean(path + ".disable-pearls"));
+        if (config.contains(path + ".build-height")) arena.setBuildHeight(config.getInteger(path + ".build-height"));
         if (config.contains(path + ".fall-death-height")) arena.setDeathHeight(config.getInteger(path + ".fall-death-height", 25));
 
-        if (config.contains(path + ".icon-material")) {
-            ItemBuilder itemBuilder = new ItemBuilder(Material.valueOf(config.getString(path + ".icon.material")));
-            itemBuilder.durability(config.getInteger(path + ".icon.durability"));
-            arena.setDisplayIcon(itemBuilder.build());
-        } else {
-            arena.setDisplayIcon(new ItemStack(Material.PAPER));
+        if (config.contains(path + ".icon")) {
+            try {
+                arena.setDisplayIcon(Array.GSON.fromJson(config.getString(path + ".icon"), ItemStack.class));
+            } catch (Exception e) {
+                arena.setDisplayIcon(new ItemStack(Material.PAPER));
+            }
         }
 
         if (config.contains(path + ".kits") && !config.getStringList(path + ".kits").isEmpty()) {
             List<String> kitNames = config.getStringList(path + ".kits");
             arena.setKits(kitNames.stream().map(plugin.getKitManager()::getByName).filter(Objects::nonNull).collect(Collectors.toList()));
-        }
-
-        if (arena.isBridge()) {
-            BridgeArena bridgeArena = (BridgeArena) arena;
-
-            Location location1;
-            Location location2;
-
-            location1 = LocationUtil.deserialize(config.getString(path + ".redCuboid.location1"));
-            location2 = LocationUtil.deserialize(config.getString(path + ".redCuboid.location2"));
-            bridgeArena.setRedCuboid(new Cuboid(location1, location2));
-
-            location1 = LocationUtil.deserialize(config.getString(path + ".blueCuboid.location1"));
-            location2 = LocationUtil.deserialize(config.getString(path + ".blueCuboid.location2"));
-            bridgeArena.setBlueCuboid(new Cuboid(location1, location2));
-
-            location1 = LocationUtil.deserialize(config.getString(path + ".bluePortal.location1"));
-            location2 = LocationUtil.deserialize(config.getString(path + ".bluePortal.location2"));
-            bridgeArena.setBluePortal(new Cuboid(location1, location2));
-
-            location1 = LocationUtil.deserialize(config.getString(path + ".redPortal.location1"));
-            location2 = LocationUtil.deserialize(config.getString(path + ".redPortal.location2"));
-            bridgeArena.setRedPortal(new Cuboid(location1, location2));
         }
     }
 
@@ -145,76 +113,69 @@ public class ArenaManager {
      * @param arena {@link Arena} the arena whose duplicates we are loading
      */
     public void loadDuplicates(Arena arena) {
-        String path = "arenas." + arena.getName() + ".";
+        String path = "arenas." + arena.getName();
 
         ConfigurationSection section = config.getConfigurationSection(path + ".duplicates");
         if (section == null || section.getKeys(false).isEmpty()) return;
 
-        switch (arena.getType()) {
-            case STANDALONE: {
-                StandaloneArena standaloneArena = (StandaloneArena) arena;
-                for (String duplicateId : section.getKeys(false)) {
-                    Location spawn1 = LocationUtil.deserialize(config.getString(path + ".duplicates." + duplicateId + ".spawn1"));
-                    Location spawn2 = LocationUtil.deserialize(config.getString(path + ".duplicates." + duplicateId + ".spawn2"));
-                    Location max = LocationUtil.deserialize(config.getString(path + ".duplicates." + duplicateId + ".max"));
-                    Location min = LocationUtil.deserialize(config.getString(path + ".duplicates." + duplicateId + ".min"));
+        StandaloneArena standaloneArena = (StandaloneArena) arena;
+        for (String duplicateId : section.getKeys(false)) {
+            Location spawn1 = LocationUtil.deserialize(config.getString(path + ".duplicates." + duplicateId + ".spawn1"));
+            Location spawn2 = LocationUtil.deserialize(config.getString(path + ".duplicates." + duplicateId + ".spawn2"));
+            Location max = LocationUtil.deserialize(config.getString(path + ".duplicates." + duplicateId + ".max"));
+            Location min = LocationUtil.deserialize(config.getString(path + ".duplicates." + duplicateId + ".min"));
 
-                    StandaloneArena duplicate = new StandaloneArena(plugin, arena.getName() + "#" + duplicateId);
-                    duplicate.setDisplayName(arena.getDisplayName());
-                    duplicate.setSpawn1(spawn1);
-                    duplicate.setSpawn2(spawn2);
-                    duplicate.setMax(max);
-                    duplicate.setMin(min);
-                    duplicate.setKits(arena.getKits());
-                    duplicate.setDuplicate(true);
+            StandaloneArena duplicate = new StandaloneArena(plugin, arena.getName() + "#" + duplicateId);
+            duplicate.setDisplayName(arena.getDisplayName());
+            duplicate.setSpawn1(spawn1);
+            duplicate.setSpawn2(spawn2);
+            duplicate.setMax(max);
+            duplicate.setMin(min);
+            duplicate.setKits(arena.getKits());
+            duplicate.setDuplicate(true);
 
-                    standaloneArena.getDuplicates().add(duplicate);
-                    this.arenas.add(duplicate);
-                }
-                break;
-            }
-            case BRIDGE: {
-                BridgeArena bridgeArena = (BridgeArena) arena;
-                for (String duplicateId : section.getKeys(false)) {
-                    Location spawn1 = LocationUtil.deserialize(section.getString("." + duplicateId + ".spawn1"));
-                    Location spawn2 = LocationUtil.deserialize(section.getString("." + duplicateId + ".spawn2"));
-                    Location max = LocationUtil.deserialize(section.getString("." + duplicateId + ".max"));
-                    Location min = LocationUtil.deserialize(section.getString("." + duplicateId + ".min"));
+            standaloneArena.getDuplicates().add(duplicate);
+            this.arenas.add(duplicate);
+        }
+    }
 
-                    BridgeArena duplicate = new BridgeArena(plugin, arena.getName() + "#" + duplicateId);
-                    duplicate.setDisplayName(arena.getDisplayName());
-                    duplicate.setSpawn1(spawn1);
-                    duplicate.setSpawn2(spawn2);
-                    duplicate.setMax(max);
-                    duplicate.setMin(min);
-                    duplicate.setKits(arena.getKits());
-                    duplicate.setDuplicate(true);
+    /**
+     * Save an {@link Arena} to the config
+     *
+     * @param arena {@link Arena} the arena being saved
+     */
+    public void save(Arena arena) {
+        String path = "arenas." + arena.getName() + ".";
 
-                    Location location1;
-                    Location location2;
+        config.set(path, null);
+        config.set(path + "display-name", CC.untranslate(arena.getDisplayName()));
+        config.set(path + "spawn1", arena.getSpawn1());
+        config.set(path + "spawn2", arena.getSpawn2());
+        config.set(path + "max", arena.getMax());
+        config.set(path + "min", arena.getMin());
+        config.set(path + "disable-pearls", arena.isDisablePearls());
+        config.set(path + "build-height", arena.getBuildHeight());
+        config.set(path + "fall-death-height", arena.getFallDeathHeight());
+        config.set(path + "icon", Array.GSON.toJson(arena.getDisplayIcon()));
+        config.set(path + "kits", arena.getKits().stream().map(Kit::getName).filter(Objects::nonNull).collect(Collectors.toList()));
+        config.save();
 
-                    location1 = LocationUtil.deserialize(section.getString("." + duplicateId + ".redCuboid.location1"));
-                    location2 = LocationUtil.deserialize(section.getString("." + duplicateId + ".redCuboid.location2"));
-                    duplicate.setRedCuboid(new Cuboid(location1, location2));
+        if (arena.isStandalone()) {
+            StandaloneArena standaloneArena = (StandaloneArena) arena;
+            if (standaloneArena.getDuplicates().isEmpty()) return;
 
-                    location1 = LocationUtil.deserialize(section.getString("." + duplicateId + ".blueCuboid.location1"));
-                    location2 = LocationUtil.deserialize(section.getString("." + duplicateId + ".blueCuboid.location2"));
-                    duplicate.setBlueCuboid(new Cuboid(location1, location2));
+            int id = 0;
+            for (StandaloneArena duplicate : standaloneArena.getDuplicates()) {
+                id++;
 
-                    location1 = LocationUtil.deserialize(section.getString("." + duplicateId + ".bluePortal.location1"));
-                    location2 = LocationUtil.deserialize(section.getString("." + duplicateId + ".bluePortal.location2"));
-                    duplicate.setBluePortal(new Cuboid(location1, location2));
-
-                    location1 = LocationUtil.deserialize(section.getString("." + duplicateId + ".redPortal.location1"));
-                    location2 = LocationUtil.deserialize(section.getString("." + duplicateId + ".redPortal.location2"));
-                    duplicate.setRedPortal(new Cuboid(location1, location2));
-
-                    bridgeArena.getDuplicates().add(duplicate);
-                    this.arenas.add(duplicate);
-                }
-                break;
+                config.set(path + "duplicates." + id + ".spawn1", LocationUtil.serialize(duplicate.getSpawn1()));
+                config.set(path + "duplicates." + id + ".spawn2", LocationUtil.serialize(duplicate.getSpawn2()));
+                config.set(path + "duplicates." + id + ".max", LocationUtil.serialize(duplicate.getMax()));
+                config.set(path + "duplicates." + id + ".min", LocationUtil.serialize(duplicate.getMin()));
             }
         }
+
+        config.save();
     }
 
     /**
@@ -268,13 +229,11 @@ public class ArenaManager {
 
         for (Arena arena : arenas) {
             if (!arena.isSetup() || !arena.getKits().contains(kit)) continue;
-            if ((arena.isStandalone() || arena.isShared()) && kit.getGameRules().isBridge()) continue;
+            if (arena.isShared() && kit.getGameRules().isBridge()) continue;
 
             if (!arena.isActive() && (arena.isStandalone() || arena.isDuplicate())) {
                 randomArenas.add(arena);
             } else if (!kit.getGameRules().isBuild() && !kit.getGameRules().isBridge() && arena.isShared()) {
-                randomArenas.add(arena);
-            } else if (kit.getGameRules().isBridge() && arena.isBridge()) {
                 randomArenas.add(arena);
             }
         }

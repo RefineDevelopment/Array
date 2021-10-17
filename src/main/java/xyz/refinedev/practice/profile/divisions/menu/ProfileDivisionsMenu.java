@@ -9,5 +9,5 @@ package xyz.refinedev.practice.profile.divisions.menu;
  * Project: Array
  */
 
-public class DivisionsMenu {
+public class ProfileDivisionsMenu {
 }

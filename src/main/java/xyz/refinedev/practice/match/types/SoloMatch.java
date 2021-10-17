@@ -5,8 +5,6 @@ import lombok.Setter;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -24,7 +22,7 @@ import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
-import xyz.refinedev.practice.profile.history.MatchHistory;
+import xyz.refinedev.practice.profile.history.ProfileHistory;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
@@ -33,6 +31,7 @@ import xyz.refinedev.practice.util.elo.EloUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 import xyz.refinedev.practice.util.other.TitleAPI;
+import xyz.refinedev.practice.util.other.XPUtil;
 
 import java.util.*;
 
@@ -135,14 +134,11 @@ public class SoloMatch extends Match {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (!isFighting()) {
-                        cancel();
-                        return;
-                    }
+                    if (!isFighting()) return;
 
-                    if (getDuration().equalsIgnoreCase("01:00") || (getDuration().equalsIgnoreCase("01:01") && getState().equals(MatchState.FIGHTING)) || (getDuration().equalsIgnoreCase("01:02") && getState().equals(MatchState.FIGHTING))) {
-                        onEnd();
-                        cancel();
+                    if (getDuration().equalsIgnoreCase("01:00") || (getDuration().equalsIgnoreCase("01:01")  && isFighting()) || (getDuration().equalsIgnoreCase("01:02") && isFighting())) {
+                        end();
+                        this.cancel();
                     }
                 }
             }.runTaskTimer(plugin, 20L, 20L);
@@ -207,11 +203,16 @@ public class SoloMatch extends Match {
         Profile losingProfile = plugin.getProfileManager().getByUUID(losingPlayer.getUniqueId());
 
         if (getQueueType() == QueueType.UNRANKED) {
-            //MatchHistory winnerProfileMatchHistory = new MatchHistory(plugin, new Date(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit(), true, false, 0, 0);
-            //MatchHistory loserProfileMatchHistory = new MatchHistory(plugin, new Date(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit(), false, false, 0, 0);
+            ProfileHistory winnerProfileMatchHistory = new ProfileHistory(plugin, System.currentTimeMillis(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit());
+            ProfileHistory loserProfileMatchHistory = new ProfileHistory(plugin,  System.currentTimeMillis(), this.getSnapshotOfPlayer(losingPlayer), this.getSnapshotOfPlayer(winningPlayer), this.getKit());
 
-            //winningProfile.getUnrankedMatchHistory().add(winnerProfileMatchHistory);
-            //losingProfile.getUnrankedMatchHistory().add(loserProfileMatchHistory);
+            winnerProfileMatchHistory.setWon(true);
+
+            winningProfile.getUnrankedMatchHistory().add(winnerProfileMatchHistory);
+            losingProfile.getUnrankedMatchHistory().add(loserProfileMatchHistory);
+
+            if (plugin.getDivisionsManager().isXPBased()) winningProfile.addExperience(XPUtil.handleExperience(winnerProfileMatchHistory));
+            if (plugin.getDivisionsManager().isXPBased()) losingProfile.addExperience(XPUtil.handleExperience(loserProfileMatchHistory));
 
             winningProfile.getStatisticsData().get(this.getKit()).incrementWon();
             plugin.getProfileManager().save(winningProfile);
@@ -227,11 +228,24 @@ public class SoloMatch extends Match {
             int newWinnerElo = EloUtil.getNewRating(oldWinnerElo, oldLoserElo, true);
             int newLoserElo = EloUtil.getNewRating(oldLoserElo, oldWinnerElo, false);
 
-            //MatchHistory winnerProfileMatchHistory = new MatchHistory(plugin, new Date(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit(), true, true, newWinnerElo, newLoserElo);
-            //MatchHistory loserProfileMatchHistory = new MatchHistory(plugin, new Date(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit(), false, true, newWinnerElo, newLoserElo);
+            int winnerEloChange = newWinnerElo - oldWinnerElo;
+            int loserEloChange = oldLoserElo - newLoserElo;
 
-            //winningProfile.getRankedMatchHistory().add(winnerProfileMatchHistory);
-            //losingProfile.getRankedMatchHistory().add(loserProfileMatchHistory);
+            ProfileHistory winnerProfileMatchHistory = new ProfileHistory(plugin, System.currentTimeMillis(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit());
+            ProfileHistory loserProfileMatchHistory = new ProfileHistory(plugin,  System.currentTimeMillis(), this.getSnapshotOfPlayer(losingPlayer), this.getSnapshotOfPlayer(winningPlayer), this.getKit());
+
+            winnerProfileMatchHistory.setWon(true);
+            winnerProfileMatchHistory.setRanked(true);
+            loserProfileMatchHistory.setRanked(true);
+
+            winnerProfileMatchHistory.setWinnerChangedELO(winnerEloChange);
+            loserProfileMatchHistory.setLooserChangedELO(loserEloChange);
+
+            winningProfile.getRankedMatchHistory().add(winnerProfileMatchHistory);
+            losingProfile.getRankedMatchHistory().add(loserProfileMatchHistory);
+
+            if (plugin.getDivisionsManager().isXPBased()) winningProfile.addExperience(XPUtil.handleExperience(winnerProfileMatchHistory));
+            if (plugin.getDivisionsManager().isXPBased()) losingProfile.addExperience(XPUtil.handleExperience(loserProfileMatchHistory));
 
             winningProfile.getStatisticsData().get(this.getKit()).setElo(newWinnerElo);
             losingProfile.getStatisticsData().get(this.getKit()).setElo(newLoserElo);
@@ -244,9 +258,6 @@ public class SoloMatch extends Match {
 
             plugin.getProfileManager().calculateGlobalElo(losingProfile);
             plugin.getProfileManager().save(losingProfile);
-
-            int winnerEloChange = newWinnerElo - oldWinnerElo;
-            int loserEloChange = oldLoserElo - newLoserElo;
 
             eloMessage = Locale.MATCH_ELO_CHANGES.toString()
                     .replace("<winner_name>", winningPlayer.getName())

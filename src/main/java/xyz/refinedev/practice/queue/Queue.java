@@ -13,6 +13,15 @@ import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.util.*;
 
+/**
+ * This Project is property of Refine Development © 2021
+ * Redistribution of this Project is not allowed
+ *
+ * @author Drizzy
+ * Created: 8/5/2021
+ * Project: Array
+ */
+
 @Getter
 public class Queue {
 

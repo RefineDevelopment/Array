@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MenuManager {
 
-    private final String[] configNames = {"profile_settings", "profile_killeffects", "party_events", "general", "event_size", "event_host"};
+    private final String[] configNames = {"profile_settings", "profile_killeffects", "profile_history", "party_events", "general", "event_size", "event_host"};
 
     private final Map<String, FoldersConfigurationFile> configs = new HashMap<>();
     private final List<MenuData> menuData = new ArrayList<>();

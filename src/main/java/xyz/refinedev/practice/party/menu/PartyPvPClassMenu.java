@@ -26,11 +26,11 @@ import java.util.stream.Collectors;
  * Project: Array
  */
 
-public class PartyClassSelectMenu extends PaginatedMenu {
+public class PartyPvPClassMenu extends PaginatedMenu {
 
     private final Array plugin = this.getPlugin();
 
-    public PartyClassSelectMenu() {
+    public PartyPvPClassMenu() {
         this.setAutoUpdate(true);
     }
 

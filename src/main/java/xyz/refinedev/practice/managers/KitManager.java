@@ -41,7 +41,6 @@ public class KitManager {
         ConfigurationSection configurationSection = config.getConfigurationSection("kits");
         if (configurationSection == null || configurationSection.getKeys(false).isEmpty()) return;
 
-
         for ( String kitName : configurationSection.getKeys(false) ) {
             Kit kit = new Kit(plugin, kitName);
 

@@ -63,15 +63,8 @@ EVENT:
   TITLE:
     STARTED:
       ENABLED: true
-      TEXT: "&aMatch Started"
+      TEXT: "&aEvent Started"
       SUB_TEXT: ""
-      FADE_IN: 5
-      STAY: 20
-      FADE_OUT: 5
-    ROUND_STARTED:
-      ENABLED: true
-      TEXT: "&aRound Started"
-      SUB_TEXT: "&7<playerA> vs <playerB>"
       FADE_IN: 5
       STAY: 20
       FADE_OUT: 5
@@ -84,28 +77,18 @@ EVENT:
       FADE_OUT: 5
     WINNER:
       ENABLED: true
-      TEXT: "&aWINNER"
-      SUB_TEXT: "&7Good Game!"
+      TEXT: "&aVICTORY!"
+      SUB_TEXT: "&fGood Event!"
       FADE_IN: 5
       STAY: 20
       FADE_OUT: 5
     LOSER:
       ENABLED: true
-      TEXT: "&cLOSER!"
-      SUB_TEXT: "&7Better Luck next time!"
+      TEXT: "&cDEFEAT!"
+      SUB_TEXT: "&fBetter Luck next time!"
       FADE_IN: 5
       STAY: 20
       FADE_OUT: 5
-  SUMO:
-    SOLO:
-      ENABLED: true
-      MAX_PLAYERS: 100
-      PLAYERS_TO_START: 8
-    TEAM:
-      ENABLED: true
-      MAX_PLAYERS: 100
-      PLAYERS_TO_START: 16
-      KICK_NOT_ON_TEAM: false
 MATCH:
   SPAWN_YLEVEL_ADD: 6
   COUNTDOWN_INTERVAL: 3
@@ -127,17 +110,24 @@ MATCH:
       FADE_IN: 5
       STAY: 20
       FADE_OUT: 5
+    RESPAWN_COUNTDOWN:
+      ENABLED: true
+      TEXT: "&c<seconds>"
+      SUB_TEXT: ""
+      FADE_IN: 5
+      STAY: 20
+      FADE_OUT: 5
     WINNER:
       ENABLED: true
-      TEXT: "&aWINNER"
-      SUB_TEXT: "&7Good Game!"
+      TEXT: "&aVICTORY!"
+      SUB_TEXT: "&fGood Game!"
       FADE_IN: 5
       STAY: 20
       FADE_OUT: 5
     LOSER:
       ENABLED: true
-      TEXT: "&cLOSER!"
-      SUB_TEXT: "&7Better Luck next time!"
+      TEXT: "&cDEFEAT!"
+      SUB_TEXT: "&fBetter Luck next time!"
       FADE_IN: 5
       STAY: 20
       FADE_OUT: 5
@@ -170,176 +160,176 @@ DIVISIONS:
      SILVER_1:
        DISPLAY_NAME: "&7Silver I"
        DEFAULT: true
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 0
+       ELO-Max: 1009
        XP-AMOUNT: 0
        XP-LEVEL: 1
      SILVER_2:
        DISPLAY_NAME: "&7Silver II"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 1010
+       ELO-Max: 1030
        XP-AMOUNT: 1000
        XP-LEVEL: 2
      SILVER_3:
        DISPLAY_NAME: "&7Silver III"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 1031
+       ELO-Max: 1049
        XP-AMOUNT: 2000
        XP-LEVEL: 3
      SILVER_4:
        DISPLAY_NAME: "&7Silver IV"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 1050
+       ELO-Max: 1069
        XP-AMOUNT: 3000
        XP-LEVEL: 4
      SILVER_5:
        DISPLAY_NAME: "&7Silver V"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 1070
+       ELO-Max: 1099
        XP-AMOUNT: 4000
        XP-LEVEL: 5
      GOLD_1:
        DISPLAY_NAME: "&6Gold I"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 2000
+       ELO-Max: 2050
        XP-AMOUNT: 5000
        XP-LEVEL: 6
      GOLD_2:
        DISPLAY_NAME: "&6Gold II"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 2051
+       ELO-Max: 2070
        XP-AMOUNT: 7000
        XP-LEVEL: 7
      GOLD_3:
        DISPLAY_NAME: "&6Gold III"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 2071
+       ELO-Max: 2091
        XP-AMOUNT: 8000
        XP-LEVEL: 8
      DIAMOND_1:
        DISPLAY_NAME: "&bDiamond I"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 3000
+       ELO-Max: 3040
        XP-AMOUNT: 9000
        XP-LEVEL: 9
      DIAMOND_2:
        DISPLAY_NAME: "&bDiamond II"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 3041
+       ELO-Max: 3060
        XP-AMOUNT: 10000
        XP-LEVEL: 10
      DIAMOND_3:
        DISPLAY_NAME: "&bDiamond III"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 3061
+       ELO-Max: 3099
        XP-AMOUNT: 11000
        XP-LEVEL: 11
      EMERALD_1:
        DISPLAY_NAME: "&aEmerald I"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 4000
+       ELO-Max: 4020
        XP-AMOUNT: 12000
        XP-LEVEL: 12
      EMERALD_2:
        DISPLAY_NAME: "&aEmerald II"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 4021
+       ELO-Max: 4040
        XP-AMOUNT: 13000
        XP-LEVEL: 13
      EMERALD_3:
        DISPLAY_NAME: "&aEmerald III"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 4041
+       ELO-Max: 4060
        XP-AMOUNT: 14000
        XP-LEVEL: 14
      EMERALD_4:
        DISPLAY_NAME: "&aEmerald IV"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 4061
+       ELO-Max: 4080
        XP-AMOUNT: 16000
        XP-LEVEL: 15
      EMERALD_5:
        DISPLAY_NAME: "&aEmerald V"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 4080
+       ELO-Max: 4099
        XP-AMOUNT: 20000
        XP-LEVEL: 16
      AMETHYST_1:
        DISPLAY_NAME: "&2Amethyst I"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 5000
+       ELO-Max: 5010
        XP-AMOUNT: 24000
        XP-LEVEL: 17
      AMETHYST_2:
        DISPLAY_NAME: "&2Amethyst II"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 5011
+       ELO-Max: 5029
        XP-AMOUNT: 26000
        XP-LEVEL: 18
      AMETHYST_3:
        DISPLAY_NAME: "&2Amethyst III"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 5030
+       ELO-Max: 5049
        XP-AMOUNT: 36000
        XP-LEVEL: 19
      PLATINUM_1:
        DISPLAY_NAME: "&ePlatinum I"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 5050
+       ELO-Max: 5069
        XP-AMOUNT: 46000
        XP-LEVEL: 20
      PLATINUM_2:
        DISPLAY_NAME: "&ePlatinum II"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 5070
+       ELO-Max: 5089
        XP-AMOUNT: 56000
        XP-LEVEL: 21
      PLATINUM_3:
        DISPLAY_NAME: "&ePlatinum III"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 5090
+       ELO-Max: 6010
        XP-AMOUNT: 76000
        XP-LEVEL: 22
      PLATINUM_4:
        DISPLAY_NAME: "&ePlatinum IV"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 6011
+       ELO-Max: 6020
        XP-AMOUNT: 86000
        XP-LEVEL: 23
      PLATINUM_5:
        DISPLAY_NAME: "&ePlatinum V"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 6021
+       ELO-Max: 6030
        XP-AMOUNT: 100000
        XP-LEVEL: 24
      MASTER:
        DISPLAY_NAME: "&cMaster"
        DEFAULT: false
-       ELO-Min: 0 0
-       ELO-Max: 1000
+       ELO-Min: 6031
+       ELO-Max: 1000000
        XP-AMOUNT: 200000
        XP-LEVEL: 25
 

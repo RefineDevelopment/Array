@@ -80,6 +80,6 @@ public class StandalonePasteRunnable extends DuplicateArenaRunnable {
         }
         plugin.logger("&8[&c&lArray&8] &7Finished pasting &c" + copiedArena.getName() + "&7's " + amount + " &7duplicate arenas.");
         plugin.getArenaManager().setPasting(false);
-        plugin.getArenaManager().getArenas().forEach(Arena::save);
+        plugin.getArenaManager().getArenas().forEach(plugin.getArenaManager()::save);
     }
 }

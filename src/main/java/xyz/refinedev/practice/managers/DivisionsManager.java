@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.ConfigurationSection;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.profile.divisions.Division;
+import xyz.refinedev.practice.profile.divisions.ProfileDivision;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 
@@ -29,7 +29,7 @@ public class DivisionsManager {
     private final Array plugin;
     private final BasicConfigurationFile config;
 
-    private final List<Division> divisions = new ArrayList<>();
+    private final List<ProfileDivision> divisions = new ArrayList<>();
     private boolean XPBased;
 
     public void init() {
@@ -45,7 +45,7 @@ public class DivisionsManager {
        for ( String key : section.getKeys(false) ) {
            String path = key + ".";
 
-           Division division = new Division(key);
+           ProfileDivision division = new ProfileDivision(key);
            division.setDisplayName(CC.translate(section.getString(path + "DISPLAY_NAME")));
            division.setMinElo(section.getInt(path + "MIN-Elo"));
            division.setMaxElo(section.getInt(path + "MAX-Elo"));
@@ -63,13 +63,13 @@ public class DivisionsManager {
      * Get a Profile's Division by their global XP
      *
      * @param xp {@link Integer} the profile's XP
-     * @return {@link Division} the profile's division
+     * @return {@link ProfileDivision} the profile's division
      */
-    public Division getDivisionByXP(int xp) {
+    public ProfileDivision getDivisionByXP(int xp) {
         if (this.getHighest() != null && xp > this.getHighest().getExperience()) return this.getHighest();
 
-        List<Division> xpDivisions = new ArrayList<>(divisions);
-        xpDivisions.sort(Comparator.comparing(Division::getExperience).reversed());
+        List<ProfileDivision> xpDivisions = new ArrayList<>(divisions);
+        xpDivisions.sort(Comparator.comparing(ProfileDivision::getExperience).reversed());
 
         return xpDivisions.stream().filter(level -> xp >= level.getExperience()).findFirst().orElse(getDefault());
     }
@@ -78,12 +78,12 @@ public class DivisionsManager {
      * Get a Profile's Division by their global ELO
      *
      * @param elo {@link Integer} the profile's elo
-     * @return {@link Division} the profile's division
+     * @return {@link ProfileDivision} the profile's division
      */
-    public Division getDivisionByELO(int elo) {
+    public ProfileDivision getDivisionByELO(int elo) {
         if (this.getHighest() != null && elo > this.getHighest().getMaxElo()) return this.getHighest();
 
-        for (Division eloRank : divisions) {
+        for ( ProfileDivision eloRank : divisions) {
             if (elo >= eloRank.getMinElo() && elo <= eloRank.getMaxElo()) {
                 return eloRank;
             }
@@ -92,27 +92,27 @@ public class DivisionsManager {
     }
 
     /**
-     * Get the default {@link Division}
+     * Get the default {@link ProfileDivision}
      *
-     * @return {@link Division} default division
+     * @return {@link ProfileDivision} default division
      */
-    public Division getDefault() {
-        return divisions.stream().filter(Division::isDefaultDivision).findAny().orElse(new Division("Default"));
+    public ProfileDivision getDefault() {
+        return divisions.stream().filter(ProfileDivision::isDefaultDivision).findAny().orElse(new ProfileDivision("Default"));
     }
 
     /**
      * This gets the highest ranking division
      * either based on ELO or XP
      *
-     * @return {@link Division} highest rank
+     * @return {@link ProfileDivision} highest rank
      */
-    public Division getHighest() {
-        LinkedList<Division> newDivisions = new LinkedList<>(divisions);
+    public ProfileDivision getHighest() {
+        LinkedList<ProfileDivision> newDivisions = new LinkedList<>(divisions);
 
         if (this.XPBased) {
-            newDivisions.sort(Comparator.comparingInt(Division::getExperience).reversed());
+            newDivisions.sort(Comparator.comparingInt(ProfileDivision::getExperience).reversed());
         } else {
-            newDivisions.sort(Comparator.comparingInt(Division::getMaxElo).reversed());
+            newDivisions.sort(Comparator.comparingInt(ProfileDivision::getMaxElo).reversed());
         }
 
         return newDivisions.getFirst();
@@ -126,6 +126,6 @@ public class DivisionsManager {
      */
     public boolean isDefaultPresent() {
         if (divisions.isEmpty()) return false;
-        return divisions.stream().anyMatch(Division::isDefaultDivision);
+        return divisions.stream().anyMatch(ProfileDivision::isDefaultDivision);
     }
 }

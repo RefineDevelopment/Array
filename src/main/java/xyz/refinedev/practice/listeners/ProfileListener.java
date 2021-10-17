@@ -18,6 +18,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.Event;
+import xyz.refinedev.practice.match.Match;
+import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 
@@ -238,6 +240,14 @@ public class ProfileListener implements Listener {
         if (!profile.isInFight() && !profile.isInEvent()) return;
 
         profile.setKills(profile.getKills() + 1);
+
+        if (profile.isInFight()) {
+            Match match = profile.getMatch();
+            TeamPlayer teamPlayer = match.getTeamPlayer(player);
+            if (teamPlayer == null || !teamPlayer.isAlive() || teamPlayer.isDisconnected()) return;
+
+            teamPlayer.setKills(teamPlayer.getKills() + 1);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)

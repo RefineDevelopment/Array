@@ -49,16 +49,36 @@ SCOREBOARD:
       - " &fRival: &c<opponent_name>"
       - " &fDuration: &c<match_duration>"
       - " &fPing: &a<your_ping>ms &7%splitter% &c<opponent_ping>ms"
-    SOLO_BOXING_ADDITION:
+    SOLO_BOXING:
+      - "&c&lFight"
+      - " &fRival: &c<opponent_name>"
+      - " &fDuration: &c<match_duration>"
       - ""
       - "&c&lHits &r(<hit_difference>)"
-      - " &fYour Hits: &a<your_hits> &e(<your_combo> Combo)"
+      - " &fYour Hits: &a<your_hits>"
       - " &fTheir Hits: &c<opponent_hits>"
-    SOLO_BRIDGE_ADDITION:
+    SOLO_BRIDGE:
+      - "&c&lFight"
+      - " &fRival: &c<opponent_name>"
+      - " &fDuration: &c<match_duration>"
       - ""
-      - "&c&lRound #<bridge_round>&7:"
+      - "&c&lRound #<match_round>"
       - " &cRed: &r<red_points_formatted>"
       - " &9Blue: &r<blue_points_formatted>"
+    SOLO_BATTLERUSH:
+      - "&c&lFight"
+      - " &fRival: &c<opponent_name>"
+      - " &fTime Left: &c<match_duration>"
+      - " &fKills: &c<your_kills>"
+      - ""
+      - "&c&lRound #<match_round>"
+      - " &cRed: &r<red_points_formatted>"
+      - " &9Blue: &r<blue_points_formatted>"
+    SOLO_BEDWARS_ADDITION:
+      - ""
+      - ""
+      - ""
+      - ""
     TEAM:
       - "&c&lFight"
       - " &fDuration: &c<match_duration>"
@@ -71,10 +91,15 @@ SCOREBOARD:
       - " &fDuration: &c<match_duration>"
       - " &fKit: &c<match_kit>"
       - ""
-      - "&c&lRound #<bridge_round>&7:"
+      - "&c&lRound #<match_round>"
       - " &cRed: &r<red_points_formatted>"
       - " &9Blue: &r<blue_points_formatted>"
-    HCF:
+    TEAM_BEDWARS:
+      - ""
+      - ""
+      - ""
+      - ""
+    TEAM_HCF:
       - "&c&lFight"
       - " &fDuration: &c<match_duration>"
       - " &fKit: &c<match_kit>"
@@ -89,11 +114,10 @@ SCOREBOARD:
       - " &fKit: &c<match_kit>"
       - " &fDuration: &c<match_duration>"
     ENDING:
-      - "&c&lFight"
-      - " &cMatch Status: &fEnded"
+      - "&cMatch Status: &fEnded"
       - ""
-      - " &7Your match has ended,"
-      - " &7teleporting you to spawn."
+      - "&7Your match has ended,"
+      - "&7teleporting you to spawn."
   SPECTATOR:
     MATCH:
       SOLO:
@@ -105,7 +129,7 @@ SCOREBOARD:
         - " &7vs"
         - " &c<playerB_name> &7(<playerB_ping>)"
         - ""
-      BOXING:
+      SOLO_BOXING:
         - "&c&lFight"
         - " &fArena: &c<match_arena>"
         - " &fKit: &c<match_kit>"
@@ -113,12 +137,20 @@ SCOREBOARD:
         - "&c&lHits"
         - " &fPlayerA Hits: &a<playerA_hits>"
         - " &fPlayerB Hits: &c<playerB_hits>"
-      BRIDGE:
+      SOLO_BATTLERUSH:
         - "&c&lFight"
         - " &fArena: &c<match_arena>"
         - " &fKit: &c<match_kit>"
         - ""
-        - "&c&lRound #<bridge_round>&7:"
+        - "&c&lRound #<match_round>&7:"
+        - " &cRed: &r<red_points_formatted>"
+        - " &9Blue: &r<blue_points_formatted>"
+      SOLO_BRIDGE:
+        - "&c&lFight"
+        - " &fArena: &c<match_arena>"
+        - " &fKit: &c<match_kit>"
+        - ""
+        - "&c&lRound #<match_round>&7:"
         - " &cRed: &r<red_points_formatted>"
         - " &9Blue: &r<blue_points_formatted>"
       TEAM:
@@ -129,7 +161,15 @@ SCOREBOARD:
         - " &c<teamA_leader_name>'s Team &7(<teamA_size>&7)"
         -  "&7vs"
         - " &c<teamB_leader_name>'s Team &7(<teamB_size>&7)"
-      HCF:
+      TEAM_BRIDGE:
+        - "&c&lFight"
+        - " &fKit: &c<match_kit>"
+        - " &fDuration: &c<match_duration>"
+        - ""
+        - "&c&lRound #<match_round>&7:"
+        - " &cRed: &r<red_points_formatted>"
+        - " &9Blue: &r<blue_points_formatted>"
+      TEAM_HCF:
         - "&c&lFight"
         - " &fKit: &c<match_kit>"
         - " &fDuration: &c<match_duration>"

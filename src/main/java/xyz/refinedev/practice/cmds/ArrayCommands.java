@@ -22,7 +22,6 @@ import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Require;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 import xyz.refinedev.practice.util.command.annotation.Text;
-import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.other.Description;
@@ -143,7 +142,7 @@ public class ArrayCommands {
 
         TaskUtil.runAsync(() -> {
             plugin.getKitManager().getKits().forEach(plugin.getKitManager()::save);
-            plugin.getArenaManager().getArenas().forEach(Arena::save);
+            plugin.getArenaManager().getArenas().forEach(plugin.getArenaManager()::save);
         });
 
         plugin.getLeaderboardsManager().loadGlobalLeaderboards();
@@ -245,24 +244,24 @@ public class ArrayCommands {
             Kit kitType = plugin.getKitManager().getByName(type);
             if (kitType != null) {
                 for ( Profile profile : plugin.getProfileManager().getProfiles().values() ) {
-                    for ( KitInventory kitInventory : profile.getStatisticsData().get(kitType).getLoadouts() ) {
+                    for ( KitInventory kitInventory : profile.getStatisticsData().get(kitType).getKitInventories() ) {
                         profile.getStatisticsData().get(kitType).deleteKit(kitInventory);
                     }
                     plugin.getProfileManager().save(profile);
                     if (profile.getPlayer().isOnline()) {
-                        profile.getPlayer().kickPlayer("Please re-log due to your kit loadouts being reset by an Admin.");
+                        profile.getPlayer().kickPlayer("Please re-log due to your kit kitInventories being reset by an Admin.");
                     }
                 }
             } else {
                 if (type.equalsIgnoreCase("all")) {
                     for ( Kit kit : plugin.getKitManager().getKits() ) {
                         for ( Profile profile : plugin.getProfileManager().getProfiles().values() ) {
-                            for ( KitInventory kitInventory : profile.getStatisticsData().get(kit).getLoadouts() ) {
+                            for ( KitInventory kitInventory : profile.getStatisticsData().get(kit).getKitInventories() ) {
                                 profile.getStatisticsData().get(kit).deleteKit(kitInventory);
                             }
                             plugin.getProfileManager().save(profile);
                             if (profile.getPlayer().isOnline()) {
-                                profile.getPlayer().kickPlayer("Please re-log due to your kit loadouts being reset by an Admin.");
+                                profile.getPlayer().kickPlayer("Please re-log due to your kit kitInventories being reset by an Admin.");
                             }
                         }
                     }
@@ -271,7 +270,7 @@ public class ArrayCommands {
                     return;
                 }
             }
-            player.sendMessage(CC.translate("&8[&cArray&8] &7Succesfully deleted kit loadouts for &cEveryone!"));
+            player.sendMessage(CC.translate("&8[&cArray&8] &7Succesfully deleted kit kitInventories for &cEveryone!"));
         } else if (Bukkit.getPlayer(reach) == null || !Bukkit.getPlayer(reach).isOnline()) {
             player.sendMessage(CC.translate("&8[&cArray&8] &7That player is offline or does not exist."));
         } else {
@@ -279,7 +278,7 @@ public class ArrayCommands {
             if (kitType != null) {
                 Player target = Bukkit.getPlayer(reach);
                 Profile profile = plugin.getProfileManager().getByPlayer(target);
-                for ( KitInventory kitInventory : profile.getStatisticsData().get(kitType).getLoadouts() ) {
+                for ( KitInventory kitInventory : profile.getStatisticsData().get(kitType).getKitInventories() ) {
                     profile.getStatisticsData().get(kitType).deleteKit(kitInventory);
                 }
                 plugin.getProfileManager().save(profile);
@@ -289,7 +288,7 @@ public class ArrayCommands {
                     for ( Kit kit : plugin.getKitManager().getKits() ) {
                         Player target = Bukkit.getPlayer(reach);
                         Profile profile = plugin.getProfileManager().getByPlayer(target);
-                        for ( KitInventory kitInventory : profile.getStatisticsData().get(kit).getLoadouts() ) {
+                        for ( KitInventory kitInventory : profile.getStatisticsData().get(kit).getKitInventories() ) {
                             profile.getStatisticsData().get(kit).deleteKit(kitInventory);
                         }
                         plugin.getProfileManager().save(profile);

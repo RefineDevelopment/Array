@@ -28,11 +28,10 @@ import xyz.refinedev.practice.util.other.TaskUtil;
 import java.util.*;
 
 @RequiredArgsConstructor
-public class PvPClassManager implements Listener {
+public class PvPClassManager {
 
     private final Array plugin;
 
-    // Mapping to get the PVP Class a player has equipped.
     private final List<PvPClass> pvpClasses = new ArrayList<>();
     private final Map<UUID, PvPClass> equippedClassMap = new HashMap<>();
     protected final Map<UUID, PvPClass> classWarmups = new HashMap<>();
@@ -42,23 +41,21 @@ public class PvPClassManager implements Listener {
         pvpClasses.add(new Archer(plugin));
         pvpClasses.add(new Rogue(plugin));
 
-        this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
-
         for ( PvPClass pvpClass : pvpClasses) {
-            if (pvpClass instanceof Listener) {
-                this.plugin.getServer().getPluginManager().registerEvents((Listener) pvpClass, this.plugin);
-            }
+            this.plugin.getServer().getPluginManager().registerEvents((Listener) pvpClass, this.plugin);
         }
 
         TaskUtil.runTimer(() -> {
-            for(Player player : this.plugin.getServer().getOnlinePlayers()){
+            for (Player player : this.plugin.getServer().getOnlinePlayers()) {
                 Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+                if (!profile.isInFight()) continue;
+
                 Match match = profile.getMatch();
-                if (match != null && match.isHCFMatch()) {
-                    TaskUtil.run(() -> attemptEquip(player));
-                }
+                if (!match.isHCFMatch()) continue;
+
+                this.attemptEquip(player);
             }
-        }, 1 , 1);
+        }, 2L, 2L);
     }
 
     public void onDisable() {
@@ -70,44 +67,32 @@ public class PvPClassManager implements Listener {
         this.equippedClassMap.clear();
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        Profile profile = plugin.getProfileManager().getByUUID(event.getEntity().getUniqueId());
-        if (profile.isInMatch() && profile.getMatch().isHCFMatch()) {
-            setEquippedClass(event.getEntity(), null);
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onArmorChange(ArmorEquipEvent event) {
-        Profile profile = plugin.getProfileManager().getByUUID(event.getPlayer().getUniqueId());
-        Match match = profile.getMatch();
-        if (match != null && match.isHCFMatch()) {
-            Bukkit.getScheduler().runTask(Array.getInstance(), () -> {
-                this.attemptEquip(event.getPlayer());
-            });
-        }
-    }
-
+    /**
+     * Attempt to register and equip a {@link PvPClass}
+     * on the player, if the are wearing the correct gear then
+     * it will equip the specified {@link PvPClass} to them
+     *
+     * @param player {@link Player} the player equipping the class
+     */
     public void attemptEquip(Player player) {
-        PvPClass current = Array.getInstance().getPvpClassManager().getEquippedClass(player);
+        PvPClass current = this.getEquippedClass(player);
+
         if (current != null) {
             if (current.isApplicableFor(player)) {
                 return;
             }
-
-            Array.getInstance().getPvpClassManager().setEquippedClass(player, null);
-        } else if ((current = classWarmups.get(player.getUniqueId())) != null) {
+            this.setEquippedClass(player, null);
+        } else if (classWarmups.containsKey(player.getUniqueId())) {
+            current = classWarmups.get(player.getUniqueId());
             if (current.isApplicableFor(player)) {
                 return;
             }
-
         }
 
-        Collection<PvPClass> pvpClasses = Array.getInstance().getPvpClassManager().getPvpClasses();
+        Collection<PvPClass> pvpClasses = this.getPvpClasses();
         for ( PvPClass pvpClass : pvpClasses) {
             if (pvpClass.isApplicableFor(player)) {
-                Array.getInstance().getPvpClassManager().setEquippedClass(player, pvpClass);
+                this.setEquippedClass(player, pvpClass);
                 break;
             }
         }
@@ -134,10 +119,6 @@ public class PvPClassManager implements Listener {
         }
     }
 
-    public boolean hasClassEquipped(Player player, PvPClass pvpClass) {
-        return getEquippedClass(player) == pvpClass;
-    }
-
     /**
      * Sets the equipped {@link PvPClass} of a {@link Player}.
      *
@@ -146,128 +127,21 @@ public class PvPClassManager implements Listener {
      */
     public void setEquippedClass(Player player, PvPClass pvpClass) {
         Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        if (!profile.isInFight()) return;
+
         Match match = profile.getMatch();
-        if (match != null && match.isHCFMatch()) {
-            if (pvpClass == null) {
-                PvPClass equipped = this.equippedClassMap.get(player.getUniqueId());
-                if (equipped != null) {
-                    equipped.onUnequip(player);
-                    Bukkit.getPluginManager().callEvent(new ArmorClassUnequipEvent(player, equipped));
-                }
-                this.equippedClassMap.remove(player.getUniqueId());
-            } else if (pvpClass.onEquip(player) && pvpClass != this.getEquippedClass(player)) {
-                equippedClassMap.put(player.getUniqueId(), pvpClass);
-                Bukkit.getPluginManager().callEvent(new ArmorClassEquipEvent(player, pvpClass));
+        if (!match.isHCFMatch()) return;
+
+        if (pvpClass == null) {
+            PvPClass equipped = this.equippedClassMap.get(player.getUniqueId());
+            if (equipped != null) {
+                equipped.onUnequip(player);
+                Bukkit.getPluginManager().callEvent(new ArmorClassUnequipEvent(player, equipped));
             }
+            this.equippedClassMap.remove(player.getUniqueId());
+        } else if (pvpClass.onEquip(player) && pvpClass != this.getEquippedClass(player)) {
+            equippedClassMap.put(player.getUniqueId(), pvpClass);
+            Bukkit.getPluginManager().callEvent(new ArmorClassEquipEvent(player, pvpClass));
         }
-    }
-
-    public static void giveBardKit(Player player) {
-        player.getInventory().setHelmet(new ItemBuilder(Material.GOLD_HELMET).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
-        player.getInventory().setChestplate(new ItemBuilder(Material.GOLD_CHESTPLATE).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
-        player.getInventory().setLeggings(new ItemBuilder(Material.GOLD_LEGGINGS).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
-        player.getInventory().setBoots(new ItemBuilder(Material.GOLD_BOOTS).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).enchantment(Enchantment.PROTECTION_FALL, 4).build());
-
-        player.getInventory().setItem(0, new ItemBuilder(Material.DIAMOND_SWORD).enchantment(Enchantment.DAMAGE_ALL, 2).enchantment(Enchantment.FIRE_ASPECT, 2).enchantment(Enchantment.DURABILITY, 3).build());
-        player.getInventory().setItem(1, new ItemBuilder(Material.ENDER_PEARL).amount(16).build());
-        player.getInventory().setItem(2, new ItemBuilder(Material.IRON_INGOT).amount(64).build());
-        player.getInventory().setItem(3, new ItemBuilder(Material.BLAZE_POWDER).amount(64).build());
-        player.getInventory().setItem(4, new ItemBuilder(Material.GHAST_TEAR).amount(16).build());
-        player.getInventory().setItem(5, new ItemBuilder(Material.POTION).amount(1).durability(8259).build());
-        player.getInventory().setItem(8, new ItemBuilder(Material.COOKED_BEEF).amount(64).build());
-        player.getInventory().setItem(18, new ItemBuilder(Material.FEATHER).amount(32).build());
-        player.getInventory().setItem(9, new ItemBuilder(Material.SUGAR).amount(64).build());
-        player.getInventory().setItem(35, new ItemBuilder(Material.MAGMA_CREAM).amount(64).build());
-        player.getInventory().setItem(26, new ItemBuilder(Material.SPIDER_EYE).amount(32).build());
-
-        ItemStack pots = new ItemBuilder(Material.POTION).durability(16421).build();
-
-        while (player.getInventory().firstEmpty() != -1) {
-            if (player.getInventory().firstEmpty() == -1) {
-                return;
-            }
-            player.getInventory().addItem(pots);
-        }
-        player.updateInventory();
-
-        Array.getInstance().getPvpClassManager().attemptEquip(player);
-    }
-
-    public static void giveDiamondKit(Player player) {
-        player.getInventory().setHelmet(new ItemBuilder(Material.DIAMOND_HELMET).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
-        player.getInventory().setChestplate(new ItemBuilder(Material.DIAMOND_CHESTPLATE).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
-        player.getInventory().setLeggings(new ItemBuilder(Material.DIAMOND_LEGGINGS).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
-        player.getInventory().setBoots(new ItemBuilder(Material.DIAMOND_BOOTS).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).enchantment(Enchantment.PROTECTION_FALL, 4).build());
-
-        player.getInventory().setItem(0, new ItemBuilder(Material.DIAMOND_SWORD).enchantment(Enchantment.DAMAGE_ALL, 2).enchantment(Enchantment.FIRE_ASPECT, 2).enchantment(Enchantment.DURABILITY, 3).build());
-        player.getInventory().setItem(1, new ItemBuilder(Material.ENDER_PEARL).amount(16).build());
-        player.getInventory().setItem(2, new ItemBuilder(Material.POTION).amount(1).durability(8259).build());
-        player.getInventory().setItem(3, new ItemBuilder(Material.POTION).amount(1).durability(8226).build());
-        player.getInventory().setItem(8, new ItemBuilder(Material.COOKED_BEEF).amount(64).build());
-
-
-        player.getInventory().setItem(17, new ItemBuilder(Material.POTION).amount(1).durability(8226).build());
-        player.getInventory().setItem(26, new ItemBuilder(Material.POTION).amount(1).durability(8226).build());
-        player.getInventory().setItem(35, new ItemBuilder(Material.POTION).amount(1).durability(8226).build());
-
-        ItemStack pots = new ItemBuilder(Material.POTION).durability(16421).build();
-        while (player.getInventory().firstEmpty() != -1) {
-            if (player.getInventory().firstEmpty() == -1) {
-                return;
-            }
-            player.getInventory().addItem(pots);
-        }
-        player.updateInventory();
-    }
-
-
-    public static void giveArcherKit(Player player) {
-        List<Color> colors = Arrays.asList(Color.fromRGB(6717235), Color.fromRGB(3361970), Color.fromRGB(5000268), Color.fromRGB(1644825));
-        Collections.shuffle(colors);
-
-        double chance = Array.RANDOM.nextDouble();
-
-        if (chance <= 0.7D) {
-            Color color = colors.get(0);
-            player.getInventory().setHelmet(new ItemBuilder(Material.LEATHER_HELMET).color(color).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
-            player.getInventory().setChestplate(new ItemBuilder(Material.LEATHER_CHESTPLATE).color(color).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
-            player.getInventory().setLeggings(new ItemBuilder(Material.LEATHER_LEGGINGS).color(color).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
-            player.getInventory().setBoots(new ItemBuilder(Material.LEATHER_BOOTS).color(color).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).enchantment(Enchantment.PROTECTION_FALL, 4).build());
-        } else {
-            player.getInventory().setHelmet(new ItemBuilder(Material.LEATHER_HELMET).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
-            player.getInventory().setChestplate(new ItemBuilder(Material.LEATHER_CHESTPLATE).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
-            player.getInventory().setLeggings(new ItemBuilder(Material.LEATHER_LEGGINGS).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).build());
-            player.getInventory().setBoots(new ItemBuilder(Material.LEATHER_BOOTS).enchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).enchantment(Enchantment.DURABILITY, 3).enchantment(Enchantment.PROTECTION_FALL, 4).build());
-        }
-        player.getInventory().setItem(0, new ItemBuilder(Material.DIAMOND_SWORD).enchantment(Enchantment.DAMAGE_ALL, 2).enchantment(Enchantment.FIRE_ASPECT, 2).enchantment(Enchantment.DURABILITY, 3).build());
-        player.getInventory().setItem(2, new ItemBuilder(Material.ENDER_PEARL).amount(16).build());
-        player.getInventory().setItem(1, new ItemBuilder(Material.BOW).enchantment(Enchantment.ARROW_DAMAGE, 3).enchantment(Enchantment.DURABILITY, 3).enchantment(Enchantment.ARROW_FIRE, 1).enchantment(Enchantment.ARROW_INFINITE, 1).build());
-        player.getInventory().setItem(3, new ItemBuilder(Material.POTION).amount(1).durability(8259).build());
-
-        player.getInventory().setItem(7, new ItemBuilder(Material.COOKED_BEEF).amount(64).build());
-        player.getInventory().setItem(8, new ItemBuilder(Material.SUGAR).amount(64).build());
-
-        player.getInventory().setItem(26, new ItemBuilder(Material.ARROW).amount(1).build());
-        player.getInventory().setItem(17, new ItemBuilder(Material.FEATHER).amount(64).build());
-
-        ItemStack pots = new ItemBuilder(Material.POTION).durability(16421).build();
-        while (player.getInventory().firstEmpty() != -1) {
-            if (player.getInventory().firstEmpty() == -1) {
-                return;
-            }
-            player.getInventory().addItem(pots);
-        }
-        player.updateInventory();
-
-        Array.getInstance().getPvpClassManager().attemptEquip(player);
-    }
-
-    public static void giveRogueKit(Player player) {
-
-        player.getInventory().setArmorContents(InventoryUtil.deserializeInventory("t@305:e@0@1:e@2@4:e@34@3;t@304:e@0@1:e@34@3;t@303:e@0@1:e@34@3;t@302:e@0@1:e@34@3;"));
-        player.getInventory().setContents(InventoryUtil.deserializeInventory("t@276:e@16@1:e@34@3;t@368:a@16;t@283;t@283;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@353:a@64;t@393:a@64;t@283;t@283;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@283;t@283;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@283;t@283;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@373:d@16421;t@288:a@64;"));
-        player.updateInventory();
-
-        Array.getInstance().getPvpClassManager().attemptEquip(player);
     }
 }

@@ -28,7 +28,7 @@ public class TeamPlayer {
     private boolean alive = true;
     private boolean disconnected;
 
-    private int elo, potionsThrown, potionsMissed, hits, combo, longestCombo;
+    private int elo, potionsThrown, potionsMissed, hits, combo, longestCombo, kills;
 
     public TeamPlayer(Player player) {
         this.uniqueId = player.getUniqueId();

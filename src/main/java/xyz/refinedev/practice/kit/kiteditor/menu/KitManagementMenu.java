@@ -42,7 +42,7 @@ public class KitManagementMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
         Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        KitInventory[] kitInventories= profile.getStatisticsData().get(kit).getLoadouts();
+        KitInventory[] kitInventories= profile.getStatisticsData().get(kit).getKitInventories();
 
         if (kitInventories == null) {
             return buttons;

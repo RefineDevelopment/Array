@@ -198,7 +198,7 @@ public class Array extends JavaPlugin {
     public void onDisable() {
         Match.getMatches().forEach(Match::cleanup);
 
-        this.arenaManager.getArenas().forEach(Arena::save);
+        this.arenaManager.getArenas().forEach(plugin.getArenaManager()::save);
         this.kitManager.getKits().forEach(kitManager::save);
         this.clanManager.getClans().forEach(clanManager::save);
         this.profileManager.getProfiles().values().forEach(profileManager::save);

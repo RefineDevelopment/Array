@@ -36,7 +36,7 @@ public abstract class Arena {
     private Rating rating = new Rating(this, 0, 0, 0,0, 0);
     private ItemStack displayIcon = new ItemStack(Material.PAPER);
 
-    private int deathHeight;
+    private int deathHeight, buildHeight;
     private boolean active, duplicate, disablePearls;
 
     public Arena(Array plugin, String name, ArenaType arenaType) {
@@ -50,7 +50,7 @@ public abstract class Arena {
 
     public int getMaxBuildHeight() {
         int highest = (int) (Math.max(spawn1.getY(), spawn2.getY()));
-        return highest + 5;
+        return highest + buildHeight;
     }
 
     public int getFallDeathHeight() {
@@ -63,10 +63,6 @@ public abstract class Arena {
 
     public boolean isStandalone() {
         return this.type == ArenaType.STANDALONE;
-    }
-
-    public boolean isBridge() {
-        return this.type == ArenaType.BRIDGE;
     }
 
     public boolean isShared() {

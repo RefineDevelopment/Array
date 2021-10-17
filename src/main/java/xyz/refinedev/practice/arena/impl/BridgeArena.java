@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.arena.impl;
+/*package xyz.refinedev.practice.arena.impl;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,15 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * This Project is the property of Refine Development © 2021
- * Redistribution of this Project is not allowed
- *
- * @author Drizzy
- * Created at 3/21/2021
- * Project: Array
- */
 
+import xyz.refinedev.practice.arena.Arena;
+import xyz.refinedev.practice.arena.ArenaType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter @Setter
 public class BridgeArena extends Arena {
@@ -116,4 +113,4 @@ public class BridgeArena extends Arena {
         return this.getSpawn1() != null && this.getSpawn2() != null && this.getMax() != null && this.getMin() != null && blueCuboid != null && redCuboid != null && redPortal != null && bluePortal != null;
     }
 
-}
+}*/

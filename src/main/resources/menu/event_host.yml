@@ -4,279 +4,279 @@
 #        Bought at Refine Development - https://dsc.gg/refine          #
 #                                                                      #
 # #####################################################################
-TITLE: '&7Events'
+TITLE: "&7Events"
 SIZE: 27
 PAGINATED: false
 PLACEHOLDER: true
 PLACEHOLDER_BUTTON:
-  NAME: ''
+  NAME: ""
   MATERIAL: STAINED_GLASS_PANE
   DATA: 7
   LORE: []
 BUTTONS:
   SUMO:
-    NAME: '&c&lSumo'
+    NAME: "&c&lSumo"
     SLOT: 2
     MATERIAL: LEASH
     ACTIVE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fKnockback everyone off the'
-      - ' &fplatform until your are'
-      - ' &fthe last player alive'
-      - ''
-      - '&c&lStatus'
-      - ' &fState: &c<event_state>'
-      - ' &fPlayers: &c<event_current_players>/&c<event_max_players>'
-      - ' &fTime: &c<event_interval>'
-      - ' &fRound: &c<event_playerA> vs &c<event_playerB>'
-      - ''
-      - '&7&o(( Click to Spectate ))'
+      - ""
+      - "&c&lInformation"
+      - " &fKnockback everyone off the"
+      - " &fplatform until your are"
+      - " &fthe last player alive"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fRound: &c<event_playerA> vs &c<event_playerB>"
+      - ""
+      - "&7&o(( Click to Spectate ))"
     IDLE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fKnockback everyone off the'
-      - ' &fplatform until your are'
-      - ' &fthe last player alive'
-      - ''
-      - '&7&o(( Left-Click to Join ))'
-      - '&7&o(( Right-Click to Select Size ))'
+      - ""
+      - "&c&lInformation"
+      - " &fKnockback everyone off the"
+      - " &fplatform until your are"
+      - " &fthe last player alive"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Select Size ))"
   BRACKETS:
-    NAME: '&c&lBrackets'
+    NAME: "&c&lBrackets"
     SLOT: 3
     MATERIAL: WOOD_SWORD
     ACTIVE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fFight through rounds and'
-      - ' &fbeat your opponent in 1v1'
-      - ' &fduels. The last player wins'
-      - ''
-      - '&c&lStatus'
-      - ' &fState: &c<event_state>'
-      - ' &fPlayers: &c<event_current_players>/&c<event_max_players>'
-      - ' &fTime: &c<event_interval>'
-      - ' &fRound: &c<event_playerA> vs &c<event_playerB>'
-      - ''
-      - '&7&o(( Click to Spectate ))'
+      - ""
+      - "&c&lInformation"
+      - " &fFight through rounds and"
+      - " &fbeat your opponent in 1v1"
+      - " &fduels. The last player wins"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fRound: &c<event_playerA> vs &c<event_playerB>"
+      - ""
+      - "&7&o(( Click to Spectate ))"
     IDLE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fFight through rounds and'
-      - ' &fbeat your opponent in 1v1'
-      - ' &fduels. The last player wins'
-      - ''
-      - '&7&o(( Left-Click to Join ))'
-      - '&7&o(( Right-Click to Select Size ))'
+      - ""
+      - "&c&lInformation"
+      - " &fFight through rounds and"
+      - " &fbeat your opponent in 1v1"
+      - " &fduels. The last player wins"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Select Size ))"
   LMS:
-    NAME: '&c&lLMS'
+    NAME: "&c&lLMS"
     SLOT: 4
     MATERIAL: REDSTONE
     ACTIVE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fFight for your life'
-      - ' &fand kill everyone to'
-      - ' &fbe the last man standing'
-      - ''
-      - '&c&lStatus'
-      - ' &fState: &c<event_state>'
-      - ' &fPlayers: &c<event_current_players>/&c<event_max_players>'
-      - ' &fTime: &c<event_interval>'
-      - ''
-      - '&7&o(( Click to Spectate ))'
+      - ""
+      - "&c&lInformation"
+      - " &fFight for your life"
+      - " &fand kill everyone to"
+      - " &fbe the last man standing"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - ""
+      - "&7&o(( Click to Spectate ))"
     IDLE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fFight for your life'
-      - ' &fand kill everyone to'
-      - ' &fbe the last man standing'
-      - ''
-      - '&7&o(( Left-Click to Join ))'
-      - '&7&o(( Right-Click to Host ))'
+      - ""
+      - "&c&lInformation"
+      - " &fFight for your life"
+      - " &fand kill everyone to"
+      - " &fbe the last man standing"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host ))"
   PARKOUR:
-    NAME: '&c&lParkour'
+    NAME: "&c&lParkour"
     SLOT: 5
     MATERIAL: FEATHER
     ACTIVE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fMake your way through the'
-      - ' &fcourse and beat the others!'
-      - ' &fThe first player to reach the end wins'
-      - ''
-      - '&c&lStatus'
-      - ' &fState: &c<event_state>'
-      - ' &fPlayers: &c<event_current_players>/&c<event_max_players>'
-      - ' &fTime: &c<event_interval>'
-      - ''
-      - '&7&o(( Click to Spectate ))'
+      - ""
+      - "&c&lInformation"
+      - " &fMake your way through the"
+      - " &fcourse and beat the others!"
+      - " &fThe first player to reach the end wins"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - ""
+      - "&7&o(( Click to Spectate ))"
     IDLE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fMake your way through the'
-      - ' &fcourse and beat the others!'
-      - ' &fThe first player to reach the end wins'
-      - ''
-      - '&7&o(( Left-Click to Join ))'
-      - '&7&o(( Right-Click to Host ))'
+      - ""
+      - "&c&lInformation"
+      - " &fMake your way through the"
+      - " &fcourse and beat the others!"
+      - " &fThe first player to reach the end wins"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host ))"
   SPLEEF:
-    NAME: '&c&lSpleef'
+    NAME: "&c&lSpleef"
     SLOT: 6
     MATERIAL: DIAMOND_SPADE
     ACTIVE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fBreak the snow blocks'
-      - ' &fand avoid falling into'
-      - ' &fwater, the last player wins!'
-      - ''
-      - '&c&lStatus'
-      - ' &fState: &c<event_state>'
-      - ' &fPlayers: &c<event_current_players>/&c<event_max_players>'
-      - ' &fTime: &c<event_interval>'
-      - ''
-      - '&7&o(( Click to Spectate ))'
+      - ""
+      - "&c&lInformation"
+      - " &fBreak the snow blocks"
+      - " &fand avoid falling into"
+      - " &fwater, the last player wins!"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - ""
+      - "&7&o(( Click to Spectate ))"
     IDLE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fBreak the snow blocks'
-      - ' &fand avoid falling into'
-      - ' &fwater, the last player wins!'
-      - ''
-      - '&7&o(( Left-Click to Join ))'
-      - '&7&o(( Right-Click to Host ))'
+      - ""
+      - "&c&lInformation"
+      - " &fBreak the snow blocks"
+      - " &fand avoid falling into"
+      - " &fwater, the last player wins!"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host ))"
   OITC:
-    NAME: '&c&lOne in the Chamber'
+    NAME: "&c&lOne in the Chamber"
     SLOT: 7
     MATERIAL: BOW
     ACTIVE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &Run for your life and'
-      - ' &fbeat your opponents in a'
-      - ' &fFFA with a One Hit Bow!'
-      - ''
-      - '&c&lStatus'
-      - ' &fState: &c<event_state>'
-      - ' &fPlayers: &c<event_current_players>/&c<event_max_players>'
-      - ' &fTime: &c<event_interval>'
-      - ''
-      - '&7&o(( Click to Spectate ))'
+      - ""
+      - "&c&lInformation"
+      - " &Run for your life and"
+      - " &fbeat your opponents in a"
+      - " &fFFA with a One Hit Bow!"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - ""
+      - "&7&o(( Click to Spectate ))"
     IDLE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &Run for your life and'
-      - ' &fbeat your opponents in an'
-      - ' &fFFA with a One Hit Bow!'
-      - ''
-      - '&7&o(( Left-Click to Join ))'
-      - '&7&o(( Right-Click to Host ))'
+      - ""
+      - "&c&lInformation"
+      - " &Run for your life and"
+      - " &fbeat your opponents in an"
+      - " &fFFA with a One Hit Bow!"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host ))"
   PAINTBALL:
-    NAME: '&c&lPaintball'
+    NAME: "&c&lPaintball"
     SLOT: 12
     MATERIAL: IRON_BARDING
     ACTIVE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fCoat your enemies completely'
-      - ' &fin your color to get a kill'
-      - ' &fTeam with most kills wins!'
-      - ''
-      - '&c&lStatus'
-      - ' &fState: &c<event_state>'
-      - ' &fPlayers: &c<event_current_players>/&c<event_max_players>'
-      - ' &fTime: &c<event_interval>'
-      - ' &fRound: &c<event_playerA> vs &c<event_playerB>'
-      - ''
-      - '&7&o(( Click to Spectate ))'
+      - ""
+      - "&c&lInformation"
+      - " &fCoat your enemies completely"
+      - " &fin your color to get a kill"
+      - " &fTeam with most kills wins!"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fRound: &c<event_playerA> vs &c<event_playerB>"
+      - ""
+      - "&7&o(( Click to Spectate ))"
     IDLE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fCoat your enemies completely'
-      - ' &fin your color to get a kill'
-      - ' &fTeam with most kills wins!'
-      - ''
-      - '&7&o(( Left-Click to Join ))'
-      - '&7&o(( Right-Click to Host ))'
+      - ""
+      - "&c&lInformation"
+      - " &fCoat your enemies completely"
+      - " &fin your color to get a kill"
+      - " &fTeam with most kills wins!"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host ))"
   JUGGERNAUT:
-    NAME: '&c&lJuggernaut'
+    NAME: "&c&lJuggernaut"
     SLOT: 13
     MATERIAL: CHAINMAIL_CHESTPLATE
     ACTIVE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fJuggernaut is given op armor'
-      - ' &fwhile the rest in normal, eliminate'
-      - ' &fthe Juggernaut to win or else he wins!'
-      - ''
-      - '&c&lStatus'
-      - ' &fState: &c<event_state>'
-      - ' &fPlayers: &c<event_current_players>/&c<event_max_players>'
-      - ' &fTime: &c<event_interval>'
-      - ' &fRound: &c<event_playerA> vs &c<event_playerB>'
-      - ''
-      - '&7&o(( Click to Spectate ))'
+      - ""
+      - "&c&lInformation"
+      - " &fJuggernaut is given op armor"
+      - " &fwhile the rest in normal, eliminate"
+      - " &fthe Juggernaut to win or else he wins!"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fRound: &c<event_playerA> vs &c<event_playerB>"
+      - ""
+      - "&7&o(( Click to Spectate ))"
     IDLE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fJuggernaut is given op armor'
-      - ' &fwhile the rest in normal, eliminate'
-      - ' &fthe Juggernaut to win or else he wins!'
-      - ''
-      - '&7&o(( Left-Click to Join ))'
-      - '&7&o(( Right-Click to Host ))'
+      - ""
+      - "&c&lInformation"
+      - " &fJuggernaut is given op armor"
+      - " &fwhile the rest in normal, eliminate"
+      - " &fthe Juggernaut to win or else he wins!"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host ))"
   GULAG:
-    NAME: '&c&lGulag'
+    NAME: "&c&lGulag"
     SLOT: 14
     MATERIAL: IRON_FENCE
     ACTIVE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fFight for your life and'
-      - ' &fbeat your opponent in'
-      - ' &f1v1 Duels with guns!'
-      - ''
-      - '&c&lStatus'
-      - ' &fState: &c<event_state>'
-      - ' &fPlayers: &c<event_current_players>/&c<event_max_players>'
-      - ' &fTime: &c<event_interval>'
-      - ' &fRound: &c<event_playerA> vs &c<event_playerB>'
-      - ''
-      - '&7&o(( Click to Spectate ))'
+      - ""
+      - "&c&lInformation"
+      - " &fFight for your life and"
+      - " &fbeat your opponent in"
+      - " &f1v1 Duels with guns!"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fRound: &c<event_playerA> vs &c<event_playerB>"
+      - ""
+      - "&7&o(( Click to Spectate ))"
     IDLE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fFight for your life and'
-      - ' &fbeat your opponent in'
-      - ' &f1v1 Duels with guns!'
-      - ''
-      - '&7&o(( Left-Click to Join ))'
-      - '&7&o(( Right-Click to Select Size ))'
+      - ""
+      - "&c&lInformation"
+      - " &fFight for your life and"
+      - " &fbeat your opponent in"
+      - " &f1v1 Duels with guns!"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Select Size ))"
   KOTH:
-    NAME: '&c&lKoTH'
+    NAME: "&c&lKoTH"
     SLOT: 15
     MATERIAL: GOLD_SWORD
     ACTIVE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fCapture the koth point'
-      - ' &fwith your team, the last'
-      - ' &fteam standing until timer ends, wins!'
-      - ''
-      - '&c&lStatus'
-      - ' &fState: &c<event_state>'
-      - ' &fPlayers: &c<event_current_players>/&c<event_max_players>'
-      - ' &fTime: &c<event_interval>'
-      - ' &fCurrently: &c<event_current_capture>'
-      - ''
-      - '&7&o(( Click to Spectate ))'
+      - ""
+      - "&c&lInformation"
+      - " &fCapture the koth point"
+      - " &fwith your team, the last"
+      - " &fteam standing until timer ends, wins!"
+      - ""
+      - "&c&lStatus"
+      - " &fState: &c<event_state>"
+      - " &fPlayers: &c<event_current_players>/&c<event_max_players>"
+      - " &fTime: &c<event_interval>"
+      - " &fCurrently: &c<event_current_capture>"
+      - ""
+      - "&7&o(( Click to Spectate ))"
     IDLE_LORE:
-      - ''
-      - '&c&lInformation'
-      - ' &fCapture the koth point'
-      - ' &fwith your team, the last'
-      - ' &fteam standing until timer ends wins!'
-      - ''
-      - '&7&o(( Left-Click to Join ))'
-      - '&7&o(( Right-Click to Host ))'
+      - ""
+      - "&c&lInformation"
+      - " &fCapture the koth point"
+      - " &fwith your team, the last"
+      - " &fteam standing until timer ends wins!"
+      - ""
+      - "&7&o(( Left-Click to Join ))"
+      - "&7&o(( Right-Click to Host ))"

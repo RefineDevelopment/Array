@@ -1,0 +1,42 @@
+TITLE: "&7Match History"
+SIZE: 27
+PLACEHOLDER: true
+PLACEHOLDER_BUTTON:
+  NAME: ""
+  MATERIAL: STAINED_GLASS_PANE
+  DATA: 8
+  LORE: []
+BUTTONS:
+  UNRANKED:
+    NAME: '&c&Unranked History'
+    SLOT: 11
+    MATERIAL: IRON_SWORD
+    LORE:
+      - ""
+      - "&c&lInformation"
+      - "&7This feature is not"
+      - "&7available for use yet."
+      - ""
+      - "&7&o(( Click to view History ))"
+  RANKED:
+    NAME: '&c&Ranked History'
+    SLOT: 13
+    MATERIAL: DIAMOND_SWORD
+    LORE:
+      - ""
+      - "&c&lInformation"
+      - "&7This feature is not"
+      - "&7available for use yet."
+      - ""
+      - "&7&o(( Click to view History ))"
+  CLAN:
+    NAME: '&c&Clan History'
+    SLOT: 15
+    MATERIAL: GOLD_SWORD
+    LORE:
+      - ""
+      - "&c&lInformation"
+      - "&7This feature is not"
+      - "&7available for use yet."
+      - ""
+      - "&7&o(( Coming Soon ))"

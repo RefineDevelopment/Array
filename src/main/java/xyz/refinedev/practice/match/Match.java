@@ -22,6 +22,8 @@ import xyz.refinedev.practice.kit.KitGameRules;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.FFAMatch;
+import xyz.refinedev.practice.match.types.kit.BattleRushMatch;
+import xyz.refinedev.practice.match.types.kit.BoxingMatch;
 import xyz.refinedev.practice.match.types.kit.TeamFightMatch;
 import xyz.refinedev.practice.match.types.SoloMatch;
 import xyz.refinedev.practice.match.types.TeamMatch;
@@ -418,6 +420,9 @@ public abstract class Match {
      * @return {@link Long} the time passed in long
      */
     public long getElapsedDuration() {
+        if (this.isBattleRushMatch()) {
+            return (TimeUtil.parseTime("15mins") + startTimestamp) - System.currentTimeMillis();
+        }
         return System.currentTimeMillis() - startTimestamp;
     }
 
@@ -760,6 +765,26 @@ public abstract class Match {
      */
     public boolean isTheBridgeMatch() {
         return this.isSoloMatch() && (this instanceof SoloBridgeMatch || this instanceof TeamBridgeMatch);
+    }
+
+    /**
+     * This method is returns true if the
+     * current match related to {@link BattleRushMatch}
+     *
+     * @return {@link Boolean}
+     */
+    public boolean isBattleRushMatch() {
+        return this.isSoloMatch() && this instanceof BattleRushMatch;
+    }
+
+    /**
+     * This method is returns true if the
+     * current match related to {@link BoxingMatch}
+     *
+     * @return {@link Boolean}
+     */
+    public boolean isBoxingMatch() {
+        return this.isSoloMatch() && this instanceof BoxingMatch;
     }
 
     /**

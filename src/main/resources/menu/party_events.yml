@@ -11,10 +11,6 @@ BUTTONS:
       - " &fSplit your party into"
       - " &ftwo teams and the last"
       - " &fteam remaining wins!"
-      - ""
-      - "&c&lMatch"
-      - " &cPlayers: &fHalf vs Half"
-      - " &cDuration: &fNone"
       - " "
       - "&7&o(( Click to Start ))"
   PARTY_FFA:
@@ -26,10 +22,6 @@ BUTTONS:
       - " &fUnleash your party in"
       - " &fa Free For All Match"
       - " &fLast player standing wins!"
-      - " "
-      - "&c&lMatch"
-      - " &cPlayers: &fFree for All"
-      - " &cDuration: &fNone"
       - ""
       - "&7&o(( Click to Start ))"
   PARTY_HCF:
@@ -41,25 +33,4 @@ BUTTONS:
       - " &fteam match with HCF kits"
       - " &fLast player standing wins!"
       - ""
-      - "&c&lMatch"
-      - " &cPlayers: &fHalf vs Half"
-      - " &cDuration: &fNone"
-      - ""
       - "&7&o(( Click to Start ))"
-CUSTOM_BUTTONS:
-  TEST_BUTTON:
-    NAME: "&cThis can be anything"
-    SLOT: 2
-    MATERIAL: DIAMOND_SWORD
-    DATA: 0
-    LORE:
-      - " &fTest Button"
-      - " &fDon't mind me kek"
-      - " &fThis opens kill effects menu"
-      - " "
-      - "&7&o(( Click to Open ))"
-    ACTIONS:
-      TEST:
-        ACTION_TYPE: MENU
-        CLICK_TYPE:
-        ACTION: "kill_effects"

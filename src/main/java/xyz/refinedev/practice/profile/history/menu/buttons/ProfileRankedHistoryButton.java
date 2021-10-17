@@ -1,16 +1,13 @@
-package xyz.refinedev.practice.queue;
+package xyz.refinedev.practice.profile.history.menu.buttons;
 
 /**
  * This Project is property of Refine Development © 2021
  * Redistribution of this Project is not allowed
  *
  * @author Drizzy
- * Created: 8/5/2021
+ * Created: 10/9/2021
  * Project: Array
  */
 
-public enum QueueType {
-
-    UNRANKED, RANKED, CLAN, //PARTY_UNRANKED, PARTY_RANKED
-
+public class ProfileRankedHistoryButton {
 }

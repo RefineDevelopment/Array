@@ -64,6 +64,15 @@ public class PlayerUtil {
         player.removePotionEffect(PotionEffectType.JUMP);
     }
 
+    public void forceRespawn(Player player) {
+        if (player == null) return;
+        if (!player.isOnline()) return;
+        if (!player.isDead()) return;
+
+        EntityPlayer craftPlayer = ((CraftPlayer) player).getHandle();
+        craftPlayer.playerConnection.a(new PacketPlayInClientCommand(PacketPlayInClientCommand.EnumClientCommand.PERFORM_RESPAWN));
+    }
+
     public int getPing(Player player) {
         if (player == null) return 0;
         return ((CraftPlayer)player).getHandle() != null ? ((CraftPlayer)player).getHandle().ping : 0;

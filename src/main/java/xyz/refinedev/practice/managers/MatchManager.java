@@ -24,6 +24,7 @@ import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.SoloMatch;
 import xyz.refinedev.practice.match.types.TeamMatch;
+import xyz.refinedev.practice.match.types.kit.BattleRushMatch;
 import xyz.refinedev.practice.match.types.kit.BoxingMatch;
 import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
 import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
@@ -112,8 +113,8 @@ public class MatchManager {
             match.setupPlayer(player);
         }
 
-        match.onStart();
         match.setState(MatchState.STARTING);
+        match.onStart();
         match.setStartTimestamp(-1);
         match.getArena().setActive(true);
         match.initiateTasks();
@@ -564,6 +565,8 @@ public class MatchManager {
             //
         } else if (kit.getGameRules().isBoxing()) {
             return new BoxingMatch(queue, playerA, playerB, kit, arena, queueType);
+        } else if (kit.getGameRules().isBattleRush()) {
+            return new BattleRushMatch(queue, playerA, playerB, kit, arena, queueType);
         }
         return new SoloMatch(queue, playerA, playerB, kit, arena, queueType);
     }

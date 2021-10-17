@@ -56,7 +56,7 @@ public class PartyEventMenu extends Menu {
             }
         } else {
             buttons.put(config.getInteger("BUTTONS.PARTY_SPLIT.HCF_DISABLED_SLOT"), new PartyEventButton(config, PartyEventType.PARTY_SPLIT));
-            buttons.put(config.getInteger("BUTTONS.PARTY_SPLIT.HCF_DISABLED_SLOT"), new PartyEventButton(config, PartyEventType.PARTY_FFA));
+            buttons.put(config.getInteger("BUTTONS.PARTY_FFA.HCF_DISABLED_SLOT"), new PartyEventButton(config, PartyEventType.PARTY_FFA));
         }
         return buttons;
     }

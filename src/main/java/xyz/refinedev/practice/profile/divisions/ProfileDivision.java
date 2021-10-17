@@ -15,7 +15,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @RequiredArgsConstructor
-public class Division {
+public class ProfileDivision {
 
     private final String name;
     private String displayName = "&aDefault";

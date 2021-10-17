@@ -20,7 +20,7 @@ import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.kiteditor.KitEditor;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.party.Party;
-import xyz.refinedev.practice.profile.history.MatchHistory;
+import xyz.refinedev.practice.profile.history.ProfileHistory;
 import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.profile.rank.TablistRank;
 import xyz.refinedev.practice.profile.settings.ProfileSettings;
@@ -42,8 +42,8 @@ public class Profile {
     private final List<ClanInvite> clanInviteList = new ArrayList<>();
     private final List<Location> plates = new ArrayList<>();
 
-    private final List<MatchHistory> unrankedMatchHistory = new ArrayList<>();
-    private final List<MatchHistory> rankedMatchHistory = new ArrayList<>();
+    private final List<ProfileHistory> unrankedMatchHistory = new ArrayList<>();
+    private final List<ProfileHistory> rankedMatchHistory = new ArrayList<>();
 
     private final UUID uniqueId;
     private String name;

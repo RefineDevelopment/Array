@@ -24,12 +24,12 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.api.events.match.MatchPlayerSetupEvent;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.arena.impl.BridgeArena;
 import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.MatchState;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
+import xyz.refinedev.practice.match.types.kit.BattleRushMatch;
 import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
 import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.match.types.kit.BoxingMatch;
@@ -45,6 +45,7 @@ import xyz.refinedev.practice.util.other.TaskUtil;
 import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -56,9 +57,9 @@ public class MatchListener implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockPlaceEvent(BlockPlaceEvent event) {
         Player player = event.getPlayer();
+        Block block = event.getBlockPlaced();
         Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         Match match = profile.getMatch();
-        Block block = event.getBlockPlaced();
         Arena arena = match.getArena();
 
         if (!profile.isInFight()) return;
@@ -82,14 +83,28 @@ public class MatchListener implements Listener {
             return;
         }
 
-        if (arena instanceof BridgeArena) {
-            BridgeArena standaloneArena = (BridgeArena) arena;
-            if (standaloneArena.getBlueCuboid() != null && standaloneArena.getBlueCuboid().contains(block)) {
-                player.sendMessage(Locale.MATCH_BRIDGE_BLOCK.toString());
-                event.setCancelled(true);
-                return;
+        //Checks if you are placing blocks near the portal
+        if (match.isTheBridgeMatch() || match.isBattleRushMatch()) {
+            List<Location> portals = new ArrayList<>();
+
+            if (match instanceof SoloBridgeMatch) {
+                SoloBridgeMatch soloBridgeMatch = (SoloBridgeMatch) match;
+                portals.addAll(soloBridgeMatch.getPlayerAPortals());
+                portals.addAll(soloBridgeMatch.getPlayerBPortals());
+            } else if (match instanceof TeamBridgeMatch) {
+                TeamBridgeMatch teamBridgeMatch = (TeamBridgeMatch) match;
+                portals.addAll(teamBridgeMatch.getTeamAPortals());
+                portals.addAll(teamBridgeMatch.getTeamBPortals());
+            } else if (match instanceof BattleRushMatch) {
+                BattleRushMatch battleRushMatch = (BattleRushMatch) match;
+                portals.addAll(battleRushMatch.getPlayerAPortals());
+                portals.addAll(battleRushMatch.getPlayerBPortals());
             }
-            if (standaloneArena.getRedCuboid() != null && standaloneArena.getRedCuboid().contains(block)) {
+
+            for ( Location location : portals ) {
+                Cuboid cuboid = new Cuboid(new Location(location.getWorld(), (location.getBlockX() - 5), (location.getBlockY() - 5), (location.getBlockZ() - 5)), new Location(location.getWorld(), (location.getBlockX() + 5), (location.getBlockY() + 5), (location.getBlockZ() + 5)));
+                if (!cuboid.contains(block.getLocation())) return;
+
                 player.sendMessage(Locale.MATCH_BRIDGE_BLOCK.toString());
                 event.setCancelled(true);
                 return;
@@ -97,7 +112,6 @@ public class MatchListener implements Listener {
         }
 
         Cuboid cuboid = new Cuboid(arena.getMax(), arena.getMin());
-
         if (x >= cuboid.getX1() && x <= cuboid.getX2() && y >= cuboid.getY1() && y <= cuboid.getY2() && z >= cuboid.getZ1() && z <= cuboid.getZ2()) {
             match.getPlacedBlocks().add(block.getLocation());
             Location down = block.getLocation().subtract(0, 1, 0);
@@ -120,6 +134,12 @@ public class MatchListener implements Listener {
 
         if (!profile.isInFight()) return;
         if (player.getLocation().getBlock().getType() != Material.ENDER_PORTAL && player.getLocation().getBlock().getType() != Material.ENDER_PORTAL_FRAME) return;
+
+        if (match.isBattleRushMatch()) {
+            BattleRushMatch battleRushMatch = (BattleRushMatch) match;
+            battleRushMatch.handlePortal(player);
+            return;
+        }
 
         if (match instanceof SoloBridgeMatch) {
             SoloBridgeMatch soloBridgeMatch = (SoloBridgeMatch) match;
@@ -181,7 +201,7 @@ public class MatchListener implements Listener {
             if (block.getType() == Material.WOOD) {
                 match.getChangedBlocks().add(block.getState());
                 block.setType(Material.AIR);
-                block.getLocation().getWorld().dropItemNaturally(block.getLocation(), new ItemBuilder(Material.WOOD).build());
+                block.getLocation().getWorld().dropItemNaturally(block.getLocation(), new ItemBuilder(block.getType()).build());
                 player.updateInventory();
             } else {
                 event.setCancelled(true);
@@ -269,12 +289,11 @@ public class MatchListener implements Listener {
 
     @EventHandler
     public void onPlayerDeathEvent(PlayerDeathEvent event) {
-        event.setDeathMessage(null);
-
         Player player = event.getEntity();
         Profile profile = plugin.getProfileManager().getByPlayer(player);
         Match match = profile.getMatch();
 
+        event.setDeathMessage(null);
         if (!profile.isInFight()) return;
 
         profile.setDeaths(profile.getDeaths() + 1);
@@ -411,11 +430,11 @@ public class MatchListener implements Listener {
                 return;
             }
             if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
-                if (match.isTheBridgeMatch() || match.getKit() != null && match.getKit().getGameRules().isDisableFallDamage()) {
+                if (match.isTheBridgeMatch() || match.getKit().getGameRules().isDisableFallDamage()) {
                     event.setCancelled(true);
                 }
             }
-            if (event.getCause() == EntityDamageEvent.DamageCause.LAVA && match.getKit() != null && match.getKit().getGameRules().isLavaKill()) {
+            if (event.getCause() == EntityDamageEvent.DamageCause.LAVA && match.getKit().getGameRules().isLavaKill()) {
                 profile.getMatch().handleDeath(player, null, false);
                 return;
             }
@@ -423,7 +442,7 @@ public class MatchListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
-            if (match.getKit() != null && match.getKit().getGameRules().isParkour()) {
+            if (match.getKit().getGameRules().isParkour()) {
                 event.setCancelled(true);
                 return;
             }
@@ -431,7 +450,7 @@ public class MatchListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
-            if (match.getKit() != null && match.getKit().getGameRules().isSumo()) {
+            if (match.getKit().getGameRules().isSumo() || match.getKit().getGameRules().isBoxing() || match.getKit().getGameRules().isBattleRush()) {
                 event.setDamage(0.0);
                 player.setHealth(20.0);
                 player.updateInventory();
@@ -459,7 +478,7 @@ public class MatchListener implements Listener {
                 return;
             }
             match.handleDeath(event.getPlayer());
-            if (match.isTheBridgeMatch()) {
+            if (match.isTheBridgeMatch() || match.isBattleRushMatch()) {
                 match.handleRespawn(event.getPlayer());
             }
         }
@@ -527,12 +546,11 @@ public class MatchListener implements Listener {
             attackedTeamPlayer.handleHit();
             damagedTeamPlayer.resetCombo();
 
-            if (match.isSoloMatch() && match instanceof BoxingMatch) {
+            if (match.isBoxingMatch()) {
                 if (attackedTeamPlayer.getHits() >= 100) {
                     teamMatch.handleDeath(damaged);
+                    return;
                 }
-                event.setDamage(0);
-                return;
             }
 
             if (!(event.getDamager() instanceof Arrow)) return;
@@ -743,7 +761,7 @@ public class MatchListener implements Listener {
 
         String displayName = CC.translate(event.getItem().getItemMeta().getDisplayName());
         String kitName = displayName.replace(" (Right-Click)", "");
-        for ( KitInventory kitInventory : profile.getStatisticsData().get(profile.getMatch().getKit()).getLoadouts() ) {
+        for ( KitInventory kitInventory : profile.getStatisticsData().get(profile.getMatch().getKit()).getKitInventories() ) {
             if (kitInventory == null) continue;
 
             if (ChatColor.stripColor(kitInventory.getCustomName()).equals(ChatColor.stripColor(kitName))) {

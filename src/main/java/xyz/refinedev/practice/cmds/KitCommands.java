@@ -256,6 +256,7 @@ public class KitCommands {
             }
             case "bridge": {
                 kit.getGameRules().setBridge(!kit.getGameRules().isBridge());
+                kit.getGameRules().setBuild(kit.getGameRules().isBridge());
                 player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isBridge() ? "&aenabled " : "&cdisabled ") + "&7bridge for &c" + kit.getDisplayName()));
                 break;
             }
@@ -265,6 +266,10 @@ public class KitCommands {
                 break;
             }
             case "editable": {
+                if (kit.getGameRules().isBridge() || kit.getGameRules().isBattleRush()) {
+                    player.sendMessage(CC.translate("&8[&c&lArray&8] &cYou can't make this kit editable because either bridge mode or battle rush mode is enabled!"));
+                    return;
+                }
                 kit.getGameRules().setEditable(!kit.getGameRules().isEditable());
                 player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isEditable() ? "&aenabled " : "&cdisabled ") + "&7editable for &c" + kit.getDisplayName()));
                 break;
@@ -364,6 +369,18 @@ public class KitCommands {
                 player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isVoidSpawn() ? "&aenabled " : "&cdisabled ") + "&7voidspawn for &c" + kit.getDisplayName()));
                 break;
             }
+            case "battlerush": {
+                kit.getGameRules().setBattleRush(!kit.getGameRules().isBattleRush());
+                kit.getGameRules().setBuild(kit.getGameRules().isBattleRush());
+                kit.getGameRules().setEditable(!kit.getGameRules().isBattleRush());
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isBattleRush() ? "&aenabled " : "&cdisabled ") + "&7battlerush for &c" + kit.getDisplayName()));
+                break;
+            }
+            case "boxing": {
+                kit.getGameRules().setBoxing(!kit.getGameRules().isBoxing());
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isBoxing() ? "&aenabled " : "&cdisabled ") + "&7boxing for &c" + kit.getDisplayName()));
+                break;
+            }
             default: {
                 this.kitGameRule(player);
             }
@@ -381,6 +398,7 @@ public class KitCommands {
         player.sendMessage(CC.translate(" &7* &c/kit gamerule build &8<&7kit&8> &8(&7&oToggle build mode for a Kit&8)"));
         player.sendMessage(CC.translate(" &7* &c/kit gamerule sumo &8<&7kit&8> &8(&7&oToggle sumo mode for a Kit&8)"));
         player.sendMessage(CC.translate(" &7* &c/kit gamerule bridge &8<&7kit&8> &8(&7&oToggle bridge mode for a Kit&8)"));
+        player.sendMessage(CC.translate(" &7* &c/kit gamerule boxing &8<&7kit&8> &8(&7&oToggle boxing mode for a Kit&8)"));
         player.sendMessage(CC.translate(" &7* &c/kit gamerule combo &8<&7kit&8> &8(&7&oToggle combo mode for a Kit&8)"));
         player.sendMessage(CC.translate(" &7* &c/kit gamerule editable &8<&7kit&8> &8(&7&oToggle editable mode for a Kit&8)"));
         player.sendMessage(CC.translate(" &7* &c/kit gamerule lavaKill &8<&7kit&8> &8(&7&oToggle lava-kill mode for a Kit&8)"));
