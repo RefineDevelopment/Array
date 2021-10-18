@@ -22,8 +22,7 @@ public enum HotbarType {
     OTHER_PARTIES,
 
     KIT_EDITOR,
-    MAIN_MENU,
-    
+
     SPECTATOR_SHOW,
     SPECTATOR_HIDE,
     SPECTATE_MENU,

@@ -83,7 +83,6 @@ public class CommandsManager {
         drink.register(new ClanQueueCMD(plugin), "clanqueue", "queue clan");
         drink.register(new LeaveQueueCMD(plugin), "leavequeue", "queue leave");
         drink.register(new KitEditorCMD(plugin) ,"kiteditor", "editkit");
-        drink.register(new MainMenuCMD(plugin), "mainmenu", "menu main");
         drink.register(new BuildCMD(plugin), "build", "buildmode");
         drink.register(new SilentCMD(plugin), "silent", "silentmode");
 

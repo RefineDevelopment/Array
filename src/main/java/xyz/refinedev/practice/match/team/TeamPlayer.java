@@ -15,7 +15,7 @@ import java.util.UUID;
 @Getter @Setter
 public class TeamPlayer {
 
-    private Map<UUID, List<Long>> cpsMap = new HashMap<>();
+    private final Map<UUID, List<Long>> cpsMap = new HashMap<>();
 
     private final UUID uniqueId;
     private final String username;
@@ -52,10 +52,12 @@ public class TeamPlayer {
     }
 
     public int getCps() {
-        if (cpsMap.get(uniqueId) == null) return 0;
-        cpsMap.get(uniqueId).removeIf(count -> count < System.currentTimeMillis() - 1000L);
+        synchronized (cpsMap) {
+            if (cpsMap.get(uniqueId) == null) return 0;
+            cpsMap.get(uniqueId).removeIf(count -> count < System.currentTimeMillis() - 1000L);
 
-        return cpsMap.get(uniqueId).size();
+            return cpsMap.get(uniqueId).size();
+        }
     }
 
     public double getPotionAccuracy() {

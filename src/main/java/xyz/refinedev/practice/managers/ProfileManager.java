@@ -135,12 +135,9 @@ public class ProfileManager {
                 Kit kit = plugin.getKitManager().getByName(key);
                 if (kit == null) continue;
 
-                ProfileStatistics profileStatistics= new ProfileStatistics();
-                Integer elo = kitDocument.getInteger("elo");
+                ProfileStatistics profileStatistics = new ProfileStatistics();
 
-                if (elo != null) {
-                    profileStatistics.setElo(kitDocument.getInteger("elo") == null ? 1000 : kitDocument.getInteger("elo"));
-                }
+                profileStatistics.setElo(kitDocument.getInteger("elo") == null ? 1000 : kitDocument.getInteger("elo"));
                 profileStatistics.setWon(kitDocument.getInteger("won"));
                 profileStatistics.setLost(kitDocument.getInteger("lost"));
 
@@ -219,6 +216,8 @@ public class ProfileManager {
         Document kitStatisticsDocument = new Document();
         for ( Map.Entry<Kit, ProfileStatistics> entry : profile.getStatisticsData().entrySet() ) {
             Document kitDocument = new Document();
+
+            if (entry.getKey().equals(plugin.getKitManager().getTeamFight())) continue;
 
             kitDocument.put("elo", entry.getValue().getElo());
             kitDocument.put("won", entry.getValue().getWon());
@@ -317,7 +316,6 @@ public class ProfileManager {
         if (player == null) return;
 
         PlayerUtil.reset(player);
-        //player.sendMessage(CC.translate("&cRefreshing hotbar"));
 
         if (profile.isInLobby()) {
             if (profile.hasParty()) {

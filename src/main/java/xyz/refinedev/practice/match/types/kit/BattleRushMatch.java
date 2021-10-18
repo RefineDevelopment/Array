@@ -231,12 +231,12 @@ public class BattleRushMatch extends SoloMatch {
      */
     public void giveKit(Player player) {
         if (this.getTeamPlayerA().getPlayer() == player) {
-            player.getInventory().all(Material.STAINED_CLAY).forEach((key, value) -> {
+            player.getInventory().all(Material.WOOL).forEach((key, value) -> {
                 player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(14).amount(64).build());
                 player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(14).amount(64).build());
             });
         } else {
-            player.getInventory().all(Material.STAINED_CLAY).forEach((key, value) -> {
+            player.getInventory().all(Material.WOOL).forEach((key, value) -> {
                 player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(11).amount(64).build());
                 player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(11).amount(64).build());
             });

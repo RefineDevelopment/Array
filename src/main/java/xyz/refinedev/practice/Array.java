@@ -49,9 +49,8 @@ public class Array extends JavaPlugin {
 
     @Getter private static Array instance;
     @Getter private static API api;
-
-    public static Gson GSON = GsonFactory.getPrettyGson();
-    public static Random RANDOM = new Random();
+    public static Gson GSON;
+    public static Random RANDOM;
 
     private BasicConfigurationFile mainConfig, arenasConfig, kitsConfig, eventsConfig, killEffectsConfig,
                                    messagesConfig, scoreboardConfig, tablistConfig,  hotbarConfig;
@@ -105,6 +104,8 @@ public class Array extends JavaPlugin {
     public void onEnable() {
         api = new ArrayAPI(this);
         drink = Drink.get(this);
+        GSON = GsonFactory.getPrettyGson();
+        RANDOM = new Random();
 
         this.configHandler = new ConfigHandler(this);
         this.configHandler.init();

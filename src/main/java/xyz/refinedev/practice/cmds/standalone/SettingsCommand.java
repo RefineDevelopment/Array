@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.cmds.standalone;
 
 import org.bukkit.entity.Player;
-import xyz.refinedev.practice.profile.settings.menu.SettingsMenu;
+import xyz.refinedev.practice.profile.settings.menu.ProfileSettingsMenu;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 
@@ -18,6 +18,6 @@ public class SettingsCommand {
 
     @Command(name = "", desc = "Open Array Settings Menu")
     public void settings(@Sender Player player) {
-        new SettingsMenu().openMenu(player);
+        new ProfileSettingsMenu().openMenu(player);
     }
 }

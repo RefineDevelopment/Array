@@ -41,16 +41,18 @@ public class KitManager {
         ConfigurationSection configurationSection = config.getConfigurationSection("kits");
         if (configurationSection == null || configurationSection.getKeys(false).isEmpty()) return;
 
-        for ( String kitName : configurationSection.getKeys(false) ) {
-            Kit kit = new Kit(plugin, kitName);
-
-            this.load(kit);
-            this.setupQueue(kit);
-        }
-
         if (plugin.getConfigHandler().isHCF_ENABLED()) {
             teamFight = new Kit(plugin,"HCFTeamFight");
             teamFight.setDisplayIcon(new ItemBuilder(Material.BEACON).clearEnchantments().clearFlags().build());
+        }
+
+        for ( String kitName : configurationSection.getKeys(false) ) {
+            Kit kit = new Kit(plugin, kitName);
+
+            if (kit.getName().equals(this.teamFight.getName())) continue;
+
+            this.load(kit);
+            this.setupQueue(kit);
         }
         plugin.logger("&7Loaded &c" + kits.size() + " &7Kit(s)!");
     }
@@ -64,7 +66,6 @@ public class KitManager {
      */
     public void load(Kit kit) {
         String path = "kits." + kit.getName();
-
         kit.setDisplayName(CC.RED + kit.getName());
         kit.setEnabled(config.getBoolean(path + ".enabled"));
 
@@ -103,9 +104,11 @@ public class KitManager {
         kit.getGameRules().setNoItems(config.getBoolean(path + ".game-rules.noItems"));
         kit.getGameRules().setBuild(config.getBoolean(path + ".game-rules.build"));
         kit.getGameRules().setBridge(config.getBoolean(path + ".game-rules.bridge"));
+        kit.getGameRules().setBoxing(config.getBoolean(path + ".game-rules.boxing"));
         kit.getGameRules().setSpleef(config.getBoolean(path + ".game-rules.spleef"));
         kit.getGameRules().setParkour(config.getBoolean(path + ".game-rules.parkour"));
         kit.getGameRules().setCombo(config.getBoolean(path + ".game-rules.combo"));
+        kit.getGameRules().setBattleRush(config.getBoolean(path + ".game-rules.battle-rush"));
         kit.getGameRules().setStickSpawn(config.getBoolean(path + ".game-rules.stickspawn"));
         kit.getGameRules().setVoidSpawn(config.getBoolean(path + ".game-rules.voidspawn"));
         kit.getGameRules().setDisableFallDamage(!config.getBoolean(path + ".game-rules.fall-damage"));
@@ -162,6 +165,8 @@ public class KitManager {
         config.set(path + ".game-rules.noitems", kit.getGameRules().isNoItems());
         config.set(path + ".game-rules.build", kit.getGameRules().isBuild());
         config.set(path + ".game-rules.bridge", kit.getGameRules().isBridge());
+        config.set(path + ".game-rules.boxing", kit.getGameRules().isBoxing());
+        config.set(path + ".game-rules.battlerush", kit.getGameRules().isBattleRush());
         config.set(path + ".game-rules.spleef", kit.getGameRules().isSpleef());
         config.set(path + ".game-rules.parkour", kit.getGameRules().isParkour());
         config.set(path + ".game-rules.fall-damage", !kit.getGameRules().isDisableFallDamage());

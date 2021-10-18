@@ -4,13 +4,18 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.event.menu.EventSelectMenu;
+import xyz.refinedev.practice.event.menu.EventTeamMenu;
 import xyz.refinedev.practice.party.menu.PartyEventMenu;
 import xyz.refinedev.practice.party.menu.PartySettingsMenu;
+import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.killeffect.menu.KEMenu;
 import xyz.refinedev.practice.profile.killeffect.menu.KEPaginatedMenu;
-import xyz.refinedev.practice.profile.settings.menu.SettingsMenu;
+import xyz.refinedev.practice.profile.menu.ProfileMenu;
+import xyz.refinedev.practice.profile.settings.menu.ProfileSettingsMenu;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.config.impl.MenuConfigurationFile;
@@ -40,7 +45,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MenuManager {
 
-    private final String[] configNames = {"profile_settings", "profile_killeffects", "profile_history", "party_events", "general", "event_size", "event_host"};
+    private final String[] configNames = {"general", "profile_menu", "profile_settings", "profile_killeffects", "profile_history", "party_events", "event_size", "event_host"};
 
     private final Map<String, FoldersConfigurationFile> configs = new HashMap<>();
     private final List<MenuData> menuData = new ArrayList<>();
@@ -217,11 +222,18 @@ public class MenuManager {
      * @param name {@link String} menu name
      * @return {@link Menu}
      */
-    public Menu findMenu(String name) {
+    public Menu findMenu(Player player, String name) {
         switch (name) {
-            case "settings": return new SettingsMenu();
+            case "event_team": {
+                Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+                if (!profile.isInEvent()) break;
+                return new EventTeamMenu(profile.getEvent());
+            }
+            case "event_host": return new EventSelectMenu();
             case "party_events": return new PartyEventMenu();
             case "party_settings": return new PartySettingsMenu();
+            case "profile_menu": return new ProfileMenu(player);
+            case "profile_settings": return new ProfileSettingsMenu();
             case "kill_effects": {
                 if (getConfigByName("kill_effects").getBoolean("PAGINATED")) {
                     return new KEPaginatedMenu();
@@ -232,7 +244,6 @@ public class MenuManager {
             default: {
                 MenuData menuData = getMenuDataByName(name);
                 if (menuData == null) return null;
-
                 if (menuData.isPaginated()) {
                     return new CustomPaginatedMenu(menuData);
                 } else {
@@ -240,6 +251,7 @@ public class MenuManager {
                 }
             }
         }
+        return null;
     }
 
 }

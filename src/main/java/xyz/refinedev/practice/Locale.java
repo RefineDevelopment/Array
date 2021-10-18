@@ -140,7 +140,7 @@ public enum Locale {
 
     ERROR_BUSY("ERROR.BUSY", "&cThat player is currently busy, please try again."),
     ERROR_NOTACTIVE("ERROR.NOT_ACTIVE", "&cThere is no current on-going event!"),
-    ERROR_NOTPARTOF("ERROR.NOT_PARTOF", "&cYou are not part of any on-going <event> event!"),
+    ERROR_NOTPARTOF("ERROR.NOT_PARTOF", "&cYou are not part of any on-going event!"),
     ERROR_NOTSPECTATING("ERROR.NOT_SPECTATING", "&cYou are not spectating!"),
     ERROR_NOREMATCH("ERROR.NO_REMATCH", "&cYou don't have anyone to rematch with!"),
     ERROR_EXPIREREMATCH("ERROR.REMATCH_EXPIRED", "&cYour rematch time has been expired!"),
@@ -159,6 +159,7 @@ public enum Locale {
     ERROR_TARGET_IN_PARTY("ERROR.TARGET_IN_PARTY", "&cThe dueled player is currently in a party."),
     ERROR_NO_PARTY_TO_DUEL("ERROR.NO_PARTY_TO_DUEL", "&cYou don't have a party to duel with."),
     ERROR_TARGET_NO_PARTY("ERROR.TARGET_NO_PARTY", "&cThe dueled player does not have a party!"),
+    ERROR_MENU("ERROR.MENU", "&cEither that menu does not exist or you are not able to open the menu."),
     ERROR_PLAYERNOTFOUND("ERROR.PLAYER_NOT_FOUND", "&cThat player does not exist or is not currently online."),
     ERROR_SETTING_NOPERM("ERROR.SETTINGS_NO_PERM", Arrays.asList("&7You don't have permission to use this setting", "&7&oyou can upgrade your core at &c&o<store>&7&o.")),
 

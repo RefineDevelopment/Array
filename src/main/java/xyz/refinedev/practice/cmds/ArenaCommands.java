@@ -13,7 +13,6 @@ import xyz.refinedev.practice.arena.impl.SharedArena;
 import xyz.refinedev.practice.arena.impl.StandaloneArena;
 import xyz.refinedev.practice.arena.rating.Rating;
 import xyz.refinedev.practice.arena.runnables.StandalonePasteRunnable;
-import xyz.refinedev.practice.arena.selection.Selection;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.util.chat.CC;
@@ -45,7 +44,6 @@ public class ArenaCommands {
         player.sendMessage(CC.translate(" &7* &c/arena create &8<&7name&8> &8<&7Shared|Standalone|TheBridge&8> &8(&7&oCreate an Arena&8)"));
         player.sendMessage(CC.translate(" &7* &c/arena remove &8<&7name&8> &8(&7&oDelete an Arena&8)"));
         player.sendMessage(CC.translate(" &7* &c/arena save &8(&7&oSave Arenas&8)"));
-        player.sendMessage(CC.translate(" &7* &c/arena wand &8(&7&oReceive a wand to select the cuboids for Arena&8)"));
         player.sendMessage(CC.translate(" &7* &c/arena pearls &8(&7&oEnable or Disable the ability for players to pearl on the arena&8)"));
         player.sendMessage(CC.translate(" &7* &c/arena kitlist &8<&7arena&8> &8(&7&oLists all the kits of an arena&8)"));
         player.sendMessage(CC.translate(" &7* &c/arena seticon &8<&7arena&8> &8(&7&oSets the item your holding as Arena Icon&8)"));
@@ -76,11 +74,18 @@ public class ArenaCommands {
         plugin.getArenaManager().getArenas().forEach(plugin.getArenaManager()::save);
     }
 
-    @Command(name = "", usage = "<arena> <int>",desc = "Set an arena's fall death height")
+    @Command(name = "setfalldeathheight", aliases = "setvoidspawn", usage = "<arena> <int>",desc = "Set an arena's fall death height")
     public void fallDeathHeight(@Sender CommandSender sender, Arena arena, int amount) {
         arena.setDeathHeight(amount);
         sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully set &c" + arena.getDisplayName() + "'s &7fall death height to &c" + amount + "&7."));
         sender.sendMessage(CC.translate("&8[&cTIP&8] &7&oPlease bare in mind, this amount is subtracted from the y-level of your spawn 1 to get the y level for death height."));
+    }
+
+    @Command(name = "setbuildheight", aliases = "setmaxbuild", usage = "<arena> <int>",desc = "Set an arena's build height")
+    public void buildHeight(@Sender CommandSender sender, Arena arena, int amount) {
+        arena.setDeathHeight(amount);
+        sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully set &c" + arena.getDisplayName() + "'s &7fall death height to &c" + amount + "&7."));
+        sender.sendMessage(CC.translate("&8[&cTIP&8] &7&oPlease bare in mind, this amount is added to the y-level of your spawn 1, which is then used as max height"));
     }
 
     @Command(name = "save", aliases = "export", desc = "Save Arenas to Config")
@@ -93,16 +98,14 @@ public class ArenaCommands {
     @Command(name = "remove", aliases = "delete", desc = "Remove an Arena", usage = "<arena>")
     @Require("array.arena.admin")
     public void arenaRemove(@Sender CommandSender player, Arena arena) {
-        if (arena != null) {
-            if (arena.isActive()) {
-                player.sendMessage(CC.translate("&8[&c&lArray&8] &7That arena is currently active, please try again later!"));
-                return;
-            }
-
-            plugin.getArenaManager().delete(arena);
-            plugin.getArenaManager().getArenas().remove(arena);
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully removed the arena &c" + arena.getDisplayName()));
+        if (arena.isActive()) {
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7That arena is currently active, please try again later!"));
+            return;
         }
+
+        plugin.getArenaManager().delete(arena);
+        plugin.getArenaManager().getArenas().remove(arena);
+        player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully removed the arena &c" + arena.getDisplayName()));
     }
 
     @Command(name = "generate", aliases = "copy", usage = "<arena> <amount>", desc = "Generate/Copy a standalone Arena")
@@ -219,21 +222,6 @@ public class ArenaCommands {
         sender.sendMessage(CC.CHAT_BAR);
     }
 
-
-    @Command(name = "wand", aliases = {"portalwand", "selection", "portal"}, desc = "Receive Arena selection wand")
-    @Require("array.arena.setup")
-    public void arenaWand(@Sender Player player) {
-        if (player.getInventory().first(Selection.SELECTION_WAND) != -1) {
-            player.getInventory().remove(Selection.SELECTION_WAND);
-        } else {
-            player.getInventory().addItem(Selection.SELECTION_WAND);
-            player.sendMessage(CC.translate("&8[&cTIP&8] &7&oLeft-Click to select first position and Right-Click to select second position."));
-            player.sendMessage(CC.translate("&7&oTo setup the cuboids, please select one position as the lower corner and one position as upper corner."));
-        }
-
-        player.updateInventory();
-    }
-
     @Command(name = "setspawn", desc = "Set an arena's spawn", usage = "<arena> <1/2>")
     @Require("array.arena.setup")
     public void arenaSpawn(@Sender Player player, Arena arena, int pos) {
@@ -260,7 +248,7 @@ public class ArenaCommands {
     @Command(name = "setmax", usage = "<arena>", desc = "Set an arena's maximum position")
     @Require("array.arena.setup")
     public void arenaMax(@Sender Player player, Arena arena) {
-        arena.setMax(player.getLocation().clone());
+        arena.setMax(player.getLocation());
         plugin.getArenaManager().save(arena);
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully set the &cMax &7Position for the arena &c" + arena.getDisplayName() + "&7!"));
     }
@@ -268,7 +256,7 @@ public class ArenaCommands {
     @Command(name = "setmin", usage = "<arena>", desc = "Set an arena's minimum position")
     @Require("array.arena.setup")
     public void arenaMin(@Sender Player player, Arena arena) {
-        arena.setMin(player.getLocation().clone());
+        arena.setMin(player.getLocation());
         plugin.getArenaManager().save(arena);
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully set the &cMin &7Position for the arena &c" + arena.getDisplayName() + "&7!"));
     }
@@ -300,16 +288,6 @@ public class ArenaCommands {
     @Command(name = "addkit", aliases = "kits add", usage = "<arena> <kit>", desc = "Add a kit to an arena")
     @Require("array.arena.kit")
     public void arenaKit(@Sender CommandSender player, Arena arena, Kit kit) {
-        if (arena == null) {
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Arena does not exist"));
-            return;
-        }
-
-        if (kit == null) {
-            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Kit does not exist"));
-            return;
-        }
-
         if (arena.getType() == ArenaType.SHARED && kit.getGameRules().isBuild()) {
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7The arena is set to type shared and you can't add build kits to it!"));
             return;

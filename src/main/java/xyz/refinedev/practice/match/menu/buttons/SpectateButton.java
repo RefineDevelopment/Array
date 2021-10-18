@@ -46,7 +46,7 @@ public class SpectateButton extends Button {
         String key = "SPECTATING_MENU.";
 
         ItemBuilder builder = new ItemBuilder(SkullCreator.itemFromUuid(teamPlayer.getUniqueId()));
-        builder.name(CC.translate(config.getString(key + "NAME").replace("<player_name>", teamPlayer.getUsername())));
+        builder.name((teamPlayer.isAlive() ? config.getString(key + "ALIVE_NAME") : config.getString(key + "DEAD_NAME")).replace("<player_name>", teamPlayer.getUsername()));
         builder.lore(config.getStringList(key + "HEAD_LORE").stream().map(s -> s.replace("<player_status>", teamPlayer.isAlive() ? "&aAlive" : "&cDead")).collect(Collectors.toList()));
         builder.clearFlags();
         builder.clearEnchantments();
@@ -68,13 +68,12 @@ public class SpectateButton extends Button {
 
         if (clickType.isLeftClick()) {
             player.teleport(teamPlayer.getPlayer().getLocation());
-            return;
+        } else if (clickType.isRightClick()) {
+            MatchSnapshot matchSnapshot = match.getSnapshots().stream().filter(m -> m.getTeamPlayer().getUniqueId().equals(teamPlayer.getUniqueId())).findFirst().orElse(null);
+            if (matchSnapshot == null) {
+                matchSnapshot = new MatchSnapshot(teamPlayer);
+            }
+            new MatchDetailsMenu(matchSnapshot, null).openMenu(player);
         }
-
-        MatchSnapshot matchSnapshot = match.getSnapshots().stream().filter(m -> m.getTeamPlayer().getUniqueId().equals(teamPlayer.getUniqueId())).findFirst().orElse(null);
-        if (matchSnapshot == null) {
-            matchSnapshot = new MatchSnapshot(teamPlayer);
-        }
-        new MatchDetailsMenu(matchSnapshot, null).openMenu(player);
     }
 }

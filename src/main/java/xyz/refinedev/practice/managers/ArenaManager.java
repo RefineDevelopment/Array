@@ -147,12 +147,13 @@ public class ArenaManager {
     public void save(Arena arena) {
         String path = "arenas." + arena.getName() + ".";
 
-        config.set(path, null);
+        if (config.contains(path) && config.getConfiguration().isSet(path)) config.set(path, null);
         config.set(path + "display-name", CC.untranslate(arena.getDisplayName()));
-        config.set(path + "spawn1", arena.getSpawn1());
-        config.set(path + "spawn2", arena.getSpawn2());
-        config.set(path + "max", arena.getMax());
-        config.set(path + "min", arena.getMin());
+        config.set(path + "type", arena.getType().name());
+        if (arena.getSpawn1() != null) config.set(path + "spawn1", LocationUtil.serialize(arena.getSpawn1()));
+        if (arena.getSpawn2() != null) config.set(path + "spawn2", LocationUtil.serialize(arena.getSpawn2()));
+        if (arena.getMax() != null) config.set(path + "max", LocationUtil.serialize(arena.getMax()));
+        if (arena.getMin() != null) config.set(path + "min", LocationUtil.serialize(arena.getMin()));
         config.set(path + "disable-pearls", arena.isDisablePearls());
         config.set(path + "build-height", arena.getBuildHeight());
         config.set(path + "fall-death-height", arena.getFallDeathHeight());

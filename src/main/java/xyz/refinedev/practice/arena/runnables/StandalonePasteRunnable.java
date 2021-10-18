@@ -2,11 +2,11 @@ package xyz.refinedev.practice.arena.runnables;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.impl.StandaloneArena;
 import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.location.CustomLocation;
 
 /**
  * @since 11/25/2017
@@ -54,21 +54,20 @@ public class StandalonePasteRunnable extends DuplicateArenaRunnable {
         double bX = this.copiedArena.getSpawn2().getX() + this.getOffsetX();
         double bZ = this.copiedArena.getSpawn2().getZ() + this.getOffsetZ();
 
-        CustomLocation min = new CustomLocation(this.copiedArena.getSpawn1().getWorld(), minX, this.copiedArena.getMin().getY(), minZ, this.copiedArena.getMin().getYaw(), this.copiedArena.getMin().getPitch());
-        CustomLocation max = new CustomLocation(this.copiedArena.getSpawn1().getWorld(), maxX, this.copiedArena.getMax().getY(), maxZ, this.copiedArena.getMax().getYaw(), this.copiedArena.getMax().getPitch());
-        CustomLocation a = new CustomLocation(this.copiedArena.getSpawn1().getWorld(), aX, this.copiedArena.getSpawn1().getY(), aZ, this.copiedArena.getSpawn1().getYaw(), this.copiedArena.getSpawn1().getPitch());
-        CustomLocation b = new CustomLocation(this.copiedArena.getSpawn1().getWorld(), bX, this.copiedArena.getSpawn2().getY(), bZ, this.copiedArena.getSpawn2().getYaw(), this.copiedArena.getSpawn2().getPitch());
+        Location min = new Location(this.copiedArena.getSpawn1().getWorld(), minX, this.copiedArena.getMin().getY(), minZ, this.copiedArena.getMin().getYaw(), this.copiedArena.getMin().getPitch());
+        Location max = new Location(this.copiedArena.getSpawn1().getWorld(), maxX, this.copiedArena.getMax().getY(), maxZ, this.copiedArena.getMax().getYaw(), this.copiedArena.getMax().getPitch());
+        Location a = new Location(this.copiedArena.getSpawn1().getWorld(), aX, this.copiedArena.getSpawn1().getY(), aZ, this.copiedArena.getSpawn1().getYaw(), this.copiedArena.getSpawn1().getPitch());
+        Location b = new Location(this.copiedArena.getSpawn1().getWorld(), bX, this.copiedArena.getSpawn2().getY(), bZ, this.copiedArena.getSpawn2().getYaw(), this.copiedArena.getSpawn2().getPitch());
 
         StandaloneArena duplicate = new StandaloneArena(plugin, this.copiedArena.getName() + "#" + arenaId);
         duplicate.setDuplicate(true);
-        duplicate.setSpawn1(a.toBukkitLocation());
-        duplicate.setSpawn2(b.toBukkitLocation());
-        duplicate.setMax(max.toBukkitLocation());
-        duplicate.setMin(min.toBukkitLocation());
+        duplicate.setSpawn1(a);
+        duplicate.setSpawn2(b);
+        duplicate.setMax(max);
+        duplicate.setMin(min);
         duplicate.setDisplayName(this.copiedArena.getDisplayName());
 
         this.copiedArena.getDuplicates().add(duplicate);
-        plugin.getArenaManager().getArenas().add(duplicate);
     }
 
     public void message() {

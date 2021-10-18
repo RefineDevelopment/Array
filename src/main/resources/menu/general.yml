@@ -6,4 +6,5 @@ SPECTATING_MENU:
     - ""
     - " &c➥ &fStatus&7: &r<player_status>"
     - ""
-    - " &7&o(( Click to view Inventory ))"
+    - " &7&o(( Left-Click to teleport ))"
+    - " &7&o(( Right-Click to view inventory ))"

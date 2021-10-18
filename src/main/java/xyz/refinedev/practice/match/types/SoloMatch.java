@@ -489,7 +489,6 @@ public class SoloMatch extends Match {
         if (this.canEnd()) {
             this.end();
         } else {
-            PlayerUtil.spectator(deadPlayer);
             if (!roundLoser.isDisconnected()) {
                 deadPlayer.teleport(getMidSpawn());
 

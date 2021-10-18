@@ -281,7 +281,6 @@ public class ProfileListener implements Listener {
         event.setCancelled(true);
         profile.getKitEditor().setActive(false);
         plugin.getProfileManager().refreshHotbar(profile);
-        shooter.sendMessage("&cYou have been caught glitching");
     }
 
     /**
@@ -299,7 +298,6 @@ public class ProfileListener implements Listener {
         event.setCancelled(true);
         profile.getKitEditor().setActive(false);
         plugin.getProfileManager().refreshHotbar(profile);
-        player.sendMessage("&cYou have been caught glitching");
     }
 
 }

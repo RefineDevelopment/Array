@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.menu.custom.action.ActionData;
@@ -51,9 +52,9 @@ public class ButtonData {
                     break;
                 case MENU:
                     player.closeInventory();
-                    Menu menu = plugin.getMenuManager().findMenu(actionData.getAction());
+                    Menu menu = plugin.getMenuManager().findMenu(player, actionData.getAction());
                     if (menu == null) {
-                        player.sendMessage(CC.translate("&7Invalid Menu!"));
+                        player.sendMessage(Locale.ERROR_MENU.toString());
                     } else {
                         menu.openMenu(player);
                     }

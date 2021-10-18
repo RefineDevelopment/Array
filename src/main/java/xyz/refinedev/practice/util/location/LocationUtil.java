@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.match.types.kit.BattleRushMatch;
 import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
@@ -18,7 +19,8 @@ import java.util.List;
 @UtilityClass
 public class LocationUtil {
 
-    public String serialize(Location location) {
+    public String serialize(@Nullable Location location) {
+        if (location == null) return "empty";
         return location.getWorld().getName() + ":" + location.getX() + ":" + location.getY() + ":" + location.getZ() +
                 ":" + location.getYaw() + ":" + location.getPitch();
     }

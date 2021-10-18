@@ -6,7 +6,6 @@
 # #####################################################################
 TITLE: "&7Events"
 SIZE: 27
-PAGINATED: false
 PLACEHOLDER: true
 PLACEHOLDER_BUTTON:
   NAME: ""

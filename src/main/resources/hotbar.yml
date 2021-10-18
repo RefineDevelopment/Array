@@ -77,15 +77,6 @@ HOTBAR_ITEMS:
       REMATCH_ADDED: 5
       EVENT_JOIN_AND_REMATCH_ADDED: 5
     LORE: []
-  MAIN_MENU:
-    NAME: "&cMain Menu &7(Right-Click)"
-    ENABLED: true
-    MATERIAL: EMERALD
-    DURABILITY: 0
-    SLOT: 7
-    LAYOUT_TYPE: LOBBY
-    COMMAND: "mainmenu"
-    LORE: []
   KIT_EDITOR:
     NAME: "&cKit Editor &7(Right-Click)"
     ENABLED: true
@@ -272,6 +263,15 @@ HOTBAR_ITEMS:
 #    LORE: []
 #
 CUSTOM_ITEMS:
+  PROFILE_MENU:
+    NAME: "&cView Profile &7(Right-Click)"
+    ENABLED: true
+    MATERIAL: NETHER_STAR
+    DURABILITY: 0
+    SLOT: 7
+    LAYOUT_TYPE: LOBBY
+    COMMAND: "openmenu profile_menu"
+    LORE: []
   LEADER_KIT_EDITOR:
     NAME: "&cKit Editor &7(Right-Click)"
     ENABLED: true

@@ -19,7 +19,7 @@ import java.util.Map;
  * Project: Array
  */
 
-public class SettingsMenu extends Menu {
+public class ProfileSettingsMenu extends Menu {
 
     private final Array plugin = Array.getInstance();
     private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("profile_settings");

@@ -156,10 +156,8 @@ public class FFAMatch extends Match {
                 deadPlayer.teleport(this.getMidSpawn());
 
                 Profile profile = plugin.getProfileManager().getByUUID(deadPlayer.getUniqueId());
-                plugin.getProfileManager().refreshHotbar(profile);
                 profile.setState(ProfileState.SPECTATING);
-
-                PlayerUtil.spectator(deadPlayer);
+                plugin.getProfileManager().refreshHotbar(profile);
             }
         }
     }
