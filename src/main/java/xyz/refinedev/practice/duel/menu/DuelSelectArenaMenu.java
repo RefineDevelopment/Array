@@ -14,7 +14,9 @@ import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.menu.pagination.PaginatedMenu;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class DuelSelectArenaMenu extends PaginatedMenu {
@@ -28,30 +30,18 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
 
     @Override
     public Map<Integer, Button> getAllPagesButtons(Player player) {
+        Map<Integer, Button> buttons = new HashMap<>();
         Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
-        Map<Integer, Button> buttons = new HashMap<>();
+        List<Arena> arenas = plugin.getArenaManager().getArenas().stream().filter(arena -> {
+            if (!arena.isSetup()) return false;
+            if (arena.isDuplicate()) return false;
+            if (!arena.getKits().contains(profile.getDuelProcedure().getKit())) return false;
+            return !profile.getDuelProcedure().getKit().getGameRules().isBuild() || arena.getType() != ArenaType.SHARED;
 
-        for ( Arena arena : plugin.getArenaManager().getArenas()) {
-            if (!arena.isSetup()) {
-                continue;
-            }
+        }).collect(Collectors.toList());
 
-                if (!arena.getKits().contains(profile.getDuelProcedure().getKit().getName())) {
-                    continue;
-                }
-
-                if (profile.getDuelProcedure().getKit().getGameRules().isBuild() && arena.getType() == ArenaType.SHARED) {
-                    continue;
-                }
-
-                if (profile.getDuelProcedure().getKit().getGameRules().isBridge() && arena.getType() == ArenaType.SHARED || profile.getDuelProcedure().getKit().getGameRules().isBridge() && arena.getType() == ArenaType.STANDALONE) {
-                    continue;
-                }
-
-                if (arena.isDuplicate()) continue;
-
-
+        for ( Arena arena : arenas) {
             buttons.put(buttons.size(), new SelectArenaButton(arena));
         }
 
@@ -60,10 +50,10 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
 
     @Override
     public void onClose(Player player) {
-        if (!isClosedByMenu()) {
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-            profile.setDuelProcedure(null);
-        }
+        if (this.isClosedByMenu()) return;
+
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        profile.setDuelProcedure(null);
     }
 
     @AllArgsConstructor
@@ -82,13 +72,12 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
         public void clicked(Player player, ClickType clickType) {
             Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
-                profile.getDuelProcedure().setArena(arena);
-                profile.getDuelProcedure().send();
+            profile.getDuelProcedure().setArena(arena);
+            profile.getDuelProcedure().send();
 
-                Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
-
-                player.closeInventory();
-            }
+            Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
+            player.closeInventory();
+        }
 
     }
 

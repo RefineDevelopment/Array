@@ -178,7 +178,7 @@ public class ProfileListener implements Listener {
         }
 
         UUID uuid = event.getUniqueId();
-        Profile profile = new Profile(plugin, uuid);
+        Profile profile = new Profile(uuid);
 
         try {
             plugin.getProfileManager().load(profile);

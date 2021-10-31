@@ -8,3 +8,8 @@ SPECTATING_MENU:
     - ""
     - " &7&o(( Left-Click to teleport ))"
     - " &7&o(( Right-Click to view inventory ))"
+TOURNAMENT_KIT_MENU:
+  TITLE: "&7Select a Kit"
+  LORE:
+    - ""
+    - "&c[Click to Select this Kit]"

@@ -88,8 +88,8 @@ public class QueueThread extends Thread {
                             queue.getPlayers().remove(firstQueueProfile);
                             queue.getPlayers().remove(secondQueueProfile);
 
-                            TeamPlayer firstMatchPlayer=new TeamPlayer(firstPlayer);
-                            TeamPlayer secondMatchPlayer=new TeamPlayer(secondPlayer);
+                            TeamPlayer firstMatchPlayer = new TeamPlayer(firstPlayer);
+                            TeamPlayer secondMatchPlayer = new TeamPlayer(secondPlayer);
 
                             if (queue.getType() == QueueType.RANKED) {
                                 firstMatchPlayer.setElo(firstProfile.getStatisticsData().get(queue.getKit()).getElo());

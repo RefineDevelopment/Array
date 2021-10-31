@@ -1,5 +1,10 @@
 package xyz.refinedev.practice.match.types.kit.team;
 
+import xyz.refinedev.practice.arena.Arena;
+import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.match.team.Team;
+import xyz.refinedev.practice.match.types.TeamMatch;
+
 /**
  * This Project is property of Refine Development © 2021
  * Redistribution of this Project is not allowed
@@ -9,5 +14,9 @@ package xyz.refinedev.practice.match.types.kit.team;
  * Project: Array
  */
 
-public class TeamBedwarsMatch {
+public class TeamBedwarsMatch extends TeamMatch {
+
+    public TeamBedwarsMatch(Team teamA, Team teamB, Kit kit, Arena arena) {
+        super(teamA, teamB, kit, arena);
+    }
 }

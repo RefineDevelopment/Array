@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.tournament.menu.buttons;
+package xyz.refinedev.practice.tournament.menu;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -9,5 +9,5 @@ package xyz.refinedev.practice.tournament.menu.buttons;
  * Project: Array
  */
 
-public class TeamSizeButton {
+public class TournamentMenu {
 }

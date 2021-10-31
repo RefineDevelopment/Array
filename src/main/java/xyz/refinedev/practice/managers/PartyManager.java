@@ -220,7 +220,7 @@ public class PartyManager {
         party.broadcast(Locale.PARTY_DISBANDED.toString());
 
         Profile leaderProfile = plugin.getProfileManager().getByUUID(party.getLeader().getUniqueId());
-        leaderProfile.getSentDuelRequests().values().removeIf(DuelRequest::isParty);
+        leaderProfile.getDuelRequests().values().removeIf(DuelRequest::isParty);
 
         for ( Player player : party.getPlayers() ) {
             Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());

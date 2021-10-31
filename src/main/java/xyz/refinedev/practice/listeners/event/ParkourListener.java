@@ -146,19 +146,19 @@ public class ParkourListener implements Listener {
 
         if (!eventPlayer.getState().equals(EventPlayerState.WAITING)) return;
         if (!action.equals(Action.PHYSICAL)) return;
-        if (profile.getPlates().contains(block.getLocation())) return;
+        if (profile.getParkourCheckpoints().contains(block.getLocation())) return;
 
         switch (block.getType()) {
             case GOLD_PLATE: {
                 parkour.handleWin(player);
                 parkour.broadcastMessage(Locale.EVENT_WON.toString().replace("<winner>", player.getDisplayName()));
-                profile.getPlates().add(event.getClickedBlock().getLocation());
+                profile.getParkourCheckpoints().add(event.getClickedBlock().getLocation());
                 break;
             }
             case IRON_PLATE: {
                 eventPlayer.setLastLocation(player.getLocation());
                 player.sendMessage(Locale.MATCH_CHECKPOINT.toString());
-                profile.getPlates().add(event.getClickedBlock().getLocation());
+                profile.getParkourCheckpoints().add(event.getClickedBlock().getLocation());
                 break;
             }
         }

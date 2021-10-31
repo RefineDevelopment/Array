@@ -42,7 +42,7 @@ public class DuelProcedure {
         Profile senderProfile = plugin.getProfileManager().getByPlayer(sender);
 
         senderProfile.setDuelProcedure(null);
-        senderProfile.getSentDuelRequests().put(target.getUniqueId(), request);
+        senderProfile.getDuelRequests().put(target.getUniqueId(), request);
 
         sender.sendMessage(Locale.DUEL_SENT.toString()
                 .replace("<target_name>", rank.getFullName(target))

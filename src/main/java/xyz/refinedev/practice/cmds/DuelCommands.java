@@ -99,7 +99,7 @@ public class DuelCommands {
             return;
         }
 
-        DuelRequest request = receiverProfile.getSentDuelRequests().get(player.getUniqueId());
+        DuelRequest request = receiverProfile.getDuelRequests().get(player.getUniqueId());
 
         if (request == null) {
             player.sendMessage(Locale.DUEL_NOT_PENDING.toString());

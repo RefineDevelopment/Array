@@ -123,6 +123,7 @@ public class BattleRushMatch extends SoloMatch {
             }
         }.runTaskTimer(this.getPlugin(), 20L, 20L);
     }
+
     @Override
     public boolean canEnd() {
         return this.getPlayerA().isDisconnected() || this.getPlayerAPoints() == 3 || this.getPlayerB().isDisconnected() || this.getPlayerBPoints() == 3;
@@ -232,13 +233,13 @@ public class BattleRushMatch extends SoloMatch {
     public void giveKit(Player player) {
         if (this.getTeamPlayerA().getPlayer() == player) {
             player.getInventory().all(Material.WOOL).forEach((key, value) -> {
-                player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(14).amount(64).build());
-                player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(14).amount(64).build());
+                player.getInventory().setItem(key, new ItemBuilder(Material.WOOL).durability(14).amount(64).build());
+                player.getInventory().setItem(key, new ItemBuilder(Material.WOOL).durability(14).amount(64).build());
             });
         } else {
             player.getInventory().all(Material.WOOL).forEach((key, value) -> {
-                player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(11).amount(64).build());
-                player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(11).amount(64).build());
+                player.getInventory().setItem(key, new ItemBuilder(Material.WOOL).durability(11).amount(64).build());
+                player.getInventory().setItem(key, new ItemBuilder(Material.WOOL).durability(11).amount(64).build());
             });
         }
         player.updateInventory();

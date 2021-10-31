@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,7 +33,10 @@ import xyz.refinedev.practice.match.MatchState;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.kit.BattleRushMatch;
+import xyz.refinedev.practice.match.types.kit.MLGRushMatch;
+import xyz.refinedev.practice.match.types.kit.solo.SoloBedwarsMatch;
 import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.team.TeamBedwarsMatch;
 import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.hotbar.HotbarItem;
@@ -44,7 +49,6 @@ import xyz.refinedev.practice.util.other.TaskUtil;
 import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -82,32 +86,42 @@ public class MatchListener implements Listener {
         }
 
         //Checks if you are placing blocks near the portal
-        if (match.isTheBridgeMatch() || match.isBattleRushMatch()) {
-            List<Location> portals = new ArrayList<>();
+        if (match.isTheBridgeMatch() || match.isBattleRushMatch() || match.isBedwarsMatch()) {
+            List<Location> volatileLocations = new ArrayList<>();
 
             if (match instanceof SoloBridgeMatch) {
                 SoloBridgeMatch soloBridgeMatch = (SoloBridgeMatch) match;
-                portals.addAll(soloBridgeMatch.getPlayerAPortals());
-                portals.addAll(soloBridgeMatch.getPlayerBPortals());
+                volatileLocations.addAll(soloBridgeMatch.getPlayerAPortals());
+                volatileLocations.addAll(soloBridgeMatch.getPlayerBPortals());
             } else if (match instanceof TeamBridgeMatch) {
                 TeamBridgeMatch teamBridgeMatch = (TeamBridgeMatch) match;
-                portals.addAll(teamBridgeMatch.getTeamAPortals());
-                portals.addAll(teamBridgeMatch.getTeamBPortals());
+                volatileLocations.addAll(teamBridgeMatch.getTeamAPortals());
+                volatileLocations.addAll(teamBridgeMatch.getTeamBPortals());
             } else if (match instanceof BattleRushMatch) {
                 BattleRushMatch battleRushMatch = (BattleRushMatch) match;
-                portals.addAll(battleRushMatch.getPlayerAPortals());
-                portals.addAll(battleRushMatch.getPlayerBPortals());
+                volatileLocations.addAll(battleRushMatch.getPlayerAPortals());
+                volatileLocations.addAll(battleRushMatch.getPlayerBPortals());
+            } else if (match instanceof SoloBedwarsMatch) {
+                SoloBedwarsMatch soloBedwarsMatch = (SoloBedwarsMatch) match;
+                volatileLocations.addAll(soloBedwarsMatch.getPlayerABed());
+                volatileLocations.addAll(soloBedwarsMatch.getPlayerBBed());
+            } else if (match instanceof TeamBedwarsMatch) {
+
             }
 
-            for ( Location location : portals ) {
-                Cuboid cuboid = new Cuboid(new Location(location.getWorld(), (location.getBlockX() - 5), (location.getBlockY() - 5), (location.getBlockZ() - 5)), new Location(location.getWorld(), (location.getBlockX() + 5), (location.getBlockY() + 5), (location.getBlockZ() + 5)));
+            for ( Location location : volatileLocations ) {
+                Cuboid cuboid = new Cuboid(new Location(location.getWorld(), (location.getBlockX() - 5), (location.getBlockY() - 5), (location.getBlockZ() - 5)),
+                                           new Location(location.getWorld(), (location.getBlockX() + 5), (location.getBlockY() + 5), (location.getBlockZ() + 5)));
+
                 if (!cuboid.contains(block.getLocation())) return;
 
-                player.sendMessage(Locale.MATCH_BRIDGE_BLOCK.toString());
+                player.sendMessage(Locale.MATCH_PLACE_BLOCK.toString());
                 event.setCancelled(true);
                 return;
             }
         }
+
+        if (arena.getMax() == null || arena.getMin() == null) return;
 
         Cuboid cuboid = new Cuboid(arena.getMax(), arena.getMin());
         if (x >= cuboid.getX1() && x <= cuboid.getX2() && y >= cuboid.getY1() && y <= cuboid.getY2() && z >= cuboid.getZ1() && z <= cuboid.getZ2()) {
@@ -203,6 +217,21 @@ public class MatchListener implements Listener {
                 player.updateInventory();
             } else {
                 event.setCancelled(true);
+            }
+        } else if (match.getKit().getGameRules().isBedwars() || match.getKit().getGameRules().isMlgRush()) {
+            if (block.getType() == Material.BED || block.getType() == Material.BED_BLOCK) {
+                event.setCancelled(true);
+
+                if (match instanceof SoloBedwarsMatch) {
+                    SoloBedwarsMatch soloBedwarsMatch = (SoloBedwarsMatch) match;
+                    soloBedwarsMatch.handleBed(player);
+                } else if (match instanceof TeamBedwarsMatch){
+                    TeamBedwarsMatch teamBedwarsMatch = (TeamBedwarsMatch) match;
+                    //teamBedwarsMatch.handleBed(player);
+                } else if (match instanceof MLGRushMatch) {
+                    MLGRushMatch mlgRushMatch = (MLGRushMatch) match;
+                    mlgRushMatch.handleBed(player);
+                }
             }
         } else if (!match.getPlacedBlocks().remove(event.getBlock().getLocation())) {
             event.setCancelled(true);
@@ -303,6 +332,13 @@ public class MatchListener implements Listener {
                 entities.add(event.getEntity().getLocation().getWorld().dropItemNaturally(event.getEntity().getLocation(), itemStack));
             }
         });
+
+        if (match.isTheBridgeMatch() || match.isBattleRushMatch()) {
+            if (PlayerUtil.getLastAttacker(player) instanceof CraftPlayer) {
+                Player killer = (Player) PlayerUtil.getLastAttacker(player);
+                killer.playSound(killer.getLocation(), Sound.LEVEL_UP, 20F, 15F);
+            }
+        }
 
         event.getDrops().clear();
         match.getEntities().addAll(entities);
@@ -637,37 +673,22 @@ public class MatchListener implements Listener {
         }
     }
 
-    /**
-     * The main code for CPS Counter
-     * Fully coded by kaya @ PurgeCommunity
-     *
-     * @param event {@link PlayerInteractEvent}
-     */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Profile profile = plugin.getProfileManager().getByPlayer(player);
 
         if (!profile.isInFight()) return;
-        if (event.getItem() == null || !event.getAction().name().contains("LEFT")) return;
+        if (event.getItem() == null || event.getClickedBlock() == null || !event.getAction().name().contains("LEFT")) return;
 
-        TeamPlayer teamPlayer=profile.getMatch().getTeamPlayer(player);
-
+        TeamPlayer teamPlayer = profile.getMatch().getTeamPlayer(player);
         if (teamPlayer == null) return;
 
+        List<Long> list = teamPlayer.getCpsList();
         try {
-            List<Long> list;
-
-            if (teamPlayer.getCpsMap().containsKey(teamPlayer.getUniqueId())) {
-                list = teamPlayer.getCpsMap().get(teamPlayer.getUniqueId());
-            } else {
-                list = new ArrayList<>();
-            }
-
             list.add(System.currentTimeMillis());
-            teamPlayer.getCpsMap().put(event.getPlayer().getUniqueId(), list);
         } catch (Exception e) {
-            teamPlayer.getCpsMap().put(event.getPlayer().getUniqueId(), Collections.singletonList(0L));
+            list.add(0L);
         }
     }
 
@@ -811,11 +832,11 @@ public class MatchListener implements Listener {
 
         if (!profile.isInFight()) return;
         if (!match.getKit().getGameRules().isParkour()) return;
-        if (profile.getPlates().contains(event.getClickedBlock().getLocation())) return;
+        if (profile.getParkourCheckpoints().contains(event.getClickedBlock().getLocation())) return;
 
 
-        if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock().getType() == Material.GOLD_PLATE && profile.getPlates() != null) {
-            profile.getPlates().add(event.getClickedBlock().getLocation());
+        if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock().getType() == Material.GOLD_PLATE && profile.getParkourCheckpoints() != null) {
+            profile.getParkourCheckpoints().add(event.getClickedBlock().getLocation());
 
             Player opponentPlayer = match.getOpponentPlayer(player);
 
@@ -826,8 +847,8 @@ public class MatchListener implements Listener {
             }
         }
 
-        if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock().getType() == Material.IRON_PLATE && profile.getPlates() != null) {
-            profile.getPlates().add(event.getClickedBlock().getLocation());
+        if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock().getType() == Material.IRON_PLATE && profile.getParkourCheckpoints() != null) {
+            profile.getParkourCheckpoints().add(event.getClickedBlock().getLocation());
 
             match.getTeamPlayer(player).setParkourCheckpoint(player.getLocation());
             player.sendMessage(Locale.MATCH_CHECKPOINT.toString());

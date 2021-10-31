@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class DuelSelectKitMenu extends Menu {
@@ -32,41 +33,28 @@ public class DuelSelectKitMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        boolean party = plugin.getProfileManager().getByUUID(player.getUniqueId()).getParty() != null;
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        List<Kit> kits = plugin.getKitManager().getKits().stream().filter(kit -> kit.isEnabled() && !kit.equals(plugin.getKitManager().getTeamFight())).collect(Collectors.toList());
 
-        if (party) {
-            if (Array.getInstance().getConfigHandler().isHCF_ENABLED()) {
-                for ( Kit kit : plugin.getKitManager().getKits() ) {
-                    if (kit.isEnabled() || kit.getName().equalsIgnoreCase("HCFTeamFight")) {
-                        if (!kit.getGameRules().isTimed() && !kit.getGameRules().isBridge())
-                            buttons.put(buttons.size(), new SelectKitButton(kit));
-                    }
-                }
-            } else {
-                for ( Kit kit : plugin.getKitManager().getKits() ) {
-                    if (kit.isEnabled() && !kit.getName().equalsIgnoreCase("HCFTeamFight")) {
-                        if (!kit.getGameRules().isTimed() && !kit.getGameRules().isBridge())
-                            buttons.put(buttons.size(), new SelectKitButton(kit));
-                    }
-                }
+        if (profile.hasParty() && plugin.getConfigHandler().isHCF_ENABLED()) {
+            for ( Kit kit : plugin.getKitManager().getKits().stream().filter(Kit::isEnabled).collect(Collectors.toList())) {
+                if (!kit.getGameRules().isTimed()) buttons.put(buttons.size(), new SelectKitButton(kit));
             }
         } else {
-            for ( Kit kit : plugin.getKitManager().getKits() ) {
-                if (kit.isEnabled() && !kit.getName().equalsIgnoreCase("HCFTeamFight")) {
-                    buttons.put(buttons.size(), new SelectKitButton(kit));
-                }
+            for ( Kit kit : kits ) {
+                if (profile.hasParty() && kit.getGameRules().isTimed()) continue;
+                buttons.put(buttons.size(), new SelectKitButton(kit));
             }
         }
-
         return buttons;
     }
 
     @Override
     public void onClose(Player player) {
-        if (!isClosedByMenu()) {
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-            profile.setDuelProcedure(null);
-        }
+        if (this.isClosedByMenu()) return;
+
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        profile.setDuelProcedure(null);
     }
 
     @AllArgsConstructor
@@ -89,7 +77,6 @@ public class DuelSelectKitMenu extends Menu {
         public void clicked(Player player, ClickType clickType) {
             Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
-
             if (profile.getDuelProcedure() == null) {
                 player.sendMessage(CC.RED + "Could not find duel data.");
                 return;
@@ -100,6 +87,7 @@ public class DuelSelectKitMenu extends Menu {
             profile.getDuelProcedure().setKit(kit);
             profile.getDuelProcedure().setArena(arena);
 
+            Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
             player.closeInventory();
 
             if (player.hasPermission("array.donator")) {

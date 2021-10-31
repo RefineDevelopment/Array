@@ -35,12 +35,12 @@ import java.util.*;
 @RequiredArgsConstructor
 public class Profile {
 
-    private final Array plugin;
+    private final Array plugin = Array.getInstance();
 
-    private final Map<UUID, DuelRequest> sentDuelRequests = new HashMap<>();
+    private final Map<UUID, DuelRequest> duelRequests = new HashMap<>();
     private final Map<Kit, ProfileStatistics> statisticsData = new LinkedHashMap<>();
     private final List<ClanInvite> clanInviteList = new ArrayList<>();
-    private final List<Location> plates = new ArrayList<>();
+    private final List<Location> parkourCheckpoints = new ArrayList<>();
 
     private final List<ProfileHistory> unrankedMatchHistory = new ArrayList<>();
     private final List<ProfileHistory> rankedMatchHistory = new ArrayList<>();
@@ -136,7 +136,7 @@ public class Profile {
     }
 
     public boolean isInTournament() {
-       return plugin.getTournamentManager().getCurrentTournament() != null && plugin.getTournamentManager().getCurrentTournament().isParticipating(this.uniqueId);
+       return plugin.getTournamentManager().isInTournament(uniqueId);
     }
 
     public boolean isInBrackets() {

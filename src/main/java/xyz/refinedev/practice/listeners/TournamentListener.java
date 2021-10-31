@@ -9,13 +9,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.api.events.match.MatchEndEvent;
 import xyz.refinedev.practice.match.Match;
-import xyz.refinedev.practice.party.Party;
-import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.tournament.Tournament;
-import xyz.refinedev.practice.tournament.impl.SoloTournament;
-import xyz.refinedev.practice.tournament.impl.TeamTournament;
-
-import java.util.UUID;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -34,64 +28,18 @@ public class TournamentListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
-        Tournament<?> tournament = plugin.getTournamentManager().getCurrentTournament();
+        Tournament tournament = this.plugin.getTournamentManager().getTournamentByUUID(player.getUniqueId());
         if (tournament == null) return;
 
-        if (tournament instanceof SoloTournament) {
-            SoloTournament soloTournament = (SoloTournament) tournament;
-            if (soloTournament.isParticipating(player.getUniqueId())) {
-                soloTournament.leave(player);
-            }
-        } else if (tournament instanceof TeamTournament) {
-            if (tournament.isFighting()) return;
-            TeamTournament teamTournament = (TeamTournament) tournament;
-            if (profile.hasParty() && teamTournament.isParticipating(player.getUniqueId())) {
-                teamTournament.leave(profile.getParty());
-            }
-        }
+        this.plugin.getTournamentManager().leaveTournament(player);
     }
 
     @EventHandler
     public void onMatchEndEvent(MatchEndEvent event) {
         Match match = event.getMatch();
-        Tournament tournament = plugin.getTournamentManager().getCurrentTournament();
-
+        Tournament tournament = this.plugin.getTournamentManager().getTournamentFromMatch(match.getMatchId());
         if (tournament == null) return;
 
-        if (tournament.getMatches().contains(match)) {
-            if (match.isSoloMatch()) {
-                Player player = match.getOpponentPlayer(match.getWinningPlayer());
-                tournament.eliminateParticipant(player, match.getWinningPlayer());
-            }
-            if (match.isTeamMatch()) {
-                UUID loserUUID = match.getOpponentTeam(match.getWinningTeam()).getLeader().getUniqueId();
-                Profile loserProfile = plugin.getProfileManager().getByUUID(loserUUID);
-                Party looserParty = loserProfile.getParty();
-
-                UUID winnerUUID = match.getWinningTeam().getLeader().getUniqueId();
-                Profile winnerProfile = plugin.getProfileManager().getByUUID(winnerUUID);
-                Party winnerParty = winnerProfile.getParty();
-
-                tournament.eliminateParticipant(looserParty, winnerParty);
-            }
-
-            //Remove the match
-            tournament.getMatches().remove(match);
-            //If matches have ended then pick last remaining team as winner
-            if (tournament.getMatches().isEmpty()) {
-                if (tournament.getTeamPlayers().size() == 1) {
-                    tournament.end(tournament.getTeamPlayers().keySet().stream().findAny());
-                    //Otherwise cancel the tournament (this shouldn't happen unless everyone leaves)
-                } else if (tournament.getTeamPlayers().isEmpty()) {
-                    tournament.end(null);
-                } else {
-                    //If the matches are not empty then move the next stage!
-                    if (!tournament.getMatches().isEmpty()) {
-                        tournament.nextStage();
-                    }
-                }
-            }
-        }
+        this.plugin.getTournamentManager().removeTournamentMatch(match);
     }
 }

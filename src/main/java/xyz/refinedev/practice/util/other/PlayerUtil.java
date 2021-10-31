@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import xyz.refinedev.practice.Array;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -49,11 +50,20 @@ public class PlayerUtil {
     }
 
     public void denyMovement(Player player) {
+        if (player.hasMetadata("noDenyMove")) {
+            player.removeMetadata("noDenyMove", Array.getInstance());
+            return;
+        }
+
         player.setWalkSpeed(0.0F);
         player.setFlySpeed(0.0F);
         player.setFoodLevel(0);
         player.setSprinting(false);
         player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 200));
+    }
+
+    public boolean checkValidity(Player player) {
+        return player != null && player.isOnline();
     }
 
     public void allowMovement(Player player) {

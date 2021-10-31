@@ -74,6 +74,10 @@ public class ArenaManager {
             }
         }
         plugin.logger("&7Loaded &c" + arenas.size() + " &7Arena(s)!");
+        if (arenas.size() != 0) {
+            this.loadChunks();
+            plugin.logger("&7Loading Chunks for &c" + arenas.size() + " &7Arena(s), this may cause lag");
+        }
     }
 
     /**
@@ -135,7 +139,6 @@ public class ArenaManager {
             duplicate.setDuplicate(true);
 
             standaloneArena.getDuplicates().add(duplicate);
-            this.arenas.add(duplicate);
         }
     }
 
@@ -147,13 +150,13 @@ public class ArenaManager {
     public void save(Arena arena) {
         String path = "arenas." + arena.getName() + ".";
 
-        if (config.contains(path) && config.getConfiguration().isSet(path)) config.set(path, null);
+        config.set("arenas." + arena.getName(), null);
         config.set(path + "display-name", CC.untranslate(arena.getDisplayName()));
         config.set(path + "type", arena.getType().name());
-        if (arena.getSpawn1() != null) config.set(path + "spawn1", LocationUtil.serialize(arena.getSpawn1()));
-        if (arena.getSpawn2() != null) config.set(path + "spawn2", LocationUtil.serialize(arena.getSpawn2()));
-        if (arena.getMax() != null) config.set(path + "max", LocationUtil.serialize(arena.getMax()));
-        if (arena.getMin() != null) config.set(path + "min", LocationUtil.serialize(arena.getMin()));
+        config.set(path + "spawn1", LocationUtil.serialize(arena.getSpawn1()));
+        config.set(path + "spawn2", LocationUtil.serialize(arena.getSpawn2()));
+        config.set(path + "max", LocationUtil.serialize(arena.getMax()));
+        config.set(path + "min", LocationUtil.serialize(arena.getMin()));
         config.set(path + "disable-pearls", arena.isDisablePearls());
         config.set(path + "build-height", arena.getBuildHeight());
         config.set(path + "fall-death-height", arena.getFallDeathHeight());
@@ -230,13 +233,10 @@ public class ArenaManager {
 
         for (Arena arena : arenas) {
             if (!arena.isSetup() || !arena.getKits().contains(kit)) continue;
-            if (arena.isShared() && kit.getGameRules().isBridge()) continue;
+            if (arena.isActive() && (arena.isDuplicate() || arena.isStandalone())) continue;
+            if (kit.getGameRules().isBuild() && arena.isShared()) continue;
 
-            if (!arena.isActive() && (arena.isStandalone() || arena.isDuplicate())) {
-                randomArenas.add(arena);
-            } else if (!kit.getGameRules().isBuild() && !kit.getGameRules().isBridge() && arena.isShared()) {
-                randomArenas.add(arena);
-            }
+            randomArenas.add(arena);
         }
 
         if (randomArenas.isEmpty()) {
@@ -245,6 +245,64 @@ public class ArenaManager {
 
         int i = Array.RANDOM.nextInt(randomArenas.size());
         return randomArenas.get(i);
+    }
+
+    /**
+     * Load chunks of all the loaded arenas
+     */
+    public void loadChunks() {
+        for ( Arena arena : this.arenas ) {
+            int arenaMinX = arena.getMin().getBlockX() >> 4;
+            int arenaMinZ = arena.getMin().getBlockZ() >> 4;
+            int arenaMaxX = arena.getMax().getBlockX() >> 4;
+            int arenaMaxZ = arena.getMax().getBlockZ() >> 4;
+
+            if (arenaMinX > arenaMaxX) {
+                int lastArenaMinX = arenaMinX;
+                arenaMinX = arenaMaxX;
+                arenaMaxX = lastArenaMinX;
+            }
+
+            if (arenaMinZ > arenaMaxZ) {
+                int lastArenaMinZ = arenaMinZ;
+                arenaMinZ = arenaMaxZ;
+                arenaMaxZ = lastArenaMinZ;
+            }
+
+            for ( int x = arenaMinX; x <=  arenaMaxX; x++ ) {
+                for ( int z = arenaMinZ; z <=  arenaMaxZ; z++ ) {
+                    arena.getMin().getWorld().getChunkAt(x, z);
+                }
+            }
+
+            if (arena.isStandalone()) {
+                for ( StandaloneArena saArena : ((StandaloneArena) arena).getDuplicates() ) {
+                    arenaMinX = saArena.getMin().getBlockX() >> 4;
+                    arenaMinZ = saArena.getMin().getBlockZ() >> 4;
+                    arenaMaxX = saArena.getMax().getBlockX() >> 4;
+                    arenaMaxZ = saArena.getMax().getBlockZ() >> 4;
+
+                    if (arenaMinX > arenaMaxX) {
+                        int lastArenaMinX = arenaMinX;
+                        arenaMinX = arenaMaxX;
+                        arenaMaxX = lastArenaMinX;
+                    }
+
+                    if (arenaMinZ > arenaMaxZ) {
+                        int lastArenaMinZ = arenaMinZ;
+                        arenaMinZ = arenaMaxZ;
+                        arenaMaxZ = lastArenaMinZ;
+                    }
+
+                    for ( int x = arenaMinX; x <=  arenaMaxX; x++ ) {
+                        for ( int z = arenaMinZ; z <=  arenaMaxZ; z++ ) {
+                            saArena.getMin().getWorld().getChunkAt(x, z);
+                        }
+                    }
+                }
+            }
+        }
+        plugin.logger("&7Loaded &cChunks &7Successfully!");
     }
 
     /**

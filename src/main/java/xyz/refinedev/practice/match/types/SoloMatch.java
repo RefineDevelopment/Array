@@ -41,13 +41,10 @@ import java.util.UUID;
 @Getter @Setter
 public class SoloMatch extends Match {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin = this.getPlugin();
 
     private final TeamPlayer playerA;
     private final TeamPlayer playerB;
-
-    private int playerARounds = 0;
-    private int playerBRounds = 0;
 
     private String eloMessage;
     private String specMessage;

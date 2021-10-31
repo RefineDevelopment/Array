@@ -25,6 +25,7 @@ import xyz.refinedev.practice.match.types.SoloMatch;
 import xyz.refinedev.practice.match.types.TeamMatch;
 import xyz.refinedev.practice.match.types.kit.BattleRushMatch;
 import xyz.refinedev.practice.match.types.kit.BoxingMatch;
+import xyz.refinedev.practice.match.types.kit.solo.SoloBedwarsMatch;
 import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
 import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
@@ -102,8 +103,8 @@ public class MatchManager {
 
             plugin.getProfileManager().handleVisibility(profile);
 
-            if (!profile.getSentDuelRequests().isEmpty()) {
-                profile.getSentDuelRequests().clear();
+            if (!profile.getDuelRequests().isEmpty()) {
+                profile.getDuelRequests().clear();
             }
 
             MatchPlayerSetupEvent event = new MatchPlayerSetupEvent(player, match);
@@ -160,7 +161,7 @@ public class MatchManager {
 
             if (kit.getGameRules().isParkour()) {
                 Profile profile = plugin.getProfileManager().getByPlayer(player);
-                profile.getPlates().clear();
+                profile.getParkourCheckpoints().clear();
             }
 
             match.removePearl(player, true);
@@ -559,7 +560,7 @@ public class MatchManager {
         if (kit.getGameRules().isBridge()) {
             return new SoloBridgeMatch(queue, playerA, playerB, kit, arena, queueType);
         } else if (kit.getGameRules().isBedwars()) {
-            //
+            return new SoloBedwarsMatch(queue, playerA, playerB, kit, arena, queueType);
         } else if (kit.getGameRules().isMlgRush()) {
             //
         } else if (kit.getGameRules().isBoxing()) {

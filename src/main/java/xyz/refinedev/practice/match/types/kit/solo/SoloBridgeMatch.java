@@ -70,11 +70,7 @@ public class SoloBridgeMatch extends SoloMatch {
         teamPlayer.setAlive(true);
 
         PlayerUtil.reset(player);
-        if (!player.hasMetadata("noDenyMove")) {
-            PlayerUtil.denyMovement(player);
-        } else {
-            player.removeMetadata("noDenyMove", this.getPlugin());
-        }
+        PlayerUtil.denyMovement(player);
 
         if (getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
         if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
@@ -111,6 +107,10 @@ public class SoloBridgeMatch extends SoloMatch {
                 .replace("<arena>", this.getArena().getName())
                 .replace("<kit>", this.getKit().getName())
                 .replace("<ping>", String.valueOf(getPlayerA().getPing()))).forEach(player::sendMessage));
+
+        if (this.getPlugin().getConfigHandler().isBRIDGE_CLEAR_BLOCKS()) {
+            this.cleanup();
+        }
     }
 
     @Override

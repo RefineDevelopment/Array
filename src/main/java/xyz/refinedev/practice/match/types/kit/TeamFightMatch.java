@@ -16,7 +16,7 @@ import xyz.refinedev.practice.util.other.PlayerUtil;
 @Getter
 public class TeamFightMatch extends TeamMatch {
 
-    private final Array plugin = Array.getInstance();
+    private final Array plugin = this.getPlugin();
 
     private final Team teamA;
     private final Team teamB;

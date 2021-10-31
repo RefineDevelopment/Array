@@ -27,7 +27,9 @@ import xyz.refinedev.practice.match.types.TeamMatch;
 import xyz.refinedev.practice.match.types.kit.BattleRushMatch;
 import xyz.refinedev.practice.match.types.kit.BoxingMatch;
 import xyz.refinedev.practice.match.types.kit.TeamFightMatch;
+import xyz.refinedev.practice.match.types.kit.solo.SoloBedwarsMatch;
 import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.team.TeamBedwarsMatch;
 import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
@@ -35,6 +37,7 @@ import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
+import xyz.refinedev.practice.task.MatchCPSTask;
 import xyz.refinedev.practice.task.MatchStartTask;
 import xyz.refinedev.practice.task.MatchWaterCheckTask;
 import xyz.refinedev.practice.util.chat.CC;
@@ -92,22 +95,23 @@ public abstract class Match {
         matches.add(this);
     }
 
-
     /**
      * Clear up the {@link Match} leftovers and remnants
      * and rollback the {@link Arena} to its original state
      */
     public void cleanup() {
-        if (kit.getGameRules().isBuild() && this.placedBlocks.size() > 0) {
-            this.placedBlocks.forEach(l -> l.getBlock().setType(Material.AIR));
-            this.placedBlocks.clear();
-        }
-        if (kit.getGameRules().isBuild() && this.changedBlocks.size() > 0) {
-            this.changedBlocks.forEach(blockState -> blockState.getLocation().getBlock().setType(blockState.getType()));
-            this.changedBlocks.clear();
-        }
-        this.arena.setActive(false);
-        this.entities.forEach(Entity::remove);
+        plugin.getServer().getScheduler().runTask(plugin, () -> {
+            if (kit.getGameRules().isBuild() && this.placedBlocks.size() > 0) {
+                this.placedBlocks.forEach(l -> l.getBlock().setType(Material.AIR));
+                this.placedBlocks.clear();
+            }
+            if (kit.getGameRules().isBuild() && this.changedBlocks.size() > 0) {
+                this.changedBlocks.forEach(blockState -> blockState.getLocation().getBlock().setType(blockState.getType()));
+                this.changedBlocks.clear();
+            }
+            this.arena.setActive(false);
+            this.entities.forEach(Entity::remove);
+        });
     }
 
     /**
@@ -130,8 +134,8 @@ public abstract class Match {
 
             plugin.getProfileManager().handleVisibility(profile);
 
-            if (!profile.getSentDuelRequests().isEmpty()) {
-                profile.getSentDuelRequests().clear();
+            if (!profile.getDuelRequests().isEmpty()) {
+                profile.getDuelRequests().clear();
             }
 
             MatchPlayerSetupEvent event = new MatchPlayerSetupEvent(player, this);
@@ -162,6 +166,7 @@ public abstract class Match {
             this.waterTask = new MatchWaterCheckTask(plugin, this).runTaskTimer(plugin, 20L, 20L);
         }
 
+        new MatchCPSTask(plugin, this).runTaskTimer(plugin, 2L, 2L);
         this.task = new MatchStartTask(this).runTaskTimer(plugin, 20L, 20L);
     }
 
@@ -196,7 +201,7 @@ public abstract class Match {
 
             if (kit.getGameRules().isParkour()) {
                 Profile profile = plugin.getProfileManager().getByPlayer(player);
-                profile.getPlates().clear();
+                profile.getParkourCheckpoints().clear();
             }
 
             this.removePearl(player, true);
@@ -778,6 +783,16 @@ public abstract class Match {
      */
     public boolean isBattleRushMatch() {
         return this.isSoloMatch() && this instanceof BattleRushMatch;
+    }
+
+    /**
+     * This method is returns true if the
+     * current match related to {@link BattleRushMatch}
+     *
+     * @return {@link Boolean}
+     */
+    public boolean isBedwarsMatch() {
+        return this instanceof SoloBedwarsMatch || this instanceof TeamBedwarsMatch;
     }
 
     /**

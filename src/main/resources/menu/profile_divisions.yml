@@ -1,0 +1,17 @@
+TITLE: "Profile Divisions"
+SIZE: 54
+BUTTONS:
+  UNLOCKED:
+    XP_BASED:
+
+    ELO_BASED:
+
+  EQUIPPED:
+    XP_BASED:
+
+    ELO_BASED:
+
+  LOCKED:
+    XP_BASED:
+
+    ELO_BASED:

@@ -7,15 +7,12 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Getter @Setter
 public class TeamPlayer {
 
-    private final Map<UUID, List<Long>> cpsMap = new HashMap<>();
+    private final List<Long> cpsList = new ArrayList<>();
 
     private final UUID uniqueId;
     private final String username;
@@ -52,12 +49,9 @@ public class TeamPlayer {
     }
 
     public int getCps() {
-        synchronized (cpsMap) {
-            if (cpsMap.get(uniqueId) == null) return 0;
-            cpsMap.get(uniqueId).removeIf(count -> count < System.currentTimeMillis() - 1000L);
+        if (cpsList.isEmpty()) return 0;
 
-            return cpsMap.get(uniqueId).size();
-        }
+        return cpsList.size();
     }
 
     public double getPotionAccuracy() {

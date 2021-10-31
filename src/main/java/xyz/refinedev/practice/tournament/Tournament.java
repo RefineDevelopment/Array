@@ -1,172 +1,92 @@
 package xyz.refinedev.practice.tournament;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.match.Match;
-import xyz.refinedev.practice.match.team.TeamPlayer;
-import xyz.refinedev.practice.party.Party;
+import xyz.refinedev.practice.Array;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This Project is property of Refine Development © 2021
  * Redistribution of this Project is not allowed
  *
- * @author Drizzy
- * Created: 8/5/2021
+ * @author MMC
  * Project: Array
  */
 
 @Getter @Setter
-public abstract class Tournament<T> {
+@RequiredArgsConstructor
+public class Tournament {
 
-    //Used for Team Tournaments
-    //Credits to Nick for Filtering
-    private final List<Party> parties = new ArrayList<Party>(){
-        @Override
-        public @NotNull Iterator<Party> iterator() {
-            this.filter();
-            return super.iterator();
+    private final Array plugin = Array.getInstance();
+
+    private final Set<UUID> players = new HashSet<>();
+    private final Set<UUID> matches = new HashSet<>();
+    private final List<TournamentTeam> aliveTeams = new ArrayList<>();
+    private final Map<UUID, TournamentTeam> playerTeams = new HashMap<>();
+
+    private final int id;
+    private final int teamSize;
+    private final int size;
+    private final String kitName;
+
+    private TournamentState tournamentState = TournamentState.WAITING;
+    private int currentRound = 1;
+    private int countdown = 31;
+
+    public void broadcast(String message) {
+        for (UUID uuid : this.players) {
+            Player player = this.plugin.getServer().getPlayer(uuid);
+
+            player.sendMessage(message);
         }
+    }
 
-        @Override
-        public int size() {
-            this.filter();
-            return super.size();
+    public void broadcastWithSound(String message, Sound sound) {
+        for (UUID uuid : this.players) {
+            Player player = this.plugin.getServer().getPlayer(uuid);
+
+            player.sendMessage(message);
+            player.playSound(player.getLocation(), sound, 10, 1);
         }
-
-        private void filter() {
-            List<Party> toRemove = new ArrayList<>();
-            for (int i = 0; i < super.size(); ++i) {
-                Party party = this.get(i);
-                if (party.isDisbanded()) toRemove.add(party);
-            }
-            this.removeAll(toRemove);
-        }
-    };
-
-    private final Map<UUID, TeamPlayer> teamPlayers = new ConcurrentHashMap<>();
-    private final List<Match> matches = new ArrayList<>();
-
-    private TournamentType type;
-    private TournamentState state = TournamentState.WAITING;
-
-    private boolean started;
-
-    private int round = 0;
-    private int individualSize;
-    private int participantsToStart;
-    private int maxPlayers;
-    private Kit kit;
-    private String host;
-
-    /**
-     * Original constructor for a tournament
-     *
-     * @param host                The host of the tournament
-     * @param tournamentType      {@link TournamentType}
-     * @param individualSize      players per team or 1 if its solo
-     * @param participantsToStart the amount of participants needed to start
-     * @param maxPlayers          maximum players allowed in a tournament
-     * @param kit                 the kit of the tournament
-     */
-    public Tournament(String host, TournamentType tournamentType, int individualSize, int participantsToStart, int maxPlayers, Kit kit) {
-        this.host = host;
-        this.type = tournamentType;
-        this.individualSize = individualSize;
-        this.participantsToStart = participantsToStart;
-        this.maxPlayers = maxPlayers;
-        this.kit = kit;
     }
 
-    /**
-     * Returns true if the uuid is in the tournament
-     *
-     * @param uuid {@link UUID} of the participant
-     * @return {@link Boolean}
-     */
-    public boolean isParticipating(UUID uuid) {
-       return this.teamPlayers.containsKey(uuid);
+    public int decrementCountdown() {
+        return --this.countdown;
     }
 
-    /**
-     * Returns true if the {@link TournamentState} is Fighting
-     *
-     * @return {@link Boolean}
-     */
-    public boolean isFighting() {
-        return started && this.state == TournamentState.FIGHTING;
+    public void addPlayer(UUID uuid) {
+        this.players.add(uuid);
     }
 
-    /**
-     * Returns true if the {@link TournamentState} is Waiting
-     *
-     * @return {@link Boolean}
-     */
-    public boolean isWaiting() {
-        return this.state == TournamentState.WAITING;
+    public void addAliveTeam(TournamentTeam team) {
+        this.aliveTeams.add(team);
     }
 
-    /**
-     * Returns true if the {@link TournamentState} is Starting
-     *
-     * @return {@link Boolean}
-     */
-    public boolean isStarting() {
-        return this.state == TournamentState.STARTING;
+    public void killTeam(TournamentTeam team) {
+        this.aliveTeams.remove(team);
     }
 
-    /**
-     * Returns the amount of participants in the tournament
-     *
-     * @return {@link Boolean}
-     */
-    public int getParticipatingCount() {
-        return this.teamPlayers.size();
+    public void setPlayerTeam(UUID uuid, TournamentTeam team) {
+        this.playerTeams.put(uuid, team);
     }
 
-    /**
-     * Leave the tournament either as a
-     * {@link Player} or {@link Party}
-     *
-     * @param type The type of joining entity
-     */
-    public abstract void join(T type);
+    public TournamentTeam getPlayerTeam(UUID uuid) {
+        return this.playerTeams.get(uuid);
+    }
 
-    /**
-     * Leave the tournament either as a
-     * {@link Player} or {@link Party}
-     *
-     * @param type The type of leaving entity
-     */
-    public abstract void leave(T type);
+    public void removePlayer(UUID uuid) {
+        this.players.remove(uuid);
+    }
 
-    /**
-     * Start the tournament
-     */
-    public abstract void start();
+    public void addMatch(UUID uuid) {
+        this.matches.add(uuid);
+    }
 
-    /**
-     * Move onwards to the next stage of the tournament
-     */
-    public abstract void nextStage();
-
-    /**
-     * Eliminate a participant from the tournament
-     *
-     * @param participant The participant being removed
-     * @param killer The killer of the participant or their opponent
-     */
-    public abstract void eliminateParticipant(T participant, T killer);
-
-    /**
-     * End or cancel the tournament
-     *
-     * @param winner The winner of the tourney if there is one
-     */
-    public abstract void end(T winner);
+    public void removeMatch(UUID uuid) {
+        this.matches.remove(uuid);
+    }
 }

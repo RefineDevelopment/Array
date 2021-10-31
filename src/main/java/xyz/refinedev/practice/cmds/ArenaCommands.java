@@ -190,7 +190,12 @@ public class ArenaCommands {
     @Command(name = "tp", aliases = "teleport", desc = "Teleport to an Arena", usage = "<arena>")
     @Require("array.arena.admin")
     public void arenaTeleport(@Sender Player player, Arena arena) {
-        player.teleport(arena.getSpawn1() == null ? arena.getSpawn2() : arena.getSpawn1());
+        if (arena.getSpawn1() == null) {
+            player.sendMessage(CC.translate("&cPlease setup the first spawn of the arena in order to teleport!"));
+            return;
+        }
+
+        TaskUtil.run(() -> player.teleport(arena.getSpawn1()));
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully &cteleported &7to the arena &c" + arena.getName() + "&7!"));
     }
 

@@ -14,14 +14,16 @@ public class MatchPearlCooldownTask extends BukkitRunnable {
 
     @Override
     public void run() {
+        float timeInterval = (plugin.getConfigHandler().getENDERPEARL_COOLDOWN() * 1000.0f);
+
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 
             if ((profile.isInFight() || profile.isInEvent()) && !profile.getEnderpearlCooldown().hasExpired()) {
-                int seconds = Math.round(profile.getEnderpearlCooldown().getRemaining()) / 1_000;
+                int seconds = Math.round(profile.getEnderpearlCooldown().getRemaining()) / 1000;
 
                 player.setLevel(seconds);
-                player.setExp(profile.getEnderpearlCooldown().getRemaining() / (Array.getInstance().getConfigHandler().getENDERPEARL_COOLDOWN() * 1_000F));
+                player.setExp(profile.getEnderpearlCooldown().getRemaining() / timeInterval);
             } else {
                 if (profile.isInFight() || profile.isInEvent()) {
                     if (!profile.getEnderpearlCooldown().isNotified() && !profile.isInLobby()) {

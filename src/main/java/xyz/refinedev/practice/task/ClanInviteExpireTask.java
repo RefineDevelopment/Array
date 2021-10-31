@@ -33,6 +33,8 @@ public class ClanInviteExpireTask extends BukkitRunnable {
      */
     @Override
     public void run() {
+        if (plugin.getProfileManager() == null || plugin.getProfileManager().getProfiles() == null) return;
+
         for ( Profile profile : plugin.getProfileManager().getProfiles().values() ) {
             profile.getClanInviteList().removeIf(ClanInvite::hasExpired);
         }

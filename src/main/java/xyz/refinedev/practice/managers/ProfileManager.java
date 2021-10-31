@@ -625,13 +625,13 @@ public class ProfileManager {
      * @return {@link Boolean}
      */
     public boolean cannotSendDuelRequest(Profile profile, Player player) {
-        if (!profile.getSentDuelRequests().containsKey(player.getUniqueId())) {
+        if (!profile.getDuelRequests().containsKey(player.getUniqueId())) {
             return false;
         }
 
-        DuelRequest request = profile.getSentDuelRequests().get(player.getUniqueId());
+        DuelRequest request = profile.getDuelRequests().get(player.getUniqueId());
         if (request.isExpired()) {
-            profile.getSentDuelRequests().remove(player.getUniqueId());
+            profile.getDuelRequests().remove(player.getUniqueId());
             return false;
         }
         return true;
@@ -644,12 +644,12 @@ public class ProfileManager {
      * @return {@link Boolean}
      */
     public boolean isPendingDuelRequest(Profile profile, Player player) {
-        if (!profile.getSentDuelRequests().containsKey(player.getUniqueId())) {
+        if (!profile.getDuelRequests().containsKey(player.getUniqueId())) {
             return false;
         }
-        DuelRequest request = profile.getSentDuelRequests().get(player.getUniqueId());
+        DuelRequest request = profile.getDuelRequests().get(player.getUniqueId());
         if (request.isExpired()) {
-            profile.getSentDuelRequests().remove(player.getUniqueId());
+            profile.getDuelRequests().remove(player.getUniqueId());
             return false;
         }
         return true;

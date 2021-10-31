@@ -9,7 +9,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.match.types.kit.BattleRushMatch;
+import xyz.refinedev.practice.match.types.kit.MLGRushMatch;
+import xyz.refinedev.practice.match.types.kit.solo.SoloBedwarsMatch;
 import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
+import xyz.refinedev.practice.match.types.kit.team.TeamBedwarsMatch;
 import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
 
@@ -60,6 +63,37 @@ public class LocationUtil {
         } else {
             return checkIfListContainsLocation(match.getPlayerBPortals(), player.getLocation());
         }
+    }
+
+    public boolean isSelfBed(Player player) {
+        Profile profile = Array.getInstance().getProfileManager().getByUUID(player.getUniqueId());
+
+        if (profile.getMatch() instanceof SoloBedwarsMatch) {
+            SoloBedwarsMatch match = (SoloBedwarsMatch) profile.getMatch();
+
+            if (match.getTeamPlayerA().getPlayer() == player) {
+                return checkIfListContainsLocation(match.getPlayerABed(), player.getLocation());
+            } else {
+                return checkIfListContainsLocation(match.getPlayerBBed(), player.getLocation());
+            }
+        } else if (profile.getMatch() instanceof TeamBedwarsMatch) {
+            TeamBedwarsMatch match = (TeamBedwarsMatch) profile.getMatch();
+
+            if (match.getTeamA().containsPlayer(player)) {
+                //return checkIfListContainsLocation(match.getPlayerABed(), player.getLocation());
+            } else {
+                //return checkIfListContainsLocation(match.getPlayerBBed(), player.getLocation());
+            }
+        } else if (profile.getMatch() instanceof MLGRushMatch) {
+            MLGRushMatch match = (MLGRushMatch) profile.getMatch();
+
+            if (match.getTeamPlayerA().getPlayer() == player) {
+                return checkIfListContainsLocation(match.getPlayerABed(), player.getLocation());
+            } else {
+                return checkIfListContainsLocation(match.getPlayerBBed(), player.getLocation());
+            }
+        }
+        return false;
     }
 
     public boolean isTeamPortalTeam(Player player) {
