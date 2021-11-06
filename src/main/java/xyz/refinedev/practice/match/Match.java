@@ -3,19 +3,16 @@ package xyz.refinedev.practice.match;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.chat.BaseComponent;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.block.BlockState;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.jetbrains.annotations.Nullable;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.api.events.match.*;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitGameRules;
@@ -26,39 +23,28 @@ import xyz.refinedev.practice.match.types.SoloMatch;
 import xyz.refinedev.practice.match.types.TeamMatch;
 import xyz.refinedev.practice.match.types.kit.BattleRushMatch;
 import xyz.refinedev.practice.match.types.kit.BoxingMatch;
+import xyz.refinedev.practice.match.types.kit.MLGRushMatch;
 import xyz.refinedev.practice.match.types.kit.TeamFightMatch;
 import xyz.refinedev.practice.match.types.kit.solo.SoloBedwarsMatch;
 import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
 import xyz.refinedev.practice.match.types.kit.team.TeamBedwarsMatch;
 import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.ProfileState;
-import xyz.refinedev.practice.profile.killeffect.KillEffect;
-import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
-import xyz.refinedev.practice.task.MatchCPSTask;
-import xyz.refinedev.practice.task.MatchStartTask;
-import xyz.refinedev.practice.task.MatchWaterCheckTask;
-import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
-import xyz.refinedev.practice.util.chat.ChatHelper;
-import xyz.refinedev.practice.util.location.LightningUtil;
+import xyz.refinedev.practice.task.match.MatchCPSTask;
+import xyz.refinedev.practice.task.match.MatchStartTask;
+import xyz.refinedev.practice.task.match.MatchWaterCheckTask;
 import xyz.refinedev.practice.util.other.Cooldown;
-import xyz.refinedev.practice.util.other.EffectUtil;
-import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Getter @Setter
 public abstract class Match {
 
     private final Array plugin = Array.getInstance();
-
-    @Getter protected static List<Match> matches = new ArrayList<>();
 
     private final Map<UUID, EnderPearl> pearlMap = new HashMap<>();
     private final List<MatchSnapshot> snapshots = new ArrayList<>();
@@ -67,7 +53,7 @@ public abstract class Match {
     private final List<Location> placedBlocks = new ArrayList<>();
     private final List<BlockState> changedBlocks = new ArrayList<>();
 
-    private final UUID matchId = UUID.randomUUID();
+    private final UUID matchId;
     private final Queue queue;
     private final Kit kit;
     private final Arena arena;
@@ -87,74 +73,13 @@ public abstract class Match {
      * @param queueType {@link QueueType} if we are connecting from queue then we provide it, otherwise its Unranked
      */
     public Match(Queue queue, Kit kit, Arena arena, QueueType queueType) {
+        this.matchId = UUID.randomUUID();
         this.queue = queue;
         this.kit = kit;
         this.arena = arena;
         this.queueType = queueType;
 
-        matches.add(this);
-    }
-
-    /**
-     * Clear up the {@link Match} leftovers and remnants
-     * and rollback the {@link Arena} to its original state
-     */
-    public void cleanup() {
-        plugin.getServer().getScheduler().runTask(plugin, () -> {
-            if (kit.getGameRules().isBuild() && this.placedBlocks.size() > 0) {
-                this.placedBlocks.forEach(l -> l.getBlock().setType(Material.AIR));
-                this.placedBlocks.clear();
-            }
-            if (kit.getGameRules().isBuild() && this.changedBlocks.size() > 0) {
-                this.changedBlocks.forEach(blockState -> blockState.getLocation().getBlock().setType(blockState.getType()));
-                this.changedBlocks.clear();
-            }
-            this.arena.setActive(false);
-            this.entities.forEach(Entity::remove);
-        });
-    }
-
-    /**
-     * Initiate and start the {@link Match}
-     * This method sets up the players, teleports them
-     * starts the countdown tasks, handles visibility
-     */
-    public void start() {
-        //So that chunks are properly visible
-        //My old dumb ass put this in the loop below causing massive lag
-        if (!this.arena.getSpawn1().getChunk().isLoaded() || !this.arena.getSpawn2().getChunk().isLoaded()) {
-            this.arena.getSpawn1().getChunk().load();
-            this.arena.getSpawn2().getChunk().load();
-        }
-
-        for (Player player : this.getPlayers()) {
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-            profile.setState(ProfileState.IN_FIGHT);
-            profile.setMatch(this);
-
-            plugin.getProfileManager().handleVisibility(profile);
-
-            if (!profile.getDuelRequests().isEmpty()) {
-                profile.getDuelRequests().clear();
-            }
-
-            MatchPlayerSetupEvent event = new MatchPlayerSetupEvent(player, this);
-            plugin.getServer().getPluginManager().callEvent(event);
-
-            this.setupPlayer(player);
-        }
-
-        this.onStart();
-
-        this.state = MatchState.STARTING;
-        this.startTimestamp = -1;
-        this.arena.setActive(true);
-
-        this.sendStartMessage();
-        this.initiateTasks();
-
-        MatchStartEvent event = new MatchStartEvent(this);
-        plugin.getServer().getPluginManager().callEvent(event);
+        this.plugin.getMatchManager().getMatches().add(this);
     }
 
     /**
@@ -162,100 +87,12 @@ public abstract class Match {
      * track and execute the match's logic
      */
     public void initiateTasks() {
-        if (kit.getGameRules().isWaterKill() || kit.getGameRules().isParkour() || kit.getGameRules().isSumo()) {
-            this.waterTask = new MatchWaterCheckTask(plugin, this).runTaskTimer(plugin, 20L, 20L);
+        if (this.kit.getGameRules().isWaterKill() || this.kit.getGameRules().isParkour() || this.kit.getGameRules().isSumo()) {
+            this.waterTask = new MatchWaterCheckTask(this.plugin, this).runTaskTimer(plugin, 20L, 20L);
         }
 
-        new MatchCPSTask(plugin, this).runTaskTimer(plugin, 2L, 2L);
+        new MatchCPSTask(this.plugin, this).runTaskTimer(plugin, 2L, 2L);
         this.task = new MatchStartTask(this).runTaskTimer(plugin, 20L, 20L);
-    }
-
-    /**
-     * End the {@link Match}
-     * This resets the players, updates the match's state
-     * Created the Match inventories for each player
-     * Resets their knockback and hit delay
-     * and finally sends them rating message if enabled
-     */
-    public void end() {
-        if (!onEnd()) return;
-
-        this.state = MatchState.ENDING;
-
-        if (kit.getGameRules().isBuild() || kit.getGameRules().isShowHealth()) {
-            for ( Player otherPlayerTeam : getPlayers() ) {
-                Objective objective = otherPlayerTeam.getScoreboard().getObjective(DisplaySlot.BELOW_NAME);
-                if (objective != null)
-                    objective.unregister();
-            }
-        }
-
-        for ( MatchSnapshot snapshot : snapshots ) {
-            snapshot.setCreated(System.currentTimeMillis());
-            plugin.getMatchManager().getSnapshotMap().put(snapshot.getTeamPlayer().getUniqueId(), snapshot);
-        }
-
-        for ( Player player : this.getPlayers() ) {
-            plugin.getSpigotHandler().resetKnockback(player);
-            player.setMaximumNoDamageTicks(20);
-
-            if (kit.getGameRules().isParkour()) {
-                Profile profile = plugin.getProfileManager().getByPlayer(player);
-                profile.getParkourCheckpoints().clear();
-            }
-
-            this.removePearl(player, true);
-        }
-
-        for ( TeamPlayer gamePlayer : this.getTeamPlayers()) {
-            if (gamePlayer == null) return;
-            Player player = gamePlayer.getPlayer();
-            if (gamePlayer.isDisconnected() || player == null) continue;
-            for ( BaseComponent[] components :  this.generateEndComponents(player) ) {
-                player.spigot().sendMessage(components);
-            }
-        }
-
-        for (Player player : this.getSpectators()) {
-            if (player == null) return;
-            for (BaseComponent[] components : this.generateEndComponents(player)) {
-                player.spigot().sendMessage(components);
-            }
-            this.removeSpectator(player);
-        }
-
-        if (plugin.getConfigHandler().isRATINGS_ENABLED()) {
-            for ( Profile profile : this.getPlayers().stream().map(plugin.getProfileManager()::getByPlayer).collect(Collectors.toList()) ) {
-                profile.setIssueRating(true);
-                profile.setRatingArena(arena);
-                plugin.getArenaManager().sendRatingMessage(profile.getPlayer(), this.getArena());
-            }
-        }
-
-        this.cleanup();
-
-        if (waterTask != null) {
-            waterTask.cancel();
-        }
-
-        MatchEndEvent event = new MatchEndEvent(this);
-        plugin.getServer().getPluginManager().callEvent(event);
-
-        matches.remove(this);
-    }
-
-    /**
-     * Send Match start message
-     * This isn't used in solo matches
-     * because we get their message in our queue thread
-     * or duel handler
-     */
-    public void sendStartMessage() {
-        if (this.isFreeForAllMatch() || this.isTeamMatch()) {
-            Locale.MATCH_TEAM_STARTMESSAGE.toList().stream().map(s -> s.replace("<arena>", this.arena.getDisplayName()).replace("<kit>", this.kit.getDisplayName())).forEach(this::broadcastMessage);
-        } else if (isHCFMatch()) {
-            Locale.MATCH_HCF_STARTMESSAGE.toList().stream().map(s -> s.replace("<arena>", this.arena.getDisplayName()).replace("<kit>", this.kit.getDisplayName())).forEach(this::broadcastMessage);
-        }
     }
 
     /**
@@ -283,127 +120,6 @@ public abstract class Match {
 
         EnderPearl pearl = this.pearlMap.get(player.getUniqueId());
         if (pearl != null) pearl.remove();
-    }
-
-    /**
-     * Handle the player's respawn
-     *
-     * @param player {@link Player} the player respawning
-     */
-    public void handleRespawn(Player player) {
-        player.setVelocity(player.getLocation().getDirection().setY(1));
-        this.onRespawn(player);
-    }
-
-    /**
-     * Handle the player's death, this method auto detects
-     * any killer if preset or if the player disconnected or not
-     *
-     * @param player {@link Player} The player dying
-     */
-    public void handleDeath(Player player) {
-        if (PlayerUtil.getLastAttacker(player) instanceof CraftPlayer) {
-            Player killer = (Player) PlayerUtil.getLastAttacker(player);
-            this.handleDeath(player, killer, false);
-        } else if (player.getKiller() != null) {
-            this.handleDeath(player, player.getKiller(), false);
-        } else {
-            this.handleDeath(player, null, false);
-        }
-    }
-
-    /**
-     * Main method for handling a player's death while in match
-     * or a player disconnecting while in match
-     *
-     * @param deadPlayer {@link Player} the player that died or disconnected
-     * @param killerPlayer {@link Player} the killer of the player if there is one or else null
-     * @param disconnected {@link Boolean} disconnected
-     */
-    public void handleDeath(Player deadPlayer, Player killerPlayer, boolean disconnected) {
-        deadPlayer.teleport(deadPlayer.getLocation().add(0.0, 1.0, 0.0));
-
-        TeamPlayer teamPlayer = this.getTeamPlayer(deadPlayer);
-
-        if (teamPlayer == null) return;
-
-        teamPlayer.setDisconnected(disconnected);
-
-        if (!teamPlayer.isAlive()) return;
-
-        teamPlayer.setAlive(false);
-        teamPlayer.setParkourCheckpoint(null);
-
-        for ( Player player : getAllPlayers() ) {
-            TeamPlayer otherTeamPlayer = getTeamPlayer(player);
-            if (otherTeamPlayer == null || otherTeamPlayer.isDisconnected()) continue;
-
-            if (teamPlayer.isDisconnected()) {
-                player.sendMessage(Locale.MATCH_DISCONNECTED.toString()
-                        .replace("<relation_color>", getRelationColor(player, deadPlayer).toString())
-                        .replace("<participant_name>", deadPlayer.getName()));
-                continue;
-            }
-            if (kit.getGameRules().isParkour() && killerPlayer != null) {
-                player.sendMessage(Locale.MATCH_WON.toString()
-                        .replace("<relation_color>", getRelationColor(player, killerPlayer).toString())
-                        .replace("<participant_name>", killerPlayer.getName()));
-            } else if (killerPlayer == null) {
-                player.sendMessage(Locale.MATCH_DIED.toString()
-                        .replace("<relation_color>", getRelationColor(player, deadPlayer).toString())
-                        .replace("<participant_name>", deadPlayer.getName()));
-            } else {
-                player.sendMessage(Locale.MATCH_KILLED.toString()
-                        .replace("<relation_color_dead>", getRelationColor(player, deadPlayer).toString())
-                        .replace("<relation_color_killer>", getRelationColor(player, killerPlayer).toString())
-                        .replace("<dead_name>", deadPlayer.getName())
-                        .replace("<killer_name>", killerPlayer.getName()));
-            }
-        }
-
-        this.handleKillEffect(deadPlayer, killerPlayer);
-        this.onDeath(deadPlayer, killerPlayer);
-    }
-
-    /**
-     * Execute the Kill Effect for a specified Player
-     *
-     * @param deadPlayer {@link Player} the player being killed
-     * @param killerPlayer {@link Player} the player killing
-     */
-    public void handleKillEffect(Player deadPlayer, Player killerPlayer) {
-        if (killerPlayer == null) return;
-        Profile profile = plugin.getProfileManager().getByPlayer(killerPlayer);
-        KillEffect killEffect = plugin.getKillEffectManager().getByUUID(profile.getKillEffect());
-        if (killEffect == null) {
-            killEffect = plugin.getKillEffectManager().getDefault();
-        }
-
-        if (killEffect.getEffect() != null) {
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 0.0f);
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 1.0f, 0.0f);
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 1.0f);
-        }
-
-        if (killEffect.isLightning() && !(this.isTheBridgeMatch())) {
-            for ( Player player : this.getPlayers() ) {
-                LightningUtil.spawnLightning(player, deadPlayer.getLocation());
-            }
-        }
-
-        if (killEffect.isDropsClear()) {
-            this.getEntities().forEach(Entity::remove);
-        }
-
-        if (killEffect.isAnimateDeath())
-            PlayerUtil.animateDeath(deadPlayer);
-
-        if (!killEffect.getKillEffectSounds().isEmpty()) {
-            float randomPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
-            for ( KillEffectSound killEffectSound : killEffect.getKillEffectSounds()) {
-                this.getPlayers().forEach(player -> player.playSound(deadPlayer.getLocation(), killEffectSound.getSound(), killEffectSound.getPitch(), randomPitch));
-            }
-        }
     }
 
     /**
@@ -440,8 +156,8 @@ public abstract class Match {
      * @param message {@link String}
      */
     public void broadcastMessage(String message) {
-        getPlayers().forEach(player -> player.sendMessage(message));
-        getSpectators().forEach(player -> player.sendMessage(message));
+        this.getPlayers().forEach(player -> player.sendMessage(message));
+        this.getSpectators().forEach(player -> player.sendMessage(message));
     }
 
     /**
@@ -450,8 +166,8 @@ public abstract class Match {
      * @param sound {@link Sound}
      */
     public void broadcastSound(Sound sound) {
-        getPlayers().forEach(player -> player.playSound(player.getLocation(), sound, 1.0F, 1.0F));
-        getSpectators().forEach(player -> player.playSound(player.getLocation(), sound, 1.0F, 1.0F));
+        this.getPlayers().forEach(player -> player.playSound(player.getLocation(), sound, 1.0F, 1.0F));
+        this.getSpectators().forEach(player -> player.playSound(player.getLocation(), sound, 1.0F, 1.0F));
     }
 
     /**
@@ -479,117 +195,6 @@ public abstract class Match {
     }
 
     /**
-     * Add a player as a spectator for this match
-     *
-     * @param player {@link Player} being added
-     * @param target {@link Player} target that the player is spectating
-     */
-    public void addSpectator(Player player, @Nullable Player target) {
-        //This could happen mane
-        if (this.isEnding()) {
-            player.sendMessage(CC.translate("&cThat match has just ended, failed to add you as a spectator!"));
-            return;
-        }
-
-        this.spectatorList.add(player.getUniqueId());
-
-        MatchSpectatorJoinEvent event = new MatchSpectatorJoinEvent(player, this);
-        plugin.getServer().getPluginManager().callEvent(event);
-
-        PlayerUtil.spectator(player);
-
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        profile.setMatch(this);
-        profile.setSpectating(target);
-        profile.setState(ProfileState.SPECTATING);
-
-        plugin.getProfileManager().handleVisibility(profile);
-        plugin.getProfileManager().refreshHotbar(profile);
-
-        player.teleport(this.getMidSpawn());
-        player.spigot().setCollidesWithEntities(false);
-        player.updateInventory();
-
-        if (!profile.getPlayer().hasPermission("array.profile.silent")) {
-            for (Player otherPlayer : getPlayers()) {
-                otherPlayer.sendMessage(Locale.MATCH_SPECTATE.toString().replace("<spectator>", player.getName()));
-            }
-        }
-
-        // I'll probably change this later onwards
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            this.getPlayers().forEach(p -> p.hidePlayer(player));
-
-            if (profile.getSettings().isShowSpectator()) {
-                getSpectators().forEach(spectator -> {
-                    spectator.showPlayer(player);
-                    player.showPlayer(spectator);
-                });
-            }
-        }, 5L);
-
-    }
-
-    /**
-     * Toggle spectator visibility for specified player
-     *
-     * @param player {@link Player}
-     */
-    public void toggleSpectators(Player player) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
-        profile.getSettings().setShowSpectator(!profile.getSettings().isShowSpectator());
-        plugin.getProfileManager().refreshHotbar(profile);
-
-        if (profile.getSettings().isShowSpectator()) {
-            getSpectators().forEach(spectator -> {
-                spectator.showPlayer(player);
-                player.showPlayer(spectator);
-            });
-            player.sendMessage(CC.translate("&aShowing spectators."));
-        } else {
-            getSpectators().forEach(spectator -> {
-                spectator.hidePlayer(player);
-                player.hidePlayer(spectator);
-            });
-            player.sendMessage(CC.translate("&cHiding spectators."));
-        }
-    }
-
-    /**
-     * Remove the specified spectator and teleport
-     * them back to spawn with their visibility and hotbar being reset
-     *
-     * @param player {@link Player} leaving spectating
-     */
-    public void removeSpectator(Player player) {
-        this.spectatorList.remove(player.getUniqueId());
-
-        MatchSpectatorLeaveEvent event = new MatchSpectatorLeaveEvent(player, this);
-        event.call();
-
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        profile.setState(ProfileState.IN_LOBBY);
-        profile.setMatch(null);
-        profile.setSpectating(null);
-
-        plugin.getProfileManager().refreshHotbar(profile);
-        plugin.getProfileManager().handleVisibility(profile);
-        plugin.getProfileManager().teleportToSpawn(profile);
-
-        player.setAllowFlight(false);
-        player.setFlying(false);
-        player.spigot().setCollidesWithEntities(true);
-        player.updateInventory();
-
-        if (this.isEnding()) return;
-        for ( Player otherPlayer : getPlayers() ) {
-            if (!profile.getPlayer().hasPermission("array.profile.silent")) {
-                otherPlayer.sendMessage(Locale.MATCH_STOPSPEC.toString().replace("<spectator>", player.getName()));
-            }
-        }
-    }
-
-    /**
      * Get both players and spectators in a {@link List}
      *
      * @return {@link List}
@@ -602,36 +207,14 @@ public abstract class Match {
     }
 
     /**
-     * Get hover event for Clickable Inventories of
-     * a specified {@link TeamPlayer}
-     *
-     * @param teamPlayer {@link TeamPlayer} the player whose hover event we are getting
-     * @return {@link String} the hover string of the hover event
-     */
-    protected static String getHoverEvent(TeamPlayer teamPlayer) {
-        return Locale.MATCH_INVENTORY_HOVER.toString().replace("<inventory_name>", teamPlayer.getUsername());
-    }
-
-    /**
-     * Get click event for Clickable Inventories of
-     * a specified {@link TeamPlayer}
-     *
-     * @param teamPlayer {@link TeamPlayer} the player whose click event we are getting
-     * @return {@link String} the command string of the click event
-     */
-    protected static String getClickEvent(TeamPlayer teamPlayer) {
-        return "/viewinv " + teamPlayer.getUniqueId().toString();
-    }
-
-    /**
      * Get the middle spawn of the current arena
      *
      * @return {@link Location} middle spawn
      */
     public Location getMidSpawn() {
-        Location spawn = getArena().getSpawn1();
-        Location spawn2 = getArena().getSpawn2();
-        Location midSpawn = getArena().getSpawn1();
+        Location spawn = this.getArena().getSpawn1();
+        Location spawn2 = this.getArena().getSpawn2();
+        Location midSpawn = this.getArena().getSpawn1();
 
         midSpawn.setX(getAverage(spawn.getX(), spawn2.getX()));
         midSpawn.setZ(getAverage(spawn.getZ(), spawn2.getZ()));
@@ -650,51 +233,6 @@ public abstract class Match {
         double three = one + two;
         three = three / 2;
         return three;
-    }
-
-    /**
-     * Generate match inventory click messages
-     *
-     * @param prefix {@link String} prefix of the message, either winner or loser
-     * @param participant {@link TeamPlayer} the teamPlayer whose inventory message we are displaying
-     * @return {@link BaseComponent}
-     */
-    public BaseComponent[] generateInventoriesComponents(String prefix, TeamPlayer participant) {
-        return generateInventoriesComponents(prefix, Collections.singletonList(participant));
-    }
-
-    /**
-     * Generate match inventory click messages
-     *
-     * @param prefix {@link String} prefix of the message, either winner or loser
-     * @param participants {@link List<TeamPlayer>} the list of teamPlayers whose message we are displaying
-     * @return {@link BaseComponent}
-     */
-    public BaseComponent[] generateInventoriesComponents(String prefix, List<TeamPlayer> participants) {
-        ChatComponentBuilder builder = new ChatComponentBuilder(prefix);
-
-        int totalPlayers = 0;
-        int processedPlayers = 0;
-
-        totalPlayers += participants.size();
-
-        for (TeamPlayer gamePlayer : participants) {
-            processedPlayers++;
-
-            ChatComponentBuilder current = new ChatComponentBuilder(gamePlayer.getUsername())
-                    .attachToEachPart(ChatHelper.hover(CC.translate(getHoverEvent(gamePlayer))))
-                    .attachToEachPart(ChatHelper.click(getClickEvent(gamePlayer)));
-
-            builder.append(current.create());
-
-            if (processedPlayers != totalPlayers) {
-                builder.append(", ");
-                builder.getCurrent().setClickEvent(null);
-                builder.getCurrent().setHoverEvent(null);
-            }
-        }
-
-        return builder.create();
     }
 
     /**
@@ -783,6 +321,16 @@ public abstract class Match {
      */
     public boolean isBattleRushMatch() {
         return this.isSoloMatch() && this instanceof BattleRushMatch;
+    }
+
+    /**
+     * This method is returns true if the
+     * current match related to {@link MLGRushMatch}
+     *
+     * @return {@link Boolean}
+     */
+    public boolean isMLGRushMatch() {
+        return this.isSoloMatch() && this instanceof MLGRushMatch;
     }
 
     /**
@@ -917,12 +465,38 @@ public abstract class Match {
      */
     public abstract Team getTeamB();
 
+    /**
+     * Get a Specific {@link Team} related to the
+     * specified player
+     *
+     * @param player {@link Player} the player whose team we are getting
+     * @return {@link Team} the queried team
+     */
     public abstract Team getTeam(Player player);
 
+    /**
+     * Get a specific {@link TeamPlayer} by the player
+     * linked to the team player
+     *
+     * @param player {@link Player} whose teamPlayer we are getting
+     * @return {@link TeamPlayer} the queried teamPlayer
+     */
     public abstract TeamPlayer getTeamPlayer(Player player);
 
-    public abstract Team getOpponentTeam(Team Team);
+    /**
+     * Get the Opponent {@link Team} of a specified Team
+     *
+     * @param team {@link Team} the team whose opponent team we are getting
+     * @return {@link Team} the queried team
+     */
+    public abstract Team getOpponentTeam(Team team);
 
+    /**
+     * Get the Opponent {@link Team} of a specified Player's Team
+     *
+     * @param player {@link Player} the player whose opponent team we are getting
+     * @return {@link Team} the queried team
+     */
     public abstract Team getOpponentTeam(Player player);
 
     public abstract TeamPlayer getOpponentTeamPlayer(Player player);

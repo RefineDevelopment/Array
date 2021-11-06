@@ -161,8 +161,27 @@ public class TitleAPI {
             sendTitle(player, fadeIn, stay, fadeOut, text, null);
         }
     }
+
     public void sendMatchLoser(Player player) {
         String path = "MATCH.TITLE.LOSER";
+        if (!configHandler.contains(path)) return;
+        if (!configHandler.getBoolean(path + "ENABLED")) return;
+
+        int stay = configHandler.getInteger(path + "STAY", 5);
+        int fadeIn = configHandler.getInteger(path + "FADE_IN", 20);
+        int fadeOut = configHandler.getInteger(path + "FADE_OUT", 20);
+        String text = configHandler.getString(path + "TEXT");
+        String subtitle = configHandler.getString(path + "SUB_TEXT");
+
+        if (subtitle != null && !subtitle.equalsIgnoreCase(" ") && !subtitle.equalsIgnoreCase("")) {
+            sendTitle(player, fadeIn, stay, fadeOut, text, subtitle);
+        } else {
+            sendTitle(player, fadeIn, stay, fadeOut, text, null);
+        }
+    }
+
+    public void sendBedDestroyed(Player player) {
+        String path = "MATCH.TITLE.BED_DESTROYED";
         if (!configHandler.contains(path)) return;
         if (!configHandler.getBoolean(path + "ENABLED")) return;
 

@@ -17,7 +17,7 @@ import xyz.refinedev.practice.clan.ClanRoleType;
 import xyz.refinedev.practice.clan.meta.ClanInvite;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.task.ClanInviteExpireTask;
+import xyz.refinedev.practice.task.clan.ClanInviteExpireTask;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.Clickable;
 
@@ -68,12 +68,7 @@ public class ClanManager {
      * @param clan {@link Clan} the clan we need to save
      */
     public void save(Clan clan) {
-        String clanString = Array.GSON.toJson(clan);
-        Document document = new Document();
-
-        document.put("_id", clan.getUniqueId().toString());
-        document.put("clan", clanString);
-
+        Document document = new Document("clan", Array.GSON.toJson(clan));
         plugin.submitToThread(() -> collection.replaceOne(Filters.eq("_id", clan.getUniqueId().toString()), document, new ReplaceOptions().upsert(true)));
     }
 

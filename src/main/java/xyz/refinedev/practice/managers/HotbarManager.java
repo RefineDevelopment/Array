@@ -8,6 +8,7 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
 import xyz.refinedev.practice.event.meta.player.EventPlayerState;
+import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.hotbar.HotbarItem;
 import xyz.refinedev.practice.profile.hotbar.HotbarLayout;
@@ -158,13 +159,15 @@ public class HotbarManager {
                 Collection<HotbarItem> partyItems = items.stream().filter(HotbarItem::isEnabled).filter(item -> item.getLayout().equals(HotbarLayout.PARTY) || item.getLayout().equals(HotbarLayout.PARTY_LEADER) || item.getLayout().equals(HotbarLayout.PARTY_MEMBER)).collect(Collectors.toList());
                 partyItems.addAll(getCustomItems().stream().filter(item -> item.getLayout().equals(HotbarLayout.PARTY) || item.getLayout().equals(HotbarLayout.PARTY_LEADER) || item.getLayout().equals(HotbarLayout.PARTY_MEMBER)).collect(Collectors.toList()));
 
+                Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getUniqueId());
+
                 for ( HotbarItem item : partyItems ) {
                     if (item.getLayout().equals(HotbarLayout.PARTY_LEADER)) {
-                        if (profile.getParty().isLeader(profile.getUniqueId())) {
+                        if (party.isLeader(profile.getUniqueId())) {
                             toReturn[item.getSlot()] = item.getItem();
                         }
                     } else if (item.getLayout().equals(HotbarLayout.PARTY_MEMBER)) {
-                        if (!profile.getParty().isLeader(profile.getUniqueId())) {
+                        if (!party.isLeader(profile.getUniqueId())) {
                             toReturn[item.getSlot()] = item.getItem();
                         }
                     } else if (item.getLayout().equals(HotbarLayout.PARTY)) {

@@ -17,11 +17,13 @@ import java.util.stream.Collectors;
 @Getter @Setter
 public class Party extends Team {
 
-    private final Array plugin;
+    private final Array plugin = Array.getInstance();
 
-    private final Map<UUID, String> kits;
-    private final List<PartyInvite> invites;
-    private final List<Player> banned;
+    private final Map<UUID, String> kits = new HashMap<>();
+    private final List<PartyInvite> invites = new ArrayList<>();
+    private final List<UUID> banned = new LinkedList<>();
+
+    private final UUID uniqueId;
 
     private int limit = 10;
 
@@ -35,22 +37,16 @@ public class Party extends Team {
      *
      * @param player The Leader of the party
      */
-    public Party(Array plugin, Player player) {
+    public Party(Player player) {
         super(new TeamPlayer(player.getUniqueId(), player.getName()));
+        this.uniqueId = UUID.randomUUID();
+        this.kits.put(player.getUniqueId(), plugin.getPartyManager().getRandomClass());
 
         if (player.hasPermission("array.donator")) {
             this.limit = 50;
         }
 
-        this.plugin = plugin;
-        this.isPublic = false;
-        this.invites = new ArrayList<>();
-        this.banned = new ArrayList<>();
-        this.kits = new HashMap<>();
-
-        this.kits.put(player.getUniqueId(), plugin.getPartyManager().getRandomClass());
-
-        plugin.getPartyManager().getParties().add(this);
+        this.plugin.getPartyManager().getParties().add(this);
     }
 
     /**
@@ -74,7 +70,7 @@ public class Party extends Team {
      * @return {@link PartyInvite}
      */
     public PartyInvite getInvite(UUID uuid) {
-        return this.invites.stream().filter(invite -> invite.getUuid().equals(uuid)).findAny().orElse(null);
+        return this.invites.stream().filter(invite -> invite.getUniqueId().equals(uuid)).findAny().orElse(null);
     }
 
     /**

@@ -12,13 +12,11 @@ import java.util.List;
 @Getter @Setter
 public class StandaloneArena extends Arena {
 
-    private final Array plugin;
+    private final Array plugin = this.getPlugin();
     private final List<StandaloneArena> duplicates = new ArrayList<>();
 
-    public StandaloneArena(Array plugin, String name) {
-        super(plugin, name, ArenaType.STANDALONE);
-
-        this.plugin = plugin;
+    public StandaloneArena(String name) {
+        super(name, ArenaType.STANDALONE);
     }
 
     @Override

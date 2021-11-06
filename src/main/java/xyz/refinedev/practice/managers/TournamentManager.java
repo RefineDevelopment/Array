@@ -11,7 +11,7 @@ import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.task.TournamentTask;
+import xyz.refinedev.practice.task.other.TournamentTask;
 import xyz.refinedev.practice.tournament.Tournament;
 import xyz.refinedev.practice.tournament.TournamentState;
 import xyz.refinedev.practice.tournament.TournamentTeam;
@@ -41,6 +41,7 @@ public class TournamentManager {
     private final Map<UUID, Integer> players = new HashMap<>();
     private final Map<UUID, Integer> matches = new HashMap<>();
     private final Map<Integer, Tournament> tournaments = new HashMap<>();
+    private final Map<Tournament, Integer> tasks = new HashMap<>();
 
     /**
      * Create a {@link Tournament} with the proper details
@@ -57,6 +58,7 @@ public class TournamentManager {
 
         TournamentTask task = new TournamentTask(this.plugin, tournament);
         task.runTaskTimer(this.plugin, 20L, 20L);
+        this.tasks.put(tournament, task.getTaskId());
 
         commandSender.sendMessage("Tournament Created");
     }
@@ -68,35 +70,35 @@ public class TournamentManager {
      * @param player {@link Player} the leader of the party
      */
     public void joinTournament(int id, Player player) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
-        Tournament tournament = this.getTournamentById(id);
-        Party party = profile.getParty();
+        Party party=this.plugin.getPartyManager().getPartyByUUID(player.getUniqueId());
+        Tournament tournament=this.getTournamentById(id);
         if (tournament == null) return;
 
         if (party == null) {
             this.handleJoin(tournament, player);
-        } else {
-            if (!party.isLeader(player.getUniqueId())) {
-                player.sendMessage(Locale.PARTY_NOTLEADER.toString());
-                return;
-            }
+            return;
+        }
 
-            if (party.getPlayers().size() + tournament.getPlayers().size() > tournament.getSize()) {
-                player.sendMessage(CC.RED + "This tournament is full!");
-                return;
-            }
+        if (!party.isLeader(player.getUniqueId())) {
+            player.sendMessage(Locale.PARTY_NOTLEADER.toString());
+            return;
+        }
 
-            if (party.getPlayers().size() != tournament.getTeamSize() || party.getPlayers().size() == 1) {
-                player.sendMessage(CC.RED + "You are in a party that does not match this tournament's description!");
-            }
+        if (party.getPlayers().size() + tournament.getPlayers().size() > tournament.getSize()) {
+            player.sendMessage(CC.RED + "This tournament is full!");
+            return;
+        }
 
-            for ( Player partyPlayer : party.getPlayers() ) {
-                this.handleJoin(tournament, partyPlayer);
-            }
+        if (party.getPlayers().size() != tournament.getTeamSize() || party.getPlayers().size() == 1) {
+            player.sendMessage(CC.RED + "You are in a party that does not match this tournament's description!");
+        }
 
-            if (tournament.getPlayers().size() == tournament.getSize()) {
-                tournament.setTournamentState(TournamentState.STARTING);
-            }
+        for ( Player partyPlayer : party.getPlayers() ) {
+            this.handleJoin(tournament, partyPlayer);
+        }
+
+        if (tournament.getPlayers().size() == tournament.getSize()) {
+            tournament.setTournamentState(TournamentState.STARTING);
         }
     }
 
@@ -106,9 +108,8 @@ public class TournamentManager {
      * @param player {@link Player} the leader of the party
      */
     public void leaveTournament(Player player) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Party party = this.plugin.getPartyManager().getPartyByUUID(player.getUniqueId());
         Tournament tournament = this.getTournamentByUUID(player.getUniqueId());
-        Party party = profile.getParty();
         if (tournament == null) return;
 
         if (party == null || tournament.getTournamentState() == TournamentState.FIGHTING) {
@@ -256,6 +257,33 @@ public class TournamentManager {
     }
 
     /**
+     * Cancel the specified tournament (also the job of twitter)
+     *
+     * @param tournament {@link Tournament} the tournament getting cancelled
+     */
+    public void cancelTournament(Tournament tournament) {
+        this.plugin.getServer().broadcastMessage(Locale.TOURNAMENT_CANCELLED.toString().replace("<id>", String.valueOf(tournament.getId())));
+
+        for (UUID uuid : tournament.getPlayers()) {
+            Profile profile = this.plugin.getProfileManager().getByUUID(uuid);
+            if (profile.isInFight()) {
+                Match match = profile.getMatch();
+                match.end();
+            }
+            this.plugin.getProfileManager().teleportToSpawn(profile);
+        }
+
+        tournament.getPlayers().clear();
+        tournament.getMatches().clear();
+        this.tournaments.remove(tournament.getId(), tournament);
+
+        Integer id = this.tasks.get(tournament);
+        if (id == null) return;
+
+        this.plugin.getServer().getScheduler().cancelTask(id);
+    }
+
+    /**
      * Is a player with this {@link UUID} in the tournament
      *
      * @param uuid {@link UUID} the uuid of the player
@@ -297,6 +325,8 @@ public class TournamentManager {
     public Tournament getTournamentFromMatch(UUID uuid) {
         Integer id = this.matches.get(uuid);
         if (id == null) return null;
+
+
 
         return this.tournaments.get(id);
     }

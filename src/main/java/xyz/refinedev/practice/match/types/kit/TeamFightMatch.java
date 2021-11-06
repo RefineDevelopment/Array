@@ -16,7 +16,7 @@ import xyz.refinedev.practice.util.other.PlayerUtil;
 @Getter
 public class TeamFightMatch extends TeamMatch {
 
-    private final Array plugin = this.getPlugin();
+    private final Array plugin = Array.getInstance();
 
     private final Team teamA;
     private final Team teamB;
@@ -31,24 +31,24 @@ public class TeamFightMatch extends TeamMatch {
     @Override
     public void setupPlayer(Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
-
         if (teamPlayer.isDisconnected()) return;
 
         teamPlayer.setAlive(true);
 
         PlayerUtil.reset(player);
 
+        this.plugin.getSpigotHandler().kitKnockback(player, this.getKit());
         player.setNoDamageTicks(this.getKit().getGameRules().getHitDelay());
 
         Team team = getTeam(player);
 
         Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
-        player.teleport(spawn.add(0, plugin.getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
+        player.teleport(spawn.add(0, this.plugin.getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
 
         teamPlayer.setPlayerSpawn(spawn);
 
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        Party party = profile.getParty();
+        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Party party = this.plugin.getPartyManager().getPartyByUUID(player.getUniqueId());
         String kit = party.getKits().get(player.getUniqueId());
 
         switch (kit) {
@@ -72,10 +72,4 @@ public class TeamFightMatch extends TeamMatch {
         plugin.getNameTagHandler().reloadPlayer(player);
         plugin.getNameTagHandler().reloadOthersFor(player);
     }
-
-    @Override
-    public void onStart() {
-        this.getPlayers().forEach(player -> plugin.getSpigotHandler().kitKnockback(player, this.getKit()));
-    }
-
 }

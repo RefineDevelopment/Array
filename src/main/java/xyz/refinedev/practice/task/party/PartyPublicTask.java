@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.task;
+package xyz.refinedev.practice.task.party;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;

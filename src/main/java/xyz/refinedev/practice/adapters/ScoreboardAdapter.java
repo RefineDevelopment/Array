@@ -19,8 +19,6 @@ import xyz.refinedev.practice.pvpclasses.PvPClass;
 import xyz.refinedev.practice.pvpclasses.classes.Bard;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueProfile;
-import xyz.refinedev.practice.tournament.Tournament;
-import xyz.refinedev.practice.tournament.TournamentType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.other.TimeUtil;
@@ -81,8 +79,8 @@ public class ScoreboardAdapter implements AssembleAdapter {
                     .replace("%splitter%", "┃")
                     .replace("|", "┃")));
 
-            if (profile.getParty() != null && plugin.getTournamentManager().getCurrentTournament() == null) {
-                Party party = profile.getParty();
+            if (profile.hasParty()) {//&& plugin.getTournamentManager().getCurrentTournament() == null) {
+                Party party = this.plugin.getPartyManager().getPartyByUUID(player.getUniqueId());
                 String armorClass = party.getKits().get(player.getUniqueId());
 
                 config.getStringList("SCOREBOARD.PARTY").forEach(line -> lines.add(CC.translate(line
@@ -143,7 +141,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                         break;
                     }
                 }
-            } else if (plugin.getTournamentManager().getCurrentTournament() != null) {
+            }/* else if (plugin.getTournamentManager().getCurrentTournament() != null) {
                 Tournament<?> tournament = plugin.getTournamentManager().getCurrentTournament();
                 String round = tournament.getRound() > 0 ? String.valueOf(tournament.getRound()) : "&fStarting";
                 String participantType = tournament.getType().equals(TournamentType.TEAM) ? "Parties" : "Players";
@@ -157,7 +155,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                         .replace("<participant_max>", String.valueOf(tournament.getMaxPlayers()))
                         .replace("%splitter%", "┃")
                         .replace("|", "┃"))));
-            }
+            }*/
         } else if (profile.isInFight()) {
             Match match = profile.getMatch();
             if (match.isEnding()) {

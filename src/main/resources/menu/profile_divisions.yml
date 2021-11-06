@@ -1,17 +1,35 @@
 TITLE: "Profile Divisions"
-SIZE: 54
+SIZE: 54 #Max Items per page as this menu is paginated
 BUTTONS:
-  UNLOCKED:
-    XP_BASED:
-
-    ELO_BASED:
-
-  EQUIPPED:
-    XP_BASED:
-
-    ELO_BASED:
-
-  LOCKED:
-    XP_BASED:
-
-    ELO_BASED:
+  XP:
+    LOCKED:
+      TITLE: "&r<division_display_name>"
+      LORE:
+        - "&f Experience Required: &c<division_experience>"
+        - "&f Current Progress: &r<division_bar>"
+    UNLOCKED:
+      TITLE: "&r<division_display_name> &7(UNLOCKED)"
+      LORE:
+        - "&f Experience Required: &c<division_experience>"
+        - "&f Current Progress: &c0/0 &r<division_bar> &7(100%)"
+    EQUIPPED:
+      TITLE: "&r<division_display_name> &7(CURRENT)"
+      LORE:
+        - "&f Experience Required: &c<division_experience>"
+        - "&f Current Progress: &c0/0 &r<division_bar> &7(100%)"
+  ELO:
+    LOCKED:
+      TITLE: "&r<division_display_name>"
+      LORE:
+        - "&f ELO Required: &c<division_min_elo>"
+        - "&f Current Progress: &r<division_bar>"
+    UNLOCKED:
+      TITLE: "&r<division_display_name> &7(UNLOCKED)"
+      LORE:
+        - "&f ELO Required: &c<division_min_elo>"
+        - "&f Current Progress: &c0/0 &r<division_bar> &7(100%)"
+    EQUIPPED:
+      TITLE: "&r<division_display_name> &7(CURRENT)"
+      LORE:
+        - "&f ELO Required: &c<division_min_elo>"
+        - "&f Current Progress: &c0/0 &r<division_bar> &7(100%)"

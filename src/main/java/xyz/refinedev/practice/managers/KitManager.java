@@ -42,14 +42,14 @@ public class KitManager {
         if (configurationSection == null || configurationSection.getKeys(false).isEmpty()) return;
 
         if (plugin.getConfigHandler().isHCF_ENABLED()) {
-            teamFight = new Kit(plugin,"HCFTeamFight");
+            teamFight = new Kit("HCFTeamFight");
             teamFight.setDisplayIcon(new ItemBuilder(Material.BEACON).clearEnchantments().clearFlags().build());
         }
 
         for ( String kitName : configurationSection.getKeys(false) ) {
-            Kit kit = new Kit(plugin, kitName);
+            Kit kit = new Kit(kitName);
 
-            if (kit.getName().equals(this.teamFight.getName())) continue;
+            if (plugin.getConfigHandler().isHCF_ENABLED()) if (kit.getName().equals(this.teamFight.getName())) continue;
 
             this.load(kit);
             this.setupQueue(kit);
@@ -105,6 +105,7 @@ public class KitManager {
         kit.getGameRules().setBuild(config.getBoolean(path + ".game-rules.build"));
         kit.getGameRules().setBridge(config.getBoolean(path + ".game-rules.bridge"));
         kit.getGameRules().setBoxing(config.getBoolean(path + ".game-rules.boxing"));
+        kit.getGameRules().setBedwars(config.getBoolean(path + ".game-rules.bedwars"));
         kit.getGameRules().setSpleef(config.getBoolean(path + ".game-rules.spleef"));
         kit.getGameRules().setParkour(config.getBoolean(path + ".game-rules.parkour"));
         kit.getGameRules().setCombo(config.getBoolean(path + ".game-rules.combo"));
@@ -166,6 +167,7 @@ public class KitManager {
         config.set(path + ".game-rules.build", kit.getGameRules().isBuild());
         config.set(path + ".game-rules.bridge", kit.getGameRules().isBridge());
         config.set(path + ".game-rules.boxing", kit.getGameRules().isBoxing());
+        config.set(path + ".game-rules.bedwars", kit.getGameRules().isBedwars());
         config.set(path + ".game-rules.battlerush", kit.getGameRules().isBattleRush());
         config.set(path + ".game-rules.spleef", kit.getGameRules().isSpleef());
         config.set(path + ".game-rules.parkour", kit.getGameRules().isParkour());

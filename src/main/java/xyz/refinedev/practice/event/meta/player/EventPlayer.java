@@ -15,6 +15,8 @@ public class EventPlayer extends PlayerSnapshot {
 	private Location lastLocation;
 	private int roundWins = 0;
 
+	private boolean isInKoth;
+
 	public EventPlayer(Player player) {
 		super(player.getUniqueId(), player.getName());
 	}

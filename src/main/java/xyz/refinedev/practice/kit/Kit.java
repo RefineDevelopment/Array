@@ -25,7 +25,7 @@ import java.util.List;
 @Getter @Setter
 public class Kit {
 
-    private final Array plugin;
+    private final Array plugin = Array.getInstance();
 
     private final List<LeaderboardsAdapter> eloLeaderboards = new ArrayList<>();
     private final List<LeaderboardsAdapter> winLeaderboards = new ArrayList<>();
@@ -41,8 +41,7 @@ public class Kit {
     private String displayName, knockbackProfile;
     private Queue unrankedQueue, rankedQueue, clanQueue;
 
-    public Kit(Array plugin, String name) {
-        this.plugin = plugin;
+    public Kit(String name) {
         this.name = name;
         this.displayName = CC.RED + name;
         this.displayIcon = new ItemStack(Material.DIAMOND_CHESTPLATE);

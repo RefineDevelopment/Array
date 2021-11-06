@@ -9,12 +9,10 @@ import xyz.refinedev.practice.arena.ArenaType;
 @Getter @Setter
 public class SharedArena extends Arena {
     
-    private final Array plugin;
+    private final Array plugin = this.getPlugin();
 
-    public SharedArena(Array plugin, String name) {
-        super(plugin, name, ArenaType.SHARED);
-
-        this.plugin = plugin;
+    public SharedArena(String name) {
+        super(name, ArenaType.SHARED);
     }
 
     @Override

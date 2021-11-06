@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
@@ -17,7 +18,8 @@ import xyz.refinedev.practice.match.types.SoloMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
-import xyz.refinedev.practice.task.MatchRespawnTask;
+import xyz.refinedev.practice.task.match.MatchBattleRushTask;
+import xyz.refinedev.practice.task.match.MatchRespawnTask;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
@@ -37,6 +39,8 @@ import java.util.List;
 @Getter
 public class BattleRushMatch extends SoloMatch {
 
+    private final Array plugin = Array.getInstance();
+    
     private int playerAPoints = 0;
     private int playerBPoints = 0;
 
@@ -76,28 +80,24 @@ public class BattleRushMatch extends SoloMatch {
         teamPlayer.setAlive(true);
 
         PlayerUtil.reset(player);
-        if (!player.hasMetadata("noDenyMove")) {
-            PlayerUtil.denyMovement(player);
-        } else {
-            player.removeMetadata("noDenyMove", this.getPlugin());
-        }
+        PlayerUtil.denyMovement(player);
 
-        if (getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
-        if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
+        if (this.getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
+        if (this.getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
-        this.getPlugin().getSpigotHandler().kitKnockback(player, getKit());
+        this.plugin.getSpigotHandler().kitKnockback(player, getKit());
         player.setNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         Location spawn = getPlayerA().equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
-        player.teleport(spawn.add(0, this.getPlugin().getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
+        player.teleport(spawn.add(0, this.plugin.getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
 
         teamPlayer.setPlayerSpawn(spawn);
 
         this.getKit().applyToPlayer(player);
         this.giveKit(player);
 
-        this.getPlugin().getNameTagHandler().reloadPlayer(player);
-        this.getPlugin().getNameTagHandler().reloadOthersFor(player);
+        this.plugin.getNameTagHandler().reloadPlayer(player);
+        this.plugin.getNameTagHandler().reloadOthersFor(player);
     }
 
     /**
@@ -110,18 +110,8 @@ public class BattleRushMatch extends SoloMatch {
 
         this.playerAPortals = LocationUtil.getNearbyPortalLocations(this.getArena().getSpawn1());
         this.playerBPortals = LocationUtil.getNearbyPortalLocations(this.getArena().getSpawn2());
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (!isFighting()) return;
-
-                if (getDuration().equalsIgnoreCase("15:00") || (getDuration().equalsIgnoreCase("15:01") && isFighting()) || (getDuration().equalsIgnoreCase("15:02") && isFighting())) {
-                    end();
-                    this.cancel();
-                }
-            }
-        }.runTaskTimer(this.getPlugin(), 20L, 20L);
+        
+        new MatchBattleRushTask(this.plugin, this).runTaskTimer(this.plugin, 20L, 20L);
     }
 
     @Override
@@ -146,12 +136,14 @@ public class BattleRushMatch extends SoloMatch {
         TeamPlayer roundWinner = getOpponentTeamPlayer(deadPlayer);
 
         if (this.canEnd()) {
-            this.getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
+            MatchSnapshot snapshot = new MatchSnapshot(roundLoser, roundWinner);
             PlayerUtil.reset(deadPlayer);
-            this.end();
+
+            this.getSnapshots().add(snapshot);
+            this.plugin.getMatchManager().end(this);
         }
 
-        this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> PlayerUtil.forceRespawn(deadPlayer));
+        this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> PlayerUtil.forceRespawn(deadPlayer));
     }
 
     @Override
@@ -162,19 +154,19 @@ public class BattleRushMatch extends SoloMatch {
         if (teamPlayer.isDisconnected()) return;
 
         for ( Player otherPlayer : this.getPlayers() ) {
-            Profile otherProfile = this.getPlugin().getProfileManager().getByPlayer(otherPlayer);
-            this.getPlugin().getProfileManager().handleVisibility(otherProfile);
+            Profile otherProfile = this.plugin.getProfileManager().getByPlayer(otherPlayer);
+            this.plugin.getProfileManager().handleVisibility(otherProfile);
         }
 
-        Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
-        this.getPlugin().getProfileManager().handleVisibility(profile);
+        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        this.plugin.getProfileManager().handleVisibility(profile);
 
         player.getInventory().clear();
         player.setAllowFlight(true);
         player.setFlying(true);
 
-        MatchRespawnTask respawnTask = new MatchRespawnTask(this.getPlugin(), player, this);
-        respawnTask.runTaskTimer(this.getPlugin(), 20L, 20L);
+        MatchRespawnTask respawnTask = new MatchRespawnTask(this.plugin, player, this);
+        respawnTask.runTaskTimer(this.plugin, 20L, 20L);
     }
 
     /**
@@ -200,11 +192,11 @@ public class BattleRushMatch extends SoloMatch {
         }
 
         if (this.canEnd()) {
-            this.end();
+            this.plugin.getMatchManager().end(this);
             return;
         }
 
-        TaskUtil.run(this::start);
+        TaskUtil.run(() -> this.plugin.getMatchManager().start(this));
     }
 
     /**

@@ -50,16 +50,6 @@ public class SumoSolo extends Event {
     }
 
     @Override
-    public boolean isFreeForAll() {
-        return false;
-    }
-
-    @Override
-    public boolean isTeam() {
-        return false;
-    }
-
-    @Override
     public void onJoin(Player player) {
         this.getPlugin().getSpigotHandler().knockback(player, this.getEventManager().getSumoKB());
     }

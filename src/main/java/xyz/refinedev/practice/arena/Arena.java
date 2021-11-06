@@ -25,7 +25,7 @@ import java.util.List;
 @Getter @Setter
 public abstract class Arena {
 
-    private final Array plugin;
+    private final Array plugin = Array.getInstance();
     private List<Kit> kits = new ArrayList<>();
 
     private final String name;
@@ -39,8 +39,7 @@ public abstract class Arena {
     private int deathHeight = 25, buildHeight = 5;
     private boolean active, duplicate, disablePearls;
 
-    public Arena(Array plugin, String name, ArenaType arenaType) {
-        this.plugin = plugin;
+    public Arena(String name, ArenaType arenaType) {
         this.name = name;
         this.type = arenaType;
         this.displayName = CC.RED + name;

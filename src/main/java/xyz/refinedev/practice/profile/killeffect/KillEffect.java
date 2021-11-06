@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.profile.killeffect;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -27,6 +28,7 @@ public class KillEffect {
     private final List<KillEffectSound> killEffectSounds = new ArrayList<>();
     private final List<String> description = Arrays.asList(" &fThis is the default", " &fdescription for kill", " &feffects, you can change", " &fthem in killeffects.yml");
 
+    @SerializedName("_id")
     private final UUID uniqueId;
     private final String name;
 

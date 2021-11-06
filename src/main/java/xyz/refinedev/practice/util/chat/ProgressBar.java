@@ -14,6 +14,10 @@ import org.bukkit.ChatColor;
 
 public class ProgressBar {
 
+    public static String getBar(int current, int total) {
+        return ProgressBar.getProgressBar(current, total, 40, '\u258e', ChatColor.GREEN, ChatColor.GRAY);
+    }
+
     public static String getProgressBar(int current, int max, int totalBars, char symbol, ChatColor completedColor, ChatColor notCompletedColor) {
         float percent = (float) current / max;
         int progressBars = (int) (totalBars * percent);

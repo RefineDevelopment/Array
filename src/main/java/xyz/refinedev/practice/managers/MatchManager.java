@@ -25,6 +25,7 @@ import xyz.refinedev.practice.match.types.SoloMatch;
 import xyz.refinedev.practice.match.types.TeamMatch;
 import xyz.refinedev.practice.match.types.kit.BattleRushMatch;
 import xyz.refinedev.practice.match.types.kit.BoxingMatch;
+import xyz.refinedev.practice.match.types.kit.MLGRushMatch;
 import xyz.refinedev.practice.match.types.kit.solo.SoloBedwarsMatch;
 import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
 import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
@@ -34,9 +35,9 @@ import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
-import xyz.refinedev.practice.task.MatchBowCooldownTask;
-import xyz.refinedev.practice.task.MatchPearlCooldownTask;
-import xyz.refinedev.practice.task.MatchSnapshotCleanupTask;
+import xyz.refinedev.practice.task.match.MatchBowCooldownTask;
+import xyz.refinedev.practice.task.match.MatchPearlCooldownTask;
+import xyz.refinedev.practice.task.match.MatchSnapshotCleanupTask;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
 import xyz.refinedev.practice.util.chat.ChatHelper;
@@ -125,6 +126,7 @@ public class MatchManager {
         plugin.getServer().getPluginManager().callEvent(event);
     }
 
+
     /**
      * End the {@link Match}
      * This resets the players, updates the match's state
@@ -150,9 +152,9 @@ public class MatchManager {
             }
         }
 
-        for ( MatchSnapshot matchSnapshot : match.getSnapshots() ) {
-            matchSnapshot.setCreated(System.currentTimeMillis());
-            plugin.getMatchManager().getSnapshotMap().put(matchSnapshot.getTeamPlayer().getUniqueId(), matchSnapshot);
+        for ( MatchSnapshot snapshot : match.getSnapshots() ) {
+            snapshot.setCreated(System.currentTimeMillis());
+            plugin.getMatchManager().getSnapshotMap().put(snapshot.getTeamPlayer().getUniqueId(), snapshot);
         }
 
         for ( Player player : match.getPlayers() ) {
@@ -168,15 +170,16 @@ public class MatchManager {
         }
 
         for ( TeamPlayer gamePlayer : match.getTeamPlayers()) {
+            if (gamePlayer == null) return;
             Player player = gamePlayer.getPlayer();
             if (gamePlayer.isDisconnected() || player == null) continue;
-            for ( BaseComponent[] components : match.generateEndComponents(player) ) {
+            for ( BaseComponent[] components :  match.generateEndComponents(player) ) {
                 player.spigot().sendMessage(components);
             }
         }
 
         for (Player player : match.getSpectators()) {
-            if (player == null) continue;
+            if (player == null) return;
             for (BaseComponent[] components : match.generateEndComponents(player)) {
                 player.spigot().sendMessage(components);
             }
@@ -185,13 +188,15 @@ public class MatchManager {
 
         if (plugin.getConfigHandler().isRATINGS_ENABLED()) {
             for ( Player player : match.getPlayers() ) {
-                Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+                Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+
                 profile.setIssueRating(true);
                 profile.setRatingArena(arena);
 
                 plugin.getArenaManager().sendRatingMessage(player, arena);
             }
         }
+
 
         this.cleanup(match);
 
@@ -310,7 +315,7 @@ public class MatchManager {
             EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 1.0f);
         }
 
-        if (killEffect.isLightning() && !(match.isTheBridgeMatch())) {
+        if (killEffect.isLightning() && !(match.isTheBridgeMatch() || match.isBedwarsMatch() || match.isMLGRushMatch() || match.isBattleRushMatch())) {
             for ( Player player : match.getPlayers() ) {
                 LightningUtil.spawnLightning(player, deadPlayer.getLocation());
             }
@@ -440,17 +445,19 @@ public class MatchManager {
      * @param match {@link Match} being cleaned up
      */
     public void cleanup(Match match) {
-        if (match.getKit().getGameRules().isBuild() && match.getPlacedBlocks().size() > 0) {
-            match.getPlacedBlocks().forEach(l -> l.getBlock().setType(Material.AIR));
-            match.getPlacedBlocks().clear();
-        }
-        if (match.getKit().getGameRules().isBuild() && match.getChangedBlocks().size() > 0) {
-            match.getChangedBlocks().forEach(blockState -> blockState.getLocation().getBlock().setType(blockState.getType()));
-            match.getChangedBlocks().clear();
-        }
+        plugin.getServer().getScheduler().runTask(plugin, () -> {
+            if (match.getKit().getGameRules().isBuild() && match.getPlacedBlocks().size() > 0) {
+                match.getPlacedBlocks().forEach(l -> l.getBlock().setType(Material.AIR));
+                match.getPlacedBlocks().clear();
+            }
+            if (match.getKit().getGameRules().isBuild() && match.getChangedBlocks().size() > 0) {
+                match.getChangedBlocks().forEach(blockState -> blockState.getLocation().getBlock().setType(blockState.getType()));
+                match.getChangedBlocks().clear();
+            }
 
-        match.getArena().setActive(false);
-        match.getEntities().forEach(Entity::remove);
+            match.getArena().setActive(false);
+            match.getEntities().forEach(Entity::remove);
+        });
     }
 
     /**
@@ -505,8 +512,8 @@ public class MatchManager {
             processedPlayers++;
 
             ChatComponentBuilder current = new ChatComponentBuilder(gamePlayer.getUsername())
-                    .attachToEachPart(ChatHelper.hover(CC.translate(this.getHoverEvent(gamePlayer))))
-                    .attachToEachPart(ChatHelper.click(this.getClickEvent(gamePlayer)));
+                    .attachToEachPart(ChatHelper.hover(CC.translate(getHoverEvent(gamePlayer))))
+                    .attachToEachPart(ChatHelper.click(getClickEvent(gamePlayer)));
 
             builder.append(current.create());
 
@@ -562,7 +569,7 @@ public class MatchManager {
         } else if (kit.getGameRules().isBedwars()) {
             return new SoloBedwarsMatch(queue, playerA, playerB, kit, arena, queueType);
         } else if (kit.getGameRules().isMlgRush()) {
-            //
+            return new MLGRushMatch(queue, playerA, playerB, kit, arena, queueType);
         } else if (kit.getGameRules().isBoxing()) {
             return new BoxingMatch(queue, playerA, playerB, kit, arena, queueType);
         } else if (kit.getGameRules().isBattleRush()) {

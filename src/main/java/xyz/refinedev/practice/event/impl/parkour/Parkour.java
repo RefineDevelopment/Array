@@ -49,11 +49,6 @@ public class Parkour extends Event {
     }
 
     @Override
-    public boolean isTeam() {
-        return false;
-    }
-
-    @Override
     public void handleJoin(Player player) {
         this.getEventPlayers().put(player.getUniqueId(), new EventPlayer(player));
 

@@ -46,11 +46,6 @@ public class LMS extends Event {
     }
 
     @Override
-    public boolean isTeam() {
-        return false;
-    }
-
-    @Override
     public void onJoin(Player player) {
 
     }

@@ -1,10 +1,7 @@
 package xyz.refinedev.practice.match.types.kit.solo;
 
 import lombok.Getter;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
@@ -19,11 +16,11 @@ import xyz.refinedev.practice.match.types.SoloMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
-import xyz.refinedev.practice.task.MatchRespawnTask;
+import xyz.refinedev.practice.task.match.MatchRespawnTask;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
-import xyz.refinedev.practice.util.other.TaskUtil;
+import xyz.refinedev.practice.util.other.TitleAPI;
 
 import java.util.List;
 
@@ -39,23 +36,17 @@ import java.util.List;
 @Getter
 public class SoloBedwarsMatch extends SoloMatch {
 
-    //Bridge scoring system but with a bed, in respawning system you wait 3 seconds and do PlayerUtil#spectator
-    //to the killed player and THEN respawn the player (add title screens)
     //instead of ooo we do ✔, teams are same Red or Blue
     //
     //Sword, Axe, Pickaxe, 64 Wool, Shears
     //
     //Endstone, Wood, Bed
     //
-    //Play LEVEL_UP on kill
-    //
     //Wool armor fully covered
 
     private final Array plugin = this.getPlugin();
 
-    private int playerAPoints = 0;
-    private int playerBPoints = 0;
-
+    private boolean playerABedDestroyed, playerBBedDestroyed;
     private List<Location> playerABed, playerBBed;
 
     private int round = 0;
@@ -129,15 +120,15 @@ public class SoloBedwarsMatch extends SoloMatch {
 
     @Override
     public boolean canEnd() {
-        return this.getPlayerA().isDisconnected() || this.getPlayerAPoints() == 3 || this.getPlayerB().isDisconnected() || this.getPlayerBPoints() == 3;
+        return (this.getPlayerA().isDisconnected() || (!this.getPlayerA().isAlive() && this.playerABedDestroyed)) || (this.getPlayerB().isDisconnected() || (!this.getPlayerB().isAlive() && this.playerBBedDestroyed));
     }
 
     @Override
     public Player getWinningPlayer() {
-        if (this.getPlayerA().isDisconnected() || this.getPlayerBPoints() == 3) {
+        if (this.getPlayerA().isDisconnected() || (!this.getPlayerA().isAlive() && this.playerABedDestroyed)) {
             return this.getPlayerB().getPlayer();
         }
-        if (this.getPlayerB().isDisconnected() || this.getPlayerAPoints() == 3) {
+        if (this.getPlayerB().isDisconnected() || (!this.getPlayerB().isAlive() && this.playerBBedDestroyed)) {
             return this.getPlayerA().getPlayer();
         }
         return null;
@@ -181,9 +172,9 @@ public class SoloBedwarsMatch extends SoloMatch {
     }
 
     /**
-     * Execute tasks when a player enters the portal
+     * Execute tasks when a player breaks opponent's bed
      *
-     * @param player {@link Player} the player entering the portal
+     * @param player {@link Player} the player breaking opponent's bed
      */
     public void handleBed(Player player) {
         TeamPlayer teamPlayer = this.getTeamPlayer(player);
@@ -196,18 +187,14 @@ public class SoloBedwarsMatch extends SoloMatch {
             return;
         }
 
-        if (this.getTeamPlayerA().equals(teamPlayer)) {
-            this.playerAPoints++;
-        } else {
-            this.playerBPoints++;
+        if (this.getTeamPlayerA().getUniqueId().equals(player.getUniqueId())) {
+            this.playerBBedDestroyed = true;
+        } else if (this.getTeamPlayerB().getUniqueId().equals(player.getUniqueId())) {
+            this.playerABedDestroyed = true;
         }
 
-        if (this.canEnd()) {
-            this.end();
-            return;
-        }
-
-        TaskUtil.run(this::start);
+        TitleAPI.sendBedDestroyed(this.getOpponentPlayer(player));
+        player.playSound(player.getLocation(), Sound.WITHER_DEATH, 20F, 1F);
     }
 
     /**

@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.task;
+package xyz.refinedev.practice.task.other;
 
 import com.google.common.collect.Sets;
 import lombok.RequiredArgsConstructor;
@@ -52,10 +52,9 @@ public class TournamentTask extends BukkitRunnable {
 
                     //Making Teams for those who joined with a party
                     for (UUID player : players) {
-                        Profile profile = this.plugin.getProfileManager().getByUUID(player);
-                        Party party = profile.getParty();
+                        Party party = this.plugin.getPartyManager().getPartyByUUID(player);
 
-                        if (profile.hasParty()) {
+                        if (party != null) {
                             List<UUID> uuids = party.getPlayers().stream().map(Player::getUniqueId).collect(Collectors.toList());
 
                             TournamentTeam team = new TournamentTeam(party.getLeader().getUniqueId(), uuids);
@@ -113,15 +112,14 @@ public class TournamentTask extends BukkitRunnable {
 
                         Kit kit = this.plugin.getKitManager().getByName(this.tournament.getKitName());
                         if (kit == null) {
-                            tournament.getPlayers().forEach(tournament::removePlayer);
-                            this.plugin.getTournamentManager().removeTournament(tournament.getId());
+                            this.plugin.getTournamentManager().cancelTournament(tournament);
                             this.cancel();
                             return;
                         }
+
                         Arena arena = this.plugin.getArenaManager().getByKit(kit);
                         if (arena == null) {
-                            tournament.getPlayers().forEach(tournament::removePlayer);
-                            this.plugin.getTournamentManager().removeTournament(tournament.getId());
+                            this.plugin.getTournamentManager().cancelTournament(tournament);
                             this.cancel();
                             return;
                         }

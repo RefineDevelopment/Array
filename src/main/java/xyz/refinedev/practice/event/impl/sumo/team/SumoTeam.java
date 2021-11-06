@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 @Setter
 public class SumoTeam extends Event {
 
-    private final Array plugin;
+    private final Array plugin = this.getPlugin();
     public final List<EventGroup> teams = new ArrayList<>();
 
     private BukkitRunnable waterTask;
@@ -58,8 +58,6 @@ public class SumoTeam extends Event {
     public SumoTeam(Array plugin, Player host, EventTeamSize size) {
         super(plugin, plugin.getEventManager(),"Sumo", new PlayerSnapshot(host.getUniqueId(), host.getName()), size.getMaxParticipants(), EventType.SUMO, size);
 
-        this.plugin = plugin;
-
         for ( int i = 0; i <= size.getTeams(); i++ ) {
             EventGroupColor color = EventGroupColor.values()[i];
             EventGroup eventGroup = new EventGroup(size.getMaxTeamPlayers(), color);
@@ -67,11 +65,6 @@ public class SumoTeam extends Event {
         }
 
         this.setEvent_Prefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
-    }
-
-    @Override
-    public boolean isFreeForAll() {
-        return false;
     }
 
     @Override

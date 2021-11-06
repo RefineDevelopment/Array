@@ -116,6 +116,7 @@ public enum Locale {
     CLAN_SELF_PROMOTE("CLAN.SELF_PROMOTE", "&7[&c&lClan&7] &7You can't self promote!"),
     CLAN_KICKED("CLAN.KICKED_BROADCAST", "&7[&cClan&7] &c<player> &7has been kicked from the Clan!"),
     CLAN_BANNED("CLAN.BANNED_BROADCAST", "&7[&cClan&7] &c<player> &7has been banned from the Clan!"),
+    CLAN_CHAT_ERROR("CLAN.CHAT_ERROR", "&8[&c&lClan&8] &7Your clan chat is currently enabled, please disable it first."),
     CLAN_JOIN("CLAN.JOINED", "&7[&cClan&7] &c<player> &7has joined the Clan!"),
     CLAN_PROMOTE("CLAN.PROMOTE", "&7[&cClan&7] &c<player> &7has been promoted to &c&l<role>&7!"),
     CLAN_DEMOTE("CLAN.DEMOTE", "&7[&cClan&7] &c<player> &7has been demoted to &c&l<role>&7!"),

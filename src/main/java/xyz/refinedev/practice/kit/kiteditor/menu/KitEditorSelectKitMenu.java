@@ -12,10 +12,8 @@ import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class KitEditorSelectKitMenu extends Menu {
 
@@ -30,8 +28,12 @@ public class KitEditorSelectKitMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        for (Kit kit : plugin.getKitManager().getKits()) {
-            if (!kit.isEnabled()) continue;
+        List<Kit> kits = plugin.getKitManager().getKits().stream()
+                .filter(Kit::isEnabled)
+                .sorted(Comparator.comparing(k -> k.getGameRules().isEditable(), Comparator.reverseOrder()))
+                .collect(Collectors.toList());
+
+        for (Kit kit : kits) {
             buttons.put(buttons.size(), new KitDisplayButton(kit));
         }
 

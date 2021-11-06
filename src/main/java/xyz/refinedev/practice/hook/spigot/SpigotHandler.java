@@ -52,7 +52,7 @@ public class SpigotHandler {
      * @param kit The kit whose knockback profile we are getting
      */
     public void kitKnockback(Player player, Kit kit) {
-        plugin.getSpigotHandler().knockback(player, kit.getKnockbackProfile());
+        spigotType.getKnockbackType().appleKitKnockback(player, kit);
     }
 
     /**

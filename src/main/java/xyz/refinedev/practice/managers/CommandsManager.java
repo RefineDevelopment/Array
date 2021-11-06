@@ -26,8 +26,6 @@ import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileProvider;
 import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.profile.killeffect.KillEffectProvider;
-import xyz.refinedev.practice.tournament.TournamentType;
-import xyz.refinedev.practice.tournament.TournamentTypeProvider;
 import xyz.refinedev.practice.util.command.CommandService;
 
 /**
@@ -112,7 +110,6 @@ public class CommandsManager {
         drink.bind(Kit.class).toProvider(new KitProvider());
         drink.bind(Profile.class).toProvider(new ProfileProvider());
         drink.bind(EventType.class).toProvider(new EventProvider());
-        drink.bind(TournamentType.class).toProvider(new TournamentTypeProvider());
         drink.bind(KillEffect.class).toProvider(new KillEffectProvider());
         drink.bind(RatingType.class).toProvider(new RatingTypeProvider());
     }

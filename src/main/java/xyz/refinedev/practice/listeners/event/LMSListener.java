@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.listeners.event;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.event.Listener;
+import xyz.refinedev.practice.Array;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -11,7 +13,8 @@ import org.bukkit.event.Listener;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class LMSListener implements Listener {
 
-
+    private final Array plugin;
 }

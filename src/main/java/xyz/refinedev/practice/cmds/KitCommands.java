@@ -119,7 +119,7 @@ public class KitCommands {
             return;
         }
 
-        Kit kit = new Kit(plugin, kitName);
+        Kit kit = new Kit(kitName);
         kit.setEnabled(true);
         kit.getGameRules().setRanked(true);
         
@@ -379,6 +379,13 @@ public class KitCommands {
             case "boxing": {
                 kit.getGameRules().setBoxing(!kit.getGameRules().isBoxing());
                 player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isBoxing() ? "&aenabled " : "&cdisabled ") + "&7boxing for &c" + kit.getDisplayName()));
+                break;
+            }
+            case "bedwars": {
+                kit.getGameRules().setBedwars(!kit.getGameRules().isBedwars());
+                kit.getGameRules().setBuild(kit.getGameRules().isBedwars());
+                kit.getGameRules().setEditable(!kit.getGameRules().isBedwars());
+                player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully " + (kit.getGameRules().isBedwars() ? "&aenabled " : "&cdisabled ") + "&7bedwars for &c" + kit.getDisplayName()));
                 break;
             }
             default: {

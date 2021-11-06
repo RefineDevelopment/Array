@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.clan;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -30,8 +31,9 @@ public class Clan {
     private final List<ClanProfile> captains;
     private final List<UUID> bannedPlayers;
 
-    private final String name;
+    @SerializedName("_id")
     private final UUID uniqueId;
+    private final String name;
 
     private ClanProfile leader;
     private String description = "This is the default Description, use /clan setdesc <text> to setup the description for your clan.";

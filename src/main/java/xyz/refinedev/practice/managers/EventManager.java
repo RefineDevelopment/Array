@@ -15,6 +15,7 @@ import xyz.refinedev.practice.event.impl.spleef.Spleef;
 import xyz.refinedev.practice.event.impl.sumo.solo.SumoSolo;
 import xyz.refinedev.practice.event.impl.sumo.team.SumoTeam;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
+import xyz.refinedev.practice.util.location.KothPoint;
 import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.other.Cooldown;
@@ -36,11 +37,13 @@ public class EventManager {
 	private Location bracketsSpawn1, bracketsSpawn2, bracketsSpectator;
 	private Location gulagSpawn1, gulagSpawn2, gulagSpectator;
 	private Location lmsSpawn, parkourSpawn, spleefSpawn, omaSpawn;
+	private Location kothSpawn1, kothSpawn2, kothSpec;
+	private KothPoint kothPoint;
 
 	private List<Location> OITCSpawns = new ArrayList<>();
 	private Location OITCSpectator;
 
-	private String sumoKB = "default", gulagKB = "default", omaKB = "default", spleefKB = "default";
+	private String sumoKB = "default", gulagKB = "default", omaKB = "default", spleefKB = "default", kothKB = "default";
 
     public void setActiveEvent(Event event) {
 		plugin.getServer().getOnlinePlayers().stream().map(plugin.getProfileManager()::getByPlayer).filter(profile -> profile.isInLobby() && !profile.getKitEditor().isActive()).forEach(plugin.getProfileManager()::refreshHotbar);
@@ -146,6 +149,11 @@ public class EventManager {
 				this.setActiveEvent(parkour);
 				return true;
 			}
+			case KOTH: {
+				//Koth koth = new Koth(plugin, player, size);
+				//this.setActiveEvent(koth);
+				return true;
+			}
 		}
 		return false;
 	}
@@ -158,6 +166,8 @@ public class EventManager {
 				return bracketsSpawn1;
 			case GULAG:
 				return gulagSpawn1;
+			case KOTH:
+				return kothSpawn1;
 		}
 		return null;
 	}
@@ -170,6 +180,8 @@ public class EventManager {
 				return bracketsSpawn2;
 			case GULAG:
 				return gulagSpawn2;
+			case KOTH:
+				return kothSpawn2;
 		}
 		return null;
 	}
@@ -198,6 +210,8 @@ public class EventManager {
 				return gulagSpectator;
 			case OITC:
 				return OITCSpectator;
+			case KOTH:
+				return kothSpec;
 		}
 		return null;
 	}

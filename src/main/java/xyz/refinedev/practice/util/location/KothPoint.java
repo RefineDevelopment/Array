@@ -5,13 +5,10 @@ import lombok.Setter;
 import org.bukkit.Location;
 import xyz.refinedev.practice.arena.cuboid.Cuboid;
 
+@Getter @Setter
 public class KothPoint {
 
-    @Getter
-    @Setter
     private Location corner1, corner2;
-
-    @Getter
     private Cuboid cuboid;
 
     public KothPoint(Location corner1, Location corner2) {
@@ -19,11 +16,10 @@ public class KothPoint {
         this.corner2 = corner2;
     }
 
-    public static KothPoint fromString(String input) {
+    public KothPoint(String input) {
         String[] info = input.split(":");
-        Location loc1 = LocationUtil.deserialize(info[0]);
-        Location loc2 = LocationUtil.deserialize(info[1]);
-        return new KothPoint(loc1, loc2);
+        this.corner1 = LocationUtil.deserialize(info[0]);
+        this.corner2 = LocationUtil.deserialize(info[1]);
     }
 
     public Cuboid toCuboid() {

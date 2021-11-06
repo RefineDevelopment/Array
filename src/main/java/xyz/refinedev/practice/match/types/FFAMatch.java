@@ -53,11 +53,14 @@ public class FFAMatch extends Match {
 
         PlayerUtil.reset(player);
 
-        if (getKit().getGameRules().isStickSpawn() || getKit().getGameRules().isSumo() || getKit().getGameRules().isParkour()) PlayerUtil.denyMovement(player);
-        if (!getKit().getGameRules().isNoItems() || !getKit().getGameRules().isSumo()) TaskUtil.runLater(() -> plugin.getProfileManager().getByUUID(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
+        if (this.getKit().getGameRules().isStickSpawn() || this.getKit().getGameRules().isSumo() || this.getKit().getGameRules().isParkour()) PlayerUtil.denyMovement(player);
+        if (this.getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
+        if (this.getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
-        if (getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
-        if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
+        if (!this.getKit().getGameRules().isNoItems() || !this.getKit().getGameRules().isSumo()) {
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            TaskUtil.runLater(() -> profile.getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
+        }
 
         plugin.getSpigotHandler().kitKnockback(player, getKit());
         player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
@@ -150,7 +153,7 @@ public class FFAMatch extends Match {
         }
 
         if (this.canEnd()) {
-            this.end();
+            this.plugin.getMatchManager().end(this);
         } else {
             if (!teamPlayer.isDisconnected()) {
                 deadPlayer.teleport(this.getMidSpawn());
@@ -164,7 +167,6 @@ public class FFAMatch extends Match {
 
     @Override
     public void onRespawn(Player player) {
-        player.teleport(player.getLocation().clone().add(0, 3, 0));
     }
 
     @Override
@@ -267,8 +269,8 @@ public class FFAMatch extends Match {
         for ( String line : Locale.MATCH_INVENTORY_MESSAGE.toList() ) {
             if (line.equalsIgnoreCase("<inventories>")) {
 
-                BaseComponent[] winners = generateInventoriesComponents(Locale.MATCH_INVENTORY_WINNERS.toString(), this.getTeamPlayer(this.getWinningPlayer()));
-                BaseComponent[] losers = generateInventoriesComponents(Locale.MATCH_INVENTORY_LOSERS.toString(), this.team.getDeadTeamPlayers());
+                BaseComponent[] winners = this.plugin.getMatchManager().generateInventoriesComponents(Locale.MATCH_INVENTORY_WINNERS.toString(), this.getTeamPlayer(this.getWinningPlayer()));
+                BaseComponent[] losers = this.plugin.getMatchManager().generateInventoriesComponents(Locale.MATCH_INVENTORY_LOSERS.toString(), this.team.getDeadTeamPlayers());
 
                 componentsList.add(winners);
                 componentsList.add(losers);

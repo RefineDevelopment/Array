@@ -57,38 +57,6 @@ COOLDOWNS:
   ENDER_PEARL: 15
   BOW: 10
 
-EVENT:
-  COUNTDOWN_INTERVAL: 60
-  COOLDOWN_INTERVAL: 15
-  TITLE:
-    STARTED:
-      ENABLED: true
-      TEXT: "&aEvent Started"
-      SUB_TEXT: ""
-      FADE_IN: 5
-      STAY: 20
-      FADE_OUT: 5
-    COUNTDOWN:
-      ENABLED: true
-      TEXT: "&7Starting in &c<seconds>"
-      SUB_TEXT: ""
-      FADE_IN: 5
-      STAY: 20
-      FADE_OUT: 5
-    WINNER:
-      ENABLED: true
-      TEXT: "&aVICTORY!"
-      SUB_TEXT: "&fGood Event!"
-      FADE_IN: 5
-      STAY: 20
-      FADE_OUT: 5
-    LOSER:
-      ENABLED: true
-      TEXT: "&cDEFEAT!"
-      SUB_TEXT: "&fBetter Luck next time!"
-      FADE_IN: 5
-      STAY: 20
-      FADE_OUT: 5
 MATCH:
   SPAWN_YLEVEL_ADD: 6
   COUNTDOWN_INTERVAL: 3
@@ -110,13 +78,6 @@ MATCH:
       FADE_IN: 5
       STAY: 20
       FADE_OUT: 5
-    RESPAWN_COUNTDOWN:
-      ENABLED: true
-      TEXT: "&c<seconds>"
-      SUB_TEXT: ""
-      FADE_IN: 5
-      STAY: 20
-      FADE_OUT: 5
     WINNER:
       ENABLED: true
       TEXT: "&aVICTORY!"
@@ -131,6 +92,28 @@ MATCH:
       FADE_IN: 5
       STAY: 20
       FADE_OUT: 5
+    BED_DESTROYED:
+      ENABLED: true
+      TEXT: "&cBED DESTROYED"
+      SUB_TEXT: "&fYou won't be able to respawn!"
+      FADE_IN: 5
+      STAY: 20
+      FADE_OUT: 5
+    RESPAWN_COUNTDOWN:
+      ENABLED: true
+      TEXT: "&c<seconds>"
+      SUB_TEXT: ""
+      FADE_IN: 5
+      STAY: 20
+      FADE_OUT: 5
+    RESPAWN:
+      ENABLED: true
+      TEXT: "&aRespawned!"
+      SUB_TEXT: ""
+      FADE_IN: 5
+      STAY: 20
+      FADE_OUT: 5
+
 
 SOCIAL:
   DISCORD: discord.gg/refine

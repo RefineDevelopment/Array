@@ -106,7 +106,9 @@ public class MatchListener implements Listener {
                 volatileLocations.addAll(soloBedwarsMatch.getPlayerABed());
                 volatileLocations.addAll(soloBedwarsMatch.getPlayerBBed());
             } else if (match instanceof TeamBedwarsMatch) {
-
+                TeamBedwarsMatch teamBedwarsMatch = (TeamBedwarsMatch) match;
+                //volatileLocations.addAll(teamBedwarsMatch.getPlayerABed());
+                //volatileLocations.addAll(teamBedwarsMatch.getPlayerBBed());
             }
 
             for ( Location location : volatileLocations ) {
@@ -172,7 +174,7 @@ public class MatchListener implements Listener {
         if (Math.abs(event.getBlock().getX()) > 300 && Math.abs(event.getBlock().getZ()) > 300) {
             Match match = null;
 
-            for ( Match filterMatch : Match.getMatches() ) {
+            for ( Match filterMatch : this.plugin.getMatchManager().getMatches() ) {
                 if (filterMatch.getPlacedBlocks().contains(event.getBlock().getLocation())) {
                     match = filterMatch;
                 }
@@ -220,7 +222,8 @@ public class MatchListener implements Listener {
             }
         } else if (match.getKit().getGameRules().isBedwars() || match.getKit().getGameRules().isMlgRush()) {
             if (block.getType() == Material.BED || block.getType() == Material.BED_BLOCK) {
-                event.setCancelled(true);
+                match.getChangedBlocks().add(block.getState());
+                block.setType(Material.AIR);
 
                 if (match instanceof SoloBedwarsMatch) {
                     SoloBedwarsMatch soloBedwarsMatch = (SoloBedwarsMatch) match;
@@ -229,6 +232,8 @@ public class MatchListener implements Listener {
                     TeamBedwarsMatch teamBedwarsMatch = (TeamBedwarsMatch) match;
                     //teamBedwarsMatch.handleBed(player);
                 } else if (match instanceof MLGRushMatch) {
+                    event.setCancelled(true);
+
                     MLGRushMatch mlgRushMatch = (MLGRushMatch) match;
                     mlgRushMatch.handleBed(player);
                 }
@@ -333,7 +338,7 @@ public class MatchListener implements Listener {
             }
         });
 
-        if (match.isTheBridgeMatch() || match.isBattleRushMatch()) {
+        if (match.isTheBridgeMatch() || match.isBattleRushMatch() || match.isBedwarsMatch()) {
             if (PlayerUtil.getLastAttacker(player) instanceof CraftPlayer) {
                 Player killer = (Player) PlayerUtil.getLastAttacker(player);
                 killer.playSound(killer.getLocation(), Sound.LEVEL_UP, 20F, 15F);
@@ -342,7 +347,7 @@ public class MatchListener implements Listener {
 
         event.getDrops().clear();
         match.getEntities().addAll(entities);
-        match.handleDeath(player, player.getKiller(), false);
+        this.plugin.getMatchManager().handleDeath(match, player);
     }
 
     /**
@@ -469,18 +474,10 @@ public class MatchListener implements Listener {
                 }
             }
             if (event.getCause() == EntityDamageEvent.DamageCause.LAVA && match.getKit().getGameRules().isLavaKill()) {
-                profile.getMatch().handleDeath(player, null, false);
+                this.plugin.getMatchManager().handleDeath(match, player, null, false);
                 return;
             }
-            if (profile.getMatch().isEnding()) {
-                event.setCancelled(true);
-                return;
-            }
-            if (match.getKit().getGameRules().isParkour()) {
-                event.setCancelled(true);
-                return;
-            }
-            if (!profile.getMatch().isFighting()) {
+            if (match.isEnding() || !match.isFighting() || match.getKit().getGameRules().isParkour()) {
                 event.setCancelled(true);
                 return;
             }
@@ -504,16 +501,17 @@ public class MatchListener implements Listener {
         if (event.getFrom().getBlockY() - 1 > event.getTo().getBlockY() && match.getArena().getFallDeathHeight() >= event.getTo().getBlockY()) {
             if (match.getKit().getGameRules().isVoidSpawn()) {
                 TeamPlayer teamPlayer = match.getTeamPlayer(player);
-                if (teamPlayer != null) {
-                    player.teleport(teamPlayer.getPlayerSpawn());
-                } else {
+                if (teamPlayer == null) {
                     player.teleport(match.getMidSpawn());
+                } else {
+                    player.teleport(teamPlayer.getPlayerSpawn());
                 }
                 return;
             }
-            match.handleDeath(event.getPlayer());
+
+            this.plugin.getMatchManager().handleDeath(match, event.getPlayer());
             if (match.isTheBridgeMatch() || match.isBattleRushMatch()) {
-                match.handleRespawn(event.getPlayer());
+                this.plugin.getMatchManager().handleRespawn(match, event.getPlayer());
             }
         }
     }
@@ -582,7 +580,7 @@ public class MatchListener implements Listener {
 
             if (match.isBoxingMatch()) {
                 if (attackedTeamPlayer.getHits() >= 100) {
-                    teamMatch.handleDeath(damaged);
+                    this.plugin.getMatchManager().handleDeath(match, damaged);
                     return;
                 }
             }
@@ -596,7 +594,7 @@ public class MatchListener implements Listener {
             return;
         }
 
-        if (!match.isTeamMatch() && !match.isHCFMatch()) return;
+        if (!match.isTeamMatch()) return;
 
         Team attackerTeam = match.getTeam(attacker);
         Team damagedTeam = match.getTeam(damaged);
@@ -605,6 +603,7 @@ public class MatchListener implements Listener {
             event.setCancelled(true);
             return;
         }
+
         if (attackerTeam.equals(damagedTeam)) {
             event.setCancelled(true);
             return;
@@ -834,17 +833,16 @@ public class MatchListener implements Listener {
         if (!match.getKit().getGameRules().isParkour()) return;
         if (profile.getParkourCheckpoints().contains(event.getClickedBlock().getLocation())) return;
 
-
         if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock().getType() == Material.GOLD_PLATE && profile.getParkourCheckpoints() != null) {
             profile.getParkourCheckpoints().add(event.getClickedBlock().getLocation());
 
             Player opponentPlayer = match.getOpponentPlayer(player);
-
-            if (opponentPlayer != null) {
-                match.handleDeath(opponentPlayer, null, false);
-            } else {
-                match.end();
+            if (opponentPlayer == null) {
+                this.plugin.getMatchManager().end(match);
+                return;
             }
+
+            this.plugin.getMatchManager().handleDeath(match, opponentPlayer);
         }
 
         if (event.getAction().equals(Action.PHYSICAL) && event.getClickedBlock().getType() == Material.IRON_PLATE && profile.getParkourCheckpoints() != null) {
@@ -870,18 +868,17 @@ public class MatchListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerLeave(PlayerQuitEvent event) {
-        Profile profile = plugin.getProfileManager().getByUUID(event.getPlayer().getUniqueId());
+        Player player = event.getPlayer();
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         Match match = profile.getMatch();
 
         if (profile.isInFight() || profile.isInMatch()) {
-            if (match.isStarting()) {
-                match.getTask().cancel();
-            }
-            match.handleDeath(event.getPlayer(), null, true);
+            if (match.isStarting()) match.getTask().cancel();
+            this.plugin.getMatchManager().handleDeath(match, player, null, true);
         }
 
         if (profile.isSpectating()) {
-            profile.getMatch().removeSpectator(event.getPlayer());
+            this.plugin.getMatchManager().removeSpectator(match, player);
         }
     }
 

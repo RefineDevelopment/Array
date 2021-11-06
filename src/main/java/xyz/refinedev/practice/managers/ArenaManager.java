@@ -59,13 +59,13 @@ public class ArenaManager {
             ArenaType arenaType = ArenaType.valueOf(section.getString(path + "type"));
             switch (arenaType) {
                 case SHARED: {
-                    SharedArena sharedArena = new SharedArena(plugin, name);
+                    SharedArena sharedArena = new SharedArena(name);
                     this.load(sharedArena);
                     this.calculateRatings(sharedArena);
                     break;
                 }
                 case STANDALONE: {
-                    StandaloneArena standaloneArena = new StandaloneArena(plugin, name);
+                    StandaloneArena standaloneArena = new StandaloneArena(name);
                     this.load(standaloneArena);
                     this.calculateRatings(standaloneArena);
                     this.loadDuplicates(standaloneArena);
@@ -74,9 +74,9 @@ public class ArenaManager {
             }
         }
         plugin.logger("&7Loaded &c" + arenas.size() + " &7Arena(s)!");
-        if (arenas.size() != 0) {
-            this.loadChunks();
+        if (!arenas.isEmpty()) {
             plugin.logger("&7Loading Chunks for &c" + arenas.size() + " &7Arena(s), this may cause lag");
+            this.loadChunks();
         }
     }
 
@@ -129,7 +129,7 @@ public class ArenaManager {
             Location max = LocationUtil.deserialize(config.getString(path + ".duplicates." + duplicateId + ".max"));
             Location min = LocationUtil.deserialize(config.getString(path + ".duplicates." + duplicateId + ".min"));
 
-            StandaloneArena duplicate = new StandaloneArena(plugin, arena.getName() + "#" + duplicateId);
+            StandaloneArena duplicate = new StandaloneArena(arena.getName() + "#" + duplicateId);
             duplicate.setDisplayName(arena.getDisplayName());
             duplicate.setSpawn1(spawn1);
             duplicate.setSpawn2(spawn2);
@@ -252,6 +252,8 @@ public class ArenaManager {
      */
     public void loadChunks() {
         for ( Arena arena : this.arenas ) {
+            if (arena.getMax() == null || arena.getMin() == null) continue;
+
             int arenaMinX = arena.getMin().getBlockX() >> 4;
             int arenaMinZ = arena.getMin().getBlockZ() >> 4;
             int arenaMaxX = arena.getMax().getBlockX() >> 4;
@@ -272,33 +274,6 @@ public class ArenaManager {
             for ( int x = arenaMinX; x <=  arenaMaxX; x++ ) {
                 for ( int z = arenaMinZ; z <=  arenaMaxZ; z++ ) {
                     arena.getMin().getWorld().getChunkAt(x, z);
-                }
-            }
-
-            if (arena.isStandalone()) {
-                for ( StandaloneArena saArena : ((StandaloneArena) arena).getDuplicates() ) {
-                    arenaMinX = saArena.getMin().getBlockX() >> 4;
-                    arenaMinZ = saArena.getMin().getBlockZ() >> 4;
-                    arenaMaxX = saArena.getMax().getBlockX() >> 4;
-                    arenaMaxZ = saArena.getMax().getBlockZ() >> 4;
-
-                    if (arenaMinX > arenaMaxX) {
-                        int lastArenaMinX = arenaMinX;
-                        arenaMinX = arenaMaxX;
-                        arenaMaxX = lastArenaMinX;
-                    }
-
-                    if (arenaMinZ > arenaMaxZ) {
-                        int lastArenaMinZ = arenaMinZ;
-                        arenaMinZ = arenaMaxZ;
-                        arenaMaxZ = lastArenaMinZ;
-                    }
-
-                    for ( int x = arenaMinX; x <=  arenaMaxX; x++ ) {
-                        for ( int z = arenaMinZ; z <=  arenaMaxZ; z++ ) {
-                            saArena.getMin().getWorld().getChunkAt(x, z);
-                        }
-                    }
                 }
             }
         }
@@ -337,6 +312,6 @@ public class ArenaManager {
      * @return {@link String} the bar
      */
     public String getBar(int currentRating, int totalRating) {
-        return ProgressBar.getProgressBar(currentRating, totalRating, 40, '|', ChatColor.GREEN, ChatColor.RED);
+        return ProgressBar.getProgressBar(currentRating, totalRating, 10, '\u258e', ChatColor.GREEN, ChatColor.RED);
     }
 }

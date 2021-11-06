@@ -162,12 +162,7 @@ public class KillEffectManager {
      * @param killEffect {@link KillEffect} to save
      */
     public void save(KillEffect killEffect) {
-        String serialized = Array.GSON.toJson(killEffect);
-        Document document = new Document();
-
-        document.put("_id", killEffect.getUniqueId().toString());
-        document.put("killEffect", serialized);
-
+        Document document = new Document("killEffect", Array.GSON.toJson(killEffect));
         plugin.submitToThread(() -> collection.replaceOne(Filters.eq("_id", killEffect.getUniqueId().toString()), document, new ReplaceOptions().upsert(true)));
     }
 

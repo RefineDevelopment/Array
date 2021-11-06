@@ -19,7 +19,6 @@ import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.kiteditor.KitEditor;
 import xyz.refinedev.practice.match.Match;
-import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.history.ProfileHistory;
 import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.profile.rank.TablistRank;
@@ -31,6 +30,7 @@ import xyz.refinedev.practice.util.other.Cooldown;
 
 import java.util.*;
 
+//TODO: Bitch its JSON Time!
 @Getter @Setter
 @RequiredArgsConstructor
 public class Profile {
@@ -41,7 +41,6 @@ public class Profile {
     private final Map<Kit, ProfileStatistics> statisticsData = new LinkedHashMap<>();
     private final List<ClanInvite> clanInviteList = new ArrayList<>();
     private final List<Location> parkourCheckpoints = new ArrayList<>();
-
     private final List<ProfileHistory> unrankedMatchHistory = new ArrayList<>();
     private final List<ProfileHistory> rankedMatchHistory = new ArrayList<>();
 
@@ -52,7 +51,7 @@ public class Profile {
     private int kills, deaths, experience;
     private ProfileState state = ProfileState.IN_LOBBY;
 
-    private Party party;
+    //TODO Remove this
     private Match match;
     private Queue queue;
     private Clan clan;
@@ -65,6 +64,7 @@ public class Profile {
     private RematchProcedure rematchData;
 
     private Arena ratingArena;
+    //TODO: Make this UUID Based
     private Player spectating;
     private boolean build, silent, issueRating;
 
@@ -92,6 +92,11 @@ public class Profile {
         return this.killEffect != null && this.killEffect.equals(killEffect.getUniqueId());
     }
 
+    /**
+     * Add XP to the profile
+     *
+     * @param experience {@link Integer} xp amount being added
+     */
     public void addExperience(int experience) {
         this.setExperience(experience);
 
@@ -160,6 +165,6 @@ public class Profile {
     }
 
     public boolean hasParty() {
-        return party != null;
+        return this.plugin.getPartyManager().isInParty(uniqueId);
     }
 }

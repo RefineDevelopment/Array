@@ -75,10 +75,13 @@ SCOREBOARD:
       - " &cRed: &r<red_points_formatted>"
       - " &9Blue: &r<blue_points_formatted>"
     SOLO_BEDWARS_ADDITION:
+      - "&c&lFight"
+      - " &cRed: &r<bedwars_red_formatted>"
+      - " &cBlue: &r<bedwars_blue_formatted>"
       - ""
-      - ""
-      - ""
-      - ""
+      - " &fRival: &c<opponent_name>"
+      - " &fDuration: &c<match_duration>"
+      - " &fKills: &c<your_kills>"
     TEAM:
       - "&c&lFight"
       - " &fDuration: &c<match_duration>"
@@ -95,10 +98,12 @@ SCOREBOARD:
       - " &cRed: &r<red_points_formatted>"
       - " &9Blue: &r<blue_points_formatted>"
     TEAM_BEDWARS:
+      - "&c&lFight"
+      - " &cRed: &r<bedwars_red_formatted>"
+      - " &cBlue: &r<bedwars_blue_formatted>"
       - ""
-      - ""
-      - ""
-      - ""
+      - " &fDuration: &c<match_duration>"
+      - " &fKills: &c<your_kills>"
     TEAM_HCF:
       - "&c&lFight"
       - " &fDuration: &c<match_duration>"
@@ -153,6 +158,13 @@ SCOREBOARD:
         - "&c&lRound #<match_round>&7:"
         - " &cRed: &r<red_points_formatted>"
         - " &9Blue: &r<blue_points_formatted>"
+      SOLO_BEDWARS:
+        - "&c&lFight"
+        - " &cRed: &r<bedwars_red_formatted>"
+        - " &cBlue: &r<bedwars_blue_formatted>"
+        - ""
+        - " &fDuration: &c<match_duration>"
+        - " &fArena: &c<match_arena>"
       TEAM:
         - "&c&lFight"
         - " &fKit: &c<match_kit>"
@@ -169,6 +181,13 @@ SCOREBOARD:
         - "&c&lRound #<match_round>&7:"
         - " &cRed: &r<red_points_formatted>"
         - " &9Blue: &r<blue_points_formatted>"
+      TEAM_BEDWARS:
+        - "&c&lFight"
+        - " &cRed: &r<bedwars_red_formatted>"
+        - " &cBlue: &r<bedwars_blue_formatted>"
+        - ""
+        - " &fDuration: &c<match_duration>"
+        - " &fArena: &c<match_arena>"
       TEAM_HCF:
         - "&c&lFight"
         - " &fKit: &c<match_kit>"

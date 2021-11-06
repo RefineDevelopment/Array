@@ -16,7 +16,7 @@ public class PartyInvite {
         return System.currentTimeMillis() >= this.expiresAt;
     }
     
-    public UUID getUuid() {
+    public UUID getUniqueId() {
         return this.uuid;
     }
 }

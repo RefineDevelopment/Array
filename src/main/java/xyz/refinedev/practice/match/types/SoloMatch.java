@@ -25,6 +25,7 @@ import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.profile.history.ProfileHistory;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
+import xyz.refinedev.practice.task.match.MatchTimedTask;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
 import xyz.refinedev.practice.util.elo.EloUtil;
@@ -97,20 +98,21 @@ public class SoloMatch extends Match {
 
         PlayerUtil.reset(player);
 
-        if (getKit().getGameRules().isStickSpawn() || getKit().getGameRules().isSumo() || getKit().getGameRules().isParkour()) PlayerUtil.denyMovement(player);
+        if (this.getKit().getGameRules().isStickSpawn() || this.getKit().getGameRules().isSumo() || this.getKit().getGameRules().isParkour()) PlayerUtil.denyMovement(player);
+        if (this.getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
+        if (this.getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
-        if (!getKit().getGameRules().isNoItems() || !getKit().getGameRules().isSumo()) TaskUtil.runLater(() -> plugin.getProfileManager().getByUUID(player.getUniqueId()).getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
+        if (!this.getKit().getGameRules().isNoItems() || !this.getKit().getGameRules().isSumo()) {
+            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            TaskUtil.runLater(() -> profile.getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
+        }
 
-        if (getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
-
-        if (getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
-
-        plugin.getSpigotHandler().kitKnockback(player, getKit());
-        player.setMaximumNoDamageTicks(getKit().getGameRules().getHitDelay());
+        plugin.getSpigotHandler().kitKnockback(player, this.getKit());
+        player.setMaximumNoDamageTicks(this.getKit().getGameRules().getHitDelay());
 
         Location spawn = playerA.equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
 
-        if (getKit().getGameRules().isSumo()) {
+        if (this.getKit().getGameRules().isSumo()) {
             player.teleport(spawn);
         } else {
             player.teleport(spawn.add(0, plugin.getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
@@ -118,7 +120,7 @@ public class SoloMatch extends Match {
 
         teamPlayer.setPlayerSpawn(spawn);
 
-        if (getKit().getGameRules().isParkour()) teamPlayer.setParkourCheckpoint(spawn);
+        if (this.getKit().getGameRules().isParkour()) teamPlayer.setParkourCheckpoint(spawn);
 
         plugin.getNameTagHandler().reloadPlayer(player);
         plugin.getNameTagHandler().reloadOthersFor(player);
@@ -131,17 +133,7 @@ public class SoloMatch extends Match {
     @Override
     public void onStart() {
         if (this.getKit().getGameRules().isTimed()) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    if (!isFighting()) return;
-
-                    if (getDuration().equalsIgnoreCase("01:00") || (getDuration().equalsIgnoreCase("01:01")  && isFighting()) || (getDuration().equalsIgnoreCase("01:02") && isFighting())) {
-                        end();
-                        this.cancel();
-                    }
-                }
-            }.runTaskTimer(plugin, 20L, 20L);
+            new MatchTimedTask(plugin, this).runTaskTimer(plugin, 20L, 20L);
         }
     }
 
@@ -160,7 +152,7 @@ public class SoloMatch extends Match {
             this.getSnapshots().add(matchSnapshot);
         }
 
-        if (getKit().getGameRules().isTimed()) {
+        if (this.getKit().getGameRules().isTimed()) {
             TeamPlayer roundLoser = this.getTeamPlayer(this.getWinningPlayer());
             TeamPlayer roundWinner = this.getOpponentTeamPlayer(this.getOpponentPlayer(this.getWinningPlayer()));
             getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
@@ -191,7 +183,7 @@ public class SoloMatch extends Match {
                     plugin.getProfileManager().teleportToSpawn(profile);
                 }
             }
-        }.runTaskLater(plugin, (getKit().getGameRules().isSumo() || getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : plugin.getConfigHandler().getTELEPORT_DELAY() * 20L);
+        }.runTaskLater(plugin, (this.getKit().getGameRules().isSumo() || getKit().getGameRules().isWaterKill() || getKit().getGameRules().isLavaKill() || getKit().getGameRules().isParkour()) ? 0L : plugin.getConfigHandler().getTELEPORT_DELAY() * 20L);
 
         Player winningPlayer = getWinningPlayer();
         Player losingPlayer = getOpponentPlayer(winningPlayer);
@@ -334,7 +326,7 @@ public class SoloMatch extends Match {
 
     @Override
     public Player getWinningPlayer() {
-        if (getKit().getGameRules().isTimed()) {
+        if (this.getKit().getGameRules().isTimed()) {
             if (playerA.isDisconnected()) {
                 return playerB.getPlayer();
             } else if (playerB.isDisconnected()) {
@@ -344,7 +336,7 @@ public class SoloMatch extends Match {
             } else {
                 return playerB.getPlayer();
             }
-        } else if (getKit().getGameRules().isParkour()) {
+        } else if (this.getKit().getGameRules().isParkour()) {
             if (playerA.isDisconnected()) {
                 return playerB.getPlayer();
             } else if (playerA.isAlive()) {
@@ -484,7 +476,7 @@ public class SoloMatch extends Match {
         }
 
         if (this.canEnd()) {
-            this.end();
+            this.plugin.getMatchManager().end(this);
         } else {
             if (!roundLoser.isDisconnected()) {
                 deadPlayer.teleport(getMidSpawn());
@@ -534,8 +526,8 @@ public class SoloMatch extends Match {
         for ( String line : Locale.MATCH_INVENTORY_MESSAGE.toList() ) {
             if (line.equalsIgnoreCase("<inventories>")) {
 
-                BaseComponent[] winners = generateInventoriesComponents(Locale.MATCH_INVENTORY_WINNER.toString(), getTeamPlayer(getWinningPlayer()));
-                BaseComponent[] losers = generateInventoriesComponents(Locale.MATCH_INVENTORY_LOSER.toString(), getOpponentTeamPlayer(getWinningPlayer()));
+                BaseComponent[] winners = this.plugin.getMatchManager().generateInventoriesComponents(Locale.MATCH_INVENTORY_WINNER.toString(), getTeamPlayer(getWinningPlayer()));
+                BaseComponent[] losers = this.plugin.getMatchManager().generateInventoriesComponents(Locale.MATCH_INVENTORY_LOSER.toString(), getOpponentTeamPlayer(getWinningPlayer()));
 
                 ChatComponentBuilder builder = new ChatComponentBuilder("");
 

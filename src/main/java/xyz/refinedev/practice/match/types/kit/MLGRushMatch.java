@@ -39,7 +39,7 @@ import java.util.List;
 @Getter
 public class MLGRushMatch extends SoloMatch {
 
-    private final Array plugin = this.getPlugin();
+    private final Array plugin = Array.getInstance();
 
     private int playerAPoints = 0;
     private int playerBPoints = 0;
@@ -112,7 +112,7 @@ public class MLGRushMatch extends SoloMatch {
         this.playerABed = LocationUtil.getNearbyBedLocations(this.getArena().getSpawn1());
         this.playerBBed = LocationUtil.getNearbyBedLocations(this.getArena().getSpawn2());
 
-        this.cleanup();
+        this.plugin.getMatchManager().cleanup(this);
     }
 
     @Override
@@ -137,9 +137,11 @@ public class MLGRushMatch extends SoloMatch {
         TeamPlayer roundWinner = getOpponentTeamPlayer(deadPlayer);
 
         if (this.canEnd()) {
-            this.getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
+            MatchSnapshot snapshot = new MatchSnapshot(roundLoser, roundWinner);
             PlayerUtil.reset(deadPlayer);
-            this.end();
+
+            this.getSnapshots().add(snapshot);
+            this.plugin.getMatchManager().end(this);
         }
 
         this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(this.getPlugin(), () -> PlayerUtil.forceRespawn(deadPlayer));
@@ -189,11 +191,11 @@ public class MLGRushMatch extends SoloMatch {
         }
 
         if (this.canEnd()) {
-            this.end();
+            this.plugin.getMatchManager().end(this);
             return;
         }
 
-        TaskUtil.run(this::start);
+        TaskUtil.run(() -> this.plugin.getMatchManager().start(this));
     }
 
     /**

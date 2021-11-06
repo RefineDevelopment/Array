@@ -10,7 +10,6 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.tournament.Tournament;
-import xyz.refinedev.practice.tournament.impl.TeamTournament;
 import xyz.refinedev.practice.util.chat.CC;
 
 import java.util.List;
@@ -41,13 +40,5 @@ public class PartyListener implements Listener {
             party.broadcast(CC.translate("&b" + party.getLeader().getUsername() + " &ehas been randomly promoted to leader because the previous leader left."));
         }
         plugin.getPartyManager().leave(player, party);
-
-        Tournament<?> tournament = plugin.getTournamentManager().getCurrentTournament();
-        if (tournament == null) return;
-        if (!(tournament instanceof TeamTournament)) return;
-        if (!tournament.isParticipating(player.getUniqueId())) return;
-
-        TeamTournament teamTournament = (TeamTournament) tournament;
-        teamTournament.leave(party);
     }
 }

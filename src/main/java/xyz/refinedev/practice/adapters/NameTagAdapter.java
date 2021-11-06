@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.match.team.TeamPlayer;
+import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.nametags.construct.NameTagInfo;
 import xyz.refinedev.practice.util.nametags.provider.NameTagProvider;
@@ -67,10 +68,13 @@ public class NameTagAdapter extends NameTagProvider {
         Player viewer = viewerProfile.getPlayer();
         Player target = targetProfile.getPlayer();
 
-        if (viewerProfile.getParty() != null && viewerProfile.getParty().containsPlayer(target)) {
+        Party viewerParty = this.plugin.getPartyManager().getPartyByUUID(viewer.getUniqueId());
+        Party targetParty = this.plugin.getPartyManager().getPartyByUUID(target.getUniqueId());
+
+        if (viewerParty != null && viewerParty.containsPlayer(target)) {
             return createNameTag(plugin.getConfigHandler().getPartyColor().toString(), "");
         }
-        if (targetProfile.getParty() != null && targetProfile.getParty().containsPlayer(viewer)) {
+        if (targetParty != null && targetParty.containsPlayer(viewer)) {
             return createNameTag(plugin.getConfigHandler().getPartyColor().toString(), "");
         }
         String color = plugin.getConfigHandler().getDefaultColor().equals("<rank_color>") ? plugin.getProfileManager().getColor(targetProfile).toString() : ChatColor.valueOf(plugin.getConfigHandler().getDefaultColor()).toString();

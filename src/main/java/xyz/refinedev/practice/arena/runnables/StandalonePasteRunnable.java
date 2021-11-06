@@ -59,7 +59,7 @@ public class StandalonePasteRunnable extends DuplicateArenaRunnable {
         Location a = new Location(this.copiedArena.getSpawn1().getWorld(), aX, this.copiedArena.getSpawn1().getY(), aZ, this.copiedArena.getSpawn1().getYaw(), this.copiedArena.getSpawn1().getPitch());
         Location b = new Location(this.copiedArena.getSpawn1().getWorld(), bX, this.copiedArena.getSpawn2().getY(), bZ, this.copiedArena.getSpawn2().getYaw(), this.copiedArena.getSpawn2().getPitch());
 
-        StandaloneArena duplicate = new StandaloneArena(plugin, this.copiedArena.getName() + "#" + arenaId);
+        StandaloneArena duplicate = new StandaloneArena(this.copiedArena.getName() + "#" + arenaId);
         duplicate.setDuplicate(true);
         duplicate.setSpawn1(a);
         duplicate.setSpawn2(b);

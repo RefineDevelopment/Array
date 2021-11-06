@@ -41,7 +41,7 @@ public class ArenaCommands {
         player.sendMessage(CC.CHAT_BAR);
         player.sendMessage(CC.translate( "&cArray &7» Arena Commands"));
         player.sendMessage(CC.CHAT_BAR);
-        player.sendMessage(CC.translate(" &7* &c/arena create &8<&7name&8> &8<&7Shared|Standalone|TheBridge&8> &8(&7&oCreate an Arena&8)"));
+        player.sendMessage(CC.translate(" &7* &c/arena create &8<&7name&8> &8<&7Shared|Standalone&8> &8(&7&oCreate an Arena&8)"));
         player.sendMessage(CC.translate(" &7* &c/arena remove &8<&7name&8> &8(&7&oDelete an Arena&8)"));
         player.sendMessage(CC.translate(" &7* &c/arena save &8(&7&oSave Arenas&8)"));
         player.sendMessage(CC.translate(" &7* &c/arena pearls &8(&7&oEnable or Disable the ability for players to pearl on the arena&8)"));
@@ -69,7 +69,7 @@ public class ArenaCommands {
             return;
         }
 
-        Arena arena = type == ArenaType.SHARED ? new SharedArena(plugin, name) : new StandaloneArena(plugin, name);
+        Arena arena = type == ArenaType.SHARED ? new SharedArena(name) : new StandaloneArena(name);
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully created an Arena called &c" + name + "&7 of type &c" + type));
         plugin.getArenaManager().getArenas().forEach(plugin.getArenaManager()::save);
     }
@@ -128,6 +128,11 @@ public class ArenaCommands {
 
         if (arena.getType() == ArenaType.SHARED || arena.isDuplicate()) {
             player.sendMessage(CC.translate("&8[&c&lArray&8] &7You can't paste that type of Arena!"));
+            return;
+        }
+
+        if (!arena.isSetup()) {
+            player.sendMessage(CC.translate("&8[&c&lArray&8] &7Please fully setup your arena before pasting!"));
             return;
         }
 

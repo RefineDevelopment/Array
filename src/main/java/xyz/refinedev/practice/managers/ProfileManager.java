@@ -29,6 +29,7 @@ import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
+import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.profile.divisions.ProfileDivision;
@@ -38,8 +39,8 @@ import xyz.refinedev.practice.profile.hotbar.HotbarType;
 import xyz.refinedev.practice.profile.rank.TablistRank;
 import xyz.refinedev.practice.profile.settings.ProfileSettings;
 import xyz.refinedev.practice.profile.statistics.ProfileStatistics;
-import xyz.refinedev.practice.task.ProfileHotbarTask;
-import xyz.refinedev.practice.task.ProfileQueryTask;
+import xyz.refinedev.practice.task.profile.ProfileHotbarTask;
+import xyz.refinedev.practice.task.profile.ProfileQueryTask;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.InventoryUtil;
 import xyz.refinedev.practice.util.other.Cooldown;
@@ -493,12 +494,11 @@ public class ProfileManager {
         if (player == null || otherPlayer == null) return;
 
         boolean hide = true;
-        if (profile.getState() == ProfileState.IN_LOBBY || profile.getState() == ProfileState.IN_QUEUE) {
-            if (profile.getSettings().isShowPlayers()) {
-                hide = false;
-            }
-            if (profile.hasParty() && profile.getParty().containsPlayer(otherPlayer)) {
-                hide = false;
+        if (profile.isInLobby() || profile.isInQueue()) {
+            hide = !profile.getSettings().isShowPlayers();
+            if (profile.hasParty()) {
+                Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getUniqueId());
+                hide = !party.containsPlayer(player);
             }
         } else if (profile.isInFight()) {
             Match match = profile.getMatch();

@@ -37,8 +37,8 @@ public abstract class Event {
 
 	private final Map<UUID, EventPlayer> eventPlayers = new HashMap<>();
 	private final Map<UUID, EventTeamPlayer> eventTeamPlayers = new HashMap<>();
+	private final List<Entity> entities = new ArrayList<>();;
 	private final List<UUID> spectators = new ArrayList<>();
-	private final List<Entity> entities = new ArrayList<>();
 	private final List<Item> droppedItems = new ArrayList<>();
 	private final List<Location> placedBlocks = new ArrayList<>();
 	private final List<BlockState> changedBlocks = new ArrayList<>();
@@ -110,7 +110,7 @@ public abstract class Event {
 	}
 
 	public void handleJoin(Player player) {
-		if (isTeam()) {
+		if (this.isTeam()) {
 			this.eventTeamPlayers.put(player.getUniqueId(), new EventTeamPlayer(player));
 		} else {
 			this.eventPlayers.put(player.getUniqueId(), new EventPlayer(player));
@@ -127,11 +127,11 @@ public abstract class Event {
 		Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 		profile.setEvent(this);
 		profile.setState(ProfileState.IN_EVENT);
-		
-		plugin.getProfileManager().handleVisibility(profile);
-		plugin.getProfileManager().refreshHotbar(profile);
 
-		if (isFreeForAll()) {
+		this.plugin.getProfileManager().handleVisibility(profile);
+		this.plugin.getProfileManager().refreshHotbar(profile);
+
+		if (this.isFreeForAll()) {
 			player.teleport(eventManager.getSpawn(this));
 		} else {
 			player.teleport(eventManager.getSpectator(this));
@@ -160,10 +160,10 @@ public abstract class Event {
 		Profile profile = plugin.getProfileManager().getByPlayer(player);
 		profile.setState(ProfileState.IN_LOBBY);
 		profile.setEvent(null);
-		
-		plugin.getProfileManager().teleportToSpawn(profile);
 
-		if (state == EventState.WAITING) {
+		this.plugin.getProfileManager().teleportToSpawn(profile);
+
+		if (this.state == EventState.WAITING) {
 			broadcastMessage(Locale.EVENT_LEAVE.toString()
 					.replace("<event_name>", getName())
 					.replace("<left>", player.getName())
@@ -175,8 +175,8 @@ public abstract class Event {
 	}
 
 	public void end() {
-		plugin.getEventManager().setActiveEvent(null);
-		plugin.getEventManager().setCooldown(new Cooldown(60_000L * 3));
+		this.plugin.getEventManager().setActiveEvent(null);
+		this.plugin.getEventManager().setCooldown(new Cooldown(60_000L * 3));
 
 		this.setEventTask(null);
 
@@ -198,8 +198,8 @@ public abstract class Event {
 			Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 			profile.setState(ProfileState.IN_LOBBY);
 			profile.setEvent(null);
-			plugin.getProfileManager().refreshHotbar(profile);
-			plugin.getProfileManager().teleportToSpawn(profile);
+
+			this.plugin.getProfileManager().teleportToSpawn(profile);
 		}
 
 		TaskUtil.run(this::cleanup);
@@ -360,9 +360,13 @@ public abstract class Event {
 		return this.getType().equals(EventType.OITC);
 	}
 
-	public abstract boolean isFreeForAll();
+	public boolean isFreeForAll() {
+		return false;
+	}
 
-	public abstract boolean isTeam();
+	public boolean isTeam() {
+		return false;
+	}
 
 	public abstract void onJoin(Player player);
 

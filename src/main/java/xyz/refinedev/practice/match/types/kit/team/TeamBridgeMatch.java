@@ -61,11 +61,7 @@ public class TeamBridgeMatch extends TeamMatch {
         teamPlayer.setAlive(true);
 
         PlayerUtil.reset(player);
-        if (!player.hasMetadata("noDenyMove")) {
-            PlayerUtil.denyMovement(player);
-        } else {
-            player.removeMetadata("noDenyMove", this.getPlugin());
-        }
+        PlayerUtil.denyMovement(player);
 
         if (this.getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
         if (this.getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
@@ -120,9 +116,11 @@ public class TeamBridgeMatch extends TeamMatch {
         TeamPlayer loser = this.getTeamPlayer(deadPlayer);
 
         if (this.canEnd()) {
-            this.getSnapshots().add(new MatchSnapshot(loser));
+            MatchSnapshot snapshot = new MatchSnapshot(loser);
             PlayerUtil.reset(deadPlayer);
-            this.end();
+
+            this.getSnapshots().add(snapshot);
+            this.plugin.getMatchManager().end(this);
         } else if (this.getTeamA().containsPlayer(deadPlayer) && this.getTeamAPoints() == 3 || this.getTeamB().containsPlayer(deadPlayer) && this.getTeamBPoints() == 3) {
             this.getSnapshots().add(new MatchSnapshot(loser));
         }
@@ -174,11 +172,11 @@ public class TeamBridgeMatch extends TeamMatch {
         }
 
         if (this.canEnd()) {
-            this.end();
+            this.plugin.getMatchManager().end(this);
             return;
         }
 
-        TaskUtil.run(this::start);
+        TaskUtil.run(() -> this.plugin.getMatchManager().start(this));
     }
 
     /**

@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.task;
+package xyz.refinedev.practice.task.clan;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.scheduler.BukkitRunnable;
