@@ -249,7 +249,7 @@ public enum Locale {
     EVENT_CANCELLED("EVENTS.CANCELLED", "&cThe <event_name> Event has been cancelled!"),
     EVENT_START_COUNTDOWN("EVENTS.START_COUNTDOWN", "&c<seconds>&f..."),
     EVENT_NOT_SETUP("EVENTS.NOT_SETUP", "&7The event you are trying to join is not correctly setup!"),
-    EVENT_PARKOUR_WON("EVENTS.PARKOUR_WON", "&c<winner> &ehas reached the end!"),
+    EVENT_PARKOUR_WON("EVENTS.PARKOUR_WON", "&c<winner> &ehas reached the handleEnd!"),
     EVENT_ROUND_STARTED("EVENTS.ROUND_STARTED", "&cThe round has started!"),
     EVENT_STARTED("EVENTS.STARTED", "&cThe event has started!"),
     EVENT_NOT_TEAM("EVENTS.NOT_TEAM", "&7This event is not a team event!"),

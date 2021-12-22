@@ -52,7 +52,7 @@ public class Queue {
     public int getInFights() {
         int i = 0;
 
-        for ( Match match : Match.getMatches()) {
+        for ( Match match : this.plugin.getMatchManager().getMatches()) {
             if (match.getQueue() == null || !match.getQueue().equals(this)) continue;
             if (!match.isFighting() && !match.isStarting()) continue;
 

@@ -1,12 +1,13 @@
-package xyz.refinedev.practice.event.impl.sumo.team.task;
+package xyz.refinedev.practice.event.task;
 
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.EventState;
+import xyz.refinedev.practice.event.meta.EventTask;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
-import xyz.refinedev.practice.event.task.EventRoundStartTask;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 
 import java.util.stream.Collectors;
@@ -16,14 +17,14 @@ import java.util.stream.Collectors;
  * Redistribution of this Project is not allowed
  *
  * @author Drizzy
- * Created at 6/25/2021
+ * Created: 12/22/2021
  * Project: Array
  */
 
-public class SumoTeamRoundStartTask extends EventRoundStartTask {
-    
-    public SumoTeamRoundStartTask(Event event) {
-        super(event);
+public class EventTeamRoundStartTask extends EventTask {
+
+    public EventTeamRoundStartTask(Array plugin, Event event) {
+        super(plugin, event, EventState.ROUND_STARTING);
     }
 
     @Override
@@ -33,7 +34,7 @@ public class SumoTeamRoundStartTask extends EventRoundStartTask {
             this.getEvent().setEventTask(null);
             this.getEvent().setState(EventState.ROUND_FIGHTING);
 
-            for (Player playerA : this.getEvent().getRoundTeamB().getPlayers().stream().filter(sumoTeamPlayer -> sumoTeamPlayer != null && sumoTeamPlayer.getPlayer() != null && sumoTeamPlayer.getPlayer().isOnline()).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
+            for ( Player playerA : this.getEvent().getRoundTeamB().getPlayers().stream().filter(sumoTeamPlayer -> sumoTeamPlayer != null && sumoTeamPlayer.getPlayer() != null && sumoTeamPlayer.getPlayer().isOnline()).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
                 if (playerA != null) {
                     playerA.playSound(playerA.getLocation(), Sound.NOTE_BASS, 1.0F, 1.0F);
                     PlayerUtil.allowMovement(playerA);

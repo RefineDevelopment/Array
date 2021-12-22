@@ -21,7 +21,7 @@ public class ParkourRoundEndTask extends EventRoundEndTask {
     @Override
     public void onRun() {
         if (getTicks() >= 3) {
-            this.getEvent().end();
+            this.getEvent().handleEnd();
         }
     }
 }

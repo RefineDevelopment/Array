@@ -23,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.Event;
+import xyz.refinedev.practice.event.EventHelperUtil;
 import xyz.refinedev.practice.event.EventState;
 import xyz.refinedev.practice.event.impl.spleef.Spleef;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
@@ -46,13 +47,13 @@ public class SpleefListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
         Block block = event.getBlock();
+        Event hostEvent = this.plugin.getEventManager().getEvent(player.getUniqueId());
 
-        if (!profile.isInEvent()) return;
-        if (!profile.getEvent().isSpleef()) return;
+        if (hostEvent == null) return;
+        if (!hostEvent.isSpleef()) return;
 
-        Spleef spleef = (Spleef) profile.getEvent();
+        Spleef spleef = (Spleef) hostEvent;
         EventPlayer eventPlayer = spleef.getEventPlayer(player.getUniqueId());
 
 
@@ -77,12 +78,12 @@ public class SpleefListener implements Listener {
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Event hostEvent = this.plugin.getEventManager().getEvent(player.getUniqueId());
 
-        if (!profile.isInEvent()) return;
-        if (!profile.getEvent().isSpleef()) return;
+        if (hostEvent == null) return;
+        if (!hostEvent.isSpleef()) return;
 
-        Spleef spleef = (Spleef) profile.getEvent();
+        Spleef spleef = (Spleef) hostEvent;
 
         if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
             event.setCancelled(true);
@@ -95,7 +96,7 @@ public class SpleefListener implements Listener {
         player.setFireTicks(0);
 
         if (!spleef.isFighting() || !spleef.isFighting(player.getUniqueId())) {
-            player.teleport(plugin.getEventManager().getSpawn(spleef));
+            player.teleport(EventHelperUtil.getSpawn(spleef));
             return;
         }
 
@@ -108,13 +109,13 @@ public class SpleefListener implements Listener {
         Player attacker = (Player) event.getDamager();
         Player damaged = (Player) event.getEntity();
 
-        Profile damagedProfile = plugin.getProfileManager().getByUUID(damaged.getUniqueId());
-        Profile attackerProfile = plugin.getProfileManager().getByUUID(attacker.getUniqueId());
+        Event damagedProfile = plugin.getEventManager().getEvent(damaged.getUniqueId());
+        Event attackerProfile = plugin.getEventManager().getEvent(attacker.getUniqueId());
 
-        if (!damagedProfile.isInEvent() || !damagedProfile.getEvent().isSpleef()) return;
-        if (!attackerProfile.isInEvent() || !attackerProfile.getEvent().isSpleef()) return;
+        if (damagedProfile == null || !damagedProfile.isSpleef()) return;
+        if (attackerProfile == null || !attackerProfile.isSpleef()) return;
 
-        Spleef spleef = (Spleef) damagedProfile.getEvent();
+        Spleef spleef = (Spleef) damagedProfile;
 
         if (spleef.isFighting(damaged.getUniqueId()) && spleef.isFighting(attacker.getUniqueId())) {
             if (!event.getCause().equals(EntityDamageEvent.DamageCause.PROJECTILE)) {
@@ -129,20 +130,22 @@ public class SpleefListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         HumanEntity player = event.getWhoClicked();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Event hostEvent = this.plugin.getEventManager().getEvent(player.getUniqueId());
 
-        if (!profile.isInEvent() || !profile.getEvent().isSpleef()) return;
-        if (profile.getEvent().isFighting(player.getUniqueId())) return;
+        if (hostEvent == null) return;
+        if (!hostEvent.isSpleef()) return;
+        if (!hostEvent.isFighting(player.getUniqueId())) return;
 
         event.setCancelled(true);
     }
     @EventHandler
     public void onInventoryInteract(InventoryInteractEvent event) {
         HumanEntity player = event.getWhoClicked();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Event hostEvent = this.plugin.getEventManager().getEvent(player.getUniqueId());
 
-        if (!profile.isInEvent() || !profile.getEvent().isSpleef()) return;
-        if (profile.getEvent().isFighting(player.getUniqueId())) return;
+        if (hostEvent == null) return;
+        if (!hostEvent.isSpleef()) return;
+        if (!hostEvent.isFighting(player.getUniqueId())) return;
 
         event.setCancelled(true);
     }
@@ -150,10 +153,12 @@ public class SpleefListener implements Listener {
     @EventHandler
     public void onItemDrop(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        if (!profile.isInEvent() || !profile.getEvent().isSpleef()) return;
+        Event hostEvent = this.plugin.getEventManager().getEvent(player.getUniqueId());
 
-        Event spleef = profile.getEvent();
+        if (hostEvent == null) return;
+        if (!hostEvent.isSpleef()) return;
+
+        Spleef spleef = (Spleef) hostEvent;
 
         if (spleef.isFighting(player.getUniqueId())) {
             spleef.getDroppedItems().add(event.getItemDrop());
@@ -166,10 +171,12 @@ public class SpleefListener implements Listener {
     @EventHandler
     public void onItemPickup(PlayerPickupItemEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        if (!profile.isInEvent() || !profile.getEvent().isSpleef()) return;
+        Event hostEvent = this.plugin.getEventManager().getEvent(player.getUniqueId());
 
-        Event spleef = profile.getEvent();
+        if (hostEvent == null) return;
+        if (!hostEvent.isSpleef()) return;
+
+        Spleef spleef = (Spleef) hostEvent;
 
         if (spleef.isFighting(player.getUniqueId())) {
             spleef.getDroppedItems().remove(event.getItem());
@@ -184,11 +191,12 @@ public class SpleefListener implements Listener {
         if (!(event.getEntity().getShooter() instanceof  Player)) return;
         Player shooter = (Player) event.getEntity().getShooter();
 
-        Profile shooterProfile = plugin.getProfileManager().getByUUID(shooter.getUniqueId());
-        if (!shooterProfile.isInEvent() || !shooterProfile.getEvent().isSpleef()) return;
+        Profile shooterProfile = this.plugin.getProfileManager().getByUUID(shooter.getUniqueId());
+        Event hostEvent = this.plugin.getEventManager().getEvent(shooter.getUniqueId());
 
-        Event spleef = shooterProfile.getEvent();
-        if (!spleef.isFighting(shooter.getUniqueId())) return;
+        if (hostEvent == null) return;
+        if (!hostEvent.isSpleef()) return;
+        if (!hostEvent.isFighting(shooter.getUniqueId())) return;
 
         if (event.getEntity() instanceof Arrow) {
             shooterProfile.getMatch().getEntities().add(event.getEntity());
@@ -201,7 +209,7 @@ public class SpleefListener implements Listener {
             Block hitBlock = iterator.next();
 
             if (hitBlock.getType() == Material.SNOW_BLOCK) {
-                spleef.getChangedBlocks().add(hitBlock.getState());
+                hostEvent.getChangedBlocks().add(hitBlock.getState());
                 hitBlock.setType(Material.AIR);
             }
 

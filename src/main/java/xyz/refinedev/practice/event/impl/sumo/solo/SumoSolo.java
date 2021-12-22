@@ -46,7 +46,7 @@ public class SumoSolo extends Event {
     public SumoSolo(Array plugin, Player host) {
         super(plugin, plugin.getEventManager(),"Sumo", new PlayerSnapshot(host.getUniqueId(), host.getName()), 100, EventType.SUMO, EventTeamSize.SOLO);
 
-        this.setEvent_Prefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
+        this.setPrefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
     }
 
     @Override
@@ -164,14 +164,41 @@ public class SumoSolo extends Event {
     }
 
     @Override
-    public void end() {
+    public void handleEnd() {
         if (waterTask != null) waterTask.cancel();
-        super.end();
+        super.handleEnd();
     }
 
     @Override
     public boolean isFighting(UUID uuid) {
         return (roundPlayerA != null && roundPlayerA.getUuid().equals(uuid)) || (roundPlayerB != null && roundPlayerB.getUuid().equals(uuid));
+    }
+
+    @Override
+    public ChatColor getRelationColor(Player viewer, Player target) {
+        if (viewer.equals(target)) {
+            if (!this.isFighting()) {
+                return this.getPlugin().getConfigHandler().getEventColor();
+            }
+            return ChatColor.GREEN;
+        }
+
+        boolean[] booleans = new boolean[]{
+                roundPlayerA.getUuid().equals(viewer.getUniqueId()),
+                roundPlayerB.getUuid().equals(viewer.getUniqueId()),
+                roundPlayerA.getUuid().equals(target.getUniqueId()),
+                roundPlayerB.getUuid().equals(target.getUniqueId())
+        };
+
+        if ((booleans[0] && booleans[3]) || (booleans[2] && booleans[1])) {
+            return org.bukkit.ChatColor.RED;
+        } else if ((booleans[0] && booleans[2]) || (booleans[1] && booleans[3])) {
+            return org.bukkit.ChatColor.GREEN;
+        } else if (getSpectators().contains(viewer.getUniqueId())) {
+            return roundPlayerA.getUuid().equals(target.getUniqueId()) ? org.bukkit.ChatColor.GREEN : org.bukkit.ChatColor.RED;
+        } else {
+            return org.bukkit.ChatColor.AQUA;
+        }
     }
 
     @Override
@@ -209,30 +236,4 @@ public class SumoSolo extends Event {
         throw new IllegalArgumentException("You can't get a team from a solo event");
     }
 
-    @Override
-    public ChatColor getRelationColor(Player viewer, Player target) {
-        if (viewer.equals(target)) {
-            if (!this.isFighting()) {
-                return this.getPlugin().getConfigHandler().getEventColor();
-            }
-            return ChatColor.GREEN;
-        }
-
-        boolean[] booleans = new boolean[]{
-                roundPlayerA.getUuid().equals(viewer.getUniqueId()),
-                roundPlayerB.getUuid().equals(viewer.getUniqueId()),
-                roundPlayerA.getUuid().equals(target.getUniqueId()),
-                roundPlayerB.getUuid().equals(target.getUniqueId())
-        };
-
-        if ((booleans[0] && booleans[3]) || (booleans[2] && booleans[1])) {
-            return org.bukkit.ChatColor.RED;
-        } else if ((booleans[0] && booleans[2]) || (booleans[1] && booleans[3])) {
-            return org.bukkit.ChatColor.GREEN;
-        } else if (getSpectators().contains(viewer.getUniqueId())) {
-            return roundPlayerA.getUuid().equals(target.getUniqueId()) ? org.bukkit.ChatColor.GREEN : org.bukkit.ChatColor.RED;
-        } else {
-            return org.bukkit.ChatColor.AQUA;
-        }
-    }
 }

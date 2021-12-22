@@ -24,7 +24,7 @@ public class SpleefStartTask extends EventStartTask {
     @Override
     public void onRun() {
         if (getTicks() >= 120) {
-            this.getEvent().end();
+            this.getEvent().handleEnd();
             return;
         }
 

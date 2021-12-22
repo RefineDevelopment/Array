@@ -172,9 +172,6 @@ public class Array extends JavaPlugin {
         this.leaderboardsManager = new LeaderboardsManager(this);
         this.leaderboardsManager.init();
 
-        this.spigotHandler = new SpigotHandler(this);
-        this.spigotHandler.init();
-
         this.pvpClassManager = new PvPClassManager(this);
         this.pvpClassManager.init();
 
@@ -196,8 +193,7 @@ public class Array extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        Match.getMatches().forEach(Match::cleanup);
-
+        this.matchManager.getMatches().forEach(matchManager::cleanup);
         this.arenaManager.getArenas().forEach(arenaManager::save);
         this.kitManager.getKits().forEach(kitManager::save);
         this.clanManager.getClans().forEach(clanManager::save);
@@ -219,11 +215,14 @@ public class Array extends JavaPlugin {
     /**
      * This method initializes and hooks
      * into the APIs used by this plugin
-     * </p>
+     * <p>
      * A very important method to initialize this
      * whole plugin.
      */
     public void initExpansions() {
+        this.spigotHandler = new SpigotHandler(this);
+        this.spigotHandler.init();
+
         ScoreboardAdapter scoreboardAdapter = new ScoreboardAdapter(this, scoreboardConfig);
 
         this.scoreboardHandler = new ScoreboardHandler(this, scoreboardAdapter);

@@ -2,32 +2,23 @@ package xyz.refinedev.practice.event.impl.sumo.team;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.event.Event;
-import xyz.refinedev.practice.event.EventState;
-import xyz.refinedev.practice.event.EventTeamSize;
-import xyz.refinedev.practice.event.EventType;
-import xyz.refinedev.practice.event.impl.sumo.team.task.SumoTeamRoundEndTask;
-import xyz.refinedev.practice.event.impl.sumo.team.task.SumoTeamRoundStartTask;
-import xyz.refinedev.practice.event.impl.sumo.team.task.SumoTeamStartTask;
+import xyz.refinedev.practice.event.*;
 import xyz.refinedev.practice.event.meta.group.EventGroup;
 import xyz.refinedev.practice.event.meta.group.EventGroupColor;
 import xyz.refinedev.practice.event.meta.group.EventTeamPlayer;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
 import xyz.refinedev.practice.event.meta.player.EventPlayerState;
+import xyz.refinedev.practice.event.task.EventStartTask;
+import xyz.refinedev.practice.event.task.EventTeamRoundEndTask;
+import xyz.refinedev.practice.event.task.EventTeamRoundStartTask;
 import xyz.refinedev.practice.event.task.EventWaterTask;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.ProfileState;
-import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.other.Cooldown;
-import xyz.refinedev.practice.util.other.PlayerSnapshot;
 import xyz.refinedev.practice.util.other.PlayerUtil;
-import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,15 +47,13 @@ public class SumoTeam extends Event {
     private EventGroup roundTeamB;
 
     public SumoTeam(Array plugin, Player host, EventTeamSize size) {
-        super(plugin, plugin.getEventManager(),"Sumo", new PlayerSnapshot(host.getUniqueId(), host.getName()), size.getMaxParticipants(), EventType.SUMO, size);
+        super(plugin, host, EventType.SUMO, size);
 
         for ( int i = 0; i <= size.getTeams(); i++ ) {
             EventGroupColor color = EventGroupColor.values()[i];
             EventGroup eventGroup = new EventGroup(size.getMaxTeamPlayers(), color);
             this.teams.add(eventGroup);
         }
-
-        this.setEvent_Prefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
     }
 
     @Override
@@ -72,35 +61,14 @@ public class SumoTeam extends Event {
         return true;
     }
 
+
     @Override
-    public void handleJoin(Player player) {
-        this.getEventTeamPlayers().put(player.getUniqueId(), new EventTeamPlayer(player));
-
-        this.broadcastMessage(Locale.EVENT_JOIN.toString()
-                .replace("<event_name>", this.getName())
-                .replace("<joined>", player.getName())
-                .replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
-                .replace("<event_max_players>", String.valueOf(getMaxPlayers())));
-
-        player.sendMessage(Locale.EVENT_PLAYER_JOIN.toString().replace("<event_name>", this.getName()));
-
-        this.onJoin(player);
-
-        player.teleport(this.getEventManager().getSpectator(this));
-
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        profile.setEvent(this);
-        profile.setState(ProfileState.IN_EVENT);
-        plugin.getProfileManager().handleVisibility(profile);
-        plugin.getProfileManager().refreshHotbar(profile);
+    public void onJoin(Player player) {
+        this.getPlugin().getSpigotHandler().knockback(player, EventHelperUtil.getSumoKB());
     }
 
     @Override
-    public void handleLeave(Player player) {
-        if (this.isFighting(this.getTeamByPlayer(player))) {
-            this.handleDeath(player);
-        }
-
+    public void onLeave(Player player) {
         EventTeamPlayer loser = (EventTeamPlayer) this.getEventPlayer(player.getUniqueId());
         loser.setState(EventPlayerState.ELIMINATED);
 
@@ -108,36 +76,7 @@ public class SumoTeam extends Event {
             loser.getGroup().setState(EventPlayerState.ELIMINATED);
         }
 
-        this.getEventTeamPlayers().remove(player.getUniqueId());
-        this.onLeave(player);
-
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
-        plugin.getProfileManager().handleVisibility(profile);
-
-        if (getState() == EventState.WAITING) {
-            this.broadcastMessage(Locale.EVENT_LEAVE.toString()
-                    .replace("<event_name>", this.getName())
-                    .replace("<left>", player.getName())
-                    .replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
-                    .replace("<event_max_players>", String.valueOf(getMaxPlayers())));
-        }
-
-        player.sendMessage(Locale.EVENT_PLAYER_LEAVE.toString().replace("<event_name>", this.getName()));
-
-        profile.setState(ProfileState.IN_LOBBY);
-        profile.setEvent(null);
-        plugin.getProfileManager().refreshHotbar(profile);
-        plugin.getProfileManager().teleportToSpawn(profile);
-    }
-
-    @Override
-    public void onJoin(Player player) {
-        this.getPlugin().getSpigotHandler().knockback(player, this.getEventManager().getSumoKB());
-    }
-
-    @Override
-    public void onLeave(Player player) {
-        this.getPlugin().getSpigotHandler().resetKnockback(player);
+        this.plugin.getSpigotHandler().resetKnockback(player);
     }
 
     @Override
@@ -159,10 +98,10 @@ public class SumoTeam extends Event {
         //Reset Previous Team A
         if (this.roundTeamA != null) {
             for (Player player : this.roundTeamA.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
-                player.teleport(this.getEventManager().getSpectator(this));
+                player.teleport(EventHelperUtil.getSpectator(this));
 
                 Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-                if (!profile.isInEvent() || (profile.isInEvent() && !profile.getEvent().isSumoTeam())) continue;
+                if (!this.isRemovable(player)) continue;
 
                 plugin.getProfileManager().refreshHotbar(profile);
             }
@@ -172,10 +111,10 @@ public class SumoTeam extends Event {
         //Reset Previous Team B
         if (this.roundTeamB != null) {
             for (Player player : this.roundTeamB.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
-                player.teleport(this.getEventManager().getSpectator(this));
+                player.teleport(EventHelperUtil.getSpectator(this));
 
                 Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-                if (!profile.isInEvent() || (profile.isInEvent() && !profile.getEvent().isSumoTeam())) continue;
+                if (!this.isRemovable(player)) continue;
 
                 plugin.getProfileManager().refreshHotbar(profile);
             }
@@ -189,7 +128,7 @@ public class SumoTeam extends Event {
             PlayerUtil.reset(playerA);
             PlayerUtil.denyMovement(playerA);
 
-            playerA.teleport(this.getEventManager().getSpawn1(this));
+            playerA.teleport(EventHelperUtil.getSpawn1(this));
 
             this.roundTeamA.getPlayers().forEach(eventPlayer -> {
                 this.getPlugin().getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
@@ -206,7 +145,7 @@ public class SumoTeam extends Event {
             PlayerUtil.reset(playerB);
             PlayerUtil.denyMovement(playerB);
            
-            playerB.teleport(this.getEventManager().getSpawn2(this));
+            playerB.teleport(EventHelperUtil.getSpawn2(this));
             
             this.roundTeamB.getPlayers().forEach(eventPlayer -> {
                 this.getPlugin().getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
@@ -219,7 +158,7 @@ public class SumoTeam extends Event {
             });
         }
         
-        this.setEventTask(new SumoTeamRoundStartTask(this));
+        this.setEventTask(new EventTeamRoundStartTask(this.plugin, this));
     }
 
     private EventGroup findRoundTeam() {
@@ -242,7 +181,7 @@ public class SumoTeam extends Event {
         }
 
         if (eventTeam == null) {
-            this.end();
+            this.handleEnd();
             throw new RuntimeException("Could not find a new round player");
         }
 
@@ -255,10 +194,10 @@ public class SumoTeam extends Event {
         EventGroup winningTeam = this.roundTeamA.equals(losingTeam) ? this.roundTeamB : this.roundTeamA;
 
         if (player != null && player.isOnline()) {
-            TaskUtil.runLater(() -> {
+            this.plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                 Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
                 plugin.getProfileManager().refreshHotbar(profile);
-                player.teleport(this.getEventManager().getSpectator(this));
+                player.teleport(EventHelperUtil.getSpectator(this));
             }, 2L);
         }
 
@@ -269,7 +208,7 @@ public class SumoTeam extends Event {
                                  .replace("<eliminator_name>", "Team " + winningTeam.getColor().getTitle()));
             
             this.setState(EventState.ROUND_ENDING);
-            this.setEventTask(new SumoTeamRoundEndTask(this));
+            this.setEventTask(new EventTeamRoundEndTask(this.plugin, this));
 
             winningTeam.setState(EventPlayerState.WAITING);
             winningTeam.getPlayers().stream().filter(this::isApplicable).forEach(eventPlayer -> eventPlayer.setState(EventPlayerState.WAITING));
@@ -278,13 +217,13 @@ public class SumoTeam extends Event {
             losingTeam.setState(EventPlayerState.ELIMINATED);
             losingTeam.getPlayers().forEach(eventPlayer -> eventPlayer.setState(EventPlayerState.ELIMINATED));
 
-            TaskUtil.runLater(() -> {
+            this.plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                 for (Player winner : winningTeam.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
                     Profile profile = plugin.getProfileManager().getByUUID(winner.getUniqueId());
                     plugin.getProfileManager().refreshHotbar(profile);
                     this.refreshNameTag();
 
-                    winner.teleport(getEventManager().getSpectator(this));
+                    winner.teleport(EventHelperUtil.getSpectator(this));
                 }
 
                 for (Player loser : losingTeam.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
@@ -292,44 +231,10 @@ public class SumoTeam extends Event {
                     plugin.getProfileManager().refreshHotbar(profile);
                     this.refreshNameTag();
 
-                    loser.teleport(getEventManager().getSpectator(this));
+                    loser.teleport(EventHelperUtil.getSpectator(this));
                 }
             }, 2L);
         }
-    }
-
-    @Override
-    public void end() {
-        if (waterTask != null) waterTask.cancel();
-
-        this.getEventManager().setActiveEvent(null);
-        this.getEventManager().setCooldown(new Cooldown(600000L));
-        
-        this.setEventTask(null);
-        
-        EventGroup winner = this.getWinningTeam();
-        if (winner == null) {
-            this.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", this.getName()));
-        } else {
-           String winners = winner.getPlayers().stream().map(EventPlayer::getUsername).collect(Collectors.joining(", "));
-           Locale.EVENT_TEAM_WON.toList().forEach(line -> Bukkit.broadcastMessage(line
-                                               .replace("<winner_name>","Team " + CC.RED + CC.BOLD + winner.getColor().getTitle())
-                                               .replace("<event_name>", this.getName())
-                                               .replace("<players>", winners)));
-        }
-        
-        for (EventTeamPlayer eventTeamPlayer : this.getEventTeamPlayers().values()) {
-            Player player = eventTeamPlayer.getPlayer();
-            if (player == null) continue;
-
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-            profile.setState(ProfileState.IN_LOBBY);
-            profile.setEvent(null);
-            plugin.getProfileManager().teleportToSpawn(profile);
-        }
-        
-        getSpectatorsList().forEach(this::removeSpectator);
-        getPlayers().stream().map(plugin.getProfileManager()::getByPlayer).forEach(plugin.getProfileManager()::handleVisibility);
     }
 
     public void refreshNameTag() {
@@ -351,9 +256,9 @@ public class SumoTeam extends Event {
 
     @Override
     public void handleStart() {
-        this.setEventTask(new SumoTeamStartTask(this));
-        waterTask = new EventWaterTask(this.getPlugin(), this);
-        waterTask.runTaskTimer(Array.getInstance(), 20L, 20L);
+        this.setEventTask(new EventStartTask(this));
+        this.waterTask = new EventWaterTask(this.getPlugin(), this);
+        this.waterTask.runTaskTimer(this.plugin, 20L, 20L);
     }
 
     @Override
@@ -405,32 +310,6 @@ public class SumoTeam extends Event {
         } else {
             return ChatColor.AQUA;
         }
-    }
-
-    @Override
-    public void addSpectator(Player player) {
-        this.getSpectators().add(player.getUniqueId());
-
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        profile.setEvent(this);
-        profile.setState(ProfileState.SPECTATING);
-        plugin.getProfileManager().refreshHotbar(profile);
-        plugin.getProfileManager().handleVisibility(profile);
-
-        player.teleport(getEventManager().getSpectator(this));
-    }
-
-    @Override
-    public void removeSpectator(Player player) {
-        this.getSpectators().remove(player.getUniqueId());
-        this.getEventTeamPlayers().remove(player.getUniqueId());
-
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        profile.setEvent(null);
-        profile.setState(ProfileState.IN_LOBBY);
-        plugin.getProfileManager().refreshHotbar(profile);
-        plugin.getProfileManager().handleVisibility(profile);
-        plugin.getProfileManager().teleportToSpawn(profile);
     }
 
     @Override

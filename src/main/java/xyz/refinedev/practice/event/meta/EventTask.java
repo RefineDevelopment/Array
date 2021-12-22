@@ -11,7 +11,7 @@ import xyz.refinedev.practice.event.EventState;
 @RequiredArgsConstructor
 public abstract class EventTask extends BukkitRunnable {
 
-	private final Array plugin = Array.getInstance();
+	private final Array plugin;
 
 	private int ticks;
 	private final Event event;

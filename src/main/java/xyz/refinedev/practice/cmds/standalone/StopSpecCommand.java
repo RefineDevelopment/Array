@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.event.Event;
+import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
@@ -28,9 +30,11 @@ public class StopSpecCommand {
         if (profile.isSpectating()) {
             profile.setSpectating(null);
             if (profile.isInMatch()) {
-                profile.getMatch().removeSpectator(player);
+                Match match = profile.getMatch();
+                this.plugin.getMatchManager().removeSpectator(match, player);
             } else if (profile.isInEvent()) {
-                profile.getEvent().removeSpectator(player);
+                Event event = profile.getEvent();
+                event.removeSpectator(player);
             }
         } else {
             player.sendMessage(Locale.ERROR_NOTSPECTATING.toString());

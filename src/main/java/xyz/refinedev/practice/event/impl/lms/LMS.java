@@ -38,6 +38,7 @@ public class LMS extends Event {
         super(plugin, plugin.getEventManager(), "LMS", new PlayerSnapshot(host.getUniqueId(), host.getName()), EventTeamSize.SOLO.getMaxParticipants(), EventType.LMS, EventTeamSize.SOLO);
 
         this.kit = kit;
+        this.setPrefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
     }
 
     @Override

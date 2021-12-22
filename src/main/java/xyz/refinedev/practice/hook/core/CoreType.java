@@ -24,7 +24,7 @@ public enum CoreType {
     HESTIA("HestiaCore", new HestiaCore()),
     ZOOM("Zoom", new ZoomCore()),
     MIZU("Mizu", new MizuCore()),
-    PHOENIX("PhoenixCore", new PhoenixCore()),
+    PHOENIX("Phoenix", new PhoenixCore()),
     SYNTH("Synth", new SynthCore()),
     SCANDIUM("Scandium", new ScandiumCore()),
     NCORE("nCore", new nCore()),

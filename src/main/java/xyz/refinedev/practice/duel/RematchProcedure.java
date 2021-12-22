@@ -132,7 +132,7 @@ public class RematchProcedure {
             sender.sendMessage(replaceOpponent(opponentMessages, sender));
             target.sendMessage(replaceOpponent(opponentMessages, target));
         }
-        TaskUtil.run(match::start);
+        TaskUtil.run(() -> this.plugin.getMatchManager().start(match));
     }
 
     private String formatMessages(String string, Player sender, Player target) {

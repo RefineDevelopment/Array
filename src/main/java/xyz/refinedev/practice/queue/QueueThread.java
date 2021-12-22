@@ -112,7 +112,7 @@ public class QueueThread extends Thread {
                                 firstPlayer.sendMessage(this.replaceOpponent(opponentMessages, firstPlayer));
                                 secondPlayer.sendMessage(this.replaceOpponent(opponentMessages, secondPlayer));
                             }
-                            TaskUtil.run(match::start);
+                            TaskUtil.run(() -> this.plugin.getMatchManager().start(match));
                         }
                     }
                 }

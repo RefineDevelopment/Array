@@ -10,6 +10,7 @@ import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitGameRules;
+import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.MatchSnapshot;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.SoloMatch;
@@ -115,7 +116,7 @@ public class SoloBedwarsMatch extends SoloMatch {
         this.playerABed = LocationUtil.getNearbyBedLocations(this.getArena().getSpawn1());
         this.playerBBed = LocationUtil.getNearbyBedLocations(this.getArena().getSpawn2());
 
-        this.cleanup();
+        this.plugin.getMatchManager().cleanup(this);
     }
 
     @Override
@@ -140,9 +141,11 @@ public class SoloBedwarsMatch extends SoloMatch {
         TeamPlayer roundWinner = getOpponentTeamPlayer(deadPlayer);
 
         if (this.canEnd()) {
-            this.getSnapshots().add(new MatchSnapshot(roundLoser, roundWinner));
+            MatchSnapshot snapshot = new MatchSnapshot(roundLoser, roundWinner);
             PlayerUtil.reset(deadPlayer);
-            this.end();
+
+            this.getSnapshots().add(snapshot);
+            this.plugin.getMatchManager().cleanup(this);
         }
 
         this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> PlayerUtil.forceRespawn(deadPlayer));

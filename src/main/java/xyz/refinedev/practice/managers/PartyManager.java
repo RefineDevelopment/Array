@@ -111,7 +111,7 @@ public class PartyManager {
 
         if (party.isFighting()) {
             Match match = party.getMatch();
-            match.addSpectator(player, null);
+            this.plugin.getMatchManager().addSpectator(match, player, null);
         }
     }
 
@@ -133,10 +133,11 @@ public class PartyManager {
         party.broadcast(Locale.PARTY_PLAYER_LEFT.toString().replace("<leaver>", player.getName()));
 
         if (profile.isInFight()) {
-            profile.getMatch().handleDeath(player, null, true);
+            Match match = profile.getMatch();
+            this.plugin.getMatchManager().handleDeath(match, player, null, true);
 
             if (profile.isSpectating()) {
-                profile.getMatch().removeSpectator(player);
+                this.plugin.getMatchManager().removeSpectator(match, player);
             }
         }
 
@@ -172,12 +173,14 @@ public class PartyManager {
         party.broadcast(Locale.PARTY_PLAYER_KICKED.toString().replace("<leaver>", player.getName()));
 
         if (profile.isInFight()) {
-            profile.getMatch().handleDeath(player, null, true);
+            Match match = profile.getMatch();
+            this.plugin.getMatchManager().handleDeath(match, player, null, true);
 
             if (profile.isSpectating()) {
-                profile.getMatch().removeSpectator(player);
+                this.plugin.getMatchManager().removeSpectator(match, player);
             }
         }
+
 
         for (Player teamPlayer : party.getPlayers()) {
             Profile teamProfile = plugin.getProfileManager().getByUUID(teamPlayer.getUniqueId());
@@ -229,7 +232,7 @@ public class PartyManager {
             this.players.remove(player.getUniqueId());
 
             if (party.isFighting()) {
-                party.getMatch().handleDeath(player, null, true);
+                this.plugin.getMatchManager().handleDeath(party.getMatch(), player, null, true);
             }
 
             if (profile.isInLobby() || profile.isInQueue()) {
@@ -241,7 +244,6 @@ public class PartyManager {
             }
         }
         party.setDisbanded(true);
-
         this.parties.remove(party);
     }
 

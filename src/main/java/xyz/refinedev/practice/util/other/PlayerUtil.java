@@ -92,10 +92,6 @@ public class PlayerUtil {
         return ((CraftPlayer)player).getHandle().activeContainer.windowId != 0;
     }
 
-    public List<Player> convertUUIDListToPlayerList(List<UUID> list) {
-        return list.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).collect(Collectors.toList());
-    }
-
     public CraftEntity getLastAttacker(Player p) {
         final EntityLiving lastAttacker = ((CraftPlayer)p).getHandle().lastDamager;
         return (lastAttacker == null) ? null : lastAttacker.getBukkitEntity();

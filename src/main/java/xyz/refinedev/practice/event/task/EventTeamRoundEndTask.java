@@ -1,21 +1,23 @@
-package xyz.refinedev.practice.event.impl.sumo.solo.task;
+package xyz.refinedev.practice.event.task;
 
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.Event;
-import xyz.refinedev.practice.event.task.EventRoundEndTask;
+import xyz.refinedev.practice.event.EventState;
+import xyz.refinedev.practice.event.meta.EventTask;
 
 /**
  * This Project is property of Refine Development © 2021
  * Redistribution of this Project is not allowed
  *
  * @author Drizzy
- * Created at 6/25/2021
+ * Created: 12/22/2021
  * Project: Array
  */
 
-public class SumoSoloRoundEndTask extends EventRoundEndTask {
+public class EventTeamRoundEndTask extends EventTask {
 
-    public SumoSoloRoundEndTask(Event event) {
-        super(event);
+    public EventTeamRoundEndTask(Array plugin, Event event) {
+        super(plugin, event, EventState.ROUND_ENDING);
     }
 
     @Override

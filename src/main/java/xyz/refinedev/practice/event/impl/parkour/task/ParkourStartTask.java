@@ -25,7 +25,7 @@ public class ParkourStartTask extends EventTask {
     @Override
     public void onRun() {
         if (getTicks() >= 120) {
-            this.getEvent().end();
+            this.getEvent().handleEnd();
             return;
         }
 

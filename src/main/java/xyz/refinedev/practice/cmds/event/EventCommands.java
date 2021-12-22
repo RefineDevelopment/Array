@@ -87,7 +87,7 @@ public class EventCommands {
         }
 
         plugin.getProfileManager().getProfiles().values().stream().filter(profile -> !profile.getKitEditor().isActive()).filter(Profile::isInLobby).forEach(plugin.getProfileManager()::refreshHotbar);
-        event.end();
+        event.handleEnd();
     }
 
     @Command(name = "join", aliases = "participate", desc = "Join an active event")
@@ -95,7 +95,7 @@ public class EventCommands {
         final Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         final Event event =  eventManager.getActiveEvent();
 
-        if (profile.isBusy() || profile.getParty() != null) {
+        if (profile.isBusy() || profile.hasParty()) {
             player.sendMessage(Locale.EVENT_NOTABLE_JOIN.toString());
             return;
         }
@@ -109,7 +109,7 @@ public class EventCommands {
         }
         if (event.getEventManager().isUnfinished(event)) {
             player.sendMessage(Locale.EVENT_NOT_SETUP.toString());
-            event.end();
+            event.handleEnd();
             return;
         }
 

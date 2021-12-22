@@ -27,6 +27,7 @@ import xyz.refinedev.practice.profile.statistics.ProfileStatistics;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueProfile;
 import xyz.refinedev.practice.util.other.Cooldown;
+import xyz.refinedev.practice.util.serialize.GsonFactory;
 
 import java.util.*;
 
@@ -37,10 +38,11 @@ public class Profile {
 
     private final Array plugin = Array.getInstance();
 
-    private final Map<UUID, DuelRequest> duelRequests = new HashMap<>();
+    @GsonFactory.Ignore private final Map<UUID, DuelRequest> duelRequests = new HashMap<>();
+    @GsonFactory.Ignore private final List<ClanInvite> clanInviteList = new ArrayList<>();
+    @GsonFactory.Ignore private final List<Location> parkourCheckpoints = new ArrayList<>();
+
     private final Map<Kit, ProfileStatistics> statisticsData = new LinkedHashMap<>();
-    private final List<ClanInvite> clanInviteList = new ArrayList<>();
-    private final List<Location> parkourCheckpoints = new ArrayList<>();
     private final List<ProfileHistory> unrankedMatchHistory = new ArrayList<>();
     private final List<ProfileHistory> rankedMatchHistory = new ArrayList<>();
 
@@ -55,7 +57,6 @@ public class Profile {
     private Match match;
     private Queue queue;
     private Clan clan;
-    private Event event;
 
     private TablistRank tablistRank;
     private ClanProfile clanProfile;
@@ -64,7 +65,7 @@ public class Profile {
     private RematchProcedure rematchData;
 
     private Arena ratingArena;
-    //TODO: Make this UUID Based
+    //TODO: Have a spectating manager for better features
     private Player spectating;
     private boolean build, silent, issueRating;
 
@@ -113,13 +114,14 @@ public class Profile {
     }
 
     public Player getPlayer() {
-        return Bukkit.getPlayer(uniqueId);
+        return this.plugin.getServer().getPlayer(uniqueId);
     }
 
     public boolean isInLobby() {
         return state == ProfileState.IN_LOBBY;
     }
 
+    //TODO: Change everything below into managers
     public boolean isInQueue() {
         return state == ProfileState.IN_QUEUE && queue != null && queueProfile != null;
     }
@@ -129,27 +131,11 @@ public class Profile {
     }
 
     public boolean isInFight() {
-        return state == ProfileState.IN_FIGHT && match != null;
+        return state == ProfileState.IN_FIGHT && this.isInMatch();
     }
 
     public boolean isSpectating() {
-        return state == ProfileState.SPECTATING && (match != null || event != null);
-    }
-
-    public boolean isInEvent() {
-        return event != null;
-    }
-
-    public boolean isInTournament() {
-       return plugin.getTournamentManager().isInTournament(uniqueId);
-    }
-
-    public boolean isInBrackets() {
-        return event != null && (event.isBracketsSolo() || event.isBracketsTeam());
-    }
-
-    public boolean isInLMS() {
-        return event != null && event.isLMS();
+        return state == ProfileState.SPECTATING && (this.isInMatch() || this.plugin.getEventManager().isInEvent(uniqueId));
     }
 
     public boolean isInSomeSortOfFight() {
@@ -157,7 +143,7 @@ public class Profile {
     }
 
     public boolean isBusy() {
-        return isInQueue() || isInFight() || isInEvent() || isSpectating() || isInTournament();
+        return this.isInQueue() || this.isInFight() || this.plugin.getEventManager().isInEvent(uniqueId) || this.isSpectating() || this.plugin.getTournamentManager().isInTournament(uniqueId);
     }
 
     public boolean hasClan() {

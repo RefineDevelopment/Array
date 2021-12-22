@@ -188,14 +188,14 @@ public class HotbarManager {
                 Collection<HotbarItem> eventItems = items.stream().filter(HotbarItem::isEnabled).filter(item -> (item.getLayout().equals(HotbarLayout.EVENT) || item.getLayout().equals(HotbarLayout.EVENT_SPECTATE) || item.getLayout().equals(HotbarLayout.EVENT_WAITING))).collect(Collectors.toList());
                 eventItems.addAll(getCustomItems().stream().filter(item -> item.getLayout().equals(HotbarLayout.EVENT) || item.getLayout().equals(HotbarLayout.EVENT_SPECTATE) || item.getLayout().equals(HotbarLayout.EVENT_WAITING)).collect(Collectors.toList()));
 
-                Event event = profile.getEvent();
+                Event event = this.plugin.getEventManager().getEvent(profile.getUniqueId());
                 EventPlayer eventPlayer = event.getEventPlayer(profile.getUniqueId());
 
                 for ( HotbarItem item : eventItems ) {
                     switch (item.getLayout()) {
                         case EVENT_WAITING: {
-                            if (profile.getEvent().isWaiting() && eventPlayer.getState().equals(EventPlayerState.WAITING)) {
-                                if (item.getType().equals(HotbarType.EVENT_TEAM) && profile.getEvent().isTeam()) {
+                            if (event.isWaiting() && eventPlayer.getState().equals(EventPlayerState.WAITING)) {
+                                if (item.getType().equals(HotbarType.EVENT_TEAM) && event.isTeam()) {
                                     toReturn[item.getSlot()] = item.getItem();
                                 } else if (!item.getType().equals(HotbarType.EVENT_TEAM)) {
                                     toReturn[item.getSlot()] = item.getItem();
@@ -204,7 +204,7 @@ public class HotbarManager {
                             break;
                         }
                         case EVENT_SPECTATE: {
-                            if (profile.isSpectating() && profile.isInEvent()) {
+                            if (profile.isSpectating() && this.plugin.getEventManager().isInEvent(profile.getUniqueId())) {
                                 toReturn[item.getSlot()] = item.getItem();
                             }
                             break;

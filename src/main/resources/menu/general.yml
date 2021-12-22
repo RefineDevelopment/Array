@@ -13,3 +13,8 @@ TOURNAMENT_KIT_MENU:
   LORE:
     - ""
     - "&c[Click to Select this Kit]"
+EVENT_KIT_MENU:
+  TITLE: "&7Select a Kit"
+  LORE:
+    - ""
+    - "&c[Click to Select this Kit]"

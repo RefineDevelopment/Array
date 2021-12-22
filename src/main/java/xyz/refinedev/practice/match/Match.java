@@ -372,8 +372,8 @@ public abstract class Match {
     public abstract void onStart();
 
     /**
-     * Execute match end tasks through this method
-     * This method is called to check if the match can end or not
+     * Execute match handleEnd tasks through this method
+     * This method is called to check if the match can handleEnd or not
      * and if it can then the method itself clears up a bit of ending the match
      *
      * @return {@link Boolean} Whether the match successfully ended or not
@@ -381,9 +381,9 @@ public abstract class Match {
     public abstract boolean onEnd();
 
     /**
-     * Returns true if the match is ready to end
+     * Returns true if the match is ready to handleEnd
      *
-     * @return {@link Boolean} Where the match can statistically end or not
+     * @return {@link Boolean} Where the match can statistically handleEnd or not
      */
     public abstract boolean canEnd();
 

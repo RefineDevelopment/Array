@@ -47,7 +47,7 @@ public class Koth extends Event {
         eventGroupA = new EventGroup(size.getMaxTeamPlayers(), EventGroupColor.RED);
         eventGroupB = new EventGroup(size.getMaxTeamPlayers(), EventGroupColor.BLUE);
 
-        this.setEvent_Prefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
+        this.setPrefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
     }
 
     @Override
@@ -116,9 +116,9 @@ public class Koth extends Event {
     }
 
     @Override
-    public void end() {
+    public void handleEnd() {
         if (detectTask != null) detectTask.cancel();
-        super.end();
+        super.handleEnd();
     }
 
     @Override

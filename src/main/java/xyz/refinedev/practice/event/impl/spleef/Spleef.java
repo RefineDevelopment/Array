@@ -42,7 +42,7 @@ public class Spleef extends Event {
     public Spleef(Array plugin, Player host) {
         super(plugin, plugin.getEventManager(),"Spleef", new PlayerSnapshot(host.getUniqueId(), host.getName()), 100, EventType.SPLEEF, EventTeamSize.SOLO);
 
-        this.setEvent_Prefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
+        this.setPrefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
     }
 
     @Override
@@ -110,9 +110,9 @@ public class Spleef extends Event {
     }
 
     @Override
-    public void end() {
+    public void handleEnd() {
         if (waterTask != null) waterTask.cancel();
-        super.end();
+        super.handleEnd();
     }
 
     @Override

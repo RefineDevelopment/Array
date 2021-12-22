@@ -1,7 +1,6 @@
 package xyz.refinedev.practice.event;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,19 +17,21 @@ import xyz.refinedev.practice.event.meta.group.EventGroup;
 import xyz.refinedev.practice.event.meta.group.EventTeamPlayer;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
 import xyz.refinedev.practice.event.meta.player.EventPlayerState;
+import xyz.refinedev.practice.event.task.EventStartTask;
 import xyz.refinedev.practice.managers.EventManager;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
+import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.Clickable;
 import xyz.refinedev.practice.util.other.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter @Setter
-@RequiredArgsConstructor
 public abstract class Event {
 
-	private String Event_Prefix;
+	private String prefix;
 
 	private final Array plugin;
 	private final EventManager eventManager;
@@ -44,10 +45,11 @@ public abstract class Event {
 	private final List<BlockState> changedBlocks = new ArrayList<>();
 
 	private final String name;
-	private final PlayerSnapshot host;
+	private final String host;
 	private final int maxPlayers;
 	private final EventType type;
 	private final EventTeamSize size;
+	private final UUID eventId;
 
 	private EventTask eventTask;
 	private Cooldown cooldown;
@@ -56,10 +58,21 @@ public abstract class Event {
 	private int totalPlayers;
 	private long roundStart;
 
+	public Event(Array plugin, Player host, EventType type, EventTeamSize size) {
+		this.plugin = plugin;
+		this.type = type;
+		this.size = size;
+		this.host = host.getName();
+		this.name = type.getName();
+		this.eventManager = plugin.getEventManager();
+		this.maxPlayers = size.getMaxParticipants();
+		this.eventId = UUID.randomUUID();
+
+		this.setPrefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
+	}
+
 	public void setEventTask(EventTask task) {
-		if (this.eventTask != null) {
-			this.eventTask.cancel();
-		}
+		if (this.eventTask != null) eventTask.cancel();
 
 		this.eventTask = task;
 
@@ -125,21 +138,21 @@ public abstract class Event {
 		this.onJoin(player);
 
 		Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-		profile.setEvent(this);
 		profile.setState(ProfileState.IN_EVENT);
+		this.eventManager.getPlayers().put(player.getUniqueId(), this.eventId);
 
 		this.plugin.getProfileManager().handleVisibility(profile);
 		this.plugin.getProfileManager().refreshHotbar(profile);
 
 		if (this.isFreeForAll()) {
-			player.teleport(eventManager.getSpawn(this));
+			player.teleport(EventHelperUtil.getSpawn(this));
 		} else {
-			player.teleport(eventManager.getSpectator(this));
+			player.teleport(EventHelperUtil.getSpectator(this));
 		}
 	}
 
 	public void handleDeath(Player player) {
-		final EventPlayer loser = this.getEventPlayer(player.getUniqueId());
+		EventPlayer loser = this.getEventPlayer(player.getUniqueId());
 		loser.setState(EventPlayerState.ELIMINATED);
 		this.onDeath(player);
 	}
@@ -149,18 +162,18 @@ public abstract class Event {
 			this.handleDeath(player);
 		}
 
+		this.onLeave(player);
+
 		if (this.isTeam()) {
 			this.eventTeamPlayers.remove(player.getUniqueId());
 		} else {
 			this.eventPlayers.remove(player.getUniqueId());
 		}
 
-		this.onLeave(player);
-
 		Profile profile = plugin.getProfileManager().getByPlayer(player);
 		profile.setState(ProfileState.IN_LOBBY);
-		profile.setEvent(null);
 
+		this.plugin.getEventManager().getPlayers().remove(player.getUniqueId());
 		this.plugin.getProfileManager().teleportToSpawn(profile);
 
 		if (this.state == EventState.WAITING) {
@@ -174,22 +187,16 @@ public abstract class Event {
 
 	}
 
-	public void end() {
+	public void handleStart() {
+		this.setEventTask(new EventStartTask(this));
+	}
+
+	public void handleEnd() {
 		this.plugin.getEventManager().setActiveEvent(null);
 		this.plugin.getEventManager().setCooldown(new Cooldown(60_000L * 3));
 
 		this.setEventTask(null);
-
-		Player winner = this.getWinner();
-
-		if (winner == null) {
-			Bukkit.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", getName()));
-		} else {
-			Locale.EVENT_WON.toList().forEach(line -> Bukkit.broadcastMessage(line
-					.replace("<winner>", winner.getName())
-					.replace("<event_name>", getName())
-					.replace("<event_prefix>", Event_Prefix)));
-		}
+		this.announceWinner();
 
 		for (EventPlayer eventPlayer : this.isTeam() ? this.eventTeamPlayers.values() : this.isTeam() ? this.eventTeamPlayers.values() : this.eventPlayers.values()) {
 			Player player = eventPlayer.getPlayer();
@@ -197,8 +204,8 @@ public abstract class Event {
 
 			Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 			profile.setState(ProfileState.IN_LOBBY);
-			profile.setEvent(null);
 
+			this.plugin.getEventManager().getPlayers().remove(player.getUniqueId());
 			this.plugin.getProfileManager().teleportToSpawn(profile);
 		}
 
@@ -206,6 +213,31 @@ public abstract class Event {
 
 		this.getSpectatorsList().forEach(this::removeSpectator);
 		this.getPlayers().stream().map(plugin.getProfileManager()::getByPlayer).forEach(plugin.getProfileManager()::handleVisibility);
+	}
+
+	public void announceWinner() {
+		if (this.isTeam()) {
+			EventGroup winner = this.getWinningTeam();
+			if (winner == null) {
+				this.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", this.getName()));
+			} else {
+				String winners = winner.getPlayers().stream().map(EventPlayer::getUsername).collect(Collectors.joining(", "));
+				Locale.EVENT_TEAM_WON.toList().forEach(line -> Bukkit.broadcastMessage(line
+						.replace("<winner_name>","Team " + CC.RED + CC.BOLD + winner.getColor().getTitle())
+						.replace("<event_name>", this.getName())
+						.replace("<players>", winners)));
+			}
+		} else {
+			Player winner = this.getWinner();
+			if (winner == null) {
+				Bukkit.broadcastMessage(Locale.EVENT_CANCELLED.toString().replace("<event_name>", this.getName()));
+			} else {
+				Locale.EVENT_WON.toList().forEach(line -> Bukkit.broadcastMessage(line
+						.replace("<winner>", winner.getName())
+						.replace("<event_name>", getName())
+						.replace("<event_prefix>", prefix)));
+			}
+		}
 	}
 
 	/**
@@ -226,7 +258,7 @@ public abstract class Event {
 	public boolean canEnd() {
 		int remaining = 0;
 
-		for (EventPlayer eventPlayer : this.isTeam() ? this.eventTeamPlayers.values() : this.isTeam() ? this.eventTeamPlayers.values() : this.eventPlayers.values()) {
+		for (EventPlayer eventPlayer : this.isTeam() ? this.eventTeamPlayers.values() : this.eventPlayers.values()) {
 			if (eventPlayer.getState() == EventPlayerState.WAITING) {
 				remaining++;
 			}
@@ -236,14 +268,24 @@ public abstract class Event {
 	}
 
 	public Player getWinner() {
-		if (isTeam()) throw new IllegalArgumentException("You can't get a single winner from a Team Event!");
+		if (this.isTeam()) throw new IllegalArgumentException("You can't get a single winner from a Team Event!");
 
-		for (EventPlayer eventPlayer : this.isTeam() ? this.eventTeamPlayers.values() : this.eventPlayers.values()) {
+		for (EventPlayer eventPlayer : this.eventPlayers.values()) {
 			if (eventPlayer.getState() != EventPlayerState.ELIMINATED) {
 				return eventPlayer.getPlayer();
 			}
 		}
+		return null;
+	}
 
+	public EventGroup getWinningTeam() {
+		if (!this.isTeam()) throw new IllegalArgumentException("You can't get a team winner from a Solo Event!");
+
+		for (EventGroup eventGroup : this.getTeams()) {
+			if (eventGroup.getState() != EventPlayerState.ELIMINATED) {
+				return eventGroup;
+			}
+		}
 		return null;
 	}
 
@@ -251,27 +293,25 @@ public abstract class Event {
 		for ( String string : Locale.EVENT_ANNOUNCE.toList() ) {
 			String main = string
 					.replace("<event_name>", this.getName())
-					.replace("<event_host>", this.getHost().getUsername())
-					.replace("<event_prefix>", Event_Prefix);
+					.replace("<event_host>", this.getHost())
+					.replace("<event_prefix>", prefix);
 
 			Clickable message = new Clickable(main, Locale.EVENT_HOVER.toString().replace("<event_name>", this.getName()), "/event join");
 
-			for ( Player player : Bukkit.getOnlinePlayers() ) {
-				if ((isTeam() && !eventTeamPlayers.containsKey(player.getUniqueId())) || (!isTeam() && !eventPlayers.containsKey(player.getUniqueId()))) {
-					message.sendToPlayer(player);
-				}
+			for ( Player player : this.plugin.getServer().getOnlinePlayers() ) {
+				if (!this.eventManager.isInEvent(player.getUniqueId())) message.sendToPlayer(player);
 			}
 		}
 	}
 
 	public void broadcastMessage(String message) {
 		for (Player player : this.getPlayers()) {
-			player.sendMessage(Event_Prefix + message);
+			player.sendMessage(prefix + message);
 		}
 	}
 
-	protected List<Player> getSpectatorsList() {
-		return PlayerUtil.convertUUIDListToPlayerList(spectators);
+	public final List<Player> getSpectatorsList() {
+		return spectators.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).collect(Collectors.toList());
 	}
 
 	public String getDuration() {
@@ -288,17 +328,17 @@ public abstract class Event {
 	public void addSpectator(Player player) {
 		this.getSpectators().add(player.getUniqueId());
 
-		Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-		profile.setEvent(this);
+		Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
 		profile.setState(ProfileState.SPECTATING);
 
-		plugin.getProfileManager().refreshHotbar(profile);
-		plugin.getProfileManager().handleVisibility(profile);
+		this.eventManager.getPlayers().put(player.getUniqueId(), this.eventId);
+		this.plugin.getProfileManager().refreshHotbar(profile);
+		this.plugin.getProfileManager().handleVisibility(profile);
 
 		if (isFreeForAll()) {
-			player.teleport(getEventManager().getSpawn(this));
+			player.teleport(EventHelperUtil.getSpawn(this));
 		} else {
-			player.teleport(getEventManager().getSpectator(this));
+			player.teleport(EventHelperUtil.getSpectator(this));
 		}
 	}
 
@@ -310,10 +350,11 @@ public abstract class Event {
 			this.getEventPlayers().remove(player.getUniqueId());
 		}
 
-		Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-		profile.setEvent(null);
+		Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
 		profile.setState(ProfileState.IN_LOBBY);
-		plugin.getProfileManager().teleportToSpawn(profile);
+
+		this.plugin.getEventManager().getPlayers().remove(player.getUniqueId());
+		this.plugin.getProfileManager().teleportToSpawn(profile);
 	}
 
 	public boolean isSpectating(UUID uuid) {
@@ -348,6 +389,16 @@ public abstract class Event {
 		return this.getType().equals(EventType.GULAG) && !this.size.equals(EventTeamSize.SOLO);
 	}
 
+	public boolean isRemovable(Player player) {
+		if (this.isTeam()) {
+			return this.getEventManager().isInEvent(player.getUniqueId()) ||
+					(this.getEventManager().isInEvent(player.getUniqueId()) &&
+							!this.getEventId().equals(this.getEventManager().getEvent(player.getUniqueId()).getEventId()));
+		}
+		return this.getEventManager().isInEvent(player.getUniqueId()) && this.getEventManager().getEvent(player.getUniqueId()).getEventId().equals(this.eventId);
+	}
+
+
 	public boolean isSpleef() {
 		return this.getType().equals(EventType.SPLEEF);
 	}
@@ -375,10 +426,6 @@ public abstract class Event {
 	public abstract void onRound();
 
 	public abstract void onDeath(Player player);
-
-	public abstract void handleStart();
-
-	public abstract EventGroup getWinningTeam();
 
 	public abstract List<EventGroup> getTeams();
 

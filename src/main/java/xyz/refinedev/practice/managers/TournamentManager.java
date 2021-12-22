@@ -268,7 +268,7 @@ public class TournamentManager {
             Profile profile = this.plugin.getProfileManager().getByUUID(uuid);
             if (profile.isInFight()) {
                 Match match = profile.getMatch();
-                match.end();
+                this.plugin.getMatchManager().end(match);
             }
             this.plugin.getProfileManager().teleportToSpawn(profile);
         }

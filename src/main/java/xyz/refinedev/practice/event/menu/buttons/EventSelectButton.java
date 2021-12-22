@@ -10,6 +10,7 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.event.EventType;
+import xyz.refinedev.practice.event.menu.EventKitMenu;
 import xyz.refinedev.practice.event.menu.EventSizeMenu;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
@@ -104,8 +105,6 @@ public class EventSelectButton extends Button {
         });
 
         itemBuilder.lore(lore);
-
-
         return itemBuilder.build();
     }
 
@@ -119,7 +118,14 @@ public class EventSelectButton extends Button {
     public void clicked(Player player, ClickType clickType) {
         player.closeInventory();
 
-        if (eventType.equals(EventType.SUMO) || eventType.equals(EventType.GULAG) || eventType.equals(EventType.BRACKETS)) {
+        if (eventType.equals(EventType.LMS) || eventType.equals(EventType.BRACKETS)) {
+            EventKitMenu kitMenu = new EventKitMenu(eventType);
+            kitMenu.openMenu(player);
+            Button.playSuccess(player);
+            return;
+        }
+
+        if (eventType.equals(EventType.SUMO) || eventType.equals(EventType.GULAG)) {
             EventSizeMenu menu = new EventSizeMenu(eventType);
             menu.openMenu(player);
             Button.playSuccess(player);

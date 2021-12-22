@@ -43,9 +43,7 @@ public class PartyPvPClassMenu extends PaginatedMenu {
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        Party party = profile.getParty();
-
+        Party party = plugin.getPartyManager().getPartyByUUID(player.getUniqueId());
         List<UUID> uuids = party.getPlayers().stream().map(Player::getUniqueId).collect(Collectors.toList());
 
         //Maybe they left?, shouldn't happen but just checking
@@ -71,7 +69,7 @@ public class PartyPvPClassMenu extends PaginatedMenu {
             List<String> lore = new ArrayList<>();
             
             Profile profile = plugin.getProfileManager().getByUUID(uuid);
-            Party party = profile.getParty();
+            Party party = plugin.getPartyManager().getPartyByUUID(uuid);
             String pvpClass = party.getKits().get(uuid);
 
             lore.add(CC.MENU_BAR);
@@ -95,44 +93,43 @@ public class PartyPvPClassMenu extends PaginatedMenu {
         @Override
         public void clicked(Player player, ClickType clickType) {
             Profile profile = plugin.getProfileManager().getByUUID(uuid);
-            Party party = plugin.getProfileManager().getByPlayer(player).getParty();
+            Party party = plugin.getPartyManager().getPartyByUUID(uuid);
 
-            if (party != null) {
-                if (party.getLeader().getUniqueId().equals(player.getUniqueId())) {
-                    Button.playSuccess(player);
-                    String pvpClass = party.getKits().get(uuid);
+            if (!party.isLeader(player.getUniqueId())) {
+                Button.playFail(player);
+                player.sendMessage(Locale.PARTY_NOTLEADER.toString());
+                return;
+            }
 
-                    if (pvpClass == null) {
-                        player.sendMessage(CC.translate("&7An internal error occurred, please contact the author of this plugin!"));
-                        player.closeInventory();
-                        return;
-                    }
+            Button.playSuccess(player);
+            String pvpClass = party.getKits().get(uuid);
 
-                    switch (pvpClass) {
-                        case "Diamond": {
-                            party.getKits().replace(uuid, "Bard");
-                            party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Bard").replace("<target>", profile.getName()));
-                            break;
-                        }
-                        case "Bard": {
-                            party.getKits().replace(uuid, "Archer");
-                            party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Archer").replace("<target>", profile.getName()));
-                            break;
-                        }
-                        case "Archer": {
-                            party.getKits().replace(uuid, "Rogue");
-                            party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Rogue").replace("<target>", profile.getName()));
-                            break;
-                        }
-                        case "Rogue": {
-                            party.getKits().replace(uuid, "Diamond");
-                            party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Diamond").replace("<target>", profile.getName()));
-                            break;
-                        }
-                    }
-                } else {
-                    Button.playFail(player);
-                    player.sendMessage(Locale.PARTY_NOTLEADER.toString());
+            if (pvpClass == null) {
+                player.sendMessage(CC.translate("&7An internal error occurred, please contact the author of this plugin!"));
+                player.closeInventory();
+                return;
+            }
+
+            switch (pvpClass) {
+                case "Diamond": {
+                    party.getKits().replace(uuid, "Bard");
+                    party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Bard").replace("<target>", profile.getName()));
+                    break;
+                }
+                case "Bard": {
+                    party.getKits().replace(uuid, "Archer");
+                    party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Archer").replace("<target>", profile.getName()));
+                    break;
+                }
+                case "Archer": {
+                    party.getKits().replace(uuid, "Rogue");
+                    party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Rogue").replace("<target>", profile.getName()));
+                    break;
+                }
+                case "Rogue": {
+                    party.getKits().replace(uuid, "Diamond");
+                    party.broadcast(Locale.PARTY_HCF_UPDATED.toString().replace("<class>", "Diamond").replace("<target>", profile.getName()));
+                    break;
                 }
             }
         }

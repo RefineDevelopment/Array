@@ -5,6 +5,7 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.event.menu.buttons.EventSizeButton;
+import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
@@ -26,11 +27,20 @@ public class EventSizeMenu extends Menu {
     private final Array plugin = this.getPlugin();
     private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("event_size");
     private final EventType eventType;
+    private final transient Kit kit;
 
     public EventSizeMenu(EventType eventType) {
         this.loadMenu(config);
 
         this.eventType = eventType;
+        this.kit = null;
+    }
+
+    public EventSizeMenu(EventType eventType, Kit kit) {
+        this.loadMenu(config);
+
+        this.eventType = eventType;
+        this.kit = kit;
     }
 
     /**
@@ -67,7 +77,7 @@ public class EventSizeMenu extends Menu {
 
         for ( EventTeamSize eventSize : EventTeamSize.values() ) {
             String path = "BUTTONS." + eventSize.name() + ".";
-            buttons.put(config.getInteger(path + "SLOT"), new EventSizeButton(eventType, eventSize, config));
+            buttons.put(config.getInteger(path + "SLOT"), new EventSizeButton(eventType, eventSize, config, kit));
         }
         return buttons;
     }

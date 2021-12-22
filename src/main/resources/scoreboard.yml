@@ -74,7 +74,7 @@ SCOREBOARD:
       - "&c&lRound #<match_round>"
       - " &cRed: &r<red_points_formatted>"
       - " &9Blue: &r<blue_points_formatted>"
-    SOLO_BEDWARS_ADDITION:
+    SOLO_BEDWARS:
       - "&c&lFight"
       - " &cRed: &r<bedwars_red_formatted>"
       - " &cBlue: &r<bedwars_blue_formatted>"

@@ -40,7 +40,7 @@ public class Parkour extends Event {
     public Parkour(Array plugin, Player host) {
         super(plugin, plugin.getEventManager(), "Parkour", new PlayerSnapshot(host.getUniqueId(), host.getName()), 100, EventType.PARKOUR, EventTeamSize.SOLO);
 
-        this.setEvent_Prefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
+        this.setPrefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
     }
 
     @Override
@@ -112,9 +112,9 @@ public class Parkour extends Event {
     }
 
     @Override
-    public void end() {
+    public void handleEnd() {
         if (waterTask != null) waterTask.cancel();
-        super.end();
+        super.handleEnd();
     }
 
     @Override

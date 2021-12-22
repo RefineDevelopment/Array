@@ -16,6 +16,7 @@ import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.kit.TeamFightMatch;
+import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
@@ -69,12 +70,12 @@ public class DuelCommands {
             player.sendMessage(CC.RED + "You have already sent that player a duel request.");
             return;
         }
-        if (senderProfile.getParty() != null && receiverProfile.getParty() == null) {
+        if (senderProfile.hasParty() && !receiverProfile.hasParty()) {
             player.sendMessage(Locale.ERROR_TARGET_NO_PARTY.toString());
             return;
         }
 
-        DuelProcedure procedure = new DuelProcedure(player, target, senderProfile.getParty() != null);
+        DuelProcedure procedure = new DuelProcedure(player, target, senderProfile.hasParty());
         senderProfile.setDuelProcedure(procedure);
         new DuelSelectKitMenu().openMenu(player);
     }
@@ -106,20 +107,19 @@ public class DuelCommands {
             return;
         }
 
-
         if (request.isParty()) {
-            if (senderProfile.getParty() == null) {
+            if (!senderProfile.hasParty()) {
                 player.sendMessage(Locale.ERROR_NO_PARTY_TO_DUEL.toString());
                 return;
-            } else if (receiverProfile.getParty() == null) {
+            } else if (!receiverProfile.hasParty()) {
                 player.sendMessage(Locale.ERROR_TARGET_NO_PARTY.toString());
                 return;
             }
         } else {
-            if (senderProfile.getParty() != null) {
+            if (senderProfile.hasParty()) {
                 player.sendMessage(Locale.ERROR_PARTY.toString());
                 return;
-            } else if (receiverProfile.getParty() != null) {
+            } else if (receiverProfile.hasParty()) {
                 player.sendMessage(Locale.ERROR_TARGET_IN_PARTY.toString());
                 return;
             }
@@ -162,15 +162,18 @@ public class DuelCommands {
         this.arena = arena;
 
         if (request.isParty()) {
+            Party senderParty = this.plugin.getPartyManager().getPartyByUUID(senderProfile.getUniqueId());
+            Party receiverParty = this.plugin.getPartyManager().getPartyByUUID(receiverProfile.getUniqueId());
+
             Team teamA = new Team(new TeamPlayer(player));
-            for ( Player partyMember : senderProfile.getParty().getPlayers() ) {
+            for ( Player partyMember : senderParty.getPlayers() ) {
                 if (!partyMember.getPlayer().equals(player)) {
                     teamA.getTeamPlayers().add(new TeamPlayer(partyMember));
                 }
             }
 
             Team teamB = new Team(new TeamPlayer(target));
-            for ( Player partyMember : receiverProfile.getParty().getPlayers() ) {
+            for ( Player partyMember : receiverParty.getPlayers() ) {
                 if (!partyMember.getPlayer().equals(target)) {
                     teamB.getTeamPlayers().add(new TeamPlayer(partyMember));
                 }
@@ -188,7 +191,7 @@ public class DuelCommands {
                 target.sendMessage(replaceOpponent(opponentMessages, target));
             }
         }
-        TaskUtil.run(match::start);
+        TaskUtil.run(() -> this.plugin.getMatchManager().start(match));
     }
 
     private String formatMessages(Player player1P, Player player2P, String string, String player1, String player2, int player1Elo, int player2Elo, QueueType type) {

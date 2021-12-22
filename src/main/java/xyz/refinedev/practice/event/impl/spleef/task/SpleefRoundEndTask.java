@@ -22,7 +22,7 @@ public class SpleefRoundEndTask extends EventRoundEndTask {
     public void onRun() {
         if (getTicks() >= 3) {
             if (this.getEvent().canEnd()) {
-                this.getEvent().end();
+                this.getEvent().handleEnd();
             }
         }
     }
