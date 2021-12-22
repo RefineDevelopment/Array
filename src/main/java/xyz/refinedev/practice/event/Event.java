@@ -38,7 +38,7 @@ public abstract class Event {
 
 	private final Map<UUID, EventPlayer> eventPlayers = new HashMap<>();
 	private final Map<UUID, EventTeamPlayer> eventTeamPlayers = new HashMap<>();
-	private final List<Entity> entities = new ArrayList<>();;
+	private final List<Entity> entities = new ArrayList<>();
 	private final List<UUID> spectators = new ArrayList<>();
 	private final List<Item> droppedItems = new ArrayList<>();
 	private final List<Location> placedBlocks = new ArrayList<>();
@@ -188,7 +188,7 @@ public abstract class Event {
 	}
 
 	public void handleStart() {
-		this.setEventTask(new EventStartTask(this));
+		this.setEventTask(new EventStartTask(this.plugin, this));
 	}
 
 	public void handleEnd() {

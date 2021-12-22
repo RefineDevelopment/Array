@@ -21,10 +21,9 @@ import java.util.UUID;
 public class Queue {
 
     private final Array plugin;
-
     private final LinkedList<QueueProfile> players = new LinkedList<>();
 
-    private final UUID uuid;
+    private final UUID uniqueId;
     private final Kit kit;
     private final QueueType type;
 
@@ -38,9 +37,9 @@ public class Queue {
         this.plugin = plugin;
         this.kit = kit;
         this.type = type;
-        this.uuid = UUID.randomUUID();
+        this.uniqueId = UUID.randomUUID();
 
-        plugin.getQueueManager().getQueues().add(this);
+        this.plugin.getQueueManager().getQueues().put(uniqueId, this);
     }
 
     /**

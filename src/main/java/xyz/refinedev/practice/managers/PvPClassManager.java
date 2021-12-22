@@ -48,7 +48,7 @@ public class PvPClassManager {
         }, 2L, 2L);
     }
 
-    public void onDisable() {
+    public void shutdown() {
         for (Map.Entry<UUID, PvPClass> entry : new HashMap<>(equippedClassMap).entrySet()) {
             this.setEquippedClass(Bukkit.getPlayer(entry.getKey()), null);
         }

@@ -16,7 +16,6 @@ import xyz.refinedev.practice.hook.core.CoreHandler;
 import xyz.refinedev.practice.hook.placeholderapi.LeaderboardPlaceholders;
 import xyz.refinedev.practice.hook.spigot.SpigotHandler;
 import xyz.refinedev.practice.managers.*;
-import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.pvpclasses.bard.EffectRestorer;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.CommandService;
@@ -196,14 +195,14 @@ public class Array extends JavaPlugin {
         this.matchManager.getMatches().forEach(matchManager::cleanup);
         this.arenaManager.getArenas().forEach(arenaManager::save);
         this.kitManager.getKits().forEach(kitManager::save);
-        this.clanManager.getClans().forEach(clanManager::save);
+        this.clanManager.getClans().values().forEach(clanManager::save);
         this.profileManager.getProfiles().values().forEach(profileManager::save);
         this.killEffectManager.getKillEffects().forEach(killEffectManager::save);
 
         this.configHandler.save();
-        this.eventManager.save();
         this.killEffectManager.exportConfig();
-        this.pvpClassManager.onDisable();
+        this.pvpClassManager.shutdown();
+        this.eventManager.shutdown();
         this.leaderboardsManager.shutdown();
         this.queueManager.shutdown();
 
@@ -262,10 +261,10 @@ public class Array extends JavaPlugin {
     }
 
     public void logger(String message) {
-        Bukkit.getConsoleSender().sendMessage(CC.translate("&c• " + message));
+        this.getServer().getConsoleSender().sendMessage(CC.translate("&c• " + message));
     }
 
     public void consoleLog(String string) {
-        Bukkit.getConsoleSender().sendMessage(CC.translate( string));
+        this.getServer().getConsoleSender().sendMessage(CC.translate( string));
     }
 }

@@ -199,9 +199,9 @@ public class KitManager {
     public void delete(Kit kit) {
         kits.remove(kit);
 
-        if (kit.isEnabled()) plugin.getQueueManager().getQueues().remove(kit.getUnrankedQueue());
-        if (kit.getRankedQueue() != null) plugin.getQueueManager().getQueues().remove(kit.getRankedQueue());
-        if (kit.getClanQueue() != null) plugin.getQueueManager().getQueues().remove(kit.getClanQueue());
+        if (kit.isEnabled()) plugin.getQueueManager().getQueues().remove(kit.getUnrankedQueue().getUniqueId());
+        if (kit.getGameRules().isRanked()) plugin.getQueueManager().getQueues().remove(kit.getRankedQueue().getUniqueId());
+        if (kit.getGameRules().isClan()) plugin.getQueueManager().getQueues().remove(kit.getClanQueue().getUniqueId());
 
         config.set("kits." + kit.getName(), null);
         config.save();

@@ -6,15 +6,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.clan.Clan;
+import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueProfile;
 import xyz.refinedev.practice.queue.QueueThread;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -30,7 +30,7 @@ import java.util.UUID;
 public class QueueManager {
 
     private final Array plugin;
-    private final List<Queue> queues = new ArrayList<>();
+    private final Map<UUID, Queue> queues = new HashMap<>();
 
     private QueueThread thread;
 
@@ -44,6 +44,7 @@ public class QueueManager {
      */
     public void shutdown() {
         this.thread.stop();
+        this.queues.clear();
     }
 
     /**
@@ -76,9 +77,10 @@ public class QueueManager {
                 break;
             }
             case CLAN: {
+                Clan clan = this.plugin.getClanManager().getByPlayer(player.getUniqueId());
                 player.sendMessage(Locale.QUEUE_JOIN_CLAN.toString()
                         .replace("<queue_name>", queue.getQueueName())
-                        .replace("<clan_elo>", String.valueOf(profile.getClan().getElo())));
+                        .replace("<clan_elo>", String.valueOf(clan.getElo())));
                 break;
             }
         }
@@ -116,11 +118,6 @@ public class QueueManager {
      * @return {@link Queue}
      */
     public Queue getByUuid(UUID uuid) {
-        for (Queue queue : queues) {
-            if (queue.getUuid().equals(uuid)) {
-                return queue;
-            }
-        }
-        return null;
+        return queues.get(uuid);
     }
 }

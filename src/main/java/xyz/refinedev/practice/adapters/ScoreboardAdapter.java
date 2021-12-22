@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.event.Event;
+import xyz.refinedev.practice.managers.*;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
@@ -65,7 +66,13 @@ public class ScoreboardAdapter implements AssembleAdapter {
     public List<String> getLines(Player player) {
         List<String> lines = new ArrayList<>();
 
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        ProfileManager profileManager = this.plugin.getProfileManager();
+        PartyManager partyManager = this.plugin.getPartyManager();
+        ClanManager clanManager = this.plugin.getClanManager();
+        QueueManager queueManager = this.plugin.getQueueManager();
+        EventManager eventManager = this.plugin.getEventManager();
+
+        Profile profile = profileManager.getByUUID(player.getUniqueId());
         if (!profile.getSettings().isScoreboardEnabled()) return lines;
 
         lines.add(config.getStringOrDefault("SCOREBOARD.LINES", CC.SB_BAR));
@@ -80,7 +87,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                     .replace("|", "┃")));
 
             if (profile.hasParty()) {//&& plugin.getTournamentManager().getCurrentTournament() == null) {
-                Party party = this.plugin.getPartyManager().getPartyByUUID(player.getUniqueId());
+                Party party = partyManager.getPartyByUUID(player.getUniqueId());
                 String armorClass = party.getKits().get(player.getUniqueId());
 
                 config.getStringList("SCOREBOARD.PARTY").forEach(line -> lines.add(CC.translate(line
@@ -91,9 +98,8 @@ public class ScoreboardAdapter implements AssembleAdapter {
                         .replace("<party_class>", armorClass == null ? "None" : armorClass)
                         .replace("%splitter%", "┃").replace("|", "┃")));
 
-            } else if (profile.hasClan() && !profile.isInQueue()) {
-                Clan clan = profile.getClan();
-
+            } else if (clanManager.hasClan(player.getUniqueId()) && !profile.isInQueue()) {
+                Clan clan = clanManager.getByPlayer(player.getUniqueId());
                 config.getStringList("SCOREBOARD.CLAN").forEach(line -> lines.add(CC.translate(line
                         .replace("<clan_leader>", plugin.getProfileManager().getByUUID(clan.getLeader().getUuid()).getName())
                         .replace("<clan_members_online>", String.valueOf(clan.getOnlineMembers().size()))
@@ -126,7 +132,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                         break;
                     }
                     case CLAN: {
-                        Clan clan = profile.getClan();
+                        Clan clan = clanManager.getByPlayer(player.getUniqueId());
                         config.getStringList("SCOREBOARD.CLAN_QUEUE").forEach(line -> lines.add(CC.translate(line
                                 .replace("<queue_kit>", queue.getKit().getDisplayName())
                                 .replace("<queue_duration>", TimeUtil.millisToTimer(queueProfile.getPassed()))
@@ -528,15 +534,15 @@ public class ScoreboardAdapter implements AssembleAdapter {
                         .replace("<alive_count>", String.valueOf(team.getAliveCount()))
                         .replace("<total_count>", String.valueOf(team.getPlayers().size()))).replace("%splitter%", "┃").replace("|", "┃")));
             }
-        } else if ((profile.isSpectating() && profile.getEvent() != null) || profile.isInEvent()) {
-            Event event = profile.getEvent();
+        } else if (eventManager.isInEvent(player.getUniqueId())) {
+            Event event = eventManager.getEvent(player.getUniqueId());
             if (!event.isTeam()) {
                 if (event.isWaiting()) {
                     String status;
                     if (event.getCooldown() == null) {
                         status=CC.translate(config.getString("SCOREBOARD.EVENT.SOLO.STATUS_WAITING")
                                 .replace("<event_name>", event.getName())
-                                .replace("<event_host_name>", event.getHost().getUsername())
+                                .replace("<event_host_name>", event.getHost())
                                 .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
                                 .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
 
@@ -546,7 +552,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
 
                         String finalRemaining=remaining;
                         status=CC.translate(config.getString("SCOREBOARD.EVENT.SOLO.STATUS_COUNTING")
-                                .replace("<event_host_name>", event.getHost().getUsername())
+                                .replace("<event_host_name>", event.getHost())
                                 .replace("<event_name>", event.getName())
                                 .replace("<event_remaining>", finalRemaining)
                                 .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
@@ -554,7 +560,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
 
                     }
                     config.getStringList("SCOREBOARD.EVENT.SOLO.WAITING").forEach(line -> lines.add(CC.translate(line
-                            .replace("<event_host_name>", event.getHost().getUsername())
+                            .replace("<event_host_name>", event.getHost())
                             .replace("<event_name>", event.getName())
                             .replace("<event_status>", status)
                             .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
@@ -587,19 +593,19 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 if (event.isWaiting()) {
                     String status;
                     if (event.getCooldown() == null) {
-                        status=CC.translate(config.getString("SCOREBOARD.EVENT.TEAM.STATUS_WAITING")
+                        status = CC.translate(config.getString("SCOREBOARD.EVENT.TEAM.STATUS_WAITING")
                                 .replace("<event_name>", event.getName())
-                                .replace("<event_host_name>", event.getHost().getUsername())
+                                .replace("<event_host_name>", event.getHost())
                                 .replace("<event_player_count>", String.valueOf(event.getEventTeamPlayers().size()))
                                 .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃");
 
                     } else {
-                        String remaining=TimeUtil.millisToSeconds(event.getCooldown().getRemaining());
-                        if (remaining.startsWith("-")) remaining="0.0";
+                        String remaining = TimeUtil.millisToSeconds(event.getCooldown().getRemaining());
+                        if (remaining.startsWith("-")) remaining = "0.0";
 
                         String finalRemaining=remaining;
-                        status=CC.translate(config.getString("SCOREBOARD.EVENT.TEAM.STATUS_COUNTING")
-                                .replace("<event_host_name>", event.getHost().getUsername())
+                        status = CC.translate(config.getString("SCOREBOARD.EVENT.TEAM.STATUS_COUNTING")
+                                .replace("<event_host_name>", event.getHost())
                                 .replace("<event_name>", event.getName())
                                 .replace("<event_remaining>", finalRemaining)
                                 .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
@@ -607,7 +613,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
 
                     }
                     config.getStringList("SCOREBOARD.EVENT.TEAM.WAITING").forEach(line -> lines.add(CC.translate(line
-                            .replace("<event_host_name>", event.getHost().getUsername())
+                            .replace("<event_host_name>", event.getHost())
                             .replace("<event_name>", event.getName())
                             .replace("<event_status>", status)
                             .replace("<event_player_count>", String.valueOf(event.getEventPlayers().size()))
@@ -615,7 +621,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
 
                 } else {
                     config.getStringList("SCOREBOARD.EVENT.TEAM.FIGHTING").forEach(line -> lines.add(CC.translate(line
-                            .replace("<event_host_name>", event.getHost().getUsername())
+                            .replace("<event_host_name>", event.getHost())
                             .replace("<event_duration>", event.getDuration())
                             .replace("<event_name>", event.getName())
                             .replace("<event_players_alive>", String.valueOf(event.getRemainingPlayers().size()))
@@ -628,12 +634,14 @@ public class ScoreboardAdapter implements AssembleAdapter {
                                 .replace("<event_teamB_name>", event.getRoundTeamB().getColor().getTitle())
                                 .replace("<event_teamA_size>", String.valueOf(event.getRoundTeamA().getPlayers().size()))
                                 .replace("<event_teamB_size>", String.valueOf(event.getRoundTeamB().getPlayers().size()))
-                                .replace("<event_host_name>", event.getHost().getUsername())
-                                .replace("<event_name>", event.getName())
-                                .replace("<event_duration>", event.getDuration())
                                 .replace("<event_players_alive>", String.valueOf(event.getRemainingPlayers().size()))
                                 .replace("<event_player_count>", String.valueOf(event.getEventTeamPlayers().size()))
-                                .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))).replace("%splitter%", "┃").replace("|", "┃")));
+                                .replace("<event_max_players>", String.valueOf(event.getMaxPlayers())))
+                                .replace("<event_host_name>", event.getHost())
+                                .replace("<event_name>", event.getName())
+                                .replace("<event_duration>", event.getDuration())
+                                .replace("%splitter%", "┃")
+                                .replace("|", "┃")));
                     }
                 }
             }

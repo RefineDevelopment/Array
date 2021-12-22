@@ -122,7 +122,6 @@ public class BracketsTeam extends Event {
 
         for (Player playerA : this.roundTeamA.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
             PlayerUtil.reset(playerA);
-            PlayerUtil.denyMovement(playerA);
 
             Profile profileA = this.plugin.getProfileManager().getByUUID(playerA.getUniqueId());
 
@@ -142,7 +141,6 @@ public class BracketsTeam extends Event {
 
         for (Player playerB : this.roundTeamB.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
             PlayerUtil.reset(playerB);
-            PlayerUtil.denyMovement(playerB);
 
             Profile profileB = this.plugin.getProfileManager().getByUUID(playerB.getUniqueId());
             playerB.teleport(EventHelperUtil.getSpawn2(this));
@@ -244,11 +242,6 @@ public class BracketsTeam extends Event {
             this.getPlugin().getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
             this.getPlugin().getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
         });
-    }
-
-    @Override
-    public void handleStart() {
-        this.setEventTask(new EventStartTask(this));
     }
 
     @Override

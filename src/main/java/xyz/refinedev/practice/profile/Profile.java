@@ -1,21 +1,19 @@
 package xyz.refinedev.practice.profile;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.clan.meta.ClanInvite;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
 import xyz.refinedev.practice.duel.DuelProcedure;
 import xyz.refinedev.practice.duel.DuelRequest;
 import xyz.refinedev.practice.duel.RematchProcedure;
-import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.kiteditor.KitEditor;
 import xyz.refinedev.practice.match.Match;
@@ -46,6 +44,7 @@ public class Profile {
     private final List<ProfileHistory> unrankedMatchHistory = new ArrayList<>();
     private final List<ProfileHistory> rankedMatchHistory = new ArrayList<>();
 
+    @SerializedName("_id")
     private final UUID uniqueId;
     private String name;
     private UUID killEffect;
@@ -56,10 +55,8 @@ public class Profile {
     //TODO Remove this
     private Match match;
     private Queue queue;
-    private Clan clan;
 
     private TablistRank tablistRank;
-    private ClanProfile clanProfile;
     private QueueProfile queueProfile;
     private DuelProcedure duelProcedure;
     private RematchProcedure rematchData;
@@ -144,10 +141,6 @@ public class Profile {
 
     public boolean isBusy() {
         return this.isInQueue() || this.isInFight() || this.plugin.getEventManager().isInEvent(uniqueId) || this.isSpectating() || this.plugin.getTournamentManager().isInTournament(uniqueId);
-    }
-
-    public boolean hasClan() {
-        return clan != null;
     }
 
     public boolean hasParty() {

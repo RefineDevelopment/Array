@@ -21,10 +21,8 @@ import xyz.refinedev.practice.task.clan.ClanInviteExpireTask;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.Clickable;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -42,7 +40,10 @@ public class ClanManager {
     private final Array plugin;
     private final MongoCollection<Document> collection;
 
-    private final List<Clan> clans = new ArrayList<>();
+    //Player UUID -> Clan UUID
+    private final Map<UUID, ClanProfile> profileMap = new HashMap<>();
+    private final Map<UUID, UUID> clanMap = new HashMap<>();
+    private final Map<UUID, Clan> clans = new HashMap<>();
 
     public void init() {
         new ClanInviteExpireTask(plugin).runTaskTimerAsynchronously(plugin, 100L, 100L);
@@ -54,12 +55,48 @@ public class ClanManager {
                 if (document.getString("clan") == null) continue; 
                 
                 Clan clan = Array.GSON.fromJson(document.getString("clan"), Clan.class);
-
-                synchronized (this.clans) {
-                    this.clans.add(clan);
-                }
+                this.setupMap(clan);
             }
         });
+    }
+
+    /**
+     * Load the members into the hashmap
+     *
+     * @param clan {@link Clan} the clan being loaded in the map
+     */
+    public void setupMap(Clan clan) {
+        this.plugin.getServer().getScheduler().runTask(this.plugin, () -> {
+            this.clans.put(clan.getUniqueId(), clan);
+
+            for ( ClanProfile profile : clan.getAllMembers() ) {
+                this.clanMap.put(profile.getUuid(), clan.getUniqueId());
+                this.profileMap.put(profile.getUuid(), profile);
+            }
+        });
+    }
+
+    /**
+     * Does the player with the given uuid have a clan
+     *
+     * @param uuid {@link UUID} the uuid of the player
+     * @return {@link Boolean} returns true if a clan is present
+     */
+    public boolean hasClan(UUID uuid) {
+        return this.clanMap.containsKey(uuid);
+    }
+
+    /**
+     * Returns a player's clan using their uuid
+     *
+     * @param uuid {@link UUID} the uuid of the player
+     * @return {@link Clan} returns the clan the of player
+     */
+    public Clan getByPlayer(UUID uuid) {
+        UUID clan = this.clanMap.get(uuid);
+        if (clan == null) return null;
+
+        return clans.get(clan);
     }
 
     /**
@@ -79,9 +116,6 @@ public class ClanManager {
         for ( ClanProfile member : clan.getAllMembers() ) {
             Profile profile = plugin.getProfileManager().getByUUID(member.getUuid());
 
-            profile.setClan(null);
-            profile.setClanProfile(null);
-
             if (profile.isInLobby()) {
                 plugin.getProfileManager().refreshHotbar(profile);
             }
@@ -93,9 +127,10 @@ public class ClanManager {
 
         clan.getMembers().clear();
         clan.getCaptains().clear();
-        this.clans.remove(clan);
 
-        plugin.submitToThread(() -> collection.deleteOne(Filters.eq("_id", clan.getUniqueId().toString())));
+        this.clans.remove(clan.getUniqueId(), clan);
+        this.clanMap.values().removeIf(entry -> entry.equals(clan.getUniqueId()));
+        this.plugin.submitToThread(() -> collection.deleteOne(Filters.eq("_id", clan.getUniqueId().toString())));
     }
 
 
@@ -253,11 +288,10 @@ public class ClanManager {
         clan.broadcast(Locale.CLAN_JOIN.toString().replace("<player>", joiner.getName()));
         this.save(clan);
 
-        profile.setClan(clan);
-        profile.setClanProfile(clanProfile);
-
-        plugin.getProfileManager().refreshHotbar(profile);
-        plugin.getProfileManager().save(profile);
+        this.clanMap.put(joiner.getUniqueId(), clan.getUniqueId());
+        this.profileMap.put(joiner.getUniqueId(), clanProfile);
+        this.plugin.getProfileManager().refreshHotbar(profile);
+        this.plugin.getProfileManager().save(profile);
     }
 
     /**
@@ -268,7 +302,7 @@ public class ClanManager {
      */
     public void leave(Clan clan, Player leaver) {
         Profile profile = plugin.getProfileManager().getByPlayer(leaver);
-        ClanProfile clanProfile = profile.getClanProfile();
+        ClanProfile clanProfile = this.profileMap.get(leaver.getUniqueId());
 
         if (clanProfile.getType() == ClanRoleType.LEADER) {
             throw new IllegalArgumentException("Leader can not leave the clan!");
@@ -277,11 +311,11 @@ public class ClanManager {
         clan.getCaptains().remove(clanProfile);
         clan.getMembers().remove(clanProfile);
 
-        profile.setClan(null);
-        profile.setClanProfile(null);
+        this.plugin.getProfileManager().save(profile);
+        this.plugin.getProfileManager().refreshHotbar(profile);
 
-        plugin.getProfileManager().save(profile);
-        plugin.getProfileManager().refreshHotbar(profile);
+        this.clanMap.remove(leaver.getUniqueId(), clan.getUniqueId());
+        this.profileMap.remove(leaver.getUniqueId(), clanProfile);
 
         this.save(clan);
         clan.broadcast(Locale.CLAN_LEFT.toString().replace("<player>", leaver.getName()));
@@ -295,7 +329,7 @@ public class ClanManager {
      */
     public void kick(Clan clan, UUID uuid) {
         Profile profile = plugin.getProfileManager().getByUUID(uuid);
-        ClanProfile clanProfile = profile.getClanProfile();
+        ClanProfile clanProfile = this.profileMap.get(uuid);
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
 
         if (clanProfile.getType() == ClanRoleType.LEADER) {
@@ -305,11 +339,11 @@ public class ClanManager {
         clan.getCaptains().remove(clanProfile);
         clan.getMembers().remove(clanProfile);
 
-        profile.setClan(null);
-        profile.setClanProfile(null);
+        this.plugin.getProfileManager().save(profile);
+        this.plugin.getProfileManager().refreshHotbar(profile);
 
-        plugin.getProfileManager().save(profile);
-        plugin.getProfileManager().refreshHotbar(profile);
+        this.clanMap.remove(uuid, clan.getUniqueId());
+        this.profileMap.remove(uuid, clanProfile);
 
         this.save(clan);
         clan.broadcast(Locale.CLAN_KICKED.toString().replace("<player>", player.getName()));
@@ -323,7 +357,7 @@ public class ClanManager {
      */
     public void ban(Clan clan, UUID uuid) {
         Profile profile = plugin.getProfileManager().getByUUID(uuid);
-        ClanProfile clanProfile = profile.getClanProfile();
+        ClanProfile clanProfile = this.profileMap.get(uuid);
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
 
         if (clanProfile.getType() == ClanRoleType.LEADER) {
@@ -332,10 +366,7 @@ public class ClanManager {
 
         clan.getCaptains().remove(clanProfile);
         clan.getMembers().remove(clanProfile);
-
-        profile.setClan(null);
-        profile.setClanProfile(null);
-
+        
         plugin.getProfileManager().save(profile);
         plugin.getProfileManager().refreshHotbar(profile);
 
@@ -351,7 +382,7 @@ public class ClanManager {
      * @return     {@link Clan}
      */
     public Clan getByName(String name) {
-        return clans.stream().filter(clan -> clan.getName().equalsIgnoreCase(name)).findAny().orElse(null);
+        return clans.values().stream().filter(clan -> clan.getName().equalsIgnoreCase(name)).findAny().orElse(null);
     }
 
     /**
@@ -361,7 +392,7 @@ public class ClanManager {
      * @return     {@link Clan}
      */
     public Clan getByUUID(UUID uuid) {
-        return clans.stream().filter(clan -> clan.getUniqueId().equals(uuid)).findAny().orElse(null);
+        return clans.get(uuid);
     }
 
     /**
@@ -371,7 +402,7 @@ public class ClanManager {
      * @return       {@link Clan}
      */
     public Clan getByLeader(UUID player) {
-        return clans.stream().filter(c -> c.getLeader().getUuid().equals(player)).findFirst().orElse(null);
+        return clans.values().stream().filter(c -> c.getLeader().getUuid().equals(player)).findFirst().orElse(null);
     }
 
     /**

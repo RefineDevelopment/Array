@@ -8,6 +8,7 @@ import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.managers.*;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
@@ -28,7 +29,13 @@ public class QueueThread extends Thread {
     public void run() {
         while (true) {
             try {
-                for (Queue queue : plugin.getQueueManager().getQueues()) {
+                ProfileManager profileManager = this.plugin.getProfileManager();
+                ArenaManager arenaManager = this.plugin.getArenaManager();
+                ClanManager clanManager = this.plugin.getClanManager();
+                QueueManager queueManager = this.plugin.getQueueManager();
+                MatchManager matchManager = this.plugin.getMatchManager();
+
+                for (Queue queue : queueManager.getQueues().values()) {
                     queue.getPlayers().forEach(QueueProfile::tickRange);
 
                     if (queue.getPlayers().size() < 2) {
@@ -37,16 +44,15 @@ public class QueueThread extends Thread {
 
                     for (QueueProfile firstQueueProfile : queue.getPlayers()) {
                         Player firstPlayer = Bukkit.getPlayer(firstQueueProfile.getUniqueId());
-
                         if (firstPlayer == null) continue;
 
-                        Profile firstProfile = plugin.getProfileManager().getByUUID(firstQueueProfile.getUniqueId());
+                        Profile firstProfile = profileManager.getByUUID(firstQueueProfile.getUniqueId());
 
                         for (QueueProfile secondQueueProfile : queue.getPlayers()) {
                             if (firstQueueProfile.equals(secondQueueProfile)) continue;
 
                             Player secondPlayer = Bukkit.getPlayer(secondQueueProfile.getUniqueId());
-                            Profile secondProfile = plugin.getProfileManager().getByUUID(secondQueueProfile.getUniqueId());
+                            Profile secondProfile = profileManager.getByUUID(secondQueueProfile.getUniqueId());
 
                             if (secondPlayer == null) continue;
 
@@ -69,20 +75,20 @@ public class QueueThread extends Thread {
                             }
 
                             if (queue.getType() == QueueType.CLAN) {
-                                Clan firstClan = firstProfile.getClan();
-                                Clan secondClan = secondProfile.getClan();
+                                Clan firstClan = clanManager.getByPlayer(firstPlayer.getUniqueId());
+                                Clan secondClan = clanManager.getByPlayer(secondPlayer.getUniqueId());
 
                                 if (firstClan == secondClan) continue;
                             }
 
-                            if (plugin.getArenaManager().getArenas().isEmpty()) {
+                            if (arenaManager.getArenas().isEmpty()) {
                                 firstPlayer.sendMessage(CC.translate("&cThere are no arenas setup!"));
                                 secondPlayer.sendMessage(CC.translate("&cThere are no arenas setup!"));
                                 continue;
                             }
 
                             // Find arena
-                            arena = plugin.getArenaManager().getByKit(queue.getKit());
+                            arena = arenaManager.getByKit(queue.getKit());
                             if (arena == null || !arena.isSetup() || arena.isActive()) continue;
 
                             if (queue.getKit().getGameRules().isBuild()) arena.setActive(true);
@@ -98,21 +104,21 @@ public class QueueThread extends Thread {
                                 firstMatchPlayer.setElo(firstProfile.getStatisticsData().get(queue.getKit()).getElo());
                                 secondMatchPlayer.setElo(secondProfile.getStatisticsData().get(queue.getKit()).getElo());
 
-                                plugin.getProfileManager().calculateGlobalElo(secondProfile);
-                                plugin.getProfileManager().calculateGlobalElo(firstProfile);
+                                profileManager.calculateGlobalElo(secondProfile);
+                                profileManager.calculateGlobalElo(firstProfile);
                             }
 
                             kit = queue.getKit();
 
                             // Create match
-                            this.match = plugin.getMatchManager().createSoloKitMatch(queue, firstMatchPlayer, secondMatchPlayer, kit, arena, queue.getType());
+                            this.match = matchManager.createSoloKitMatch(queue, firstMatchPlayer, secondMatchPlayer, kit, arena, queue.getType());
 
                             for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList() ) {
                                 String opponentMessages = this.formatMessages(string, firstPlayer, secondPlayer, queue.getType());
                                 firstPlayer.sendMessage(this.replaceOpponent(opponentMessages, firstPlayer));
                                 secondPlayer.sendMessage(this.replaceOpponent(opponentMessages, secondPlayer));
                             }
-                            TaskUtil.run(() -> this.plugin.getMatchManager().start(match));
+                            matchManager.start(match);
                         }
                     }
                 }
@@ -135,14 +141,16 @@ public class QueueThread extends Thread {
     }
 
     private String formatMessages(String string, Player sender, Player target, QueueType type) {
-        Profile senderProfile = plugin.getProfileManager().getByUUID(sender.getUniqueId());
-        Profile targetProfile = plugin.getProfileManager().getByUUID(target.getUniqueId());
+        ProfileManager profileManager = this.plugin.getProfileManager();
+
+        Profile senderProfile = profileManager.getByUUID(sender.getUniqueId());
+        Profile targetProfile = profileManager.getByUUID(target.getUniqueId());
 
         int senderELO = senderProfile.getStatisticsData().get(kit).getElo();
         int targetELO = targetProfile.getStatisticsData().get(kit).getElo();
 
-        String senderName = plugin.getProfileManager().getColouredName(senderProfile);
-        String targetName = plugin.getProfileManager().getColouredName(targetProfile);
+        String senderName = profileManager.getColouredName(senderProfile);
+        String targetName = profileManager.getColouredName(targetProfile);
 
         return string
                 .replace("<ranked>", type == QueueType.RANKED ? "&aTrue" : "&cFalse")
@@ -154,8 +162,8 @@ public class QueueThread extends Thread {
 
     private String replaceOpponent(String opponent, Player player) {
         opponent = opponent
-                .replace("<opponent>", match.getOpponentPlayer(player).getDisplayName())
-                .replace("<opponent_ping>", String.valueOf(PlayerUtil.getPing(match.getOpponentPlayer(player))))
+                .replace("<opponent>", this.match.getOpponentPlayer(player).getDisplayName())
+                .replace("<opponent_ping>", String.valueOf(PlayerUtil.getPing(this.match.getOpponentPlayer(player))))
                 .replace("<player_ping>", String.valueOf(PlayerUtil.getPing(player)))
                 .replace("<arena>", this.arena.getDisplayName())
                 .replace("<kit>", this.kit.getDisplayName())
