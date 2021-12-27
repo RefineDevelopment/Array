@@ -9,10 +9,10 @@ import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.EventState;
 import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.event.EventType;
-import xyz.refinedev.practice.event.impl.lms.task.LMSRoundEndTask;
 import xyz.refinedev.practice.event.impl.parkour.task.ParkourRoundStartTask;
 import xyz.refinedev.practice.event.meta.group.EventGroup;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
+import xyz.refinedev.practice.event.task.EventRoundEndTask;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.other.PlayerSnapshot;
@@ -73,7 +73,7 @@ public class LMS extends Event {
 
         if (this.canEnd()) {
             this.setState(EventState.ROUND_ENDING);
-            this.setEventTask(new LMSRoundEndTask(this));
+            this.setEventTask(new EventRoundEndTask(this.getPlugin(), this));
         }
 
         for (Player otherPlayer : getPlayers()) {

@@ -3,9 +3,9 @@ package xyz.refinedev.practice.tournament;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import xyz.refinedev.practice.Array;
 
 import java.util.*;
 
@@ -21,14 +21,13 @@ import java.util.*;
 @RequiredArgsConstructor
 public class Tournament {
 
-    private final Array plugin = Array.getInstance();
 
     private final Set<UUID> players = new HashSet<>();
     private final Set<UUID> matches = new HashSet<>();
     private final List<TournamentTeam> aliveTeams = new ArrayList<>();
     private final Map<UUID, TournamentTeam> playerTeams = new HashMap<>();
 
-    private final int id;
+    private final UUID uniqueId;
     private final int teamSize;
     private final int size;
     private final String kitName;
@@ -39,7 +38,7 @@ public class Tournament {
 
     public void broadcast(String message) {
         for (UUID uuid : this.players) {
-            Player player = this.plugin.getServer().getPlayer(uuid);
+            Player player = Bukkit.getPlayer(uuid);
 
             player.sendMessage(message);
         }
@@ -47,7 +46,7 @@ public class Tournament {
 
     public void broadcastWithSound(String message, Sound sound) {
         for (UUID uuid : this.players) {
-            Player player = this.plugin.getServer().getPlayer(uuid);
+            Player player = Bukkit.getPlayer(uuid);
 
             player.sendMessage(message);
             player.playSound(player.getLocation(), sound, 10, 1);

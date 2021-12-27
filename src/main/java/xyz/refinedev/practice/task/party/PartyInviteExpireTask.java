@@ -3,6 +3,7 @@ package xyz.refinedev.practice.task.party;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.managers.PartyManager;
 import xyz.refinedev.practice.party.PartyInvite;
 
 /**
@@ -21,6 +22,7 @@ public class PartyInviteExpireTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        plugin.getPartyManager().getParties().forEach(party -> party.getInvites().removeIf(PartyInvite::hasExpired));
+        PartyManager partyManager = this.plugin.getPartyManager();
+        partyManager.getParties().values().forEach(party -> party.getInvites().removeIf(PartyInvite::hasExpired));
     }
 }

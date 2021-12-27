@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
@@ -29,16 +30,12 @@ import xyz.refinedev.practice.util.serialize.GsonFactory;
 
 import java.util.*;
 
-//TODO: Bitch its JSON Time!
 @Getter @Setter
 @RequiredArgsConstructor
 public class Profile {
 
-    private final Array plugin = Array.getInstance();
-
-    @GsonFactory.Ignore private final Map<UUID, DuelRequest> duelRequests = new HashMap<>();
-    @GsonFactory.Ignore private final List<ClanInvite> clanInviteList = new ArrayList<>();
-    @GsonFactory.Ignore private final List<Location> parkourCheckpoints = new ArrayList<>();
+    private transient Map<UUID, DuelRequest> duelRequests = new HashMap<>();
+    private transient List<Location> parkourCheckpoints = new ArrayList<>();
 
     private final Map<Kit, ProfileStatistics> statisticsData = new LinkedHashMap<>();
     private final List<ProfileHistory> unrankedMatchHistory = new ArrayList<>();
@@ -52,7 +49,9 @@ public class Profile {
     private int kills, deaths, experience;
     private ProfileState state = ProfileState.IN_LOBBY;
 
-    //TODO Remove this
+    private transient UUID tournament, party, event;//, match, queue;
+    private UUID clan;
+    //TODO turn into uniqueId
     private Match match;
     private Queue queue;
 
@@ -102,23 +101,33 @@ public class Profile {
         this.getPlayer().sendMessage(Locale.XP_ADD.toString().replace("<xp>", String.valueOf(experience)));
     }
 
-    public Integer getTotalWins() {
+    /**
+     * Returns the total amount of wins of this profile
+     *
+     * @return {@link Integer} total wins
+     */
+    public int getTotalWins() {
         return this.statisticsData.values().stream().mapToInt(ProfileStatistics::getWon).sum();
     }
 
-    public Integer getTotalLost() {
+    /**
+     * Returns the total amount of losses of this profile
+     *
+     * @return {@link Integer} total losses
+     */
+    public int getTotalLost() {
         return this.statisticsData.values().stream().mapToInt(ProfileStatistics::getLost).sum();
     }
 
     public Player getPlayer() {
-        return this.plugin.getServer().getPlayer(uniqueId);
+        return Bukkit.getPlayer(uniqueId);
     }
 
     public boolean isInLobby() {
         return state == ProfileState.IN_LOBBY;
     }
 
-    //TODO: Change everything below into managers
+
     public boolean isInQueue() {
         return state == ProfileState.IN_QUEUE && queue != null && queueProfile != null;
     }
@@ -132,7 +141,7 @@ public class Profile {
     }
 
     public boolean isSpectating() {
-        return state == ProfileState.SPECTATING && (this.isInMatch() || this.plugin.getEventManager().isInEvent(uniqueId));
+        return state == ProfileState.SPECTATING && (this.isInMatch() || this.isInEvent());
     }
 
     public boolean isInSomeSortOfFight() {
@@ -140,10 +149,22 @@ public class Profile {
     }
 
     public boolean isBusy() {
-        return this.isInQueue() || this.isInFight() || this.plugin.getEventManager().isInEvent(uniqueId) || this.isSpectating() || this.plugin.getTournamentManager().isInTournament(uniqueId);
+        return this.isInQueue() || this.isInFight() || this.isInEvent() || this.isSpectating() || this.isInTournament();
+    }
+
+    public boolean isInEvent() {
+        return event != null;
+    }
+
+    public boolean isInTournament() {
+        return tournament != null;
     }
 
     public boolean hasParty() {
-        return this.plugin.getPartyManager().isInParty(uniqueId);
+        return party != null;
+    }
+
+    public boolean hasClan() {
+        return clan != null;
     }
 }

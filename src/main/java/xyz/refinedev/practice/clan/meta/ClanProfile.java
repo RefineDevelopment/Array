@@ -8,12 +8,11 @@ import xyz.refinedev.practice.clan.ClanRoleType;
 
 import java.util.UUID;
 
-
 @Getter @Setter
 @AllArgsConstructor
 public class ClanProfile {
 
-    private UUID uuid;
+    private UUID uniqueId;
     private Clan clan;
     private ClanRoleType type;
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.clan.meta.ClanInvite;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.other.DateUtil;
@@ -30,6 +31,7 @@ public class Clan {
     private final List<ClanProfile> members;
     private final List<ClanProfile> captains;
     private final List<UUID> bannedPlayers;
+    private transient List<ClanInvite> invites;
 
     @SerializedName("_id")
     private final UUID uniqueId;
@@ -62,6 +64,7 @@ public class Clan {
 
         this.members = new ArrayList<>();
         this.captains = new ArrayList<>();
+        this.invites = new ArrayList<>();
         this.bannedPlayers = new ArrayList<>();
 
         this.maxMembers = 25;
@@ -88,7 +91,11 @@ public class Clan {
      * @return {@link List<Player>} of Online Members
      */
     public List<Player> getOnlineMembers() {
-        return getAllMembers().stream().map(ClanProfile::getUuid).map(Bukkit::getPlayer).filter(Objects::nonNull).collect(Collectors.toList());
+        return this.getAllMembers().stream()
+                .map(ClanProfile::getUniqueId)
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -97,28 +104,34 @@ public class Clan {
      * @param message The message to broadcast
      */
     public void broadcast(String message) {
-        this.getAllMembers().stream().map(ClanProfile::getUuid).map(Bukkit::getPlayer).filter(Objects::nonNull).forEach(player -> player.sendMessage(CC.translate(message)));
+        this.getAllMembers().stream()
+                .map(ClanProfile::getUniqueId)
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
+                .forEach(player -> player.sendMessage(CC.translate(message)));
     }
 
     /**
-     * Returns true if the given uuid
-     * matches the uuid of this Clan's leader
+     * Returns true if the given uniqueId
+     * matches the uniqueId of this Clan's leader
      *
-     * @param uuid {@link UUID} the given uuid
+     * @param uuid {@link UUID} the given uniqueId
      * @return {@link Boolean}
      */
     public boolean isLeader(UUID uuid) {
-        return this.getLeader().getUuid().equals(uuid);
+        return this.getLeader().getUniqueId().equals(uuid);
     }
 
     /**
-     * Returns true if the given uuid
-     * matches the uuid of any captain's uuid
+     * Returns true if the given uniqueId
+     * matches the uniqueId of any captain's uniqueId
      *
-     * @param uuid {@link UUID} the given uuid
+     * @param uuid {@link UUID} the given uniqueId
      * @return {@link Boolean}
      */
     public boolean isCaptain(UUID uuid) {
-        return this.getCaptains().stream().map(ClanProfile::getUuid).anyMatch(unique -> unique.equals(uuid));
+        return this.getCaptains().stream()
+                .map(ClanProfile::getUniqueId)
+                .anyMatch(unique -> unique.equals(uuid));
     }
 }

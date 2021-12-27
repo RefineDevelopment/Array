@@ -84,7 +84,7 @@ public class KillEffectCommands {
     public void remove(@Sender CommandSender sender, KillEffect killEffect) {
         sender.sendMessage(CC.translate("&8[&c&lArray&8] &7Successfully removed a kill effect with the name &c" + killEffect.getName() + "&7."));
         plugin.getKillEffectManager().getKillEffects().remove(killEffect);
-        plugin.getKillEffectManager().getCollection().deleteOne(Filters.eq("uuid", killEffect.getUniqueId().toString()));
+        plugin.getKillEffectManager().getCollection().deleteOne(Filters.eq("uniqueId", killEffect.getUniqueId().toString()));
     }
 
     @Command(name = "list", desc = "List all Kill Effects")

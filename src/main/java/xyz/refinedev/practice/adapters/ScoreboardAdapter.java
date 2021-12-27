@@ -87,7 +87,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                     .replace("|", "┃")));
 
             if (profile.hasParty()) {//&& plugin.getTournamentManager().getCurrentTournament() == null) {
-                Party party = partyManager.getPartyByUUID(player.getUniqueId());
+                Party party = partyManager.getPartyByUUID(profile.getParty());
                 String armorClass = party.getKits().get(player.getUniqueId());
 
                 config.getStringList("SCOREBOARD.PARTY").forEach(line -> lines.add(CC.translate(line
@@ -98,10 +98,10 @@ public class ScoreboardAdapter implements AssembleAdapter {
                         .replace("<party_class>", armorClass == null ? "None" : armorClass)
                         .replace("%splitter%", "┃").replace("|", "┃")));
 
-            } else if (clanManager.hasClan(player.getUniqueId()) && !profile.isInQueue()) {
-                Clan clan = clanManager.getByPlayer(player.getUniqueId());
+            } else if (profile.hasClan() && !profile.isInQueue()) {
+                Clan clan = clanManager.getByUUID(profile.getClan());
                 config.getStringList("SCOREBOARD.CLAN").forEach(line -> lines.add(CC.translate(line
-                        .replace("<clan_leader>", plugin.getProfileManager().getByUUID(clan.getLeader().getUuid()).getName())
+                        .replace("<clan_leader>", plugin.getProfileManager().getByUUID(clan.getLeader().getUniqueId()).getName())
                         .replace("<clan_members_online>", String.valueOf(clan.getOnlineMembers().size()))
                         .replace("<clan_members_total>", String.valueOf(clan.getAllMembers().size()))
                         .replace("<clan_elo>",String.valueOf(clan.getElo()))
@@ -132,13 +132,13 @@ public class ScoreboardAdapter implements AssembleAdapter {
                         break;
                     }
                     case CLAN: {
-                        Clan clan = clanManager.getByPlayer(player.getUniqueId());
+                        Clan clan = clanManager.getByUUID(profile.getClan());
                         config.getStringList("SCOREBOARD.CLAN_QUEUE").forEach(line -> lines.add(CC.translate(line
                                 .replace("<queue_kit>", queue.getKit().getDisplayName())
                                 .replace("<queue_duration>", TimeUtil.millisToTimer(queueProfile.getPassed()))
                                 .replace("<queue_range>", this.getEloRangeFormat(profile))
                                 .replace("<queue_name>", queue.getQueueName()))
-                                .replace("<clan_leader>", plugin.getProfileManager().getByUUID(clan.getLeader().getUuid()).getName())
+                                .replace("<clan_leader>", plugin.getProfileManager().getByUUID(clan.getLeader().getUniqueId()).getName())
                                 .replace("<clan_members_online>", String.valueOf(clan.getOnlineMembers().size()))
                                 .replace("<clan_members_total>", String.valueOf(clan.getAllMembers().size()))
                                 .replace("<clan_elo>",String.valueOf(clan.getElo()))
@@ -534,8 +534,8 @@ public class ScoreboardAdapter implements AssembleAdapter {
                         .replace("<alive_count>", String.valueOf(team.getAliveCount()))
                         .replace("<total_count>", String.valueOf(team.getPlayers().size()))).replace("%splitter%", "┃").replace("|", "┃")));
             }
-        } else if (eventManager.isInEvent(player.getUniqueId())) {
-            Event event = eventManager.getEvent(player.getUniqueId());
+        } else if (profile.isInEvent()) {
+            Event event = eventManager.getEventByUUID(profile.getEvent());
             if (!event.isTeam()) {
                 if (event.isWaiting()) {
                     String status;

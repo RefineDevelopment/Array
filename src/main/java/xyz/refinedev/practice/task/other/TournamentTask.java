@@ -17,7 +17,6 @@ import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.tournament.Tournament;
 import xyz.refinedev.practice.tournament.TournamentState;
 import xyz.refinedev.practice.tournament.TournamentTeam;
-import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -127,9 +126,9 @@ public class TournamentTask extends BukkitRunnable {
                         Match match = this.plugin.getMatchManager().createTeamKitMatch(matchTeamA, matchTeamB, kit, arena);
 
                         this.tournament.addMatch(match.getMatchId());
-                        this.plugin.getTournamentManager().addTournamentMatch(match.getMatchId(), tournament.getId());
+                        this.plugin.getTournamentManager().addTournamentMatch(match.getMatchId(), tournament.getUniqueId());
 
-                        TaskUtil.run(match::start);
+                        this.plugin.getMatchManager().start(match);
                     } else {
                         for (UUID playerUUID : teamA.getAlivePlayers()) {
                             Player player = this.plugin.getServer().getPlayer(playerUUID);
@@ -153,14 +152,14 @@ public class TournamentTask extends BukkitRunnable {
     /**
      * Stop a profile from spectating tournament matches
      *
-     * @param uuid {@link UUID} the uuid of the profile
+     * @param uuid {@link UUID} the uniqueId of the profile
      */
     public void removeSpectator(UUID uuid) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(uuid);
         Player player = Bukkit.getPlayer(uuid);
+        Profile profile = this.plugin.getProfileManager().getByUUID(uuid);
         Match match = profile.getMatch();
         if (player == null || !player.isOnline() || !profile.isSpectating() || match == null) return;
 
-        match.removeSpectator(player);
+        this.plugin.getMatchManager().removeSpectator(match, player);
     }
 }

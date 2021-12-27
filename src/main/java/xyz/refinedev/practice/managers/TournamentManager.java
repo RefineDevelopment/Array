@@ -38,23 +38,21 @@ public class TournamentManager {
 
     private final Array plugin;
 
-    private final Map<UUID, Integer> players = new HashMap<>();
-    private final Map<UUID, Integer> matches = new HashMap<>();
-    private final Map<Integer, Tournament> tournaments = new HashMap<>();
+    private final Map<UUID, UUID> matches = new HashMap<>();
+    private final Map<UUID, Tournament> tournaments = new HashMap<>();
     private final Map<Tournament, Integer> tasks = new HashMap<>();
 
     /**
      * Create a {@link Tournament} with the proper details
      *
      * @param commandSender {@link CommandSender} the command sender creating the tournament
-     * @param id            {@link Integer} the ID of the tournament
      * @param teamSize      {@link Integer} the size of total team members
      * @param size          {@link Integer} the max players allowed to play in the tournament
      * @param kitName       {@link String} the kit name which is going to be utilized in the tournament
      */
-    public void createTournament(CommandSender commandSender, int id, int teamSize, int size, String kitName) {
-        Tournament tournament = new Tournament(id, teamSize, size, kitName);
-        this.tournaments.put(id, tournament);
+    public void createTournament(CommandSender commandSender, int teamSize, int size, String kitName) {
+        Tournament tournament = new Tournament(UUID.randomUUID(), teamSize, size, kitName);
+        this.tournaments.put(tournament.getUniqueId(), tournament);
 
         TournamentTask task = new TournamentTask(this.plugin, tournament);
         task.runTaskTimer(this.plugin, 20L, 20L);
@@ -66,12 +64,13 @@ public class TournamentManager {
     /**
      * Have a party join the tournament
      *
-     * @param id {@link Integer} the id of the tournament
+     * @param id {@link UUID} the id of the tournament
      * @param player {@link Player} the leader of the party
      */
-    public void joinTournament(int id, Player player) {
-        Party party=this.plugin.getPartyManager().getPartyByUUID(player.getUniqueId());
-        Tournament tournament=this.getTournamentById(id);
+    public void joinTournament(UUID id, Player player) {
+        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        Tournament tournament = this.getTournamentById(id);
         if (tournament == null) return;
 
         if (party == null) {
@@ -133,12 +132,12 @@ public class TournamentManager {
      */
     private void handleJoin(Tournament tournament, Player player) {
         Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        profile.setTournament(tournament.getUniqueId());
+
         tournament.addPlayer(player.getUniqueId());
-
-        this.players.put(player.getUniqueId(), tournament.getId());
-        this.plugin.getProfileManager().teleportToSpawn(profile);
-
         tournament.broadcast("Joined Tournament");
+
+        this.plugin.getProfileManager().teleportToSpawn(profile);
     }
 
     /**
@@ -149,11 +148,11 @@ public class TournamentManager {
      */
     private void handleLeave(Tournament tournament, Player player) {
         Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        profile.setTournament(null);
 
         TournamentTeam team = tournament.getPlayerTeam(player.getUniqueId());
         tournament.removePlayer(player.getUniqueId());
 
-        this.players.remove(player.getUniqueId());
         this.plugin.getProfileManager().teleportToSpawn(profile);
 
         if (PlayerUtil.checkValidity(player)) player.sendMessage("You left the tournament.");
@@ -178,12 +177,13 @@ public class TournamentManager {
             this.plugin.getServer().broadcastMessage("names won the tournament");
 
             for ( UUID playerUUID : tournamentTeam.getAlivePlayers() ) {
-                this.players.remove(playerUUID);
                 Profile tournamentProfile = this.plugin.getProfileManager().getByUUID(playerUUID);
+                tournamentProfile.setTournament(null);
+
                 this.plugin.getProfileManager().teleportToSpawn(tournamentProfile);
             }
 
-            this.plugin.getTournamentManager().removeTournament(tournament.getId());
+            this.plugin.getTournamentManager().removeTournament(tournament.getUniqueId());
         }
 
     }
@@ -197,14 +197,15 @@ public class TournamentManager {
      */
     private void handleElimination(Tournament tournament, TournamentTeam winnerTeam, TournamentTeam losingTeam) {
         for (UUID playerUUID : losingTeam.getAlivePlayers()) {
+            Profile profile = this.plugin.getProfileManager().getByUUID(playerUUID);
             Player player = this.plugin.getServer().getPlayer(playerUUID);
 
             tournament.removePlayer(player.getUniqueId());
 
             player.sendMessage(CC.RED + "You have been eliminated.");
-            player.sendMessage(CC.RED + "Do /tournament status " + tournament.getId() + " to see who is left in the tournament.");
+            player.sendMessage(CC.RED + "Do /tournament status to see who is left in the tournament.");
 
-            this.players.remove(player.getUniqueId());
+            profile.setTournament(null);
         }
 
         String word = losingTeam.getAlivePlayers().size() > 1 ? "have" : "has";
@@ -248,12 +249,13 @@ public class TournamentManager {
         this.plugin.getServer().broadcastMessage("names won the Tournament !");
 
         for ( UUID playerUUID : winningTournamentTeam.getAlivePlayers() ) {
-            this.players.remove(playerUUID);
             Profile tournamentPlayer = this.plugin.getProfileManager().getByUUID(playerUUID);
+            tournamentPlayer.setTournament(null);
+
             this.plugin.getProfileManager().teleportToSpawn(tournamentPlayer);
         }
 
-        this.plugin.getTournamentManager().removeTournament(tournament.getId());
+        this.plugin.getTournamentManager().removeTournament(tournament.getUniqueId());
     }
 
     /**
@@ -262,7 +264,7 @@ public class TournamentManager {
      * @param tournament {@link Tournament} the tournament getting cancelled
      */
     public void cancelTournament(Tournament tournament) {
-        this.plugin.getServer().broadcastMessage(Locale.TOURNAMENT_CANCELLED.toString().replace("<id>", String.valueOf(tournament.getId())));
+        this.plugin.getServer().broadcastMessage(Locale.TOURNAMENT_CANCELLED.toString());
 
         for (UUID uuid : tournament.getPlayers()) {
             Profile profile = this.plugin.getProfileManager().getByUUID(uuid);
@@ -275,7 +277,7 @@ public class TournamentManager {
 
         tournament.getPlayers().clear();
         tournament.getMatches().clear();
-        this.tournaments.remove(tournament.getId(), tournament);
+        this.tournaments.remove(tournament.getUniqueId());
 
         Integer id = this.tasks.get(tournament);
         if (id == null) return;
@@ -284,33 +286,24 @@ public class TournamentManager {
     }
 
     /**
-     * Is a player with this {@link UUID} in the tournament
-     *
-     * @param uuid {@link UUID} the uuid of the player
-     * @return {@link Boolean} boolean whether they are in or not
-     */
-    public boolean isInTournament(UUID uuid) {
-        return this.players.containsKey(uuid);
-    }
-
-    /**
      * Get a tournament by its ID
      *
-     * @param id {@link Integer} the tournament's ID
+     * @param id {@link UUID} the tournament's ID
      * @return {@link Tournament} returns the queried tournament
      */
-    public Tournament getTournamentById(int id) {
+    public Tournament getTournamentById(UUID id) {
         return this.tournaments.get(id);
     }
 
     /**
      * Get a tournament from a player's {@link UUID}
      *
-     * @param uuid {@link UUID} uuid of the player
+     * @param uuid {@link UUID} uniqueId of the player
      * @return {@link Tournament} queried tournament
      */
     public Tournament getTournamentByUUID(UUID uuid) {
-        Integer id = this.players.get(uuid);
+        Profile profile = this.plugin.getProfileManager().getByUUID(uuid);
+        UUID id = profile.getTournament();
         if (id == null) return null;
 
         return this.tournaments.get(id);
@@ -319,14 +312,12 @@ public class TournamentManager {
     /**
      * Get a tournament from a {@link Match}
      *
-     * @param uuid {@link UUID} uuid of the match
+     * @param uuid {@link UUID} uniqueId of the match
      * @return {@link Tournament} queried tournament
      */
     public Tournament getTournamentFromMatch(UUID uuid) {
-        Integer id = this.matches.get(uuid);
+        UUID id = this.matches.get(uuid);
         if (id == null) return null;
-
-
 
         return this.tournaments.get(id);
     }
@@ -334,9 +325,9 @@ public class TournamentManager {
     /**
      * Eliminate the tournament from the plugin
      *
-     * @param id {@link Integer} the tournament getting eliminated
+     * @param id {@link UUID} the tournament getting eliminated
      */
-    public void removeTournament(Integer id) {
+    public void removeTournament(UUID id) {
         Tournament tournament = this.tournaments.get(id);
         if (tournament == null) return;
 
@@ -346,10 +337,10 @@ public class TournamentManager {
     /**
      * Add a Tournament {@link Match} to the list
      *
-     * @param matchId {@link UUID} the uuid of the match
-     * @param tournamentId {@link Integer} the id of the tournament
+     * @param matchId {@link UUID} the uniqueId of the match
+     * @param tournamentId {@link UUID} the id of the tournament
      */
-    public void addTournamentMatch(UUID matchId, Integer tournamentId) {
+    public void addTournamentMatch(UUID matchId, UUID tournamentId) {
         this.matches.put(matchId, tournamentId);
     }
 }

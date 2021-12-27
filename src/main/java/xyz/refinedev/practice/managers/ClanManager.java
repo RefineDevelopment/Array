@@ -22,7 +22,6 @@ import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.Clickable;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -40,10 +39,10 @@ public class ClanManager {
     private final Array plugin;
     private final MongoCollection<Document> collection;
 
-    //Player UUID -> Clan UUID
-    private final Map<UUID, ClanProfile> profileMap = new HashMap<>();
-    private final Map<UUID, UUID> clanMap = new HashMap<>();
+    //Clan UUID -> Clan
     private final Map<UUID, Clan> clans = new HashMap<>();
+    //Player UUID -> ClanProfile
+    private final Map<UUID, ClanProfile> profileMap = new HashMap<>();
 
     public void init() {
         new ClanInviteExpireTask(plugin).runTaskTimerAsynchronously(plugin, 100L, 100L);
@@ -70,33 +69,9 @@ public class ClanManager {
             this.clans.put(clan.getUniqueId(), clan);
 
             for ( ClanProfile profile : clan.getAllMembers() ) {
-                this.clanMap.put(profile.getUuid(), clan.getUniqueId());
-                this.profileMap.put(profile.getUuid(), profile);
+                this.profileMap.put(profile.getUniqueId(), profile);
             }
         });
-    }
-
-    /**
-     * Does the player with the given uuid have a clan
-     *
-     * @param uuid {@link UUID} the uuid of the player
-     * @return {@link Boolean} returns true if a clan is present
-     */
-    public boolean hasClan(UUID uuid) {
-        return this.clanMap.containsKey(uuid);
-    }
-
-    /**
-     * Returns a player's clan using their uuid
-     *
-     * @param uuid {@link UUID} the uuid of the player
-     * @return {@link Clan} returns the clan the of player
-     */
-    public Clan getByPlayer(UUID uuid) {
-        UUID clan = this.clanMap.get(uuid);
-        if (clan == null) return null;
-
-        return clans.get(clan);
     }
 
     /**
@@ -114,22 +89,24 @@ public class ClanManager {
      */
     public void delete(Clan clan) {
         for ( ClanProfile member : clan.getAllMembers() ) {
-            Profile profile = plugin.getProfileManager().getByUUID(member.getUuid());
+            Player player = this.plugin.getServer().getPlayer(member.getUniqueId());
 
-            if (profile.isInLobby()) {
-                plugin.getProfileManager().refreshHotbar(profile);
-            }
+            Profile profile = this.plugin.getProfileManager().getByUUID(member.getUniqueId());
+            profile.setClan(null);
 
-            if (profile.getPlayer() != null && profile.getPlayer().isOnline()) {
-                profile.getPlayer().sendMessage(Locale.CLAN_DISBANDED.toString());
+            if (player != null && player.isOnline()) {
+                if (profile.isInLobby()) {
+                    this.plugin.getProfileManager().refreshHotbar(profile);
+                }
+                player.sendMessage(Locale.CLAN_DISBANDED.toString());
             }
+            this.plugin.getProfileManager().save(profile);
         }
 
         clan.getMembers().clear();
         clan.getCaptains().clear();
 
         this.clans.remove(clan.getUniqueId(), clan);
-        this.clanMap.values().removeIf(entry -> entry.equals(clan.getUniqueId()));
         this.plugin.submitToThread(() -> collection.deleteOne(Filters.eq("_id", clan.getUniqueId().toString())));
     }
 
@@ -141,10 +118,14 @@ public class ClanManager {
      * @param player The Player receiving the information
      */
     public void information(Clan clan, Player player) {
+        OfflinePlayer offlinePlayer = this.plugin.getServer().getOfflinePlayer(clan.getLeader().getUniqueId());
         clan.getAllMembers().sort(Comparator.comparing(cm -> cm.getType().getWeight()));
 
         List<String> playerNames = new ArrayList<>();
-        clan.getAllMembers().forEach(cm -> playerNames.add((clan.getLeader().getUuid().equals(cm.getUuid()) ? CC.RED + "***" : clan.getCaptains().contains(cm) ? CC.RED + "*" : "") + colorName(cm.getUuid())));
+        clan.getAllMembers().forEach(cm -> playerNames.add((
+        clan.getLeader().getUniqueId().equals(cm.getUniqueId()) ? CC.RED + "**" : // If its a leader then two stars
+        clan.getCaptains().contains(cm) ? CC.RED + "*" : //If a captain then one star
+        "") + colorName(cm.getUniqueId()))); // if just a member then no stars lel
 
         Locale.CLAN_INFO.toList().forEach(line -> {
             line = line
@@ -155,7 +136,7 @@ public class ClanManager {
                     .replace("<clan_members_limit>", String.valueOf(clan.getMaxMembers()))
                     .replace("<clan_members>", Strings.join(playerNames, CC.GRAY + ", "))
                     .replace("<clan_winstreak>", String.valueOf(clan.getWinStreak()))
-                    .replace("<clan_leader>", plugin.getProfileManager().getByUUID(clan.getLeader().getUuid()).getName())
+                    .replace("<clan_leader>", offlinePlayer.getName())
                     .replace("<clan_highest_winstreak>", String.valueOf(clan.getHighestWinStreak()))
                     .replace("<clan_members_size>", String.valueOf(clan.getAllMembers().size()));
 
@@ -181,7 +162,7 @@ public class ClanManager {
      * @param member The {@link ClanProfile} being promoted
      */
     public void promote(Clan clan, ClanProfile member) {
-        OfflinePlayer player = Bukkit.getOfflinePlayer(member.getUuid());
+        OfflinePlayer player = Bukkit.getOfflinePlayer(member.getUniqueId());
 
         member.setType(ClanRoleType.CAPTAIN);
         clan.getMembers().remove(member);
@@ -198,8 +179,8 @@ public class ClanManager {
      * @param member The {@link ClanProfile} being promoted
      */
     public void leader(Clan clan, ClanProfile member) {
-        OfflinePlayer player = Bukkit.getOfflinePlayer(member.getUuid());
-        OfflinePlayer leaderPlayer = Bukkit.getOfflinePlayer(clan.getLeader().getUuid());
+        OfflinePlayer player = Bukkit.getOfflinePlayer(member.getUniqueId());
+        OfflinePlayer leaderPlayer = Bukkit.getOfflinePlayer(clan.getLeader().getUniqueId());
 
         clan.broadcast(Locale.CLAN_PROMOTE.toString().replace("<player>", player.getName()).replace("<role>", "Leader"));
         clan.broadcast(Locale.CLAN_DEMOTE.toString().replace("<player>", leaderPlayer.getName()).replace("<role>", "Captain"));
@@ -227,7 +208,7 @@ public class ClanManager {
      * @param member The {@link ClanProfile} being demoted
      */
     public void demote(Clan clan, ClanProfile member) {
-        OfflinePlayer player = Bukkit.getOfflinePlayer(member.getUuid());
+        OfflinePlayer player = Bukkit.getOfflinePlayer(member.getUniqueId());
 
         member.setType(ClanRoleType.MEMBER);
 
@@ -236,7 +217,6 @@ public class ClanManager {
 
         this.save(clan);
         clan.broadcast(Locale.CLAN_DEMOTE.toString().replace("<player>", player.getName()).replace("<role>", "Member"));
-
     }
 
     /**
@@ -246,15 +226,15 @@ public class ClanManager {
      * @param target The player being invited
      */
     public void invite(Clan clan, Player target) {
-        Profile profile = plugin.getProfileManager().getByPlayer(target);
-        profile.getClanInviteList().add(new ClanInvite(clan));
-        OfflinePlayer leader = Bukkit.getOfflinePlayer(clan.getLeader().getUuid());
+        OfflinePlayer leader = Bukkit.getOfflinePlayer(clan.getLeader().getUniqueId());
+        ClanInvite invite = new ClanInvite(target.getUniqueId(), clan);
+        clan.getInvites().add(invite);
 
-        List<String> invite = new ArrayList<>();
-        invite.add(Locale.CLAN_INVITED.toString().replace("<leader>", leader.getName()));
-        invite.add(Locale.CLAN_CLICK_TO_JOIN.toString());
+        List<String> strings = new ArrayList<>();
+        strings.add(Locale.CLAN_INVITED.toString().replace("<leader>", leader.getName()));
+        strings.add(Locale.CLAN_CLICK_TO_JOIN.toString());
 
-        for ( String string : invite ) {
+        for ( String string : strings ) {
             Clickable message = new Clickable(string, Locale.CLAN_INVITE_HOVER.toString(), "/clan join " + leader.getName());
             message.sendToPlayer(target);
         }
@@ -267,9 +247,9 @@ public class ClanManager {
      * @param joiner The player joining the clan
      */
     public void join(Clan clan, Player joiner, ClanInvite clanInvite) {
-        Profile profile = plugin.getProfileManager().getByPlayer(joiner);
+        Profile profile = this.plugin.getProfileManager().getByPlayer(joiner);
 
-        if (!profile.getClanInviteList().contains(clanInvite)) {
+        if (clanInvite != null && !clan.getInvites().contains(clanInvite)) {
             joiner.sendMessage(CC.translate("&7You are not invited to this clan or your invite expired!"));
             return;
         }
@@ -279,19 +259,20 @@ public class ClanManager {
             return;
         }
 
+        // Create a ClanProfile and have it hooked up to the player and their profile
         ClanProfile clanProfile = new ClanProfile(joiner.getUniqueId(), clan, ClanRoleType.MEMBER);
-
         clan.getMembers().add(clanProfile);
 
-        if (clanInvite != null) profile.getClanInviteList().remove(clanInvite);
+        profile.setClan(clan.getUniqueId());
+        if (clanInvite != null) clan.getInvites().remove(clanInvite);
+
+        this.plugin.getProfileManager().refreshHotbar(profile);
+        this.plugin.getProfileManager().save(profile);
+
+        this.profileMap.put(joiner.getUniqueId(), clanProfile);
 
         clan.broadcast(Locale.CLAN_JOIN.toString().replace("<player>", joiner.getName()));
         this.save(clan);
-
-        this.clanMap.put(joiner.getUniqueId(), clan.getUniqueId());
-        this.profileMap.put(joiner.getUniqueId(), clanProfile);
-        this.plugin.getProfileManager().refreshHotbar(profile);
-        this.plugin.getProfileManager().save(profile);
     }
 
     /**
@@ -301,7 +282,7 @@ public class ClanManager {
      * @param leaver The player leaving the clan
      */
     public void leave(Clan clan, Player leaver) {
-        Profile profile = plugin.getProfileManager().getByPlayer(leaver);
+        Profile profile = this.plugin.getProfileManager().getByPlayer(leaver);
         ClanProfile clanProfile = this.profileMap.get(leaver.getUniqueId());
 
         if (clanProfile.getType() == ClanRoleType.LEADER) {
@@ -311,10 +292,11 @@ public class ClanManager {
         clan.getCaptains().remove(clanProfile);
         clan.getMembers().remove(clanProfile);
 
+        profile.setClan(null);
+
         this.plugin.getProfileManager().save(profile);
         this.plugin.getProfileManager().refreshHotbar(profile);
 
-        this.clanMap.remove(leaver.getUniqueId(), clan.getUniqueId());
         this.profileMap.remove(leaver.getUniqueId(), clanProfile);
 
         this.save(clan);
@@ -328,7 +310,7 @@ public class ClanManager {
      * @param uuid The uniqueId getting kicked from the Clan
      */
     public void kick(Clan clan, UUID uuid) {
-        Profile profile = plugin.getProfileManager().getByUUID(uuid);
+        Profile profile = this.plugin.getProfileManager().getByUUID(uuid);
         ClanProfile clanProfile = this.profileMap.get(uuid);
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
 
@@ -339,11 +321,12 @@ public class ClanManager {
         clan.getCaptains().remove(clanProfile);
         clan.getMembers().remove(clanProfile);
 
+        profile.setClan(null);
+
         this.plugin.getProfileManager().save(profile);
         this.plugin.getProfileManager().refreshHotbar(profile);
 
-        this.clanMap.remove(uuid, clan.getUniqueId());
-        this.profileMap.remove(uuid, clanProfile);
+        this.profileMap.remove(player.getUniqueId(), clanProfile);
 
         this.save(clan);
         clan.broadcast(Locale.CLAN_KICKED.toString().replace("<player>", player.getName()));
@@ -356,9 +339,9 @@ public class ClanManager {
      * @param uuid The uniqueId getting banned from the Clan
      */
     public void ban(Clan clan, UUID uuid) {
-        Profile profile = plugin.getProfileManager().getByUUID(uuid);
+        Profile profile = this.plugin.getProfileManager().getByUUID(uuid);
         ClanProfile clanProfile = this.profileMap.get(uuid);
-        OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+        OfflinePlayer player = this.plugin.getServer().getOfflinePlayer(uuid);
 
         if (clanProfile.getType() == ClanRoleType.LEADER) {
             throw new IllegalArgumentException("Leader can not leave the clan!");
@@ -366,13 +349,18 @@ public class ClanManager {
 
         clan.getCaptains().remove(clanProfile);
         clan.getMembers().remove(clanProfile);
-        
-        plugin.getProfileManager().save(profile);
-        plugin.getProfileManager().refreshHotbar(profile);
 
-        this.save(clan);
+        profile.setClan(null);
+
+        this.plugin.getProfileManager().save(profile);
+        this.plugin.getProfileManager().refreshHotbar(profile);
+
+        this.profileMap.remove(player.getUniqueId(), clanProfile);
+
         clan.broadcast(Locale.CLAN_BANNED.toString().replace("<player>", player.getName()));
         clan.getBannedPlayers().add(uuid);
+
+        this.save(clan);
     }
 
     /**
@@ -396,13 +384,25 @@ public class ClanManager {
     }
 
     /**
+     * Get a ClanProfile by its associated UUID
+     *
+     * @param uuid The UUID of the Clan or Player
+     * @return     {@link ClanProfile}
+     */
+    public ClanProfile getProfileByUUID(UUID uuid) {
+        return profileMap.get(uuid);
+    }
+
+    /**
      * Get a clan by its leader
      *
      * @param player The leader of the Clan
      * @return       {@link Clan}
      */
     public Clan getByLeader(UUID player) {
-        return clans.values().stream().filter(c -> c.getLeader().getUuid().equals(player)).findFirst().orElse(null);
+        return clans.values().stream()
+                .filter(c -> c.getLeader().getUniqueId().equals(player))
+                .findFirst().orElse(null);
     }
 
     /**
@@ -413,11 +413,10 @@ public class ClanManager {
      * @return       {@link ClanInvite}
      */
     public ClanInvite getInvite(Clan clan, Player player) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
-        for ( ClanInvite invite : profile.getClanInviteList() )
-            if (invite.getClan().equals(clan) && !invite.hasExpired()) {
-                return invite;
-            }
-        return null;
+        return clan.getInvites().stream()
+                .filter(invite -> invite.getPlayer().equals(player.getUniqueId()))
+                .filter(invite -> invite.getClan().getUniqueId().equals(clan.getUniqueId()))
+                .filter(invite -> !invite.hasExpired())
+                .findAny().orElse(null);
     }
 }

@@ -592,7 +592,7 @@ public class ProfileManager {
     /**
      * Get a Profile by its UniqueId
      *
-     * @param uuid {@link UUID} the uuid of the profile
+     * @param uuid {@link UUID} the uniqueId of the profile
      * @return {@link Profile} the profile requested
      */
     public Profile getByUUID(UUID uuid) {

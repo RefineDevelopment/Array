@@ -28,8 +28,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class EventManager {
 
-	// Player UUID -> Event UUID
-	private final Map<UUID, UUID> players =  new HashMap<>();
 	private final Map<UUID, Event> events = new HashMap<>();
 
 	private final Array plugin;
@@ -53,33 +51,19 @@ public class EventManager {
 	public void shutdown() {
 		this.events.values().forEach(Event::handleEnd);
 
-		this.players.clear();
 		this.events.clear();
 
 		this.helper.saveLocations();
 	}
 
 	/**
-	 * Check to see if a player is currently in an event
-	 *
-	 * @param uuid {@link UUID} the player's uniqueId
-	 * @return {@link Boolean} returns true if player is present in the map
-	 */
-	public boolean isInEvent(UUID uuid) {
-		return this.players.containsKey(uuid);
-	}
-
-	/**
 	 * Get a player's event by his uniqueId
 	 *
-	 * @param uuid {@link UUID} the player's uniqueId
+	 * @param uuid {@link UUID} the event's id
 	 * @return {@link Event} the player's event
 	 */
-	public Event getEvent(UUID uuid) {
-		UUID eventId = this.players.get(uuid);
-		if (eventId == null) return null;
-
-		return this.events.get(eventId);
+	public Event getEventByUUID(UUID uuid) {
+		return this.events.get(uuid);
 	}
 
     public void setActiveEvent(Event event) {

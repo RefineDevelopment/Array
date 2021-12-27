@@ -10,6 +10,8 @@ import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.nametags.construct.NameTagInfo;
 import xyz.refinedev.practice.util.nametags.provider.NameTagProvider;
 
+import java.util.UUID;
+
 /**
  * This Project is the property of Refine Development © 2021
  * Redistribution of this Project is not allowed
@@ -68,8 +70,8 @@ public class NameTagAdapter extends NameTagProvider {
         Player viewer = viewerProfile.getPlayer();
         Player target = targetProfile.getPlayer();
 
-        Party viewerParty = this.plugin.getPartyManager().getPartyByUUID(viewer.getUniqueId());
-        Party targetParty = this.plugin.getPartyManager().getPartyByUUID(target.getUniqueId());
+        Party viewerParty = this.plugin.getPartyManager().getPartyByUUID(viewerProfile.getParty());
+        Party targetParty = this.plugin.getPartyManager().getPartyByUUID(targetProfile.getParty());
 
         if (viewerParty != null && viewerParty.containsPlayer(target)) {
             return createNameTag(plugin.getConfigHandler().getPartyColor().toString(), "");
@@ -84,7 +86,7 @@ public class NameTagAdapter extends NameTagProvider {
     public NameTagInfo getEventColor(Profile viewerProfile, Profile targetProfile) {
         Player viewer = viewerProfile.getPlayer();
         Player target = targetProfile.getPlayer();
-        Event event = targetProfile.getEvent();
+        UUID event = targetProfile.getEvent();
 
         if (targetProfile.isInEvent()) {
             return createNameTag(plugin.getConfigHandler().getEventColor().toString(), "");

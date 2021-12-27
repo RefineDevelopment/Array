@@ -2,6 +2,8 @@ package xyz.refinedev.practice.hook.core;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 
 /**
@@ -31,5 +33,59 @@ public class CoreHandler {
         plugin.logger("&7Found &c" + coreType.getName() + "&7, Implementing Core Hook...");
     }
 
+    /**
+     * Returns the full name of specified player
+     * from the core hook
+     *
+     * @param player {@link Player} whose name we fetching
+     * @return {@link String} full name
+     */
+    public String getFullName(Player player) {
+        return coreType.getCoreAdapter().getFullName(player);
+    }
+
+    /**
+     * Returns the rank name of specified player
+     * from the core hook
+     *
+     * @param player {@link Player} whose rank name we fetching
+     * @return {@link String} rank name
+     */
+    public String getRankName(Player player) {
+        return coreType.getCoreAdapter().getRankName(player);
+    }
+
+    /**
+     * Returns the rank prefix of specified player
+     * from the core hook
+     *
+     * @param player {@link Player} whose rank prefix we fetching
+     * @return {@link String} rank prefix
+     */
+    public String getRankPrefix(Player player) {
+        return coreType.getCoreAdapter().getRankPrefix(player);
+    }
+
+    /**
+     * Returns the rank suffix of specified player
+     * from the core hook
+     *
+     * @param player {@link Player} whose rank suffix we fetching
+     * @return {@link String} rank suffix
+     */
+    public String getRankSuffix(Player player) {
+        return coreType.getCoreAdapter().getRankSuffix(player);
+    }
+
+    /**
+     * Returns the rank color of specified player
+     * from the core hook
+     *
+     * @param player {@link Player} whose color suffix we fetching
+     * @return {@link ChatColor} rank color
+     */
+    public ChatColor getRankColor(Player player) {
+        return coreType.getCoreAdapter().getRankColor(player);
+    }
 
 }

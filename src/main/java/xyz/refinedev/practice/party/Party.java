@@ -5,19 +5,19 @@ import lombok.Setter;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
+import xyz.refinedev.practice.util.other.PartyHelperUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter @Setter
 public class Party extends Team {
-
-    private final Array plugin = Array.getInstance();
 
     private final Map<UUID, String> kits = new HashMap<>();
     private final List<PartyInvite> invites = new ArrayList<>();
@@ -40,13 +40,11 @@ public class Party extends Team {
     public Party(Player player) {
         super(new TeamPlayer(player.getUniqueId(), player.getName()));
         this.uniqueId = UUID.randomUUID();
-        this.kits.put(player.getUniqueId(), plugin.getPartyManager().getRandomClass());
+        this.kits.put(player.getUniqueId(), PartyHelperUtil.getRandomClass());
 
         if (player.hasPermission("array.donator")) {
             this.limit = 50;
         }
-
-        this.plugin.getPartyManager().getParties().add(this);
     }
 
     /**
@@ -100,14 +98,6 @@ public class Party extends Team {
 
     public String getName() {
         return this.getLeader().getUsername() + "'s Party";
-    }
-
-    public boolean isFighting() {
-        return this.getPlayers().stream().map(plugin.getProfileManager()::getByPlayer).anyMatch(profile -> profile.isInFight() || profile.isInTournament());
-    }
-
-    public Match getMatch() {
-        return this.getPlayers().stream().map(plugin.getProfileManager()::getByPlayer).filter(profile -> profile.isInFight() || profile.isInTournament()).map(Profile::getMatch).findAny().orElse(null);
     }
 
     public boolean isMember(UUID uuid) {

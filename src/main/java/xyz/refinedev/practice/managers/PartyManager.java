@@ -14,6 +14,7 @@ import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.task.party.PartyInviteExpireTask;
 import xyz.refinedev.practice.task.party.PartyPublicTask;
 import xyz.refinedev.practice.util.chat.Clickable;
+import xyz.refinedev.practice.util.other.PartyHelperUtil;
 
 import java.util.*;
 
@@ -30,10 +31,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PartyManager {
 
-    private final List<Party> parties = new ArrayList<>();
-    private final Map<UUID, Party> players = new HashMap<>();
-
     private final Array plugin;
+    private final Map<UUID, Party> parties = new HashMap<>();
 
     public void init() {
         PartyInviteExpireTask partyInviteExpireTask = new PartyInviteExpireTask(plugin);
@@ -57,7 +56,10 @@ public class PartyManager {
         strings.add(Locale.PARTY_INVITED.toString().replace("<leader>", party.getLeader().getUsername()));
         strings.add(Locale.PARTY_CLICK_TO_JOIN.toString());
 
-        strings.forEach(string -> new Clickable(string, Locale.PARTY_INVITE_HOVER.toString(), "/party join " + party.getLeader().getUsername()).sendToPlayer(player));
+        for ( String string : strings ) {
+            Clickable clickable = new Clickable(string, Locale.PARTY_INVITE_HOVER.toString(), "/party join " + party.getLeader().getUsername());
+            clickable.sendToPlayer(player);
+        }
 
         party.broadcast(Locale.PARTY_PLAYER_INVITED.toString().replace("<invited>", player.getName()));
     }
@@ -91,26 +93,28 @@ public class PartyManager {
      */
     public void join(Player player, Party party) {
         TeamPlayer teamPlayer = new TeamPlayer(player);
-        this.players.put(player.getUniqueId(), party);
+
+        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        profile.setParty(party.getUniqueId());
 
         party.getTeamPlayers().add(teamPlayer);
-        party.getKits().put(player.getUniqueId(), this.getRandomClass());
+        party.getKits().put(player.getUniqueId(), PartyHelperUtil.getRandomClass());
 
-        plugin.getNameTagHandler().reloadPlayer(player);
-        plugin.getNameTagHandler().reloadOthersFor(player);
+        this.plugin.getNameTagHandler().reloadPlayer(player);
+        this.plugin.getNameTagHandler().reloadOthersFor(player);
 
         party.getInvites().removeIf(invite -> invite.getUniqueId().equals(player.getUniqueId()));
         party.broadcast(Locale.PARTY_PLAYER_JOINED.toString().replace("<joiner>", player.getName()));
 
         for (Player partyMember : party.getPlayers()) {
-            Profile partyProfile = plugin.getProfileManager().getByUUID(partyMember.getUniqueId());
+            Profile partyProfile = this.plugin.getProfileManager().getByUUID(partyMember.getUniqueId());
 
-            plugin.getProfileManager().handleVisibility(partyProfile, player);
-            plugin.getProfileManager().refreshHotbar(partyProfile);
+            this.plugin.getProfileManager().handleVisibility(partyProfile, player);
+            this.plugin.getProfileManager().refreshHotbar(partyProfile);
         }
 
-        if (party.isFighting()) {
-            Match match = party.getMatch();
+        if (this.isFighting(party.getUniqueId())) {
+            Match match = this.getMatch(party.getUniqueId());
             this.plugin.getMatchManager().addSpectator(match, player, null);
         }
     }
@@ -122,17 +126,10 @@ public class PartyManager {
      * @param party The party being utilized
      */
     public void leave(Player player, Party party) {
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        this.players.remove(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        profile.setParty(null);
 
-        party.getTeamPlayers().removeIf(member -> member.getUniqueId().equals(player.getUniqueId()));
-        party.getPlayers().remove(player);
-        party.getKits().remove(player.getUniqueId());
-
-
-        party.broadcast(Locale.PARTY_PLAYER_LEFT.toString().replace("<leaver>", player.getName()));
-
-        if (profile.isInFight()) {
+        if (profile.isInMatch()) {
             Match match = profile.getMatch();
             this.plugin.getMatchManager().handleDeath(match, player, null, true);
 
@@ -141,18 +138,24 @@ public class PartyManager {
             }
         }
 
-        for (Player teamPlayer : party.getPlayers()) {
-            Profile teamProfile = plugin.getProfileManager().getByUUID(teamPlayer.getUniqueId());
+        party.getTeamPlayers().removeIf(member -> member.getUniqueId().equals(player.getUniqueId()));
+        party.getPlayers().remove(player);
+        party.getKits().remove(player.getUniqueId());
 
-            plugin.getProfileManager().handleVisibility(teamProfile, player);
-            plugin.getProfileManager().refreshHotbar(teamProfile);
+        for (Player teamPlayer : party.getPlayers()) {
+            Profile teamProfile = this.plugin.getProfileManager().getByUUID(teamPlayer.getUniqueId());
+
+            this.plugin.getProfileManager().handleVisibility(teamProfile, player);
+            this.plugin.getProfileManager().refreshHotbar(teamProfile);
         }
 
-        plugin.getProfileManager().handleVisibility(profile);
-        plugin.getProfileManager().refreshHotbar(profile);
+        this.plugin.getProfileManager().handleVisibility(profile);
+        this.plugin.getProfileManager().refreshHotbar(profile);
 
-        plugin.getNameTagHandler().reloadPlayer(player);
-        plugin.getNameTagHandler().reloadOthersFor(player);
+        this.plugin.getNameTagHandler().reloadPlayer(player);
+        this.plugin.getNameTagHandler().reloadOthersFor(player);
+
+        party.broadcast(Locale.PARTY_PLAYER_LEFT.toString().replace("<leaver>", player.getName()));
     }
 
     /**
@@ -162,17 +165,10 @@ public class PartyManager {
      * @param party The party being utilized
      */
     public void kick(Player player, Party party) {
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        this.players.remove(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        profile.setParty(null);
 
-        party.getTeamPlayers().removeIf(member -> member.getUniqueId().equals(player.getUniqueId()));
-        party.getPlayers().remove(player);
-        party.getKits().remove(player.getUniqueId());
-
-
-        party.broadcast(Locale.PARTY_PLAYER_KICKED.toString().replace("<leaver>", player.getName()));
-
-        if (profile.isInFight()) {
+        if (profile.isInMatch()) {
             Match match = profile.getMatch();
             this.plugin.getMatchManager().handleDeath(match, player, null, true);
 
@@ -181,20 +177,24 @@ public class PartyManager {
             }
         }
 
+        party.getTeamPlayers().removeIf(member -> member.getUniqueId().equals(player.getUniqueId()));
+        party.getPlayers().remove(player);
+        party.getKits().remove(player.getUniqueId());
 
         for (Player teamPlayer : party.getPlayers()) {
-            Profile teamProfile = plugin.getProfileManager().getByUUID(teamPlayer.getUniqueId());
+            Profile teamProfile = this.plugin.getProfileManager().getByUUID(teamPlayer.getUniqueId());
 
-            plugin.getProfileManager().handleVisibility(teamProfile, player);
-            plugin.getProfileManager().refreshHotbar(teamProfile);
+            this.plugin.getProfileManager().handleVisibility(teamProfile, player);
+            this.plugin.getProfileManager().refreshHotbar(teamProfile);
         }
 
-        plugin.getProfileManager().handleVisibility(profile);
-        plugin.getProfileManager().refreshHotbar(profile);
+        this.plugin.getProfileManager().handleVisibility(profile);
+        this.plugin.getProfileManager().refreshHotbar(profile);
 
-        plugin.getNameTagHandler().reloadPlayer(player);
-        plugin.getNameTagHandler().reloadOthersFor(player);
+        this.plugin.getNameTagHandler().reloadPlayer(player);
+        this.plugin.getNameTagHandler().reloadOthersFor(player);
 
+        party.broadcast(Locale.PARTY_PLAYER_KICKED.toString().replace("<leaver>", player.getName()));
         player.sendMessage(Locale.PARTY_KICKED.toString());
     }
 
@@ -205,15 +205,15 @@ public class PartyManager {
      * @param party The party being utilized
      */
     public void leader(Player player, Party party) {
-        Profile profile = plugin.getProfileManager().getByUUID(party.getLeader().getUniqueId());
-        Profile targetProfile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getByUUID(party.getLeader().getUniqueId());
+        Profile targetProfile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
         TeamPlayer teamPlayer =  party.getTeamPlayers().stream().filter(t -> t.getUniqueId().equals(player.getUniqueId())).findAny().orElse(new TeamPlayer(player));
 
         party.setLeader(teamPlayer);
         party.broadcast(Locale.PARTY_PROMOTED.toString().replace("<promoted>", player.getName()));
 
-       plugin.getProfileManager().refreshHotbar(profile);
-       plugin.getProfileManager().refreshHotbar(targetProfile);
+        this.plugin.getProfileManager().refreshHotbar(profile);
+        this.plugin.getProfileManager().refreshHotbar(targetProfile);
     }
 
     /**
@@ -222,66 +222,70 @@ public class PartyManager {
      * @param party The party being disbanded
      */
     public void disband(Party party) {
-        party.broadcast(Locale.PARTY_DISBANDED.toString());
-
-        Profile leaderProfile = plugin.getProfileManager().getByUUID(party.getLeader().getUniqueId());
+        Profile leaderProfile = this.plugin.getProfileManager().getByUUID(party.getLeader().getUniqueId());
         leaderProfile.getDuelRequests().values().removeIf(DuelRequest::isParty);
 
         for ( Player player : party.getPlayers() ) {
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-            this.players.remove(player.getUniqueId());
+            Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+            profile.setParty(null);
 
-            if (party.isFighting()) {
-                this.plugin.getMatchManager().handleDeath(party.getMatch(), player, null, true);
+            if (this.isFighting(party.getUniqueId())) {
+                this.plugin.getMatchManager().handleDeath(this.getMatch(party.getUniqueId()), player, null, true);
             }
 
             if (profile.isInLobby() || profile.isInQueue()) {
-                plugin.getProfileManager().handleVisibility(profile);
-                plugin.getProfileManager().refreshHotbar(profile);
+                this.plugin.getProfileManager().handleVisibility(profile);
+                this.plugin.getProfileManager().refreshHotbar(profile);
 
-                plugin.getNameTagHandler().reloadPlayer(player);
-                plugin.getNameTagHandler().reloadOthersFor(player);
+                this.plugin.getNameTagHandler().reloadPlayer(player);
+                this.plugin.getNameTagHandler().reloadOthersFor(player);
             }
         }
+        party.broadcast(Locale.PARTY_DISBANDED.toString());
         party.setDisbanded(true);
-        this.parties.remove(party);
-    }
 
-    public String getRandomClass() {
-        List<String> classes = Arrays.asList(
-                "Diamond",
-                "Bard",
-                "Archer",
-                "Rogue"
-        );
-        Collections.shuffle(classes);
-        return classes.get(0);
-    }
-
-
-    /**
-     * Checks if the given player {@link UUID}
-     * exists in one of the registered parties
-     * <p>
-     * Got rid of the static abuse method of having
-     * this linked up to the profile itself instead
-     * of having each party registered separately
-     *
-     * @param uniqueId {@link UUID} the player's uniqueId
-     * @return {@link Boolean}
-     */
-    public boolean isInParty(UUID uniqueId) {
-        return this.players.containsKey(uniqueId);
+        this.parties.remove(party.getUniqueId());
     }
 
     /**
-     * Get a Party from a player's or party's {@link UUID}
+     * Get a party by its {@link UUID}
      *
-     * @param uuid {@link UUID} uuid of the player or party
-     * @return {@link Party} queried party
+     * @param uuid {@link UUID} party uniqueId
+     * @return {@link Party} party
      */
     public Party getPartyByUUID(UUID uuid) {
-        return this.players.get(uuid);
+        return this.parties.get(uuid);
+    }
+
+    /**
+     * Is the given party in a {@link Match}
+     *
+     * @param uuid {@link UUID} party uniqueId
+     * @return {@link Boolean} returns true if party is in a match
+     */
+    public boolean isFighting(UUID uuid) {
+        ProfileManager profileManager = this.plugin.getProfileManager();
+        Party party = this.parties.get(uuid);
+        return party.getPlayers().stream()
+                .map(profileManager::getByPlayer)
+                .anyMatch(profile -> profile.isInFight() || profile.isInTournament());
+    }
+
+    /**
+     * Get a party's match by the party's uniqueId
+     *
+     * @param uuid {@link UUID} party uniqueId
+     * @return {@link Match} party match
+     */
+    public Match getMatch(UUID uuid) {
+        ProfileManager profileManager = this.plugin.getProfileManager();
+        Party party = this.parties.get(uuid);
+        return party.getPlayers().stream()
+                .map(profileManager::getByPlayer)
+                .filter(profile -> profile.isInFight() || profile.isInTournament())
+                .map(Profile::getMatch)
+                .findAny()
+                .orElse(null);
     }
 
 }
