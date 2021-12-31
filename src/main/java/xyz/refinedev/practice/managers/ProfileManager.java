@@ -327,7 +327,7 @@ public class ProfileManager {
         } else if (profile.isInQueue()) {
             player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.QUEUE, profile));
         } else if (profile.isInEvent()) {
-            Event event = profile.getEvent();
+            Event event = this.plugin.getEventManager().getEventByUUID(profile.getEvent());
             if (event.getEventPlayer(profile.getUniqueId()).getState().equals(EventPlayerState.ELIMINATED)) {
                 PlayerUtil.spectator(player);
             }

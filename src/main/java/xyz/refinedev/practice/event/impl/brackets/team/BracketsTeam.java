@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 
 public class BracketsTeam extends Event {
 
-    private final Array plugin = this.getPlugin();
+    private final Array plugin;
     public final List<EventGroup> teams = new ArrayList<>();
 
     private EventGroup roundTeamA;
@@ -50,6 +50,7 @@ public class BracketsTeam extends Event {
             this.teams.add(eventGroup);
         }
 
+        this.plugin = plugin;
         this.kit = kit;
     }
 
@@ -60,7 +61,7 @@ public class BracketsTeam extends Event {
 
     @Override
     public void onJoin(Player player) {
-        this.getPlugin().getSpigotHandler().knockback(player, this.kit.getKnockbackProfile());
+        this.plugin.getSpigotHandler().knockback(player, this.kit.getKnockbackProfile());
     }
 
     @Override
@@ -72,7 +73,7 @@ public class BracketsTeam extends Event {
             loser.getGroup().setState(EventPlayerState.ELIMINATED);
         }
 
-        this.getPlugin().getSpigotHandler().resetKnockback(player);
+        this.plugin.getSpigotHandler().resetKnockback(player);
     }
 
     @Override
@@ -129,13 +130,13 @@ public class BracketsTeam extends Event {
             playerA.teleport(EventHelperUtil.getSpawn1(this));
 
             this.roundTeamA.getPlayers().forEach(eventPlayer -> {
-                this.getPlugin().getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
-                this.getPlugin().getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
+                this.plugin.getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
+                this.plugin.getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
             });
 
             this.roundTeamB.getPlayers().forEach(eventPlayer -> {
-                this.getPlugin().getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
-                this.getPlugin().getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
+                this.plugin.getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
+                this.plugin.getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
             });
         }
 
@@ -148,13 +149,13 @@ public class BracketsTeam extends Event {
             profileB.getStatisticsData().get(this.kit).getKitItems().forEach((integer, itemStack) -> playerB.getInventory().setItem(integer, itemStack));
 
             this.roundTeamB.getPlayers().forEach(eventPlayer -> {
-                this.getPlugin().getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
-                this.getPlugin().getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
+                this.plugin.getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
+                this.plugin.getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
             });
 
             this.roundTeamA.getPlayers().forEach(eventPlayer -> {
-                this.getPlugin().getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
-                this.getPlugin().getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
+                this.plugin.getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
+                this.plugin.getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
             });
         }
 
@@ -239,8 +240,8 @@ public class BracketsTeam extends Event {
 
     public void refreshNameTag() {
         this.getEventPlayers().values().forEach(eventPlayer -> {
-            this.getPlugin().getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
-            this.getPlugin().getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
+            this.plugin.getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
+            this.plugin.getNameTagHandler().reloadOthersFor(eventPlayer.getPlayer());
         });
     }
 
@@ -281,7 +282,7 @@ public class BracketsTeam extends Event {
     public ChatColor getRelationColor(Player viewer, Player target) {
         if (viewer.equals(target)) {
             if (!this.isFighting()) {
-                return this.getPlugin().getConfigHandler().getEventColor();
+                return this.plugin.getConfigHandler().getEventColor();
             }
             return org.bukkit.ChatColor.GREEN;
         }

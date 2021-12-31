@@ -67,8 +67,8 @@ public class ConfigHandler {
         this.NEW_VERSION = Description.getVersion();
         this.LICENSE = config.getStringOrDefault("LICENSE", "XXXX-XXXX-XXXX-XXXX");
 
-        PiracyMeta piracyMeta = new PiracyMeta(this.plugin, this.getLICENSE());
-        piracyMeta.verify();
+        //PiracyMeta piracyMeta = new PiracyMeta(this.plugin, this.getLICENSE());
+        //piracyMeta.verify();
 
         TaskUtil.runLater(() -> this.setLoaded(true), 15 * 20L);
 

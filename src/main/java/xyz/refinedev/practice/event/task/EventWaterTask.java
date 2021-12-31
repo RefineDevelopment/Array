@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.EventState;
+import xyz.refinedev.practice.event.meta.player.EventPlayer;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -27,7 +28,7 @@ public class EventWaterTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (event == null || event.getRemainingPlayers().isEmpty() || event.getRemainingPlayers().size() <= 1) {
+        if (event.getRemainingPlayers().isEmpty() || event.getRemainingPlayers().size() <= 1) {
             return;
         }
 
@@ -44,7 +45,8 @@ public class EventWaterTask extends BukkitRunnable {
                     return;
                 }
                 if (event.isParkour()) {
-                    //.teleport(match.getTeamPlayers(player).getParkourCheckpoint());
+                    EventPlayer eventPlayer = this.event.getEventPlayer(player.getUniqueId());
+                    player.teleport(eventPlayer.getCheckpoint());
                 }
             }
         }

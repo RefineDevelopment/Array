@@ -12,7 +12,7 @@ import xyz.refinedev.practice.util.other.PlayerUtil;
 public class EventPlayer extends PlayerSnapshot {
 
 	private EventPlayerState state = EventPlayerState.WAITING;
-	private Location lastLocation;
+	private Location lastLocation, checkpoint;
 	private int roundWins = 0;
 
 	private boolean isInKoth;

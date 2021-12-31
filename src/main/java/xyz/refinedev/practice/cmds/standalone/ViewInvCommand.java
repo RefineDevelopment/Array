@@ -23,7 +23,7 @@ public class ViewInvCommand {
 
     private final Array plugin;
 
-    @Command(name = "", desc = "Open match details menu", usage = "<uniqueId>")
+    @Command(name = "", desc = "Open match details menu", usage = "<uuid>")
     public void viewInventory(@Sender Player player, String id) {
         MatchSnapshot cachedInventory = plugin.getMatchManager().getByString(id);
 

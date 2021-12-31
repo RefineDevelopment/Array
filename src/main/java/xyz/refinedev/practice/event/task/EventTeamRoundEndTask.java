@@ -16,17 +16,21 @@ import xyz.refinedev.practice.event.meta.EventTask;
 
 public class EventTeamRoundEndTask extends EventTask {
 
+    private final Event event;
+
     public EventTeamRoundEndTask(Array plugin, Event event) {
         super(plugin, event, EventState.ROUND_ENDING);
+
+        this.event = event;
     }
 
     @Override
     public void onRun() {
-        if (this.getEvent().canEnd()) {
-            this.getEvent().handleEnd();
+        if (this.event.canEnd()) {
+            this.event.handleEnd();
         } else {
-            if (getTicks() >= 3) {
-                this.getEvent().onRound();
+            if (this.getTicks() >= 3) {
+                this.event.onRound();
             }
         }
     }

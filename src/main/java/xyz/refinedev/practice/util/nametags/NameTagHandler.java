@@ -18,7 +18,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Getter @Setter
-@RequiredArgsConstructor
 public class NameTagHandler {
 
     private final Array plugin;
@@ -33,17 +32,17 @@ public class NameTagHandler {
     private boolean async = true;
     private static int teamCreateIndex = 1;
 
-    public void init() {
+    public NameTagHandler(Array plugin) {
+        this.plugin = plugin;
         this.initiated = true;
 
         this.thread = new NametagThread();
         this.thread.start();
 
         this.plugin.getServer().getPluginManager().registerEvents(new NameTagListener(), this.plugin);
-        this.registerProvider(new NameTagAdapter(this.plugin));
     }
 
-    public void registerProvider(NameTagProvider newProvider) {
+    public void registerAdapter(NameTagProvider newProvider) {
         this.providers.add(newProvider);
         this.providers.sort(new NameTagComparator());
     }

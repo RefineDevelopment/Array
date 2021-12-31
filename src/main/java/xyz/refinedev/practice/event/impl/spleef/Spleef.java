@@ -7,21 +7,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.event.Event;
-import xyz.refinedev.practice.event.EventState;
-import xyz.refinedev.practice.event.EventTeamSize;
-import xyz.refinedev.practice.event.EventType;
-import xyz.refinedev.practice.event.impl.spleef.task.SpleefRoundEndTask;
-import xyz.refinedev.practice.event.impl.spleef.task.SpleefRoundStartTask;
-import xyz.refinedev.practice.event.impl.spleef.task.SpleefStartTask;
+import xyz.refinedev.practice.event.*;
 import xyz.refinedev.practice.event.meta.group.EventGroup;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
+import xyz.refinedev.practice.event.task.EventRoundEndTask;
+import xyz.refinedev.practice.event.task.EventRoundStartTask;
+import xyz.refinedev.practice.event.task.EventStartTask;
 import xyz.refinedev.practice.event.task.EventWaterTask;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.hotbar.HotbarItem;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
 import xyz.refinedev.practice.util.location.LocationUtil;
-import xyz.refinedev.practice.util.other.PlayerSnapshot;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,12 +33,13 @@ import java.util.UUID;
 
 public class Spleef extends Event {
 
+    private final Array plugin;
     private BukkitRunnable waterTask;
 
     public Spleef(Array plugin, Player host) {
-        super(plugin, plugin.getEventManager(),"Spleef", new PlayerSnapshot(host.getUniqueId(), host.getName()), 100, EventType.SPLEEF, EventTeamSize.SOLO);
+        super(plugin, host, EventType.SPLEEF, EventTeamSize.SOLO);
 
-        this.setPrefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
+        this.plugin = plugin;
     }
 
     @Override
@@ -51,18 +48,13 @@ public class Spleef extends Event {
     }
 
     @Override
-    public boolean isTeam() {
-        return false;
-    }
-
-    @Override
     public void onJoin(Player player) {
-        this.getPlugin().getSpigotHandler().knockback(player, this.getEventManager().getSpleefKB());
+        this.plugin.getSpigotHandler().knockback(player, EventHelperUtil.getSpleefKB());
     }
 
     @Override
     public void onLeave(Player player) {
-        this.getPlugin().getSpigotHandler().resetKnockback(player);
+        this.plugin.getSpigotHandler().resetKnockback(player);
     }
 
     @Override
@@ -71,13 +63,12 @@ public class Spleef extends Event {
 
         int i = 0;
         for (Player player : this.getRemainingPlayers()) {
-            Location midSpawn = this.getPlugin().getEventManager().getSpawn(this);
-            List<Location> circleLocations = LocationUtil.getCircle(midSpawn, this.getPlugin().getConfigHandler().getFFA_SPAWN_RADIUS(), this.getPlayers().size());
+            List<Location> circleLocations = LocationUtil.getCircle(EventHelperUtil.getSpawn(this), this.plugin.getConfigHandler().getFFA_SPAWN_RADIUS(), this.getPlayers().size());
 
-            Location center = midSpawn.clone();
+            Location center = EventHelperUtil.getSpawn(this).clone();
             Location loc = circleLocations.get(i);
             Location target = loc.setDirection(center.subtract(loc).toVector());
-            HotbarItem item = this.getPlugin().getHotbarManager().getHotbarItem(HotbarType.SPLEEF_MATCH);
+            HotbarItem item = this.plugin.getHotbarManager().getHotbarItem(HotbarType.SPLEEF_MATCH);
 
             player.teleport(target.add(0, 0.5, 0));
             player.getInventory().addItem(item.getItem());
@@ -85,28 +76,28 @@ public class Spleef extends Event {
             circleLocations.remove(i);
             i++;
         }
-        this.setEventTask(new SpleefRoundStartTask(this));
+        this.setEventTask(new EventRoundStartTask(plugin, this));
     }
 
     @Override
     public void onDeath(Player player) {
-        Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
-        this.getPlugin().getProfileManager().handleVisibility(profile);
-        this.getPlugin().getProfileManager().refreshHotbar(profile);
+        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        this.plugin.getProfileManager().handleVisibility(profile);
+        this.plugin.getProfileManager().refreshHotbar(profile);
 
         this.broadcastMessage(Locale.EVENT_DIED.toString().replace("<eliminated_name>", player.getName()));
 
         if (canEnd()) {
             this.setState(EventState.ROUND_ENDING);
-            this.setEventTask(new SpleefRoundEndTask(this));
+            this.setEventTask(new EventRoundEndTask(plugin, this));
         }
     }
 
     @Override
     public void handleStart() {
-        this.setEventTask(new SpleefStartTask(this));
-        waterTask = new EventWaterTask(this.getPlugin(), this);
-        waterTask.runTaskTimer(this.getPlugin(), 20L, 20L);
+        this.setEventTask(new EventStartTask(this.plugin, this));
+        waterTask = new EventWaterTask(this.plugin, this);
+        waterTask.runTaskTimer(this.plugin, 20L, 20L);
     }
 
     @Override
@@ -164,7 +155,7 @@ public class Spleef extends Event {
 
     @Override
     public ChatColor getRelationColor(Player viewer, Player target) {
-        if (!isFighting()) return this.getPlugin().getConfigHandler().getEventColor();
+        if (!isFighting()) return this.plugin.getConfigHandler().getEventColor();
 
         if (viewer.equals(target)) {
             return ChatColor.GREEN;

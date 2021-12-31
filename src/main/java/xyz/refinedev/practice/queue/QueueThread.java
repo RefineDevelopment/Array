@@ -75,8 +75,8 @@ public class QueueThread extends Thread {
                             }
 
                             if (queue.getType() == QueueType.CLAN) {
-                                Clan firstClan = clanManager.getByPlayer(firstPlayer.getUniqueId());
-                                Clan secondClan = clanManager.getByPlayer(secondPlayer.getUniqueId());
+                                Clan firstClan = clanManager.getByUUID(firstProfile.getClan());
+                                Clan secondClan = clanManager.getByUUID(secondProfile.getClan());
 
                                 if (firstClan == secondClan) continue;
                             }

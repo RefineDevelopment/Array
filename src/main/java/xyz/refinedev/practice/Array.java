@@ -7,12 +7,14 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.refinedev.practice.adapters.NameTagAdapter;
 import xyz.refinedev.practice.adapters.ScoreboardAdapter;
 import xyz.refinedev.practice.adapters.TablistAdapter;
 import xyz.refinedev.practice.api.API;
 import xyz.refinedev.practice.api.ArrayAPI;
 import xyz.refinedev.practice.config.ConfigHandler;
 import xyz.refinedev.practice.hook.core.CoreHandler;
+import xyz.refinedev.practice.hook.hologram.HologramHandler;
 import xyz.refinedev.practice.hook.placeholderapi.LeaderboardPlaceholders;
 import xyz.refinedev.practice.hook.spigot.SpigotHandler;
 import xyz.refinedev.practice.managers.*;
@@ -48,6 +50,7 @@ public class Array extends JavaPlugin {
 
     @Getter private static Array instance;
     @Getter private static API api;
+
     public static Gson GSON;
     public static Random RANDOM;
 
@@ -59,6 +62,7 @@ public class Array extends JavaPlugin {
     private SpigotHandler spigotHandler;
     private TablistHandler tablistHandler;
     private NameTagHandler nameTagHandler;
+    private HologramHandler hologramHandler;
     private ScoreboardHandler scoreboardHandler;
 
     private KitManager kitManager;
@@ -102,9 +106,9 @@ public class Array extends JavaPlugin {
     @Override
     public void onEnable() {
         api = new ArrayAPI(this);
-        drink = Drink.get(this);
-        GSON = GsonFactory.getPrettyGson();
         RANDOM = new Random();
+        GSON = GsonFactory.getPrettyGson();
+        drink = Drink.get(this);
 
         this.configHandler = new ConfigHandler(this);
         this.configHandler.init();
@@ -222,23 +226,24 @@ public class Array extends JavaPlugin {
         this.spigotHandler = new SpigotHandler(this);
         this.spigotHandler.init();
 
+        TablistAdapter tablistAdapter = new TablistAdapter(this, tablistConfig);
         ScoreboardAdapter scoreboardAdapter = new ScoreboardAdapter(this, scoreboardConfig);
+        NameTagAdapter nameTagAdapter = new NameTagAdapter(this);
 
         this.scoreboardHandler = new ScoreboardHandler(this, scoreboardAdapter);
         this.scoreboardHandler.setAssembleStyle(AssembleStyle.KOHI);
         this.scoreboardHandler.setTicks(2);
 
         this.nameTagHandler = new NameTagHandler(this);
-        this.nameTagHandler.init();
+        this.nameTagHandler.registerAdapter(nameTagAdapter);
 
         if (this.configHandler.isTAB_ENABLED()) {
-            TablistAdapter tablistAdapter = new TablistAdapter(this, tablistConfig);
             this.tablistHandler = new TablistHandler(tablistAdapter, this, tablistConfig.getInteger("TABLIST.UPDATE_TICKS") * 20L);
         }
 
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            LeaderboardPlaceholders placeholders = new LeaderboardPlaceholders(this);
             this.logger("&7Found &cPlaceholderAPI&7, Registering Expansions....");
+            LeaderboardPlaceholders placeholders = new LeaderboardPlaceholders(this);
             placeholders.register();
         }
 

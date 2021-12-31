@@ -77,7 +77,7 @@ public class QueueManager {
                 break;
             }
             case CLAN: {
-                Clan clan = this.plugin.getClanManager().getByPlayer(player.getUniqueId());
+                Clan clan = this.plugin.getClanManager().getByUUID(profile.getClan());
                 player.sendMessage(Locale.QUEUE_JOIN_CLAN.toString()
                         .replace("<queue_name>", queue.getQueueName())
                         .replace("<clan_elo>", String.valueOf(clan.getElo())));

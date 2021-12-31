@@ -139,7 +139,7 @@ public abstract class Event {
 
 		Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 		profile.setState(ProfileState.IN_EVENT);
-		this.eventManager.getPlayers().put(player.getUniqueId(), this.eventId);
+		profile.setEvent(this.eventId);
 
 		this.plugin.getProfileManager().handleVisibility(profile);
 		this.plugin.getProfileManager().refreshHotbar(profile);
@@ -172,8 +172,8 @@ public abstract class Event {
 
 		Profile profile = plugin.getProfileManager().getByPlayer(player);
 		profile.setState(ProfileState.IN_LOBBY);
+		profile.setEvent(null);
 
-		this.plugin.getEventManager().getPlayers().remove(player.getUniqueId());
 		this.plugin.getProfileManager().teleportToSpawn(profile);
 
 		if (this.state == EventState.WAITING) {
@@ -204,8 +204,8 @@ public abstract class Event {
 
 			Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
 			profile.setState(ProfileState.IN_LOBBY);
+			profile.setEvent(null);
 
-			this.plugin.getEventManager().getPlayers().remove(player.getUniqueId());
 			this.plugin.getProfileManager().teleportToSpawn(profile);
 		}
 
@@ -299,7 +299,8 @@ public abstract class Event {
 			Clickable message = new Clickable(main, Locale.EVENT_HOVER.toString().replace("<event_name>", this.getName()), "/event join");
 
 			for ( Player player : this.plugin.getServer().getOnlinePlayers() ) {
-				if (!this.eventManager.isInEvent(player.getUniqueId())) message.sendToPlayer(player);
+				Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+				if (!profile.isInEvent()) message.sendToPlayer(player);
 			}
 		}
 	}
@@ -330,8 +331,8 @@ public abstract class Event {
 
 		Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
 		profile.setState(ProfileState.SPECTATING);
+		profile.setEvent(this.getEventId());
 
-		this.eventManager.getPlayers().put(player.getUniqueId(), this.eventId);
 		this.plugin.getProfileManager().refreshHotbar(profile);
 		this.plugin.getProfileManager().handleVisibility(profile);
 
@@ -352,8 +353,8 @@ public abstract class Event {
 
 		Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
 		profile.setState(ProfileState.IN_LOBBY);
+		profile.setEvent(null);
 
-		this.plugin.getEventManager().getPlayers().remove(player.getUniqueId());
 		this.plugin.getProfileManager().teleportToSpawn(profile);
 	}
 
@@ -390,14 +391,9 @@ public abstract class Event {
 	}
 
 	public boolean isRemovable(Player player) {
-		if (this.isTeam()) {
-			return this.getEventManager().isInEvent(player.getUniqueId()) ||
-					(this.getEventManager().isInEvent(player.getUniqueId()) &&
-							!this.getEventId().equals(this.getEventManager().getEvent(player.getUniqueId()).getEventId()));
-		}
-		return this.getEventManager().isInEvent(player.getUniqueId()) && this.getEventManager().getEvent(player.getUniqueId()).getEventId().equals(this.eventId);
+		Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+		return profile.isInEvent() && this.getEventId().equals(profile.getEvent());
 	}
-
 
 	public boolean isSpleef() {
 		return this.getType().equals(EventType.SPLEEF);

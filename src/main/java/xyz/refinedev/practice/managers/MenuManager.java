@@ -7,6 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.menu.EventSelectMenu;
 import xyz.refinedev.practice.event.menu.EventTeamMenu;
 import xyz.refinedev.practice.party.menu.PartyEventMenu;
@@ -45,11 +46,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MenuManager {
 
-    private final String[] configNames = {"general", "profile_menu", "profile_settings", "profile_killeffects", "profile_history", "party_events", "event_size", "event_host"};
+    private final Array plugin;
+
+    private final String[] configNames = {"general", "profile_menu", "profile_settings", "profile_killeffects",
+                                          "profile_history", "party_events", "event_size", "event_host"};
 
     private final Map<String, FoldersConfigurationFile> configs = new HashMap<>();
     private final List<MenuData> menuData = new ArrayList<>();
-    private final Array plugin;
 
     public void init() {
         File file = new File(plugin.getDataFolder().getAbsolutePath() + "/menu");
@@ -223,24 +226,27 @@ public class MenuManager {
      * @return {@link Menu}
      */
     public Menu findMenu(Player player, String name) {
+        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
         switch (name) {
             case "event_team": {
-                Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-                if (!profile.isInEvent()) break;
-                return new EventTeamMenu(profile.getEvent());
+                if (profile.isInEvent()) {
+                    Event event = this.plugin.getEventManager().getEventByUUID(profile.getEvent());
+                    return new EventTeamMenu(event);
+                }
+                break;
+            }
+            case "kill_effects": {
+                if (this.getConfigByName("kill_effects").getBoolean("PAGINATED")) {
+                    return new KEPaginatedMenu();
+                } else {
+                    return new KEMenu();
+                }
             }
             case "event_host": return new EventSelectMenu();
             case "party_events": return new PartyEventMenu();
             case "party_settings": return new PartySettingsMenu();
             case "profile_menu": return new ProfileMenu(player);
             case "profile_settings": return new ProfileSettingsMenu();
-            case "kill_effects": {
-                if (getConfigByName("kill_effects").getBoolean("PAGINATED")) {
-                    return new KEPaginatedMenu();
-                } else {
-                    return new KEMenu();
-                }
-            }
             default: {
                 MenuData menuData = getMenuDataByName(name);
                 if (menuData == null) return null;

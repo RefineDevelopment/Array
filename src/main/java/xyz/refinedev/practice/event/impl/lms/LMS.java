@@ -9,13 +9,11 @@ import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.EventState;
 import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.event.EventType;
-import xyz.refinedev.practice.event.impl.parkour.task.ParkourRoundStartTask;
 import xyz.refinedev.practice.event.meta.group.EventGroup;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
 import xyz.refinedev.practice.event.task.EventRoundEndTask;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.util.other.PlayerSnapshot;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,14 +29,16 @@ import java.util.UUID;
 
 public class LMS extends Event {
 
+    private final Array plugin;
+
     private Player winner;
     private final Kit kit;
 
     public LMS(Array plugin, Player host, Kit kit) {
-        super(plugin, plugin.getEventManager(), "LMS", new PlayerSnapshot(host.getUniqueId(), host.getName()), EventTeamSize.SOLO.getMaxParticipants(), EventType.LMS, EventTeamSize.SOLO);
+        super(plugin, host, EventType.LMS, EventTeamSize.SOLO);
 
         this.kit = kit;
-        this.setPrefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
+        this.plugin = plugin;
     }
 
     @Override
@@ -91,11 +91,6 @@ public class LMS extends Event {
     }
 
     @Override
-    public void handleStart() {
-        this.setEventTask(new ParkourRoundStartTask(this));
-    }
-
-    @Override
     public EventGroup getWinningTeam() {
         throw new IllegalArgumentException("Can not get a team from an FFA Event");
     }
@@ -143,6 +138,12 @@ public class LMS extends Event {
 
     @Override
     public ChatColor getRelationColor(Player viewer, Player target) {
-        return null;
+        if (!isFighting()) return this.plugin.getConfigHandler().getEventColor();
+
+        if (viewer.equals(target)) {
+            return ChatColor.GREEN;
+        }
+
+        return ChatColor.RED;
     }
 }

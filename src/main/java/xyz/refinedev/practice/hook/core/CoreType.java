@@ -34,8 +34,17 @@ public enum CoreType {
     private final String name;
     private final CoreAdapter coreAdapter;
 
+    /**
+     * Yes this is static for obvious reasons
+     *
+     * @return {@link CoreType} returns the coreType for the core hooked in
+     */
     public static CoreType get() {
-        return Arrays.stream(CoreType.values()).filter(core -> !core.equals(CoreType.DEFAULT) && check(core.getName())).findFirst().orElse(CoreType.DEFAULT);
+        return Arrays.stream(CoreType.values())
+                .filter(core -> !core.equals(CoreType.DEFAULT))
+                .filter(core -> check(core.getName()))
+                .findFirst()
+                .orElse(CoreType.DEFAULT);
     }
 
     /**

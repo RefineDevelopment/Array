@@ -7,12 +7,12 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.event.*;
-import xyz.refinedev.practice.event.impl.brackets.solo.task.BracketsSoloRoundEndTask;
-import xyz.refinedev.practice.event.impl.brackets.solo.task.BracketsSoloRoundStartTask;
-import xyz.refinedev.practice.event.impl.brackets.solo.task.BracketsSoloStartTask;
 import xyz.refinedev.practice.event.meta.group.EventGroup;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
 import xyz.refinedev.practice.event.meta.player.EventPlayerState;
+import xyz.refinedev.practice.event.task.EventRoundEndTask;
+import xyz.refinedev.practice.event.task.EventRoundStartTask;
+import xyz.refinedev.practice.event.task.EventStartTask;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.other.PlayerUtil;
@@ -32,6 +32,8 @@ import java.util.UUID;
 @Getter
 @Setter
 public class BracketsSolo extends Event {
+    
+    private final Array plugin;
 
     private EventPlayer roundPlayerA;
     private EventPlayer roundPlayerB;
@@ -42,16 +44,17 @@ public class BracketsSolo extends Event {
         super(plugin, host, EventType.BRACKETS, EventTeamSize.SOLO);
 
         this.kit = kit;
+        this.plugin = plugin;
     }
 
     @Override
     public void onJoin(Player player) {
-        this.getPlugin().getSpigotHandler().knockback(player, EventHelperUtil.getSumoKB());
+        this.plugin.getSpigotHandler().knockback(player, EventHelperUtil.getSumoKB());
     }
 
     @Override
     public void onLeave(Player player) {
-        this.getPlugin().getSpigotHandler().resetKnockback(player);
+        this.plugin.getSpigotHandler().resetKnockback(player);
     }
 
     @Override
@@ -64,10 +67,10 @@ public class BracketsSolo extends Event {
             if (player != null) {
                 player.teleport(EventHelperUtil.getSpectator(this));
 
-                Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
+                Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
 
                 if (this.isRemovable(player)) {
-                    this.getPlugin().getProfileManager().refreshHotbar(profile);
+                    this.plugin.getProfileManager().refreshHotbar(profile);
                 }
             }
 
@@ -80,10 +83,10 @@ public class BracketsSolo extends Event {
             if (player != null) {
                 player.teleport(EventHelperUtil.getSpectator(this));
 
-                Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
+                Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
 
                 if (this.isRemovable(player)) {
-                    this.getPlugin().getProfileManager().refreshHotbar(profile);
+                    this.plugin.getProfileManager().refreshHotbar(profile);
                 }
             }
 
@@ -96,8 +99,8 @@ public class BracketsSolo extends Event {
         Player playerA = roundPlayerA.getPlayer();
         Player playerB = roundPlayerB.getPlayer();
 
-        Profile profileA = this.getPlugin().getProfileManager().getByUUID(playerA.getUniqueId());
-        Profile profileB = this.getPlugin().getProfileManager().getByUUID(playerB.getUniqueId());
+        Profile profileA = this.plugin.getProfileManager().getByUUID(playerA.getUniqueId());
+        Profile profileB = this.plugin.getProfileManager().getByUUID(playerB.getUniqueId());
 
         PlayerUtil.reset(playerA);
         PlayerUtil.reset(playerB);
@@ -111,7 +114,7 @@ public class BracketsSolo extends Event {
         playerA.teleport(EventHelperUtil.getSpawn1(this));
         playerB.teleport(EventHelperUtil.getSpawn2(this));
 
-        this.setEventTask(new BracketsSoloRoundStartTask(this));
+        this.setEventTask(new EventRoundStartTask(this.plugin, this));
     }
 
     private EventPlayer findRoundPlayer() {
@@ -154,17 +157,7 @@ public class BracketsSolo extends Event {
                 .replace("<eliminator_name>", winner.getPlayer().getName()));
 
         this.setState(EventState.ROUND_ENDING);
-        this.setEventTask(new BracketsSoloRoundEndTask(this));
-    }
-
-    @Override
-    public void handleStart() {
-        this.setEventTask(new BracketsSoloStartTask(this));
-    }
-
-    @Override
-    public void handleEnd() {
-        super.handleEnd();
+        this.setEventTask(new EventRoundEndTask(this.plugin, this));
     }
 
     @Override
@@ -176,7 +169,7 @@ public class BracketsSolo extends Event {
     public ChatColor getRelationColor(Player viewer, Player target) {
         if (viewer.equals(target)) {
             if (!this.isFighting()) {
-                return this.getPlugin().getConfigHandler().getEventColor();
+                return this.plugin.getConfigHandler().getEventColor();
             }
             return ChatColor.GREEN;
         }

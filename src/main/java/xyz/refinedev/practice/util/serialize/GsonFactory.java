@@ -384,7 +384,7 @@ public class GsonFactory {
 
         private static Type seriType = new TypeToken<Map<String, Object>>(){}.getType();
 
-        private static String UUID = "uniqueId";
+        private static String UUID = "uuid";
         private static String X = "x";
         private static String Y = "y";
         private static String Z = "z";

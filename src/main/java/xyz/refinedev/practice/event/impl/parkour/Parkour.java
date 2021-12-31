@@ -5,19 +5,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.event.Event;
-import xyz.refinedev.practice.event.EventState;
-import xyz.refinedev.practice.event.EventTeamSize;
-import xyz.refinedev.practice.event.EventType;
-import xyz.refinedev.practice.event.impl.parkour.task.ParkourRoundEndTask;
-import xyz.refinedev.practice.event.impl.parkour.task.ParkourRoundStartTask;
+import xyz.refinedev.practice.event.*;
 import xyz.refinedev.practice.event.meta.group.EventGroup;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
+import xyz.refinedev.practice.event.task.EventRoundEndTask;
+import xyz.refinedev.practice.event.task.EventRoundStartTask;
 import xyz.refinedev.practice.event.task.EventWaterTask;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.ProfileState;
-import xyz.refinedev.practice.util.other.PlayerSnapshot;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 
 import java.util.List;
@@ -34,13 +28,15 @@ import java.util.UUID;
 
 public class Parkour extends Event {
 
+    private final Array plugin;
+
     private BukkitRunnable waterTask;
     private Player winner;
 
     public Parkour(Array plugin, Player host) {
-        super(plugin, plugin.getEventManager(), "Parkour", new PlayerSnapshot(host.getUniqueId(), host.getName()), 100, EventType.PARKOUR, EventTeamSize.SOLO);
+        super(plugin, host, EventType.PARKOUR, EventTeamSize.SOLO);
 
-        this.setPrefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
+        this.plugin = plugin;
     }
 
     @Override
@@ -50,25 +46,7 @@ public class Parkour extends Event {
 
     @Override
     public void handleJoin(Player player) {
-        this.getEventPlayers().put(player.getUniqueId(), new EventPlayer(player));
-
-        this.broadcastMessage(Locale.EVENT_JOIN.toString()
-                .replace("<event_name>", this.getName())
-                .replace("<joined>", player.getName())
-                .replace("<event_participants_size>", String.valueOf(getRemainingPlayers().size()))
-                .replace("<event_max_players>", String.valueOf(getMaxPlayers())));
-
-        this.onJoin(player);
-
-        Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
-        profile.setEvent(this);
-        profile.setState(ProfileState.IN_EVENT);
-
-        this.getPlugin().getProfileManager().handleVisibility(profile);
-        this.getPlugin().getProfileManager().refreshHotbar(profile);
-
-        player.teleport(this.getEventManager().getSpawn(this));
-
+        super.handleJoin(player);
         PlayerUtil.denyMovement(player);
     }
 
@@ -78,14 +56,14 @@ public class Parkour extends Event {
 
         for (Player player : this.getRemainingPlayers()) {
             if (player == null) return;
-            player.teleport(this.getEventManager().getSpawn(this));
+            player.teleport(EventHelperUtil.getSpawn(this));
 
             Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
-            if (profile.isInEvent() && profile.getEvent().equals(this)) {
+            if (this.isRemovable(player)) {
                 this.getPlugin().getProfileManager().refreshHotbar(profile);
             }
         }
-        this.setEventTask(new ParkourRoundStartTask(this));
+        this.setEventTask(new EventRoundStartTask(plugin, this));
     }
 
     @Override
@@ -101,12 +79,12 @@ public class Parkour extends Event {
         this.winner = player;
 
         this.setState(EventState.ROUND_ENDING);
-        this.setEventTask(new ParkourRoundEndTask(this));
+        this.setEventTask(new EventRoundEndTask(plugin, this));
     }
 
     @Override
     public void handleStart() {
-        this.setEventTask(new ParkourRoundStartTask(this));
+        this.setEventTask(new EventRoundStartTask(plugin, this));
         waterTask = new EventWaterTask(this.getPlugin(), this);
         waterTask.runTaskTimer(this.getPlugin(), 20L, 20L);
     }
@@ -165,14 +143,20 @@ public class Parkour extends Event {
 
     @Override
     public void onJoin(Player player) {
-
     }
+
     @Override
     public void onLeave(Player player) {
     }
 
     @Override
     public ChatColor getRelationColor(Player viewer, Player target) {
-        return null;
+        if (!isFighting()) return this.plugin.getConfigHandler().getEventColor();
+
+        if (viewer.equals(target)) {
+            return ChatColor.GREEN;
+        }
+
+        return ChatColor.RED;
     }
 }

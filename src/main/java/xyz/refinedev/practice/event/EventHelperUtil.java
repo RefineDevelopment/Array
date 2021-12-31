@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.event;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
@@ -28,15 +29,15 @@ public class EventHelperUtil {
     
     private final BasicConfigurationFile config;
 
-    private static Location sumoSpawn1, sumoSpawn2, sumoSpectator;
-    private static Location bracketsSpawn1, bracketsSpawn2, bracketsSpectator;
-    private static Location gulagSpawn1, gulagSpawn2, gulagSpectator;
-    private static Location lmsSpawn, parkourSpawn, spleefSpawn, omaSpawn;
-    private static Location kothSpawn1, kothSpawn2, kothSpec;
-    private static KothPoint kothPoint;
+    @Setter @Getter private static Location sumoSpawn1, sumoSpawn2, sumoSpectator;
+    @Setter @Getter private static Location bracketsSpawn1, bracketsSpawn2, bracketsSpectator;
+    @Setter @Getter private static Location gulagSpawn1, gulagSpawn2, gulagSpectator;
+    @Setter @Getter private static Location lmsSpawn, parkourSpawn, spleefSpawn, omaSpawn;
+    @Setter @Getter private static Location kothSpawn1, kothSpawn2, kothSpec;
+    @Setter @Getter private static KothPoint kothPoint;
 
-    private static List<Location> OITCSpawns = new ArrayList<>();
-    private static Location OITCSpectator;
+    @Getter private static List<Location> OITCSpawns = new ArrayList<>();
+    @Setter @Getter private static Location OITCSpectator;
 
     @Getter
     private static String sumoKB = "default", gulagKB = "default", omaKB = "default", spleefKB = "default", kothKB = "default";

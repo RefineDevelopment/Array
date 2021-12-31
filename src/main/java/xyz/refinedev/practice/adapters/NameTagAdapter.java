@@ -3,6 +3,7 @@ package xyz.refinedev.practice.adapters;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.config.ConfigHandler;
 import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.party.Party;
@@ -67,6 +68,8 @@ public class NameTagAdapter extends NameTagProvider {
     }
 
     public NameTagInfo getNormalColor(Profile viewerProfile, Profile targetProfile) {
+        ConfigHandler configHandler = this.plugin.getConfigHandler();
+
         Player viewer = viewerProfile.getPlayer();
         Player target = targetProfile.getPlayer();
 
@@ -74,12 +77,12 @@ public class NameTagAdapter extends NameTagProvider {
         Party targetParty = this.plugin.getPartyManager().getPartyByUUID(targetProfile.getParty());
 
         if (viewerParty != null && viewerParty.containsPlayer(target)) {
-            return createNameTag(plugin.getConfigHandler().getPartyColor().toString(), "");
+            return createNameTag(configHandler.getPartyColor().toString(), "");
         }
         if (targetParty != null && targetParty.containsPlayer(viewer)) {
-            return createNameTag(plugin.getConfigHandler().getPartyColor().toString(), "");
+            return createNameTag(configHandler.getPartyColor().toString(), "");
         }
-        String color = plugin.getConfigHandler().getDefaultColor().equals("<rank_color>") ? plugin.getProfileManager().getColor(targetProfile).toString() : ChatColor.valueOf(plugin.getConfigHandler().getDefaultColor()).toString();
+        String color = configHandler.getDefaultColor().equals("<rank_color>") ? plugin.getProfileManager().getColor(targetProfile).toString() : ChatColor.valueOf(configHandler.getDefaultColor()).toString();
         return createNameTag(color, "");
     }
 

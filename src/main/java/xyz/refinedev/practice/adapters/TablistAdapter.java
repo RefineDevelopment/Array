@@ -28,6 +28,7 @@ import xyz.refinedev.tablist.util.Skin;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -370,8 +371,10 @@ public class TablistAdapter implements TabAdapter {
                     entries.add(finalEntry);
                 }
             }
+            //TODO: Complete Event Tablist
         } else if (profile.isInEvent() && !profile.isSpectating()) {
-            Event event = profile.getEvent();
+            UUID uuid = profile.getEvent();
+            Event event = this.plugin.getEventManager().getEventByUUID(uuid);
             if (event.isWaiting()) {
 
             } else if (event.isFighting()) {
@@ -422,8 +425,9 @@ public class TablistAdapter implements TabAdapter {
     }
 
     public String replaceParty(Player player, String toReplace) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
-        Party party = profile.getParty();
+        Profile profile = this.plugin.getProfileManager().getByPlayer(player);
+        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+
         String armorClass = party.getKits().get(player.getUniqueId());
         List<TeamPlayer> teamPlayers = party.getTeamPlayers();
 
@@ -448,7 +452,7 @@ public class TablistAdapter implements TabAdapter {
     }
 
     public String replaceSoloMatch(Player player, String toReplace) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile profile = this.plugin.getProfileManager().getByPlayer(player);
         Match match = profile.getMatch();
 
         int playerAPing = PlayerUtil.getPing(match.getTeamPlayerA().getPlayer());
@@ -467,7 +471,7 @@ public class TablistAdapter implements TabAdapter {
     }
 
     public String replaceTeamMatch(Player player, String toReplace) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile profile = this.plugin.getProfileManager().getByPlayer(player);
         Match match = profile.getMatch();
 
         Team team = match.getTeam(player);
@@ -534,8 +538,8 @@ public class TablistAdapter implements TabAdapter {
 
     public String replaceHCFMatch(Player player, String toReplace) {
         Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
         Match match = profile.getMatch();
-        Party party = profile.getParty();
         PvPClass pvpClass = Array.getInstance().getPvpClassManager().getEquippedClass(player);
 
         Team team = match.getTeam(player);
@@ -543,7 +547,7 @@ public class TablistAdapter implements TabAdapter {
 
         //Your Team Replacement
         for ( int i = 0; i < 30; i++ ) {
-            String member = "team_" + ((i + 1)) + ">";
+            String member = "<team_" + ((i + 1)) + ">";
             if (team.getPlayers().size() <= i) {
                 toReplace = toReplace.replace(member, "&7");
             } else {
@@ -561,7 +565,7 @@ public class TablistAdapter implements TabAdapter {
 
         //Opponent Team Replacement
         for ( int i = 0; i < 30; i++ ) {
-            String member = "opponent_" + ((i + 1)) + ">";
+            String member = "<opponent_" + ((i + 1)) + ">";
             if (opponentTeam.getPlayers().size() <= i) {
                 toReplace = toReplace.replace(member, "&7");
             } else {
@@ -597,7 +601,9 @@ public class TablistAdapter implements TabAdapter {
                 .replace("<your_team_alive>", String.valueOf(team.getAliveCount()))
                 .replace("<opponent_team_alive>", String.valueOf(opponentTeam.getAliveCount()))
                 .replace("<your_team_count>", String.valueOf(team.getPlayers().size()))
-                .replace("<opponent_team_count>", String.valueOf(opponentTeam.getPlayers().size())).replace("%splitter%", "┃").replace("|", "┃");
+                .replace("<opponent_team_count>", String.valueOf(opponentTeam.getPlayers().size()))
+                .replace("%splitter%", "┃")
+                .replace("|", "┃");
     }
 
     public ChatColor getClassColor(String pvPClass) {
@@ -646,6 +652,7 @@ public class TablistAdapter implements TabAdapter {
                 .replace("%splitter%", "┃").replace("|", "┃");
     }
 
+    //TODO: Complete Event Tablist
     public void replaceEvent(Player player, String toReplace) {
 
     }
@@ -708,7 +715,9 @@ public class TablistAdapter implements TabAdapter {
 
         @Override
         public int compare(Player o1, Player o2) {
-            return plugin.getProfileManager().getByPlayer(o2).getTabPriority() - plugin.getProfileManager().getByPlayer(o1).getTabPriority();
+            Profile profile1 = plugin.getProfileManager().getByPlayer(o2);
+            Profile profile2 = plugin.getProfileManager().getByPlayer(o1);
+            return profile1.getTabPriority() - profile2.getTabPriority();
         }
     }
 }

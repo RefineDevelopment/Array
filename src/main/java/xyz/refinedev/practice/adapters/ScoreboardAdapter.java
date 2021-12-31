@@ -16,6 +16,7 @@ import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
 import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.profile.divisions.ProfileDivision;
 import xyz.refinedev.practice.pvpclasses.PvPClass;
 import xyz.refinedev.practice.pvpclasses.classes.Bard;
 import xyz.refinedev.practice.queue.Queue;
@@ -77,11 +78,12 @@ public class ScoreboardAdapter implements AssembleAdapter {
 
         lines.add(config.getStringOrDefault("SCOREBOARD.LINES", CC.SB_BAR));
         if (profile.isInLobby() || profile.isInQueue()) {
+            ProfileDivision division = profileManager.getDivision(profile);
             config.getStringList("SCOREBOARD.LOBBY").forEach(line -> lines.add(CC.translate(line
                     .replace("<online>", String.valueOf(TrackUtil.getOnline()))
                     .replace("<in_fights>", String.valueOf(TrackUtil.getInFights()))
                     .replace("<in_queues>", String.valueOf(TrackUtil.getInQueues()))
-                    .replace("<elo_league>", plugin.getProfileManager().getDivision(profile).getDisplayName())
+                    .replace("<elo_league>", division.getDisplayName())
                     .replace("<global_elo>", String.valueOf(profile.getGlobalElo())))
                     .replace("%splitter%", "┃")
                     .replace("|", "┃")));

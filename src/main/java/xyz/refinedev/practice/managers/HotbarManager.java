@@ -188,7 +188,7 @@ public class HotbarManager {
                 Collection<HotbarItem> eventItems = items.stream().filter(HotbarItem::isEnabled).filter(item -> (item.getLayout().equals(HotbarLayout.EVENT) || item.getLayout().equals(HotbarLayout.EVENT_SPECTATE) || item.getLayout().equals(HotbarLayout.EVENT_WAITING))).collect(Collectors.toList());
                 eventItems.addAll(getCustomItems().stream().filter(item -> item.getLayout().equals(HotbarLayout.EVENT) || item.getLayout().equals(HotbarLayout.EVENT_SPECTATE) || item.getLayout().equals(HotbarLayout.EVENT_WAITING)).collect(Collectors.toList()));
 
-                Event event = this.plugin.getEventManager().getEvent(profile.getUniqueId());
+                Event event = this.plugin.getEventManager().getEventByUUID(profile.getEvent());
                 EventPlayer eventPlayer = event.getEventPlayer(profile.getUniqueId());
 
                 for ( HotbarItem item : eventItems ) {
@@ -204,7 +204,7 @@ public class HotbarManager {
                             break;
                         }
                         case EVENT_SPECTATE: {
-                            if (profile.isSpectating() && this.plugin.getEventManager().isInEvent(profile.getUniqueId())) {
+                            if (profile.isSpectating() && profile.isInEvent()) {
                                 toReturn[item.getSlot()] = item.getItem();
                             }
                             break;

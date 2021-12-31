@@ -7,19 +7,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.event.Event;
-import xyz.refinedev.practice.event.EventState;
-import xyz.refinedev.practice.event.EventTeamSize;
-import xyz.refinedev.practice.event.EventType;
-import xyz.refinedev.practice.event.impl.sumo.solo.task.SumoSoloRoundEndTask;
-import xyz.refinedev.practice.event.impl.sumo.solo.task.SumoSoloRoundStartTask;
-import xyz.refinedev.practice.event.impl.sumo.solo.task.SumoSoloStartTask;
+import xyz.refinedev.practice.event.*;
 import xyz.refinedev.practice.event.meta.group.EventGroup;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
 import xyz.refinedev.practice.event.meta.player.EventPlayerState;
+import xyz.refinedev.practice.event.task.EventRoundEndTask;
+import xyz.refinedev.practice.event.task.EventRoundStartTask;
+import xyz.refinedev.practice.event.task.EventStartTask;
 import xyz.refinedev.practice.event.task.EventWaterTask;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.util.other.PlayerSnapshot;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 
 import java.util.List;
@@ -38,25 +34,27 @@ import java.util.UUID;
 @Setter
 public class SumoSolo extends Event {
 
+    private final Array plugin;
+    
     private BukkitRunnable waterTask;
 
     private EventPlayer roundPlayerA;
     private EventPlayer roundPlayerB;
 
     public SumoSolo(Array plugin, Player host) {
-        super(plugin, plugin.getEventManager(),"Sumo", new PlayerSnapshot(host.getUniqueId(), host.getName()), 100, EventType.SUMO, EventTeamSize.SOLO);
-
-        this.setPrefix(Locale.EVENT_PREFIX.toString().replace("<event_name>", this.getName()));
+        super(plugin, host, EventType.SUMO, EventTeamSize.SOLO);
+        
+        this.plugin = plugin;
     }
 
     @Override
     public void onJoin(Player player) {
-        this.getPlugin().getSpigotHandler().knockback(player, this.getEventManager().getSumoKB());
+        this.plugin.getSpigotHandler().knockback(player, EventHelperUtil.getSumoKB());
     }
 
     @Override
     public void onLeave(Player player) {
-        this.getPlugin().getSpigotHandler().resetKnockback(player);
+        this.plugin.getSpigotHandler().resetKnockback(player);
     }
 
     @Override
@@ -67,12 +65,12 @@ public class SumoSolo extends Event {
             Player player = roundPlayerA.getPlayer();
 
             if (player != null) {
-                player.teleport(this.getEventManager().getSpectator(this));
+                player.teleport(EventHelperUtil.getSpectator(this));
 
-                Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
+                Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
 
-                if (profile.isInEvent() && profile.getEvent().isSumoSolo()) {
-                    this.getPlugin().getProfileManager().refreshHotbar(profile);
+                if (this.isRemovable(player)) {
+                    this.plugin.getProfileManager().refreshHotbar(profile);
                 }
             }
 
@@ -83,12 +81,12 @@ public class SumoSolo extends Event {
             Player player = roundPlayerB.getPlayer();
 
             if (player != null) {
-                player.teleport(this.getEventManager().getSpectator(this));
+                player.teleport(EventHelperUtil.getSpectator(this));
 
-                Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
+                Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
 
-                if (profile.isInEvent() && profile.getEvent().isSumoSolo()) {
-                    this.getPlugin().getProfileManager().refreshHotbar(profile);
+                if (this.isRemovable(player)) {
+                    this.plugin.getProfileManager().refreshHotbar(profile);
                 }
             }
 
@@ -107,17 +105,17 @@ public class SumoSolo extends Event {
         PlayerUtil.denyMovement(playerA);
         PlayerUtil.denyMovement(playerB);
 
-        playerA.teleport(getEventManager().getSpawn1(this));
-        playerB.teleport(getEventManager().getSpawn2(this));
+        playerA.teleport(EventHelperUtil.getSpawn1(this));
+        playerB.teleport(EventHelperUtil.getSpawn2(this));
 
-        this.setEventTask(new SumoSoloRoundStartTask(this));
+        this.setEventTask(new EventRoundStartTask(this.plugin, this));
     }
 
     private EventPlayer findRoundPlayer() {
         EventPlayer eventPlayer = null;
 
         for (EventPlayer check : getEventPlayers().values()) {
-            if (!isFighting(check.getUuid()) && check.getState() == EventPlayerState.WAITING) {
+            if (!this.isFighting(check.getUuid()) && check.getState() == EventPlayerState.WAITING) {
                 if (eventPlayer == null) {
                     eventPlayer = check;
                     continue;
@@ -146,21 +144,21 @@ public class SumoSolo extends Event {
         EventPlayer winner = roundPlayerA.getUuid().equals(player.getUniqueId()) ? roundPlayerB : roundPlayerA;
         winner.setState(EventPlayerState.WAITING);
         winner.incrementRoundWins();
-        winner.getPlayer().teleport(getEventManager().getSpectator(this));
+        winner.getPlayer().teleport(EventHelperUtil.getSpectator(this));
 
         broadcastMessage(Locale.EVENT_ELIMINATED.toString()
                 .replace("<eliminated_name>", player.getName())
                 .replace("<eliminator_name>", winner.getPlayer().getName()));
 
         this.setState(EventState.ROUND_ENDING);
-        this.setEventTask(new SumoSoloRoundEndTask(this));
+        this.setEventTask(new EventRoundEndTask(this.plugin, this));
     }
 
     @Override
     public void handleStart() {
-        this.setEventTask(new SumoSoloStartTask(this));
-        waterTask = new EventWaterTask(this.getPlugin(), this);
-        waterTask.runTaskTimer(Array.getInstance(), 20L, 20L);
+        this.setEventTask(new EventStartTask(this.plugin, this));
+        waterTask = new EventWaterTask(this.plugin, this);
+        waterTask.runTaskTimer(this.plugin, 20L, 20L);
     }
 
     @Override
@@ -178,7 +176,7 @@ public class SumoSolo extends Event {
     public ChatColor getRelationColor(Player viewer, Player target) {
         if (viewer.equals(target)) {
             if (!this.isFighting()) {
-                return this.getPlugin().getConfigHandler().getEventColor();
+                return this.plugin.getConfigHandler().getEventColor();
             }
             return ChatColor.GREEN;
         }
