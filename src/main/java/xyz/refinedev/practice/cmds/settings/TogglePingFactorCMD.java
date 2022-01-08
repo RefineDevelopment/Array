@@ -26,7 +26,7 @@ public class TogglePingFactorCMD {
     @Command(name = "", desc = "Toggle Ping Factor for your Profile")
     @Require("array.profile.pingfactor")
     public void toggle(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
         ProfileSettings settings = profile.getSettings();
 
         settings.setPingFactor(!settings.isPingFactor());

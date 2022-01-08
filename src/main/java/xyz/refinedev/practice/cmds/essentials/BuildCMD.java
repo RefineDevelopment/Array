@@ -26,7 +26,7 @@ public class BuildCMD {
     @Command(name = "", desc = "Toggle build mode for your profile")
     @Require("array.profile.build")
     public void build(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         profile.setBuild(!profile.isBuild());
 
         player.sendMessage(CC.translate(profile.isBuild() ? "&aEnabled Build-Mode for your profile." : "&cDisabled Build-Mode for your profile."));

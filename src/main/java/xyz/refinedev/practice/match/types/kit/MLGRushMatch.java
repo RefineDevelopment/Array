@@ -155,11 +155,11 @@ public class MLGRushMatch extends SoloMatch {
         if (teamPlayer.isDisconnected()) return;
 
         for ( Player otherPlayer : this.getPlayers() ) {
-            Profile otherProfile = this.getPlugin().getProfileManager().getByPlayer(otherPlayer);
+            Profile otherProfile = this.getPlugin().getProfileManager().getProfileByPlayer(otherPlayer);
             this.getPlugin().getProfileManager().handleVisibility(otherProfile);
         }
 
-        Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
         this.getPlugin().getProfileManager().refreshHotbar(profile);
         this.getPlugin().getProfileManager().handleVisibility(profile);
 

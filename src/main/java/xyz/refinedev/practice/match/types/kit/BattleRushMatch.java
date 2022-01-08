@@ -6,10 +6,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
+import xyz.refinedev.practice.arena.cuboid.Cuboid;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitGameRules;
 import xyz.refinedev.practice.match.MatchSnapshot;
@@ -25,6 +25,7 @@ import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -154,11 +155,11 @@ public class BattleRushMatch extends SoloMatch {
         if (teamPlayer.isDisconnected()) return;
 
         for ( Player otherPlayer : this.getPlayers() ) {
-            Profile otherProfile = this.plugin.getProfileManager().getByPlayer(otherPlayer);
+            Profile otherProfile = this.plugin.getProfileManager().getProfileByPlayer(otherPlayer);
             this.plugin.getProfileManager().handleVisibility(otherProfile);
         }
 
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         this.plugin.getProfileManager().handleVisibility(profile);
 
         player.getInventory().clear();
@@ -167,6 +168,20 @@ public class BattleRushMatch extends SoloMatch {
 
         MatchRespawnTask respawnTask = new MatchRespawnTask(this.plugin, player, this);
         respawnTask.runTaskTimer(this.plugin, 20L, 20L);
+    }
+
+    public boolean isVolatileLocation(Location location) {
+        List<Location> occupiedLocations = new ArrayList<>();
+        occupiedLocations.addAll(playerAPortals);
+        occupiedLocations.addAll(playerBPortals);
+
+        for ( Location volatileLocations :  occupiedLocations) {
+            Cuboid cuboid = new Cuboid(new Location(location.getWorld(), (location.getBlockX() - 5), (location.getBlockY() - 5), (location.getBlockZ() - 5)),
+                    new Location(location.getWorld(), (location.getBlockX() + 5), (location.getBlockY() + 5), (location.getBlockZ() + 5)));
+
+            if (!cuboid.contains(location)) return false;
+        }
+        return true;
     }
 
     /**

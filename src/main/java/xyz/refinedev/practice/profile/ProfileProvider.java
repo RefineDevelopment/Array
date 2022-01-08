@@ -40,7 +40,7 @@ public class ProfileProvider extends DrinkProvider<Profile> {
         UUID uuid = PlayerUtil.getUUIDByName(name);
 
         if (uuid != null) {
-            return this.getPlugin().getProfileManager().getByUUID(uuid);
+            return this.getPlugin().getProfileManager().getProfileByUUID(uuid);
         }
 
         throw new CommandExitMessage("A profile with that name does not exist!");

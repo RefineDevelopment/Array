@@ -4,7 +4,6 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.config.ConfigHandler;
-import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
@@ -41,8 +40,8 @@ public class NameTagAdapter extends NameTagProvider {
      */
     @Override
     public NameTagInfo fetchNameTag(Player target, Player viewer) {
-            Profile targetProfile = plugin.getProfileManager().getByPlayer(target);
-            Profile viewerProfile = plugin.getProfileManager().getByPlayer(viewer);
+            Profile targetProfile = plugin.getProfileManager().getProfileByPlayer(target);
+            Profile viewerProfile = plugin.getProfileManager().getProfileByPlayer(viewer);
 
             if ((plugin.getConfigHandler().isNAMETAGS_ENABLED()) && viewerProfile.isInLobby() || viewerProfile.isInQueue()) {
                 return this.getNormalColor(viewerProfile, targetProfile);

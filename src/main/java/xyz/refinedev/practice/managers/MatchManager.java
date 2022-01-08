@@ -90,26 +90,28 @@ public class MatchManager {
      * @param match {@link Match} the match starting
      */
     public void start(Match match) {
+        Arena arena = match.getArena();
+
         //So that chunks are properly visible
         //My old dumb ass put this in the loop below causing massive lag
-        if (!match.getArena().getSpawn1().getChunk().isLoaded() || !match.getArena().getSpawn2().getChunk().isLoaded()) {
-            match.getArena().getSpawn1().getChunk().load();
-            match.getArena().getSpawn2().getChunk().load();
+        if (!arena.getSpawn1().getChunk().isLoaded() || !arena.getSpawn2().getChunk().isLoaded()) {
+            arena.getSpawn1().getChunk().load();
+            arena.getSpawn2().getChunk().load();
         }
 
         for (Player player : match.getPlayers()) {
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
             profile.setState(ProfileState.IN_FIGHT);
             profile.setMatch(match);
 
-            plugin.getProfileManager().handleVisibility(profile);
+            this.plugin.getProfileManager().handleVisibility(profile);
 
             if (!profile.getDuelRequests().isEmpty()) {
                 profile.getDuelRequests().clear();
             }
 
             MatchPlayerSetupEvent event = new MatchPlayerSetupEvent(player, match);
-            plugin.getServer().getPluginManager().callEvent(event);
+            this.plugin.getServer().getPluginManager().callEvent(event);
 
             match.setupPlayer(player);
         }
@@ -117,13 +119,13 @@ public class MatchManager {
         match.setState(MatchState.STARTING);
         match.onStart();
         match.setStartTimestamp(-1);
-        match.getArena().setActive(true);
-        match.initiateTasks();
+        arena.setActive(true);
+        match.initiateTasks(this.plugin);
 
         this.sendStartMessage(match);
 
         MatchStartEvent event = new MatchStartEvent(match);
-        plugin.getServer().getPluginManager().callEvent(event);
+        this.plugin.getServer().getPluginManager().callEvent(event);
     }
 
 
@@ -158,15 +160,16 @@ public class MatchManager {
         }
 
         for ( Player player : match.getPlayers() ) {
+            Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+
             plugin.getSpigotHandler().resetKnockback(player);
             player.setMaximumNoDamageTicks(20);
 
             if (kit.getGameRules().isParkour()) {
-                Profile profile = plugin.getProfileManager().getByPlayer(player);
                 profile.getParkourCheckpoints().clear();
             }
 
-            match.removePearl(player, true);
+            match.removePearl(profile, true);
         }
 
         for ( TeamPlayer gamePlayer : match.getTeamPlayers()) {
@@ -188,7 +191,7 @@ public class MatchManager {
 
         if (plugin.getConfigHandler().isRATINGS_ENABLED()) {
             for ( Player player : match.getPlayers() ) {
-                Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+                Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
                 profile.setIssueRating(true);
                 profile.setRatingArena(arena);
@@ -300,7 +303,7 @@ public class MatchManager {
      */
     public void handleKillEffect(Match match, Player deadPlayer, Player killerPlayer) {
         if (killerPlayer == null) return;
-        Profile profile = plugin.getProfileManager().getByPlayer(killerPlayer);
+        Profile profile = plugin.getProfileManager().getProfileByPlayer(killerPlayer);
         KillEffect killEffect = plugin.getKillEffectManager().getByUUID(profile.getKillEffect());
 
         deadPlayer.teleport(deadPlayer.getLocation().add(0.0, 1.0, 0.0));
@@ -356,7 +359,7 @@ public class MatchManager {
 
         PlayerUtil.spectator(player);
 
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         profile.setMatch(match);
         profile.setSpectating(target);
         profile.setState(ProfileState.SPECTATING);
@@ -369,7 +372,7 @@ public class MatchManager {
         player.updateInventory();
 
         for ( Player matchPlayer : match.getAllPlayers() ) {
-            Profile matchProfile = plugin.getProfileManager().getByPlayer(matchPlayer);
+            Profile matchProfile = plugin.getProfileManager().getProfileByPlayer(matchPlayer);
             plugin.getProfileManager().handleVisibility(matchProfile, player);
         }
 
@@ -392,7 +395,7 @@ public class MatchManager {
         MatchSpectatorLeaveEvent event = new MatchSpectatorLeaveEvent(player, match);
         plugin.getServer().getPluginManager().callEvent(event);
 
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         profile.setState(ProfileState.IN_LOBBY);
         profile.setMatch(null);
         profile.setSpectating(null);
@@ -417,7 +420,7 @@ public class MatchManager {
      * @param player {@link Player} for whom we are toggling
      */
     public void toggleSpectators(Match match, Player player) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
 
         profile.setVisibilityCooldown(new Cooldown(TimeUtil.parseTime("5s")));
 
@@ -458,6 +461,23 @@ public class MatchManager {
             match.getArena().setActive(false);
             match.getEntities().forEach(Entity::remove);
         });
+    }
+
+    /**
+     * Get amount of players in fight from a certain
+     * queue
+     *
+     * @return amount of players in fight with the queue
+     */
+    public int getInFights() {
+        int i = 0;
+
+        for ( Match match : matches) {
+            if (!match.isFighting() && !match.isStarting()) continue;
+
+            i += match.getTeamPlayers().size();
+        }
+        return i;
     }
 
     /**
@@ -535,7 +555,7 @@ public class MatchManager {
      */
     public void sendStartMessage(Match match) {
         if (match.isFreeForAllMatch() || match.isTeamMatch()) {
-            xyz.refinedev.practice.Locale.MATCH_TEAM_STARTMESSAGE.toList().stream().map(s -> s
+            Locale.MATCH_TEAM_STARTMESSAGE.toList().stream().map(s -> s
                     .replace("<arena>", match.getArena().getDisplayName())
                     .replace("<kit>", match.getKit().getDisplayName()))
                     .forEach(match::broadcastMessage);
@@ -562,28 +582,36 @@ public class MatchManager {
         }
     }
 
-
     public Match createSoloKitMatch(Queue queue, TeamPlayer playerA, TeamPlayer playerB, Kit kit, Arena arena, QueueType queueType) {
+        Match match;
+
         if (kit.getGameRules().isBridge()) {
-            return new SoloBridgeMatch(queue, playerA, playerB, kit, arena, queueType);
+            match = new SoloBridgeMatch(queue, playerA, playerB, kit, arena, queueType);
         } else if (kit.getGameRules().isBedwars()) {
-            return new SoloBedwarsMatch(queue, playerA, playerB, kit, arena, queueType);
+            match = new SoloBedwarsMatch(queue, playerA, playerB, kit, arena, queueType);
         } else if (kit.getGameRules().isMlgRush()) {
-            return new MLGRushMatch(queue, playerA, playerB, kit, arena, queueType);
+            match = new MLGRushMatch(queue, playerA, playerB, kit, arena, queueType);
         } else if (kit.getGameRules().isBoxing()) {
-            return new BoxingMatch(queue, playerA, playerB, kit, arena, queueType);
+            match = new BoxingMatch(queue, playerA, playerB, kit, arena, queueType);
         } else if (kit.getGameRules().isBattleRush()) {
-            return new BattleRushMatch(queue, playerA, playerB, kit, arena, queueType);
+            match = new BattleRushMatch(queue, playerA, playerB, kit, arena, queueType);
+        } else {
+            match = new SoloMatch(queue, playerA, playerB, kit, arena, queueType);
         }
-        return new SoloMatch(queue, playerA, playerB, kit, arena, queueType);
+        this.matches.add(match);
+        return match;
     }
 
     public Match createTeamKitMatch(Team teamA, Team teamB, Kit kit, Arena arena) {
-        if (kit.getGameRules().isBridge()) {
-            return new TeamBridgeMatch(teamA, teamB, kit, arena);
-        } else if (kit.getGameRules().isBedwars()) {
-            //
+        Match match;
+        if (kit.equals(this.plugin.getKitManager().getTeamFight())) {
+            match = new TeamMatch(teamA, teamB, kit, arena);
+        } else if (kit.getGameRules().isBridge()) {
+            match = new TeamBridgeMatch(teamA, teamB, kit, arena);
+        } else {
+            match = new TeamMatch(teamA, teamB, kit, arena);
         }
-        return new TeamMatch(teamA, teamB, kit, arena);
+        this.matches.add(match);
+        return match;
     }
 }

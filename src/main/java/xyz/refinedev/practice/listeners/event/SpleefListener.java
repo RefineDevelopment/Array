@@ -191,7 +191,7 @@ public class SpleefListener implements Listener {
         if (!(event.getEntity().getShooter() instanceof  Player)) return;
         Player shooter = (Player) event.getEntity().getShooter();
 
-        Profile shooterProfile = this.plugin.getProfileManager().getByUUID(shooter.getUniqueId());
+        Profile shooterProfile = this.plugin.getProfileManager().getProfileByUUID(shooter.getUniqueId());
         Event hostEvent = this.plugin.getEventManager().getEvent(shooter.getUniqueId());
 
         if (hostEvent == null) return;

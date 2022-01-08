@@ -35,13 +35,15 @@ public class PartyDuelButton extends Button {
 
     @Override
     public ItemStack getButtonItem(Player player) {
+        boolean fighting = this.plugin.getPartyManager().isFighting(party.getUniqueId());
+
         ItemStack itemStack = SkullCreator.itemFromUuid(party.getLeader().getUniqueId());
-        ItemBuilder builder = new ItemBuilder(party.isFighting() ? new ItemStack(Material.SKULL) : itemStack);
+        ItemBuilder builder = new ItemBuilder(fighting ? new ItemStack(Material.SKULL) : itemStack);
 
         builder.name(ChatColor.RED + party.getName());
         //If they are in a fight, then it displays their skull
         //as a wither skull
-        if (party.isFighting()) builder.durability(1);
+        if (fighting) builder.durability(1);
 
         List<String> lore = new ArrayList<>();
         lore.add("");
@@ -58,20 +60,23 @@ public class PartyDuelButton extends Button {
 
     @Override
     public void clicked(Player player, ClickType clickType) {
-        Profile senderProfile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        Profile receiverProfile = plugin.getProfileManager().getByUUID(this.party.getLeader().getUniqueId());
+        Profile senderProfile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile receiverProfile = this.plugin.getProfileManager().getProfileByUUID(this.party.getLeader().getUniqueId());
+
+        Party senderParty = this.plugin.getPartyManager().getPartyByUUID(senderProfile.getParty());
+        Party receiverParty = this.plugin.getPartyManager().getPartyByUUID(receiverProfile.getParty());
 
         player.closeInventory();
 
-        if (!senderProfile.getParty().isLeader(player.getUniqueId())) {
+        if (!senderParty.isLeader(player.getUniqueId())) {
             player.sendMessage(Locale.PARTY_NOTLEADER.toString());
             return;
         }
-        if (plugin.getProfileManager().cannotSendDuelRequest(senderProfile, player)) {
+        if (this.plugin.getProfileManager().cannotSendDuelRequest(senderProfile, player)) {
             player.sendMessage(Locale.DUEL_ALREADYSENT.toString());
             return;
         }
-        if (receiverProfile.getParty() == null) {
+        if (receiverParty == null) {
             player.sendMessage(Locale.DUEL_DISBANDED.toString());
             return;
         }

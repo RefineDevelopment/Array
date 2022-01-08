@@ -39,7 +39,7 @@ public class KEButton extends Button {
      */
     @Override
     public ItemStack getButtonItem(Player player) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
         ItemBuilder itemBuilder = new ItemBuilder(killEffect.getItemStack());
         List<String> lore = new ArrayList<>();
 
@@ -79,7 +79,7 @@ public class KEButton extends Button {
      * @param clickType {@link ClickType}
      */
     public void clicked(Player player, ClickType clickType) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
 
         if (profile.isSelected(killEffect)) {
             Button.playFail(player);

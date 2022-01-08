@@ -26,7 +26,7 @@ public class MapCommand {
 
     @Command(name = "", desc = "View the arena you are playing on")
     public void mapCommand(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
         Match match = profile.getMatch();
 
         if (profile.isInFight()) {

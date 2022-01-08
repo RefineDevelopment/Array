@@ -67,7 +67,7 @@ public class SumoSolo extends Event {
             if (player != null) {
                 player.teleport(EventHelperUtil.getSpectator(this));
 
-                Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+                Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
                 if (this.isRemovable(player)) {
                     this.plugin.getProfileManager().refreshHotbar(profile);
@@ -83,7 +83,7 @@ public class SumoSolo extends Event {
             if (player != null) {
                 player.teleport(EventHelperUtil.getSpectator(this));
 
-                Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+                Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
                 if (this.isRemovable(player)) {
                     this.plugin.getProfileManager().refreshHotbar(profile);

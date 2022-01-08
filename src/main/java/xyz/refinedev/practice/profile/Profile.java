@@ -50,13 +50,11 @@ public class Profile {
     private ProfileState state = ProfileState.IN_LOBBY;
 
     private transient UUID tournament, party, event;//, match, queue;
-    private UUID clan;
+    private UUID clan, queue;
     //TODO turn into uniqueId
     private Match match;
-    private Queue queue;
 
     private TablistRank tablistRank;
-    private QueueProfile queueProfile;
     private DuelProcedure duelProcedure;
     private RematchProcedure rematchData;
 
@@ -129,7 +127,7 @@ public class Profile {
 
 
     public boolean isInQueue() {
-        return state == ProfileState.IN_QUEUE && queue != null && queueProfile != null;
+        return state == ProfileState.IN_QUEUE && queue != null;
     }
 
     public boolean isInMatch() {

@@ -63,7 +63,7 @@ public class LMS extends Event {
 
     @Override
     public void onDeath(Player player) {
-        Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (player.getKiller() != null) {
             this.broadcastMessage(Locale.EVENT_ELIMINATED.toString()
@@ -77,7 +77,7 @@ public class LMS extends Event {
         }
 
         for (Player otherPlayer : getPlayers()) {
-            Profile otherProfile = this.getPlugin().getProfileManager().getByUUID(otherPlayer.getUniqueId());
+            Profile otherProfile = this.getPlugin().getProfileManager().getProfileByUUID(otherPlayer.getUniqueId());
             this.getPlugin().getProfileManager().handleVisibility(otherProfile, player);
             this.getPlugin().getProfileManager().handleVisibility(profile, otherPlayer);
         }

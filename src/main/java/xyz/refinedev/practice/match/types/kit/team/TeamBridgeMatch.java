@@ -13,6 +13,7 @@ import org.bukkit.potion.PotionEffectType;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
+import xyz.refinedev.practice.arena.cuboid.Cuboid;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.MatchSnapshot;
 import xyz.refinedev.practice.match.team.Team;
@@ -24,6 +25,7 @@ import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -136,17 +138,31 @@ public class TeamBridgeMatch extends TeamMatch {
         if (teamPlayer.isDisconnected()) return;
 
         for ( Player otherPlayer : this.getPlayers() ) {
-            Profile otherProfile = this.getPlugin().getProfileManager().getByPlayer(otherPlayer);
+            Profile otherProfile = this.getPlugin().getProfileManager().getProfileByPlayer(otherPlayer);
             this.getPlugin().getProfileManager().handleVisibility(otherProfile);
         }
 
-        Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
         this.getPlugin().getProfileManager().refreshHotbar(profile);
         this.getPlugin().getProfileManager().handleVisibility(profile);
 
         player.setMetadata("noDenyMove", new FixedMetadataValue(this.getPlugin(), true));
 
         TaskUtil.runLater(() -> this.setupPlayer(player), 2L);
+    }
+
+    public boolean isVolatileLocation(Location location) {
+        List<Location> occupiedLocations = new ArrayList<>();
+        occupiedLocations.addAll(teamAPortals);
+        occupiedLocations.addAll(teamBPortals);
+
+        for ( Location volatileLocations :  occupiedLocations) {
+            Cuboid cuboid = new Cuboid(new Location(location.getWorld(), (location.getBlockX() - 5), (location.getBlockY() - 5), (location.getBlockZ() - 5)),
+                    new Location(location.getWorld(), (location.getBlockX() + 5), (location.getBlockY() + 5), (location.getBlockZ() + 5)));
+
+            if (!cuboid.contains(location)) return false;
+        }
+        return true;
     }
 
     /**

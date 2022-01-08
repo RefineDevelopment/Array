@@ -243,16 +243,16 @@ public class EntityHider {
             @EventHandler(priority = EventPriority.MONITOR)
             public void onPotionSplash(PotionSplashEvent event) {
                 ThrownPotion potion = event.getEntity();
-
                 if (!(potion.getShooter() instanceof Player)) return;
+
                 Player shooter = (Player) potion.getShooter();
 
                 for (LivingEntity livingEntity : event.getAffectedEntities()) {
-                    if (livingEntity instanceof Player) {
-                        Player receiver = (Player) livingEntity;
-                        if (!receiver.canSee(shooter)) {
-                            event.setIntensity(receiver, 0.0D);
-                        }
+                    if (!(livingEntity instanceof Player)) return;
+
+                    Player receiver = (Player) livingEntity;
+                    if (!receiver.canSee(shooter)) {
+                        event.setIntensity(receiver, 0.0D);
                     }
                 }
             }

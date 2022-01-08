@@ -72,7 +72,7 @@ public class Koth extends Event {
 
         this.onJoin(player);
 
-        Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
         profile.setEvent(this);
         profile.setState(ProfileState.IN_EVENT);
 
@@ -100,7 +100,7 @@ public class Koth extends Event {
 
     @Override
     public void onDeath(Player player) {
-        Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
         this.getPlugin().getProfileManager().handleVisibility(profile);
         this.getPlugin().getProfileManager().refreshHotbar(profile);
 

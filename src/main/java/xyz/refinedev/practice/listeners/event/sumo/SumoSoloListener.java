@@ -31,7 +31,7 @@ public class SumoSoloListener implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (!profile.isInEvent() || !profile.getEvent().isSumoSolo()) return;
 
@@ -41,7 +41,7 @@ public class SumoSoloListener implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled=true)
     public void onBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (!profile.isInEvent() || !profile.getEvent().isSumoSolo()) return;
 
@@ -54,7 +54,7 @@ public class SumoSoloListener implements Listener {
         if (event.getCause() != EntityDamageEvent.DamageCause.FALL) return;
 
         Player player = ((Player) event.getEntity()).getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (!profile.isInEvent() || !profile.getEvent().isSumoSolo()) return;
 
@@ -65,7 +65,7 @@ public class SumoSoloListener implements Listener {
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Event sumo = profile.getEvent();
 
         if (!profile.isInEvent() || !sumo.isSumoSolo()) return;
@@ -114,8 +114,8 @@ public class SumoSoloListener implements Listener {
 
         if (attacker == null) return;
 
-        Profile damagedProfile = plugin.getProfileManager().getByUUID(damaged.getUniqueId());
-        Profile attackerProfile = plugin.getProfileManager().getByUUID(attacker.getUniqueId());
+        Profile damagedProfile = plugin.getProfileManager().getProfileByUUID(damaged.getUniqueId());
+        Profile attackerProfile = plugin.getProfileManager().getProfileByUUID(attacker.getUniqueId());
 
         if (!damagedProfile.isInEvent() || !damagedProfile.getEvent().isSumoSolo()) return;
         if (!attackerProfile.isInEvent() || !attackerProfile.getEvent().isSumoSolo()) return;

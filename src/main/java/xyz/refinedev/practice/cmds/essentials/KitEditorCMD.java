@@ -25,7 +25,7 @@ public class KitEditorCMD {
 
     @Command(name = "", desc = "Open the kit editor via command")
     public void kitEditor(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
 
         if (!profile.isInLobby() || profile.isBusy()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());

@@ -31,7 +31,7 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
     @Override
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
         List<Arena> arenas = plugin.getArenaManager().getArenas().stream().filter(arena -> {
             if (!arena.isSetup()) return false;
@@ -52,7 +52,7 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
     public void onClose(Player player) {
         if (this.isClosedByMenu()) return;
 
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         profile.setDuelProcedure(null);
     }
 
@@ -70,7 +70,7 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
             profile.getDuelProcedure().setArena(arena);
             profile.getDuelProcedure().send();

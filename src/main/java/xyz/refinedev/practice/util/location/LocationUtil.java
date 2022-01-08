@@ -44,7 +44,7 @@ public class LocationUtil {
     }
 
     public boolean isTeamPortalSolo(Player player) {
-        Profile profile = Array.getInstance().getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = Array.getInstance().getProfileManager().getProfileByUUID(player.getUniqueId());
         SoloBridgeMatch match = (SoloBridgeMatch) profile.getMatch();
 
         if (match.getTeamPlayerA().getPlayer() == player) {
@@ -55,7 +55,7 @@ public class LocationUtil {
     }
 
     public boolean isSelfPortal(Player player) {
-        Profile profile = Array.getInstance().getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = Array.getInstance().getProfileManager().getProfileByUUID(player.getUniqueId());
         BattleRushMatch match = (BattleRushMatch) profile.getMatch();
 
         if (match.getTeamPlayerA().getPlayer() == player) {
@@ -66,7 +66,7 @@ public class LocationUtil {
     }
 
     public boolean isSelfBed(Player player) {
-        Profile profile = Array.getInstance().getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = Array.getInstance().getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (profile.getMatch() instanceof SoloBedwarsMatch) {
             SoloBedwarsMatch match = (SoloBedwarsMatch) profile.getMatch();
@@ -97,7 +97,7 @@ public class LocationUtil {
     }
 
     public boolean isTeamPortalTeam(Player player) {
-        Profile profile = Array.getInstance().getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = Array.getInstance().getProfileManager().getProfileByUUID(player.getUniqueId());
         TeamBridgeMatch match = (TeamBridgeMatch) profile.getMatch();
 
         if (match.getTeamA().containsPlayer(player)) {

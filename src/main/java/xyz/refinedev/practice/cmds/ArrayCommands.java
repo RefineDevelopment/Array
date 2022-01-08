@@ -152,7 +152,7 @@ public class ArrayCommands {
     @Command(name = "spawn", aliases = "reset", desc = "Reset your profile and Teleport to Spawn")
     @Require("array.listeners.admin")
     public void spawn(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
         if (profile.isBusy()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
@@ -181,7 +181,7 @@ public class ArrayCommands {
     @Command(name = "refill", aliases = "cheat", desc = "Refill your Inventory with Soup or Potions Quitely")
     @Require("array.listeners.admin")
     public void refill(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
         if (profile.isInFight()) {
             if (player.getInventory().contains(Material.POTION)) {
                 while (player.getInventory().firstEmpty() != -1) {
@@ -276,7 +276,7 @@ public class ArrayCommands {
             Kit kitType = plugin.getKitManager().getByName(type);
             if (kitType != null) {
                 Player target = Bukkit.getPlayer(reach);
-                Profile profile = plugin.getProfileManager().getByPlayer(target);
+                Profile profile = plugin.getProfileManager().getProfileByPlayer(target);
                 for ( KitInventory kitInventory : profile.getStatisticsData().get(kitType).getKitInventories() ) {
                     profile.getStatisticsData().get(kitType).deleteKit(kitInventory);
                 }
@@ -286,7 +286,7 @@ public class ArrayCommands {
                 if (type.equalsIgnoreCase("all")) {
                     for ( Kit kit : plugin.getKitManager().getKits() ) {
                         Player target = Bukkit.getPlayer(reach);
-                        Profile profile = plugin.getProfileManager().getByPlayer(target);
+                        Profile profile = plugin.getProfileManager().getProfileByPlayer(target);
                         for ( KitInventory kitInventory : profile.getStatisticsData().get(kit).getKitInventories() ) {
                             profile.getStatisticsData().get(kit).deleteKit(kitInventory);
                         }

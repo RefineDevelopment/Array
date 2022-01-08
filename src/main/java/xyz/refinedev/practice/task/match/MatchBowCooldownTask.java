@@ -27,7 +27,7 @@ public class MatchBowCooldownTask extends BukkitRunnable {
 
         for ( Player player : plugin.getServer().getOnlinePlayers()) {
             if (player == null) return;
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
             if ((profile.isInFight()) && !profile.getBowCooldown().hasExpired()) {
                 int seconds = Math.round(profile.getBowCooldown().getRemaining()) / 1000;

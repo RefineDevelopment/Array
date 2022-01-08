@@ -24,7 +24,7 @@ public class ToggleTournamentMessagesCMD {
 
     @Command(name = "", desc = "Toggle Tournament Messages for your Profile")
     public void toggle(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
         ProfileSettings settings = profile.getSettings();
 
         settings.setTournamentMessages(!settings.isTournamentMessages());

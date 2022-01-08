@@ -26,7 +26,7 @@ public class StopSpecCommand {
 
     @Command(name = "", desc = "Stop spectating")
     public void stopSpec(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         if (profile.isSpectating()) {
             profile.setSpectating(null);
             if (profile.isInMatch()) {

@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.match;
 
+import com.lunarclient.bukkitapi.cooldown.LunarClientAPICooldown;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -44,8 +45,6 @@ import java.util.stream.Collectors;
 @Getter @Setter
 public abstract class Match {
 
-    private final Array plugin = Array.getInstance();
-
     private final Map<UUID, EnderPearl> pearlMap = new HashMap<>();
     private final List<MatchSnapshot> snapshots = new ArrayList<>();
     private final List<UUID> spectatorList = new ArrayList<>();
@@ -78,20 +77,18 @@ public abstract class Match {
         this.kit = kit;
         this.arena = arena;
         this.queueType = queueType;
-
-        this.plugin.getMatchManager().getMatches().add(this);
     }
 
     /**
      * Start all the usual Match tasks that
      * track and execute the match's logic
      */
-    public void initiateTasks() {
+    public void initiateTasks(Array plugin) {
         if (this.kit.getGameRules().isWaterKill() || this.kit.getGameRules().isParkour() || this.kit.getGameRules().isSumo()) {
-            this.waterTask = new MatchWaterCheckTask(this.plugin, this).runTaskTimer(plugin, 20L, 20L);
+            this.waterTask = new MatchWaterCheckTask(plugin, this).runTaskTimer(plugin, 20L, 20L);
         }
 
-        new MatchCPSTask(this.plugin, this).runTaskTimer(plugin, 2L, 2L);
+        new MatchCPSTask(plugin, this).runTaskTimer(plugin, 2L, 2L);
         this.task = new MatchStartTask(this).runTaskTimer(plugin, 20L, 20L);
     }
 
@@ -108,19 +105,31 @@ public abstract class Match {
     /**
      * Remove the pearl from our map because we have tracked it
      *
-     * @param player {@link Player} the player that threw the pearl
+     * @param profile {@link Profile} the profile that threw the pearl
      * @param resetCooldown {@link Boolean} should we reset their pearl cooldown
      */
-    public void removePearl(Player player, boolean resetCooldown) {
-        if (player == null) return;
+    public void removePearl(Profile profile, boolean resetCooldown) {
         if (resetCooldown) {
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-            plugin.getProfileManager().setEnderpearlCooldown(profile, new Cooldown(0L));
+            this.setEnderpearlCooldown(profile, new Cooldown(0L));
         }
 
-        EnderPearl pearl = this.pearlMap.get(player.getUniqueId());
+        EnderPearl pearl = this.pearlMap.get(profile.getUniqueId());
         if (pearl != null) pearl.remove();
     }
+
+    /**
+     * Apply the Enderpearl cooldown to the profile
+     * and send it to LunarAPI if they are on Lunar
+     *
+     * @param cooldown {@link Cooldown}
+     */
+    public void setEnderpearlCooldown(Profile profile, Cooldown cooldown) {
+        profile.setEnderpearlCooldown(cooldown);
+        Player player = profile.getPlayer();
+
+        if (Bukkit.getServer().getPluginManager().isPluginEnabled("LunarClient-API")) LunarClientAPICooldown.sendCooldown(player, "Enderpearl");
+    }
+
 
     /**
      * Get match's duration in string form

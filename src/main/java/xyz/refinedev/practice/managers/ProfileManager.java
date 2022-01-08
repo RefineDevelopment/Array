@@ -119,14 +119,12 @@ public class ProfileManager {
 
             String killEffectString = document.getString("killEffect");
             if (killEffectString != null) {
-                UUID killEffectUniqueId = UUID.fromString(killEffectString);
-                profile.setKillEffect(killEffectUniqueId);
+                profile.setKillEffect(UUID.fromString(killEffectString));
             }
 
             String clanString = document.getString("clan");
             if (clanString != null) {
-                UUID clanUniqueId = UUID.fromString(clanString);
-                profile.setClan(plugin.getClanManager().getByUUID(clanUniqueId));
+                profile.setClan(UUID.fromString(clanString));
             }
 
             Document kitStatistics = (Document) document.get("kitStatistics");
@@ -206,11 +204,8 @@ public class ProfileManager {
         document.put("kills", profile.getKills());
         document.put("deaths", profile.getDeaths());
 
-        if (profile.getKillEffect() != null)
-            document.put("killEffect", profile.getKillEffect().toString());
-
-        if (profile.hasClan())
-            document.put("clan", profile.getClan().getUniqueId().toString());
+        if (profile.getKillEffect() != null) document.put("killEffect", profile.getKillEffect().toString());
+        if (profile.hasClan()) document.put("clan", profile.getClan().toString());
 
         document.put("settings", Array.GSON.toJson(profile.getSettings()));
 
@@ -435,7 +430,7 @@ public class ProfileManager {
                 profile.setRematchData(null);
                 return true;
             } else {
-                Profile targetProfile = plugin.getProfileManager().getByUUID(target.getUniqueId());
+                Profile targetProfile = this.getProfileByUUID(target.getUniqueId());
                 if (!(targetProfile.isInLobby() || targetProfile.isInQueue())) {
                     profile.setRematchData(null);
                     return true;
@@ -571,8 +566,7 @@ public class ProfileManager {
         profile.setEnderpearlCooldown(cooldown);
         Player player = profile.getPlayer();
 
-        if (plugin.getServer().getPluginManager().isPluginEnabled("LunarClient-API"))
-            LunarClientAPICooldown.sendCooldown(player, "Enderpearl");
+        if (plugin.getServer().getPluginManager().isPluginEnabled("LunarClient-API")) LunarClientAPICooldown.sendCooldown(player, "Enderpearl");
     }
 
     /**
@@ -595,12 +589,8 @@ public class ProfileManager {
      * @param uuid {@link UUID} the uniqueId of the profile
      * @return {@link Profile} the profile requested
      */
-    public Profile getByUUID(UUID uuid) {
-        for ( Profile profile : profiles.values() ) {
-            if (profile.getUniqueId().equals(uuid))
-                return profile;
-        }
-        return null;
+    public Profile getProfileByUUID(UUID uuid) {
+        return profiles.get(uuid);
     }
 
     /**
@@ -609,12 +599,8 @@ public class ProfileManager {
      * @param player {@link Player} the player of the profile
      * @return {@link Profile} the profile requested
      */
-    public Profile getByPlayer(Player player) {
-        for ( Profile profile : profiles.values() ) {
-            if (profile.getUniqueId().equals(player.getUniqueId()))
-                return profile;
-        }
-        return null;
+    public Profile getProfileByPlayer(Player player) {
+       return profiles.get(player.getUniqueId());
     }
 
     /**
@@ -662,7 +648,7 @@ public class ProfileManager {
      * @return {@link ChatColor}
      */
     public ChatColor getColor(Profile profile) {
-        return plugin.getCoreHandler().getCoreType().getCoreAdapter().getRankColor(profile.getPlayer());
+        return plugin.getCoreHandler().getRankColor(profile.getPlayer());
     }
 
 
@@ -672,6 +658,6 @@ public class ProfileManager {
      * @return {@link String}
      */
     public String getColouredName(Profile profile) {
-        return plugin.getCoreHandler().getCoreType().getCoreAdapter().getFullName(profile.getPlayer());
+        return plugin.getCoreHandler().getFullName(profile.getPlayer());
     }
 }

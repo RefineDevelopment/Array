@@ -63,7 +63,7 @@ public class KitEditorSelectKitMenu extends Menu {
                 return;
             }
 
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
             profile.getKitEditor().setSelectedKit(kit);
             profile.getKitEditor().setPreviousState(profile.getState());
 

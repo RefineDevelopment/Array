@@ -52,7 +52,7 @@ public class QueueSelectKitMenu extends Menu {
 
         @Override
         public ItemStack getButtonItem(Player player) {
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
             List<String> lore = new ArrayList<>();
             this.getLore().forEach(lines -> lore.add(CC.translate(this.replace(profile, lines))));
@@ -68,7 +68,7 @@ public class QueueSelectKitMenu extends Menu {
         public void clicked(Player player, ClickType clickType) {
             player.closeInventory();
 
-            Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
             if (profile.isBusy()) {
                 player.sendMessage(Locale.ERROR_NOTABLE.toString());
                 return;

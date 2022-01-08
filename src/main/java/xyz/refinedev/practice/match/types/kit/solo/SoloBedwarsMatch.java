@@ -10,7 +10,6 @@ import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitGameRules;
-import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.MatchSnapshot;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.SoloMatch;
@@ -159,11 +158,11 @@ public class SoloBedwarsMatch extends SoloMatch {
         if (teamPlayer.isDisconnected()) return;
 
         for ( Player otherPlayer : this.getPlayers() ) {
-            Profile otherProfile = this.getPlugin().getProfileManager().getByPlayer(otherPlayer);
+            Profile otherProfile = this.getPlugin().getProfileManager().getProfileByPlayer(otherPlayer);
             this.getPlugin().getProfileManager().handleVisibility(otherProfile);
         }
 
-        Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
         this.getPlugin().getProfileManager().handleVisibility(profile);
 
         player.getInventory().clear();

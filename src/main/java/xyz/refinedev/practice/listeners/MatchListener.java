@@ -60,7 +60,7 @@ public class MatchListener implements Listener {
     public void onBlockPlaceEvent(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         Block block = event.getBlockPlaced();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Match match = profile.getMatch();
         Arena arena = match.getArena();
 
@@ -86,41 +86,23 @@ public class MatchListener implements Listener {
         }
 
         //Checks if you are placing blocks near the portal
-        if (match.isTheBridgeMatch() || match.isBattleRushMatch() || match.isBedwarsMatch()) {
-            List<Location> volatileLocations = new ArrayList<>();
+        boolean occupied = false;
 
-            if (match instanceof SoloBridgeMatch) {
-                SoloBridgeMatch soloBridgeMatch = (SoloBridgeMatch) match;
-                volatileLocations.addAll(soloBridgeMatch.getPlayerAPortals());
-                volatileLocations.addAll(soloBridgeMatch.getPlayerBPortals());
-            } else if (match instanceof TeamBridgeMatch) {
-                TeamBridgeMatch teamBridgeMatch = (TeamBridgeMatch) match;
-                volatileLocations.addAll(teamBridgeMatch.getTeamAPortals());
-                volatileLocations.addAll(teamBridgeMatch.getTeamBPortals());
-            } else if (match instanceof BattleRushMatch) {
-                BattleRushMatch battleRushMatch = (BattleRushMatch) match;
-                volatileLocations.addAll(battleRushMatch.getPlayerAPortals());
-                volatileLocations.addAll(battleRushMatch.getPlayerBPortals());
-            } else if (match instanceof SoloBedwarsMatch) {
-                SoloBedwarsMatch soloBedwarsMatch = (SoloBedwarsMatch) match;
-                volatileLocations.addAll(soloBedwarsMatch.getPlayerABed());
-                volatileLocations.addAll(soloBedwarsMatch.getPlayerBBed());
-            } else if (match instanceof TeamBedwarsMatch) {
-                TeamBedwarsMatch teamBedwarsMatch = (TeamBedwarsMatch) match;
-                //volatileLocations.addAll(teamBedwarsMatch.getPlayerABed());
-                //volatileLocations.addAll(teamBedwarsMatch.getPlayerBBed());
-            }
+        if (match instanceof SoloBridgeMatch) {
+            SoloBridgeMatch soloBridgeMatch = (SoloBridgeMatch) match;
+            occupied = soloBridgeMatch.isVolatileLocation(block.getLocation());
+        } else if (match instanceof TeamBridgeMatch) {
+            TeamBridgeMatch teamBridgeMatch = (TeamBridgeMatch) match;
+            occupied = teamBridgeMatch.isVolatileLocation(block.getLocation());
+        } else if (match instanceof BattleRushMatch) {
+            BattleRushMatch battleRushMatch = (BattleRushMatch) match;
+            occupied = battleRushMatch.isVolatileLocation(block.getLocation());
+        }
 
-            for ( Location location : volatileLocations ) {
-                Cuboid cuboid = new Cuboid(new Location(location.getWorld(), (location.getBlockX() - 5), (location.getBlockY() - 5), (location.getBlockZ() - 5)),
-                                           new Location(location.getWorld(), (location.getBlockX() + 5), (location.getBlockY() + 5), (location.getBlockZ() + 5)));
-
-                if (!cuboid.contains(block.getLocation())) return;
-
-                player.sendMessage(Locale.MATCH_PLACE_BLOCK.toString());
-                event.setCancelled(true);
-                return;
-            }
+        if (occupied) {
+            player.sendMessage(Locale.MATCH_PLACE_BLOCK.toString());
+            event.setCancelled(true);
+            return;
         }
 
         if (arena.getMax() == null || arena.getMin() == null) return;
@@ -143,7 +125,7 @@ public class MatchListener implements Listener {
         if (!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Match match = profile.getMatch();
 
         if (!profile.isInFight()) return;
@@ -192,7 +174,7 @@ public class MatchListener implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockBreakEvent(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Match match = profile.getMatch();
         Block block = event.getBlock();
 
@@ -222,12 +204,13 @@ public class MatchListener implements Listener {
             }
         } else if (match.getKit().getGameRules().isBedwars() || match.getKit().getGameRules().isMlgRush()) {
             if (block.getType() == Material.BED || block.getType() == Material.BED_BLOCK) {
-                match.getChangedBlocks().add(block.getState());
-                block.setType(Material.AIR);
 
                 if (match instanceof SoloBedwarsMatch) {
                     SoloBedwarsMatch soloBedwarsMatch = (SoloBedwarsMatch) match;
+                    match.getChangedBlocks().add(block.getState());
+                    block.setType(Material.AIR);
                     soloBedwarsMatch.handleBed(player);
+                    block.setType(Material.BED);
                 } else if (match instanceof TeamBedwarsMatch){
                     TeamBedwarsMatch teamBedwarsMatch = (TeamBedwarsMatch) match;
                     //teamBedwarsMatch.handleBed(player);
@@ -246,7 +229,7 @@ public class MatchListener implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBucketEmptyEvent(PlayerBucketEmptyEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Match match = profile.getMatch();
         Arena arena = match.getArena();
         Block block = event.getBlockClicked().getRelative(event.getBlockFace());
@@ -279,7 +262,7 @@ public class MatchListener implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerPickupItemEvent(PlayerPickupItemEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Match match = profile.getMatch();
 
         if (profile.isSpectating()) {
@@ -288,7 +271,7 @@ public class MatchListener implements Listener {
         }
 
         if (!profile.isInFight()) return;
-        if (!profile.getMatch().getTeamPlayer(event.getPlayer()).isAlive() || match.isEnding()) {
+        if (!match.getTeamPlayer(event.getPlayer()).isAlive() || match.isEnding()) {
             event.setCancelled(true);
         }
     }
@@ -296,7 +279,7 @@ public class MatchListener implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(event.getPlayer().getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(event.getPlayer().getUniqueId());
 
         ItemStack itemStack = event.getItemDrop().getItemStack();
         Material itemType = itemStack.getType();
@@ -322,7 +305,7 @@ public class MatchListener implements Listener {
     @EventHandler
     public void onPlayerDeathEvent(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
         Match match = profile.getMatch();
 
         event.setDeathMessage(null);
@@ -378,7 +361,7 @@ public class MatchListener implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         event.setRespawnLocation(player.getLocation());
 
         if (!profile.isInFight()) return;
@@ -392,7 +375,7 @@ public class MatchListener implements Listener {
         if (!(event.getEntity().getShooter() instanceof Player)) return;
 
         Player shooter = (Player) event.getEntity().getShooter();
-        Profile shooterProfile = plugin.getProfileManager().getByUUID(shooter.getUniqueId());
+        Profile shooterProfile = plugin.getProfileManager().getProfileByUUID(shooter.getUniqueId());
 
         if (!shooterProfile.isInFight()) return;
         if (!shooterProfile.getMatch().isFighting()) return;
@@ -406,7 +389,7 @@ public class MatchListener implements Listener {
 
         if (event.getEntity() instanceof Arrow) {
             Player shooter = (Player) event.getEntity().getShooter();
-            Profile shooterProfile = plugin.getProfileManager().getByUUID(shooter.getUniqueId());
+            Profile shooterProfile = plugin.getProfileManager().getProfileByUUID(shooter.getUniqueId());
 
             if (shooterProfile.isInFight()) {
                 shooterProfile.getMatch().getEntities().add(event.getEntity());
@@ -418,7 +401,7 @@ public class MatchListener implements Listener {
             Block hitBlock = iterator.next();
 
             Player shooter = (Player) event.getEntity().getShooter();
-            Profile shooterProfile = plugin.getProfileManager().getByUUID(shooter.getUniqueId());
+            Profile shooterProfile = plugin.getProfileManager().getProfileByUUID(shooter.getUniqueId());
 
             if (hitBlock.getType() == Material.SNOW_BLOCK) {
                 shooterProfile.getMatch().getChangedBlocks().add(hitBlock.getState());
@@ -431,7 +414,7 @@ public class MatchListener implements Listener {
     public void onPotionSplashEvent(PotionSplashEvent event) {
         if (event.getPotion().getShooter() instanceof Player) {
             Player shooter = (Player) event.getPotion().getShooter();
-            Profile shooterProfile = plugin.getProfileManager().getByUUID(shooter.getUniqueId());
+            Profile shooterProfile = plugin.getProfileManager().getProfileByUUID(shooter.getUniqueId());
 
             if (shooterProfile.isSpectating()) {
                 event.setCancelled(true);
@@ -446,7 +429,7 @@ public class MatchListener implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onEntityRegainHealth(EntityRegainHealthEvent event) {
         if (event.getEntity() instanceof Player && event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED) {
-            Profile profile = plugin.getProfileManager().getByUUID(event.getEntity().getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(event.getEntity().getUniqueId());
             if (!profile.isInFight()) return;
 
             if (!profile.getMatch().getKit().getGameRules().isRegen()) {
@@ -459,7 +442,7 @@ public class MatchListener implements Listener {
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
             if (!profile.isInFight()) return;
 
@@ -492,7 +475,7 @@ public class MatchListener implements Listener {
     @EventHandler
     public void onVertMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Match match = profile.getMatch();
 
         if (!profile.isInFight()) return;
@@ -539,8 +522,8 @@ public class MatchListener implements Listener {
         if (attacker == null) return;
         if (!(event.getEntity() instanceof Player)) return;
 
-        Profile damagedProfile = plugin.getProfileManager().getByUUID(damaged.getUniqueId());
-        Profile attackerProfile = plugin.getProfileManager().getByUUID(attacker.getUniqueId());
+        Profile damagedProfile = plugin.getProfileManager().getProfileByUUID(damaged.getUniqueId());
+        Profile attackerProfile = plugin.getProfileManager().getProfileByUUID(attacker.getUniqueId());
         if (attackerProfile.isSpectating() || damagedProfile.isSpectating()) {
             event.setCancelled(true);
             return;
@@ -636,7 +619,7 @@ public class MatchListener implements Listener {
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
             Match match = profile.getMatch();
 
             if (!profile.isInFight()) return;
@@ -658,7 +641,7 @@ public class MatchListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        Profile profile = plugin.getProfileManager().getByUUID(event.getWhoClicked().getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(event.getWhoClicked().getUniqueId());
         if (profile.isSpectating()) {
             event.setCancelled(true);
         }
@@ -666,7 +649,7 @@ public class MatchListener implements Listener {
 
     @EventHandler
     public void onInventoryInteract(InventoryInteractEvent event) {
-        Profile profile = plugin.getProfileManager().getByUUID(event.getWhoClicked().getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(event.getWhoClicked().getUniqueId());
         if (profile.isSpectating()) {
             event.setCancelled(true);
         }
@@ -675,7 +658,7 @@ public class MatchListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
 
         if (!profile.isInFight()) return;
         if (event.getItem() == null || event.getClickedBlock() == null || !event.getAction().name().contains("LEFT")) return;
@@ -700,7 +683,7 @@ public class MatchListener implements Listener {
 
             if (source instanceof Player) {
                 Player shooter = (Player) source;
-                Profile profile = plugin.getProfileManager().getByUUID(shooter.getUniqueId());
+                Profile profile = plugin.getProfileManager().getProfileByUUID(shooter.getUniqueId());
 
                 if (!profile.isInFight()) return;
 
@@ -723,7 +706,7 @@ public class MatchListener implements Listener {
 
             if (source instanceof Player) {
                 Player shooter = (Player) source;
-                Profile profile = plugin.getProfileManager().getByPlayer(shooter);
+                Profile profile = plugin.getProfileManager().getProfileByPlayer(shooter);
 
                 if (!profile.isInFight()) return;
                 if (!profile.getMatch().isTheBridgeMatch()) return;
@@ -744,9 +727,9 @@ public class MatchListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerTeleportPearl(PlayerTeleportEvent event) {
-        Profile profile = plugin.getProfileManager().getByUUID(event.getPlayer().getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(event.getPlayer().getUniqueId());
         if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL && profile.isInFight()) {
-            profile.getMatch().removePearl(event.getPlayer(), false);
+            profile.getMatch().removePearl(profile, false);
             Location target = event.getTo();
             target.setX(target.getBlockX() + 0.5);
             target.setZ(target.getBlockZ() + 0.5);
@@ -758,7 +741,7 @@ public class MatchListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Match match = profile.getMatch();
         ItemStack item = event.getItem();
 
@@ -826,7 +809,7 @@ public class MatchListener implements Listener {
     @EventHandler
     public void onPressurePlate(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Match match = profile.getMatch();
 
         if (!profile.isInFight()) return;
@@ -859,7 +842,7 @@ public class MatchListener implements Listener {
             if (!(entity instanceof Player)) return;
 
             Player player = (Player) entity;
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
             if (!profile.isSpectating()) continue;
 
             event.setIntensity(player, 0.0);
@@ -869,7 +852,7 @@ public class MatchListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Match match = profile.getMatch();
 
         if (profile.isInFight() || profile.isInMatch()) {
@@ -888,7 +871,7 @@ public class MatchListener implements Listener {
         if (!(entity instanceof Player)) return;
 
         Player damaged = (Player) event.getEntity();
-        Profile damagedProfile = plugin.getProfileManager().getByUUID(damaged.getUniqueId());
+        Profile damagedProfile = plugin.getProfileManager().getProfileByUUID(damaged.getUniqueId());
         Match match = damagedProfile.getMatch();
         if (!damagedProfile.isInFight()) return;
 
@@ -907,7 +890,7 @@ public class MatchListener implements Listener {
         if (!(source instanceof Player)) return;
 
         Player shooter = (Player) source;
-        Profile profile = plugin.getProfileManager().getByPlayer(shooter);
+        Profile profile = plugin.getProfileManager().getProfileByPlayer(shooter);
 
         if (!profile.isInFight()) return;
 

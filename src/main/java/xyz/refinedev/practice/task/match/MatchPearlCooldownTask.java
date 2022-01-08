@@ -17,7 +17,7 @@ public class MatchPearlCooldownTask extends BukkitRunnable {
         float timeInterval = (plugin.getConfigHandler().getENDERPEARL_COOLDOWN() * 1000.0f);
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
             if ((profile.isInFight() || profile.isInEvent()) && !profile.getEnderpearlCooldown().hasExpired()) {
                 int seconds = Math.round(profile.getEnderpearlCooldown().getRemaining()) / 1000;

@@ -10,12 +10,11 @@ import xyz.refinedev.practice.arena.impl.StandaloneArena;
 import xyz.refinedev.practice.duel.DuelProcedure;
 import xyz.refinedev.practice.duel.DuelRequest;
 import xyz.refinedev.practice.duel.menu.DuelSelectKitMenu;
-import xyz.refinedev.practice.hook.core.CoreAdapter;
+import xyz.refinedev.practice.hook.core.CoreHandler;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
-import xyz.refinedev.practice.match.types.kit.TeamFightMatch;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.queue.QueueType;
@@ -23,7 +22,6 @@ import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 import xyz.refinedev.practice.util.other.PlayerUtil;
-import xyz.refinedev.practice.util.other.TaskUtil;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -39,7 +37,7 @@ import xyz.refinedev.practice.util.other.TaskUtil;
 public class DuelCommands {
 
     private final Array plugin;
-    private final CoreAdapter coreAdapter = Array.getInstance().getCoreHandler().getCoreType().getCoreAdapter();
+    private final CoreHandler coreAdapter;
 
     private Match match;
     private Arena arena;
@@ -47,8 +45,8 @@ public class DuelCommands {
 
     @Command(name = "", desc = "Duel a player", usage = "<player>")
     public void duel(@Sender Player player, Player target) {
-        Profile senderProfile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        Profile receiverProfile = plugin.getProfileManager().getByUUID(target.getUniqueId());
+        Profile senderProfile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile receiverProfile = plugin.getProfileManager().getProfileByUUID(target.getUniqueId());
 
         if (player.getUniqueId().equals(target.getUniqueId())) {
             player.sendMessage(CC.RED + "You cannot duel yourself.");
@@ -82,8 +80,8 @@ public class DuelCommands {
 
     @Command(name = "accept", usage = "<player> <target>", desc = "Accept a duel pending request")
     public void duelAccept(@Sender Player player, Player target) {
-        Profile senderProfile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        Profile receiverProfile = plugin.getProfileManager().getByUUID(target.getUniqueId());
+        Profile senderProfile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile receiverProfile = plugin.getProfileManager().getProfileByUUID(target.getUniqueId());
 
         if (senderProfile.isBusy()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
@@ -135,19 +133,9 @@ public class DuelCommands {
         if (arena.isActive()) {
             if (arena.getType().equals(ArenaType.STANDALONE)) {
                 StandaloneArena sarena = (StandaloneArena) arena;
-                if (sarena.getDuplicates() == null) {
-                    player.sendMessage(CC.RED + "The arena you were dueled was a build arena and all arenas are busy.");
-                    return;
-                }
-                boolean found = false;
-                for ( Arena duplicate : sarena.getDuplicates() ) {
-                    if (!duplicate.isActive()) {
-                        arena = duplicate;
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
+                arena = this.plugin.getArenaManager().findDuplicate(sarena);
+
+                if (arena == null) {
                     player.sendMessage(CC.RED + "The arena you were dueled was a build arena and all arenas are busy.");
                     return;
                 }
@@ -178,11 +166,7 @@ public class DuelCommands {
                     teamB.getTeamPlayers().add(new TeamPlayer(partyMember));
                 }
             }
-            if (request.getKit().equals(plugin.getKitManager().getTeamFight())) {
-                match = new TeamFightMatch(teamA, teamB, arena);
-            } else {
-                match = plugin.getMatchManager().createTeamKitMatch(teamA, teamB, request.getKit(), arena);
-            }
+            match = plugin.getMatchManager().createTeamKitMatch(teamA, teamB, request.getKit(), arena);
         } else {
             match = plugin.getMatchManager().createSoloKitMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena, QueueType.UNRANKED);
             for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList() ) {
@@ -191,7 +175,7 @@ public class DuelCommands {
                 target.sendMessage(replaceOpponent(opponentMessages, target));
             }
         }
-        TaskUtil.run(() -> this.plugin.getMatchManager().start(match));
+        this.plugin.getServer().getScheduler().runTask(plugin, () -> this.plugin.getMatchManager().start(match));
     }
 
     private String formatMessages(Player player1P, Player player2P, String string, String player1, String player2, int player1Elo, int player2Elo, QueueType type) {

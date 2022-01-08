@@ -156,7 +156,7 @@ public class TournamentTask extends BukkitRunnable {
      */
     public void removeSpectator(UUID uuid) {
         Player player = Bukkit.getPlayer(uuid);
-        Profile profile = this.plugin.getProfileManager().getByUUID(uuid);
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(uuid);
         Match match = profile.getMatch();
         if (player == null || !player.isOnline() || !profile.isSpectating() || match == null) return;
 

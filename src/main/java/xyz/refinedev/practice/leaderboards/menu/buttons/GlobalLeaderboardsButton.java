@@ -34,7 +34,7 @@ public class GlobalLeaderboardsButton extends Button {
         int position = 1;
         lore.add(CC.MENU_BAR);
         for ( LeaderboardsAdapter leaderboardsAdapter : plugin.getLeaderboardsManager().getGlobalLeaderboards()) {
-            Profile profile = plugin.getProfileManager().getByUUID(leaderboardsAdapter.getUuid());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(leaderboardsAdapter.getUuid());
 
             lore.add(Locale.LEADERBOARDS_GLOBAL_FORMAT.toString()
                     .replace("<leaderboards_pos>", String.valueOf(position))

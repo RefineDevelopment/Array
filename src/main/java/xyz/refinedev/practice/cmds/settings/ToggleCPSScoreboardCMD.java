@@ -25,7 +25,7 @@ public class ToggleCPSScoreboardCMD {
 
     @Command(name = "", desc = "Toggle CPS on Scoreboard for your Profile")
     public void toggle(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
         ProfileSettings settings = profile.getSettings();
 
         settings.setCpsScoreboard(!settings.isCpsScoreboard());

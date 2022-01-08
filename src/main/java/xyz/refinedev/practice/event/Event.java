@@ -137,7 +137,7 @@ public abstract class Event {
 
 		this.onJoin(player);
 
-		Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+		Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 		profile.setState(ProfileState.IN_EVENT);
 		profile.setEvent(this.eventId);
 
@@ -170,7 +170,7 @@ public abstract class Event {
 			this.eventPlayers.remove(player.getUniqueId());
 		}
 
-		Profile profile = plugin.getProfileManager().getByPlayer(player);
+		Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
 		profile.setState(ProfileState.IN_LOBBY);
 		profile.setEvent(null);
 
@@ -202,7 +202,7 @@ public abstract class Event {
 			Player player = eventPlayer.getPlayer();
 			if (player == null) return;
 
-			Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+			Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 			profile.setState(ProfileState.IN_LOBBY);
 			profile.setEvent(null);
 
@@ -212,7 +212,7 @@ public abstract class Event {
 		TaskUtil.run(this::cleanup);
 
 		this.getSpectatorsList().forEach(this::removeSpectator);
-		this.getPlayers().stream().map(plugin.getProfileManager()::getByPlayer).forEach(plugin.getProfileManager()::handleVisibility);
+		this.getPlayers().stream().map(plugin.getProfileManager()::getProfileByPlayer).forEach(plugin.getProfileManager()::handleVisibility);
 	}
 
 	public void announceWinner() {
@@ -299,7 +299,7 @@ public abstract class Event {
 			Clickable message = new Clickable(main, Locale.EVENT_HOVER.toString().replace("<event_name>", this.getName()), "/event join");
 
 			for ( Player player : this.plugin.getServer().getOnlinePlayers() ) {
-				Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+				Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 				if (!profile.isInEvent()) message.sendToPlayer(player);
 			}
 		}
@@ -329,7 +329,7 @@ public abstract class Event {
 	public void addSpectator(Player player) {
 		this.getSpectators().add(player.getUniqueId());
 
-		Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+		Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 		profile.setState(ProfileState.SPECTATING);
 		profile.setEvent(this.getEventId());
 
@@ -351,7 +351,7 @@ public abstract class Event {
 			this.getEventPlayers().remove(player.getUniqueId());
 		}
 
-		Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+		Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 		profile.setState(ProfileState.IN_LOBBY);
 		profile.setEvent(null);
 
@@ -391,7 +391,7 @@ public abstract class Event {
 	}
 
 	public boolean isRemovable(Player player) {
-		Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+		Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 		return profile.isInEvent() && this.getEventId().equals(profile.getEvent());
 	}
 

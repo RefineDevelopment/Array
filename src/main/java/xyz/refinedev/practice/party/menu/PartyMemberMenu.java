@@ -82,7 +82,7 @@ public class PartyMemberMenu extends Menu {
         
         @Override
         public void clicked(Player player, ClickType clickType) {
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
             Party party = profile.getParty();
 
             player.closeInventory();

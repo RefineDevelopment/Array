@@ -47,7 +47,7 @@ public class TeamFightMatch extends TeamMatch {
 
         teamPlayer.setPlayerSpawn(spawn);
 
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(player.getUniqueId());
         String kit = party.getKits().get(player.getUniqueId());
 

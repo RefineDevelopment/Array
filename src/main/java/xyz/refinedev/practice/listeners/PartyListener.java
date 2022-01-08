@@ -9,7 +9,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.tournament.Tournament;
 import xyz.refinedev.practice.util.chat.CC;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public class PartyListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Party party = profile.getParty();
 
         if (party == null) return;

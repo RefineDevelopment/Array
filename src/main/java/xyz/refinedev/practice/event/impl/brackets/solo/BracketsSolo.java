@@ -12,7 +12,6 @@ import xyz.refinedev.practice.event.meta.player.EventPlayer;
 import xyz.refinedev.practice.event.meta.player.EventPlayerState;
 import xyz.refinedev.practice.event.task.EventRoundEndTask;
 import xyz.refinedev.practice.event.task.EventRoundStartTask;
-import xyz.refinedev.practice.event.task.EventStartTask;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.other.PlayerUtil;
@@ -67,7 +66,7 @@ public class BracketsSolo extends Event {
             if (player != null) {
                 player.teleport(EventHelperUtil.getSpectator(this));
 
-                Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+                Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
                 if (this.isRemovable(player)) {
                     this.plugin.getProfileManager().refreshHotbar(profile);
@@ -83,7 +82,7 @@ public class BracketsSolo extends Event {
             if (player != null) {
                 player.teleport(EventHelperUtil.getSpectator(this));
 
-                Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+                Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
                 if (this.isRemovable(player)) {
                     this.plugin.getProfileManager().refreshHotbar(profile);
@@ -99,8 +98,8 @@ public class BracketsSolo extends Event {
         Player playerA = roundPlayerA.getPlayer();
         Player playerB = roundPlayerB.getPlayer();
 
-        Profile profileA = this.plugin.getProfileManager().getByUUID(playerA.getUniqueId());
-        Profile profileB = this.plugin.getProfileManager().getByUUID(playerB.getUniqueId());
+        Profile profileA = this.plugin.getProfileManager().getProfileByUUID(playerA.getUniqueId());
+        Profile profileB = this.plugin.getProfileManager().getProfileByUUID(playerB.getUniqueId());
 
         PlayerUtil.reset(playerA);
         PlayerUtil.reset(playerB);

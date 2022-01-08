@@ -58,7 +58,7 @@ public class Parkour extends Event {
             if (player == null) return;
             player.teleport(EventHelperUtil.getSpawn(this));
 
-            Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
             if (this.isRemovable(player)) {
                 this.getPlugin().getProfileManager().refreshHotbar(profile);
             }

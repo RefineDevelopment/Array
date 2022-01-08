@@ -81,7 +81,7 @@ public class Spleef extends Event {
 
     @Override
     public void onDeath(Player player) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         this.plugin.getProfileManager().handleVisibility(profile);
         this.plugin.getProfileManager().refreshHotbar(profile);
 

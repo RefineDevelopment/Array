@@ -14,7 +14,6 @@ import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.other.PlayerUtil;
-import xyz.refinedev.practice.util.other.TaskUtil;
 
 @RequiredArgsConstructor
 public class QueueThread extends Thread {
@@ -46,13 +45,13 @@ public class QueueThread extends Thread {
                         Player firstPlayer = Bukkit.getPlayer(firstQueueProfile.getUniqueId());
                         if (firstPlayer == null) continue;
 
-                        Profile firstProfile = profileManager.getByUUID(firstQueueProfile.getUniqueId());
+                        Profile firstProfile = profileManager.getProfileByUUID(firstQueueProfile.getUniqueId());
 
                         for (QueueProfile secondQueueProfile : queue.getPlayers()) {
                             if (firstQueueProfile.equals(secondQueueProfile)) continue;
 
                             Player secondPlayer = Bukkit.getPlayer(secondQueueProfile.getUniqueId());
-                            Profile secondProfile = profileManager.getByUUID(secondQueueProfile.getUniqueId());
+                            Profile secondProfile = profileManager.getProfileByUUID(secondQueueProfile.getUniqueId());
 
                             if (secondPlayer == null) continue;
 
@@ -91,6 +90,7 @@ public class QueueThread extends Thread {
                             arena = arenaManager.getByKit(queue.getKit());
                             if (arena == null || !arena.isSetup() || arena.isActive()) continue;
 
+                            // Set active ya know
                             if (queue.getKit().getGameRules().isBuild()) arena.setActive(true);
 
                             // Remove players from queue
@@ -143,8 +143,8 @@ public class QueueThread extends Thread {
     private String formatMessages(String string, Player sender, Player target, QueueType type) {
         ProfileManager profileManager = this.plugin.getProfileManager();
 
-        Profile senderProfile = profileManager.getByUUID(sender.getUniqueId());
-        Profile targetProfile = profileManager.getByUUID(target.getUniqueId());
+        Profile senderProfile = profileManager.getProfileByUUID(sender.getUniqueId());
+        Profile targetProfile = profileManager.getProfileByUUID(target.getUniqueId());
 
         int senderELO = senderProfile.getStatisticsData().get(kit).getElo();
         int targetELO = targetProfile.getStatisticsData().get(kit).getElo();

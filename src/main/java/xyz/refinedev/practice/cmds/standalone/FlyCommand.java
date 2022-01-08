@@ -26,7 +26,7 @@ public class FlyCommand {
     @Command(name = "", desc = "Allow Donators to Fly")
     @Require("array.profile.fly")
     public void fly(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (profile.isInLobby() || profile.isInQueue()) {
             if (player.getAllowFlight()) {

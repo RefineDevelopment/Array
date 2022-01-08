@@ -91,7 +91,7 @@ public class ClanManager {
         for ( ClanProfile member : clan.getAllMembers() ) {
             Player player = this.plugin.getServer().getPlayer(member.getUniqueId());
 
-            Profile profile = this.plugin.getProfileManager().getByUUID(member.getUniqueId());
+            Profile profile = this.plugin.getProfileManager().getProfileByUUID(member.getUniqueId());
             profile.setClan(null);
 
             if (player != null && player.isOnline()) {
@@ -247,7 +247,7 @@ public class ClanManager {
      * @param joiner The player joining the clan
      */
     public void join(Clan clan, Player joiner, ClanInvite clanInvite) {
-        Profile profile = this.plugin.getProfileManager().getByPlayer(joiner);
+        Profile profile = this.plugin.getProfileManager().getProfileByPlayer(joiner);
 
         if (clanInvite != null && !clan.getInvites().contains(clanInvite)) {
             joiner.sendMessage(CC.translate("&7You are not invited to this clan or your invite expired!"));
@@ -282,7 +282,7 @@ public class ClanManager {
      * @param leaver The player leaving the clan
      */
     public void leave(Clan clan, Player leaver) {
-        Profile profile = this.plugin.getProfileManager().getByPlayer(leaver);
+        Profile profile = this.plugin.getProfileManager().getProfileByPlayer(leaver);
         ClanProfile clanProfile = this.profileMap.get(leaver.getUniqueId());
 
         if (clanProfile.getType() == ClanRoleType.LEADER) {
@@ -310,7 +310,7 @@ public class ClanManager {
      * @param uuid The uniqueId getting kicked from the Clan
      */
     public void kick(Clan clan, UUID uuid) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(uuid);
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(uuid);
         ClanProfile clanProfile = this.profileMap.get(uuid);
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
 
@@ -339,7 +339,7 @@ public class ClanManager {
      * @param uuid The uniqueId getting banned from the Clan
      */
     public void ban(Clan clan, UUID uuid) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(uuid);
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(uuid);
         ClanProfile clanProfile = this.profileMap.get(uuid);
         OfflinePlayer player = this.plugin.getServer().getOfflinePlayer(uuid);
 

@@ -10,7 +10,6 @@ import xyz.refinedev.practice.event.meta.group.EventGroupColor;
 import xyz.refinedev.practice.event.meta.group.EventTeamPlayer;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
 import xyz.refinedev.practice.event.meta.player.EventPlayerState;
-import xyz.refinedev.practice.event.task.EventStartTask;
 import xyz.refinedev.practice.event.task.EventTeamRoundEndTask;
 import xyz.refinedev.practice.event.task.EventTeamRoundStartTask;
 import xyz.refinedev.practice.kit.Kit;
@@ -86,7 +85,7 @@ public class BracketsTeam extends Event {
 
         this.getTeams().removeAll(this.getTeams().stream().filter(team -> team.getPlayers().size() == 0).collect(Collectors.toList()));
         this.getEventPlayers().values().stream().filter(this::isApplicable).forEach(eventPlayer -> {
-            Profile profile = plugin.getProfileManager().getByUUID(eventPlayer.getUuid());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(eventPlayer.getUuid());
             plugin.getProfileManager().refreshHotbar(profile);
         });
 
@@ -97,7 +96,7 @@ public class BracketsTeam extends Event {
             for (Player player : this.roundTeamA.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
                 player.teleport(EventHelperUtil.getSpectator(this));
 
-                Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+                Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
                 if (this.isRemovable(player)) continue;
 
                 plugin.getProfileManager().refreshHotbar(profile);
@@ -110,7 +109,7 @@ public class BracketsTeam extends Event {
             for (Player player : this.roundTeamB.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
                 player.teleport(EventHelperUtil.getSpectator(this));
 
-                Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+                Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
                 if (this.isRemovable(player)) continue;
 
                 this.plugin.getProfileManager().refreshHotbar(profile);
@@ -124,7 +123,7 @@ public class BracketsTeam extends Event {
         for (Player playerA : this.roundTeamA.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
             PlayerUtil.reset(playerA);
 
-            Profile profileA = this.plugin.getProfileManager().getByUUID(playerA.getUniqueId());
+            Profile profileA = this.plugin.getProfileManager().getProfileByUUID(playerA.getUniqueId());
 
             profileA.getStatisticsData().get(this.kit).getKitItems().forEach((integer, itemStack) -> playerA.getInventory().setItem(integer, itemStack));
             playerA.teleport(EventHelperUtil.getSpawn1(this));
@@ -143,7 +142,7 @@ public class BracketsTeam extends Event {
         for (Player playerB : this.roundTeamB.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
             PlayerUtil.reset(playerB);
 
-            Profile profileB = this.plugin.getProfileManager().getByUUID(playerB.getUniqueId());
+            Profile profileB = this.plugin.getProfileManager().getProfileByUUID(playerB.getUniqueId());
             playerB.teleport(EventHelperUtil.getSpawn2(this));
 
             profileB.getStatisticsData().get(this.kit).getKitItems().forEach((integer, itemStack) -> playerB.getInventory().setItem(integer, itemStack));
@@ -196,7 +195,7 @@ public class BracketsTeam extends Event {
 
         if (player != null && player.isOnline()) {
             this.plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-                Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+                Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
                 plugin.getProfileManager().refreshHotbar(profile);
                 player.teleport(EventHelperUtil.getSpectator(this));
             }, 2L);
@@ -220,7 +219,7 @@ public class BracketsTeam extends Event {
 
             this.plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                 for (Player winner : winningTeam.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
-                    Profile profile = plugin.getProfileManager().getByUUID(winner.getUniqueId());
+                    Profile profile = plugin.getProfileManager().getProfileByUUID(winner.getUniqueId());
                     plugin.getProfileManager().refreshHotbar(profile);
                     this.refreshNameTag();
 
@@ -228,7 +227,7 @@ public class BracketsTeam extends Event {
                 }
 
                 for (Player loser : losingTeam.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
-                    Profile profile = plugin.getProfileManager().getByUUID(loser.getUniqueId());
+                    Profile profile = plugin.getProfileManager().getProfileByUUID(loser.getUniqueId());
                     plugin.getProfileManager().refreshHotbar(profile);
                     this.refreshNameTag();
 

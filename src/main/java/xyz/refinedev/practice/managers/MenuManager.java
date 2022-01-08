@@ -226,7 +226,7 @@ public class MenuManager {
      * @return {@link Menu}
      */
     public Menu findMenu(Player player, String name) {
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         switch (name) {
             case "event_team": {
                 if (profile.isInEvent()) {

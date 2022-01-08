@@ -29,7 +29,7 @@ public class PartyListMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         profile.getParty().getPlayers().forEach(pplayer -> buttons.put(buttons.size(), new PartyDisplayButton(pplayer)));
         return buttons;
     }
@@ -51,8 +51,8 @@ public class PartyListMenu extends Menu {
         
         @Override
         public void clicked(Player player, ClickType clickType) {
-            Profile senderProfile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-            Profile receiverProfile = plugin.getProfileManager().getByUUID(this.pplayer.getUniqueId());
+            Profile senderProfile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile receiverProfile = plugin.getProfileManager().getProfileByUUID(this.pplayer.getUniqueId());
 
             player.closeInventory();
 

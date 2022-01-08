@@ -36,7 +36,7 @@ public class PartyCommands {
 
     @Command(name = "create", desc = "Create a Party")
     public void partyCreate(@Sender Player player) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (profile.hasParty()) {
             player.sendMessage(Locale.PARTY_ALREADYHAVE.toString());
@@ -59,7 +59,7 @@ public class PartyCommands {
 
     @Command(name = "disband", desc = "Disband your Party")
     public void partyDisband(@Sender Player player) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
         
         if (party == null) {
@@ -83,8 +83,8 @@ public class PartyCommands {
 
     @Command(name = "invite", desc = "Invite a Profile to your Party", usage = "<profile>")
     public void partyInvite(@Sender Player player, Player target) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
-        Profile targetData = plugin.getProfileManager().getByUUID(target.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile targetData = plugin.getProfileManager().getProfileByUUID(target.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
 
         if (party == null) {
@@ -112,7 +112,7 @@ public class PartyCommands {
 
     @Command(name = "settings", desc = "Open Party Settings Menu")
     public void partySettings(@Sender Player player) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
         
         if (party == null) {
@@ -131,7 +131,7 @@ public class PartyCommands {
 
     @Command(name = "event", aliases = "event", desc = "Open Party Events Menu")
     public void partyEvents(@Sender Player player) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
         
         if (party == null) {
@@ -150,7 +150,7 @@ public class PartyCommands {
 
     @Command(name = "classes", aliases = {"hcfkits", "hcfkit", "class"}, desc = "View HCF Class Menu")
     public void partyClasses(@Sender Player player) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
         
         if (party == null) {
@@ -169,7 +169,7 @@ public class PartyCommands {
 
     @Command(name = "info", aliases = "information", desc = "View Information about your Party")
     public void partyInfo(@Sender Player player) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
         
         if (party == null) {
@@ -181,7 +181,7 @@ public class PartyCommands {
 
     @Command(name = "duel", aliases = "otherparties", desc = "Duel other parties")
     public void partyDuel(@Sender Player player) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
         
         if (party == null) {
@@ -200,8 +200,8 @@ public class PartyCommands {
 
     @Command(name = "join", aliases = "accept" ,desc = "Join a party using its invitation", usage = "<leader>")
     public void partyJoin(@Sender Player player, Player target) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
-        Profile targetprofile = this.plugin.getProfileManager().getByUUID(target.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile targetprofile = this.plugin.getProfileManager().getProfileByUUID(target.getUniqueId());
         
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
         Party targetParty = this.plugin.getPartyManager().getPartyByUUID(targetprofile.getParty());
@@ -240,7 +240,7 @@ public class PartyCommands {
 
     @Command(name = "kick", aliases = "remove", desc = "Kick a player from the party", usage = "<target>")
     public void partyKick(@Sender Player player, Player target) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
 
         if (party == null) {
@@ -269,7 +269,7 @@ public class PartyCommands {
     
     @Command(name = "open", aliases = "public", desc = "Publicize your party")
     public void partyOpen(@Sender Player player) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
 
         if (!player.hasPermission("array.party.privacy") && !player.isOp() && !player.hasPermission("*")) {
@@ -293,7 +293,7 @@ public class PartyCommands {
 
     @Command(name = "promote", aliases = "leader", desc = "Promote a player to leader in your party", usage = "<target>")
     public void partyPromote(@Sender Player player, Player target) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
 
         if (party == null) {
@@ -317,7 +317,7 @@ public class PartyCommands {
 
     @Command(name = "ban", desc = "Ban a player from the party", usage = "<target>")
     public void partyBan(@Sender Player player, Player target) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
 
         if (!player.hasPermission("array.party.ban") && !player.isOp() && !player.hasPermission("*")) {
@@ -357,7 +357,7 @@ public class PartyCommands {
 
     @Command(name = "unban", desc = "Unban a player from your party", usage = "<target>")
     public void partyUnban(@Sender Player player, Player target) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
 
         if (!player.hasPermission("array.party.ban")) {
@@ -393,7 +393,7 @@ public class PartyCommands {
 
     @Command(name = "chat", desc = "Toggle party chat mode for your profile")
     public void partyChat(@Sender Player player) {
-        Profile profile = this.plugin.getProfileManager().getByPlayer(player);
+        Profile profile = this.plugin.getProfileManager().getProfileByPlayer(player);
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
 
         if (party == null) {
@@ -410,7 +410,7 @@ public class PartyCommands {
 
     @Command(name = "close", desc = "Privatise your party to the public")
     public void partyClose(@Sender Player player) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
 
         if (party == null) {
@@ -431,7 +431,7 @@ public class PartyCommands {
 
     @Command(name = "leave", aliases = "resign", desc = "Leave your party")
     public void partyLeave(@Sender Player player) {
-        Profile profile = this.plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
 
         if (party == null) {

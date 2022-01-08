@@ -44,7 +44,7 @@ public class SettingsButton extends Button {
      */
     @Override
     public ItemStack getButtonItem(Player player) {
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         List<String> lines = new ArrayList<>();
 
         key += type.name() + ".";
@@ -191,7 +191,7 @@ public class SettingsButton extends Button {
      */
     @Override
     public void clicked(Player player, ClickType clickType) {
-        final Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        final Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         switch (type) {
             case TOGGLESCOREBOARD:
                 Button.playSuccess(player);

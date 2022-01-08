@@ -67,7 +67,7 @@ public class EventManager {
 	}
 
     public void setActiveEvent(Event event) {
-		this.plugin.getServer().getOnlinePlayers().stream().map(plugin.getProfileManager()::getByPlayer).filter(profile -> profile.isInLobby() && !profile.getKitEditor().isActive()).forEach(plugin.getProfileManager()::refreshHotbar);
+		this.plugin.getServer().getOnlinePlayers().stream().map(plugin.getProfileManager()::getProfileByPlayer).filter(profile -> profile.isInLobby() && !profile.getKitEditor().isActive()).forEach(plugin.getProfileManager()::refreshHotbar);
 
 		if (this.activeEvent != null) {
 			this.activeEvent.setEventTask(null);

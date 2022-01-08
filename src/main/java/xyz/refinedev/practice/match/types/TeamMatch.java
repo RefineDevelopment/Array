@@ -62,7 +62,7 @@ public class TeamMatch extends Match {
         if (this.getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
         if (!this.getKit().getGameRules().isNoItems() || !this.getKit().getGameRules().isSumo()) {
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
             TaskUtil.runLater(() -> profile.getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
         }
 
@@ -106,7 +106,7 @@ public class TeamMatch extends Match {
             Player player = teamPlayer.getPlayer();
             if (player == null) continue;
 
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
             plugin.getProfileManager().handleVisibility(profile);
 
             this.getSnapshots().add(new MatchSnapshot(teamPlayer));
@@ -144,7 +144,7 @@ public class TeamMatch extends Match {
 
                     plugin.getSpigotHandler().resetKnockback(player);
 
-                    Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+                    Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
                     profile.setState(ProfileState.IN_LOBBY);
                     profile.setMatch(null);
                     plugin.getProfileManager().teleportToSpawn(profile);
@@ -155,11 +155,11 @@ public class TeamMatch extends Match {
         Team winningTeam = getWinningTeam();
         Team losingTeam = getOpponentTeam(winningTeam);
 
-        winningTeam.getPlayers().stream().map(plugin.getProfileManager()::getByPlayer).forEach(profile -> {
+        winningTeam.getPlayers().stream().map(plugin.getProfileManager()::getProfileByPlayer).forEach(profile -> {
             profile.getStatisticsData().get(getKit()).incrementWon();
             plugin.getProfileManager().save(profile);
         });
-        losingTeam.getPlayers().stream().map(plugin.getProfileManager()::getByPlayer).forEach(profile -> {
+        losingTeam.getPlayers().stream().map(plugin.getProfileManager()::getProfileByPlayer).forEach(profile -> {
             profile.getStatisticsData().get(getKit()).incrementLost();
             plugin.getProfileManager().save(profile);
         });
@@ -179,7 +179,7 @@ public class TeamMatch extends Match {
         PlayerUtil.reset(deadPlayer);
 
         for ( Player otherPlayer : getPlayers() ) {
-            Profile profile = plugin.getProfileManager().getByUUID(otherPlayer.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(otherPlayer.getUniqueId());
             TaskUtil.runLater(() -> plugin.getProfileManager().handleVisibility(profile, deadPlayer), 2L);
         }
 
@@ -189,7 +189,7 @@ public class TeamMatch extends Match {
             if (!teamPlayer.isDisconnected()) {
                 deadPlayer.teleport(this.getMidSpawn());
 
-                Profile profile = plugin.getProfileManager().getByUUID(deadPlayer.getUniqueId());
+                Profile profile = plugin.getProfileManager().getProfileByUUID(deadPlayer.getUniqueId());
                 profile.setState(ProfileState.SPECTATING);
                 plugin.getProfileManager().refreshHotbar(profile);
             }

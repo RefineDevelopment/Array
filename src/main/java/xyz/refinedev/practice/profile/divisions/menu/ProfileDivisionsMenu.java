@@ -53,7 +53,7 @@ public class ProfileDivisionsMenu extends PaginatedMenu {
     @Override
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         if (plugin.getDivisionsManager().isXPBased()) {
             buttons.put(buttons.size(), new ProfileXPDivisionsButton(profile, plugin.getDivisionsManager().getDivisionByXP(profile.getExperience())));
         } else {

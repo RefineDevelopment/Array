@@ -31,7 +31,7 @@ public class ClanProfileProvider extends DrinkProvider<ClanProfile> {
         UUID uuid = PlayerUtil.getUUIDByName(name);
 
         if (uuid != null) {
-            ClanProfile clanProfile = this.getPlugin().getProfileManager().getByUUID(uuid).getClanProfile();
+            ClanProfile clanProfile = this.getPlugin().getProfileManager().getProfileByUUID(uuid).getClanProfile();
             if (clanProfile != null) {
                 return clanProfile;
             }

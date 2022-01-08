@@ -41,7 +41,7 @@ public class ParkourListener implements Listener {
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (!profile.isInEvent()) return;
         if (!profile.getEvent().isParkour()) return;
@@ -66,7 +66,7 @@ public class ParkourListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         HumanEntity player = event.getWhoClicked();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (!profile.isInEvent() || !profile.getEvent().isParkour()) return;
         if (profile.getEvent().isFighting(player.getUniqueId())) return;
@@ -76,7 +76,7 @@ public class ParkourListener implements Listener {
     @EventHandler
     public void onInventoryInteract(InventoryInteractEvent event) {
         HumanEntity player = event.getWhoClicked();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (!profile.isInEvent() || !profile.getEvent().isParkour()) return;
         if (profile.getEvent().isFighting(player.getUniqueId())) return;
@@ -87,7 +87,7 @@ public class ParkourListener implements Listener {
     @EventHandler
     public void onItemDrop(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (!profile.isInEvent() || !profile.getEvent().isParkour()) return;
 
@@ -97,7 +97,7 @@ public class ParkourListener implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled=true)
     public void onBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (!profile.isInEvent() || !profile.getEvent().isParkour()) return;
 
@@ -108,7 +108,7 @@ public class ParkourListener implements Listener {
     @EventHandler
     public void onItemPickup(PlayerPickupItemEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (!profile.isInEvent() || !profile.getEvent().isParkour()) return;
         if (profile.getEvent().isFighting(player.getUniqueId())) return;
@@ -122,7 +122,7 @@ public class ParkourListener implements Listener {
         if (!event.getAction().name().contains("RIGHT")) return;
 
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (!profile.isInEvent() || !profile.getEvent().isParkour()) return;
         EventPlayer eventPlayer = profile.getEvent().getEventPlayer(player.getUniqueId());
@@ -133,7 +133,7 @@ public class ParkourListener implements Listener {
     @EventHandler
     public void onButton(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Block block = event.getClickedBlock();
         Action action = event.getAction();
 

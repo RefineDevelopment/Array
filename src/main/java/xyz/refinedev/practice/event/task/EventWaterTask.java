@@ -33,7 +33,7 @@ public class EventWaterTask extends BukkitRunnable {
         }
 
         for ( Player player : event.getRemainingPlayers()) {
-            if (player == null || !plugin.getProfileManager().getByUUID(player.getUniqueId()).isInEvent()) {
+            if (player == null || !plugin.getProfileManager().getProfileByUUID(player.getUniqueId()).isInEvent()) {
                 return;
             }
 

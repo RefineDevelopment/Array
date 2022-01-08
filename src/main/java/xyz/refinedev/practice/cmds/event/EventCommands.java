@@ -45,7 +45,7 @@ public class EventCommands {
 
     @Command(name = "teamselect", aliases = "teams", desc = "Choose a Team for your Event")
     public void teamSelect(@Sender Player player) {
-        final Profile profile = plugin.getProfileManager().getByPlayer(player);
+        final Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
         final Event activeEvent = eventManager.getActiveEvent();
 
         if (activeEvent == null) {
@@ -74,7 +74,7 @@ public class EventCommands {
             return;
         }
 
-        Bukkit.getOnlinePlayers().stream().map(plugin.getProfileManager()::getByPlayer).filter(profile -> profile.isInLobby() && !profile.getKitEditor().isActive()).forEach(Profile::refreshHotbar);
+        Bukkit.getOnlinePlayers().stream().map(plugin.getProfileManager()::getProfileByPlayer).filter(profile -> profile.isInLobby() && !profile.getKitEditor().isActive()).forEach(Profile::refreshHotbar);
     }*/
 
     @Command(name = "cancel", aliases = "stop", desc = "Cancel an ongoing event")
@@ -92,7 +92,7 @@ public class EventCommands {
 
     @Command(name = "join", aliases = "participate", desc = "Join an active event")
     public void join(@Sender Player player) {
-        final Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        final Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         final Event event =  eventManager.getActiveEvent();
 
         if (profile.isBusy() || profile.hasParty()) {
@@ -118,7 +118,7 @@ public class EventCommands {
 
     @Command(name = "leave", aliases = "quit", desc = "Leave an active event")
     public void leave(@Sender Player player) {
-        final Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        final Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         final Event event = eventManager.getActiveEvent();
         if (event == null) {
             player.sendMessage(Locale.ERROR_NOTACTIVE.toString());

@@ -2,19 +2,20 @@ package xyz.refinedev.practice.managers;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.clan.Clan;
-import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
+import xyz.refinedev.practice.profile.statistics.ProfileStatistics;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueProfile;
 import xyz.refinedev.practice.queue.QueueThread;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -31,6 +32,7 @@ public class QueueManager {
 
     private final Array plugin;
     private final Map<UUID, Queue> queues = new HashMap<>();
+    private final Map<UUID, QueueProfile> profileMap = new HashMap<>();
 
     private QueueThread thread;
 
@@ -47,6 +49,14 @@ public class QueueManager {
         this.queues.clear();
     }
 
+    public int getInQueues() {
+        int i = 0;
+        for ( Queue queue : queues.values() ) {
+            i += queue.getPlayers().size();
+        }
+        return i;
+    }
+
     /**
      * Add a player to a certain queue
      *
@@ -58,22 +68,24 @@ public class QueueManager {
         QueueProfile queueProfile = new QueueProfile(player.getUniqueId());
         queueProfile.setElo(elo);
 
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
-        profile.setQueue(queue);
-        profile.setQueueProfile(queueProfile);
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        profile.setQueue(queue.getUniqueId());
         profile.setState(ProfileState.IN_QUEUE);
 
-        plugin.getProfileManager().refreshHotbar(profile);
+        this.profileMap.put(profile.getUniqueId(), queueProfile);
+        this.plugin.getProfileManager().refreshHotbar(profile);
 
         switch (queue.getType()) {
             case UNRANKED: {
-                player.sendMessage(Locale.QUEUE_JOIN_UNRANKED.toString().replace("<queue_name>", queue.getQueueName()));
+                player.sendMessage(Locale.QUEUE_JOIN_UNRANKED.toString()
+                        .replace("<queue_name>", queue.getQueueName()));
                 break;
             }
             case RANKED: {
+                ProfileStatistics stats = profile.getStatisticsData().get(queue.getKit());
                 player.sendMessage(Locale.QUEUE_JOIN_RANKED.toString()
                         .replace("<queue_name>", queue.getQueueName())
-                        .replace("<queue_elo>", String.valueOf(profile.getStatisticsData().get(queue.getKit()).getElo())));
+                        .replace("<queue_elo>", String.valueOf(stats.getElo())));
                 break;
             }
             case CLAN: {
@@ -97,18 +109,17 @@ public class QueueManager {
     public void removePlayer(Queue queue, QueueProfile queueProfile) {
         queue.getPlayers().remove(queueProfile);
 
-        Player player = Bukkit.getPlayer(queueProfile.getUniqueId());
-
+        Player player = this.plugin.getServer().getPlayer(queueProfile.getUniqueId());
         if (player != null && player.isOnline()) {
             player.sendMessage(Locale.QUEUE_LEAVE.toString().replace("<queue_name>", queue.getQueueName()));
         }
 
-        Profile profile = plugin.getProfileManager().getByUUID(queueProfile.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(queueProfile.getUniqueId());
         profile.setQueue(null);
-        profile.setQueueProfile(null);
         profile.setState(ProfileState.IN_LOBBY);
 
-        plugin.getProfileManager().refreshHotbar(profile);
+        this.profileMap.remove(profile.getUniqueId());
+        this.plugin.getProfileManager().refreshHotbar(profile);
     }
 
     /**
@@ -117,7 +128,17 @@ public class QueueManager {
      * @param uuid The UUID of the Queue
      * @return {@link Queue}
      */
-    public Queue getByUuid(UUID uuid) {
+    public Queue getByUUID(UUID uuid) {
         return queues.get(uuid);
+    }
+
+    /**
+     * Get a QueueProfile by its associated UUID
+     *
+     * @param uuid The UUID of the Player QueueProfile
+     * @return     {@link QueueProfile}
+     */
+    public QueueProfile getProfileByUUID(UUID uuid) {
+        return profileMap.get(uuid);
     }
 }

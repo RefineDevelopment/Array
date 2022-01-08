@@ -69,7 +69,7 @@ public class Bard extends PvPClass implements Listener {
             return false;
         }
 
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Match match = profile.getMatch();
         if (match != null && (match.isHCFMatch())) {
             BardData bardData = new BardData();
@@ -121,7 +121,7 @@ public class Bard extends PvPClass implements Listener {
     @Override
     public void onUnequip(Player player) {
         super.onUnequip(player);
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Match match = profile.getMatch();
         if (match != null && (match.isHCFMatch())) {
             clearBardData(player.getUniqueId());
@@ -137,7 +137,7 @@ public class Bard extends PvPClass implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Profile profile = plugin.getProfileManager().getByUUID(event.getPlayer().getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(event.getPlayer().getUniqueId());
         Match match = profile.getMatch();
         if (match != null && (match.isHCFMatch())) {
             clearBardData(event.getPlayer().getUniqueId());
@@ -146,7 +146,7 @@ public class Bard extends PvPClass implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerKick(PlayerKickEvent event) {
-        Profile profile = plugin.getProfileManager().getByUUID(event.getPlayer().getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(event.getPlayer().getUniqueId());
         Match match = profile.getMatch();
         if (match != null && (match.isHCFMatch())) {
             clearBardData(event.getPlayer().getUniqueId());
@@ -156,7 +156,7 @@ public class Bard extends PvPClass implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onItemHeld(PlayerItemHeldEvent event) {
 
-        Profile profile = plugin.getProfileManager().getByUUID(event.getPlayer().getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(event.getPlayer().getUniqueId());
         Match match = profile.getMatch();
         if (match != null && (match.isHCFMatch() )) {
             Player player = event.getPlayer();
@@ -176,7 +176,7 @@ public class Bard extends PvPClass implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        Profile profile = plugin.getProfileManager().getByUUID(event.getPlayer().getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(event.getPlayer().getUniqueId());
         Match match = profile.getMatch();
         if (match != null && match.isHCFMatch()) {
             Team team = profile.getMatch().getTeam(event.getPlayer());

@@ -68,7 +68,7 @@ public class PartyPvPClassMenu extends PaginatedMenu {
         public ItemStack getButtonItem(Player player) {
             List<String> lore = new ArrayList<>();
             
-            Profile profile = plugin.getProfileManager().getByUUID(uuid);
+            Profile profile = plugin.getProfileManager().getProfileByUUID(uuid);
             Party party = plugin.getPartyManager().getPartyByUUID(uuid);
             String pvpClass = party.getKits().get(uuid);
 
@@ -92,7 +92,7 @@ public class PartyPvPClassMenu extends PaginatedMenu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
-            Profile profile = plugin.getProfileManager().getByUUID(uuid);
+            Profile profile = plugin.getProfileManager().getProfileByUUID(uuid);
             Party party = plugin.getPartyManager().getPartyByUUID(uuid);
 
             if (!party.isLeader(player.getUniqueId())) {

@@ -5,7 +5,9 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -21,7 +23,7 @@ import java.util.UUID;
 public class Queue {
 
     private final Array plugin;
-    private final LinkedList<QueueProfile> players = new LinkedList<>();
+    private final List<QueueProfile> players = new ArrayList<>();
 
     private final UUID uniqueId;
     private final Kit kit;

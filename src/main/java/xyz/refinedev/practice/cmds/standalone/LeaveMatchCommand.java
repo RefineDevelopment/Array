@@ -27,7 +27,7 @@ public class LeaveMatchCommand {
     @Command(name = "", desc = "Cancel your on-going match")
     @Require("array.profile.forfeit")
     public void forfeitMatch(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (profile.isInFight()) {
             Match match = profile.getMatch();

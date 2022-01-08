@@ -24,7 +24,7 @@ public class ToggleDuelCMD {
 
     @Command(name = "", desc = "Toggle Duels for your Profile")
     public void toggleDuels(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
         ProfileSettings settings = profile.getSettings();
 
         settings.setReceiveDuelRequests(!settings.isReceiveDuelRequests());

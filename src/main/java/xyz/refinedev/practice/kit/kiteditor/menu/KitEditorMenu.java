@@ -41,7 +41,7 @@ public class KitEditorMenu extends Menu {
 
     @Override
     public String getTitle(Player player) {
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         return "&cEditing &7(" + profile.getKitEditor().getSelectedKit().getName() + ")";
     }
 
@@ -59,7 +59,7 @@ public class KitEditorMenu extends Menu {
         buttons.put(7, new ClearInventoryButton());
         buttons.put(8, new CancelButton());
 
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Kit kit = profile.getKitEditor().getSelectedKit();
         KitInventory kitInventory = profile.getKitEditor().getSelectedKitInventory();
 
@@ -84,7 +84,7 @@ public class KitEditorMenu extends Menu {
         if (!isClosedByMenu()) {
             PlayerUtil.reset(player);
 
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
             profile.getKitEditor().setActive(true);
 
             if (profile.getKitEditor().getSelectedKit() != null) {
@@ -96,7 +96,7 @@ public class KitEditorMenu extends Menu {
 
     @Override
     public void onClose(Player player) {
-        Profile profile = this.getPlugin().getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
         profile.getKitEditor().setActive(false);
 
         if (!profile.isInFight()) {
@@ -134,7 +134,7 @@ public class KitEditorMenu extends Menu {
 
         @Override
         public ItemStack getButtonItem(Player player) {
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
             return new ItemBuilder(Material.NAME_TAG)
                     .name("&cEditing &r" + profile.getKitEditor().getSelectedKit().getName())
@@ -191,7 +191,7 @@ public class KitEditorMenu extends Menu {
         public void clicked(Player player, int i, ClickType clickType, int hb) {
             Button.playNeutral(player);
 
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
             player.setItemOnCursor(null);
             player.getInventory().setContents(profile.getKitEditor().getSelectedKit().getKitInventory().getContents());
@@ -222,7 +222,7 @@ public class KitEditorMenu extends Menu {
             Button.playNeutral(player);
             player.closeInventory();
 
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
             if (profile.getKitEditor().getSelectedKitInventory() != null) {
                 profile.getKitEditor().getSelectedKitInventory().setContents(player.getInventory().getContents());
@@ -252,7 +252,7 @@ public class KitEditorMenu extends Menu {
         public void clicked(Player player, int i, ClickType clickType, int hb) {
             Button.playNeutral(player);
 
-            Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
             if (profile.getKitEditor().getSelectedKit() != null) {
                 new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(player);

@@ -25,7 +25,7 @@ public class RematchCommand {
 
     @Command(name = "", desc = "Rematch a Player")
     public void rematch(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (profile.getRematchData() == null) {
             player.sendMessage(Locale.ERROR_NOREMATCH.toString());

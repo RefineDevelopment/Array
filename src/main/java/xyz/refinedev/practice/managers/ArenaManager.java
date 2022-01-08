@@ -280,6 +280,24 @@ public class ArenaManager {
         plugin.logger("&7Loaded &cChunks &7Successfully!");
     }
 
+    public Arena findDuplicate(StandaloneArena arena) {
+        Arena queriedArena = null;
+
+        if (arena.getDuplicates() == null) return null;
+
+        boolean found = false;
+        for ( Arena duplicate : arena.getDuplicates() ) {
+            if (!duplicate.isActive()) {
+                queriedArena = duplicate;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) return null;
+        return queriedArena;
+    }
+
     /**
      * Send the player our rating message and allow them to
      * rate the arena provided in their match
@@ -288,7 +306,7 @@ public class ArenaManager {
      * @param arena {@link Arena} the arena being rated
      */
     public void sendRatingMessage(Player player, Arena arena) {
-        Profile profile = plugin.getProfileManager().getByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
         profile.setIssueRating(true);
 
         String key = "&7Click to rate &a" + arena.getDisplayName();
