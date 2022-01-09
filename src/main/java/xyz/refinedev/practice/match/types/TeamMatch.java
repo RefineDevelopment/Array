@@ -30,8 +30,6 @@ import java.util.List;
 @Getter
 public class TeamMatch extends Match {
 
-    private final Array plugin = Array.getInstance();
-
     private final Team teamA;
     private final Team teamB;
 
@@ -48,7 +46,7 @@ public class TeamMatch extends Match {
     }
 
     @Override
-    public void setupPlayer(Player player) {
+    public void setupPlayer(Array plugin, Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
         if (teamPlayer.isDisconnected()) return;
@@ -81,7 +79,7 @@ public class TeamMatch extends Match {
     }
 
     @Override
-    public void onStart() {
+    public void onStart(Array plugin) {
         if (getPlayers().size() < 1) return;
 
         if (getKit().getGameRules().isTimed())
@@ -92,15 +90,15 @@ public class TeamMatch extends Match {
                         return;
 
                     if (getDuration().equalsIgnoreCase("01:00")) {
-                        onEnd();
+                        onEnd(plugin);
                         cancel();
                     }
                 }
-            }.runTaskTimer(Array.getInstance(), 20L, 20L);
+            }.runTaskTimer(plugin, 20L, 20L);
     }
 
     @Override
-    public boolean onEnd() {
+    public boolean onEnd(Array plugin) {
         for ( TeamPlayer teamPlayer : getTeamPlayers() ) {
             if (teamPlayer.isDisconnected() || !teamPlayer.isAlive()) continue;
             Player player = teamPlayer.getPlayer();
@@ -172,7 +170,7 @@ public class TeamMatch extends Match {
     }
 
     @Override
-    public void onDeath(Player deadPlayer, Player killer) {
+    public void onDeath(Array plugin, Player deadPlayer, Player killer) {
         TeamPlayer teamPlayer = getTeamPlayer(deadPlayer);
 
         this.getSnapshots().add(new MatchSnapshot(teamPlayer));
@@ -184,7 +182,7 @@ public class TeamMatch extends Match {
         }
 
         if (this.canEnd()) {
-            this.plugin.getMatchManager().end(this);
+            plugin.getMatchManager().end(this);
         } else {
             if (!teamPlayer.isDisconnected()) {
                 deadPlayer.teleport(this.getMidSpawn());
@@ -197,7 +195,7 @@ public class TeamMatch extends Match {
     }
 
     @Override
-    public void onRespawn(Player player) {
+    public void onRespawn(Array plugin, Player player) {
     }
 
     @Override
@@ -385,14 +383,14 @@ public class TeamMatch extends Match {
     }
 
     @Override
-    public List<BaseComponent[]> generateEndComponents(Player player) {
+    public List<BaseComponent[]> generateEndComponents(Array plugin, Player player) {
         List<BaseComponent[]> componentsList = new ArrayList<>();
 
         for ( String line : Locale.MATCH_INVENTORY_MESSAGE.toList() ) {
             if (line.equalsIgnoreCase("<inventories>")) {
 
-                BaseComponent[] winners = this.plugin.getMatchManager().generateInventoriesComponents(Locale.MATCH_INVENTORY_WINNERS.toString(), getWinningTeam().getTeamPlayers());
-                BaseComponent[] losers = this.plugin.getMatchManager().generateInventoriesComponents(Locale.MATCH_INVENTORY_LOSERS.toString(), getOpponentTeam(getWinningTeam()).getTeamPlayers());
+                BaseComponent[] winners = plugin.getMatchManager().generateInventoriesComponents(Locale.MATCH_INVENTORY_WINNERS.toString(), getWinningTeam().getTeamPlayers());
+                BaseComponent[] losers = plugin.getMatchManager().generateInventoriesComponents(Locale.MATCH_INVENTORY_LOSERS.toString(), getOpponentTeam(getWinningTeam()).getTeamPlayers());
 
                 componentsList.add(winners);
                 componentsList.add(losers);

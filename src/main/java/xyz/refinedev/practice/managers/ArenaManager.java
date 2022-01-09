@@ -62,6 +62,7 @@ public class ArenaManager {
                     SharedArena sharedArena = new SharedArena(name);
                     this.load(sharedArena);
                     this.calculateRatings(sharedArena);
+                    this.arenas.add(sharedArena);
                     break;
                 }
                 case STANDALONE: {
@@ -69,6 +70,7 @@ public class ArenaManager {
                     this.load(standaloneArena);
                     this.calculateRatings(standaloneArena);
                     this.loadDuplicates(standaloneArena);
+                    this.arenas.add(standaloneArena);
                     break;
                 }
             }
@@ -139,6 +141,7 @@ public class ArenaManager {
             duplicate.setDuplicate(true);
 
             standaloneArena.getDuplicates().add(duplicate);
+            this.arenas.add(duplicate);
         }
     }
 

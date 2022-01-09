@@ -372,13 +372,13 @@ public abstract class Match {
      *
      * @param player {@link Player} being setup
      */
-    public abstract void setupPlayer(Player player);
+    public abstract void setupPlayer(Array plugin, Player player);
 
     /**
      * Execute start tasks through this method
      * This method is called as soon as the match is started
      */
-    public abstract void onStart();
+    public abstract void onStart(Array plugin);
 
     /**
      * Execute match handleEnd tasks through this method
@@ -387,7 +387,7 @@ public abstract class Match {
      *
      * @return {@link Boolean} Whether the match successfully ended or not
      */
-    public abstract boolean onEnd();
+    public abstract boolean onEnd(Array plugin);
 
     /**
      * Returns true if the match is ready to handleEnd
@@ -402,14 +402,14 @@ public abstract class Match {
      * @param player {@link Player} the player being killed
      * @param killer {@link Player} the player killing
      */
-    public abstract void onDeath(Player player, Player killer);
+    public abstract void onDeath(Array plugin, Player player, Player killer);
 
     /**
      * Execute tasks upon a player's respawn
      *
      * @param player {@link Player} the player being respawned
      */
-    public abstract void onRespawn(Player player);
+    public abstract void onRespawn(Array plugin, Player player);
 
     /**
      * Get the winning {@link Player} of a Match
@@ -512,7 +512,7 @@ public abstract class Match {
 
     public abstract Player getOpponentPlayer(Player player);
 
-    public abstract List<BaseComponent[]> generateEndComponents(Player player);
+    public abstract List<BaseComponent[]> generateEndComponents(Array plugin, Player player);
 
     public abstract ChatColor getRelationColor(Player viewer, Player target);
 }

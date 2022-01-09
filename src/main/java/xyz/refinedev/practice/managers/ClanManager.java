@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.managers;
 
+import com.google.common.base.Preconditions;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
@@ -17,6 +18,7 @@ import xyz.refinedev.practice.clan.ClanRoleType;
 import xyz.refinedev.practice.clan.meta.ClanInvite;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
 import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.task.clan.ClanInviteExpireTask;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.Clickable;
@@ -282,6 +284,8 @@ public class ClanManager {
      * @param leaver The player leaving the clan
      */
     public void leave(Clan clan, Player leaver) {
+        Preconditions.checkNotNull(leaver, "Player can not be null!");
+
         Profile profile = this.plugin.getProfileManager().getProfileByPlayer(leaver);
         ClanProfile clanProfile = this.profileMap.get(leaver.getUniqueId());
 
@@ -310,9 +314,11 @@ public class ClanManager {
      * @param uuid The uniqueId getting kicked from the Clan
      */
     public void kick(Clan clan, UUID uuid) {
+        OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+        Preconditions.checkNotNull(player, "Player can not be null!");
+
         Profile profile = this.plugin.getProfileManager().getProfileByUUID(uuid);
         ClanProfile clanProfile = this.profileMap.get(uuid);
-        OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
 
         if (clanProfile.getType() == ClanRoleType.LEADER) {
             throw new IllegalArgumentException("Leader can not leave the clan!");
@@ -339,9 +345,11 @@ public class ClanManager {
      * @param uuid The uniqueId getting banned from the Clan
      */
     public void ban(Clan clan, UUID uuid) {
+        OfflinePlayer player = this.plugin.getServer().getOfflinePlayer(uuid);
+        Preconditions.checkNotNull(player, "Player can not be null!");
+
         Profile profile = this.plugin.getProfileManager().getProfileByUUID(uuid);
         ClanProfile clanProfile = this.profileMap.get(uuid);
-        OfflinePlayer player = this.plugin.getServer().getOfflinePlayer(uuid);
 
         if (clanProfile.getType() == ClanRoleType.LEADER) {
             throw new IllegalArgumentException("Leader can not leave the clan!");
@@ -370,7 +378,11 @@ public class ClanManager {
      * @return     {@link Clan}
      */
     public Clan getByName(String name) {
-        return clans.values().stream().filter(clan -> clan.getName().equalsIgnoreCase(name)).findAny().orElse(null);
+        return clans.values()
+                .stream()
+                .filter(clan -> clan.getName().equalsIgnoreCase(name))
+                .findAny()
+                .orElse(null);
     }
 
     /**
@@ -380,6 +392,7 @@ public class ClanManager {
      * @return     {@link Clan}
      */
     public Clan getByUUID(UUID uuid) {
+        if (uuid == null) return null;
         return clans.get(uuid);
     }
 
@@ -400,7 +413,8 @@ public class ClanManager {
      * @return       {@link Clan}
      */
     public Clan getByLeader(UUID player) {
-        return clans.values().stream()
+        return clans.values()
+                .stream()
                 .filter(c -> c.getLeader().getUniqueId().equals(player))
                 .findFirst().orElse(null);
     }
@@ -413,10 +427,20 @@ public class ClanManager {
      * @return       {@link ClanInvite}
      */
     public ClanInvite getInvite(Clan clan, Player player) {
-        return clan.getInvites().stream()
+        return clan.getInvites()
+                .stream()
                 .filter(invite -> invite.getPlayer().equals(player.getUniqueId()))
                 .filter(invite -> invite.getClan().getUniqueId().equals(clan.getUniqueId()))
                 .filter(invite -> !invite.hasExpired())
                 .findAny().orElse(null);
+    }
+
+    public boolean isInFight(Clan clan) {
+        return clan.getAllMembers()
+                .stream()
+                .map(ClanProfile::getUniqueId)
+                .map(this.plugin.getProfileManager()::getProfileByUUID)
+                .filter(Objects::nonNull)
+                .anyMatch(profile -> profile.isInFight() && profile.getMatch().getQueueType().equals(QueueType.CLAN));
     }
 }

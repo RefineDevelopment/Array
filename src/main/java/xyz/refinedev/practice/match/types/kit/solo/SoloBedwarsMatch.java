@@ -43,9 +43,7 @@ public class SoloBedwarsMatch extends SoloMatch {
     //Endstone, Wood, Bed
     //
     //Wool armor fully covered
-
-    private final Array plugin = this.getPlugin();
-
+    
     private boolean playerABedDestroyed, playerBBedDestroyed;
     private List<Location> playerABed, playerBBed;
 
@@ -76,7 +74,7 @@ public class SoloBedwarsMatch extends SoloMatch {
      * @param player {@link Player} being setup
      */
     @Override
-    public void setupPlayer(Player player) {
+    public void setupPlayer(Array plugin, Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
         if (teamPlayer.isDisconnected()) return;
@@ -109,13 +107,13 @@ public class SoloBedwarsMatch extends SoloMatch {
      * This method is called as soon as the match is started
      */
     @Override
-    public void onStart() {
+    public void onStart(Array plugin) {
         this.round++;
 
         this.playerABed = LocationUtil.getNearbyBedLocations(this.getArena().getSpawn1());
         this.playerBBed = LocationUtil.getNearbyBedLocations(this.getArena().getSpawn2());
 
-        this.plugin.getMatchManager().cleanup(this);
+        plugin.getMatchManager().cleanup(this);
     }
 
     @Override
@@ -135,7 +133,7 @@ public class SoloBedwarsMatch extends SoloMatch {
     }
 
     @Override
-    public void onDeath(Player deadPlayer, Player killerPlayer) {
+    public void onDeath(Array plugin, Player deadPlayer, Player killerPlayer) {
         TeamPlayer roundLoser = getTeamPlayer(deadPlayer);
         TeamPlayer roundWinner = getOpponentTeamPlayer(deadPlayer);
 
@@ -144,33 +142,33 @@ public class SoloBedwarsMatch extends SoloMatch {
             PlayerUtil.reset(deadPlayer);
 
             this.getSnapshots().add(snapshot);
-            this.plugin.getMatchManager().cleanup(this);
+            plugin.getMatchManager().cleanup(this);
         }
 
-        this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> PlayerUtil.forceRespawn(deadPlayer));
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> PlayerUtil.forceRespawn(deadPlayer));
     }
 
     @Override
-    public void onRespawn(Player player) {
+    public void onRespawn(Array plugin, Player player) {
         TeamPlayer teamPlayer = this.getTeamPlayer(player);
 
         if (!this.isFighting()) return;
         if (teamPlayer.isDisconnected()) return;
 
         for ( Player otherPlayer : this.getPlayers() ) {
-            Profile otherProfile = this.getPlugin().getProfileManager().getProfileByPlayer(otherPlayer);
-            this.getPlugin().getProfileManager().handleVisibility(otherProfile);
+            Profile otherProfile = plugin.getProfileManager().getProfileByPlayer(otherPlayer);
+            plugin.getProfileManager().handleVisibility(otherProfile);
         }
 
-        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
-        this.getPlugin().getProfileManager().handleVisibility(profile);
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        plugin.getProfileManager().handleVisibility(profile);
 
         player.getInventory().clear();
         player.setAllowFlight(true);
         player.setFlying(true);
 
-        MatchRespawnTask respawnTask = new MatchRespawnTask(this.getPlugin(), player, this);
-        respawnTask.runTaskTimer(this.getPlugin(), 20L, 20L);
+        MatchRespawnTask respawnTask = new MatchRespawnTask(plugin, player, this);
+        respawnTask.runTaskTimer(plugin, 20L, 20L);
     }
 
     /**
@@ -178,7 +176,7 @@ public class SoloBedwarsMatch extends SoloMatch {
      *
      * @param player {@link Player} the player breaking opponent's bed
      */
-    public void handleBed(Player player) {
+    public void handleBed(Array plugin, Player player) {
         TeamPlayer teamPlayer = this.getTeamPlayer(player);
 
         if (teamPlayer == null) return;

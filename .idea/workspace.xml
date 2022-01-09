@@ -4,86 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c41a8b3-4728-4d1b-a454-565d875f3ead" name="Default Changelist" comment="[/] Bug Fixes">
+    <list default="true" id="3c41a8b3-4728-4d1b-a454-565d875f3ead" name="Default Changelist" comment="[/] Either I was an idiot or praxi was">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/adapters/NameTagAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/adapters/NameTagAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/adapters/ScoreboardAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/adapters/ScoreboardAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Array.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Array.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Locale.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Locale.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/adapters/TablistAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/adapters/TablistAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/api/ArrayAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/api/ArrayAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/clan/ClanProfileProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/clan/ClanProfileProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ArenaCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ArenaCommands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ArrayCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ArrayCommands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/arena/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/arena/Arena.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ClanCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ClanCommands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/DuelCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/DuelCommands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/PartyCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/PartyCommands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/BuildCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/BuildCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/ClanQueueCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/ClanQueueCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/KitEditorCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/KitEditorCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/LeaveQueueCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/LeaveQueueCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/RankedQueueCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/RankedQueueCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/SilentCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/SilentCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/UnrankedQueueCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/UnrankedQueueCMD.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/event/EventCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/event/EventCommands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/ToggleCPSScoreboardCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/ToggleCPSScoreboardCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/ToggleDropProtectCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/ToggleDropProtectCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/ToggleDuelCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/ToggleDuelCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/TogglePingFactorCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/TogglePingFactorCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/TogglePingScoreboardCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/TogglePingScoreboardCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/TogglePlayersCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/TogglePlayersCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/ToggleScoreboardCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/ToggleScoreboardCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/ToggleSpectatorsCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/ToggleSpectatorsCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/ToggleTournamentMessagesCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/settings/ToggleTournamentMessagesCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/AbortMatchCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/AbortMatchCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/FlyCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/FlyCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/LeaveMatchCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/LeaveMatchCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/MapCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/MapCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/RateCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/RateCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/RematchCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/RematchCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/SpectateCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/SpectateCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/SpectateMenuCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/SpectateMenuCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/StopSpecCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/StopSpecCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/duel/DuelProcedure.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/duel/DuelProcedure.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/duel/RematchProcedure.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/duel/RematchProcedure.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/duel/menu/DuelSelectArenaMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/duel/menu/DuelSelectArenaMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/duel/menu/DuelSelectKitMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/duel/menu/DuelSelectKitMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/Event.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/impl/brackets/solo/BracketsSolo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/impl/brackets/solo/BracketsSolo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/impl/brackets/team/BracketsTeam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/impl/brackets/team/BracketsTeam.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/impl/koth/Koth.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/impl/koth/Koth.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/impl/lms/LMS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/impl/lms/LMS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/impl/parkour/Parkour.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/impl/parkour/Parkour.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/impl/spleef/Spleef.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/impl/spleef/Spleef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/impl/sumo/solo/SumoSolo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/impl/sumo/solo/SumoSolo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/impl/sumo/team/SumoTeam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/impl/sumo/team/SumoTeam.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/task/EventWaterTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/event/task/EventWaterTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/hook/placeholderapi/LeaderboardPlaceholders.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/hook/placeholderapi/LeaderboardPlaceholders.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/kit/kiteditor/menu/KitEditorMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/kit/kiteditor/menu/KitEditorMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/kit/kiteditor/menu/KitEditorSelectKitMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/kit/kiteditor/menu/KitEditorSelectKitMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/kit/kiteditor/menu/KitManagementMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/kit/kiteditor/menu/KitManagementMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/leaderboards/menu/buttons/GlobalLeaderboardsButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/leaderboards/menu/buttons/GlobalLeaderboardsButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/leaderboards/menu/buttons/KitLeaderboardsButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/leaderboards/menu/buttons/KitLeaderboardsButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/ChatListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/ChatListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/GHeadListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/GHeadListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/KitEditorListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/KitEditorListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/MatchListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/MatchListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/PartyListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/PartyListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/ProfileListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/ProfileListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/PvPClassListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/PvPClassListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/QueueListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/QueueListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/event/ParkourListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/event/ParkourListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/event/SpleefListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/event/SpleefListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/event/sumo/SumoSoloListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/event/sumo/SumoSoloListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/event/sumo/SumoTeamListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/event/sumo/SumoTeamListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/ArenaManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/ArenaManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/ClanManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/ClanManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/EventManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/EventManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/MatchManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/MenuManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/MenuManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/PartyManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/PartyManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/ProfileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/ProfileManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/PvPClassManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/PvPClassManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/QueueManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/QueueManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/TournamentManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/TournamentManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/Match.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/FFAMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/FFAMatch.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/SoloMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/SoloMatch.java" afterDir="false" />
@@ -93,31 +25,9 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/kit/TeamFightMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/kit/TeamFightMatch.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/kit/solo/SoloBedwarsMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/kit/solo/SoloBedwarsMatch.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/kit/solo/SoloBridgeMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/kit/solo/SoloBridgeMatch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/kit/team/TeamBedwarsMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/kit/team/TeamBedwarsMatch.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/kit/team/TeamBridgeMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/kit/team/TeamBridgeMatch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/PartyDuelMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/PartyDuelMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/PartyListMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/PartyListMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/PartyMemberMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/PartyMemberMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/PartyPvPClassMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/PartyPvPClassMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/PartySelectKitMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/PartySelectKitMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/PartySettingsMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/PartySettingsMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/buttons/PartyDuelButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/buttons/PartyDuelButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/buttons/PartyEventButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/party/menu/buttons/PartyEventButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/ProfileProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/ProfileProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/divisions/menu/ProfileDivisionsMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/divisions/menu/ProfileDivisionsMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/menu/buttons/KEButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/menu/buttons/KEButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/settings/menu/SettingsButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/settings/menu/SettingsButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/pvpclasses/classes/Archer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/pvpclasses/classes/Archer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/pvpclasses/classes/Bard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/pvpclasses/classes/Bard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/Queue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/Queue.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/QueueThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/QueueThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/menu/QueueSelectKitMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/menu/QueueSelectKitMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/task/match/MatchBowCooldownTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/task/match/MatchBowCooldownTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/task/match/MatchPearlCooldownTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/task/match/MatchPearlCooldownTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/task/other/TournamentTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/task/other/TournamentTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/location/LocationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/location/LocationUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/EntityHider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/EntityHider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/TrackUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/TitleAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/TitleAPI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -437,7 +347,14 @@
       <option name="project" value="LOCAL" />
       <updated>1640954588248</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="[/] Either I was an idiot or praxi was">
+      <created>1641641640329</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1641641640329</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -454,7 +371,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="[+] Changed Clans to Non-Static&#10;[+] Added Usage of Common Pool instead of Executors for Mongo&#10;[/] Improved Match Performance&#10;[+] Added Events Menu&#10;[+] EventTeamSize" />
     <MESSAGE value="[+] Changed Clans to Non-Static&#10;[+] Added Usage of Common Pool instead of Executors for Mongo&#10;[/] Improved Match Performance&#10;[+] Added Events Menu&#10;[-] Removed ArrayCache.java and its usage&#10;[+] Added TrackUtil for tracking counts of player in fights and queues&#10;[+] Added PlayerUtil#getUUIDByName and PlayerUtil#getPlayerByName" />
     <MESSAGE value="[/] No Idea why these changes didn't go with previous" />
     <MESSAGE value="[+] Spleef Event&#10;[/] More Code Cleaning" />
@@ -479,7 +395,8 @@
     <MESSAGE value="[/] Semi-Completed my profile recode to adjust to json" />
     <MESSAGE value="[+] Fixed a lot of convention code problems" />
     <MESSAGE value="[/] Bug Fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="[/] Bug Fixes" />
+    <MESSAGE value="[/] Either I was an idiot or praxi was" />
+    <option name="LAST_COMMIT_MESSAGE" value="[/] Either I was an idiot or praxi was" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

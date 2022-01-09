@@ -133,16 +133,16 @@ public class MatchListener implements Listener {
 
         if (match.isBattleRushMatch()) {
             BattleRushMatch battleRushMatch = (BattleRushMatch) match;
-            battleRushMatch.handlePortal(player);
+            battleRushMatch.handlePortal(plugin, player);
             return;
         }
 
         if (match instanceof SoloBridgeMatch) {
             SoloBridgeMatch soloBridgeMatch = (SoloBridgeMatch) match;
-            soloBridgeMatch.handlePortal(player);
+            soloBridgeMatch.handlePortal(plugin, player);
         } else if (match instanceof TeamBridgeMatch) {
             TeamBridgeMatch teamBridgeMatch = (TeamBridgeMatch) match;
-            teamBridgeMatch.handlePortal(player);
+            teamBridgeMatch.handlePortal(plugin, player);
         }
     }
 
@@ -209,7 +209,7 @@ public class MatchListener implements Listener {
                     SoloBedwarsMatch soloBedwarsMatch = (SoloBedwarsMatch) match;
                     match.getChangedBlocks().add(block.getState());
                     block.setType(Material.AIR);
-                    soloBedwarsMatch.handleBed(player);
+                    soloBedwarsMatch.handleBed(plugin, player);
                     block.setType(Material.BED);
                 } else if (match instanceof TeamBedwarsMatch){
                     TeamBedwarsMatch teamBedwarsMatch = (TeamBedwarsMatch) match;
@@ -218,7 +218,7 @@ public class MatchListener implements Listener {
                     event.setCancelled(true);
 
                     MLGRushMatch mlgRushMatch = (MLGRushMatch) match;
-                    mlgRushMatch.handleBed(player);
+                    mlgRushMatch.handleBed(plugin, player);
                 }
             }
         } else if (!match.getPlacedBlocks().remove(event.getBlock().getLocation())) {

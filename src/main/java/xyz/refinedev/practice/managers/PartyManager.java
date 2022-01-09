@@ -280,7 +280,8 @@ public class PartyManager {
     public Match getMatch(UUID uuid) {
         ProfileManager profileManager = this.plugin.getProfileManager();
         Party party = this.parties.get(uuid);
-        return party.getPlayers().stream()
+        return party.getPlayers()
+                .stream()
                 .map(profileManager::getProfileByPlayer)
                 .filter(profile -> profile.isInFight() || profile.isInTournament())
                 .map(Profile::getMatch)

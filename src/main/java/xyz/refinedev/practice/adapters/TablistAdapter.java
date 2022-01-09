@@ -539,7 +539,7 @@ public class TablistAdapter implements TabAdapter {
         Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
         Match match = profile.getMatch();
-        PvPClass pvpClass = Array.getInstance().getPvpClassManager().getEquippedClass(player);
+        PvPClass pvpClass = plugin.getPvpClassManager().getEquippedClass(player);
 
         Team team = match.getTeam(player);
         Team opponentTeam = match.getOpponentTeam(player);

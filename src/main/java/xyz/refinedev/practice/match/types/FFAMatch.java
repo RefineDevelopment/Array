@@ -27,7 +27,6 @@ import java.util.List;
 
 public class FFAMatch extends Match {
 
-    private final Array plugin = this.getPlugin();
     private final Team team;
 
     public FFAMatch(Team team, Kit kit, Arena arena) {
@@ -42,7 +41,7 @@ public class FFAMatch extends Match {
     }
 
     @Override
-    public void setupPlayer(Player player) {
+    public void setupPlayer(Array plugin, Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
         if (teamPlayer.isDisconnected()) {
@@ -77,7 +76,7 @@ public class FFAMatch extends Match {
     }
 
     @Override
-    public void onStart() {
+    public void onStart(Array plugin) {
         int i = 0;
         for ( Player player : getPlayers() ) {
             Location midSpawn = this.getMidSpawn();
@@ -94,7 +93,7 @@ public class FFAMatch extends Match {
     }
 
     @Override
-    public boolean onEnd() {
+    public boolean onEnd(Array plugin) {
         for ( TeamPlayer teamPlayer : team.getTeamPlayers() ) {
             if (teamPlayer.isDisconnected() || !teamPlayer.isAlive()) continue;
             Player player = teamPlayer.getPlayer();
@@ -141,7 +140,7 @@ public class FFAMatch extends Match {
     }
 
     @Override
-    public void onDeath(Player deadPlayer, Player killer) {
+    public void onDeath(Array plugin, Player deadPlayer, Player killer) {
         TeamPlayer teamPlayer = getTeamPlayer(deadPlayer);
 
         this.getSnapshots().add(new MatchSnapshot(teamPlayer));
@@ -153,7 +152,7 @@ public class FFAMatch extends Match {
         }
 
         if (this.canEnd()) {
-            this.plugin.getMatchManager().end(this);
+            plugin.getMatchManager().end(this);
         } else {
             if (!teamPlayer.isDisconnected()) {
                 deadPlayer.teleport(this.getMidSpawn());
@@ -166,7 +165,7 @@ public class FFAMatch extends Match {
     }
 
     @Override
-    public void onRespawn(Player player) {
+    public void onRespawn(Array plugin, Player player) {
     }
 
     @Override
@@ -263,14 +262,14 @@ public class FFAMatch extends Match {
     }
 
     @Override
-    public List<BaseComponent[]> generateEndComponents(Player player) {
+    public List<BaseComponent[]> generateEndComponents(Array plugin, Player player) {
         List<BaseComponent[]> componentsList = new ArrayList<>();
 
         for ( String line : Locale.MATCH_INVENTORY_MESSAGE.toList() ) {
             if (line.equalsIgnoreCase("<inventories>")) {
 
-                BaseComponent[] winners = this.plugin.getMatchManager().generateInventoriesComponents(Locale.MATCH_INVENTORY_WINNERS.toString(), this.getTeamPlayer(this.getWinningPlayer()));
-                BaseComponent[] losers = this.plugin.getMatchManager().generateInventoriesComponents(Locale.MATCH_INVENTORY_LOSERS.toString(), this.team.getDeadTeamPlayers());
+                BaseComponent[] winners = plugin.getMatchManager().generateInventoriesComponents(Locale.MATCH_INVENTORY_WINNERS.toString(), this.getTeamPlayer(this.getWinningPlayer()));
+                BaseComponent[] losers = plugin.getMatchManager().generateInventoriesComponents(Locale.MATCH_INVENTORY_LOSERS.toString(), this.team.getDeadTeamPlayers());
 
                 componentsList.add(winners);
                 componentsList.add(losers);

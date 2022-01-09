@@ -113,7 +113,7 @@ public class Array extends JavaPlugin {
         this.configHandler = new ConfigHandler(this);
         this.configHandler.init();
 
-        Locale.init();
+        Locale.init(this);
 
         if (!Description.getAuthor().contains("RefineDevelopment") || !Description.getName().contains("Array")
            || !Description.getAuthor().contains("Nick_0251") || !Description.getWebsite().equalsIgnoreCase("https://dsc.gg/refine")) {

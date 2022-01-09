@@ -50,7 +50,7 @@ public class CommandsManager {
         drink.register(new ArrayCommands(plugin), "array", "practice");
         drink.register(new ArenaCommands(plugin), "arena", "arenas");
         drink.register(new KitCommands(plugin), "kit", "kits");
-        drink.register(new DuelCommands(plugin), "duel");
+        drink.register(new DuelCommands(plugin, plugin.getCoreHandler()), "duel");
         drink.register(new RematchCommand(plugin), "rematch");
         drink.register(new PartyCommands(plugin), "party", "p");
         drink.register(new TournamentCommands(plugin), "tournament", "tourney");

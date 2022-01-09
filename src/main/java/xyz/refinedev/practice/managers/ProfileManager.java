@@ -504,7 +504,7 @@ public class ProfileManager {
             }
         } else if (profile.isSpectating()) {
             if (profile.isInEvent()) {
-                Event event = profile.getEvent();
+                Event event = plugin.getEventManager().getEventByUUID(profile.getEvent());
                 EventPlayer eventPlayer = event.getEventPlayer(otherPlayer.getUniqueId());
                 if (eventPlayer != null && eventPlayer.getState() == EventPlayerState.WAITING) {
                     hide = false;
@@ -521,7 +521,7 @@ public class ProfileManager {
                 }
             }
         } else if (profile.isInEvent()) {
-            Event event = profile.getEvent();
+            Event event = plugin.getEventManager().getEventByUUID(profile.getEvent());
             if (!event.isSpectating(otherPlayer.getUniqueId())) {
                 EventPlayer eventPlayer = event.getEventPlayer(otherPlayer.getUniqueId());
                 if (eventPlayer != null && eventPlayer.getState() == EventPlayerState.WAITING) {
@@ -566,7 +566,8 @@ public class ProfileManager {
         profile.setEnderpearlCooldown(cooldown);
         Player player = profile.getPlayer();
 
-        if (plugin.getServer().getPluginManager().isPluginEnabled("LunarClient-API")) LunarClientAPICooldown.sendCooldown(player, "Enderpearl");
+        if (plugin.getServer().getPluginManager().isPluginEnabled("LunarClient-API"))
+            LunarClientAPICooldown.sendCooldown(player, "Enderpearl");
     }
 
     /**

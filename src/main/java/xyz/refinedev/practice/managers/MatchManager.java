@@ -139,7 +139,7 @@ public class MatchManager {
      * @param match {@link Match} the match ending
      */
     public void end(Match match) {
-        if (!match.onEnd()) return;
+        if (!match.onEnd(plugin)) return;
 
         match.setState(MatchState.ENDING);
 
@@ -176,14 +176,14 @@ public class MatchManager {
             if (gamePlayer == null) return;
             Player player = gamePlayer.getPlayer();
             if (gamePlayer.isDisconnected() || player == null) continue;
-            for ( BaseComponent[] components :  match.generateEndComponents(player) ) {
+            for ( BaseComponent[] components :  match.generateEndComponents(plugin, player) ) {
                 player.spigot().sendMessage(components);
             }
         }
 
         for (Player player : match.getSpectators()) {
             if (player == null) return;
-            for (BaseComponent[] components : match.generateEndComponents(player)) {
+            for (BaseComponent[] components : match.generateEndComponents(plugin, player)) {
                 player.spigot().sendMessage(components);
             }
             this.removeSpectator(match, player);

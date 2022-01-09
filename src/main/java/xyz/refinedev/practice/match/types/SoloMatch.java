@@ -42,8 +42,6 @@ import java.util.UUID;
 @Getter @Setter
 public class SoloMatch extends Match {
 
-    private final Array plugin = this.getPlugin();
-
     private final TeamPlayer playerA;
     private final TeamPlayer playerB;
 
@@ -89,7 +87,7 @@ public class SoloMatch extends Match {
      * @param player {@link Player} being setup
      */
     @Override
-    public void setupPlayer(Player player) {
+    public void setupPlayer(Array plugin, Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
         if (teamPlayer.isDisconnected()) return;
@@ -131,14 +129,14 @@ public class SoloMatch extends Match {
      * This method is called as soon as the match is started
      */
     @Override
-    public void onStart() {
+    public void onStart(Array plugin) {
         if (this.getKit().getGameRules().isTimed()) {
             new MatchTimedTask(plugin, this).runTaskTimer(plugin, 20L, 20L);
         }
     }
 
     @Override
-    public boolean onEnd() {
+    public boolean onEnd(Array plugin) {
         UUID rematchKey = UUID.randomUUID();
 
         for (TeamPlayer teamPlayer : new TeamPlayer[]{getTeamPlayerA(), getTeamPlayerB()}) {
@@ -261,8 +259,8 @@ public class SoloMatch extends Match {
         }
 
         if (getQueueType() == QueueType.CLAN) {
-            Clan winningClan = winningProfile.getClan();
-            Clan losingClan = losingProfile.getClan();
+            Clan winningClan = plugin.getClanManager().getByUUID(winningProfile.getClan());
+            Clan losingClan = plugin.getClanManager().getByUUID(losingProfile.getClan());
 
             int oldWinnerElo = winningClan.getElo();
             int oldLoserElo = losingClan.getElo();
@@ -460,7 +458,7 @@ public class SoloMatch extends Match {
     }
 
     @Override
-    public void onDeath(Player deadPlayer, Player killerPlayer) {
+    public void onDeath(Array plugin, Player deadPlayer, Player killerPlayer) {
         TeamPlayer roundLoser = getTeamPlayer(deadPlayer);
         TeamPlayer roundWinner = getOpponentTeamPlayer(deadPlayer);
 
@@ -476,7 +474,7 @@ public class SoloMatch extends Match {
         }
 
         if (this.canEnd()) {
-            this.plugin.getMatchManager().end(this);
+            plugin.getMatchManager().end(this);
         } else {
             if (!roundLoser.isDisconnected()) {
                 deadPlayer.teleport(getMidSpawn());
@@ -490,7 +488,7 @@ public class SoloMatch extends Match {
     }
 
     @Override
-    public void onRespawn(Player player) {
+    public void onRespawn(Array plugin, Player player) {
         Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
         plugin.getProfileManager().teleportToSpawn(profile);
     }
@@ -520,14 +518,14 @@ public class SoloMatch extends Match {
     }
 
     @Override
-    public List<BaseComponent[]> generateEndComponents(Player player) {
+    public List<BaseComponent[]> generateEndComponents(Array plugin, Player player) {
         List<BaseComponent[]> componentsList = new ArrayList<>();
 
         for ( String line : Locale.MATCH_INVENTORY_MESSAGE.toList() ) {
             if (line.equalsIgnoreCase("<inventories>")) {
 
-                BaseComponent[] winners = this.plugin.getMatchManager().generateInventoriesComponents(Locale.MATCH_INVENTORY_WINNER.toString(), getTeamPlayer(getWinningPlayer()));
-                BaseComponent[] losers = this.plugin.getMatchManager().generateInventoriesComponents(Locale.MATCH_INVENTORY_LOSER.toString(), getOpponentTeamPlayer(getWinningPlayer()));
+                BaseComponent[] winners = plugin.getMatchManager().generateInventoriesComponents(Locale.MATCH_INVENTORY_WINNER.toString(), getTeamPlayer(getWinningPlayer()));
+                BaseComponent[] losers = plugin.getMatchManager().generateInventoriesComponents(Locale.MATCH_INVENTORY_LOSER.toString(), getOpponentTeamPlayer(getWinningPlayer()));
 
                 ChatComponentBuilder builder = new ChatComponentBuilder("");
 

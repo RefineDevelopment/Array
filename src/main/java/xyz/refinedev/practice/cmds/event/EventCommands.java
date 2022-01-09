@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.event.Event;
+import xyz.refinedev.practice.event.EventHelperUtil;
 import xyz.refinedev.practice.event.EventState;
 import xyz.refinedev.practice.event.menu.EventSelectMenu;
 import xyz.refinedev.practice.event.menu.EventTeamMenu;
@@ -80,13 +81,18 @@ public class EventCommands {
     @Command(name = "cancel", aliases = "stop", desc = "Cancel an ongoing event")
     @Require("array.event.admin")
     public void cancel(@Sender CommandSender sender) {
-        final Event event = Array.getInstance().getEventManager().getActiveEvent();
+        final Event event = plugin.getEventManager().getActiveEvent();
         if (event == null) {
             sender.sendMessage(Locale.ERROR_NOTACTIVE.toString());
             return;
         }
 
-        plugin.getProfileManager().getProfiles().values().stream().filter(profile -> !profile.getKitEditor().isActive()).filter(Profile::isInLobby).forEach(plugin.getProfileManager()::refreshHotbar);
+        for ( Profile profile : plugin.getProfileManager().getProfiles().values() ) {
+            if (profile.getKitEditor().isActive() || !profile.isInLobby()) continue;
+
+            plugin.getProfileManager().refreshHotbar(profile);
+        }
+
         event.handleEnd();
     }
 
@@ -107,7 +113,7 @@ public class EventCommands {
             player.sendMessage(Locale.EVENT_ALREADY_STARTED.toString());
             return;
         }
-        if (event.getEventManager().isUnfinished(event)) {
+        if (EventHelperUtil.isUnfinished(event)) {
             player.sendMessage(Locale.EVENT_NOT_SETUP.toString());
             event.handleEnd();
             return;
@@ -157,7 +163,7 @@ public class EventCommands {
         Locale.EVENT_INFO.toList().stream().map(line -> {
             return line
                     .replace("<event_state>", event.getState().name())
-                    .replace("<event_host>", event.getHost().getUsername())
+                    .replace("<event_host>", event.getHost())
                     .replace("<event_alive_players>", String.valueOf(event.getRemainingPlayers().size()))
                     .replace("<event_max_players>", String.valueOf(event.getMaxPlayers()))
                     .replace("<event_type>", event.getType().getName())

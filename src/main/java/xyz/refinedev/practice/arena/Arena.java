@@ -25,7 +25,6 @@ import java.util.List;
 @Getter @Setter
 public abstract class Arena {
 
-    private final Array plugin = Array.getInstance();
     private List<Kit> kits = new ArrayList<>();
 
     private final String name;
@@ -43,8 +42,6 @@ public abstract class Arena {
         this.name = name;
         this.type = arenaType;
         this.displayName = CC.RED + name;
-
-        plugin.getArenaManager().getArenas().add(this);
     }
 
     public int getMaxBuildHeight() {

@@ -14,6 +14,7 @@ import xyz.refinedev.practice.match.types.TeamMatch;
  * Project: Array
  */
 
+//TODO: lol
 public class TeamBedwarsMatch extends TeamMatch {
 
     public TeamBedwarsMatch(Team teamA, Team teamB, Kit kit, Arena arena) {

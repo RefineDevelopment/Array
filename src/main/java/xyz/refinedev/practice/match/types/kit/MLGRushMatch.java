@@ -39,8 +39,6 @@ import java.util.List;
 @Getter
 public class MLGRushMatch extends SoloMatch {
 
-    private final Array plugin = Array.getInstance();
-
     private int playerAPoints = 0;
     private int playerBPoints = 0;
 
@@ -73,7 +71,7 @@ public class MLGRushMatch extends SoloMatch {
      * @param player {@link Player} being setup
      */
     @Override
-    public void setupPlayer(Player player) {
+    public void setupPlayer(Array plugin, Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
         if (teamPlayer.isDisconnected()) return;
@@ -106,13 +104,13 @@ public class MLGRushMatch extends SoloMatch {
      * This method is called as soon as the match is started
      */
     @Override
-    public void onStart() {
+    public void onStart(Array plugin) {
         this.round++;
 
         this.playerABed = LocationUtil.getNearbyBedLocations(this.getArena().getSpawn1());
         this.playerBBed = LocationUtil.getNearbyBedLocations(this.getArena().getSpawn2());
 
-        this.plugin.getMatchManager().cleanup(this);
+        plugin.getMatchManager().cleanup(this);
     }
 
     @Override
@@ -132,7 +130,7 @@ public class MLGRushMatch extends SoloMatch {
     }
 
     @Override
-    public void onDeath(Player deadPlayer, Player killerPlayer) {
+    public void onDeath(Array plugin, Player deadPlayer, Player killerPlayer) {
         TeamPlayer roundLoser = getTeamPlayer(deadPlayer);
         TeamPlayer roundWinner = getOpponentTeamPlayer(deadPlayer);
 
@@ -141,31 +139,31 @@ public class MLGRushMatch extends SoloMatch {
             PlayerUtil.reset(deadPlayer);
 
             this.getSnapshots().add(snapshot);
-            this.plugin.getMatchManager().end(this);
+            plugin.getMatchManager().end(this);
         }
 
-        this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(this.getPlugin(), () -> PlayerUtil.forceRespawn(deadPlayer));
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> PlayerUtil.forceRespawn(deadPlayer));
     }
 
     @Override
-    public void onRespawn(Player player) {
+    public void onRespawn(Array plugin, Player player) {
         TeamPlayer teamPlayer = this.getTeamPlayer(player);
 
         if (!this.isFighting()) return;
         if (teamPlayer.isDisconnected()) return;
 
         for ( Player otherPlayer : this.getPlayers() ) {
-            Profile otherProfile = this.getPlugin().getProfileManager().getProfileByPlayer(otherPlayer);
-            this.getPlugin().getProfileManager().handleVisibility(otherProfile);
+            Profile otherProfile = plugin.getProfileManager().getProfileByPlayer(otherPlayer);
+            plugin.getProfileManager().handleVisibility(otherProfile);
         }
 
-        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
-        this.getPlugin().getProfileManager().refreshHotbar(profile);
-        this.getPlugin().getProfileManager().handleVisibility(profile);
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        plugin.getProfileManager().refreshHotbar(profile);
+        plugin.getProfileManager().handleVisibility(profile);
 
-        player.setMetadata("noDenyMove", new FixedMetadataValue(this.getPlugin(), true));
+        player.setMetadata("noDenyMove", new FixedMetadataValue(plugin, true));
 
-        TaskUtil.runLater(() -> this.setupPlayer(player), 2L);
+        TaskUtil.runLater(() -> this.setupPlayer(plugin, player), 2L);
     }
 
     /**
@@ -173,7 +171,7 @@ public class MLGRushMatch extends SoloMatch {
      *
      * @param player {@link Player} the player entering the portal
      */
-    public void handleBed(Player player) {
+    public void handleBed(Array plugin, Player player) {
         TeamPlayer teamPlayer = this.getTeamPlayer(player);
 
         if (teamPlayer == null) return;
@@ -191,11 +189,11 @@ public class MLGRushMatch extends SoloMatch {
         }
 
         if (this.canEnd()) {
-            this.plugin.getMatchManager().end(this);
+            plugin.getMatchManager().end(this);
             return;
         }
 
-        TaskUtil.run(() -> this.plugin.getMatchManager().start(this));
+        TaskUtil.run(() -> plugin.getMatchManager().start(this));
     }
 
     /**

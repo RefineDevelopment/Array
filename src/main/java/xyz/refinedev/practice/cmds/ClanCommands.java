@@ -213,19 +213,23 @@ public class ClanCommands {
            return;
        }
 
+       if (this.plugin.getClanManager().isInFight(clan)) {
+           player.sendMessage(Locale.CLAN_IN_FIGHT.toString());
+           return;
+       }
+
        this.plugin.getClanManager().delete(clan);
     }
 
     @Command(name = "information", aliases = "info", desc = "View information about your Clan")
     public void information(@Sender Player player) {
         Profile profile = this.plugin.getProfileManager().getProfileByPlayer(player);
-        Clan clan = this.plugin.getClanManager().getByUUID(profile.getClan());
-
-        if (clan == null) {
+        if (!profile.hasClan()) {
             player.sendMessage(Locale.CLAN_DONOTHAVE.toString());
             return;
         }
 
+        Clan clan = this.plugin.getClanManager().getByUUID(profile.getClan());
         this.plugin.getClanManager().information(clan, player);
     }
 

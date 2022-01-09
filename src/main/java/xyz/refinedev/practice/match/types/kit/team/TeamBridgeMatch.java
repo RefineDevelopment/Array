@@ -40,9 +40,7 @@ import java.util.List;
 //TODO: Add KitEditor for Bridge Kit
 @Getter @Setter
 public class TeamBridgeMatch extends TeamMatch {
-
-    private final Array plugin = this.getPlugin();
-
+    
     private int teamAPoints = 0;
     private int teamBPoints = 0;
 
@@ -55,7 +53,7 @@ public class TeamBridgeMatch extends TeamMatch {
     }
 
     @Override
-    public void setupPlayer(Player player) {
+    public void setupPlayer(Array plugin, Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
 
         if (teamPlayer.isDisconnected()) return;
@@ -68,23 +66,23 @@ public class TeamBridgeMatch extends TeamMatch {
         if (this.getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
         if (this.getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
-        this.getPlugin().getSpigotHandler().kitKnockback(player, getKit());
+        plugin.getSpigotHandler().kitKnockback(player, getKit());
         player.setNoDamageTicks(this.getKit().getGameRules().getHitDelay());
 
         Location spawn = this.getTeamA().containsPlayer(player) ? this.getArena().getSpawn1() : this.getArena().getSpawn2();
-        player.teleport(spawn.add(0, this.getPlugin().getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
+        player.teleport(spawn.add(0, plugin.getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
 
         teamPlayer.setPlayerSpawn(spawn);
 
         this.getKit().applyToPlayer(player);
         this.giveBridgeKit(player);
 
-        this.getPlugin().getNameTagHandler().reloadPlayer(player);
-        this.getPlugin().getNameTagHandler().reloadOthersFor(player);
+        plugin.getNameTagHandler().reloadPlayer(player);
+        plugin.getNameTagHandler().reloadOthersFor(player);
     }
 
     @Override
-    public void onStart() {
+    public void onStart(Array plugin) {
         this.round++;
 
         this.teamAPortals = LocationUtil.getNearbyPortalLocations(this.getArena().getSpawn1());
@@ -114,7 +112,7 @@ public class TeamBridgeMatch extends TeamMatch {
     }
 
     @Override
-    public void onDeath(Player deadPlayer, Player killerPlayer) {
+    public void onDeath(Array plugin, Player deadPlayer, Player killerPlayer) {
         TeamPlayer loser = this.getTeamPlayer(deadPlayer);
 
         if (this.canEnd()) {
@@ -122,33 +120,33 @@ public class TeamBridgeMatch extends TeamMatch {
             PlayerUtil.reset(deadPlayer);
 
             this.getSnapshots().add(snapshot);
-            this.plugin.getMatchManager().end(this);
+            plugin.getMatchManager().end(this);
         } else if (this.getTeamA().containsPlayer(deadPlayer) && this.getTeamAPoints() == 3 || this.getTeamB().containsPlayer(deadPlayer) && this.getTeamBPoints() == 3) {
             this.getSnapshots().add(new MatchSnapshot(loser));
         }
 
-        this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(this.getPlugin(), () -> PlayerUtil.forceRespawn(deadPlayer));
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> PlayerUtil.forceRespawn(deadPlayer));
     }
 
     @Override
-    public void onRespawn(Player player) {
+    public void onRespawn(Array plugin, Player player) {
         TeamPlayer teamPlayer = this.getTeamPlayer(player);
 
         if (!this.isFighting()) return;
         if (teamPlayer.isDisconnected()) return;
 
         for ( Player otherPlayer : this.getPlayers() ) {
-            Profile otherProfile = this.getPlugin().getProfileManager().getProfileByPlayer(otherPlayer);
-            this.getPlugin().getProfileManager().handleVisibility(otherProfile);
+            Profile otherProfile = plugin.getProfileManager().getProfileByPlayer(otherPlayer);
+            plugin.getProfileManager().handleVisibility(otherProfile);
         }
 
-        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
-        this.getPlugin().getProfileManager().refreshHotbar(profile);
-        this.getPlugin().getProfileManager().handleVisibility(profile);
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        plugin.getProfileManager().refreshHotbar(profile);
+        plugin.getProfileManager().handleVisibility(profile);
 
-        player.setMetadata("noDenyMove", new FixedMetadataValue(this.getPlugin(), true));
+        player.setMetadata("noDenyMove", new FixedMetadataValue(plugin, true));
 
-        TaskUtil.runLater(() -> this.setupPlayer(player), 2L);
+        TaskUtil.runLater(() -> this.setupPlayer(plugin, player), 2L);
     }
 
     public boolean isVolatileLocation(Location location) {
@@ -156,9 +154,9 @@ public class TeamBridgeMatch extends TeamMatch {
         occupiedLocations.addAll(teamAPortals);
         occupiedLocations.addAll(teamBPortals);
 
-        for ( Location volatileLocations :  occupiedLocations) {
-            Cuboid cuboid = new Cuboid(new Location(location.getWorld(), (location.getBlockX() - 5), (location.getBlockY() - 5), (location.getBlockZ() - 5)),
-                    new Location(location.getWorld(), (location.getBlockX() + 5), (location.getBlockY() + 5), (location.getBlockZ() + 5)));
+        for ( Location volatileLocation :  occupiedLocations) {
+            Cuboid cuboid = new Cuboid(new Location(volatileLocation.getWorld(), (volatileLocation.getBlockX() - 5), (volatileLocation.getBlockY() - 5), (volatileLocation.getBlockZ() - 5)),
+                    new Location(volatileLocation.getWorld(), (volatileLocation.getBlockX() + 5), (volatileLocation.getBlockY() + 5), (volatileLocation.getBlockZ() + 5)));
 
             if (!cuboid.contains(location)) return false;
         }
@@ -170,7 +168,7 @@ public class TeamBridgeMatch extends TeamMatch {
      *
      * @param player {@link Player} the player entering the portal
      */
-    public void handlePortal(Player player) {
+    public void handlePortal(Array plugin, Player player) {
         TeamPlayer teamPlayer = this.getTeamPlayer(player);
 
         if (teamPlayer == null) return;
@@ -188,11 +186,11 @@ public class TeamBridgeMatch extends TeamMatch {
         }
 
         if (this.canEnd()) {
-            this.plugin.getMatchManager().end(this);
+            plugin.getMatchManager().end(this);
             return;
         }
 
-        TaskUtil.run(() -> this.plugin.getMatchManager().start(this));
+        TaskUtil.run(() -> plugin.getMatchManager().start(this));
     }
 
     /**

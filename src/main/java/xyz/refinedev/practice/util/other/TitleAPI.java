@@ -20,7 +20,7 @@ import java.lang.reflect.Constructor;
 @UtilityClass
 public class TitleAPI {
 
-    private final BasicConfigurationFile configHandler = Array.getInstance().getMainConfig();
+    private final BasicConfigurationFile config = Array.getInstance().getMainConfig();
 
     public void sendPacket(Player player, Object packet) {
         try {
@@ -92,14 +92,14 @@ public class TitleAPI {
 
     public void sendMatchStart(Player player) {
         String path = "MATCH.TITLE.STARTED";
-        if (!configHandler.contains(path)) return;
-        if (!configHandler.getBoolean(path + "ENABLED")) return;
+        if (!config.contains(path)) return;
+        if (!config.getBoolean(path + "ENABLED")) return;
 
-        int stay = configHandler.getInteger(path + "STAY", 5);
-        int fadeIn = configHandler.getInteger(path + "FADE_IN", 20);
-        int fadeOut = configHandler.getInteger(path + "FADE_OUT", 20);
-        String text = configHandler.getString(path + "TEXT");
-        String subtitle = configHandler.getString(path + "SUB_TEXT");
+        int stay = config.getInteger(path + "STAY", 5);
+        int fadeIn = config.getInteger(path + "FADE_IN", 20);
+        int fadeOut = config.getInteger(path + "FADE_OUT", 20);
+        String text = config.getString(path + "TEXT");
+        String subtitle = config.getString(path + "SUB_TEXT");
 
         if (subtitle != null && !subtitle.equalsIgnoreCase(" ") && !subtitle.equalsIgnoreCase("")) {
             sendTitle(player, fadeIn, stay, fadeOut, text, subtitle);
@@ -110,14 +110,14 @@ public class TitleAPI {
 
     public void sendMatchCountdown(Player player) {
         String path = "MATCH.TITLE.COUNTDOWN";
-        if (!configHandler.contains(path)) return;
-        if (!configHandler.getBoolean(path + "ENABLED")) return;
+        if (!config.contains(path)) return;
+        if (!config.getBoolean(path + "ENABLED")) return;
 
-        int stay = configHandler.getInteger(path + "STAY", 5);
-        int fadeIn = configHandler.getInteger(path + "FADE_IN", 20);
-        int fadeOut = configHandler.getInteger(path + "FADE_OUT", 20);
-        String text = configHandler.getString(path + "TEXT");
-        String subtitle = configHandler.getString(path + "SUB_TEXT");
+        int stay = config.getInteger(path + "STAY", 5);
+        int fadeIn = config.getInteger(path + "FADE_IN", 20);
+        int fadeOut = config.getInteger(path + "FADE_OUT", 20);
+        String text = config.getString(path + "TEXT");
+        String subtitle = config.getString(path + "SUB_TEXT");
 
         if (subtitle != null && !subtitle.equalsIgnoreCase(" ") && !subtitle.equalsIgnoreCase("")) {
             sendTitle(player, fadeIn, stay, fadeOut, text, subtitle);
@@ -128,14 +128,14 @@ public class TitleAPI {
 
     public void sendRespawnCountdown(Player player, int tick) {
         String path = "MATCH.TITLE.RESPAWN_COUNTDOWN";
-        if (!configHandler.contains(path)) return;
-        if (!configHandler.getBoolean(path + "ENABLED")) return;
+        if (!config.contains(path)) return;
+        if (!config.getBoolean(path + "ENABLED")) return;
 
-        int stay = configHandler.getInteger(path + "STAY", 5);
-        int fadeIn = configHandler.getInteger(path + "FADE_IN", 20);
-        int fadeOut = configHandler.getInteger(path + "FADE_OUT", 20);
-        String text = configHandler.getString(path + "TEXT").replace("<seconds>", String.valueOf(tick));
-        String subtitle = configHandler.getString(path + "SUB_TEXT");
+        int stay = config.getInteger(path + "STAY", 5);
+        int fadeIn = config.getInteger(path + "FADE_IN", 20);
+        int fadeOut = config.getInteger(path + "FADE_OUT", 20);
+        String text = config.getString(path + "TEXT").replace("<seconds>", String.valueOf(tick));
+        String subtitle = config.getString(path + "SUB_TEXT");
 
         if (subtitle != null && !subtitle.equalsIgnoreCase(" ") && !subtitle.equalsIgnoreCase("")) {
             sendTitle(player, fadeIn, stay, fadeOut, text, subtitle.replace("<seconds>", String.valueOf(tick)));
@@ -146,14 +146,14 @@ public class TitleAPI {
 
     public void sendMatchWinner(Player player) {
         String path = "MATCH.TITLE.WINNER";
-        if (!configHandler.contains(path)) return;
-        if (!configHandler.getBoolean(path + "ENABLED")) return;
+        if (!config.contains(path)) return;
+        if (!config.getBoolean(path + "ENABLED")) return;
 
-        int stay = configHandler.getInteger(path + "STAY", 5);
-        int fadeIn = configHandler.getInteger(path + "FADE_IN", 20);
-        int fadeOut = configHandler.getInteger(path + "FADE_OUT", 20);
-        String text = configHandler.getString(path + "TEXT");
-        String subtitle = configHandler.getString(path + "SUB_TEXT");
+        int stay = config.getInteger(path + "STAY", 5);
+        int fadeIn = config.getInteger(path + "FADE_IN", 20);
+        int fadeOut = config.getInteger(path + "FADE_OUT", 20);
+        String text = config.getString(path + "TEXT");
+        String subtitle = config.getString(path + "SUB_TEXT");
 
         if (subtitle != null && !subtitle.equalsIgnoreCase(" ") && !subtitle.equalsIgnoreCase("")) {
             sendTitle(player, fadeIn, stay, fadeOut, text, subtitle);
@@ -164,14 +164,14 @@ public class TitleAPI {
 
     public void sendMatchLoser(Player player) {
         String path = "MATCH.TITLE.LOSER";
-        if (!configHandler.contains(path)) return;
-        if (!configHandler.getBoolean(path + "ENABLED")) return;
+        if (!config.contains(path)) return;
+        if (!config.getBoolean(path + "ENABLED")) return;
 
-        int stay = configHandler.getInteger(path + "STAY", 5);
-        int fadeIn = configHandler.getInteger(path + "FADE_IN", 20);
-        int fadeOut = configHandler.getInteger(path + "FADE_OUT", 20);
-        String text = configHandler.getString(path + "TEXT");
-        String subtitle = configHandler.getString(path + "SUB_TEXT");
+        int stay = config.getInteger(path + "STAY", 5);
+        int fadeIn = config.getInteger(path + "FADE_IN", 20);
+        int fadeOut = config.getInteger(path + "FADE_OUT", 20);
+        String text = config.getString(path + "TEXT");
+        String subtitle = config.getString(path + "SUB_TEXT");
 
         if (subtitle != null && !subtitle.equalsIgnoreCase(" ") && !subtitle.equalsIgnoreCase("")) {
             sendTitle(player, fadeIn, stay, fadeOut, text, subtitle);
@@ -182,14 +182,14 @@ public class TitleAPI {
 
     public void sendBedDestroyed(Player player) {
         String path = "MATCH.TITLE.BED_DESTROYED";
-        if (!configHandler.contains(path)) return;
-        if (!configHandler.getBoolean(path + "ENABLED")) return;
+        if (!config.contains(path)) return;
+        if (!config.getBoolean(path + "ENABLED")) return;
 
-        int stay = configHandler.getInteger(path + "STAY", 5);
-        int fadeIn = configHandler.getInteger(path + "FADE_IN", 20);
-        int fadeOut = configHandler.getInteger(path + "FADE_OUT", 20);
-        String text = configHandler.getString(path + "TEXT");
-        String subtitle = configHandler.getString(path + "SUB_TEXT");
+        int stay = config.getInteger(path + "STAY", 5);
+        int fadeIn = config.getInteger(path + "FADE_IN", 20);
+        int fadeOut = config.getInteger(path + "FADE_OUT", 20);
+        String text = config.getString(path + "TEXT");
+        String subtitle = config.getString(path + "SUB_TEXT");
 
         if (subtitle != null && !subtitle.equalsIgnoreCase(" ") && !subtitle.equalsIgnoreCase("")) {
             sendTitle(player, fadeIn, stay, fadeOut, text, subtitle);

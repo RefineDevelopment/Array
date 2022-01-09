@@ -112,6 +112,7 @@ public enum Locale {
     CLAN_ALREADYHAVE("CLAN.ALREADY_HAVE", "&7[&cClan&7] &7That player already has a Clan!"),
     CLAN_ALREADYINVITED("CLAN.ALREADY_INVITED", "&7[&cClan&7] &7That player has already been invited!"),
     CLAN_INVITED_BROADCAST("CLAN.INVITE_BROADCAST", "&7[&c&lClan&7] &c<invited> &7has been invited to the clan!"),
+    CLAN_IN_FIGHT("CLAN.IN_FIGHT", "&7[&c&lClan&7] &7A Clan member from your Clan is in a clan match, please wait before disbanding!"),
     CLAN_NOT_CAPTAIN("CLAN.NOT_CAPTAIN", "&7[&c&lClan&7] &7You are not the captain of any Clan!"),
     CLAN_SELF_PROMOTE("CLAN.SELF_PROMOTE", "&7[&c&lClan&7] &7You can't self promote!"),
     CLAN_KICKED("CLAN.KICKED_BROADCAST", "&7[&cClan&7] &c<player> &7has been kicked from the Clan!"),
@@ -127,7 +128,24 @@ public enum Locale {
     CLAN_LEADER_LEAVE("CLAN.LEADER_LEAVE", "&7[&cClan&7] &7The Leader can not leave the Clan, use &c/clan disband &7to disband your Clan!"),
     CLAN_IS_BANNED("CLAN.PLAYER_BANNED", "&7[&c&lClan&7] &7That player has been banned from this clan, use &c/clan unban <profile> &7to unban."),
     CLAN_CHAT_FORMAT("CLAN.CHAT_FORMAT", "&7[&c&lClan&7] &c<player_displayname> &7» &f<message>"),
-    CLAN_HELP("CLAN.HELP_MESSAGE", Arrays.asList("&c&m--------&7&m-------------------------------------&c&m--------", "&cClan Commands", "&c&m--------&7&m-------------------------------------&c&m--------", " &8\u2022 &c/clan create &8<&7name&8> &8(&7&oCreate a Clan&8)", " &8\u2022 &c/clan disband &8(&7&oDisband your Clan&8)", " &8\u2022 &c/clan chat &8(&7&oToggle your Clan Chat Mode&8)", " &8\u2022 &c/clan accept &8<&7leader&8> &8(&7&oAccept a Clan Invitation&8)", " &8\u2022 &c/clan leave &8(&7&oLeave your Current Clan&8)", " &8\u2022 &c/clan info &8(&7&oView information about your Clan&8)", " &8\u2022 &c/clan invite &8<&7profile&8> &8(&7&oInvite a Profile to your Clan&8)", " &8\u2022 &c/clan kick &8<&7profile&8> &8(&7&oKick a Profile from your Clan&8)", " &8\u2022 &c/clan ban &8<&7profile&8> &8(&7&oBan a Profile from your Clan&8)", " &8\u2022 &c/clan promote &8<&7profile&8> &8(&7&oPromote a Profile to Captain&8)", " &8\u2022 &c/clan demote &8<&7profile&8> &8(&7&oDemote a Profile to Member&8)", " &8\u2022 &c/clan leader &8<&7profile&8> &8(&7&oPromote a Profile to Leader&8)", " &8\u2022 &c/clan description &8<&7text&8> &8(&7&oSet your Clan's Description&8)", "&c&m--------&7&m-------------------------------------&c&m--------")),
+    CLAN_HELP("CLAN.HELP_MESSAGE", Arrays.asList(
+            "&c&m--------&7&m-------------------------------------&c&m--------",
+            "&cClan Commands",
+            "&c&m--------&7&m-------------------------------------&c&m--------",
+            " &8\u2022 &c/clan create &8<&7name&8> &8(&7&oCreate a Clan&8)",
+            " &8\u2022 &c/clan disband &8(&7&oDisband your Clan&8)",
+            " &8\u2022 &c/clan chat &8(&7&oToggle your Clan Chat Mode&8)",
+            " &8\u2022 &c/clan accept &8<&7leader&8> &8(&7&oAccept a Clan Invitation&8)",
+            " &8\u2022 &c/clan leave &8(&7&oLeave your Current Clan&8)",
+            " &8\u2022 &c/clan info &8(&7&oView information about your Clan&8)",
+            " &8\u2022 &c/clan invite &8<&7profile&8> &8(&7&oInvite a Profile to your Clan&8)",
+            " &8\u2022 &c/clan kick &8<&7profile&8> &8(&7&oKick a Profile from your Clan&8)",
+            " &8\u2022 &c/clan ban &8<&7profile&8> &8(&7&oBan a Profile from your Clan&8)",
+            " &8\u2022 &c/clan promote &8<&7profile&8> &8(&7&oPromote a Profile to Captain&8)",
+            " &8\u2022 &c/clan demote &8<&7profile&8> &8(&7&oDemote a Profile to Member&8)",
+            " &8\u2022 &c/clan leader &8<&7profile&8> &8(&7&oPromote a Profile to Leader&8)",
+            " &8\u2022 &c/clan description &8<&7text&8> &8(&7&oSet your Clan's Description&8)",
+            "&c&m--------&7&m-------------------------------------&c&m--------")),
     CLAN_INFO("CLAN.INFO", Arrays.asList(
             "&c&m--------&7&m-------------------------------------&c&m--------",
             "&c<clan_name> Information &8[&7<clan_members_size>/<clan_members_limit>&7]",
@@ -231,7 +249,16 @@ public enum Locale {
     TOURNAMENT_WON("TOURNAMENT.WON", "&7[&c&lTournament&7] &c<won> &7won the &ctournament&7!"),
     TOURNAMENT_JOIN("TOURNAMENT.JOIN", "&7[&c&lTournament&7] &c<joined> &7has joined the tournament! &8(&c<participants_size>/<participants_max>&8)"),
     TOURNAMENT_LEAVE("TOURNAMENT.LEAVE", "&7[&c&lTournament&7] &c<left> &7has left the tournament! &8(&c<participants_size>/<participants_max>&8)"),
-    TOURNAMENT_HELP("TOURNAMENT.HELP", Arrays.asList("&c&m--------&7&m-------------------------------------&c&m--------", "&cArray &7» Tournament Commands", "&c&m--------&7&m-------------------------------------&c&m--------", " &8\u2022 &c/tournament list &8(&7&oList Active Tournaments&8)", " &8\u2022 &c/tournament host (team-size(1/2)) &8(&7&oHost a tournament8&o)", " &8\u2022 &c/tournament cancel &8(&7&oCancel a tournament8&o) &8- &c&l[ADMIN]", " &8\u2022 &c/tournament join &8(&7&oJoin an on-going tournament8&o)", " &8\u2022 &c/tournament leave &8(&7&oLeave an on-going tournament8&o)", "&c&m--------&7&m-------------------------------------&c&m--------")),
+    TOURNAMENT_HELP("TOURNAMENT.HELP", Arrays.asList(
+            "&c&m--------&7&m-------------------------------------&c&m--------",
+            "&cArray &7» Tournament Commands",
+            "&c&m--------&7&m-------------------------------------&c&m--------",
+            " &8\u2022 &c/tournament list &8(&7&oList Active Tournaments&8)",
+            " &8\u2022 &c/tournament host (team-size(1/2)) &8(&7&oHost a tournament8&o)",
+            " &8\u2022 &c/tournament cancel &8(&7&oCancel a tournament8&o) &8- &c&l[ADMIN]",
+            " &8\u2022 &c/tournament join &8(&7&oJoin an on-going tournament8&o)",
+            " &8\u2022 &c/tournament leave &8(&7&oLeave an on-going tournament8&o)",
+            "&c&m--------&7&m-------------------------------------&c&m--------")),
 
     EVENT_PREFIX("EVENTS.PREFIX", "&7[&c<event_name>&7] &r"),
     EVENT_JOIN("EVENTS.JOIN", "&c<joined> &7has joined the &c<event_name> Event&8! &8(&c<event_participants_size>/<event_max_players>&8)"),
@@ -339,11 +366,10 @@ public enum Locale {
     LEADERBOARDS_GLOBAL_FORMAT("LEADERBOARDS.GLOBAL_FORMAT", "&c<leaderboards_pos> &7&l\uff5c &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)"),
     LEADERBOARDS_CLAN_FORMAT("LEADERBOARDS.CLAN_FORMAT", "&c<leaderboards_pos> &7&l\uff5c &f<leaderboards_name>: &c<leaderboards_elo> &7(<leaderboards_division>)");
 
-    private final String path;
+    private String path;
     private String value;
     private List<String> listValue;
-
-    private static final BasicConfigurationFile configFile = Array.getInstance().getMessagesConfig();
+    private static BasicConfigurationFile configFile;
 
     Locale(String path, String value) {
         this.path = path;
@@ -371,7 +397,9 @@ public enum Locale {
      * Deploy all the non-present messages to the config
      * this works with both strings and lists
      */
-    public static void init() {
+    public static void init(Array plugin) {
+        configFile = plugin.getConfigHandler().getConfig();
+
         Arrays.stream(values()).forEach(language -> {
             if (configFile.getString(language.getPath()) == null || configFile.getStringList(language.getPath()) == null) {
                 if (language.getListValue() != null) {

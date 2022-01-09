@@ -39,8 +39,6 @@ import java.util.List;
 
 @Getter
 public class BattleRushMatch extends SoloMatch {
-
-    private final Array plugin = Array.getInstance();
     
     private int playerAPoints = 0;
     private int playerBPoints = 0;
@@ -74,7 +72,7 @@ public class BattleRushMatch extends SoloMatch {
      * @param player {@link Player} being setup
      */
     @Override
-    public void setupPlayer(Player player) {
+    public void setupPlayer(Array plugin, Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
         if (teamPlayer.isDisconnected()) return;
 
@@ -86,19 +84,19 @@ public class BattleRushMatch extends SoloMatch {
         if (this.getKit().getGameRules().isSpeed()) player.addPotionEffect(PotionEffectType.SPEED.createEffect(500000000, 1));
         if (this.getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
-        this.plugin.getSpigotHandler().kitKnockback(player, getKit());
+        plugin.getSpigotHandler().kitKnockback(player, getKit());
         player.setNoDamageTicks(getKit().getGameRules().getHitDelay());
 
         Location spawn = getPlayerA().equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
-        player.teleport(spawn.add(0, this.plugin.getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
+        player.teleport(spawn.add(0, plugin.getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
 
         teamPlayer.setPlayerSpawn(spawn);
 
         this.getKit().applyToPlayer(player);
         this.giveKit(player);
 
-        this.plugin.getNameTagHandler().reloadPlayer(player);
-        this.plugin.getNameTagHandler().reloadOthersFor(player);
+        plugin.getNameTagHandler().reloadPlayer(player);
+        plugin.getNameTagHandler().reloadOthersFor(player);
     }
 
     /**
@@ -106,13 +104,13 @@ public class BattleRushMatch extends SoloMatch {
      * This method is called as soon as the match is started
      */
     @Override
-    public void onStart() {
+    public void onStart(Array plugin) {
         this.round++;
 
         this.playerAPortals = LocationUtil.getNearbyPortalLocations(this.getArena().getSpawn1());
         this.playerBPortals = LocationUtil.getNearbyPortalLocations(this.getArena().getSpawn2());
         
-        new MatchBattleRushTask(this.plugin, this).runTaskTimer(this.plugin, 20L, 20L);
+        new MatchBattleRushTask(plugin, this).runTaskTimer(plugin, 20L, 20L);
     }
 
     @Override
@@ -132,7 +130,7 @@ public class BattleRushMatch extends SoloMatch {
     }
 
     @Override
-    public void onDeath(Player deadPlayer, Player killerPlayer) {
+    public void onDeath(Array plugin, Player deadPlayer, Player killerPlayer) {
         TeamPlayer roundLoser = getTeamPlayer(deadPlayer);
         TeamPlayer roundWinner = getOpponentTeamPlayer(deadPlayer);
 
@@ -141,33 +139,33 @@ public class BattleRushMatch extends SoloMatch {
             PlayerUtil.reset(deadPlayer);
 
             this.getSnapshots().add(snapshot);
-            this.plugin.getMatchManager().end(this);
+            plugin.getMatchManager().end(this);
         }
 
-        this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> PlayerUtil.forceRespawn(deadPlayer));
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> PlayerUtil.forceRespawn(deadPlayer));
     }
 
     @Override
-    public void onRespawn(Player player) {
+    public void onRespawn(Array plugin, Player player) {
         TeamPlayer teamPlayer = this.getTeamPlayer(player);
 
         if (!this.isFighting()) return;
         if (teamPlayer.isDisconnected()) return;
 
         for ( Player otherPlayer : this.getPlayers() ) {
-            Profile otherProfile = this.plugin.getProfileManager().getProfileByPlayer(otherPlayer);
-            this.plugin.getProfileManager().handleVisibility(otherProfile);
+            Profile otherProfile = plugin.getProfileManager().getProfileByPlayer(otherPlayer);
+            plugin.getProfileManager().handleVisibility(otherProfile);
         }
 
-        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-        this.plugin.getProfileManager().handleVisibility(profile);
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        plugin.getProfileManager().handleVisibility(profile);
 
         player.getInventory().clear();
         player.setAllowFlight(true);
         player.setFlying(true);
 
-        MatchRespawnTask respawnTask = new MatchRespawnTask(this.plugin, player, this);
-        respawnTask.runTaskTimer(this.plugin, 20L, 20L);
+        MatchRespawnTask respawnTask = new MatchRespawnTask(plugin, player, this);
+        respawnTask.runTaskTimer(plugin, 20L, 20L);
     }
 
     public boolean isVolatileLocation(Location location) {
@@ -175,9 +173,9 @@ public class BattleRushMatch extends SoloMatch {
         occupiedLocations.addAll(playerAPortals);
         occupiedLocations.addAll(playerBPortals);
 
-        for ( Location volatileLocations :  occupiedLocations) {
-            Cuboid cuboid = new Cuboid(new Location(location.getWorld(), (location.getBlockX() - 5), (location.getBlockY() - 5), (location.getBlockZ() - 5)),
-                    new Location(location.getWorld(), (location.getBlockX() + 5), (location.getBlockY() + 5), (location.getBlockZ() + 5)));
+        for ( Location volatileLocation :  occupiedLocations) {
+            Cuboid cuboid = new Cuboid(new Location(volatileLocation.getWorld(), (volatileLocation.getBlockX() - 5), (volatileLocation.getBlockY() - 5), (volatileLocation.getBlockZ() - 5)),
+                    new Location(volatileLocation.getWorld(), (volatileLocation.getBlockX() + 5), (volatileLocation.getBlockY() + 5), (volatileLocation.getBlockZ() + 5)));
 
             if (!cuboid.contains(location)) return false;
         }
@@ -189,7 +187,7 @@ public class BattleRushMatch extends SoloMatch {
      *
      * @param player {@link Player} the player entering the portal
      */
-    public void handlePortal(Player player) {
+    public void handlePortal(Array plugin, Player player) {
         TeamPlayer teamPlayer = this.getTeamPlayer(player);
 
         if (teamPlayer == null) return;
@@ -207,11 +205,11 @@ public class BattleRushMatch extends SoloMatch {
         }
 
         if (this.canEnd()) {
-            this.plugin.getMatchManager().end(this);
+            plugin.getMatchManager().end(this);
             return;
         }
 
-        TaskUtil.run(() -> this.plugin.getMatchManager().start(this));
+        TaskUtil.run(() -> plugin.getMatchManager().start(this));
     }
 
     /**

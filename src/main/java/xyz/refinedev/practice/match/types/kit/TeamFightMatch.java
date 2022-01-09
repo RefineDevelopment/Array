@@ -15,9 +15,7 @@ import xyz.refinedev.practice.util.other.PlayerUtil;
 
 @Getter
 public class TeamFightMatch extends TeamMatch {
-
-    private final Array plugin = Array.getInstance();
-
+    
     private final Team teamA;
     private final Team teamB;
 
@@ -29,7 +27,7 @@ public class TeamFightMatch extends TeamMatch {
     }
 
     @Override
-    public void setupPlayer(Player player) {
+    public void setupPlayer(Array plugin, Player player) {
         TeamPlayer teamPlayer = getTeamPlayer(player);
         if (teamPlayer.isDisconnected()) return;
 
@@ -37,18 +35,18 @@ public class TeamFightMatch extends TeamMatch {
 
         PlayerUtil.reset(player);
 
-        this.plugin.getSpigotHandler().kitKnockback(player, this.getKit());
+        plugin.getSpigotHandler().kitKnockback(player, this.getKit());
         player.setNoDamageTicks(this.getKit().getGameRules().getHitDelay());
 
         Team team = getTeam(player);
 
         Location spawn = team.equals(teamA) ? getArena().getSpawn1() : getArena().getSpawn2();
-        player.teleport(spawn.add(0, this.plugin.getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
+        player.teleport(spawn.add(0, plugin.getConfigHandler().getMATCH_SPAWN_YLEVEL(), 0));
 
         teamPlayer.setPlayerSpawn(spawn);
 
-        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-        Party party = this.plugin.getPartyManager().getPartyByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Party party = plugin.getPartyManager().getPartyByUUID(player.getUniqueId());
         String kit = party.getKits().get(player.getUniqueId());
 
         switch (kit) {
