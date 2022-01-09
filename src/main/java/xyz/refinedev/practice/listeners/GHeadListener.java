@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
 import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
@@ -34,10 +35,11 @@ public class GHeadListener implements Listener {
 		player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 2400, 0));
 		player.setFoodLevel(Math.min(player.getFoodLevel() + 6, 20));
 
-		if (profile.isInFight()) {
-			if (profile.getMatch() instanceof SoloBridgeMatch || profile.getMatch() instanceof TeamBridgeMatch) {
-				player.setHealth(event.getPlayer().getMaxHealth());
-			}
+		if (!profile.isInFight()) return;
+		Match match = profile.getMatch();
+
+		if (match.isTheBridgeMatch()) {
+			player.setHealth(event.getPlayer().getMaxHealth());
 		}
 	}
 

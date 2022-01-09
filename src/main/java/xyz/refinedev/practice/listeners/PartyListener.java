@@ -23,11 +23,14 @@ public class PartyListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-        Party party = profile.getParty();
 
+        Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
         if (party == null) return;
 
-        List<Player> partyPlayers = party.getPlayers().stream().filter(p -> !p.getUniqueId().equals(player.getUniqueId())).collect(Collectors.toList());
+        List<Player> partyPlayers = party.getPlayers()
+                .stream()
+                .filter(p -> !p.getUniqueId().equals(player.getUniqueId()))
+                .collect(Collectors.toList());
 
         if (partyPlayers.isEmpty()) {
             plugin.getPartyManager().disband(party);

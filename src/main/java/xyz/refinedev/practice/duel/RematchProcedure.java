@@ -26,7 +26,7 @@ public class RematchProcedure {
 
     private final long timestamp = System.currentTimeMillis();
     private final Array plugin = Array.getInstance();
-    private final CoreAdapter rank = plugin.getCoreHandler().getCoreType().getCoreAdapter();
+    private final CoreAdapter rank = plugin.getCoreHandler();
 
     private final UUID key;
     private final UUID sender;

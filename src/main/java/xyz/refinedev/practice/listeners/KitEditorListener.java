@@ -66,12 +66,12 @@ public class KitEditorListener implements Listener {
                 }
             }
 
-            if (!(profile.isInSomeSortOfFight() || player.getGameMode() != GameMode.SURVIVAL || profile.isInBrackets() || profile.isInLMS())) {
+            if (!(profile.isInSomeSortOfFight() || player.getGameMode() != GameMode.SURVIVAL)) {
                     Inventory clicked = event.getClickedInventory();
                     if (profile.getKitEditor().isActive()) {
                         if (clicked == null) {
                             event.setCancelled(true);
-                            event.setCursor(null);
+                            //event.setCursor(null);
                             player.updateInventory();
                         } else if (clicked.equals(player.getOpenInventory().getTopInventory())) {
                             if (event.getCursor().getType() != Material.AIR &&
@@ -79,7 +79,7 @@ public class KitEditorListener implements Listener {
                                 event.getCursor().getType() != Material.AIR &&
                                 event.getCurrentItem().getType() != Material.AIR) {
                                 event.setCancelled(true);
-                                event.setCursor(null);
+                                //event.setCursor(null);
                                 player.updateInventory();
                             }
                         }

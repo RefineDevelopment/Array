@@ -366,7 +366,7 @@ public class MatchListener implements Listener {
 
         if (!profile.isInFight()) return;
 
-        profile.getMatch().onRespawn(event.getPlayer());
+        profile.getMatch().onRespawn(plugin, event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true)

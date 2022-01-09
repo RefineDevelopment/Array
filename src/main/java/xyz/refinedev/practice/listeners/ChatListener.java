@@ -30,17 +30,18 @@ public class ChatListener implements Listener {
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         String chatMessage = event.getMessage();
+        
         Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
-        Clan clan = profile.getClan();
-
         if (!profile.getSettings().isClanChat() && !chatMessage.startsWith("$") && !chatMessage.startsWith(".")) return;
-        if (clan == null) return;
+        if (!profile.hasClan()) return;
+        
+        Clan clan = plugin.getClanManager().getByUUID(profile.getClan());
 
         event.setCancelled(true);
         clan.broadcast(Locale.CLAN_CHAT_FORMAT.toString()
                 .replace("<player_displayname>", player.getDisplayName())
                 .replace("<player_name>", player.getName())
-                .replace("<player_rankname>", plugin.getCoreHandler().getCoreType().getCoreAdapter().getFullName(player))
+                .replace("<player_rankname>", plugin.getCoreHandler().getFullName(player))
                 .replace("<message>", chatMessage.replace("$", "")));
     }
 
@@ -48,17 +49,18 @@ public class ChatListener implements Listener {
     public void onPartyChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         String chatMessage = event.getMessage();
+        
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-        Party party = profile.getParty();
-
         if (!chatMessage.startsWith("@") && !profile.getSettings().isPartyChat()) return;
-        if (party == null) return;
+        if (!profile.hasParty()) return;
+        
+        Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
 
         event.setCancelled(true);
         party.broadcast(Locale.PARTY_CHAT_FORMAT.toString()
                 .replace("<player_displayname>", player.getDisplayName())
                 .replace("<player_name>", player.getName())
-                .replace("<player_rankname>", plugin.getCoreHandler().getCoreType().getCoreAdapter().getFullName(player))
+                .replace("<player_rankname>", plugin.getCoreHandler().getFullName(player))
                 .replace("<message>", chatMessage.replace("@", "")));
     }
 }

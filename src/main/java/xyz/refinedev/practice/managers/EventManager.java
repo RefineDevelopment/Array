@@ -33,7 +33,9 @@ public class EventManager {
 	private final Array plugin;
 	private final BasicConfigurationFile config;
 
+	//TODO: Make a Multiple Event System
 	private Event activeEvent;
+
 	private EventHelperUtil helper;
 	private Cooldown cooldown = new Cooldown(0);
 

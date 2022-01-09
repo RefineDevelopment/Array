@@ -223,13 +223,7 @@ public class ArrayCommands {
 
     @Command(name = "debug", desc = "ntohing")
     public void debug(@Sender CommandSender sender) {
-        for ( Queue queue : plugin.getQueueManager().getQueues() ) {
-            if (queue == null) {
-                sender.sendMessage(CC.translate("&cNo Queues found"));
-                return;
-            }
-            sender.sendMessage("- " + queue.getQueueName());
-        }
+        sender.sendMessage("I'm out of commission right now ;)");
     }
 
     /**

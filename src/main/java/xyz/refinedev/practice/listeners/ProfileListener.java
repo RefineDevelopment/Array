@@ -157,7 +157,7 @@ public class ProfileListener implements Listener {
         }
 
         if (profile.isInEvent()) {
-            Event profileEvent = profile.getEvent();
+            Event profileEvent = plugin.getEventManager().getEventByUUID(profile.getEvent());
             if (profileEvent.isBracketsSolo() || profileEvent.isBracketsTeam() || profileEvent.isLMS()) return;
             event.setCancelled(true);
         }
@@ -208,7 +208,7 @@ public class ProfileListener implements Listener {
         Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
 
         if (profile.isInEvent()) {
-            Event profileEvent = profile.getEvent();
+            Event profileEvent = plugin.getEventManager().getEventByUUID(profile.getEvent());
             profileEvent.handleLeave(player);
         }
 

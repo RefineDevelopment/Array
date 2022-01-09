@@ -58,7 +58,7 @@ public class ArrayAPI implements API {
 
     @Override
     public String getDisplayName(Player player) {
-        return plugin.getCoreHandler().getCoreType().getCoreAdapter().getFullName(player);
+        return plugin.getCoreHandler().getFullName(player);
     }
 
     @Override

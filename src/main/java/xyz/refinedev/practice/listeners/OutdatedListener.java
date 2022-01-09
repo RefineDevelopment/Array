@@ -35,7 +35,7 @@ public class OutdatedListener implements Listener {
                 player.sendMessage(CC.translate("&eYour Version: &c" + Description.getVersion()));
                 player.sendMessage(CC.translate("&eLatest Version: &c" + plugin.getConfigHandler().getNEW_VERSION()));
                 player.sendMessage("");
-                player.sendMessage(CC.translate("&7Please update your version from the respective download site."));
+                player.sendMessage(CC.translate("&7Please update your version from the respective download area."));
                 player.sendMessage(CC.CHAT_BAR);
             }
         }
