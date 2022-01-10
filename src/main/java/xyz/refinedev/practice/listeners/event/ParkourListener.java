@@ -17,6 +17,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.event.Event;
+import xyz.refinedev.practice.event.EventHelperUtil;
 import xyz.refinedev.practice.event.EventState;
 import xyz.refinedev.practice.event.impl.parkour.Parkour;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
@@ -44,9 +46,11 @@ public class ParkourListener implements Listener {
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (!profile.isInEvent()) return;
-        if (!profile.getEvent().isParkour()) return;
 
-        Parkour parkour = (Parkour) profile.getEvent();
+        Event profileEvent = plugin.getEventManager().getEventByUUID(profile.getEvent());
+        if (!profileEvent.isParkour()) return;
+
+        Parkour parkour = (Parkour) profileEvent;
         EventPlayer eventPlayer = parkour.getEventPlayer(player.getUniqueId());
 
         event.setCancelled(true);
@@ -58,7 +62,7 @@ public class ParkourListener implements Listener {
             if (eventPlayer.getLastLocation() != null) {
                 player.teleport(eventPlayer.getLastLocation());
             } else {
-                player.teleport(plugin.getEventManager().getSpawn(parkour));
+                player.teleport(EventHelperUtil.getSpawn(parkour));
             }
         }
     }
@@ -68,8 +72,13 @@ public class ParkourListener implements Listener {
         HumanEntity player = event.getWhoClicked();
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
-        if (!profile.isInEvent() || !profile.getEvent().isParkour()) return;
-        if (profile.getEvent().isFighting(player.getUniqueId())) return;
+        if (!profile.isInEvent()) return;
+
+        Event profileEvent = plugin.getEventManager().getEventByUUID(profile.getEvent());
+        if (!profileEvent.isParkour()) return;
+
+        Parkour parkour = (Parkour) profileEvent;
+        if (parkour.isFighting(player.getUniqueId())) return;
 
         event.setCancelled(true);
     }
@@ -78,8 +87,13 @@ public class ParkourListener implements Listener {
         HumanEntity player = event.getWhoClicked();
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
-        if (!profile.isInEvent() || !profile.getEvent().isParkour()) return;
-        if (profile.getEvent().isFighting(player.getUniqueId())) return;
+        if (!profile.isInEvent()) return;
+
+        Event profileEvent = plugin.getEventManager().getEventByUUID(profile.getEvent());
+        if (!profileEvent.isParkour()) return;
+
+        Parkour parkour = (Parkour) profileEvent;
+        if (parkour.isFighting(player.getUniqueId())) return;
 
         event.setCancelled(true);
     }
@@ -89,7 +103,10 @@ public class ParkourListener implements Listener {
         Player player = event.getPlayer();
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
-        if (!profile.isInEvent() || !profile.getEvent().isParkour()) return;
+        if (!profile.isInEvent()) return;
+
+        Event profileEvent = plugin.getEventManager().getEventByUUID(profile.getEvent());
+        if (!profileEvent.isParkour()) return;
 
         event.setCancelled(true);
     }
@@ -99,7 +116,10 @@ public class ParkourListener implements Listener {
         Player player = event.getPlayer();
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
-        if (!profile.isInEvent() || !profile.getEvent().isParkour()) return;
+        if (!profile.isInEvent()) return;
+
+        Event profileEvent = plugin.getEventManager().getEventByUUID(profile.getEvent());
+        if (!profileEvent.isParkour()) return;
 
         event.setCancelled(true);
     }
@@ -110,8 +130,10 @@ public class ParkourListener implements Listener {
         Player player = event.getPlayer();
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
-        if (!profile.isInEvent() || !profile.getEvent().isParkour()) return;
-        if (profile.getEvent().isFighting(player.getUniqueId())) return;
+        if (!profile.isInEvent()) return;
+
+        Event profileEvent = plugin.getEventManager().getEventByUUID(profile.getEvent());
+        if (!profileEvent.isParkour()) return;
 
         event.setCancelled(true);
     }
@@ -124,8 +146,13 @@ public class ParkourListener implements Listener {
         Player player = event.getPlayer();
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
-        if (!profile.isInEvent() || !profile.getEvent().isParkour()) return;
-        EventPlayer eventPlayer = profile.getEvent().getEventPlayer(player.getUniqueId());
+        if (!profile.isInEvent()) return;
+
+        Event profileEvent = plugin.getEventManager().getEventByUUID(profile.getEvent());
+        if (!profileEvent.isParkour()) return;
+
+        Parkour parkour = (Parkour) profileEvent;
+        EventPlayer eventPlayer = parkour.getEventPlayer(player.getUniqueId());
 
         if (eventPlayer.getState().equals(EventPlayerState.ELIMINATED)) event.setCancelled(true);
     }
@@ -138,11 +165,15 @@ public class ParkourListener implements Listener {
         Action action = event.getAction();
 
         if (event.getClickedBlock() == null) return;
-        if (!profile.isInEvent() || !profile.getEvent().isParkour()) return;
-        if (profile.getEvent().getState().equals(EventState.ROUND_ENDING)) return;
+        if (!profile.isInEvent()) return;
 
-        Parkour parkour = (Parkour) profile.getEvent();
-        EventPlayer eventPlayer = profile.getEvent().getEventPlayer(player.getUniqueId());
+        Event profileEvent = plugin.getEventManager().getEventByUUID(profile.getEvent());
+        if (!profileEvent.isParkour()) return;
+
+        if (profileEvent.getState().equals(EventState.ROUND_ENDING)) return;
+
+        Parkour parkour = (Parkour) profileEvent;
+        EventPlayer eventPlayer = profileEvent.getEventPlayer(player.getUniqueId());
 
         if (!eventPlayer.getState().equals(EventPlayerState.WAITING)) return;
         if (!action.equals(Action.PHYSICAL)) return;
