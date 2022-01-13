@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.managers.EventManager;
+import xyz.refinedev.practice.event.EventLocations;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Require;
@@ -24,7 +24,6 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
 public class SumoCommands {
 
     private final Array plugin;
-    private final EventManager manager;
 
     @Command(name = "", aliases = "help", desc = "View Sumo Commands")
     @Require("array.event.admin")
@@ -42,25 +41,27 @@ public class SumoCommands {
     @Command(name = "knockback", aliases = {"setkb", "kb"}, usage = "<knockback>", desc = "Force start an on-going Sumo Event")
     @Require("array.event.admin")
     public void knockback(@Sender CommandSender player, String kb) {
-        manager.setSumoKB(kb);
-        manager.save();
+        EventLocations helper = this.plugin.getEventManager().getHelper();
+        helper.setSumoKB(kb);
+        helper.save();
         player.sendMessage(Locale.EVENT_KNOCKBACK.toString().replace("<knockback>", kb));
     }
 
     @Command(name = "setspawn", aliases = "location", desc = "Set Sumo's Spawn Points", usage = "<one|two|spec>")
     @Require("array.event.admin")
     public void setSpawn(@Sender Player player, String position) {
+        EventLocations helper = this.plugin.getEventManager().getHelper();
         switch (position) {
             case "one": {
-                manager.setSumoSpawn1(player.getLocation());
+                helper.setSumoSpawn1(player.getLocation());
                 break;
             }
             case "two": {
-                manager.setSumoSpawn2(player.getLocation());
+                helper.setSumoSpawn2(player.getLocation());
                 break;
             }
             case "spec": {
-                manager.setSumoSpectator(player.getLocation());
+                helper.setSumoSpectator(player.getLocation());
                 break;
             }
             default: {
@@ -70,18 +71,19 @@ public class SumoCommands {
         }
 
         player.sendMessage(Locale.EVENT_SPAWN.toString().replace("<position>", position));
-        manager.save();
+        helper.save();
     }
 
     @Command(name = "tp", aliases = "teleport", desc = "Teleport to Sumo's Spawn Location")
     @Require("array.event.admin")
     public void teleport(@Sender Player player) {
-        if (manager.getSumoSpectator() == null || manager.getSumoSpawn1() == null || manager.getSumoSpawn2() == null) {
+        EventLocations helper = this.plugin.getEventManager().getHelper();
+        if (helper.getSumoSpectator() == null || helper.getSumoSpawn1() == null || helper.getSumoSpawn2() == null) {
             player.sendMessage("&cCould not teleport, spawn points are not setup");
             return;
         }
 
-        player.teleport(manager.getSumoSpectator());
+        player.teleport(helper.getSumoSpectator());
         player.sendMessage(Locale.EVENT_TELEPORT.toString().replace("<event_name>", "Sumo"));
     }
 }

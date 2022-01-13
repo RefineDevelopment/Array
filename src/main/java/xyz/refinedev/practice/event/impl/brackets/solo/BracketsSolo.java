@@ -48,7 +48,7 @@ public class BracketsSolo extends Event {
 
     @Override
     public void onJoin(Player player) {
-        this.plugin.getSpigotHandler().knockback(player, EventHelperUtil.getSumoKB());
+        this.plugin.getSpigotHandler().knockback(player, this.plugin.getEventManager().getHelper().getSumoKB());
     }
 
     @Override
@@ -64,7 +64,7 @@ public class BracketsSolo extends Event {
             Player player = roundPlayerA.getPlayer();
 
             if (player != null) {
-                player.teleport(EventHelperUtil.getSpectator(this));
+                player.teleport(this.plugin.getEventManager().getHelper().getSpectator(this));
 
                 Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
@@ -80,7 +80,7 @@ public class BracketsSolo extends Event {
             Player player = roundPlayerB.getPlayer();
 
             if (player != null) {
-                player.teleport(EventHelperUtil.getSpectator(this));
+                player.teleport(this.plugin.getEventManager().getHelper().getSpectator(this));
 
                 Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
@@ -110,8 +110,8 @@ public class BracketsSolo extends Event {
         profileA.getStatisticsData().get(this.kit).getKitItems().forEach((integer, itemStack) -> playerA.getInventory().setItem(integer, itemStack));
         profileB.getStatisticsData().get(this.kit).getKitItems().forEach((integer, itemStack) -> playerB.getInventory().setItem(integer, itemStack));
 
-        playerA.teleport(EventHelperUtil.getSpawn1(this));
-        playerB.teleport(EventHelperUtil.getSpawn2(this));
+        playerA.teleport(this.plugin.getEventManager().getHelper().getSpawn1(this));
+        playerB.teleport(this.plugin.getEventManager().getHelper().getSpawn2(this));
 
         this.setEventTask(new EventRoundStartTask(this.plugin, this));
     }
@@ -149,7 +149,7 @@ public class BracketsSolo extends Event {
         EventPlayer winner = roundPlayerA.getUuid().equals(player.getUniqueId()) ? roundPlayerB : roundPlayerA;
         winner.setState(EventPlayerState.WAITING);
         winner.incrementRoundWins();
-        winner.getPlayer().teleport(EventHelperUtil.getSpectator(this));
+        winner.getPlayer().teleport(this.plugin.getEventManager().getHelper().getSpectator(this));
 
         this.broadcastMessage(Locale.EVENT_ELIMINATED.toString()
                 .replace("<eliminated_name>", player.getName())

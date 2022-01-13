@@ -4,16 +4,21 @@ import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.match.Match;
+import xyz.refinedev.practice.util.inventory.ItemBuilder;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -38,6 +43,7 @@ public class PlayerUtil {
         player.getInventory().setArmorContents(new ItemStack[4]);
         player.getInventory().setContents(new ItemStack[36]);
         player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
+        ((CraftPlayer)player).getHandle().getDataWatcher().watch(9, 0);
         player.updateInventory();
     }
 
@@ -72,6 +78,21 @@ public class PlayerUtil {
         player.setFoodLevel(20);
         player.setSprinting(true);
         player.removePotionEffect(PotionEffectType.JUMP);
+    }
+
+    public void lockPos(Array plugin, Player player, int seconds) {
+        player.setFlying(false);
+        player.setSprinting(false);
+        player.setWalkSpeed(0.0f);
+        player.setFoodLevel(0);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 20 * seconds, 250));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * seconds, 250));
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            player.setFlying(false);
+            player.setSprinting(true);
+            player.setWalkSpeed(0.2f);
+            player.setFoodLevel(20);
+        }, (long)seconds * 20L);
     }
 
     public void forceRespawn(Player player) {
@@ -163,5 +184,66 @@ public class PlayerUtil {
                 ((CraftPlayer) watcher).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(entityId));
             }
         }, 40L);
+    }
+
+    /**
+     * Replace and color the wool blocks and leather
+     * armor of the specified player to their corresponding color
+     *
+     * @param player The player getting the kit applied
+     */
+    public void giveWoolKit(Match match, Player player) {
+        ItemStack[] armorRed = leatherArmor(Color.RED);
+        ItemStack[] armorBlue = leatherArmor(Color.BLUE);
+
+        if (match.getTeamPlayerA().getPlayer() == player) {
+            player.getInventory().setArmorContents(armorRed);
+            player.getInventory().all(org.bukkit.Material.WOOL).forEach((key, value) -> {
+                player.getInventory().setItem(key, new ItemBuilder(org.bukkit.Material.WOOL).durability(14).amount(64).build());
+                player.getInventory().setItem(key, new ItemBuilder(org.bukkit.Material.WOOL).durability(14).amount(64).build());
+            });
+        } else {
+            player.getInventory().setArmorContents(armorBlue);
+            player.getInventory().all(org.bukkit.Material.WOOL).forEach((key, value) -> {
+                player.getInventory().setItem(key, new ItemBuilder(org.bukkit.Material.WOOL).durability(11).amount(64).build());
+                player.getInventory().setItem(key, new ItemBuilder(org.bukkit.Material.WOOL).durability(11).amount(64).build());
+            });
+        }
+        player.updateInventory();
+    }
+
+    /**
+     * Replace and color the clay blocks and leather
+     * armor of the specified player to their corresponding color
+     *
+     * @param player The player getting the kit applied
+     */
+    public void giveClayKit(Match match, Player player) {
+        ItemStack[] armorRed = leatherArmor(Color.RED);
+        ItemStack[] armorBlue = leatherArmor(Color.BLUE);
+
+        if (match.getTeamPlayerA().getPlayer() == player) {
+            player.getInventory().setArmorContents(armorRed);
+            player.getInventory().all(Material.STAINED_CLAY).forEach((key, value) -> {
+                player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(14).amount(64).build());
+                player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(14).amount(64).build());
+            });
+        } else {
+            player.getInventory().setArmorContents(armorBlue);
+            player.getInventory().all(Material.STAINED_CLAY).forEach((key, value) -> {
+                player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(11).amount(64).build());
+                player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(11).amount(64).build());
+            });
+        }
+        player.updateInventory();
+    }
+
+    public ItemStack[] leatherArmor(Color color){
+        return new ItemStack[]{
+                new ItemBuilder(org.bukkit.Material.LEATHER_BOOTS).color(color).build(),
+                new ItemBuilder(org.bukkit.Material.LEATHER_LEGGINGS).color(color).build(),
+                new ItemBuilder(org.bukkit.Material.LEATHER_CHESTPLATE).color(color).build(),
+                new ItemBuilder(Material.LEATHER_HELMET).color(color).build()
+        };
     }
 }

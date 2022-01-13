@@ -103,16 +103,16 @@ MATCH:
       ENABLED: true
       TEXT: "&c<seconds>"
       SUB_TEXT: ""
-      FADE_IN: 5
+      FADE_IN: 1
       STAY: 20
-      FADE_OUT: 5
-    RESPAWN:
+      FADE_OUT: 0
+    RESPAWNING:
       ENABLED: true
-      TEXT: "&aRespawned!"
+      TEXT: "&Respawning..."
       SUB_TEXT: ""
-      FADE_IN: 5
+      FADE_IN: 1
       STAY: 20
-      FADE_OUT: 5
+      FADE_OUT: 0
 
 
 SOCIAL:

@@ -49,7 +49,7 @@ public class Spleef extends Event {
 
     @Override
     public void onJoin(Player player) {
-        this.plugin.getSpigotHandler().knockback(player, EventHelperUtil.getSpleefKB());
+        this.plugin.getSpigotHandler().knockback(player, this.plugin.getEventManager().getHelper().getSpleefKB());
     }
 
     @Override
@@ -63,9 +63,9 @@ public class Spleef extends Event {
 
         int i = 0;
         for (Player player : this.getRemainingPlayers()) {
-            List<Location> circleLocations = LocationUtil.getCircle(EventHelperUtil.getSpawn(this), this.plugin.getConfigHandler().getFFA_SPAWN_RADIUS(), this.getPlayers().size());
+            List<Location> circleLocations = LocationUtil.getCircle(this.plugin.getEventManager().getHelper().getSpawn(this), this.plugin.getConfigHandler().getFFA_SPAWN_RADIUS(), this.getPlayers().size());
 
-            Location center = EventHelperUtil.getSpawn(this).clone();
+            Location center = this.plugin.getEventManager().getHelper().getSpawn(this).clone();
             Location loc = circleLocations.get(i);
             Location target = loc.setDirection(center.subtract(loc).toVector());
             HotbarItem item = this.plugin.getHotbarManager().getHotbarItem(HotbarType.SPLEEF_MATCH);

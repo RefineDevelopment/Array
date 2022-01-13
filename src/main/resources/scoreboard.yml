@@ -54,7 +54,7 @@ SCOREBOARD:
       - " &fRival: &c<opponent_name>"
       - " &fDuration: &c<match_duration>"
       - ""
-      - "&c&lHits &r(<hit_difference>)"
+      - "&c&lHits &r<hit_difference>"
       - " &fYour Hits: &a<your_hits>"
       - " &fTheir Hits: &c<opponent_hits>"
     SOLO_BRIDGE:

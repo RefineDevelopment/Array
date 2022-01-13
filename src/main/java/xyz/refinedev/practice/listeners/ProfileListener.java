@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.listeners;
 
 import lombok.RequiredArgsConstructor;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,6 +19,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.TrapDoor;
 import org.bukkit.projectiles.ProjectileSource;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.Event;
@@ -34,29 +36,47 @@ public class ProfileListener implements Listener {
     private final Array plugin;
 
     @EventHandler
+    public void onCommand(PlayerCommandPreprocessEvent event) {
+        String command = event.getMessage().split(" ")[0];
+        Player player = event.getPlayer();
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+
+        if (profile.getKitEditor().isRenaming()) {
+            event.getPlayer().sendMessage(ChatColor.RED + "A kit name cannot start with \"/\".");
+            event.getPlayer().sendMessage(ChatColor.RED + "Event cancelled.");
+            profile.getKitEditor().setActive(false);
+            profile.getKitEditor().setRename(false);
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getItem() == null || event.getClickedBlock() == null) return;
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
 
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-        ItemStack item = event.getItem();
-        Block block = event.getClickedBlock();
-        
-        if (item != null) {
-            if (player.getGameMode() != GameMode.CREATIVE && !profile.isBuild()) {
-                if (item.getType().equals(Material.PAINTING) || item.getType().equals(Material.TRAP_DOOR)) {
-                    event.setCancelled(true);
-                }
-            }
-        }
+        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
-        if (block != null) {
-            if (player.getGameMode() != GameMode.CREATIVE && !profile.isBuild()) {
-                if (block.getState() instanceof ItemFrame) {
-                    event.setCancelled(true);
-                }
-            }
+        if ((player.getGameMode() == GameMode.CREATIVE && !profile.isSpectating()) || profile.isBuild()) return;
+        if (event.getAction().name().endsWith("_BLOCK")
+                && (event.getClickedBlock().getType().name().contains("FENCE")
+                && event.getClickedBlock().getState() instanceof TrapDoor
+                || event.getClickedBlock().getType().name().contains("TRAP")
+                || event.getClickedBlock().getType().name().contains("CHEST")
+                || event.getClickedBlock().getType().name().contains("DOOR")
+                || event.getClickedBlock().getType().equals(Material.BEACON)
+                || event.getClickedBlock().getType().equals(Material.FURNACE)
+                || event.getClickedBlock().getType().equals(Material.WORKBENCH)
+                || event.getClickedBlock().getType().equals(Material.NOTE_BLOCK)
+                || event.getClickedBlock().getType().equals(Material.JUKEBOX)
+                || event.getClickedBlock().getType().equals(Material.ANVIL)
+                || event.getClickedBlock().getType().equals(Material.HOPPER)
+                || event.getClickedBlock().getType().equals(Material.BED_BLOCK)
+                || event.getClickedBlock().getType().equals(Material.DROPPER)
+                || event.getClickedBlock().getType().equals(Material.ITEM_FRAME)
+                || event.getClickedBlock().getType().equals(Material.BREWING_STAND))) {
+            event.setCancelled(true);
         }
     }
 
@@ -185,7 +205,7 @@ public class ProfileListener implements Listener {
         } catch (Exception e) {
             e.printStackTrace();
             event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
-            event.setKickMessage(CC.RED + "Failed to init your profile, Please contact an Administrator!");
+            event.setKickMessage(CC.RED + "Failed to load your profile, Please contact an Administrator!");
             return;
         }
         plugin.getProfileManager().getProfiles().put(uuid, profile);

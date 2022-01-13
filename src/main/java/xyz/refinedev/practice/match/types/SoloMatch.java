@@ -106,7 +106,7 @@ public class SoloMatch extends Match {
         }
 
         plugin.getSpigotHandler().kitKnockback(player, this.getKit());
-        player.setMaximumNoDamageTicks(this.getKit().getGameRules().getHitDelay());
+        player.setMaximumNoDamageTicks(this.getKit().getGameRules().isCombo() ? 3 : this.getKit().getGameRules().getHitDelay());
 
         Location spawn = playerA.equals(teamPlayer) ? getArena().getSpawn1() : getArena().getSpawn2();
 

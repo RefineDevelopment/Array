@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.event.Event;
-import xyz.refinedev.practice.event.EventHelperUtil;
+import xyz.refinedev.practice.event.EventLocations;
 import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.event.impl.brackets.solo.BracketsSolo;
@@ -36,14 +36,14 @@ public class EventManager {
 	//TODO: Make a Multiple Event System
 	private Event activeEvent;
 
-	private EventHelperUtil helper;
+	private EventLocations helper;
 	private Cooldown cooldown = new Cooldown(0);
 
 	/**
 	 * Load event utilities and setup basic tasks
 	 */
 	public void init() {
-		this.helper = new EventHelperUtil(config);
+		this.helper = new EventLocations(config);
 		this.helper.loadLocations();
 	}
 
@@ -55,7 +55,7 @@ public class EventManager {
 
 		this.events.clear();
 
-		this.helper.saveLocations();
+		this.helper.save();
 	}
 
 	/**

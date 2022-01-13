@@ -94,7 +94,7 @@ public class BracketsTeam extends Event {
         //Reset Previous Team A
         if (this.roundTeamA != null) {
             for (Player player : this.roundTeamA.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
-                player.teleport(EventHelperUtil.getSpectator(this));
+                player.teleport(this.plugin.getEventManager().getHelper().getSpectator(this));
 
                 Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
                 if (this.isRemovable(player)) continue;
@@ -107,7 +107,7 @@ public class BracketsTeam extends Event {
         //Reset Previous Team B
         if (this.roundTeamB != null) {
             for (Player player : this.roundTeamB.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
-                player.teleport(EventHelperUtil.getSpectator(this));
+                player.teleport(this.plugin.getEventManager().getHelper().getSpectator(this));
 
                 Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
                 if (this.isRemovable(player)) continue;
@@ -126,7 +126,7 @@ public class BracketsTeam extends Event {
             Profile profileA = this.plugin.getProfileManager().getProfileByUUID(playerA.getUniqueId());
 
             profileA.getStatisticsData().get(this.kit).getKitItems().forEach((integer, itemStack) -> playerA.getInventory().setItem(integer, itemStack));
-            playerA.teleport(EventHelperUtil.getSpawn1(this));
+            playerA.teleport(this.plugin.getEventManager().getHelper().getSpawn1(this));
 
             this.roundTeamA.getPlayers().forEach(eventPlayer -> {
                 this.plugin.getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
@@ -143,7 +143,7 @@ public class BracketsTeam extends Event {
             PlayerUtil.reset(playerB);
 
             Profile profileB = this.plugin.getProfileManager().getProfileByUUID(playerB.getUniqueId());
-            playerB.teleport(EventHelperUtil.getSpawn2(this));
+            playerB.teleport(this.plugin.getEventManager().getHelper().getSpawn2(this));
 
             profileB.getStatisticsData().get(this.kit).getKitItems().forEach((integer, itemStack) -> playerB.getInventory().setItem(integer, itemStack));
 
@@ -197,7 +197,7 @@ public class BracketsTeam extends Event {
             this.plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                 Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
                 plugin.getProfileManager().refreshHotbar(profile);
-                player.teleport(EventHelperUtil.getSpectator(this));
+                player.teleport(this.plugin.getEventManager().getHelper().getSpectator(this));
             }, 2L);
         }
 
@@ -223,7 +223,7 @@ public class BracketsTeam extends Event {
                     plugin.getProfileManager().refreshHotbar(profile);
                     this.refreshNameTag();
 
-                    winner.teleport(EventHelperUtil.getSpectator(this));
+                    winner.teleport(this.plugin.getEventManager().getHelper().getSpectator(this));
                 }
 
                 for (Player loser : losingTeam.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
@@ -231,7 +231,7 @@ public class BracketsTeam extends Event {
                     plugin.getProfileManager().refreshHotbar(profile);
                     this.refreshNameTag();
 
-                    loser.teleport(EventHelperUtil.getSpectator(this));
+                    loser.teleport(this.plugin.getEventManager().getHelper().getSpectator(this));
                 }
             }, 2L);
         }

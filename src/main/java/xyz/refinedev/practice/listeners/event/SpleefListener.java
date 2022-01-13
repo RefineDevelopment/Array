@@ -23,7 +23,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.Event;
-import xyz.refinedev.practice.event.EventHelperUtil;
 import xyz.refinedev.practice.event.EventState;
 import xyz.refinedev.practice.event.impl.spleef.Spleef;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
@@ -100,7 +99,7 @@ public class SpleefListener implements Listener {
         player.setFireTicks(0);
 
         if (!spleef.isFighting() || !spleef.isFighting(player.getUniqueId())) {
-            player.teleport(EventHelperUtil.getSpawn(spleef));
+            player.teleport(this.plugin.getEventManager().getHelper().getSpawn(spleef));
             return;
         }
 

@@ -24,6 +24,7 @@ import xyz.refinedev.practice.profile.Profile;
  * Project: Array
  */
 
+//TODO: Clean this up
 @RequiredArgsConstructor
 public class SumoTeamListener implements Listener {
     
@@ -144,15 +145,6 @@ public class SumoTeamListener implements Listener {
                     event.setCancelled(true);
                 }
             }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        Profile profile = plugin.getProfileManager().getProfileByUUID(event.getPlayer().getUniqueId());
-
-        if (profile.isInEvent() && profile.getEvent().isSumoTeam()) {
-            profile.getEvent().handleLeave(event.getPlayer());
         }
     }
 }

@@ -19,7 +19,6 @@ import xyz.refinedev.practice.clan.meta.ClanInvite;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.queue.QueueType;
-import xyz.refinedev.practice.task.clan.ClanInviteExpireTask;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.Clickable;
 
@@ -47,8 +46,6 @@ public class ClanManager {
     private final Map<UUID, ClanProfile> profileMap = new HashMap<>();
 
     public void init() {
-        new ClanInviteExpireTask(plugin).runTaskTimerAsynchronously(plugin, 100L, 100L);
-
         plugin.submitToThread(() -> {
             for ( Document document : collection.find() ) {
 
@@ -229,8 +226,8 @@ public class ClanManager {
      */
     public void invite(Clan clan, Player target) {
         OfflinePlayer leader = Bukkit.getOfflinePlayer(clan.getLeader().getUniqueId());
-        ClanInvite invite = new ClanInvite(target.getUniqueId(), clan);
-        clan.getInvites().add(invite);
+        ClanInvite invite = new ClanInvite(target.getUniqueId());
+        clan.getInvites().put(target.getUniqueId(), invite);
 
         List<String> strings = new ArrayList<>();
         strings.add(Locale.CLAN_INVITED.toString().replace("<leader>", leader.getName()));
@@ -251,7 +248,7 @@ public class ClanManager {
     public void join(Clan clan, Player joiner, ClanInvite clanInvite) {
         Profile profile = this.plugin.getProfileManager().getProfileByPlayer(joiner);
 
-        if (clanInvite != null && !clan.getInvites().contains(clanInvite)) {
+        if (clanInvite != null && !clan.getInvites().containsKey(joiner.getUniqueId())) {
             joiner.sendMessage(CC.translate("&7You are not invited to this clan or your invite expired!"));
             return;
         }
@@ -427,12 +424,7 @@ public class ClanManager {
      * @return       {@link ClanInvite}
      */
     public ClanInvite getInvite(Clan clan, Player player) {
-        return clan.getInvites()
-                .stream()
-                .filter(invite -> invite.getPlayer().equals(player.getUniqueId()))
-                .filter(invite -> invite.getClan().getUniqueId().equals(clan.getUniqueId()))
-                .filter(invite -> !invite.hasExpired())
-                .findAny().orElse(null);
+        return clan.getInvites().get(player.getUniqueId());
     }
 
     public boolean isInFight(Clan clan) {

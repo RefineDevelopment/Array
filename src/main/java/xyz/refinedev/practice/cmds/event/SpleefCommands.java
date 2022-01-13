@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.event.EventLocations;
 import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.managers.EventManager;
@@ -50,28 +51,31 @@ public class SpleefCommands {
     @Command(name = "knockback", aliases = {"setkb", "kb"}, usage = "<knockback>", desc = "Set Spleef's Knockback")
     @Require("array.event.admin")
     public void knockback(@Sender CommandSender player, String kb) {
-        manager.setSpleefKB(kb);
-        manager.save();
+        EventLocations helper = this.plugin.getEventManager().getHelper();
+        helper.setSpleefKB(kb);
+        helper.save();
         player.sendMessage(Locale.EVENT_KNOCKBACK.toString().replace("<knockback>", kb));
     }
 
     @Command(name = "setspawn", aliases = "location", desc = "Set Spleef's Spawn Point")
     @Require("array.event.admin")
     public void setSpawn(@Sender Player player) {
-        manager.setSpleefSpawn(player.getLocation());
+        EventLocations helper = this.plugin.getEventManager().getHelper();
+        helper.setSpleefSpawn(player.getLocation());
+        helper.save();
         player.sendMessage(Locale.EVENT_SPAWN.toString().replace("<position>", "Main"));
-        manager.save();
     }
 
     @Command(name = "tp", aliases = "teleport", desc = "Teleport to Spleef's Spawn Location")
     @Require("array.event.admin")
     public void teleport(@Sender Player player) {
-        if (manager.getSpleefSpawn() == null) {
-            player.sendMessage("&cCould not teleport, spawn points are not setup");
+        EventLocations helper = this.plugin.getEventManager().getHelper();
+        if (helper.getSpleefSpawn() == null) {
+            player.sendMessage("&cCould not teleport, spawn point not setup.");
             return;
         }
 
-        player.teleport(manager.getSpleefSpawn());
+        player.teleport(helper.getSpleefSpawn());
         player.sendMessage(Locale.EVENT_TELEPORT.toString().replace("<event_name>", "Spleef"));
     }
 }

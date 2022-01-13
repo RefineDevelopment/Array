@@ -7,6 +7,7 @@ import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.command.annotation.Command;
+import xyz.refinedev.practice.util.command.annotation.OptArg;
 import xyz.refinedev.practice.util.command.annotation.Require;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 
@@ -26,14 +27,15 @@ public class LeaveMatchCommand {
 
     @Command(name = "", desc = "Cancel your on-going match")
     @Require("array.profile.forfeit")
-    public void forfeitMatch(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+    public void forfeitMatch(@Sender Player player, @OptArg() Player target) {
 
-        if (profile.isInFight()) {
-            Match match = profile.getMatch();
-            match.handleDeath(player);
-        } else {
-            player.sendMessage(Locale.ERROR_NOTMATCH.toString());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(target == null ? player.getUniqueId() : target.getUniqueId());
+        if (!profile.isInFight()) {
+            player.sendMessage(target == null ? Locale.ERROR_NOTMATCH.toString() : Locale.ERROR_TARGET_NOTMATCH.toString());
+            return;
         }
+
+        Match match = profile.getMatch();
+        plugin.getMatchManager().handleDeath(match, player);
     }
 }

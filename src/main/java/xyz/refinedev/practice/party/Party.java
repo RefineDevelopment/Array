@@ -3,24 +3,22 @@ package xyz.refinedev.practice.party;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
-import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.managers.ProfileManager;
-import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
-import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.other.PartyHelperUtil;
+import xyz.refinedev.practice.util.storage.TimerHashMap;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Getter @Setter
 public class Party extends Team {
 
     private final Map<UUID, String> kits = new HashMap<>();
-    private final List<PartyInvite> invites = new ArrayList<>();
+    private final Map<UUID, PartyInvite> invites = new TimerHashMap<>(TimeUnit.SECONDS, 15);
     private final List<UUID> banned = new LinkedList<>();
 
     private final UUID uniqueId;
@@ -68,7 +66,7 @@ public class Party extends Team {
      * @return {@link PartyInvite}
      */
     public PartyInvite getInvite(UUID uuid) {
-        return this.invites.stream().filter(invite -> invite.getUniqueId().equals(uuid)).findAny().orElse(null);
+        return this.invites.get(uuid);
     }
 
     /**

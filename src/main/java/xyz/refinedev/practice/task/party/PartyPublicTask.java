@@ -28,18 +28,16 @@ public class PartyPublicTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        for (Party party : plugin.getPartyManager().getParties()) {
-            if (party == null || party.isDisbanded() || party.getPlayers().isEmpty() || party.getLeader() == null ) return;
+        for (Party party : plugin.getPartyManager().getParties().values()) {
+            if (party == null || party.isDisbanded() || !party.isPublic()) continue;
 
-            if (party.isPublic()) {
-                for ( Player player : Bukkit.getOnlinePlayers() ) {
-                    List<String> toSend = new ArrayList<>();
+            for ( Player player : Bukkit.getOnlinePlayers() ) {
+                List<String> toSend = new ArrayList<>();
 
-                    toSend.add(Locale.PARTY_PUBLIC.toString().replace("<host>", party.getLeader().getUsername()));
-                    toSend.add(Locale.PARTY_CLICK_TO_JOIN.toString());
+                toSend.add(Locale.PARTY_PUBLIC.toString().replace("<host>", party.getLeader().getUsername()));
+                toSend.add(Locale.PARTY_CLICK_TO_JOIN.toString());
 
-                    toSend.forEach(string -> new Clickable(string, Locale.PARTY_INVITE_HOVER.toString(), "/party join " + party.getLeader().getUsername()).sendToPlayer(player));
-                }
+                toSend.forEach(string -> new Clickable(string, Locale.PARTY_INVITE_HOVER.toString(), "/party join " + party.getLeader().getUsername()).sendToPlayer(player));
             }
         }
     }

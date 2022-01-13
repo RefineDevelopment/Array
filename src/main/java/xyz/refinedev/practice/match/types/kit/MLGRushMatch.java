@@ -93,7 +93,7 @@ public class MLGRushMatch extends SoloMatch {
         teamPlayer.setPlayerSpawn(spawn);
 
         this.getKit().applyToPlayer(player);
-        this.giveBedwarsKit(player);
+        PlayerUtil.giveWoolKit(this, player);
 
         plugin.getNameTagHandler().reloadPlayer(player);
         plugin.getNameTagHandler().reloadOthersFor(player);
@@ -211,40 +211,5 @@ public class MLGRushMatch extends SoloMatch {
             return ChatColor.RED;
         }
         return ChatColor.AQUA;
-    }
-
-    /**
-     * Replace and color the clay blocks and leather
-     * armor of the specified player to their corresponding color
-     *
-     * @param player The player getting the kit applied
-     */
-    public void giveBedwarsKit(Player player) {
-        ItemStack[] armorRed = leatherArmor(Color.RED);
-        ItemStack[] armorBlue = leatherArmor(Color.BLUE);
-
-        if (this.getTeamPlayerA().getPlayer() == player) {
-            player.getInventory().setArmorContents(armorRed);
-            player.getInventory().all(Material.WOOL).forEach((key, value) -> {
-                player.getInventory().setItem(key, new ItemBuilder(Material.WOOL).durability(14).amount(64).build());
-                player.getInventory().setItem(key, new ItemBuilder(Material.WOOL).durability(14).amount(64).build());
-            });
-        } else {
-            player.getInventory().setArmorContents(armorBlue);
-            player.getInventory().all(Material.WOOL).forEach((key, value) -> {
-                player.getInventory().setItem(key, new ItemBuilder(Material.WOOL).durability(11).amount(64).build());
-                player.getInventory().setItem(key, new ItemBuilder(Material.WOOL).durability(11).amount(64).build());
-            });
-        }
-        player.updateInventory();
-    }
-
-    public ItemStack[] leatherArmor(Color color){
-        return new ItemStack[]{
-                new ItemBuilder(Material.LEATHER_BOOTS).color(color).build(),
-                new ItemBuilder(Material.LEATHER_LEGGINGS).color(color).build(),
-                new ItemBuilder(Material.LEATHER_CHESTPLATE).color(color).build(),
-                new ItemBuilder(Material.LEATHER_HELMET).color(color).build()
-        };
     }
 }

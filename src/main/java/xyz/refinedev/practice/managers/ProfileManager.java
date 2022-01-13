@@ -274,6 +274,11 @@ public class ProfileManager {
         for (Profile otherProfile : profiles.values()) {
             this.handleVisibility(otherProfile);
         }
+
+        if (player.hasPermission("array.profile.fly")) {
+            player.setAllowFlight(true);
+            player.setFlying(true);
+        }
     }
 
     public void handleLeave(Profile profile) {
@@ -384,13 +389,16 @@ public class ProfileManager {
         if (!event.isCancelled() && event.getLocation() != null) {
             player.teleport(event.getLocation());
         }
+        this.applyLevels(profile, player);
+    }
 
+    public void applyLevels(Profile profile, Player player) {
         if (!plugin.getDivisionsManager().isXPBased()) return;
+        if (!profile.getState().equals(ProfileState.IN_LOBBY)) return;
+
         //Just to make it look cool, we just apply the experience to the player's hotbar
-        if (profile.getState().equals(ProfileState.IN_LOBBY)) {
-            player.setLevel(this.getDivision(profile).getXpLevel());
-            player.setExp((float) (profile.getExperience() % 100) / 100.0f);
-        }
+        player.setLevel(this.getDivision(profile).getXpLevel());
+        player.setExp((float) (profile.getExperience() % 100) / 100.0f);
     }
 
     /**

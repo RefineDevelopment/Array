@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.event.Event;
+import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.command.annotation.Command;
@@ -62,9 +64,11 @@ public class SpectateCommand {
         }
 
         if (targetProfile.isInFight() || targetProfile.isInTournament()) {
-            targetProfile.getMatch().addSpectator(player, target);
+            Match match = profile.getMatch();
+            this.plugin.getMatchManager().addSpectator(match, player, target);
         } else if (targetProfile.isInEvent()) {
-            targetProfile.getEvent().addSpectator(player);
+            Event event = this.plugin.getEventManager().getEventByUUID(profile.getEvent());
+            event.addSpectator(player);
         }
     }
 
@@ -78,7 +82,7 @@ public class SpectateCommand {
             player.sendMessage(Locale.ERROR_NOTSPECTATING.toString());
             return;
         }
-        profile.getMatch().toggleSpectators(player);
+        this.plugin.getMatchManager().toggleSpectators(profile.getMatch(), player);
     }
 
     @Command(name = "hide", aliases = "disable", desc = "Hide spectators")
@@ -91,6 +95,6 @@ public class SpectateCommand {
             player.sendMessage(Locale.ERROR_NOTSPECTATING.toString());
             return;
         }
-        profile.getMatch().toggleSpectators(player);
+        this.plugin.getMatchManager().toggleSpectators(profile.getMatch(), player);
     }
 }

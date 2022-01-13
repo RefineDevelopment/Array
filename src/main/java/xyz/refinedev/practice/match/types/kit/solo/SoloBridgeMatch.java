@@ -3,11 +3,8 @@ package xyz.refinedev.practice.match.types.kit.solo;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffectType;
 import xyz.refinedev.practice.Array;
@@ -22,7 +19,6 @@ import xyz.refinedev.practice.match.types.SoloMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
@@ -87,7 +83,7 @@ public class SoloBridgeMatch extends SoloMatch {
         teamPlayer.setPlayerSpawn(spawn);
 
         this.getKit().applyToPlayer(player);
-        this.giveBridgeKit(player);
+        PlayerUtil.giveClayKit(this, player);
 
         plugin.getNameTagHandler().reloadPlayer(player);
         plugin.getNameTagHandler().reloadOthersFor(player);
@@ -226,40 +222,5 @@ public class SoloBridgeMatch extends SoloMatch {
             return ChatColor.RED;
         }
         return ChatColor.AQUA;
-    }
-
-    /**
-     * Replace and color the clay blocks and leather
-     * armor of the specified player to their corresponding color
-     *
-     * @param player The player getting the kit applied
-     */
-    public void giveBridgeKit(Player player) {
-        ItemStack[] armorRed = leatherArmor(Color.RED);
-        ItemStack[] armorBlue = leatherArmor(Color.BLUE);
-
-        if (this.getTeamPlayerA().getPlayer() == player) {
-            player.getInventory().setArmorContents(armorRed);
-            player.getInventory().all(Material.STAINED_CLAY).forEach((key, value) -> {
-                player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(14).amount(64).build());
-                player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(14).amount(64).build());
-            });
-        } else {
-            player.getInventory().setArmorContents(armorBlue);
-            player.getInventory().all(Material.STAINED_CLAY).forEach((key, value) -> {
-                player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(11).amount(64).build());
-                player.getInventory().setItem(key, new ItemBuilder(Material.STAINED_CLAY).durability(11).amount(64).build());
-            });
-        }
-        player.updateInventory();
-    }
-
-    public ItemStack[] leatherArmor(Color color){
-        return new ItemStack[]{
-                new ItemBuilder(Material.LEATHER_BOOTS).color(color).build(),
-                new ItemBuilder(Material.LEATHER_LEGGINGS).color(color).build(),
-                new ItemBuilder(Material.LEATHER_CHESTPLATE).color(color).build(),
-                new ItemBuilder(Material.LEATHER_HELMET).color(color).build()
-        };
     }
 }

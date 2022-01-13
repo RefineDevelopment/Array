@@ -129,6 +129,7 @@ public class QueueManager {
      * @return {@link Queue}
      */
     public Queue getByUUID(UUID uuid) {
+        if (uuid == null) return null;
         return queues.get(uuid);
     }
 
@@ -139,6 +140,7 @@ public class QueueManager {
      * @return     {@link QueueProfile}
      */
     public QueueProfile getProfileByUUID(UUID uuid) {
+        if (uuid == null) return null;
         return profileMap.get(uuid);
     }
 }

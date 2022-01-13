@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.event.EventHelperUtil;
 import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.managers.EventManager;
@@ -51,19 +50,19 @@ public class ParkourCommands {
     public void setSpawn(@Sender Player player) {
         player.sendMessage(Locale.EVENT_SPAWN.toString().replace("<position>", "Main"));
 
-        EventHelperUtil.setParkourSpawn(player.getLocation());
-        this.manager.getHelper().saveLocations();
+        this.plugin.getEventManager().getHelper().setParkourSpawn(player.getLocation());
+        this.manager.getHelper().save();
     }
 
     @Command(name = "tp", aliases = "teleport", desc = "Teleport to Parkour's Spawn Location")
     @Require("array.event.admin")
     public void teleport(@Sender Player player) {
-        if (EventHelperUtil.getParkourSpawn() == null) {
+        if (this.plugin.getEventManager().getHelper().getParkourSpawn() == null) {
             player.sendMessage("&cCould not teleport, spawn points are not setup");
             return;
         }
 
-        player.teleport(EventHelperUtil.getParkourSpawn());
+        player.teleport(this.plugin.getEventManager().getHelper().getParkourSpawn());
         player.sendMessage(Locale.EVENT_TELEPORT.toString().replace("<event_name>", "Parkour"));
     }
 }

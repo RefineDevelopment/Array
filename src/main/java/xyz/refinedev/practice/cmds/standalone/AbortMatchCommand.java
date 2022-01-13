@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
@@ -33,7 +34,8 @@ public class AbortMatchCommand {
             player.sendMessage(Locale.MATCH_NOT_IN.toString());
             return;
         }
-        profile.getMatch().end();
+        Match match = profile.getMatch();
+        this.plugin.getMatchManager().end(match);
         player.sendMessage(CC.translate("&7Successfully cancelled &c" + profile.getName() + "'s &7Match!"));
     }
 

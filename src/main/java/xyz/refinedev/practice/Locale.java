@@ -173,6 +173,7 @@ public enum Locale {
     ERROR_FREE("ERROR.FREE", "&cThat player is not in any match or any event."),
     ERROR_NO_ARENAS("ERROR.NO_ARENAS", "&cThere are no available arenas!"),
     ERROR_NOTMATCH("ERROR.NOT_IN_MATCH", "&cYou are not in any match."),
+    ERROR_TARGET_NOTMATCH("ERROR.TARGET_NOT_IN_MATCH", "&cTarget is not in any match."),
     ERROR_NOTABLE("ERROR.NOT_ABLE", "&cYou can not do this right now."),
     ERROR_PING_TOO_HIGH("ERROR.PING_TOO_HIGH", "&cYour ping is too high!"),
     ERROR_TARGET_IN_PARTY("ERROR.TARGET_IN_PARTY", "&cThe dueled player is currently in a party."),

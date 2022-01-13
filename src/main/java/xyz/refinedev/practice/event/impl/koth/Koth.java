@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.event.impl.koth;
+/*package xyz.refinedev.practice.event.impl.koth;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,7 +10,6 @@ import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.event.impl.koth.task.KoTHDetectTask;
-import xyz.refinedev.practice.event.impl.koth.task.KothRoundStartTask;
 import xyz.refinedev.practice.event.meta.group.EventGroup;
 import xyz.refinedev.practice.event.meta.group.EventGroupColor;
 import xyz.refinedev.practice.event.meta.group.EventTeamPlayer;
@@ -22,14 +21,22 @@ import xyz.refinedev.practice.util.other.PlayerSnapshot;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * This Project is property of Refine Development © 2021
- * Redistribution of this Project is not allowed
- *
- * @author Drizzy
- * Created: 11/4/2021
- * Project: Array
- */
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.event.EventTeamSize;
+import xyz.refinedev.practice.event.EventType;
+import xyz.refinedev.practice.event.impl.koth.task.KoTHDetectTask;
+import xyz.refinedev.practice.event.meta.group.EventGroup;
+import xyz.refinedev.practice.event.meta.group.EventGroupColor;
+import xyz.refinedev.practice.event.meta.group.EventTeamPlayer;
+import xyz.refinedev.practice.event.meta.player.EventPlayer;
+import xyz.refinedev.practice.profile.ProfileState;
+import xyz.refinedev.practice.util.other.PlayerSnapshot;
+
+import java.util.List;
+import java.util.UUID;
 
 //TODO: A completely new take on the gamemode itself (from dani)
 //TODO: Just Basically, have a 5 minute timer, players need to get to the top of the hill through parkour
@@ -181,4 +188,4 @@ public class Koth extends Event {
         throw new IllegalArgumentException("Can not get a team from an FFA Event");
     }
 
-}
+}*/

@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.event.Event;
-import xyz.refinedev.practice.event.EventHelperUtil;
 import xyz.refinedev.practice.event.EventState;
 import xyz.refinedev.practice.event.menu.EventSelectMenu;
 import xyz.refinedev.practice.event.menu.EventTeamMenu;
@@ -113,7 +112,7 @@ public class EventCommands {
             player.sendMessage(Locale.EVENT_ALREADY_STARTED.toString());
             return;
         }
-        if (EventHelperUtil.isUnfinished(event)) {
+        if (this.plugin.getEventManager().getHelper().isUnfinished(event)) {
             player.sendMessage(Locale.EVENT_NOT_SETUP.toString());
             event.handleEnd();
             return;
@@ -175,7 +174,7 @@ public class EventCommands {
     @Command(name = "cooldown", aliases = "resetcooldown", desc = "Reset the event cooldown")
     @Require("array.event.admin")
     public void cooldown(@Sender CommandSender sender) {
-        eventManager.setCooldown(new Cooldown(0));
+        eventthis.plugin.getEventManager().getHelper().setCooldown(new Cooldown(0));
         sender.sendMessage(Locale.EVENT_COOLDOW_RESET.toString());
     }
 }

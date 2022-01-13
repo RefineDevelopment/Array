@@ -1,22 +1,13 @@
 package xyz.refinedev.practice.party;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import java.util.UUID;
 
+@Getter
+@RequiredArgsConstructor
 public class PartyInvite {
 
     private final UUID uuid;
-    private final long expiresAt;
-
-    public PartyInvite(final UUID uuid) {
-        this.expiresAt = System.currentTimeMillis() + 30000L;
-        this.uuid = uuid;
-    }
-    
-    public boolean hasExpired() {
-        return System.currentTimeMillis() >= this.expiresAt;
-    }
-    
-    public UUID getUniqueId() {
-        return this.uuid;
-    }
 }

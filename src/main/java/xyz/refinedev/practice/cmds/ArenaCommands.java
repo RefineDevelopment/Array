@@ -148,9 +148,8 @@ public class ArenaCommands {
     public void arenaReload(@Sender CommandSender player) {
         long st = System.currentTimeMillis();
 
-        Match.getMatches().forEach(Match::cleanup);
-        plugin.getArenaManager().getArenas().clear();
-        plugin.getArenaManager().init();
+        plugin.getMatchManager().getMatches().forEach(plugin.getMatchManager()::cleanup);
+        plugin.getArenaManager().reloadArenas();
 
         long et = System.currentTimeMillis();
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7Arenas were reloaded in &c" + (et - st) + " ms&7."));

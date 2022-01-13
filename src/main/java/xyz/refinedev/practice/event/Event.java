@@ -145,9 +145,9 @@ public abstract class Event {
 		this.plugin.getProfileManager().refreshHotbar(profile);
 
 		if (this.isFreeForAll()) {
-			player.teleport(EventHelperUtil.getSpawn(this));
+			player.teleport(this.plugin.getEventManager().getHelper().getSpawn(this));
 		} else {
-			player.teleport(EventHelperUtil.getSpectator(this));
+			player.teleport(this.plugin.getEventManager().getHelper().getSpectator(this));
 		}
 	}
 
@@ -337,9 +337,9 @@ public abstract class Event {
 		this.plugin.getProfileManager().handleVisibility(profile);
 
 		if (isFreeForAll()) {
-			player.teleport(EventHelperUtil.getSpawn(this));
+			player.teleport(this.plugin.getEventManager().getHelper().getSpawn(this));
 		} else {
-			player.teleport(EventHelperUtil.getSpectator(this));
+			player.teleport(this.plugin.getEventManager().getHelper().getSpectator(this));
 		}
 	}
 

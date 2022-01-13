@@ -18,7 +18,6 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.event.Event;
-import xyz.refinedev.practice.event.EventHelperUtil;
 import xyz.refinedev.practice.event.EventState;
 import xyz.refinedev.practice.event.impl.parkour.Parkour;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
@@ -62,7 +61,7 @@ public class ParkourListener implements Listener {
             if (eventPlayer.getLastLocation() != null) {
                 player.teleport(eventPlayer.getLastLocation());
             } else {
-                player.teleport(EventHelperUtil.getSpawn(parkour));
+                player.teleport(this.plugin.getEventManager().getHelper().getSpawn(parkour));
             }
         }
     }

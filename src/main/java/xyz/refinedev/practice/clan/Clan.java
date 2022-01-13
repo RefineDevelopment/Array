@@ -9,11 +9,10 @@ import xyz.refinedev.practice.clan.meta.ClanInvite;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.other.DateUtil;
+import xyz.refinedev.practice.util.storage.TimerHashMap;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -31,7 +30,7 @@ public class Clan {
     private final List<ClanProfile> members;
     private final List<ClanProfile> captains;
     private final List<UUID> bannedPlayers;
-    private transient List<ClanInvite> invites;
+    private transient Map<UUID, ClanInvite> invites;
 
     @SerializedName("_id")
     private final UUID uniqueId;
@@ -64,7 +63,7 @@ public class Clan {
 
         this.members = new ArrayList<>();
         this.captains = new ArrayList<>();
-        this.invites = new ArrayList<>();
+        this.invites = new TimerHashMap<>(TimeUnit.SECONDS, 100L);
         this.bannedPlayers = new ArrayList<>();
 
         this.maxMembers = 25;

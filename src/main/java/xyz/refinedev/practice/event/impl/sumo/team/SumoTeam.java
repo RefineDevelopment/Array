@@ -64,7 +64,7 @@ public class SumoTeam extends Event {
 
     @Override
     public void onJoin(Player player) {
-        this.getPlugin().getSpigotHandler().knockback(player, EventHelperUtil.getSumoKB());
+        this.getPlugin().getSpigotHandler().knockback(player, this.plugin.getEventManager().getHelper().getSumoKB());
     }
 
     @Override
@@ -98,7 +98,7 @@ public class SumoTeam extends Event {
         //Reset Previous Team A
         if (this.roundTeamA != null) {
             for (Player player : this.roundTeamA.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
-                player.teleport(EventHelperUtil.getSpectator(this));
+                player.teleport(this.plugin.getEventManager().getHelper().getSpectator(this));
 
                 Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
                 if (!this.isRemovable(player)) continue;
@@ -111,7 +111,7 @@ public class SumoTeam extends Event {
         //Reset Previous Team B
         if (this.roundTeamB != null) {
             for (Player player : this.roundTeamB.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
-                player.teleport(EventHelperUtil.getSpectator(this));
+                player.teleport(this.plugin.getEventManager().getHelper().getSpectator(this));
 
                 Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
                 if (!this.isRemovable(player)) continue;
@@ -128,7 +128,7 @@ public class SumoTeam extends Event {
             PlayerUtil.reset(playerA);
             PlayerUtil.denyMovement(playerA);
 
-            playerA.teleport(EventHelperUtil.getSpawn1(this));
+            playerA.teleport(this.plugin.getEventManager().getHelper().getSpawn1(this));
 
             this.roundTeamA.getPlayers().forEach(eventPlayer -> {
                 this.getPlugin().getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
@@ -145,7 +145,7 @@ public class SumoTeam extends Event {
             PlayerUtil.reset(playerB);
             PlayerUtil.denyMovement(playerB);
            
-            playerB.teleport(EventHelperUtil.getSpawn2(this));
+            playerB.teleport(this.plugin.getEventManager().getHelper().getSpawn2(this));
             
             this.roundTeamB.getPlayers().forEach(eventPlayer -> {
                 this.getPlugin().getNameTagHandler().reloadPlayer(eventPlayer.getPlayer());
@@ -197,7 +197,7 @@ public class SumoTeam extends Event {
             this.plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                 Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
                 plugin.getProfileManager().refreshHotbar(profile);
-                player.teleport(EventHelperUtil.getSpectator(this));
+                player.teleport(this.plugin.getEventManager().getHelper().getSpectator(this));
             }, 2L);
         }
 
@@ -223,7 +223,7 @@ public class SumoTeam extends Event {
                     plugin.getProfileManager().refreshHotbar(profile);
                     this.refreshNameTag();
 
-                    winner.teleport(EventHelperUtil.getSpectator(this));
+                    winner.teleport(this.plugin.getEventManager().getHelper().getSpectator(this));
                 }
 
                 for (Player loser : losingTeam.getPlayers().stream().filter(this::isApplicable).map(EventPlayer::getPlayer).collect(Collectors.toList())) {
@@ -231,7 +231,7 @@ public class SumoTeam extends Event {
                     plugin.getProfileManager().refreshHotbar(profile);
                     this.refreshNameTag();
 
-                    loser.teleport(EventHelperUtil.getSpectator(this));
+                    loser.teleport(this.plugin.getEventManager().getHelper().getSpectator(this));
                 }
             }, 2L);
         }
@@ -256,7 +256,7 @@ public class SumoTeam extends Event {
 
     @Override
     public void handleStart() {
-        this.setEventTask(new EventStartTask(this));
+        this.setEventTask(new EventStartTask(plugin, this));
         this.waterTask = new EventWaterTask(this.getPlugin(), this);
         this.waterTask.runTaskTimer(this.plugin, 20L, 20L);
     }

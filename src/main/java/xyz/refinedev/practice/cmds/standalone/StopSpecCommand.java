@@ -27,17 +27,20 @@ public class StopSpecCommand {
     @Command(name = "", desc = "Stop spectating")
     public void stopSpec(@Sender Player player) {
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-        if (profile.isSpectating()) {
-            profile.setSpectating(null);
-            if (profile.isInMatch()) {
-                Match match = profile.getMatch();
-                this.plugin.getMatchManager().removeSpectator(match, player);
-            } else if (profile.isInEvent()) {
-                Event event = profile.getEvent();
-                event.removeSpectator(player);
-            }
-        } else {
+        if (!profile.isSpectating()) {
             player.sendMessage(Locale.ERROR_NOTSPECTATING.toString());
+            return;
         }
+
+        profile.setSpectating(null);
+
+        if (profile.isInMatch()) {
+            Match match = profile.getMatch();
+            this.plugin.getMatchManager().removeSpectator(match, player);
+        } else if (profile.isInEvent()) {
+            Event event = this.plugin.getEventManager().getEventByUUID(profile.getEvent());
+            event.removeSpectator(player);
+        }
+
     }
 }

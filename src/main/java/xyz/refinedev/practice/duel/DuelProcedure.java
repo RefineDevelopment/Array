@@ -8,6 +8,7 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.hook.core.CoreAdapter;
+import xyz.refinedev.practice.hook.core.CoreHandler;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.Clickable;
@@ -17,8 +18,7 @@ import xyz.refinedev.practice.util.other.PlayerUtil;
 @RequiredArgsConstructor
 public class DuelProcedure {
 
-    private final Array plugin = Array.getInstance();
-    private final CoreAdapter rank = plugin.getCoreHandler();
+    private final Array plugin;
 
     private final Player sender;
     private final Player target;
@@ -45,13 +45,13 @@ public class DuelProcedure {
         senderProfile.getDuelRequests().put(target.getUniqueId(), request);
 
         sender.sendMessage(Locale.DUEL_SENT.toString()
-                .replace("<target_name>", rank.getFullName(target))
+                .replace("<target_name>", plugin.getCoreHandler().getFullName(target))
                 .replace("<target_ping>", String.valueOf(PlayerUtil.getPing(target)))
                 .replace("<duel_kit>", request.getKit().getDisplayName())
                 .replace("<duel_arena>", request.getArena().getDisplayName()));
 
         target.sendMessage(Locale.DUEL_RECEIVED.toString()
-                .replace("<sender_name>", rank.getFullName(sender))
+                .replace("<sender_name>", plugin.getCoreHandler().getFullName(sender))
                 .replace("<sender_ping>", String.valueOf(PlayerUtil.getPing(sender)))
                 .replace("<duel_kit>", request.getKit().getDisplayName())
                 .replace("<duel_arena>", request.getArena().getDisplayName()));

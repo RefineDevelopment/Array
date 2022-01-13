@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import xyz.refinedev.practice.Array;
@@ -40,6 +41,7 @@ public class GHeadListener implements Listener {
 
 		if (match.isTheBridgeMatch()) {
 			player.setHealth(event.getPlayer().getMaxHealth());
+			this.plugin.getServer().getScheduler().runTaskLaterAsynchronously(this.plugin, () -> player.removePotionEffect(PotionEffectType.REGENERATION), 1L);
 		}
 	}
 

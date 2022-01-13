@@ -1,13 +1,17 @@
 package xyz.refinedev.practice.task.match;
 
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.match.Match;
-import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.match.team.TeamPlayer;
+import xyz.refinedev.practice.util.chat.CC;
+import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TitleAPI;
 
 /**
@@ -26,28 +30,55 @@ public class MatchRespawnTask extends BukkitRunnable {
     private final Player player;
     private final Match match;
 
-    private int ticks;
+    private int respawn = 4;
 
     @Override
     public void run() {
-        int seconds = 3 - ticks;
+        if (this.respawn <= 1) {
+            TeamPlayer teamPlayer = match.getTeamPlayer(player);
 
-        if (match.isEnding()) {
-            cancel();
-            return;
+            player.removePotionEffect(PotionEffectType.WEAKNESS);
+            player.teleport(teamPlayer.getPlayerSpawn());
+            match.getAllPlayers().forEach(matchPlayer -> matchPlayer.showPlayer(player));
+            player.setFallDistance(50.0f);
+            player.setAllowFlight(false);
+            player.setFlying(false);
+            player.setHealth(player.getMaxHealth());
+            player.setFoodLevel(20);
+            player.sendMessage(CC.translate("&aYou have respawned!"));
+            player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10.0f, 1.0f);
+
+            plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+                player.resetMaxHealth();
+                player.setHealth(player.getMaxHealth());
+                player.setFoodLevel(20);
+                match.getKit().applyToPlayer(player);
+                PlayerUtil.giveWoolKit(match, player);
+                TitleAPI.sendRespawning(player);
+                this.cancel();
+            }, 2L);
         }
 
-        final String replace = Locale.MATCH_COUNTDOWN.toString().replace("<seconds>", String.valueOf((seconds)));
-        if (seconds == 0) {
-            player.setMetadata("noDenyMove", new FixedMetadataValue(plugin, true));
-            match.setupPlayer(player);
-            this.cancel();
-            return;
+        if (this.respawn == 4) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, Integer.MAX_VALUE, 0));
+            match.getAllPlayers().forEach(matchPlayer -> matchPlayer.hidePlayer(player));
+            player.getInventory().clear();
+            player.getInventory().setArmorContents(null);
+            player.updateInventory();
+            player.setHealth(player.getMaxHealth());
+            player.setFoodLevel(20);
+            player.setVelocity(player.getVelocity().add(new Vector(0.0, 0.25, 0.0)));
+            player.setAllowFlight(true);
+            player.setFlying(true);
+            player.setVelocity(player.getVelocity().add(new Vector(0.0, 0.15, 0.0)));
+            player.setAllowFlight(true);
+            player.setFlying(true);
+            if (player.getKiller() != null) {
+                player.teleport(player.getKiller());
+            }
         }
-
-        TitleAPI.sendRespawnCountdown(player, ticks);
-        player.sendMessage(replace);
-        Button.playNeutral(player);
-        ticks++;
+        --this.respawn;
+        TitleAPI.sendRespawnCountdown(player, this.respawn);
+        player.playSound(player.getLocation(), Sound.NOTE_PLING, 10.0f, 1.0f);
     }
 }

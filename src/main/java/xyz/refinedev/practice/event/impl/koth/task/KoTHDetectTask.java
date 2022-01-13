@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.event.impl.koth.task;
+/*package xyz.refinedev.practice.event.impl.koth.task;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
@@ -7,14 +7,6 @@ import xyz.refinedev.practice.event.impl.koth.Koth;
 import xyz.refinedev.practice.event.meta.player.EventPlayer;
 import xyz.refinedev.practice.util.location.KothPoint;
 
-/**
- * This Project is property of Refine Development © 2021
- * Redistribution of this Project is not allowed
- *
- * @author Drizzy
- * Created: 11/4/2021
- * Project: Array
- */
 
 @RequiredArgsConstructor
 public class KoTHDetectTask extends BukkitRunnable {
@@ -37,3 +29,4 @@ public class KoTHDetectTask extends BukkitRunnable {
         }
     }
 }
+*/

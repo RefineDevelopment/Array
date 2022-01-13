@@ -93,7 +93,7 @@ public class BattleRushMatch extends SoloMatch {
         teamPlayer.setPlayerSpawn(spawn);
 
         this.getKit().applyToPlayer(player);
-        this.giveKit(player);
+        PlayerUtil.giveWoolKit(this, player);
 
         plugin.getNameTagHandler().reloadPlayer(player);
         plugin.getNameTagHandler().reloadOthersFor(player);
@@ -228,27 +228,5 @@ public class BattleRushMatch extends SoloMatch {
         }
         return ChatColor.AQUA;
     }
-
-    /**
-     * Replace and color the clay blocks and leather
-     * armor of the specified player to their corresponding color
-     *
-     * @param player The player getting the kit applied
-     */
-    public void giveKit(Player player) {
-        if (this.getTeamPlayerA().getPlayer() == player) {
-            player.getInventory().all(Material.WOOL).forEach((key, value) -> {
-                player.getInventory().setItem(key, new ItemBuilder(Material.WOOL).durability(14).amount(64).build());
-                player.getInventory().setItem(key, new ItemBuilder(Material.WOOL).durability(14).amount(64).build());
-            });
-        } else {
-            player.getInventory().all(Material.WOOL).forEach((key, value) -> {
-                player.getInventory().setItem(key, new ItemBuilder(Material.WOOL).durability(11).amount(64).build());
-                player.getInventory().setItem(key, new ItemBuilder(Material.WOOL).durability(11).amount(64).build());
-            });
-        }
-        player.updateInventory();
-    }
-
 
 }

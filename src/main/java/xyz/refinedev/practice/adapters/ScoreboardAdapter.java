@@ -248,15 +248,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                             .replace("|", "┃"));
                 }
             } else if (match.isBoxingMatch()) {
-                int hitDifference = self.getHits() - opponent.getHits();
-                String hits;
-                if (hitDifference < 0) {
-                    hits = CC.RED + hitDifference;
-                } else if (hitDifference == 0) {
-                    hits = CC.YELLOW + hitDifference;
-                } else {
-                    hits = CC.GREEN + hitDifference;
-                }
+                String hits = this.getHitDifference(self.getHits(), opponent.getHits());
 
                 for ( String line : config.getStringList("MATCH.SOLO_BOXING") ) {
                     if (line.contains("cps>") && !profile.getSettings().isCpsScoreboard() && plugin.getConfigHandler().isCPS_SCOREBOARD_SETTING()) continue;
@@ -752,5 +744,16 @@ public class ScoreboardAdapter implements AssembleAdapter {
         return config.getStringOrDefault("SCOREBOARD.ELO_RANGE_FORMAT", "<min_range> -> <max_range>")
                 .replace("<min_range>", String.valueOf(profile.getMinRange()))
                 .replace("<max_range>", String.valueOf(profile.getMaxRange()));
+    }
+
+    public String getHitDifference(int own, int opp) {
+        String hits = "&e(" + (opp - own) + ")";
+
+        if (own < opp) {
+            hits = "&c(-" + (opp - own) + ")";
+        } else if (own > opp) {
+            hits = "&a(+" + (opp - own) + ")";
+        }
+        return hits;
     }
 }

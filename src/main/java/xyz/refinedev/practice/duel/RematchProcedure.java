@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
-import xyz.refinedev.practice.hook.core.CoreAdapter;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
@@ -24,9 +23,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RematchProcedure {
 
+    private final Array plugin;
     private final long timestamp = System.currentTimeMillis();
-    private final Array plugin = Array.getInstance();
-    private final CoreAdapter rank = plugin.getCoreHandler();
 
     private final UUID key;
     private final UUID sender;
@@ -58,13 +56,13 @@ public class RematchProcedure {
         }
 
         sender.sendMessage(Locale.DUEL_SENT.toString()
-                .replace("<target_name>", rank.getFullName(target))
+                .replace("<target_name>", plugin.getCoreHandler().getFullName(target))
                 .replace("<target_ping>", String.valueOf(PlayerUtil.getPing(target)))
                 .replace("<duel_kit>", getKit().getDisplayName())
                 .replace("<duel_arena>", getArena().getDisplayName()));
 
         target.sendMessage(Locale.DUEL_RECEIVED.toString()
-                .replace("<sender_name>", rank.getFullName(sender))
+                .replace("<sender_name>", plugin.getCoreHandler().getFullName(sender))
                 .replace("<sender_ping>", String.valueOf(PlayerUtil.getPing(sender)))
                 .replace("<duel_kit>", getKit().getDisplayName())
                 .replace("<duel_arena>", getArena().getDisplayName()));

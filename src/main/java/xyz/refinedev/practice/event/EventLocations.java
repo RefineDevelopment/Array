@@ -20,29 +20,29 @@ import java.util.List;
  * Project: Array
  */
 
-public class EventHelperUtil {
+@Getter @Setter
+public class EventLocations {
 
-    //This class is mostly static because access this in an instance seems quite pointless as
+    //This class is mostly because access this in an instance seems quite pointless as
     //it does not have other uses besides checking and getting locations and knockback strings
     //besides, they are mostly nullable (most of the time) and they are loaded on startup so
     //no worries
     
     private final BasicConfigurationFile config;
 
-    @Setter @Getter private static Location sumoSpawn1, sumoSpawn2, sumoSpectator;
-    @Setter @Getter private static Location bracketsSpawn1, bracketsSpawn2, bracketsSpectator;
-    @Setter @Getter private static Location gulagSpawn1, gulagSpawn2, gulagSpectator;
-    @Setter @Getter private static Location lmsSpawn, parkourSpawn, spleefSpawn, omaSpawn;
-    @Setter @Getter private static Location kothSpawn1, kothSpawn2, kothSpec;
-    @Setter @Getter private static KothPoint kothPoint;
+    private Location sumoSpawn1, sumoSpawn2, sumoSpectator;
+    private Location bracketsSpawn1, bracketsSpawn2, bracketsSpectator;
+    private Location gulagSpawn1, gulagSpawn2, gulagSpectator;
+    private Location lmsSpawn, parkourSpawn, spleefSpawn, omaSpawn;
+    private Location kothSpawn1, kothSpawn2, kothSpec;
+    private KothPoint kothPoint;
 
-    @Getter private static List<Location> OITCSpawns = new ArrayList<>();
-    @Setter @Getter private static Location OITCSpectator;
+    private List<Location> OITCSpawns = new ArrayList<>();
+    private Location OITCSpectator;
 
-    @Getter
-    private static String sumoKB = "default", gulagKB = "default", omaKB = "default", spleefKB = "default", kothKB = "default";
+    private String sumoKB = "default", gulagKB = "default", omaKB = "default", spleefKB = "default", kothKB = "default";
 
-    public EventHelperUtil(BasicConfigurationFile config) {
+    public EventLocations(BasicConfigurationFile config) {
         this.config = config;
     }
     
@@ -73,7 +73,7 @@ public class EventHelperUtil {
         config.save();
     }
 
-    public void saveLocations() {
+    public void save() {
         String key = "EVENTS.";
 
         if (sumoSpawn1 != null) config.set(key + "SUMO.SPAWN1", LocationUtil.serialize(sumoSpawn1));
@@ -96,7 +96,7 @@ public class EventHelperUtil {
     }
 
 
-    public static Location getSpawn1(Event event) {
+    public Location getSpawn1(Event event) {
         switch (event.getType()) {
             case SUMO:
                 return sumoSpawn1;
@@ -110,7 +110,7 @@ public class EventHelperUtil {
         return null;
     }
 
-    public static Location getSpawn2(Event event) {
+    public Location getSpawn2(Event event) {
         switch (event.getType()) {
             case SUMO:
                 return sumoSpawn2;
@@ -124,7 +124,7 @@ public class EventHelperUtil {
         return null;
     }
 
-    public static Location getSpawn(Event event) {
+    public Location getSpawn(Event event) {
         switch (event.getType()) {
             case SPLEEF:
                 return spleefSpawn;
@@ -138,7 +138,7 @@ public class EventHelperUtil {
         return null;
     }
 
-    public static Location getSpectator(Event event) {
+    public Location getSpectator(Event event) {
         switch (event.getType()) {
             case SUMO:
                 return sumoSpectator;
@@ -154,7 +154,7 @@ public class EventHelperUtil {
         return null;
     }
 
-    public static boolean isUnfinished(Event event) {
+    public boolean isUnfinished(Event event) {
         if (event.isFreeForAll()) {
             return getSpawn(event) == null;
         } else {

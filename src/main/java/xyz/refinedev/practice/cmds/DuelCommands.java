@@ -73,7 +73,7 @@ public class DuelCommands {
             return;
         }
 
-        DuelProcedure procedure = new DuelProcedure(player, target, senderProfile.hasParty());
+        DuelProcedure procedure = new DuelProcedure(plugin, player, target, senderProfile.hasParty());
         senderProfile.setDuelProcedure(procedure);
         new DuelSelectKitMenu().openMenu(player);
     }

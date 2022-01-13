@@ -3,7 +3,6 @@ package xyz.refinedev.practice.match.types.kit.solo;
 import lombok.Getter;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
@@ -17,7 +16,6 @@ import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.task.match.MatchRespawnTask;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TitleAPI;
@@ -96,7 +94,7 @@ public class SoloBedwarsMatch extends SoloMatch {
         teamPlayer.setPlayerSpawn(spawn);
 
         this.getKit().applyToPlayer(player);
-        this.giveBedwarsKit(player);
+        PlayerUtil.giveWoolKit(this, player);
 
         plugin.getNameTagHandler().reloadPlayer(player);
         plugin.getNameTagHandler().reloadOthersFor(player);
@@ -212,40 +210,5 @@ public class SoloBedwarsMatch extends SoloMatch {
             return ChatColor.RED;
         }
         return ChatColor.AQUA;
-    }
-
-    /**
-     * Replace and color the clay blocks and leather
-     * armor of the specified player to their corresponding color
-     *
-     * @param player The player getting the kit applied
-     */
-    public void giveBedwarsKit(Player player) {
-        ItemStack[] armorRed = leatherArmor(Color.RED);
-        ItemStack[] armorBlue = leatherArmor(Color.BLUE);
-
-        if (this.getTeamPlayerA().getPlayer() == player) {
-            player.getInventory().setArmorContents(armorRed);
-            player.getInventory().all(Material.WOOL).forEach((key, value) -> {
-                player.getInventory().setItem(key, new ItemBuilder(Material.WOOL).durability(14).amount(64).build());
-                player.getInventory().setItem(key, new ItemBuilder(Material.WOOL).durability(14).amount(64).build());
-            });
-        } else {
-            player.getInventory().setArmorContents(armorBlue);
-            player.getInventory().all(Material.WOOL).forEach((key, value) -> {
-                player.getInventory().setItem(key, new ItemBuilder(Material.WOOL).durability(11).amount(64).build());
-                player.getInventory().setItem(key, new ItemBuilder(Material.WOOL).durability(11).amount(64).build());
-            });
-        }
-        player.updateInventory();
-    }
-
-    public ItemStack[] leatherArmor(Color color){
-        return new ItemStack[]{
-                new ItemBuilder(Material.LEATHER_BOOTS).color(color).build(),
-                new ItemBuilder(Material.LEATHER_LEGGINGS).color(color).build(),
-                new ItemBuilder(Material.LEATHER_CHESTPLATE).color(color).build(),
-                new ItemBuilder(Material.LEATHER_HELMET).color(color).build()
-        };
     }
 }

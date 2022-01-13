@@ -23,14 +23,14 @@ public class MatchWaterCheckTask extends BukkitRunnable {
             return;
         }
 
+        if (match.isEnding()) {
+            this.cancel();
+            return;
+        }
+
         for (Player player : match.getAlivePlayers()) {
             TeamPlayer teamPlayer = match.getTeamPlayer(player);
             if (teamPlayer == null) continue;
-
-            if (match.isEnding()) {
-                this.cancel();
-                return;
-            }
 
             Block body = player.getLocation().getBlock();
             Block head = body.getRelative(BlockFace.UP);
@@ -38,7 +38,7 @@ public class MatchWaterCheckTask extends BukkitRunnable {
             if (body.getType() == Material.WATER || body.getType() == Material.STATIONARY_WATER || head.getType() == Material.WATER || head.getType() == Material.STATIONARY_WATER) {
                 if (match.getKit().getGameRules().isWaterKill() || match.getKit().getGameRules().isSumo()) {
                     teamPlayer.setAlive(false);
-                    match.handleDeath(player, null, false);
+                    plugin.getMatchManager().handleDeath(match, player, null, false);
                 }
                 if (match.getKit().getGameRules().isParkour()) {
                     player.teleport(match.getTeamPlayer(player).getParkourCheckpoint());

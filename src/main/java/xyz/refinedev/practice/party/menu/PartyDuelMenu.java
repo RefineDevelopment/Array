@@ -28,7 +28,7 @@ public class PartyDuelMenu extends PaginatedMenu {
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        List<Party> parties = new ArrayList<>(plugin.getPartyManager().getParties());
+        List<Party> parties = new ArrayList<>(plugin.getPartyManager().getParties().values());
         int index = 0;
 
         parties.sort(Comparator.comparing(p -> p.getPlayers().size()));

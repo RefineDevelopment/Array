@@ -91,7 +91,7 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
             return;
         }
-        if (party.getInvite(target.getUniqueId()) != null) {
+        if (party.getInvites().containsKey(target.getUniqueId())) {
             player.sendMessage(Locale.PARTY_ALREADYINVITED.toString());
             return;
         }

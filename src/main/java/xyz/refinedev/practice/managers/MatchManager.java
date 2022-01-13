@@ -5,8 +5,10 @@ import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -37,7 +39,6 @@ import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.task.match.MatchBowCooldownTask;
 import xyz.refinedev.practice.task.match.MatchPearlCooldownTask;
-import xyz.refinedev.practice.task.match.MatchSnapshotCleanupTask;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
 import xyz.refinedev.practice.util.chat.ChatHelper;
@@ -46,9 +47,11 @@ import xyz.refinedev.practice.util.other.Cooldown;
 import xyz.refinedev.practice.util.other.EffectUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TimeUtil;
+import xyz.refinedev.practice.util.storage.TimerHashMap;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -65,15 +68,14 @@ public class MatchManager {
 
     private final Array plugin;
 
-    private final Map<UUID, MatchSnapshot> snapshotMap = new LinkedHashMap<>();
+    private final Map<UUID, MatchSnapshot> snapshotMap = new TimerHashMap<>(TimeUnit.SECONDS, 60);
     private final List<Match> matches = new ArrayList<>();
 
     public void init() {
         new MatchPearlCooldownTask(plugin).runTaskTimerAsynchronously(plugin, 10L, 10L);
         new MatchBowCooldownTask(plugin).runTaskTimerAsynchronously(plugin, 10L, 10L);
-        new MatchSnapshotCleanupTask(plugin).runTaskTimerAsynchronously(plugin, 200L, 200L);
 
-        Bukkit.getWorlds().forEach(world -> {
+        plugin.getServer().getWorlds().forEach(world -> {
             world.setGameRuleValue("doWeatherCycle", "false");
             world.setGameRuleValue("doMobSpawning", "false");
 
@@ -90,15 +92,6 @@ public class MatchManager {
      * @param match {@link Match} the match starting
      */
     public void start(Match match) {
-        Arena arena = match.getArena();
-
-        //So that chunks are properly visible
-        //My old dumb ass put this in the loop below causing massive lag
-        if (!arena.getSpawn1().getChunk().isLoaded() || !arena.getSpawn2().getChunk().isLoaded()) {
-            arena.getSpawn1().getChunk().load();
-            arena.getSpawn2().getChunk().load();
-        }
-
         for (Player player : match.getPlayers()) {
             Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
             profile.setState(ProfileState.IN_FIGHT);
@@ -113,13 +106,13 @@ public class MatchManager {
             MatchPlayerSetupEvent event = new MatchPlayerSetupEvent(player, match);
             this.plugin.getServer().getPluginManager().callEvent(event);
 
-            match.setupPlayer(player);
+            match.setupPlayer(plugin, player);
         }
 
         match.setState(MatchState.STARTING);
-        match.onStart();
+        match.onStart(plugin);
         match.setStartTimestamp(-1);
-        arena.setActive(true);
+        match.getArena().setActive(true);
         match.initiateTasks(this.plugin);
 
         this.sendStartMessage(match);
@@ -222,7 +215,7 @@ public class MatchManager {
      */
     public void handleRespawn(Match match, Player player) {
         player.setVelocity(player.getLocation().getDirection().setY(1));
-        match.onRespawn(player);
+        match.onRespawn(plugin, player);
     }
 
     /**
@@ -292,7 +285,7 @@ public class MatchManager {
         }
 
         this.handleKillEffect(match, deadPlayer, killerPlayer);
-        match.onDeath(deadPlayer, killerPlayer);
+        match.onDeath(plugin, deadPlayer, killerPlayer);
     }
 
     /**
@@ -461,6 +454,13 @@ public class MatchManager {
             match.getArena().setActive(false);
             match.getEntities().forEach(Entity::remove);
         });
+
+        World world = plugin.getServer().getWorld("world");
+        for ( Entity entity : world.getEntities()) {
+            if (entity.getType() != EntityType.DROPPED_ITEM) continue;
+            entity.remove();
+        }
+
     }
 
     /**

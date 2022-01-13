@@ -71,13 +71,15 @@ public class MongoManager {
     }
 
     public void shutdown() {
+        plugin.consoleLog("&7Disconnecting &cMongo&7...");
         try {
             Thread.sleep(50L);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
 
-        this.client.close();
+        if (this.client != null) this.client.close();
+        plugin.consoleLog("&7Disconnected &cMongo &7Successfully!");
     }
 
     public void disableLogging() {

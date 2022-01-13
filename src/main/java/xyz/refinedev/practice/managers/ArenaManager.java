@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -183,6 +184,11 @@ public class ArenaManager {
         }
 
         config.save();
+
+        Chunk[] chunks = this.plugin.getServer().getWorld("world").getLoadedChunks();
+        for ( Chunk chunk :  chunks) {
+            chunk.unload(true);
+        }
     }
 
     /**
@@ -213,6 +219,11 @@ public class ArenaManager {
 
         Rating rating = new Rating(arena, terrible, average, decent, okay, good);
         arena.setRating(rating);
+    }
+
+    public void reloadArenas() {
+        this.arenas.clear();
+        this.init();
     }
 
     /**
@@ -254,6 +265,7 @@ public class ArenaManager {
      * Load chunks of all the loaded arenas
      */
     public void loadChunks() {
+        this.plugin.logger("&7Starting &cchunk loading &7task!");
         for ( Arena arena : this.arenas ) {
             if (arena.getMax() == null || arena.getMin() == null) continue;
 
@@ -276,7 +288,10 @@ public class ArenaManager {
 
             for ( int x = arenaMinX; x <=  arenaMaxX; x++ ) {
                 for ( int z = arenaMinZ; z <=  arenaMaxZ; z++ ) {
-                    arena.getMin().getWorld().getChunkAt(x, z);
+                    Chunk chunk = arena.getMin().getWorld().getChunkAt(x, z);
+                    if (!chunk.isLoaded()) {
+                        chunk.load();
+                    }
                 }
             }
         }
