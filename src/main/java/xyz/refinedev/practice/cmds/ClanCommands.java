@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.cmds;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
+import xyz.refinedev.practice.util.other.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;

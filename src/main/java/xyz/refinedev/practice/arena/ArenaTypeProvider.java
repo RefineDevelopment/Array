@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.arena;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
@@ -36,7 +36,7 @@ public class ArenaTypeProvider extends DrinkProvider<ArenaType> {
 
     @Nullable
     @Override
-    public ArenaType provide(@NotNull CommandArg arg, @NotNull List<? extends Annotation> annotations) throws CommandExitMessage {
+    public ArenaType provide(@Nonnull CommandArg arg, @Nonnull List<? extends Annotation> annotations) throws CommandExitMessage {
         String name = arg.get();
         try {
             return ArenaType.valueOf(name.toUpperCase());
@@ -52,7 +52,7 @@ public class ArenaTypeProvider extends DrinkProvider<ArenaType> {
     }
 
     @Override
-    public List<String> getSuggestions(@NotNull String prefix) {
+    public List<String> getSuggestions(@Nonnull String prefix) {
         final String finalPrefix = prefix;
         return Arrays.stream(ArenaType.values()).map(ArenaType::name).filter(s -> finalPrefix.length() == 0 || s.startsWith(finalPrefix)).collect(Collectors.toList());
     }

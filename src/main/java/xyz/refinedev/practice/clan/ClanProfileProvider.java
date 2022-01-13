@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.clan;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
@@ -26,7 +26,7 @@ public class ClanProfileProvider extends DrinkProvider<ClanProfile> {
 
     @Nullable
     @Override
-    public ClanProfile provide(@NotNull CommandArg arg, @NotNull List<? extends Annotation> annotations) throws CommandExitMessage {
+    public ClanProfile provide(@Nonnull CommandArg arg, @Nonnull List<? extends Annotation> annotations) throws CommandExitMessage {
         String name = arg.get();
         UUID uuid = PlayerUtil.getUUIDByName(name);
         if (uuid == null) throw new CommandExitMessage("A profile with that name does not exist");
@@ -43,7 +43,7 @@ public class ClanProfileProvider extends DrinkProvider<ClanProfile> {
     }
 
     @Override
-    public List<String> getSuggestions(@NotNull String prefix) {
+    public List<String> getSuggestions(@Nonnull String prefix) {
         return null;
     }
 }

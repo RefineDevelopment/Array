@@ -11,7 +11,6 @@ import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.party.PartyInvite;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.task.party.PartyInviteExpireTask;
 import xyz.refinedev.practice.task.party.PartyPublicTask;
 import xyz.refinedev.practice.util.chat.Clickable;
 import xyz.refinedev.practice.util.other.PartyHelperUtil;
@@ -35,9 +34,6 @@ public class PartyManager {
     private final Map<UUID, Party> parties = new HashMap<>();
 
     public void init() {
-        PartyInviteExpireTask partyInviteExpireTask = new PartyInviteExpireTask(plugin);
-        partyInviteExpireTask.runTaskTimer(plugin, 100L, 100L);
-
         PartyPublicTask partyPublicTask = new PartyPublicTask(plugin);
         partyPublicTask.runTaskTimer(plugin, 1000L, 1000L);
     }
@@ -49,7 +45,7 @@ public class PartyManager {
      * @param party The party being utilized
      */
     public void invite(Player player, Party party) {
-        party.getInvites().add(new PartyInvite(player.getUniqueId()));
+        party.getInvites().put(player.getUniqueId(), new PartyInvite(player.getUniqueId()));
 
         List<String> strings = new ArrayList<>();
 
@@ -103,7 +99,7 @@ public class PartyManager {
         this.plugin.getNameTagHandler().reloadPlayer(player);
         this.plugin.getNameTagHandler().reloadOthersFor(player);
 
-        party.getInvites().removeIf(invite -> invite.getUniqueId().equals(player.getUniqueId()));
+        party.getInvites().values().removeIf(invite -> invite.getUniqueId().equals(player.getUniqueId()));
         party.broadcast(Locale.PARTY_PLAYER_JOINED.toString().replace("<joiner>", player.getName()));
 
         for (Player partyMember : party.getPlayers()) {

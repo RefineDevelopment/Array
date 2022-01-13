@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.util.duration;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
@@ -23,7 +23,7 @@ public class DurationProvider extends DrinkProvider<Duration> {
 
     @Nullable
     @Override
-    public Duration provide(@NotNull CommandArg arg, @NotNull List<? extends Annotation> annotations) throws CommandExitMessage {
+    public Duration provide(@Nonnull CommandArg arg, @Nonnull List<? extends Annotation> annotations) throws CommandExitMessage {
         String type = arg.get();
         return Duration.fromString(type);
     }
@@ -34,7 +34,7 @@ public class DurationProvider extends DrinkProvider<Duration> {
     }
 
     @Override
-    public List<String> getSuggestions(@NotNull String prefix) {
+    public List<String> getSuggestions(@Nonnull String prefix) {
         return null;
     }
 }

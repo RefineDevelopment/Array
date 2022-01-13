@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.util.command.command;
 
 import com.google.common.base.Preconditions;
-import org.apache.commons.lang3.StringUtils;
+import xyz.refinedev.practice.util.other.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

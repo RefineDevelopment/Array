@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.profile.killeffect;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
@@ -33,7 +33,7 @@ public class KillEffectProvider extends DrinkProvider<KillEffect> {
 
     @Nullable
     @Override
-    public KillEffect provide(@NotNull CommandArg arg, @NotNull List<? extends Annotation> annotations) throws CommandExitMessage {
+    public KillEffect provide(@Nonnull CommandArg arg, @Nonnull List<? extends Annotation> annotations) throws CommandExitMessage {
         String name = arg.get();
         KillEffect killEffect = this.getPlugin().getKillEffectManager().getByName(name);
         if (killEffect != null) return killEffect;
@@ -47,7 +47,7 @@ public class KillEffectProvider extends DrinkProvider<KillEffect> {
     }
 
     @Override
-    public List<String> getSuggestions(@NotNull String prefix) {
+    public List<String> getSuggestions(@Nonnull String prefix) {
         final String finalPrefix = prefix;
         return this.getPlugin().getKillEffectManager().getKillEffects().stream().map(KillEffect::getName).filter(s -> finalPrefix.length() == 0 || s.startsWith(finalPrefix)).collect(Collectors.toList());
 

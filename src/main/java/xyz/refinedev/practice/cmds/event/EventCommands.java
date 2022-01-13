@@ -174,7 +174,7 @@ public class EventCommands {
     @Command(name = "cooldown", aliases = "resetcooldown", desc = "Reset the event cooldown")
     @Require("array.event.admin")
     public void cooldown(@Sender CommandSender sender) {
-        eventthis.plugin.getEventManager().getHelper().setCooldown(new Cooldown(0));
+        plugin.getEventManager().setCooldown(new Cooldown(0));
         sender.sendMessage(Locale.EVENT_COOLDOW_RESET.toString());
     }
 }

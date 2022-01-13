@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.util.menu;
 
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
+import xyz.refinedev.practice.util.other.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

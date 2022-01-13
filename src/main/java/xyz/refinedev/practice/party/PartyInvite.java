@@ -9,5 +9,5 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PartyInvite {
 
-    private final UUID uuid;
+    private final UUID uniqueId;
 }

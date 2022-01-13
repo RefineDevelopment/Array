@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.listeners;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
+import xyz.refinedev.practice.util.other.StringUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

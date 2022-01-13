@@ -2,7 +2,6 @@ package xyz.refinedev.practice.match.menu;
 
 import com.google.common.base.Preconditions;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -131,7 +130,7 @@ public class MatchDetailsMenu extends Menu {
         @Override
         public ItemStack getButtonItem(Player player) {
             return new ItemBuilder(Material.MELON)
-                    .name("&cHealth: &7" + health + "/10&c" + StringEscapeUtils.unescapeJava("\u2764"))
+                    .name("&cHealth: &7" + health + "/10&c + \u2764")
                     .amount(health == 0 ? 1 : health)
                     .build();
         }

@@ -175,7 +175,8 @@ public class SoloMatch extends Match {
                     profile.setMatch(null);
 
                     if (opponent != null && opponent.isOnline()) {
-                        profile.setRematchData(new RematchProcedure(rematchKey, player.getUniqueId(), opponent.getUniqueId(), getKit(), getArena()));
+                        RematchProcedure rematchProcedure = new RematchProcedure(plugin, rematchKey, player.getUniqueId(), opponent.getUniqueId(), getKit(), getArena());
+                        profile.setRematchData(rematchProcedure);
                     }
 
                     plugin.getProfileManager().teleportToSpawn(profile);

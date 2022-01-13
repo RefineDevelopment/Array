@@ -1,7 +1,7 @@
 package xyz.refinedev.practice.kit;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
@@ -36,7 +36,7 @@ public class KitProvider extends DrinkProvider<Kit> {
 
     @Nullable
     @Override
-    public Kit provide(@NotNull CommandArg arg, @NotNull List<? extends Annotation> annotations) throws CommandExitMessage {
+    public Kit provide(@Nonnull CommandArg arg, @Nonnull List<? extends Annotation> annotations) throws CommandExitMessage {
         String name = arg.get();
         Kit kit = this.getPlugin().getKitManager().getByName(name);
         if (kit != null) {
@@ -51,7 +51,7 @@ public class KitProvider extends DrinkProvider<Kit> {
     }
 
     @Override
-    public List<String> getSuggestions(@NotNull String prefix) {
+    public List<String> getSuggestions(@Nonnull String prefix) {
         return this.getPlugin().getKitManager().getKits().stream().map(Kit::getName).filter(Objects::nonNull).filter(s -> prefix.length() == 0 || s.startsWith(prefix)).collect(Collectors.toList());
     }
 

@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.pvpclasses.classes;
 
-import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -18,6 +17,7 @@ import org.bukkit.potion.PotionEffectType;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.pvpclasses.PvPClass;
+import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -108,8 +108,9 @@ public class Rogue extends PvPClass implements Listener {
             long timestamp = rogueSpeedCooldowns.getOrDefault(event.getPlayer().getUniqueId(), 0L);
             long millis = System.currentTimeMillis();
             long remaining = timestamp - millis;
+
             if (remaining > 0L) {
-                player.sendMessage(Locale.HCF_COOLDOWN.toString().replace("<duration>", DurationFormatUtils.formatDurationWords(remaining, true, true)));
+                player.sendMessage(Locale.HCF_COOLDOWN.toString().replace("<duration>", TimeUtil.millisToRoundedTime(remaining)));
             } else {
                 ItemStack stack = player.getItemInHand();
                 if (stack.getAmount() == 1) {
@@ -131,7 +132,7 @@ public class Rogue extends PvPClass implements Listener {
             long millis = System.currentTimeMillis();
             long remaining1 = timestamp - millis;
             if (remaining1 > 0L) {
-                player.sendMessage(Locale.HCF_COOLDOWN.toString().replace("<duration>", DurationFormatUtils.formatDurationWords(remaining1, true, true)));
+                player.sendMessage(Locale.HCF_COOLDOWN.toString().replace("<duration>", TimeUtil.millisToRoundedTime(remaining1)));
             } else {
                 ItemStack stack = player.getItemInHand();
                 if (stack.getAmount() == 1) {

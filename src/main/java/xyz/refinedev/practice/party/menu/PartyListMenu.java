@@ -25,7 +25,7 @@ public class PartyListMenu extends Menu {
 
     @Override
     public String getTitle(Player player) {
-        return "&cClick to Manage a Member";
+        return "&7Party List";
     }
     
     @Override
@@ -43,38 +43,11 @@ public class PartyListMenu extends Menu {
         private final Player pplayer;
         
         @Override
-        public ItemStack getButtonItem(final Player player) {
-            final List<String> lore = new ArrayList<>();
-            lore.add(CC.MENU_BAR);
-            lore.add("&7Click here to manage");
-            lore.add("&7" + pplayer.getName());
-            lore.add(CC.MENU_BAR);
-            return new ItemBuilder(SkullCreator.itemFromUuid(pplayer.getUniqueId())).name("&a&l" + this.pplayer.getName()).lore(lore).durability(3).build();
-        }
-        
-        @Override
-        public void clicked(Player player, ClickType clickType) {
-            Profile senderProfile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-            Profile receiverProfile = plugin.getProfileManager().getProfileByUUID(this.pplayer.getUniqueId());
-
-            Party senderParty = plugin.getPartyManager().getPartyByUUID(senderProfile.getParty());
-            Party receiverParty = plugin.getPartyManager().getPartyByUUID(receiverProfile.getParty());
-
-            player.closeInventory();
-
-            if (!senderParty.isLeader(player.getUniqueId())) {
-                player.sendMessage(Locale.PARTY_NOTLEADER.toString());
-                return;
-            }
-            if (receiverParty.isLeader(pplayer.getUniqueId())) {
-                player.sendMessage(CC.RED + "You cannot manage yourself.");
-                return;
-            }
-            if (senderProfile.getParty() != null && receiverProfile.getParty() == null) {
-                player.sendMessage(Locale.PARTY_PLAYER_LEFT.toString().replace("<leaver>", CC.translate("&7That player")));
-                return;
-            }
-            new PartyMemberMenu(this.pplayer).openMenu(player);
+        public ItemStack getButtonItem(Player player) {
+            return new ItemBuilder(SkullCreator.itemFromUuid(pplayer.getUniqueId()))
+                    .name("&a" + this.pplayer.getName())
+                    .durability(3)
+                    .build();
         }
     }
 }

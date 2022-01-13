@@ -56,7 +56,7 @@ public class CommandsManager {
         drink.register(new TournamentCommands(plugin), "tournament", "tourney");
         drink.register(new ClanCommands(plugin), "clan", "c");
         drink.register(new EventCommands(plugin, plugin.getEventManager()), "event", "events");
-        drink.register(new SumoCommands(plugin, plugin.getEventManager()), "sumo");
+        drink.register(new SumoCommands(plugin), "sumo");
         drink.register(new SpleefCommands(plugin, plugin.getEventManager()), "spleef");
         drink.register(new ParkourCommands(plugin, plugin.getEventManager()), "parkour");
         drink.register(new KillEffectCommands(plugin), "killeffect", "killeffects", "ke");

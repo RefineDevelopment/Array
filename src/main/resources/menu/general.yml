@@ -18,3 +18,7 @@ EVENT_KIT_MENU:
   LORE:
     - ""
     - "&c[Click to Select this Kit]"
+PARTY_LIST_MENU:
+  TITLE: "&7Party List"
+  LORE:
+    - ""

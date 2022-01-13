@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.pvpclasses.classes;
 
-import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -22,6 +21,7 @@ import org.bukkit.projectiles.ProjectileSource;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.pvpclasses.PvPClass;
+import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -156,7 +156,7 @@ public class Archer extends PvPClass implements Listener {
             long remaining = timestamp - millis;
 
             if (remaining > 0L) {
-                player.sendMessage(Locale.HCF_COOLDOWN.toString().replace("<cooldown>", DurationFormatUtils.formatDurationWords(remaining, true, true)));
+                player.sendMessage(Locale.HCF_COOLDOWN.toString().replace("<cooldown>", TimeUtil.millisToRoundedTime(remaining)));
             } else {
                 ItemStack stack = player.getItemInHand();
 
@@ -180,7 +180,7 @@ public class Archer extends PvPClass implements Listener {
             long remaining1 = timestamp - millis;
 
             if (remaining1 > 0L) {
-                player.sendMessage(Locale.HCF_COOLDOWN.toString().replace("<cooldown>", DurationFormatUtils.formatDurationWords(remaining1, true, true)));
+                player.sendMessage(Locale.HCF_COOLDOWN.toString().replace("<cooldown>", TimeUtil.millisToRoundedTime(remaining1)));
             } else {
                 ItemStack stack = player.getItemInHand();
 
@@ -194,7 +194,6 @@ public class Archer extends PvPClass implements Listener {
                 archerJumpCooldowns.put(event.getPlayer().getUniqueId(), System.currentTimeMillis() + ARCHER_JUMP_COOLDOWN_DELAY);
             }
         } else if (((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK)) && (event.hasItem()) && (event.getItem().getType() == Material.IRON_INGOT)) {
-
             if (this.plugin.getPvpClassManager().getEquippedClass(event.getPlayer()) != this) {
                 return;
             }
@@ -204,7 +203,7 @@ public class Archer extends PvPClass implements Listener {
             long remaining1 = timestamp - millis;
 
             if (remaining1 > 0L) {
-                player.sendMessage(Locale.HCF_COOLDOWN.toString().replace("<cooldown>", DurationFormatUtils.formatDurationWords(remaining1, true, true)));
+                player.sendMessage(Locale.HCF_COOLDOWN.toString().replace("<cooldown>", TimeUtil.millisToRoundedTime(remaining1)));
             } else {
                 ItemStack stack = player.getItemInHand();
 

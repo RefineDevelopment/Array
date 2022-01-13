@@ -6,7 +6,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.match.types.kit.BattleRushMatch;
 import xyz.refinedev.practice.match.types.kit.MLGRushMatch;
@@ -16,6 +15,7 @@ import xyz.refinedev.practice.match.types.kit.team.TeamBedwarsMatch;
 import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

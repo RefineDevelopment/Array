@@ -1,11 +1,11 @@
 package xyz.refinedev.practice.arena.rating;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +34,7 @@ public class RatingTypeProvider extends DrinkProvider<RatingType> {
 
     @Nullable
     @Override
-    public RatingType provide(@NotNull CommandArg arg, @NotNull List<? extends Annotation> annotations) throws CommandExitMessage {
+    public RatingType provide(@Nonnull CommandArg arg, @Nonnull List<? extends Annotation> annotations) throws CommandExitMessage {
         String name = arg.get();
         try {
             return RatingType.valueOf(name);
@@ -49,7 +49,7 @@ public class RatingTypeProvider extends DrinkProvider<RatingType> {
     }
 
     @Override
-    public List<String> getSuggestions(@NotNull String prefix) {
+    public List<String> getSuggestions(@Nonnull String prefix) {
         final String finalPrefix = prefix;
         return Arrays.stream(RatingType.values()).map(RatingType::name).filter(s -> finalPrefix.length() == 0 || s.startsWith(finalPrefix)).collect(Collectors.toList());
     }
