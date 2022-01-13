@@ -72,13 +72,14 @@ public class PartySettingsMenu extends Menu {
         @Override
         public ItemStack getButtonItem(final Player player) {
             Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+            Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
             List<String> lore = new ArrayList<>();
 
             switch (partyManageType) {
                 case LIMIT: {
                     lore.add(CC.MENU_BAR);
                     lore.add("&cCurrent Limit:");
-                    lore.add("&8 • &fLimit: &c" + profile.getParty().getLimit());
+                    lore.add("&8 • &fLimit: &c" + party.getLimit());
                     lore.add("");
                     lore.add("&8(&cLeft-Click&8) - &7Increase Limit");
                     lore.add("&8(&cRight-Click&8) - &7Decrease Limit");
@@ -88,7 +89,7 @@ public class PartySettingsMenu extends Menu {
                 case PUBLIC: {
                     lore.add(CC.MENU_BAR);
                     lore.add("&cCurrent State:");
-                    lore.add("&8 • &fPublic: " + (profile.getParty().isPublic() ? "&aPublic" : "&eInvite Only"));
+                    lore.add("&8 • &fPublic: " + (party.isPublic() ? "&aPublic" : "&eInvite Only"));
                     lore.add("");
                     lore.add("&cClick to change party state.");
                     lore.add(CC.MENU_BAR);
@@ -115,16 +116,15 @@ public class PartySettingsMenu extends Menu {
          * @param clickType {@link ClickType}
          */
         @Override
-        public void clicked(final Player player, final ClickType clickType) {
+        public void clicked(Player player, ClickType clickType) {
             Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-            Party party = profile.getParty();
-
-            if (party == null) {
+            if (!profile.hasParty()) {
                 player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
                 player.closeInventory();
                 return;
             }
 
+            Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
             switch (partyManageType) {
                 case LIMIT: {
                     if (!player.hasPermission("array.party.limit")) {
@@ -175,7 +175,7 @@ public class PartySettingsMenu extends Menu {
          * @return {@link Boolean}
          */
         @Override
-        public boolean shouldUpdate(final Player player, final ClickType clickType) {
+        public boolean shouldUpdate(Player player, ClickType clickType) {
             return true;
         }
     }

@@ -32,8 +32,10 @@ public class SumoSoloListener implements Listener {
     public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        if (!profile.isInEvent()) return;
 
-        if (!profile.isInEvent() || !profile.getEvent().isSumoSolo()) return;
+        Event sumo = plugin.getEventManager().getEventByUUID(profile.getEvent());
+        if (!sumo.isSumoSolo()) return;
 
         event.setCancelled(true);
     }
@@ -42,8 +44,10 @@ public class SumoSoloListener implements Listener {
     public void onBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        if (!profile.isInEvent()) return;
 
-        if (!profile.isInEvent() || !profile.getEvent().isSumoSolo()) return;
+        Event sumo = plugin.getEventManager().getEventByUUID(profile.getEvent());
+        if (!sumo.isSumoSolo()) return;
 
         event.setCancelled(true);
     }
@@ -55,8 +59,10 @@ public class SumoSoloListener implements Listener {
 
         Player player = ((Player) event.getEntity()).getPlayer();
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        if (!profile.isInEvent()) return;
 
-        if (!profile.isInEvent() || !profile.getEvent().isSumoSolo()) return;
+        Event sumo = plugin.getEventManager().getEventByUUID(profile.getEvent());
+        if (!sumo.isSumoSolo()) return;
 
         event.setCancelled(true);
     }
@@ -66,23 +72,24 @@ public class SumoSoloListener implements Listener {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-        Event sumo = profile.getEvent();
+        if (!profile.isInEvent()) return;
 
-        if (!profile.isInEvent() || !sumo.isSumoSolo()) return;
+        Event sumo = plugin.getEventManager().getEventByUUID(profile.getEvent());
+        if (!sumo.isSumoSolo()) return;
 
         if (event.getCause() == EntityDamageEvent.DamageCause.VOID || event.getCause() == EntityDamageEvent.DamageCause.LAVA) {
             event.setCancelled(true);
             event.getEntity().setFireTicks(0);
 
             if (!sumo.isFighting() || !sumo.isFighting(player.getUniqueId())) {
-                player.teleport(plugin.getEventManager().getSpawn(sumo));
+                player.teleport(plugin.getEventManager().getHelper().getSpawn(sumo));
                 return;
             }
             sumo.handleDeath(player);
             return;
         }
 
-        if (!profile.getEvent().isFighting() || !profile.getEvent().isFighting(player.getUniqueId())) {
+        if (!sumo.isFighting() || !sumo.isFighting(player.getUniqueId())) {
             event.setCancelled(true);
             return;
         }
@@ -102,7 +109,6 @@ public class SumoSoloListener implements Listener {
         if (event.getDamager() instanceof Projectile) {
             Projectile projectile = (Projectile) event.getDamager();
             if (!(projectile.getShooter() instanceof Player)) {
-                event.setCancelled(true);
                 return;
             }
             attacker = (Player) projectile.getShooter();
@@ -117,13 +123,15 @@ public class SumoSoloListener implements Listener {
         Profile damagedProfile = plugin.getProfileManager().getProfileByUUID(damaged.getUniqueId());
         Profile attackerProfile = plugin.getProfileManager().getProfileByUUID(attacker.getUniqueId());
 
-        if (!damagedProfile.isInEvent() || !damagedProfile.getEvent().isSumoSolo()) return;
-        if (!attackerProfile.isInEvent() || !attackerProfile.getEvent().isSumoSolo()) return;
+        if (!damagedProfile.isInEvent() || !attackerProfile.isInEvent()) return;
 
-        Event sumo = damagedProfile.getEvent();
+        Event damagedEvent = plugin.getEventManager().getEventByUUID(damagedProfile.getEvent());
+        Event attackerEvent = plugin.getEventManager().getEventByUUID(attackerProfile.getEvent());
 
-        if (!sumo.isFighting() || !sumo.isFighting(damaged.getUniqueId()) || !sumo.isFighting(attacker.getUniqueId())) {
-            event.setCancelled(true);
-        }
+        if (!damagedEvent.isSumoSolo() || !attackerEvent.isSumoSolo()) return;
+        if (!damagedEvent.getEventId().equals(attackerEvent.getEventId())) return;
+        if (damagedEvent.isFighting() && damagedEvent.isFighting(damaged.getUniqueId()) && damagedEvent.isFighting(attacker.getUniqueId())) return;
+
+        event.setCancelled(true);
     }
 }

@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
 import xyz.refinedev.practice.queue.Queue;
@@ -24,8 +25,6 @@ import java.util.List;
 
 @Getter @Setter
 public class Kit {
-
-    private final Array plugin = Array.getInstance();
 
     private final List<LeaderboardsAdapter> eloLeaderboards = new ArrayList<>();
     private final List<LeaderboardsAdapter> winLeaderboards = new ArrayList<>();
@@ -47,21 +46,29 @@ public class Kit {
         this.displayIcon = new ItemStack(Material.DIAMOND_CHESTPLATE);
         this.knockbackProfile = "default";
         this.kitDescription = new ArrayList<>();
-
-        plugin.getKitManager().getKits().add(this);
     }
 
     public ItemStack getDisplayIcon() {
-        return this.displayIcon.clone();
+        ItemStack itemStack = this.displayIcon.clone();
+        ItemMeta itemMeta = itemStack.getItemMeta();
+
+        itemMeta.setDisplayName(CC.translate(this.displayName));
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
     }
 
     public boolean isParty() {
-        return (!this.gameRules.isDisablePartyFFA() && !this.gameRules.isParkour() && !this.gameRules.isBridge() && !this.gameRules.isDisablePartySplit() && this.isEnabled());
+        return (!this.gameRules.isDisablePartyFFA()
+                && !this.gameRules.isParkour()
+                && !this.gameRules.isBridge()
+                && !this.gameRules.isDisablePartySplit()
+                && this.isEnabled());
     }
 
     public void applyToPlayer(Player player) {
-        player.getInventory().setArmorContents(getKitInventory().getArmor());
-        player.getInventory().setContents(getKitInventory().getContents());
+        player.getInventory().setArmorContents(kitInventory.getArmor());
+        player.getInventory().setContents(kitInventory.getContents());
         player.updateInventory();
     }
 }

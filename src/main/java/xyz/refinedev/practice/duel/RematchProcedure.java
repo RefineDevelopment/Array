@@ -76,15 +76,15 @@ public class RematchProcedure {
         plugin.getProfileManager().checkForHotbarUpdate(senderProfile);
         plugin.getProfileManager().checkForHotbarUpdate(targetProfile);
 
-        TaskUtil.runLater(() -> {
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             plugin.getProfileManager().checkForHotbarUpdate(senderProfile);
             plugin.getProfileManager().checkForHotbarUpdate(targetProfile);
         }, 15 * 20);
     }
 
     public void accept() {
-        Player sender = Array.getInstance().getServer().getPlayer(this.sender);
-        Player target = Array.getInstance().getServer().getPlayer(this.target);
+        Player sender = plugin.getServer().getPlayer(this.sender);
+        Player target = plugin.getServer().getPlayer(this.target);
 
         if (sender == null || target == null || !sender.isOnline() || !target.isOnline()) {
             return;
@@ -121,7 +121,6 @@ public class RematchProcedure {
         }
 
         arena.setActive(true);
-
 
         match = plugin.getMatchManager().createSoloKitMatch(null, new TeamPlayer(sender), new TeamPlayer(target), kit, arena, QueueType.UNRANKED);
 

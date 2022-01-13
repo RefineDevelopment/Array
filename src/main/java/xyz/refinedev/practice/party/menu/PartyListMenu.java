@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
@@ -30,7 +32,8 @@ public class PartyListMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-        profile.getParty().getPlayers().forEach(pplayer -> buttons.put(buttons.size(), new PartyDisplayButton(pplayer)));
+        Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        party.getPlayers().forEach(pplayer -> buttons.put(buttons.size(), new PartyDisplayButton(pplayer)));
         return buttons;
     }
 
@@ -44,7 +47,7 @@ public class PartyListMenu extends Menu {
             final List<String> lore = new ArrayList<>();
             lore.add(CC.MENU_BAR);
             lore.add("&7Click here to manage");
-            lore.add("&7" + pplayer.getName() + "!");
+            lore.add("&7" + pplayer.getName());
             lore.add(CC.MENU_BAR);
             return new ItemBuilder(SkullCreator.itemFromUuid(pplayer.getUniqueId())).name("&a&l" + this.pplayer.getName()).lore(lore).durability(3).build();
         }
@@ -54,18 +57,21 @@ public class PartyListMenu extends Menu {
             Profile senderProfile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
             Profile receiverProfile = plugin.getProfileManager().getProfileByUUID(this.pplayer.getUniqueId());
 
+            Party senderParty = plugin.getPartyManager().getPartyByUUID(senderProfile.getParty());
+            Party receiverParty = plugin.getPartyManager().getPartyByUUID(receiverProfile.getParty());
+
             player.closeInventory();
 
-            if (!player.getUniqueId().equals(senderProfile.getParty().getLeader().getPlayer().getUniqueId())) {
-                player.sendMessage(CC.RED + "You can only manage players as a leader.");
+            if (!senderParty.isLeader(player.getUniqueId())) {
+                player.sendMessage(Locale.PARTY_NOTLEADER.toString());
                 return;
             }
-            if (this.pplayer.getUniqueId().equals(receiverProfile.getParty().getLeader().getPlayer().getUniqueId())) {
+            if (receiverParty.isLeader(pplayer.getUniqueId())) {
                 player.sendMessage(CC.RED + "You cannot manage yourself.");
                 return;
             }
             if (senderProfile.getParty() != null && receiverProfile.getParty() == null) {
-                player.sendMessage(CC.RED + "That player left your party!");
+                player.sendMessage(Locale.PARTY_PLAYER_LEFT.toString().replace("<leaver>", CC.translate("&7That player")));
                 return;
             }
             new PartyMemberMenu(this.pplayer).openMenu(player);

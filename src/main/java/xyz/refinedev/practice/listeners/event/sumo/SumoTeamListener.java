@@ -32,119 +32,108 @@ public class SumoTeamListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
-        Profile profile = plugin.getProfileManager().getProfileByUUID(event.getPlayer().getUniqueId());
         Player player = event.getPlayer();
-        if (profile.isInEvent() && profile.getEvent().isSumoTeam()) {
-            if (!profile.getEvent().isFighting(player.getUniqueId())) {
-                event.setCancelled(true);
-            }
-        } else if (profile.getEvent() != null && profile.getEvent().getSpectators().contains(player.getUniqueId())) {
-            event.setCancelled(true);
-        }
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        if (!profile.isInEvent()) return;
+
+        Event sumo = plugin.getEventManager().getEventByUUID(profile.getEvent());
+        if (!sumo.isSumoTeam()) return;
+
+        event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled=true)
     public void onBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(event.getPlayer().getUniqueId());
-        if (profile.isInEvent() && profile.getEvent().isSumoTeam() || (profile.getEvent() != null && profile.getEvent().getSpectators().contains(event.getPlayer().getUniqueId()))) {
-            if (profile.isInEvent() && profile.getEvent().isSumoTeam()) {
-                if (!profile.getEvent().isFighting(player.getUniqueId())) {
-                    event.setCancelled(true);
-                }
-            } else if (profile.getEvent() != null && profile.getEvent().getSpectators().contains(player.getUniqueId())) {
-                event.setCancelled(true);
-            }
-        }
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        if (!profile.isInEvent()) return;
+
+        Event sumo = plugin.getEventManager().getEventByUUID(profile.getEvent());
+        if (!sumo.isSumoTeam()) return;
+
+        event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled=true)
     public void onHit(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            Player player = ((Player) event.getEntity()).getPlayer();
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-            if (profile.isInEvent() && profile.getEvent().isSumoTeam()) {
-                if (!profile.getEvent().isFighting(player.getUniqueId())) {
-                    event.setCancelled(true);
-                }
-            } else if (profile.getEvent() != null && profile.getEvent().getSpectators().contains(player.getUniqueId())) {
-                event.setCancelled(true);
-            }
-        }
+        if (!(event.getEntity() instanceof Player)) return;
+        if (event.getCause() != EntityDamageEvent.DamageCause.FALL) return;
+
+        Player player = ((Player) event.getEntity()).getPlayer();
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        if (!profile.isInEvent()) return;
+
+        Event sumo = plugin.getEventManager().getEventByUUID(profile.getEvent());
+        if (!sumo.isSumoTeam()) return;
+
+        event.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-            Event sumo = profile.getEvent();
-            
-            if (profile.isInEvent() && profile.getEvent().isSumoTeam()) {
-                if (event.getCause() == EntityDamageEvent.DamageCause.VOID || event.getCause() == EntityDamageEvent.DamageCause.LAVA) {
-                    event.setCancelled(true);
-                    event.getEntity().setFireTicks(0);
-                    
-                    if (!profile.getEvent().isFighting() || !profile.getEvent().isFighting(player.getUniqueId())) {
-                        player.teleport(plugin.getEventManager().getSpectator(sumo));
-                        return;
-                    }  else if (profile.getEvent() != null && profile.getEvent().getSpectators().contains(player.getUniqueId())) {
-                        event.setCancelled(true);
-                        return;
-                    }
-                    
-                    player.teleport(plugin.getEventManager().getSpectator(sumo));
-                    profile.getEvent().handleDeath(player);
-                    plugin.getProfileManager().refreshHotbar(profile);
-                    return;
-                }
+        if (!(event.getEntity() instanceof Player)) return;
+        Player player = (Player) event.getEntity();
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        if (!profile.isInEvent()) return;
 
-                if (profile.getEvent() != null) {
-                    if (!profile.getEvent().isFighting() || !profile.getEvent().isFighting(player.getUniqueId())) {
-                        event.setCancelled(true);
-                        return;
-                    } else if (profile.getEvent() != null && profile.getEvent().getSpectators().contains(player.getUniqueId())) {
-                        event.setCancelled(true);
-                    }
+        Event sumo = plugin.getEventManager().getEventByUUID(profile.getEvent());
+        if (!sumo.isSumoTeam()) return;
 
-                    event.setDamage(0);
-                    player.setHealth(20.0);
-                    player.updateInventory();
-                }
-            }
-        }
-    }
+        if (event.getCause() == EntityDamageEvent.DamageCause.VOID || event.getCause() == EntityDamageEvent.DamageCause.LAVA) {
+            event.setCancelled(true);
+            event.getEntity().setFireTicks(0);
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        Player attacker;
-
-        if (event.getDamager() instanceof Player) {
-            attacker = (Player) event.getDamager();
-        } else if (event.getDamager() instanceof Projectile) {
-            if (((Projectile) event.getDamager()).getShooter() instanceof Player) {
-                attacker = (Player) ((Projectile) event.getDamager()).getShooter();
-            } else {
-                event.setCancelled(true);
+            if (!sumo.isFighting() || !sumo.isFighting(player.getUniqueId())) {
+                player.teleport(plugin.getEventManager().getHelper().getSpawn(sumo));
                 return;
             }
-        } else {
+            sumo.handleDeath(player);
+            return;
+        }
+
+        if (!sumo.isFighting() || !sumo.isFighting(player.getUniqueId())) {
             event.setCancelled(true);
             return;
         }
 
-        if (attacker != null && event.getEntity() instanceof Player) {
-            Player damaged = (Player) event.getEntity();
-            Profile damagedProfile = plugin.getProfileManager().getProfileByUUID(damaged.getUniqueId());
-            Profile attackerProfile = plugin.getProfileManager().getProfileByUUID(attacker.getUniqueId());
+        event.setDamage(0);
+        player.setHealth(20.0);
+        player.updateInventory();
+    }
 
-            if (damagedProfile.isInEvent() && damagedProfile.getEvent().isSumoTeam() && attackerProfile.isInEvent() && attackerProfile.getEvent().isSumoTeam()) {
-                Event sumo = damagedProfile.getEvent();
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
 
-                if (!sumo.isFighting() || !sumo.isFighting(damaged.getUniqueId()) || !sumo.isFighting(attacker.getUniqueId())) {
-                    event.setCancelled(true);
-                }
+        Player damaged = (Player) event.getEntity();
+        Player attacker = null;
+
+        if (event.getDamager() instanceof Projectile) {
+            Projectile projectile = (Projectile) event.getDamager();
+            if (!(projectile.getShooter() instanceof Player)) {
+                return;
             }
+            attacker = (Player) projectile.getShooter();
         }
+
+        if (event.getDamager() instanceof Player) {
+            attacker = (Player) event.getDamager();
+        }
+
+        if (attacker == null) return;
+
+        Profile damagedProfile = plugin.getProfileManager().getProfileByUUID(damaged.getUniqueId());
+        Profile attackerProfile = plugin.getProfileManager().getProfileByUUID(attacker.getUniqueId());
+
+        if (!damagedProfile.isInEvent() || !attackerProfile.isInEvent()) return;
+
+        Event damagedEvent = plugin.getEventManager().getEventByUUID(damagedProfile.getEvent());
+        Event attackerEvent = plugin.getEventManager().getEventByUUID(attackerProfile.getEvent());
+
+        if (!damagedEvent.isSumoTeam() || !attackerEvent.isSumoTeam()) return;
+        if (!damagedEvent.getEventId().equals(attackerEvent.getEventId())) return;
+        if (damagedEvent.isFighting() && damagedEvent.isFighting(damaged.getUniqueId()) && damagedEvent.isFighting(attacker.getUniqueId())) return;
+
+        event.setCancelled(true);
     }
 }

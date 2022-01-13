@@ -43,7 +43,6 @@ public class ParkourListener implements Listener {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-
         if (!profile.isInEvent()) return;
 
         Event profileEvent = plugin.getEventManager().getEventByUUID(profile.getEvent());

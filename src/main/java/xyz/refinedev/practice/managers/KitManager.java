@@ -49,7 +49,7 @@ public class KitManager {
         for ( String kitName : configurationSection.getKeys(false) ) {
             Kit kit = new Kit(kitName);
 
-            if (plugin.getConfigHandler().isHCF_ENABLED()) if (kit.getName().equals(this.teamFight.getName())) continue;
+            if (plugin.getConfigHandler().isHCF_ENABLED() && kit.getName().equals(this.teamFight.getName())) continue;
 
             this.load(kit);
             this.setupQueue(kit);
@@ -65,6 +65,8 @@ public class KitManager {
      * @param kit The {@link Kit} being loaded
      */
     public void load(Kit kit) {
+        this.kits.add(kit);
+
         String path = "kits." + kit.getName();
         kit.setDisplayName(CC.RED + kit.getName());
         kit.setEnabled(config.getBoolean(path + ".enabled"));

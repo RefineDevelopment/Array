@@ -29,14 +29,12 @@ public class ClanProfileProvider extends DrinkProvider<ClanProfile> {
     public ClanProfile provide(@NotNull CommandArg arg, @NotNull List<? extends Annotation> annotations) throws CommandExitMessage {
         String name = arg.get();
         UUID uuid = PlayerUtil.getUUIDByName(name);
+        if (uuid == null) throw new CommandExitMessage("A profile with that name does not exist");
 
-        if (uuid != null) {
-            ClanProfile clanProfile = this.getPlugin().getProfileManager().getProfileByUUID(uuid).getClanProfile();
-            if (clanProfile != null) {
-                return clanProfile;
-            }
-        }
-        throw new CommandExitMessage("A profile with that name does not exist");
+        ClanProfile clanProfile = this.getPlugin().getClanManager().getProfileByUUID(uuid);
+        if (clanProfile == null) throw new CommandExitMessage("A profile with that name does not exist");
+
+        return clanProfile;
     }
 
     @Override

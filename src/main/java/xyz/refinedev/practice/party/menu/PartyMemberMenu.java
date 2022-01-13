@@ -53,7 +53,7 @@ public class PartyMemberMenu extends Menu {
                 lore.add(CC.MENU_BAR);
                 lore.add("&7Click here to make &c" + target.getName());
                 lore.add("&7the party leader, this will grant them");
-                lore.add("&c&lCOMPLETE &7control of the party!");
+                lore.add("&c&lcomplete &7control of the party!");
                 lore.add("");
                 lore.add("&cClick to Grant party leadership.");
                 lore.add(CC.MENU_BAR);
@@ -83,15 +83,13 @@ public class PartyMemberMenu extends Menu {
         @Override
         public void clicked(Player player, ClickType clickType) {
             Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-            Party party = profile.getParty();
-
-            player.closeInventory();
-
-            if (party == null) {
+            if (!profile.hasParty()) {
                 player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
                 return;
             }
+            player.closeInventory();
 
+            Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
             switch (this.partyManageType) {
                 case LEADER: {
                     plugin.getPartyManager().leader(this.target, party);

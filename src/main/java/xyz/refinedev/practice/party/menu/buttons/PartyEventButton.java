@@ -72,7 +72,7 @@ public class PartyEventButton extends Button {
     @Override
     public void clicked(Player player, ClickType clickType) {
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-        Party party = profile.getParty();
+        Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
 
         player.closeInventory();
 
@@ -81,7 +81,7 @@ public class PartyEventButton extends Button {
             return;
         }
 
-        if (party.isFighting() || party.isInTournament()) {
+        if (plugin.getPartyManager().isFighting(party.getUniqueId()) || party.isInTournament()) {
             player.sendMessage(Locale.PARTY_BUSY.toString());
             return;
         }
@@ -107,7 +107,12 @@ public class PartyEventButton extends Button {
         Team teamB = new Team(new TeamPlayer(party.getPlayers().get(1)));
 
         List<Player> players = new ArrayList<>(party.getPlayers());
+
+        //Doing a thorough shuffle, because some people complaining it keeps the same team
         Collections.shuffle(players);
+        Collections.reverse(players);
+        Collections.shuffle(players);
+        Collections.reverse(players);
 
         Match match = new TeamFightMatch(teamA, teamB, arena);
 
@@ -124,6 +129,6 @@ public class PartyEventButton extends Button {
                 }
             }
         }
-        TaskUtil.run(match::start);
+        this.plugin.getMatchManager().start(match);
     }
 }

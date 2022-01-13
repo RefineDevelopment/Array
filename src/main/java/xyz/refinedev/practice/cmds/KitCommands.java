@@ -122,7 +122,8 @@ public class KitCommands {
         Kit kit = new Kit(kitName);
         kit.setEnabled(true);
         kit.getGameRules().setRanked(true);
-        
+
+        plugin.getKitManager().getKits().add(kit);
         plugin.getKitManager().save(kit);
         plugin.getKitManager().setupQueue(kit);
 

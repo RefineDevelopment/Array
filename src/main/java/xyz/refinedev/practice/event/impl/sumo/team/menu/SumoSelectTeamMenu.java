@@ -31,6 +31,8 @@ import java.util.Map;
 
 public class SumoSelectTeamMenu extends PaginatedMenu {
 
+    private final Array plugin = this.getPlugin();
+
     /**
      * @param player player viewing the inventory
      * @return title of the inventory before the page number is added
@@ -49,14 +51,14 @@ public class SumoSelectTeamMenu extends PaginatedMenu {
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
         int i = 0;
-        for ( EventGroup eventGroup : ((SumoTeam) Array.getInstance().getEventManager().getActiveEvent()).getTeams()) {
+        for ( EventGroup eventGroup : plugin.getEventManager().getActiveEvent().getTeams()) {
             buttons.put(i++, new SelectTeamButton(eventGroup));
         }
         return buttons;
     }
 
     @RequiredArgsConstructor
-    private final static class SelectTeamButton extends Button {
+    private final class SelectTeamButton extends Button {
 
         private final EventGroup group;
         
@@ -71,13 +73,19 @@ public class SumoSelectTeamMenu extends PaginatedMenu {
                 for ( EventPlayer eventTeamPlayer : this.group.getPlayers()) lore.add(" &f" + eventTeamPlayer.getUsername());
             }
             lore.add("");
-            return new ItemBuilder(Material.LEATHER_CHESTPLATE).name("&b&l" + this.group.getColor().getTitle()).color(this.group.getColor().getColor()).lore(lore).amount(this.group.getPlayers().size()).clearFlags().build();
+            return new ItemBuilder(Material.LEATHER_CHESTPLATE)
+                    .name("&b&l" + this.group.getColor().getTitle())
+                    .color(this.group.getColor().getColor())
+                    .lore(lore)
+                    .amount(this.group.getPlayers().size())
+                    .clearFlags()
+                    .build();
         }
 
         @Override
         public void clicked(Player player, ClickType clickType) {
             player.closeInventory();
-            SumoTeam sumoTeam = (SumoTeam) Array.getInstance().getEventManager().getActiveEvent();
+            SumoTeam sumoTeam = (SumoTeam) plugin.getEventManager().getActiveEvent();
             if (sumoTeam == null) return;
             
             if (this.group.getPlayers().size() >= this.group.getMaxMembers()) {
