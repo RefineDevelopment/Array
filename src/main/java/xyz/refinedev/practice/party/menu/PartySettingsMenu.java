@@ -20,11 +20,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//TODO: config
 public class PartySettingsMenu extends Menu {
 
-    private final Array plugin = this.getPlugin();
+    private final Array plugin;
 
-    public PartySettingsMenu() {
+    public PartySettingsMenu(Array plugin) {
+        this.plugin = plugin;
+
         this.setAutoUpdate(true);
         this.setUpdateAfterClick(true);
         this.setPlaceholder(true);
@@ -151,7 +154,8 @@ public class PartySettingsMenu extends Menu {
                         return;
                     }
                     player.closeInventory();
-                    new PartyListMenu().openMenu(player);
+                    PartyListMenu menu = new PartyListMenu(plugin);
+                    menu.openMenu(plugin, player);
                     break;
                 }
                 case PUBLIC: {

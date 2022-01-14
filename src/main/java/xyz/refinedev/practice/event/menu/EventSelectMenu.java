@@ -26,7 +26,7 @@ public class EventSelectMenu extends Menu {
     private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("event_host");
 
     public EventSelectMenu() {
-        this.loadMenu(config);
+        this.loadMenu(plugin, config);
         this.setAutoUpdate(true);
     }
 

@@ -1,54 +1,73 @@
 package xyz.refinedev.practice.duel.menu;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.arena.Arena;
+import xyz.refinedev.practice.duel.menu.buttons.DuelKitButton;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-@AllArgsConstructor
+/**
+ * This Project is property of Refine Development © 2021 - 2022
+ * Redistribution of this Project is not allowed
+ *
+ * @author Drizzy
+ * Created: 1/14/2022
+ * Project: Array
+ */
+
+@RequiredArgsConstructor
 public class DuelSelectKitMenu extends Menu {
 
-    private final Array plugin = this.getPlugin();
+    private final Array plugin;
 
+    /**
+     * Get menu's title
+     *
+     * @param player {@link Player} viewing the menu
+     * @return {@link String} the title of the menu
+     */
     @Override
     public String getTitle(Player player) {
         return "&7Select a kit";
     }
 
+    /**
+     * Map of slots and buttons on that particular slot
+     *
+     * @param player {@link Player} player viewing the menu
+     * @return {@link Map}
+     */
     @Override
     public Map<Integer, Button> getButtons(Player player) {
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         Map<Integer, Button> buttons = new HashMap<>();
 
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-        List<Kit> kits = plugin.getKitManager().getKits().stream().filter(kit -> kit.isEnabled() && !kit.equals(plugin.getKitManager().getTeamFight())).collect(Collectors.toList());
-
         if (profile.hasParty() && plugin.getConfigHandler().isHCF_ENABLED()) {
-            for ( Kit kit : plugin.getKitManager().getKits().stream().filter(Kit::isEnabled).collect(Collectors.toList())) {
-                if (!kit.getGameRules().isTimed()) buttons.put(buttons.size(), new SelectKitButton(kit));
+            for ( Kit kit : plugin.getKitManager().getKits()) {
+                buttons.put(buttons.size(), new DuelKitButton(plugin, kit));
             }
         } else {
-            for ( Kit kit : kits ) {
+            for ( Kit kit : plugin.getKitManager().getKits() ) {
+                if (kit.equals(plugin.getKitManager().getTeamFight())) continue;
                 if (profile.hasParty() && kit.getGameRules().isTimed()) continue;
-                buttons.put(buttons.size(), new SelectKitButton(kit));
+
+                buttons.put(buttons.size(), new DuelKitButton(plugin, kit));
             }
         }
         return buttons;
     }
 
+    /**
+     * This method runs when the menu is closed
+     *
+     * @param player {@link Player} player viewing the menu
+     */
     @Override
     public void onClose(Player player) {
         if (this.isClosedByMenu()) return;
@@ -56,47 +75,4 @@ public class DuelSelectKitMenu extends Menu {
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         profile.setDuelProcedure(null);
     }
-
-    @AllArgsConstructor
-    private class SelectKitButton extends Button {
-
-        private final Kit kit;
-
-        @Override
-        public ItemStack getButtonItem(Player player) {
-            List<String> lore = new ArrayList<>();
-            lore.add("");
-            lore.add("&cClick to send a duel with this kit.");
-            return new ItemBuilder(kit.getDisplayIcon())
-                    .name(kit.getDisplayName()).lore(lore)
-                    .clearFlags()
-                    .build();
-        }
-
-        @Override
-        public void clicked(Player player, ClickType clickType) {
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-
-            if (profile.getDuelProcedure() == null) {
-                player.sendMessage(CC.RED + "Could not find duel data.");
-                return;
-            }
-
-            Arena arena = plugin.getArenaManager().getByKit(kit);
-
-            profile.getDuelProcedure().setKit(kit);
-            profile.getDuelProcedure().setArena(arena);
-
-            Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
-            player.closeInventory();
-
-            if (player.hasPermission("array.donator")) {
-                new DuelSelectArenaMenu().openMenu(player);
-            } else {
-                profile.getDuelProcedure().send();
-            }
-        }
-
-    }
-
 }

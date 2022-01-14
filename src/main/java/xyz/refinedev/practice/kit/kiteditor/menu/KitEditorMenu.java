@@ -229,7 +229,7 @@ public class KitEditorMenu extends Menu {
             }
 
             plugin.getProfileManager().refreshHotbar(profile);
-            new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(player);
+            new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(plugin, player);
         }
     }
 
@@ -255,7 +255,7 @@ public class KitEditorMenu extends Menu {
             Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
 
             if (profile.getKitEditor().getSelectedKit() != null) {
-                new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(player);
+                new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(plugin, player);
             }
         }
 

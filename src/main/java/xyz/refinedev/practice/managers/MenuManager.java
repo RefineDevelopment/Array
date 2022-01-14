@@ -205,7 +205,10 @@ public class MenuManager {
      * @return {@link MenuData} menuData of the menu
      */
     public MenuData getMenuDataByName(String name) {
-        return menuData.stream().filter(menu -> menu.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+        return menuData.stream()
+                .filter(menu -> menu.getName().equalsIgnoreCase(name))
+                .findFirst()
+                .orElse(null);
     }
 
     /**-
@@ -237,23 +240,23 @@ public class MenuManager {
             }
             case "kill_effects": {
                 if (this.getConfigByName("kill_effects").getBoolean("PAGINATED")) {
-                    return new KEPaginatedMenu();
+                    return new KEPaginatedMenu(plugin);
                 } else {
-                    return new KEMenu();
+                    return new KEMenu(plugin);
                 }
             }
-            case "event_host": return new EventSelectMenu();
-            case "party_events": return new PartyEventMenu();
-            case "party_settings": return new PartySettingsMenu();
-            case "profile_menu": return new ProfileMenu(player);
-            case "profile_settings": return new ProfileSettingsMenu();
+            case "event_host": return new EventSelectMenu(plugin);
+            case "party_events": return new PartyEventMenu(plugin);
+            case "party_settings": return new PartySettingsMenu(plugin);
+            case "profile_menu": return new ProfileMenu(plugin, player);
+            case "profile_settings": return new ProfileSettingsMenu(plugin);
             default: {
                 MenuData menuData = getMenuDataByName(name);
                 if (menuData == null) return null;
                 if (menuData.isPaginated()) {
-                    return new CustomPaginatedMenu(menuData);
+                    return new CustomPaginatedMenu(plugin, menuData);
                 } else {
-                    return new CustomMenu(menuData);
+                    return new CustomMenu(plugin, menuData);
                 }
             }
         }

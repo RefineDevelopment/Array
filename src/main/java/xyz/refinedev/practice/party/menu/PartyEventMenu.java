@@ -17,7 +17,7 @@ public class PartyEventMenu extends Menu {
     private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("party_events");
 
     public PartyEventMenu() {
-        this.loadMenu(config);
+        this.loadMenu(plugin, config);
     }
 
     /**

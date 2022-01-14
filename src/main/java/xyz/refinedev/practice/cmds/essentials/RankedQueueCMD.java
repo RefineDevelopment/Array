@@ -49,7 +49,7 @@ public class RankedQueueCMD {
             }
         }
         if (!profile.isBusy()) {
-            new QueueSelectKitMenu(QueueType.RANKED).openMenu(player);
+            new QueueSelectKitMenu(QueueType.RANKED).openMenu(plugin, player);
         } else {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
         }

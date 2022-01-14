@@ -56,7 +56,7 @@ public class ButtonData {
                     if (menu == null) {
                         player.sendMessage(Locale.ERROR_MENU.toString());
                     } else {
-                        menu.openMenu(player);
+                        menu.openMenu(plugin, player);
                     }
                     break;
             }

@@ -55,6 +55,6 @@ public class EventKitButton extends Button {
         player.closeInventory();
 
         EventSizeMenu menu = new EventSizeMenu(type, kit);
-        menu.openMenu(player);
+        menu.openMenu(plugin, player);
     }
 }

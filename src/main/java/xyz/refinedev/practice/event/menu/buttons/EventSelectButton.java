@@ -120,14 +120,14 @@ public class EventSelectButton extends Button {
 
         if (eventType.equals(EventType.LMS) || eventType.equals(EventType.BRACKETS)) {
             EventKitMenu kitMenu = new EventKitMenu(eventType);
-            kitMenu.openMenu(player);
+            kitMenu.openMenu(plugin, player);
             Button.playSuccess(player);
             return;
         }
 
         if (eventType.equals(EventType.SUMO) || eventType.equals(EventType.GULAG)) {
             EventSizeMenu menu = new EventSizeMenu(eventType);
-            menu.openMenu(player);
+            menu.openMenu(plugin, player);
             Button.playSuccess(player);
             return;
         }

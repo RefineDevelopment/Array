@@ -92,7 +92,7 @@ public class PartyEventButton extends Button {
         }
 
         if (this.partyEventType == PartyEventType.PARTY_FFA || this.partyEventType == PartyEventType.PARTY_SPLIT) {
-            new PartySelectKitMenu(this.partyEventType).openMenu(player);
+            new PartySelectKitMenu(this.partyEventType).openMenu(plugin, player);
             return;
         }
 

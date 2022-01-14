@@ -30,14 +30,14 @@ public class EventSizeMenu extends Menu {
     private final transient Kit kit;
 
     public EventSizeMenu(EventType eventType) {
-        this.loadMenu(config);
+        this.loadMenu(plugin, config);
 
         this.eventType = eventType;
         this.kit = null;
     }
 
     public EventSizeMenu(EventType eventType, Kit kit) {
-        this.loadMenu(config);
+        this.loadMenu(plugin, config);
 
         this.eventType = eventType;
         this.kit = kit;

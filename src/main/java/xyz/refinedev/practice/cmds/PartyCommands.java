@@ -126,7 +126,7 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
-        new PartySettingsMenu().openMenu(player);
+        new PartySettingsMenu(plugin).openMenu(plugin, player);
     }
 
     @Command(name = "event", aliases = "event", desc = "Open Party Events Menu")
@@ -145,7 +145,7 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
-        new PartyEventMenu().openMenu(player);
+        new PartyEventMenu().openMenu(plugin, player);
     }
 
     @Command(name = "classes", aliases = {"hcfkits", "hcfkit", "class"}, desc = "View HCF Class Menu")
@@ -164,7 +164,7 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
-        new PartyPvPClassMenu().openMenu(player);
+        new PartyPvPClassMenu().openMenu(plugin, player);
     }
 
     @Command(name = "info", aliases = "information", desc = "View Information about your Party")
@@ -195,7 +195,7 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
-        new PartyDuelMenu().openMenu(player);
+        new PartyDuelMenu().openMenu(plugin, player);
     }
 
     @Command(name = "join", aliases = "accept" ,desc = "Join a party using its invitation", usage = "<leader>")

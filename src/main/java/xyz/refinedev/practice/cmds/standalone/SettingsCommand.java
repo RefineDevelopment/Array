@@ -18,6 +18,6 @@ public class SettingsCommand {
 
     @Command(name = "", desc = "Open Array Settings Menu")
     public void settings(@Sender Player player) {
-        new ProfileSettingsMenu().openMenu(player);
+        new ProfileSettingsMenu().openMenu(plugin, player);
     }
 }

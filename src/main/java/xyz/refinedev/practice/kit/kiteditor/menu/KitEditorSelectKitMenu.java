@@ -67,7 +67,7 @@ public class KitEditorSelectKitMenu extends Menu {
             profile.getKitEditor().setSelectedKit(kit);
             profile.getKitEditor().setPreviousState(profile.getState());
 
-            new KitManagementMenu(kit).openMenu(player);
+            new KitManagementMenu(kit).openMenu(plugin, player);
         }
 
     }

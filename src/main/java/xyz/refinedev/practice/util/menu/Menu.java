@@ -2,7 +2,6 @@ package xyz.refinedev.practice.util.menu;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -23,8 +22,6 @@ import java.util.Map;
 @Getter @Setter
 public abstract class Menu {
 
-    private final Array plugin = Array.getInstance();
-
     private final List<ButtonData> customButtons = new ArrayList<>();
 
     public static Map<String, Menu> currentlyOpenedMenus = new HashMap<>();
@@ -37,23 +34,7 @@ public abstract class Menu {
 
     private Button placeholderButton = Button.placeholder(Material.STAINED_GLASS_PANE, (byte) 15);
 
-    private ItemStack createItemStack(Player player, Button button) {
-        ItemStack item = button.getButtonItem(player);
-        ItemMeta itemMeta = item.getItemMeta();
-
-        if (item.getType() != Material.SKULL_ITEM) {
-            ItemMeta meta = item.getItemMeta();
-
-            if (meta != null && meta.hasDisplayName()) {
-                meta.setDisplayName(meta.getDisplayName() + "§b§c§d§e");
-            }
-
-            item.setItemMeta(meta);
-        }
-        return item;
-    }
-
-    public void loadMenu(FoldersConfigurationFile config) {
+    public void loadMenu(Array plugin, FoldersConfigurationFile config) {
         List<ButtonData> custom = plugin.getMenuManager().loadCustomButtons(config);
         if (custom != null && !custom.isEmpty()) {
             this.getCustomButtons().addAll(custom);
@@ -86,7 +67,7 @@ public abstract class Menu {
      *
      * @param player Player viewing the menu
      */
-    public void openMenu(Player player) {
+    public void openMenu(Array plugin, Player player) {
         this.buttons = this.getButtons(player);
 
         for ( ButtonData customButton : customButtons ) {
@@ -121,15 +102,14 @@ public abstract class Menu {
         }
 
         if (inventory == null) {
-            inventory = Bukkit.createInventory(player, size, title);
+            inventory = plugin.getServer().createInventory(player, size, title);
         }
 
         inventory.setContents(new ItemStack[inventory.getSize()]);
 
         currentlyOpenedMenus.put(player.getName(), this);
-
         for (Map.Entry<Integer, Button> buttonEntry : this.buttons.entrySet()) {
-            inventory.setItem(buttonEntry.getKey(), createItemStack(player, buttonEntry.getValue()));
+            inventory.setItem(buttonEntry.getKey(), buttonEntry.getValue().getButtonItem(player));
         }
 
         if (this.isPlaceholder()) {
