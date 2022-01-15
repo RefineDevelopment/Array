@@ -78,7 +78,7 @@ public class ArenaManager {
         }
         plugin.logger("&7Loaded &c" + arenas.size() + " &7Arena(s)!");
         if (!arenas.isEmpty()) {
-            plugin.logger("&7Loading Chunks for &c" + arenas.size() + " &7Arena(s), this may cause lag");
+            plugin.logger("&7Loading Chunks for &c" + arenas.size() + " &7Arena(s)");
             this.loadChunks();
         }
     }
@@ -140,10 +140,12 @@ public class ArenaManager {
             duplicate.setMin(min);
             duplicate.setKits(arena.getKits());
             duplicate.setDuplicate(true);
+            duplicate.takeSnapshot();
 
             standaloneArena.getDuplicates().add(duplicate);
             this.arenas.add(duplicate);
         }
+        standaloneArena.takeSnapshot();
     }
 
     /**
@@ -184,11 +186,6 @@ public class ArenaManager {
         }
 
         config.save();
-
-        Chunk[] chunks = this.plugin.getServer().getWorld("world").getLoadedChunks();
-        for ( Chunk chunk :  chunks) {
-            chunk.unload(true);
-        }
     }
 
     /**
@@ -265,7 +262,6 @@ public class ArenaManager {
      * Load chunks of all the loaded arenas
      */
     public void loadChunks() {
-        this.plugin.logger("&7Starting &cchunk loading &7task!");
         for ( Arena arena : this.arenas ) {
             if (arena.getMax() == null || arena.getMin() == null) continue;
 

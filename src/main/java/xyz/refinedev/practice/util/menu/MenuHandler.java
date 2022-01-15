@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.managers;
+package xyz.refinedev.practice.util.menu;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,6 @@ import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.config.impl.MenuConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
-import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.menu.custom.ButtonData;
 import xyz.refinedev.practice.util.menu.custom.CustomMenu;
 import xyz.refinedev.practice.util.menu.custom.CustomPaginatedMenu;
@@ -44,7 +43,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
-public class MenuManager {
+public class MenuHandler {
 
     private final Array plugin;
 
@@ -52,6 +51,7 @@ public class MenuManager {
                                           "profile_history", "party_events", "event_size", "event_host"};
 
     private final Map<String, FoldersConfigurationFile> configs = new HashMap<>();
+    private final Map<UUID, Menu> openedMenus = new HashMap<>();
     private final List<MenuData> menuData = new ArrayList<>();
 
     public void init() {
@@ -99,6 +99,8 @@ public class MenuManager {
 
             menuData.add(menu);
         }
+
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new MenuUpdateTask(plugin), 15 * 20L, 15 * 20L);
     }
 
     /**
@@ -125,6 +127,28 @@ public class MenuManager {
                 this.configs.put(name, loadedConfig);
             }
         }
+    }
+
+    /**
+     * Get the menu that is opened to the player by
+     * their UniqueId
+     *
+     * @param player {@link Player}
+     * @return {@link Menu} queried menu
+     */
+    public Menu getByPlayer(Player player) {
+       return this.openedMenus.get(player.getUniqueId());
+    }
+
+    /**
+     * Get the menu that is opened to the player by
+     * their UniqueId
+     *
+     * @param player {@link Player}
+     * @return {@link Menu} queried menu
+     */
+    public Menu getByPlayer(UUID player) {
+        return this.openedMenus.get(player);
     }
 
     /**

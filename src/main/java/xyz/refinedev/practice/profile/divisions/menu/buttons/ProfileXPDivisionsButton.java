@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class ProfileXPDivisionsButton extends Button {
 
     private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("profile_divisions");
+    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_divisions");
 
     private final Profile profile;
     private final ProfileDivision division;

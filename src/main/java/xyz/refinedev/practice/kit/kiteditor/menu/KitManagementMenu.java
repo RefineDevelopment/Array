@@ -22,13 +22,15 @@ import java.util.Map;
 
 public class KitManagementMenu extends Menu {
 
-    private final Array plugin = this.getPlugin();
+    private final Array plugin;
     private final Button PLACEHOLDER = Button.placeholder(Material.STAINED_GLASS_PANE, (byte) 7, " ");
 
     private final Kit kit;
 
-    public KitManagementMenu(Kit kit) {
+    public KitManagementMenu(Array plugin, Kit kit) {
+        this.plugin = plugin;
         this.kit = kit;
+
         this.setPlaceholder(true);
         this.setUpdateAfterClick(false);
     }
@@ -98,7 +100,7 @@ public class KitManagementMenu extends Menu {
             Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
             profile.getStatisticsData().get(kit).deleteKit(kitInventory);
 
-            new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(plugin, player);
+            new KitManagementMenu(plugin, profile.getKitEditor().getSelectedKit()).openMenu(plugin, player);
         }
 
     }
@@ -139,7 +141,7 @@ public class KitManagementMenu extends Menu {
 
             profile.getStatisticsData().get(kit).replaceKit(index, kitInventory);
             profile.getKitEditor().setSelectedKitInventory(kitInventory);
-            new KitEditorMenu().openMenu(plugin, player);
+            new KitEditorMenu(plugin).openMenu(plugin, player);
         }
 
     }
@@ -162,7 +164,7 @@ public class KitManagementMenu extends Menu {
 
         @Override
         public void clicked(Player player, int slot, ClickType clickType, int hotbarSlot) {
-            Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
+            setClosedByMenu(true);
 
             Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
             profile.getKitEditor().setActive(true);
@@ -211,7 +213,7 @@ public class KitManagementMenu extends Menu {
 
             profile.getKitEditor().setSelectedKitInventory(kit);
 
-            new KitEditorMenu().openMenu(plugin, player);
+            new KitEditorMenu(plugin).openMenu(plugin, player);
         }
 
     }

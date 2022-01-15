@@ -193,8 +193,9 @@ public class MatchManager {
             }
         }
 
-
-        this.cleanup(match);
+        if (match.getArena().isStandalone()) match.getArena().restoreSnapshot();
+        match.getArena().setActive(false);
+        match.getEntities().forEach(Entity::remove);
 
         if (match.getWaterTask() != null) {
             match.getWaterTask().cancel();
@@ -450,17 +451,7 @@ public class MatchManager {
                 match.getChangedBlocks().forEach(blockState -> blockState.getLocation().getBlock().setType(blockState.getType()));
                 match.getChangedBlocks().clear();
             }
-
-            match.getArena().setActive(false);
-            match.getEntities().forEach(Entity::remove);
         });
-
-        World world = plugin.getServer().getWorld("world");
-        for ( Entity entity : world.getEntities()) {
-            if (entity.getType() != EntityType.DROPPED_ITEM) continue;
-            entity.remove();
-        }
-
     }
 
     /**

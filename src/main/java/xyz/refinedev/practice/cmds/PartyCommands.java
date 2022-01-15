@@ -164,7 +164,7 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
-        new PartyPvPClassMenu().openMenu(plugin, player);
+        new PartyPvPClassMenu(plugin).openMenu(plugin, player);
     }
 
     @Command(name = "info", aliases = "information", desc = "View Information about your Party")

@@ -9,7 +9,6 @@ import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.MatchSnapshot;
 import xyz.refinedev.practice.match.menu.MatchDetailsMenu;
 import xyz.refinedev.practice.match.team.TeamPlayer;
-import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
@@ -30,7 +29,7 @@ import java.util.stream.Collectors;
 public class SpectateButton extends Button {
 
     private final Array plugin = Array.getInstance();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("general");
+    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("general");
 
     private final Match match;
     private final TeamPlayer teamPlayer;

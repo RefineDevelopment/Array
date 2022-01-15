@@ -30,6 +30,7 @@ import java.util.List;
 public class EventTeamButton extends Button {
 
     private final Event event;
+    private final Menu menu;
     private final EventGroup eventGroup;
 
     @Override
@@ -55,7 +56,7 @@ public class EventTeamButton extends Button {
 
     @Override
     public void clicked(Player player, ClickType clickType) {
-        Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
+        menu.setClosedByMenu(true);
         player.closeInventory();
 
         if (this.eventGroup.getPlayers().size() >= this.eventGroup.getMaxMembers()) {

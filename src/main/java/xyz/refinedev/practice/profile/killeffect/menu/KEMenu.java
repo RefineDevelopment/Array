@@ -22,7 +22,7 @@ import java.util.*;
 public class KEMenu extends Menu {
 
     private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("profile_killeffects");
+    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_killeffects");
 
     /**
      * Get menu's title

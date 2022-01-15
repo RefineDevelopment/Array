@@ -25,7 +25,7 @@ import java.util.Map;
 public class ProfileDivisionsMenu extends PaginatedMenu {
 
     private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("profile_divisions");
+    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_divisions");
 
     /**
      * @param player player viewing the inventory

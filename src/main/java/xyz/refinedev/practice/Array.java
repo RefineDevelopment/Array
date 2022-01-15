@@ -6,6 +6,11 @@ import com.lunarclient.bukkitapi.cooldown.LunarClientAPICooldown;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.refinedev.practice.adapters.NameTagAdapter;
 import xyz.refinedev.practice.adapters.ScoreboardAdapter;
@@ -23,6 +28,7 @@ import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.CommandService;
 import xyz.refinedev.practice.util.command.Drink;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
+import xyz.refinedev.practice.util.menu.MenuHandler;
 import xyz.refinedev.practice.util.nametags.NameTagHandler;
 import xyz.refinedev.practice.util.other.ClassUtil;
 import xyz.refinedev.practice.util.other.Description;
@@ -57,6 +63,7 @@ public class Array extends JavaPlugin {
     private BasicConfigurationFile mainConfig, arenasConfig, kitsConfig, eventsConfig, killEffectsConfig,
                                    messagesConfig, scoreboardConfig, tablistConfig,  hotbarConfig;
 
+    private MenuHandler menuHandler;
     private CoreHandler coreHandler;
     private ConfigHandler configHandler;
     private SpigotHandler spigotHandler;
@@ -67,7 +74,6 @@ public class Array extends JavaPlugin {
 
     private KitManager kitManager;
     private ClanManager clanManager;
-    private MenuManager menuManager;
     private EventManager eventManager;
     private MatchManager matchManager;
     private ArenaManager arenaManager;
@@ -112,6 +118,9 @@ public class Array extends JavaPlugin {
 
         this.configHandler = new ConfigHandler(this);
         this.configHandler.init();
+
+        this.menuHandler = new MenuHandler(this);
+        this.menuHandler.init();
 
         Locale.init(this);
 
@@ -161,9 +170,6 @@ public class Array extends JavaPlugin {
         this.partyManager = new PartyManager(this);
         this.partyManager.init();
 
-        this.menuManager = new MenuManager(this);
-        this.menuManager.init();
-
         this.eventManager = new EventManager(this, eventsConfig);
         this.eventManager.init();
 
@@ -202,6 +208,12 @@ public class Array extends JavaPlugin {
         this.clanManager.getClans().values().forEach(clanManager::save);
         this.profileManager.getProfiles().values().forEach(profileManager::save);
         this.killEffectManager.getKillEffects().forEach(killEffectManager::save);
+
+        World world = plugin.getServer().getWorld("world");
+        for ( Entity entity : world.getEntities()) {
+            if (entity.getType() != EntityType.DROPPED_ITEM) continue;
+            entity.remove();
+        }
 
         this.configHandler.save();
         this.killEffectManager.exportConfig();
@@ -252,6 +264,21 @@ public class Array extends JavaPlugin {
             LunarClientAPICooldown.registerCooldown(new LCCooldown("Enderpearl", this.configHandler.getENDERPEARL_COOLDOWN(), TimeUnit.SECONDS, Material.ENDER_PEARL));
             LunarClientAPICooldown.registerCooldown(new LCCooldown("Bow", this.configHandler.getBOW_COOLDOWN(), TimeUnit.SECONDS, Material.BOW));
         }
+
+        this.logger("&7Registering permissions");
+        this.registerPermissions();
+        this.logger("&7Registered &cpermissions &7successfully!");
+    }
+
+    /**
+     * Register the permissions so if you have
+     * OP, you can have basically all the permission already given to you.
+     */
+    public void registerPermissions() {
+        PluginManager pluginManager = this.getServer().getPluginManager();
+
+        pluginManager.addPermission(new Permission("array.arena.admin", PermissionDefault.OP));
+        pluginManager.addPermission(new Permission("array.kit.admin", PermissionDefault.OP));
     }
 
     /**

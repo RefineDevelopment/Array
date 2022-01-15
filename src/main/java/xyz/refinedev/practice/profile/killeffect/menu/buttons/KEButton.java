@@ -28,7 +28,7 @@ import java.util.List;
 public class KEButton extends Button {
 
     private final Array plugin = Array.getInstance();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("profile_killeffects");
+    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_killeffects");
     private final KillEffect killEffect;
 
     /**

@@ -1,32 +1,28 @@
 package xyz.refinedev.practice.party.menu;
 
-import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.party.enums.PartyManageType;
-import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
+import xyz.refinedev.practice.party.menu.buttons.PartySettingsButton;
+import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 //TODO: config
 public class PartySettingsMenu extends Menu {
 
     private final Array plugin;
+    private final FoldersConfigurationFile config;
 
     public PartySettingsMenu(Array plugin) {
         this.plugin = plugin;
+        this.config = plugin.getMenuHandler().getConfigByName("party_settings");
+
+        this.loadMenu(plugin, config);
 
         this.setAutoUpdate(true);
         this.setUpdateAfterClick(true);
@@ -41,8 +37,8 @@ public class PartySettingsMenu extends Menu {
      * @return {@link String} the title of the menu
      */
     @Override
-    public String getTitle(final Player player) {
-        return "&7Party Settings";
+    public String getTitle(Player player) {
+        return config.getString("TITLE");
     }
 
     /**
@@ -52,135 +48,13 @@ public class PartySettingsMenu extends Menu {
      * @return {@link Map}
      */
     @Override
-    public Map<Integer, Button> getButtons(final Player player) {
+    public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        buttons.put(11, new SelectManageButton(PartyManageType.LIMIT));
-        buttons.put(13, new SelectManageButton(PartyManageType.PUBLIC));
-        buttons.put(15, new SelectManageButton(PartyManageType.MANAGE));
+        for ( PartyManageType type : PartyManageType.values() ) {
+            buttons.put(config.getInteger("BUTTONS." + type.name() + ".SLOT"), new PartySettingsButton(plugin, config, type));
+        }
+
         return buttons;
-    }
-
-    @AllArgsConstructor
-    private class SelectManageButton extends Button {
-
-        private final PartyManageType partyManageType;
-
-        /**
-         * Get itemStack of the Button
-         *
-         * @param player {@link Player} viewing the menu
-         * @return {@link ItemStack}
-         */
-        @Override
-        public ItemStack getButtonItem(final Player player) {
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-            Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
-            List<String> lore = new ArrayList<>();
-
-            switch (partyManageType) {
-                case LIMIT: {
-                    lore.add(CC.MENU_BAR);
-                    lore.add("&cCurrent Limit:");
-                    lore.add("&8 • &fLimit: &c" + party.getLimit());
-                    lore.add("");
-                    lore.add("&8(&cLeft-Click&8) - &7Increase Limit");
-                    lore.add("&8(&cRight-Click&8) - &7Decrease Limit");
-                    lore.add(CC.MENU_BAR);
-                    return new ItemBuilder(Material.INK_SACK).durability(2).name("&c" + this.partyManageType.getName()).lore(lore).build();
-                }
-                case PUBLIC: {
-                    lore.add(CC.MENU_BAR);
-                    lore.add("&cCurrent State:");
-                    lore.add("&8 • &fPublic: " + (party.isPublic() ? "&aPublic" : "&eInvite Only"));
-                    lore.add("");
-                    lore.add("&cClick to change party state.");
-                    lore.add(CC.MENU_BAR);
-                    return new ItemBuilder(Material.CHEST).name("&c" + this.partyManageType.getName()).lore(lore).build();
-                }
-                default: {
-                    lore.add(CC.MENU_BAR);
-                    lore.add("&7Click here to manage your party");
-                    lore.add("&7members, you can make them");
-                    lore.add("&7leader or kick them from the party");
-                    lore.add("");
-                    lore.add("&cClick to change party state.");
-                    lore.add(CC.MENU_BAR);
-                    return new ItemBuilder(Material.SKULL_ITEM).name("&c" + this.partyManageType.getName()).lore(lore).build();
-                }
-            }
-        }
-
-        /**
-         * This method is called upon clicking an
-         * item on the menu
-         *
-         * @param player {@link Player} clicking
-         * @param clickType {@link ClickType}
-         */
-        @Override
-        public void clicked(Player player, ClickType clickType) {
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-            if (!profile.hasParty()) {
-                player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
-                player.closeInventory();
-                return;
-            }
-
-            Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
-            switch (partyManageType) {
-                case LIMIT: {
-                    if (!player.hasPermission("array.party.limit")) {
-                        Locale.PARTY_DONATOR.toList().forEach(player::sendMessage);
-                        player.closeInventory();
-                        return;
-                    }
-                    if (clickType.isLeftClick()) {
-                        if (party.getLimit() < 100) {
-                            party.setLimit(party.getLimit() + 1);
-                        }
-                    }
-                    if (clickType.isRightClick()) {
-                        if (party.getLimit() > 1) {
-                            party.setLimit(party.getLimit() - 1);
-                        }
-                    }
-                    break;
-                }
-                case MANAGE: {
-                    if (!player.hasPermission("array.party.manage")) {
-                        Locale.PARTY_DONATOR.toList().forEach(player::sendMessage);
-                        player.closeInventory();
-                        return;
-                    }
-                    player.closeInventory();
-                    PartyListMenu menu = new PartyListMenu(plugin);
-                    menu.openMenu(plugin, player);
-                    break;
-                }
-                case PUBLIC: {
-                    if (!player.hasPermission("array.party.privacy")) {
-                        Locale.PARTY_DONATOR.toList().forEach(player::sendMessage);
-                        player.closeInventory();
-                        return;
-                    }
-
-                    party.setPublic(!party.isPublic());
-                    break;
-                }
-            }
-        }
-
-        /**
-         * Should the click update the menu
-         *
-         * @param player The player clicking
-         * @param clickType {@link ClickType}
-         * @return {@link Boolean}
-         */
-        @Override
-        public boolean shouldUpdate(Player player, ClickType clickType) {
-            return true;
-        }
     }
 }

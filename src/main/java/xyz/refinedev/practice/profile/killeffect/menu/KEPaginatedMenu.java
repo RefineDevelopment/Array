@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class KEPaginatedMenu extends PaginatedMenu {
 
     private final Array plugin = Array.getInstance();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("profile_killeffects");
+    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_killeffects");
 
     /**
      * @param player player viewing the inventory

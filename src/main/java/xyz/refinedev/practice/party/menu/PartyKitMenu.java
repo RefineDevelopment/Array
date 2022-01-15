@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class PartySelectKitMenu extends Menu {
+public class PartyKitMenu extends Menu {
 
     private final Array plugin = this.getPlugin();
     private final PartyEventType partyEventType;

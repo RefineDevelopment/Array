@@ -1,0 +1,33 @@
+TITLE: "&7Edit Party Settings"
+SIZE: 27
+PLACEHOLDER: true
+PLACEHOLDER_BUTTON:
+  NAME: ""
+  MATERIAL: STAINED_GLASS_PANE
+  DATA: 7
+BUTTONS:
+  PARTY_LIMIT:
+    NAME: ""
+    MATERIAL: INK_SACK
+    DATA: 2
+    SLOT: 12
+    LORE:
+      - "&7&m------------------------"
+      - "&c&lCurrent Limit"
+      - "&8 • &fLimit: &c<party_limit>"
+      - ""
+      - "&7&o(( Left-Click to increment ))"
+      - "&7&o(( Right-Click to decrement ))"
+      - "&7&m------------------------"
+  PARTY_STATE:
+    NAME: ""
+    MATERIAL: CHEST
+    DATA: 0
+    SLOT: 14
+    LORE:
+      - "&7&m------------------------"
+      - "&c&lCurrent State"
+      - "&8 • &fState: &c<party_state>"
+      - ""
+      - "&7&o(( Click to Change ))"
+      - "&7&m------------------------"

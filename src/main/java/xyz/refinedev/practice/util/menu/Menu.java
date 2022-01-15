@@ -6,7 +6,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
@@ -23,8 +22,6 @@ import java.util.Map;
 public abstract class Menu {
 
     private final List<ButtonData> customButtons = new ArrayList<>();
-
-    public static Map<String, Menu> currentlyOpenedMenus = new HashMap<>();
     private Map<Integer, Button> buttons = new HashMap<>();
 
     private boolean autoUpdate = false;
@@ -35,7 +32,7 @@ public abstract class Menu {
     private Button placeholderButton = Button.placeholder(Material.STAINED_GLASS_PANE, (byte) 15);
 
     public void loadMenu(Array plugin, FoldersConfigurationFile config) {
-        List<ButtonData> custom = plugin.getMenuManager().loadCustomButtons(config);
+        List<ButtonData> custom = plugin.getMenuHandler().loadCustomButtons(config);
         if (custom != null && !custom.isEmpty()) {
             this.getCustomButtons().addAll(custom);
         }
@@ -75,7 +72,7 @@ public abstract class Menu {
             this.buttons.put(customButton.getSlot(), new CustomButton(customButton));
         }
 
-        Menu previousMenu = Menu.currentlyOpenedMenus.get(player.getName());
+        Menu previousMenu =  plugin.getMenuHandler().getOpenedMenus().get(player.getUniqueId());
         Inventory inventory = null;
         int size = this.getSize() == -1 ? this.size(this.buttons) : this.getSize();
         boolean update = false;
@@ -107,7 +104,7 @@ public abstract class Menu {
 
         inventory.setContents(new ItemStack[inventory.getSize()]);
 
-        currentlyOpenedMenus.put(player.getName(), this);
+        plugin.getMenuHandler().getOpenedMenus().put(player.getUniqueId(), this);
         for (Map.Entry<Integer, Button> buttonEntry : this.buttons.entrySet()) {
             inventory.setItem(buttonEntry.getKey(), buttonEntry.getValue().getButtonItem(player));
         }

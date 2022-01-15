@@ -2,13 +2,20 @@ package xyz.refinedev.practice.arena;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.server.v1_8_R3.Chunk;
+import net.minecraft.server.v1_8_R3.ChunkSection;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R3.CraftChunk;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.arena.cache.ArenaCache;
+import xyz.refinedev.practice.arena.cache.ArenaChunk;
+import xyz.refinedev.practice.arena.cuboid.Cuboid;
 import xyz.refinedev.practice.arena.rating.Rating;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.util.chat.CC;
+import xyz.refinedev.practice.util.chunk.ChunkUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +39,7 @@ public abstract class Arena {
     private Location spawn1, spawn2, min, max;
 
     private ArenaType type;
+    private ArenaCache cache;
     private Rating rating = new Rating(this, 0, 0, 0,0, 0);
     private ItemStack displayIcon = new ItemStack(Material.PAPER);
 
@@ -66,4 +74,45 @@ public abstract class Arena {
     }
 
     public abstract boolean isSetup();
+
+    /**
+     * Caches the arena's original chunks and saves them in memory
+     * for restoration after the arena is used. By doing this we
+     * improve the restoration speed and fix a lot of bugs regarding
+     * resetting the arena, this way whatever you do inside the arena
+     * chunks, it always gets reset no matter what.
+     */
+    public void takeSnapshot() {
+        Cuboid cuboid = new Cuboid(min, max);
+        ArenaCache chunkCache = new ArenaCache();
+        cuboid.getChunks().forEach(chunk -> {
+            chunk.load();
+            Chunk nmsChunk = ((CraftChunk)chunk).getHandle();
+            ChunkSection[] nmsSections = ChunkUtil.copyChunkSections(nmsChunk.getSections());
+            chunkCache.chunks.put(new ArenaChunk(chunk.getX(), chunk.getZ()), ChunkUtil.copyChunkSections(nmsSections));
+        });
+
+        this.cache = chunkCache;
+    }
+
+    /**
+     * This method completely restores the arena to its
+     * original state, no matter what changes have occurred inside
+     * its chunks. This method instead of running a tracker and runnable
+     * might be a bit memory excessive but does better in performance
+     * as compared to the latter.
+     */
+    public void restoreSnapshot() {
+        Cuboid cuboid = new Cuboid(min, max);
+        cuboid.getChunks().forEach(chunk -> {
+            try {
+                chunk.load();
+                Chunk craftChunk = ((CraftChunk)chunk).getHandle();
+                ChunkSection[] sections = ChunkUtil.copyChunkSections(this.cache.getArenaChunkAtLocation(chunk.getX(), chunk.getZ()));
+                ChunkUtil.setChunkSections(craftChunk, sections);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
 }

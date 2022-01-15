@@ -15,7 +15,6 @@ import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.listeners.GHeadListener;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.menu.WorldsMenu;
-import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Require;
@@ -124,7 +123,7 @@ public class ArrayCommands {
         plugin.getTablistConfig().reload();
         plugin.getScoreboardConfig().reload();
 
-        for ( FoldersConfigurationFile config : plugin.getMenuManager().getConfigs().values() ) {
+        for ( FoldersConfigurationFile config : plugin.getMenuHandler().getConfigs().values() ) {
             config.reload();
         }
 

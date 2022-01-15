@@ -52,7 +52,7 @@ public class ButtonData {
                     break;
                 case MENU:
                     player.closeInventory();
-                    Menu menu = plugin.getMenuManager().findMenu(player, actionData.getAction());
+                    Menu menu = plugin.getMenuHandler().findMenu(player, actionData.getAction());
                     if (menu == null) {
                         player.sendMessage(Locale.ERROR_MENU.toString());
                     } else {

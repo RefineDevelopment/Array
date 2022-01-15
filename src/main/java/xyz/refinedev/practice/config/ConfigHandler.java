@@ -133,8 +133,6 @@ public class ConfigHandler {
         }
 
         ((CraftServer) plugin.getServer()).getHandle().getServer().setAllowFlight(true);
-
-        TaskUtil.runTimerAsync(new MenuUpdateTask(), 15 * 20L, 15 * 20L);
     }
 
     public void loadTablistRanks() {

@@ -50,14 +50,13 @@ public class DuelSelectKitMenu extends Menu {
 
         if (profile.hasParty() && plugin.getConfigHandler().isHCF_ENABLED()) {
             for ( Kit kit : plugin.getKitManager().getKits()) {
-                buttons.put(buttons.size(), new DuelKitButton(plugin, kit));
+                buttons.put(buttons.size(), new DuelKitButton(plugin, this, kit));
             }
         } else {
             for ( Kit kit : plugin.getKitManager().getKits() ) {
                 if (kit.equals(plugin.getKitManager().getTeamFight())) continue;
-                if (profile.hasParty() && kit.getGameRules().isTimed()) continue;
 
-                buttons.put(buttons.size(), new DuelKitButton(plugin, kit));
+                buttons.put(buttons.size(), new DuelKitButton(plugin, this, kit));
             }
         }
         return buttons;

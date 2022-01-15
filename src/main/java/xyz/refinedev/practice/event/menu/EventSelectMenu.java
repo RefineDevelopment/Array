@@ -23,7 +23,7 @@ import java.util.Map;
 public class EventSelectMenu extends Menu {
 
     private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("event_host");
+    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("event_host");
 
     public EventSelectMenu() {
         this.loadMenu(plugin, config);

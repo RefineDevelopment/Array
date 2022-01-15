@@ -26,7 +26,7 @@ import java.util.Map;
 public class EventKitMenu extends Menu {
 
     private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("general");
+    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("general");
     private final EventType type;
 
     /**

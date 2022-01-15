@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.kit.kiteditor.menu;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -17,16 +18,16 @@ import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.menu.button.DisplayButton;
 import xyz.refinedev.practice.util.other.BukkitReflection;
 import xyz.refinedev.practice.util.other.PlayerUtil;
-import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class KitEditorMenu extends Menu {
 
-    private final Array plugin = this.getPlugin();
+    private final Array plugin;
 
     private static final int[] ITEM_POSITIONS = new int[]{
             20, 21, 22, 23, 24, 25, 26, 29, 30, 31, 32, 33, 34, 35, 38, 39, 40, 41, 42, 43, 44, 47, 48, 49, 50, 51, 52,
@@ -96,18 +97,14 @@ public class KitEditorMenu extends Menu {
 
     @Override
     public void onClose(Player player) {
-        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         profile.getKitEditor().setActive(false);
 
         if (!profile.isInFight()) {
-           TaskUtil.run(() -> this.getPlugin().getProfileManager().refreshHotbar(profile));
+           plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> plugin.getProfileManager().refreshHotbar(profile));
         }
 
-        Menu openMenu = Menu.currentlyOpenedMenus.get(player.getName());
-        if (openMenu == null) return;
-
-        openMenu.setClosedByMenu(false);
-        Menu.currentlyOpenedMenus.remove(player.getName());
+        setClosedByMenu(false);
     }
 
     @AllArgsConstructor
@@ -261,7 +258,7 @@ public class KitEditorMenu extends Menu {
 
     }
 
-    private class InfiniteItemButton extends DisplayButton {
+    private static class InfiniteItemButton extends DisplayButton {
 
         InfiniteItemButton(ItemStack itemStack) {
             super(itemStack, false);

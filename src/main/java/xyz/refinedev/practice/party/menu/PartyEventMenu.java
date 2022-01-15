@@ -14,7 +14,7 @@ import java.util.Map;
 public class PartyEventMenu extends Menu {
 
     private final Array plugin = Array.getInstance();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("party_events");
+    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("party_events");
 
     public PartyEventMenu() {
         this.loadMenu(plugin, config);

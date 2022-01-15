@@ -1,7 +1,9 @@
 package xyz.refinedev.practice.util.menu;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -12,11 +14,14 @@ import org.bukkit.entity.Player;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class MenuUpdateTask implements Runnable {
+
+    private final Array plugin;
 
     @Override
     public void run() {
-        Menu.currentlyOpenedMenus.forEach((key, value) -> {
+        plugin.getMenuHandler().getOpenedMenus().forEach((key, value) -> {
             final Player player = Bukkit.getPlayer(key);
 
             if (player != null) {

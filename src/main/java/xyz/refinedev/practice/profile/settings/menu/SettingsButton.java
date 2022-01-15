@@ -30,7 +30,7 @@ import java.util.List;
 public class SettingsButton extends Button {
 
     private final Array plugin = Array.getInstance();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("profile_settings");
+    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_settings");
 
     private final ProfileSettingsType type;
 

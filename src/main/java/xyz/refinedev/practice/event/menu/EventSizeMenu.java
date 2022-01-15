@@ -25,7 +25,7 @@ import java.util.Map;
 public class EventSizeMenu extends Menu {
 
     private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("event_size");
+    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("event_size");
     private final EventType eventType;
     private final transient Kit kit;
 

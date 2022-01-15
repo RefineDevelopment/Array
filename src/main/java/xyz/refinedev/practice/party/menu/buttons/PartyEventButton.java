@@ -13,12 +13,11 @@ import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.match.types.kit.TeamFightMatch;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.party.enums.PartyEventType;
-import xyz.refinedev.practice.party.menu.PartySelectKitMenu;
+import xyz.refinedev.practice.party.menu.PartyKitMenu;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
-import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -92,7 +91,7 @@ public class PartyEventButton extends Button {
         }
 
         if (this.partyEventType == PartyEventType.PARTY_FFA || this.partyEventType == PartyEventType.PARTY_SPLIT) {
-            new PartySelectKitMenu(this.partyEventType).openMenu(plugin, player);
+            new PartyKitMenu(this.partyEventType).openMenu(plugin, player);
             return;
         }
 

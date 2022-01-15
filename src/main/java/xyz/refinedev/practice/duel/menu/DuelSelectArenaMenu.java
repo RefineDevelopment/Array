@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.duel.menu;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -18,10 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class DuelSelectArenaMenu extends PaginatedMenu {
 
-    private final Array plugin = this.getPlugin();
+    private final Array plugin;
 
     @Override
     public String getPrePaginatedTitle(Player player) {
@@ -75,7 +76,7 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
             profile.getDuelProcedure().setArena(arena);
             profile.getDuelProcedure().send();
 
-            Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
+            setClosedByMenu(true);
             player.closeInventory();
         }
 

@@ -209,7 +209,7 @@ public class BattleRushMatch extends SoloMatch {
             return;
         }
 
-        TaskUtil.run(() -> plugin.getMatchManager().start(this));
+        plugin.getMatchManager().start(this);
     }
 
     /**

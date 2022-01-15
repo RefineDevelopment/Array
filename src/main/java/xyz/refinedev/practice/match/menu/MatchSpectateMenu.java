@@ -28,7 +28,7 @@ public class MatchSpectateMenu extends Menu {
 
 
     private final Array plugin = Array.getInstance();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("general");
+    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("general");
 
     private final Match match;
 

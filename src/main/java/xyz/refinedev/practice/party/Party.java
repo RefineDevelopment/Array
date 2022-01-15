@@ -23,7 +23,7 @@ public class Party extends Team {
 
     private final UUID uniqueId;
 
-    private int limit = 10;
+    private int limit;
 
     private boolean isPublic;
     private boolean inTournament;
@@ -39,10 +39,7 @@ public class Party extends Team {
         super(new TeamPlayer(player.getUniqueId(), player.getName()));
         this.uniqueId = UUID.randomUUID();
         this.kits.put(player.getUniqueId(), PartyHelperUtil.getRandomClass());
-
-        if (player.hasPermission("array.donator")) {
-            this.limit = 50;
-        }
+        this.limit = player.hasPermission("array.party.limit") ? 50 : 10;
     }
 
     /**
@@ -57,6 +54,12 @@ public class Party extends Team {
 
     public String getPrivacy() {
         return (isPublic ? "&aOpen" : "&eClose");
+    }
+
+    public boolean containsPlayer(UUID uuid) {
+        List<UUID> uuids = this.getPlayers().stream().map(Player::getUniqueId).collect(Collectors.toList());
+
+        return uuids.contains(uuid);
     }
 
     /**

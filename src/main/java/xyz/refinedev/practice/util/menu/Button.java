@@ -1,19 +1,16 @@
 package xyz.refinedev.practice.util.menu;
 
 import lombok.Getter;
-import xyz.refinedev.practice.util.other.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.util.other.StringUtils;
 
 @Getter
 public abstract class Button {
-
-    private final Array plugin = Array.getInstance();
 
     /**
      * Create a quick and easy placeholder Button

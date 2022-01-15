@@ -8,11 +8,11 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.duel.menu.DuelSelectArenaMenu;
+import xyz.refinedev.practice.duel.menu.DuelSelectKitMenu;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
-import xyz.refinedev.practice.util.menu.Menu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,7 @@ import java.util.List;
 public class DuelKitButton extends Button {
 
     private final Array plugin;
+    private final DuelSelectKitMenu menu;
     private final Kit kit;
 
     @Override
@@ -58,11 +59,11 @@ public class DuelKitButton extends Button {
         profile.getDuelProcedure().setKit(kit);
         profile.getDuelProcedure().setArena(arena);
 
-        Menu.currentlyOpenedMenus.get(player.getName()).setClosedByMenu(true);
+        menu.setClosedByMenu(true);
         player.closeInventory();
 
-        if (player.hasPermission("array.donator")) {
-            new DuelSelectArenaMenu().openMenu(plugin, player);
+        if (player.hasPermission("array.duel.arena")) {
+            new DuelSelectArenaMenu(plugin).openMenu(plugin, player);
         } else {
             profile.getDuelProcedure().send();
         }

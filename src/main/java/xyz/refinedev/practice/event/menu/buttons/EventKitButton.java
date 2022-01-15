@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.event.EventTeamSize;
 import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.event.menu.EventSizeMenu;
 import xyz.refinedev.practice.kit.Kit;
@@ -26,7 +25,7 @@ import xyz.refinedev.practice.util.menu.Button;
 public class EventKitButton extends Button {
 
     private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("general");
+    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("general");
     private final EventType type;
     private final Kit kit;
 

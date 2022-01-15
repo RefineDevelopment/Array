@@ -27,7 +27,7 @@ public class ProfileMenu extends Menu {
     //TODO: Same goes for events and tournaments
 
     private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("profile_menu");
+    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_menu");
 
     private final Player player;
 

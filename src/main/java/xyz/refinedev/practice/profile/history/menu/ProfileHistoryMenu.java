@@ -20,7 +20,7 @@ import java.util.Map;
 public class ProfileHistoryMenu extends Menu {
 
     private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuManager().getConfigByName("profile_history");
+    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_history");
 
     /**
      * Get menu's title
