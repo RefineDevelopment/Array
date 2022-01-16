@@ -18,6 +18,6 @@ public class LeaderboardsCommand {
 
     @Command(name = "", desc = "Open Leaderboards Menu")
     public void leaderboard(@Sender Player player) {
-        new LeaderboardsMenu().openMenu(plugin, player);
+        new LeaderboardsMenu().openMenu(player);
     }
 }

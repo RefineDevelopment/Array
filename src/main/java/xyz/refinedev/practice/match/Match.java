@@ -45,12 +45,10 @@ import java.util.stream.Collectors;
 @Getter @Setter
 public abstract class Match {
 
-    private final Map<UUID, EnderPearl> pearlMap = new HashMap<>();
     private final List<MatchSnapshot> snapshots = new ArrayList<>();
     private final List<UUID> spectatorList = new ArrayList<>();
     private final List<Entity> entities = new ArrayList<>();
     private final List<Location> placedBlocks = new ArrayList<>();
-    private final List<BlockState> changedBlocks = new ArrayList<>();
 
     private final UUID matchId;
     private final Queue queue;
@@ -90,44 +88,6 @@ public abstract class Match {
 
         new MatchCPSTask(plugin, this).runTaskTimer(plugin, 2L, 2L);
         this.task = new MatchStartTask(this).runTaskTimer(plugin, 20L, 20L);
-    }
-
-    /**
-     * Add the pearl to our map to track it
-     *
-     * @param player {@link Player} the player pearling
-     * @param pearl {@link EnderPearl} the enderpearl used
-     */
-    public void onPearl(Player player, EnderPearl pearl) {
-        this.pearlMap.put(player.getUniqueId(), pearl);
-    }
-
-    /**
-     * Remove the pearl from our map because we have tracked it
-     *
-     * @param profile {@link Profile} the profile that threw the pearl
-     * @param resetCooldown {@link Boolean} should we reset their pearl cooldown
-     */
-    public void removePearl(Profile profile, boolean resetCooldown) {
-        if (resetCooldown) {
-            this.setEnderpearlCooldown(profile, new Cooldown(0L));
-        }
-
-        EnderPearl pearl = this.pearlMap.get(profile.getUniqueId());
-        if (pearl != null) pearl.remove();
-    }
-
-    /**
-     * Apply the Enderpearl cooldown to the profile
-     * and send it to LunarAPI if they are on Lunar
-     *
-     * @param cooldown {@link Cooldown}
-     */
-    public void setEnderpearlCooldown(Profile profile, Cooldown cooldown) {
-        profile.setEnderpearlCooldown(cooldown);
-        Player player = profile.getPlayer();
-
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("LunarClient-API")) LunarClientAPICooldown.sendCooldown(player, "Enderpearl");
     }
 
 

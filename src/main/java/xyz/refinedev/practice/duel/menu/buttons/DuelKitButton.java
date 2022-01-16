@@ -63,7 +63,7 @@ public class DuelKitButton extends Button {
         player.closeInventory();
 
         if (player.hasPermission("array.duel.arena")) {
-            new DuelSelectArenaMenu(plugin).openMenu(plugin, player);
+            new DuelSelectArenaMenu(plugin).openMenu(player);
         } else {
             profile.getDuelProcedure().send();
         }

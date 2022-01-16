@@ -50,11 +50,7 @@ public class QueueManager {
     }
 
     public int getInQueues() {
-        int i = 0;
-        for ( Queue queue : queues.values() ) {
-            i += queue.getPlayers().size();
-        }
-        return i;
+        return queues.values().stream().mapToInt(queue -> queue.getPlayers().size()).sum();
     }
 
     /**

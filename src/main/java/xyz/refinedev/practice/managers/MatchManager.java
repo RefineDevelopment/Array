@@ -37,6 +37,7 @@ import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.task.match.MatchBowCooldownTask;
+import xyz.refinedev.practice.task.match.MatchCooldownTask;
 import xyz.refinedev.practice.task.match.MatchPearlCooldownTask;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
@@ -72,8 +73,7 @@ public class MatchManager {
     private final List<Match> matches = new ArrayList<>();
 
     public void init() {
-        new MatchPearlCooldownTask(plugin).runTaskTimerAsynchronously(plugin, 10L, 10L);
-        new MatchBowCooldownTask(plugin).runTaskTimerAsynchronously(plugin, 10L, 10L);
+        new MatchCooldownTask(plugin).runTaskTimerAsynchronously(plugin, 1L, 1L);
 
         plugin.getServer().getWorlds().forEach(world -> {
             world.setGameRuleValue("doWeatherCycle", "false");

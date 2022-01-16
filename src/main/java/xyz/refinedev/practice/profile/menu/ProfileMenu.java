@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.profile.menu;
 
-import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
@@ -19,17 +18,21 @@ import java.util.Map;
  * Project: Array
  */
 
-@RequiredArgsConstructor
 public class ProfileMenu extends Menu {
 
     //TODO: Add Statistics Button, Divisions Button, History Button, Global Stats being displayed normally in the menu
     //TODO: Display the clan, the player is in and if he's in a party then show it and if he's in a match show it and have an option to go and spectate it
     //TODO: Same goes for events and tournaments
 
-    private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_menu");
-
+    private final Array plugin;
     private final Player player;
+    private final FoldersConfigurationFile config;
+
+    public ProfileMenu(Array plugin, Player player) {
+        this.plugin = plugin;
+        this.player = player;
+        this.config = plugin.getMenuHandler().getConfigByName("profile_menu");
+    }
 
     /**
      * Get menu's title

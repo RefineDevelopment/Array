@@ -2,6 +2,7 @@ package xyz.refinedev.practice.util.menu.pagination;
 
 import lombok.Getter;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
 
@@ -12,9 +13,13 @@ public abstract class PaginatedMenu extends Menu {
 
     @Getter
     private int page = 1;
+    private final Array plugin;
 
-    {
-        setUpdateAfterClick(false);
+    public PaginatedMenu(Array plugin) {
+        super(plugin);
+
+        this.plugin = plugin;
+        this.setUpdateAfterClick(false);
     }
 
     @Override
@@ -54,8 +59,8 @@ public abstract class PaginatedMenu extends Menu {
 
         HashMap<Integer, Button> buttons = new HashMap<>();
 
-        buttons.put(0, new PageButton(-1, this));
-        buttons.put(8, new PageButton(1, this));
+        buttons.put(0, new PageButton(plugin, -1, this));
+        buttons.put(8, new PageButton(plugin, 1, this));
 
         for (Map.Entry<Integer, Button> entry : getAllPagesButtons(player).entrySet()) {
             int ind = entry.getKey();

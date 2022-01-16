@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.profile.history.menu;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
@@ -19,8 +20,15 @@ import java.util.Map;
 
 public class ProfileHistoryMenu extends Menu {
 
-    private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_history");
+    private final Array plugin;
+    private final FoldersConfigurationFile config;
+
+    public ProfileHistoryMenu(Array plugin) {
+        super(plugin);
+
+        this.plugin = plugin;
+        this.config = plugin.getMenuHandler().getConfigByName("profile_history");
+    }
 
     /**
      * Get menu's title

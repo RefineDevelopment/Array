@@ -72,7 +72,7 @@ public class SpectateButton extends Button {
             if (matchSnapshot == null) {
                 matchSnapshot = new MatchSnapshot(teamPlayer);
             }
-            new MatchDetailsMenu(matchSnapshot, null).openMenu(plugin, player);
+            new MatchDetailsMenu(matchSnapshot, null).openMenu(player);
         }
     }
 }

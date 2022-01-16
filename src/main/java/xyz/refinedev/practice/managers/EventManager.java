@@ -3,6 +3,11 @@ package xyz.refinedev.practice.managers;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.WorldType;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
@@ -18,6 +23,8 @@ import xyz.refinedev.practice.event.impl.spleef.Spleef;
 import xyz.refinedev.practice.event.impl.sumo.solo.SumoSolo;
 import xyz.refinedev.practice.event.impl.sumo.team.SumoTeam;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.other.Cooldown;
@@ -29,13 +36,13 @@ import java.util.*;
 public class EventManager {
 
 	private final Map<UUID, Event> events = new HashMap<>();
+	private final Map<UUID, Event> spectators = new HashMap<>();
 
 	private final Array plugin;
 	private final BasicConfigurationFile config;
 
-	//TODO: Make a Multiple Event System
 	private Event activeEvent;
-
+	private World eventWorld;
 	private EventLocations helper;
 	private Cooldown cooldown = new Cooldown(0);
 
@@ -45,6 +52,32 @@ public class EventManager {
 	public void init() {
 		this.helper = new EventLocations(config);
 		this.helper.loadLocations();
+
+		boolean newWorld = false;
+
+		if (plugin.getServer().getWorld("event") == null) {
+			plugin.logger("&7Event world &cnot found&7, creating...");
+			WorldCreator creator = new WorldCreator("event")
+					.type(WorldType.FLAT)
+					.generatorSettings("2;0;1;");
+
+			eventWorld = this.plugin.getServer().createWorld(creator);
+			newWorld = true;
+			plugin.logger("&7Created &cevent world&7 successfully!");
+		} else {
+			eventWorld = this.plugin.getServer().getWorld("event");
+			plugin.logger("&7Found &cevent world&7!");
+		}
+
+		if (eventWorld != null) {
+			if (newWorld) this.plugin.getServer().getWorlds().add(this.eventWorld);
+			this.eventWorld.setTime(2000L);
+			this.eventWorld.setGameRuleValue("doDaylightCycle", "false");
+			this.eventWorld.setGameRuleValue("doMobSpawning", "false");
+			this.eventWorld.setStorm(false);
+			this.eventWorld.getEntities().stream().filter(entity -> !(entity instanceof Player)).forEach(Entity::remove);
+			plugin.logger("&7Successfully finished &csetting up &7event world!");
+		}
 	}
 
 	/**
@@ -52,9 +85,8 @@ public class EventManager {
 	 */
 	public void shutdown() {
 		this.events.values().forEach(Event::handleEnd);
-
+		this.spectators.clear();
 		this.events.clear();
-
 		this.helper.save();
 	}
 
@@ -94,8 +126,8 @@ public class EventManager {
 			player.sendMessage(Locale.EVENT_ON_GOING.toString());
 			return false;
 		}
-		if (!this.getCooldown().hasExpired()) {
-			player.sendMessage(Locale.EVENT_COOLDOWN_ACTIVE.toString().replace("<expire_time>", this.getCooldown().getTimeLeft()));
+		if (!this.cooldown.hasExpired()) {
+			player.sendMessage(Locale.EVENT_COOLDOWN_ACTIVE.toString().replace("<expire_time>", this.cooldown.getTimeLeft()));
 			return false;
 		}
 
@@ -122,27 +154,17 @@ public class EventManager {
 				this.setActiveEvent(parkour);
 				return true;
 			}
-			case KOTH: {
-				//Koth koth = new Koth(plugin, player, size);
-				//this.setActiveEvent(koth);
-				return true;
-			}
 		}
 		return false;
 	}
 
 	public boolean hostByTypeAndKit(Player player, EventType type, EventTeamSize size, Kit kit) {
-		if (!player.hasPermission("*") && !player.isOp() && !player.hasPermission("array.event." + type.getName().toLowerCase())) {
-			player.sendMessage(Locale.EVENT_NO_PERMISSION.toString().replace("<store>", plugin.getConfigHandler().getSTORE()));
-			return false;
-		}
-
 		if (this.getActiveEvent() != null) {
 			player.sendMessage(Locale.EVENT_ON_GOING.toString());
 			return false;
 		}
-		if (!this.getCooldown().hasExpired()) {
-			player.sendMessage(Locale.EVENT_COOLDOWN_ACTIVE.toString().replace("<expire_time>", this.getCooldown().getTimeLeft()));
+		if (!this.cooldown.hasExpired()) {
+			player.sendMessage(Locale.EVENT_COOLDOWN_ACTIVE.toString().replace("<expire_time>", this.cooldown.getTimeLeft()));
 			return false;
 		}
 
@@ -177,4 +199,28 @@ public class EventManager {
 		return null;
 	}
 
+
+	public void addSpectator(Event event, UUID uuid) {
+		this.getSpectators().put(uuid, event);
+
+		Player player = Bukkit.getPlayer(uuid);
+		Profile profile = this.plugin.getProfileManager().getProfileByUUID(uuid);
+		profile.setState(ProfileState.SPECTATING);
+		profile.setEvent(event.getEventId());
+
+		this.plugin.getProfileManager().refreshHotbar(profile);
+		this.plugin.getProfileManager().handleVisibility(profile);
+
+		player.teleport(event.isFreeForAll() ? helper.getSpawn(event) : helper.getSpectator(event));
+	}
+
+	public void removeSpectator(Event event, UUID uuid) {
+		this.getSpectators().remove(uuid);
+
+		Profile profile = this.plugin.getProfileManager().getProfileByUUID(uuid);
+		profile.setState(ProfileState.IN_LOBBY);
+		profile.setEvent(null);
+
+		this.plugin.getProfileManager().teleportToSpawn(profile);
+	}
 }

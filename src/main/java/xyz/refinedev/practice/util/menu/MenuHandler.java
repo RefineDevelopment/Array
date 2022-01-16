@@ -100,7 +100,8 @@ public class MenuHandler {
             menuData.add(menu);
         }
 
-        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new MenuUpdateTask(plugin), 15 * 20L, 15 * 20L);
+        //Async cuz yknow we don't wanna diturb the main thread and besides this stuff gets updated way too often
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new MenuUpdateTask(plugin), 5L, 5L);
     }
 
     /**
@@ -122,10 +123,10 @@ public class MenuHandler {
     public void checkMissingConfigs(File[] files) {
         List<String> fileNames = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
         for ( String name : configNames ) {
-            if (!fileNames.contains(name)) {
-                FoldersConfigurationFile loadedConfig = new FoldersConfigurationFile(plugin, "menu", name);
-                this.configs.put(name, loadedConfig);
-            }
+            if (fileNames.contains(name)) continue;
+
+            FoldersConfigurationFile loadedConfig = new FoldersConfigurationFile(plugin, "menu", name);
+            this.configs.put(name, loadedConfig);
         }
     }
 
@@ -184,7 +185,6 @@ public class MenuHandler {
             ItemStack itemStack = itemBuilder.build();
             buttonData.setItem(itemStack);
             buttonData.setSlot(section.getInt(key + ".SLOT"));
-
             buttonData.getActions().addAll(this.loadActionData(key, config));
 
             customButtons.add(buttonData);
@@ -213,7 +213,7 @@ public class MenuHandler {
             try {
                 actionType = ActionType.valueOf(config.getString(path + ".ACTION_TYPE"));
             } catch (Exception e) {
-                System.out.println("Button " + buttonKey + "'s Action Type is invalid, ignoring action...");
+                plugin.getLogger().info("Button " + buttonKey + "'s Action Type is invalid, ignoring action...");
                 continue;
             }
             ActionData data = new ActionData(actionType, config.getString(path + ".CLICK_TYPE"), config.getString(path + ".ACTION"));
@@ -278,9 +278,9 @@ public class MenuHandler {
                 MenuData menuData = getMenuDataByName(name);
                 if (menuData == null) return null;
                 if (menuData.isPaginated()) {
-                    return new CustomPaginatedMenu(plugin, menuData);
+                    return new CustomPaginatedMenu(menuData);
                 } else {
-                    return new CustomMenu(plugin, menuData);
+                    return new CustomMenu(menuData);
                 }
             }
         }

@@ -3,6 +3,7 @@ package xyz.refinedev.practice.leaderboards.menu.buttons;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
@@ -26,6 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class KitLeaderboardsButton extends Button {
 
+    private final Array plugin;
     private final Kit kit;
 
     @Override
@@ -35,13 +37,13 @@ public class KitLeaderboardsButton extends Button {
         lore.add(CC.MENU_BAR);
         int position = 1;
         for (LeaderboardsAdapter leaderboardsAdapter : this.kit.getEloLeaderboards()) {
-            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(leaderboardsAdapter.getUuid());
+            Profile profile = plugin.getProfileManager().getProfileByUUID(leaderboardsAdapter.getUuid());
 
             lore.add(Locale.LEADERBOARDS_KIT_FORMAT.toString()
                     .replace("<leaderboards_pos>", String.valueOf(position))
                     .replace("<leaderboards_name>", leaderboardsAdapter.getName())
                     .replace("<leaderboards_elo>", String.valueOf(leaderboardsAdapter.getElo()))
-                    .replace("<leaderboards_division>", this.getPlugin().getProfileManager().getDivision(profile).getDisplayName()));
+                    .replace("<leaderboards_division>", plugin.getProfileManager().getDivision(profile).getDisplayName()));
             position++;
         }
         lore.add(CC.MENU_BAR);

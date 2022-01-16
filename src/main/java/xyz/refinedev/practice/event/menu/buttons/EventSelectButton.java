@@ -1,7 +1,5 @@
 package xyz.refinedev.practice.event.menu.buttons;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -29,13 +27,17 @@ import java.util.List;
  * Project: Array
  */
 
-@Getter
-@RequiredArgsConstructor
 public class EventSelectButton extends Button {
 
-    private final Array plugin = this.getPlugin();
+    private final Array plugin;
     private final FoldersConfigurationFile config;
     private final EventType eventType;
+
+    public EventSelectButton(Array plugin, EventType eventType) {
+        this.plugin = plugin;
+        this.config = plugin.getMenuHandler().getConfigByName("event_host");
+        this.eventType = eventType;
+    }
 
     /**
      * Get itemStack of the Button
@@ -119,15 +121,15 @@ public class EventSelectButton extends Button {
         player.closeInventory();
 
         if (eventType.equals(EventType.LMS) || eventType.equals(EventType.BRACKETS)) {
-            EventKitMenu kitMenu = new EventKitMenu(eventType);
-            kitMenu.openMenu(plugin, player);
+            EventKitMenu kitMenu = new EventKitMenu(plugin, eventType);
+            kitMenu.openMenu(player);
             Button.playSuccess(player);
             return;
         }
 
         if (eventType.equals(EventType.SUMO) || eventType.equals(EventType.GULAG)) {
-            EventSizeMenu menu = new EventSizeMenu(eventType);
-            menu.openMenu(plugin, player);
+            EventSizeMenu menu = new EventSizeMenu(plugin, eventType);
+            menu.openMenu(player);
             Button.playSuccess(player);
             return;
         }
@@ -136,4 +138,15 @@ public class EventSelectButton extends Button {
         }
     }
 
+    public Array getPlugin() {
+        return this.plugin;
+    }
+
+    public FoldersConfigurationFile getConfig() {
+        return this.config;
+    }
+
+    public EventType getEventType() {
+        return this.eventType;
+    }
 }

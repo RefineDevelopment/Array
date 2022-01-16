@@ -75,7 +75,7 @@ public class DuelCommands {
 
         DuelProcedure procedure = new DuelProcedure(plugin, player, target, senderProfile.hasParty());
         senderProfile.setDuelProcedure(procedure);
-        new DuelSelectKitMenu().openMenu(plugin, player);
+        new DuelSelectKitMenu(plugin).openMenu(player);
     }
 
     @Command(name = "accept", usage = "<player> <target>", desc = "Accept a duel pending request")

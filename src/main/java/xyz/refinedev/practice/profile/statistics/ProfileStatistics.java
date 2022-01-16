@@ -13,7 +13,6 @@ import xyz.refinedev.practice.util.chat.CC;
 
 import java.util.*;
 
-
 //TODO: Recode this
 @Getter @Setter
 public class ProfileStatistics {

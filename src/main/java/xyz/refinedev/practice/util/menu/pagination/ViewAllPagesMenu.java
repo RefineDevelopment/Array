@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.menu.button.BackButton;
@@ -11,12 +12,24 @@ import xyz.refinedev.practice.util.menu.button.BackButton;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequiredArgsConstructor
+@Getter
 public class ViewAllPagesMenu extends Menu {
 
-    @NonNull
-    @Getter
-    PaginatedMenu menu;
+    private final Array plugin;
+    public PaginatedMenu menu;
+
+    public ViewAllPagesMenu(Array plugin) {
+        super(plugin);
+
+        this.plugin = plugin;
+    }
+
+    public ViewAllPagesMenu(Array plugin, PaginatedMenu menu) {
+        super(plugin);
+
+        this.menu = menu;
+        this.plugin = plugin;
+    }
 
     @Override
     public String getTitle(Player player) {

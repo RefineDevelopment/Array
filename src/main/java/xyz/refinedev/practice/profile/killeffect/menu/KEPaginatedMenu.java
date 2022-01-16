@@ -10,6 +10,7 @@ import xyz.refinedev.practice.util.menu.pagination.PaginatedMenu;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -24,8 +25,13 @@ import java.util.stream.Collectors;
 
 public class KEPaginatedMenu extends PaginatedMenu {
 
-    private final Array plugin = Array.getInstance();
-    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_killeffects");
+    private final Array plugin;
+    private final FoldersConfigurationFile config;
+
+    public KEPaginatedMenu(Array plugin) {
+        this.plugin = plugin;
+        this.config = plugin.getMenuHandler().getConfigByName("profile_killeffects");
+    }
 
     /**
      * @param player player viewing the inventory
@@ -53,8 +59,10 @@ public class KEPaginatedMenu extends PaginatedMenu {
     @Override
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        for ( KillEffect killEffect : plugin.getKillEffectManager().getKillEffects().stream().sorted(Comparator.comparing(KillEffect::getPriority)).collect(Collectors.toList())) {
-            buttons.put(buttons.size(), new KEButton(killEffect));
+        List<KillEffect> effects = plugin.getKillEffectManager().getKillEffects();
+        Comparator.comparingInt(KillEffect::getPriority).reversed();
+        for ( KillEffect killEffect : effects) {
+            buttons.put(buttons.size(), new KEButton(plugin, killEffect));
         }
         return buttons;
     }

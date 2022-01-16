@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.kit.kiteditor.menu;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -15,9 +16,10 @@ import xyz.refinedev.practice.util.menu.Menu;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class KitEditorSelectKitMenu extends Menu {
 
-    private final Array plugin = this.getPlugin();
+    private final Array plugin;
 
     @Override
     public String getTitle(Player player) {
@@ -67,7 +69,7 @@ public class KitEditorSelectKitMenu extends Menu {
             profile.getKitEditor().setSelectedKit(kit);
             profile.getKitEditor().setPreviousState(profile.getState());
 
-            new KitManagementMenu(kit).openMenu(plugin, player);
+            new KitManagementMenu(plugin, kit).openMenu(player);
         }
 
     }

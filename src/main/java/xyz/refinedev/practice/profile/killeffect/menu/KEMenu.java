@@ -21,8 +21,13 @@ import java.util.*;
 
 public class KEMenu extends Menu {
 
-    private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_killeffects");
+    private final Array plugin;
+    private final FoldersConfigurationFile config;
+
+    public KEMenu(Array plugin) {
+        this.plugin = plugin;
+        this.config = plugin.getMenuHandler().getConfigByName("profile_killeffects");
+    }
 
     /**
      * Get menu's title
@@ -58,7 +63,7 @@ public class KEMenu extends Menu {
         killEffects.sort(Comparator.comparing(KillEffect::getPriority));
 
         for ( KillEffect killEffect : killEffects) {
-            buttons.put(buttons.size(), new KEButton(killEffect));
+            buttons.put(buttons.size(), new KEButton(plugin, killEffect));
         }
         return buttons;
     }

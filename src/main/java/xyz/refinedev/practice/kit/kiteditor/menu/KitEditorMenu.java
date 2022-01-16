@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitInventory;
+import xyz.refinedev.practice.kit.kiteditor.KitEditor;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
@@ -220,13 +221,14 @@ public class KitEditorMenu extends Menu {
             player.closeInventory();
 
             Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+            KitEditor kitEditor = profile.getKitEditor();
 
-            if (profile.getKitEditor().getSelectedKitInventory() != null) {
-                profile.getKitEditor().getSelectedKitInventory().setContents(player.getInventory().getContents());
+            if (kitEditor.getSelectedKitInventory() != null) {
+                kitEditor.getSelectedKitInventory().setContents(player.getInventory().getContents());
             }
 
             plugin.getProfileManager().refreshHotbar(profile);
-            new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(plugin, player);
+            new KitManagementMenu(plugin, kitEditor.getSelectedKit()).openMenu(player);
         }
     }
 
@@ -250,9 +252,10 @@ public class KitEditorMenu extends Menu {
             Button.playNeutral(player);
 
             Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+            KitEditor kitEditor = profile.getKitEditor();
 
             if (profile.getKitEditor().getSelectedKit() != null) {
-                new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(plugin, player);
+                new KitManagementMenu(plugin, kitEditor.getSelectedKit()).openMenu(player);
             }
         }
 

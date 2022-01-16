@@ -7,10 +7,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.other.StringUtils;
 
 @Getter
 public abstract class Button {
+
+    private final Array plugin;
+
+    public Button(Array plugin) {
+        this.plugin = plugin;
+    }
+
+    public Button() {
+        this.plugin = null;
+    }
 
     /**
      * Create a quick and easy placeholder Button

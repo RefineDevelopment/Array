@@ -211,7 +211,11 @@ public abstract class Event {
 
 		TaskUtil.run(this::cleanup);
 
-		this.getSpectatorsList().forEach(this::removeSpectator);
+		for ( Map.Entry<UUID, Event> keySet : plugin.getEventManager().getSpectators().entrySet() ) {
+			if (!keySet.getValue().getEventId().equals(eventId)) continue;
+
+			plugin.getEventManager().removeSpectator(this, keySet.getKey());
+		}
 		this.getPlayers().stream().map(plugin.getProfileManager()::getProfileByPlayer).forEach(plugin.getProfileManager()::handleVisibility);
 	}
 
@@ -324,38 +328,6 @@ public abstract class Event {
 			default:
 				return "Ending";
 		}
-	}
-
-	public void addSpectator(Player player) {
-		this.getSpectators().add(player.getUniqueId());
-
-		Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-		profile.setState(ProfileState.SPECTATING);
-		profile.setEvent(this.getEventId());
-
-		this.plugin.getProfileManager().refreshHotbar(profile);
-		this.plugin.getProfileManager().handleVisibility(profile);
-
-		if (isFreeForAll()) {
-			player.teleport(this.plugin.getEventManager().getHelper().getSpawn(this));
-		} else {
-			player.teleport(this.plugin.getEventManager().getHelper().getSpectator(this));
-		}
-	}
-
-	public void removeSpectator(Player player) {
-		this.getSpectators().remove(player.getUniqueId());
-		if (isTeam()) {
-			this.getEventTeamPlayers().remove(player.getUniqueId());
-		} else {
-			this.getEventPlayers().remove(player.getUniqueId());
-		}
-
-		Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-		profile.setState(ProfileState.IN_LOBBY);
-		profile.setEvent(null);
-
-		this.plugin.getProfileManager().teleportToSpawn(profile);
 	}
 
 	public boolean isSpectating(UUID uuid) {

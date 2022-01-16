@@ -24,20 +24,28 @@ import java.util.Map;
 
 public class EventSizeMenu extends Menu {
 
-    private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("event_size");
+    private final Array plugin;
+    private final FoldersConfigurationFile config;
     private final EventType eventType;
-    private final transient Kit kit;
+    private final Kit kit;
 
-    public EventSizeMenu(EventType eventType) {
-        this.loadMenu(plugin, config);
+    public EventSizeMenu(Array plugin, EventType eventType) {
+        super(plugin);
+
+        this.plugin = plugin;
+        this.config = plugin.getMenuHandler().getConfigByName("event_size");
+        this.loadMenu(config);
 
         this.eventType = eventType;
         this.kit = null;
     }
 
-    public EventSizeMenu(EventType eventType, Kit kit) {
-        this.loadMenu(plugin, config);
+    public EventSizeMenu(Array plugin, EventType eventType, Kit kit) {
+        super(plugin);
+
+        this.plugin = plugin;
+        this.config = plugin.getMenuHandler().getConfigByName("event_size");
+        this.loadMenu(config);
 
         this.eventType = eventType;
         this.kit = kit;
@@ -77,7 +85,8 @@ public class EventSizeMenu extends Menu {
 
         for ( EventTeamSize eventSize : EventTeamSize.values() ) {
             String path = "BUTTONS." + eventSize.name() + ".";
-            buttons.put(config.getInteger(path + "SLOT"), new EventSizeButton(eventType, eventSize, config, kit));
+            EventSizeButton button = new EventSizeButton(plugin, eventType, eventSize, config, kit);
+            buttons.put(config.getInteger(path + "SLOT"), button);
         }
         return buttons;
     }

@@ -100,7 +100,7 @@ public class KitManagementMenu extends Menu {
             Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
             profile.getStatisticsData().get(kit).deleteKit(kitInventory);
 
-            new KitManagementMenu(plugin, profile.getKitEditor().getSelectedKit()).openMenu(plugin, player);
+            new KitManagementMenu(plugin, profile.getKitEditor().getSelectedKit()).openMenu(player);
         }
 
     }
@@ -141,7 +141,7 @@ public class KitManagementMenu extends Menu {
 
             profile.getStatisticsData().get(kit).replaceKit(index, kitInventory);
             profile.getKitEditor().setSelectedKitInventory(kitInventory);
-            new KitEditorMenu(plugin).openMenu(plugin, player);
+            new KitEditorMenu(plugin).openMenu(player);
         }
 
     }
@@ -213,7 +213,7 @@ public class KitManagementMenu extends Menu {
 
             profile.getKitEditor().setSelectedKitInventory(kit);
 
-            new KitEditorMenu(plugin).openMenu(plugin, player);
+            new KitEditorMenu(plugin).openMenu(player);
         }
 
     }

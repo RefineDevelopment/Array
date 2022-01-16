@@ -8,7 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.CraftChunk;
 import org.bukkit.inventory.ItemStack;
-import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.cache.ArenaCache;
 import xyz.refinedev.practice.arena.cache.ArenaChunk;
 import xyz.refinedev.practice.arena.cuboid.Cuboid;

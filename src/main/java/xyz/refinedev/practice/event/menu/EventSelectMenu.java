@@ -22,10 +22,13 @@ import java.util.Map;
 
 public class EventSelectMenu extends Menu {
 
-    private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("event_host");
+    private final Array plugin;
+    private final FoldersConfigurationFile config;
 
-    public EventSelectMenu() {
+    public EventSelectMenu(Array plugin) {
+        this.plugin = plugin;
+        this.config = plugin.getMenuHandler().getConfigByName("event_host");
+
         this.loadMenu(plugin, config);
         this.setAutoUpdate(true);
     }
@@ -63,7 +66,7 @@ public class EventSelectMenu extends Menu {
 
         for ( EventType eventType : EventType.values() ) {
             String path = "BUTTONS." + eventType.name() + ".";
-            buttons.put(config.getInteger(path + "SLOT"), new EventSelectButton(config, eventType));
+            buttons.put(config.getInteger(path + "SLOT"), new EventSelectButton(plugin, eventType));
         }
         return buttons;
     }

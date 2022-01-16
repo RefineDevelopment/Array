@@ -22,6 +22,7 @@ import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
+import xyz.refinedev.practice.util.timer.impl.BridgeArrowTimer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,6 +160,7 @@ public class SoloBridgeMatch extends SoloMatch {
         plugin.getProfileManager().handleVisibility(profile);
 
         player.setMetadata("noDenyMove", new FixedMetadataValue(plugin, true));
+        plugin.getTimerHandler().getTimer(BridgeArrowTimer.class).clearCooldown(player.getUniqueId());
 
         TaskUtil.runLater(() -> this.setupPlayer(plugin, player), 2L);
     }

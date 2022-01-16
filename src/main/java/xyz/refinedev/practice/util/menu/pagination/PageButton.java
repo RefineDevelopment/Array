@@ -1,19 +1,26 @@
 package xyz.refinedev.practice.util.menu.pagination;
 
-import lombok.AllArgsConstructor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 
-@AllArgsConstructor
 public class PageButton extends Button {
 
+    private final Array plugin;
     private final int mod;
     private final PaginatedMenu menu;
+
+    public PageButton(Array plugin, int mod, PaginatedMenu menu) {
+        super(plugin);
+        this.plugin = plugin;
+        this.mod = mod;
+        this.menu = menu;
+    }
 
     @Override
     public ItemStack getButtonItem(Player player) {
@@ -31,7 +38,7 @@ public class PageButton extends Button {
     @Override
     public void clicked(Player player, ClickType clickType) {
         if (clickType == ClickType.RIGHT) {
-            new ViewAllPagesMenu(this.menu).openMenu(plugin, player);
+            new ViewAllPagesMenu(plugin, this.menu).openMenu(player);
             playNeutral(player);
         } else {
             if (hasNext(player)) {

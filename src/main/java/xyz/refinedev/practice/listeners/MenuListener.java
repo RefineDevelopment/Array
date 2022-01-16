@@ -56,12 +56,12 @@ public class MenuListener implements Listener {
 
                         if (buttonUpdate) {
                             openMenu.setClosedByMenu(true);
-                            newMenu.openMenu(plugin, player);
+                            newMenu.openMenu(player);
                         }
                     }
                 } else if (button.shouldUpdate(player, event.getClick())) {
                     openMenu.setClosedByMenu(true);
-                    openMenu.openMenu(plugin, player);
+                    openMenu.openMenu(player);
                 }
 
                 if (event.isCancelled()) {

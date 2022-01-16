@@ -100,7 +100,7 @@ public class MatchDetailsMenu extends Menu {
         @Override
         public void clicked(Player player, ClickType clickType) {
             if (opponent != null) {
-                new MatchDetailsMenu(opponent, snapshot).openMenu(plugin, player);
+                new MatchDetailsMenu(opponent, snapshot).openMenu(player);
             }
 
             MatchSnapshot cachedInventory;
@@ -116,7 +116,7 @@ public class MatchDetailsMenu extends Menu {
                     player.sendMessage(CC.RED + "Couldn't find an inventory for that ID.");
                     return;
                 }
-                new MatchDetailsMenu(cachedInventory, snapshot).openMenu(plugin, player);
+                new MatchDetailsMenu(cachedInventory, snapshot).openMenu(player);
             }
         }
 

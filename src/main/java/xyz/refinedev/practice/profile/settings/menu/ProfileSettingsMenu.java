@@ -21,8 +21,13 @@ import java.util.Map;
 
 public class ProfileSettingsMenu extends Menu {
 
-    private final Array plugin = Array.getInstance();
-    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_settings");
+    private final Array plugin;
+    private final FoldersConfigurationFile config;
+
+    public ProfileSettingsMenu(Array plugin) {
+        this.plugin = plugin;
+        this.config = plugin.getMenuHandler().getConfigByName("profile_settings");
+    }
 
     /**
      * Get menu's title

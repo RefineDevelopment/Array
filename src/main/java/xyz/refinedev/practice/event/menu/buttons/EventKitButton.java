@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.event.menu.buttons;
 
-import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -21,13 +20,20 @@ import xyz.refinedev.practice.util.menu.Button;
  * Project: Array
  */
 
-@RequiredArgsConstructor
 public class EventKitButton extends Button {
 
-    private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("general");
+    private final Array plugin;
+    private final FoldersConfigurationFile config;
     private final EventType type;
     private final Kit kit;
+
+    public EventKitButton(Array plugin, EventType type, Kit kit) {
+        this.plugin = plugin;
+        this.config = plugin.getMenuHandler().getConfigByName("general");
+
+        this.type = type;
+        this.kit = kit;
+    }
 
     /**
      * Get itemStack of the Button
@@ -53,7 +59,7 @@ public class EventKitButton extends Button {
     public void clicked(Player player, ClickType clickType) {
         player.closeInventory();
 
-        EventSizeMenu menu = new EventSizeMenu(type, kit);
-        menu.openMenu(plugin, player);
+        EventSizeMenu menu = new EventSizeMenu(plugin, type, kit);
+        menu.openMenu(player);
     }
 }

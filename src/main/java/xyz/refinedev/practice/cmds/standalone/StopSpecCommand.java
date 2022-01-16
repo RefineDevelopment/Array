@@ -39,7 +39,7 @@ public class StopSpecCommand {
             this.plugin.getMatchManager().removeSpectator(match, player);
         } else if (profile.isInEvent()) {
             Event event = this.plugin.getEventManager().getEventByUUID(profile.getEvent());
-            event.removeSpectator(player);
+            this.plugin.getEventManager().removeSpectator(event, player.getUniqueId());
         }
 
     }

@@ -68,7 +68,7 @@ public class SpectateCommand {
             this.plugin.getMatchManager().addSpectator(match, player, target);
         } else if (targetProfile.isInEvent()) {
             Event event = this.plugin.getEventManager().getEventByUUID(profile.getEvent());
-            event.addSpectator(player);
+            this.plugin.getEventManager().addSpectator(event, player.getUniqueId());
         }
     }
 

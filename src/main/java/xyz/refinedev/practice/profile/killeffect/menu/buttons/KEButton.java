@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.profile.killeffect.menu.buttons;
 
-import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -24,12 +23,17 @@ import java.util.List;
  * Project: Array
  */
 
-@RequiredArgsConstructor
 public class KEButton extends Button {
 
-    private final Array plugin = Array.getInstance();
-    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_killeffects");
+    private final Array plugin;
+    private final FoldersConfigurationFile config;
     private final KillEffect killEffect;
+
+    public KEButton(Array plugin, KillEffect killEffect) {
+        this.plugin =plugin;
+        this.config = plugin.getMenuHandler().getConfigByName("profile_killeffects");
+        this.killEffect = killEffect;
+    }
 
     /**
      * Get itemStack of the Button

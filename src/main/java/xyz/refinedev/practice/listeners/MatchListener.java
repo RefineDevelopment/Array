@@ -110,10 +110,10 @@ public class MatchListener implements Listener {
         Cuboid cuboid = new Cuboid(arena.getMax(), arena.getMin());
         if (x >= cuboid.getX1() && x <= cuboid.getX2() && y >= cuboid.getY1() && y <= cuboid.getY2() && z >= cuboid.getZ1() && z <= cuboid.getZ2()) {
             match.getPlacedBlocks().add(block.getLocation());
-            Location down = block.getLocation().subtract(0, 1, 0);
+            /*Location down = block.getLocation().subtract(0, 1, 0);
             if (down.getBlock().getType() == Material.GRASS) {
                 match.getChangedBlocks().add(down.getBlock().getState());
-            }
+            }*/
         } else {
             player.sendMessage(Locale.MATCH_BUILD_OUTSIDE.toString());
             event.setCancelled(true);
@@ -186,7 +186,7 @@ public class MatchListener implements Listener {
 
         if (match.getKit().getGameRules().isSpleef()) {
             if (block.getType() == Material.SNOW_BLOCK || block.getType() == Material.SNOW) {
-                match.getChangedBlocks().add(block.getState());
+                //match.getChangedBlocks().add(block.getState());
                 block.setType(Material.AIR);
                 player.getInventory().addItem(new ItemStack(Material.SNOW_BALL, 4));
                 player.updateInventory();
@@ -195,7 +195,7 @@ public class MatchListener implements Listener {
             }
         } else if (match.getKit().getGameRules().isBoxuhc()) {
             if (block.getType() == Material.WOOD) {
-                match.getChangedBlocks().add(block.getState());
+                //match.getChangedBlocks().add(block.getState());
                 block.setType(Material.AIR);
                 block.getLocation().getWorld().dropItemNaturally(block.getLocation(), new ItemBuilder(block.getType()).build());
                 player.updateInventory();
@@ -207,10 +207,9 @@ public class MatchListener implements Listener {
 
                 if (match instanceof SoloBedwarsMatch) {
                     SoloBedwarsMatch soloBedwarsMatch = (SoloBedwarsMatch) match;
-                    match.getChangedBlocks().add(block.getState());
+                    //match.getChangedBlocks().add(block.getState());
                     block.setType(Material.AIR);
                     soloBedwarsMatch.handleBed(plugin, player);
-                    block.setType(Material.BED);
                 } else if (match instanceof TeamBedwarsMatch){
                     TeamBedwarsMatch teamBedwarsMatch = (TeamBedwarsMatch) match;
                     //teamBedwarsMatch.handleBed(player);
@@ -400,11 +399,11 @@ public class MatchListener implements Listener {
             if (!iterator.hasNext()) return;
             Block hitBlock = iterator.next();
 
-            Player shooter = (Player) event.getEntity().getShooter();
-            Profile shooterProfile = plugin.getProfileManager().getProfileByUUID(shooter.getUniqueId());
+            //Player shooter = (Player) event.getEntity().getShooter();
+            //Profile shooterProfile = plugin.getProfileManager().getProfileByUUID(shooter.getUniqueId());
 
             if (hitBlock.getType() == Material.SNOW_BLOCK) {
-                shooterProfile.getMatch().getChangedBlocks().add(hitBlock.getState());
+                //shooterProfile.getMatch().getChangedBlocks().add(hitBlock.getState());
                 hitBlock.setType(Material.AIR);
             }
         }
@@ -677,30 +676,7 @@ public class MatchListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
         Projectile projectile = event.getEntity();
-        if (projectile instanceof EnderPearl) {
-            EnderPearl enderPearl = (EnderPearl) projectile;
-            ProjectileSource source = enderPearl.getShooter();
-
-            if (source instanceof Player) {
-                Player shooter = (Player) source;
-                Profile profile = plugin.getProfileManager().getProfileByUUID(shooter.getUniqueId());
-
-                if (!profile.isInFight()) return;
-
-                if (!profile.getEnderpearlCooldown().hasExpired()) {
-                    String time = TimeUtil.millisToSeconds(profile.getEnderpearlCooldown().getRemaining());
-                    String context = "second" + (time.equalsIgnoreCase("1.0") ? "" : "s");
-
-                    shooter.sendMessage(Locale.MATCH_PEARL_COOLDOWN.toString().replace("<cooldown>", time + " " + context));
-                    shooter.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 1));
-
-                    event.setCancelled(true);
-                } else {
-                    plugin.getProfileManager().setEnderpearlCooldown(profile, new Cooldown(16000L));
-                    profile.getMatch().onPearl(shooter, enderPearl);
-                }
-            }
-        } else if (projectile instanceof Arrow) {
+        if (projectile instanceof Arrow) {
             Arrow enderPearl = (Arrow) projectile;
             ProjectileSource source = enderPearl.getShooter();
 
@@ -729,7 +705,6 @@ public class MatchListener implements Listener {
     public void onPlayerTeleportPearl(PlayerTeleportEvent event) {
         Profile profile = plugin.getProfileManager().getProfileByUUID(event.getPlayer().getUniqueId());
         if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL && profile.isInFight()) {
-            profile.getMatch().removePearl(profile, false);
             Location target = event.getTo();
             target.setX(target.getBlockX() + 0.5);
             target.setZ(target.getBlockZ() + 0.5);

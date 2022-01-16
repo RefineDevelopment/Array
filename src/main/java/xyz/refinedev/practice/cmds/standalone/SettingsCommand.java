@@ -1,6 +1,8 @@
 package xyz.refinedev.practice.cmds.standalone;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.settings.menu.ProfileSettingsMenu;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
@@ -14,10 +16,13 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class SettingsCommand {
+
+    private final Array plugin;
 
     @Command(name = "", desc = "Open Array Settings Menu")
     public void settings(@Sender Player player) {
-        new ProfileSettingsMenu().openMenu(plugin, player);
+        new ProfileSettingsMenu(plugin).openMenu(player);
     }
 }

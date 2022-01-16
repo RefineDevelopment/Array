@@ -19,9 +19,9 @@ public class StatsCommand {
     @Command(name = "", desc = "View Statistics of your profile")
     public void stats(@Sender Player player, @OptArg() Player target) {
         if (target == null) {
-            //new StatsMenu(player).openMenu(plugin, player);
+            //new StatsMenu(player).openMenu(player);
             return;
         }
-       // new StatsMenu(target).openMenu(plugin, player);
+       // new StatsMenu(target).openMenu(player);
     }
 }

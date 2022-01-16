@@ -31,7 +31,13 @@ public abstract class Menu {
 
     private Button placeholderButton = Button.placeholder(Material.STAINED_GLASS_PANE, (byte) 15);
 
-    public void loadMenu(Array plugin, FoldersConfigurationFile config) {
+    private final Array plugin;
+
+    public Menu(Array plugin) {
+        this.plugin = plugin;
+    }
+
+    public void loadMenu(FoldersConfigurationFile config) {
         List<ButtonData> custom = plugin.getMenuHandler().loadCustomButtons(config);
         if (custom != null && !custom.isEmpty()) {
             this.getCustomButtons().addAll(custom);
@@ -64,7 +70,7 @@ public abstract class Menu {
      *
      * @param player Player viewing the menu
      */
-    public void openMenu(Array plugin, Player player) {
+    public void openMenu(Player player) {
         this.buttons = this.getButtons(player);
 
         for ( ButtonData customButton : customButtons ) {

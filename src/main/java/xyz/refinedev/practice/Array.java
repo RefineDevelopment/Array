@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
@@ -18,6 +19,7 @@ import xyz.refinedev.practice.adapters.TablistAdapter;
 import xyz.refinedev.practice.api.API;
 import xyz.refinedev.practice.api.ArrayAPI;
 import xyz.refinedev.practice.config.ConfigHandler;
+import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.hook.core.CoreHandler;
 import xyz.refinedev.practice.hook.hologram.HologramHandler;
 import xyz.refinedev.practice.hook.placeholderapi.LeaderboardPlaceholders;
@@ -36,6 +38,9 @@ import xyz.refinedev.practice.util.other.EntityHider;
 import xyz.refinedev.practice.util.scoreboard.AssembleStyle;
 import xyz.refinedev.practice.util.scoreboard.ScoreboardHandler;
 import xyz.refinedev.practice.util.serialize.GsonFactory;
+import xyz.refinedev.practice.util.timer.TimerHandler;
+import xyz.refinedev.practice.util.timer.impl.BridgeArrowTimer;
+import xyz.refinedev.practice.util.timer.impl.EnderpearlTimer;
 import xyz.refinedev.tablist.TablistHandler;
 
 import java.util.Random;
@@ -65,6 +70,7 @@ public class Array extends JavaPlugin {
 
     private MenuHandler menuHandler;
     private CoreHandler coreHandler;
+    private TimerHandler timerHandler;
     private ConfigHandler configHandler;
     private SpigotHandler spigotHandler;
     private TablistHandler tablistHandler;
@@ -152,7 +158,6 @@ public class Array extends JavaPlugin {
         this.killEffectManager.init();
 
         this.queueManager = new QueueManager(this);
-
         this.queueManager.init();
 
         this.kitManager = new KitManager(this, kitsConfig);
@@ -209,7 +214,7 @@ public class Array extends JavaPlugin {
         this.profileManager.getProfiles().values().forEach(profileManager::save);
         this.killEffectManager.getKillEffects().forEach(killEffectManager::save);
 
-        World world = plugin.getServer().getWorld("world");
+        World world = this.getServer().getWorld("world");
         for ( Entity entity : world.getEntities()) {
             if (entity.getType() != EntityType.DROPPED_ITEM) continue;
             entity.remove();
@@ -230,7 +235,7 @@ public class Array extends JavaPlugin {
     /**
      * This method initializes and hooks
      * into the APIs used by this plugin
-     * <p>
+     *
      * A very important method to initialize this
      * whole plugin.
      */
@@ -252,6 +257,10 @@ public class Array extends JavaPlugin {
         if (this.configHandler.isTAB_ENABLED()) {
             this.tablistHandler = new TablistHandler(tablistAdapter, this, tablistConfig.getInteger("TABLIST.UPDATE_TICKS") * 20L);
         }
+
+        this.timerHandler = new TimerHandler(this);
+        this.timerHandler.registerTimer(new EnderpearlTimer(this));
+        this.timerHandler.registerTimer(new BridgeArrowTimer(this));
 
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             this.logger("&7Found &cPlaceholderAPI&7, Registering Expansions....");
@@ -279,6 +288,11 @@ public class Array extends JavaPlugin {
 
         pluginManager.addPermission(new Permission("array.arena.admin", PermissionDefault.OP));
         pluginManager.addPermission(new Permission("array.kit.admin", PermissionDefault.OP));
+        pluginManager.addPermission(new Permission("array.event.admin", PermissionDefault.OP));
+
+        for ( EventType event : EventType.values()) {
+            pluginManager.addPermission(new Permission("array.event." + event.name(), PermissionDefault.OP));
+        }
     }
 
     /**

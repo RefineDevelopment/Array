@@ -64,7 +64,7 @@ public class Profile {
     private boolean build, silent, issueRating;
 
     //TODO: Completely Change this shit.
-    private Cooldown enderpearlCooldown = new Cooldown(0), bowCooldown = new Cooldown(0), visibilityCooldown = new Cooldown(0);
+    private Cooldown visibilityCooldown = new Cooldown(0);
 
     private KitEditor kitEditor = new KitEditor();
     private ProfileSettings settings = new ProfileSettings();

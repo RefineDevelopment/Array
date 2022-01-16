@@ -35,7 +35,7 @@ public class EventCommands {
 
     @Command(name = "", aliases = {"menu, host"}, desc = "Open Event Host Menu")
     public void host(@Sender Player player) {
-        new EventSelectMenu().openMenu(plugin, player);
+        new EventSelectMenu(plugin).openMenu(player);
     }
 
     @Command(name = "help", desc = "View Event Commands")
@@ -60,7 +60,7 @@ public class EventCommands {
             player.sendMessage(Locale.EVENT_NOT_TEAM.toString());
             return;
         }
-        new EventTeamMenu(activeEvent).openMenu(plugin, player);
+        new EventTeamMenu(activeEvent).openMenu(player);
     }
 
     /*@Command(name = "host", aliases = "start", usage = "<event>", desc = "Host an Event")

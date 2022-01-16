@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.event.menu.buttons;
 
-import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -22,14 +21,23 @@ import xyz.refinedev.practice.util.menu.Button;
  * Project: Array
  */
 
-@RequiredArgsConstructor
 public class EventSizeButton extends Button {
 
-    private final Array plugin = this.getPlugin();
+    private final Array plugin;
     private final EventType eventType;
     private final EventTeamSize teamSize;
     private final FoldersConfigurationFile config;
-    private final transient Kit kit;
+    private final Kit kit;
+
+    public EventSizeButton(Array plugin, EventType eventType, EventTeamSize teamSize, FoldersConfigurationFile config, Kit kit) {
+        super(plugin);
+
+        this.plugin = plugin;
+        this.eventType = eventType;
+        this.teamSize = teamSize;
+        this.config = config;
+        this.kit = kit;
+    }
 
     /**
      * Get itemStack of the Button

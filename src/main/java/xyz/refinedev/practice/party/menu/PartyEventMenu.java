@@ -13,10 +13,12 @@ import java.util.Map;
 
 public class PartyEventMenu extends Menu {
 
-    private final Array plugin = Array.getInstance();
-    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("party_events");
+    private final Array plugin;
+    private final FoldersConfigurationFile config;
 
-    public PartyEventMenu() {
+    public PartyEventMenu(Array plugin) {
+        this.plugin = plugin;
+        this.config = plugin.getMenuHandler().getConfigByName("party_events");
         this.loadMenu(plugin, config);
     }
 

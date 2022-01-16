@@ -38,7 +38,6 @@ public class ClassUtil {
                     constructor.setAccessible(true);
                     Listener listener = (Listener) constructor.newInstance(plugin);
                     plugin.getServer().getPluginManager().registerEvents(listener, plugin);
-                    // production code should handle these exceptions more gracefully
                 } catch (ReflectiveOperationException x) {
                     x.printStackTrace();
                 }

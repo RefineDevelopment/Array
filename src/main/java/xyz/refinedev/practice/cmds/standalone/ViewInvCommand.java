@@ -32,6 +32,6 @@ public class ViewInvCommand {
             return;
         }
 
-        new MatchDetailsMenu(cachedInventory, null).openMenu(plugin, player);
+        new MatchDetailsMenu(cachedInventory, null).openMenu(player);
     }
 }

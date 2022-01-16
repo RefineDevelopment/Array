@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.listeners;
 
 import lombok.RequiredArgsConstructor;
+import xyz.refinedev.practice.kit.kiteditor.KitEditor;
 import xyz.refinedev.practice.util.other.StringUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -26,8 +27,8 @@ public class KitEditorListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
         Profile profile = plugin.getProfileManager().getProfileByUUID(event.getPlayer().getUniqueId());
-
-        if (profile.getKitEditor().isRenaming()) {
+        KitEditor kitEditor = profile.getKitEditor();
+        if (kitEditor.isRenaming()) {
             event.setCancelled(true);
 
             if (event.getMessage().length() > 16) {
@@ -42,11 +43,11 @@ public class KitEditorListener implements Listener {
 
             String customName = CC.translate(event.getMessage());
 
-            profile.getKitEditor().getSelectedKitInventory().setCustomName(customName);
-            profile.getKitEditor().setRename(false);
+            kitEditor.getSelectedKitInventory().setCustomName(customName);
+            kitEditor.setRename(false);
 
             if (!profile.isInFight()) {
-                new KitManagementMenu(profile.getKitEditor().getSelectedKit()).openMenu(event.getPlayer());
+                new KitManagementMenu(plugin, kitEditor.getSelectedKit()).openMenu(plugin, event.getPlayer());
             }
 
             event.getPlayer().sendMessage(Locale.KITEDITOR_RENAMED.toString().replace("<custom_name>", customName));

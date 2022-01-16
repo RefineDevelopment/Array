@@ -31,6 +31,6 @@ public class KitEditorCMD {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
         }
-         new KitEditorSelectKitMenu().openMenu(plugin, player);
+         new KitEditorSelectKitMenu().openMenu(player);
     }
 }

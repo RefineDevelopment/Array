@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.event.menu;
 
-import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.EventType;
@@ -22,12 +21,17 @@ import java.util.Map;
  * Project: Array
  */
 
-@RequiredArgsConstructor
 public class EventKitMenu extends Menu {
 
-    private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("general");
+    private final Array plugin;
+    private final FoldersConfigurationFile config;
     private final EventType type;
+
+    public EventKitMenu(Array plugin, EventType type) {
+        this.plugin = plugin;
+        this.config = plugin.getMenuHandler().getConfigByName("general");
+        this.type = type;
+    }
 
     /**
      * Get menu's title
@@ -50,7 +54,7 @@ public class EventKitMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
         for ( Kit kit : this.plugin.getKitManager().getKits() ) {
-            buttons.put(buttons.size(), new EventKitButton(type, kit));
+            buttons.put(buttons.size(), new EventKitButton(plugin, type, kit));
         }
         return buttons;
     }

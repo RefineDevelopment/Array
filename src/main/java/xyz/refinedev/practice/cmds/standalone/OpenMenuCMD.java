@@ -30,6 +30,6 @@ public class OpenMenuCMD {
             player.sendMessage(Locale.ERROR_MENU.toString());
             return;
         }
-        menu.openMenu(plugin, player);
+        menu.openMenu(player);
     }
 }

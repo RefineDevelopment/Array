@@ -66,6 +66,7 @@ public class StandalonePasteRunnable extends DuplicateArenaRunnable {
         duplicate.setMax(max);
         duplicate.setMin(min);
         duplicate.setDisplayName(this.copiedArena.getDisplayName());
+        duplicate.takeSnapshot();
 
         this.copiedArena.getDuplicates().add(duplicate);
     }

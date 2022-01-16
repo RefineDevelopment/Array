@@ -167,7 +167,7 @@ public class ArrayCommands {
     @Command(name = "worlds", aliases = "world", desc = "Open a Worlds GUI to Teleport to Different Worlds")
     @Require("array.listeners.admin")
     public void worlds(@Sender Player player) {
-        new WorldsMenu().openMenu(plugin, player);
+        new WorldsMenu().openMenu(player);
     }
 
     @Command(name = "goldenhead", aliases = {"ghead", "goldh", "head"}, desc = "Receive a pre-made Golden Head")
