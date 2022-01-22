@@ -389,7 +389,6 @@ public class ClanManager {
      * @return     {@link Clan}
      */
     public Clan getByUUID(UUID uuid) {
-        if (uuid == null) return null;
         return clans.get(uuid);
     }
 

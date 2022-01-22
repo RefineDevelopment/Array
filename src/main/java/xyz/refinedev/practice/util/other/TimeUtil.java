@@ -16,7 +16,8 @@ public final class TimeUtil {
         throw new RuntimeException("Cannot instantiate a utility class.");
     }
 
-    public static String millisToTimer(long millis) {
+    public static String millisToTimer(Long millis) {
+        if (millis == null) return "none";
         long seconds = millis / 1000L;
 
         if (seconds > 3600L) {

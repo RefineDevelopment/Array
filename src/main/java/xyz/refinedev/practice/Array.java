@@ -97,7 +97,7 @@ public class Array extends JavaPlugin {
 
     private CommandService drink;
     private EntityHider entityHider;
-    private boolean disabling;
+    private boolean disabling, placeholderAPI;
 
     @Override
     public void onLoad() {
