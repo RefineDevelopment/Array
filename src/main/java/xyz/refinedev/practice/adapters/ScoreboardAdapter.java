@@ -79,7 +79,9 @@ public class ScoreboardAdapter implements AssembleAdapter {
         lines.addAll(this.fetchLines(player, profile));
 
         if (this.plugin.isPlaceholderAPI()) {
-            return lines.stream().map(line -> PlaceholderAPI.setPlaceholders(player, line)).collect(Collectors.toList());
+            return lines.stream()
+                    .map(line -> PlaceholderAPI.setPlaceholders(player, line))
+                    .collect(Collectors.toList());
         }
 
         return lines.stream()
@@ -109,7 +111,6 @@ public class ScoreboardAdapter implements AssembleAdapter {
     }
 
     public List<String> getLobbyLines(Player player) {
-
         ProfileManager profileManager = this.plugin.getProfileManager();
         QueueManager queueManager = this.plugin.getQueueManager();
         MatchManager matchManager = this.plugin.getMatchManager();
@@ -122,13 +123,11 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 .replace("<in_fights>", String.valueOf(matchManager.getInFights()))
                 .replace("<in_queues>", String.valueOf(queueManager.getInQueues()))
                 .replace("<elo_league>", division.getDisplayName())
-                .replace("<global_elo>", String.valueOf(profile.getGlobalElo())))).collect(Collectors.toList());
-
+                .replace("<global_elo>", String.valueOf(profile.getGlobalElo()))))
+                .collect(Collectors.toList());
     }
 
     public List<String> getQueueLines(Player player) {
-        List<String> lines = new ArrayList<>();
-
         ProfileManager profileManager = this.plugin.getProfileManager();
         ClanManager clanManager = this.plugin.getClanManager();
         QueueManager queueManager = this.plugin.getQueueManager();
@@ -141,7 +140,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
 
         switch (queue.getType()) {
             case UNRANKED: {
-                config.getStringList("SCOREBOARD.UNRANKED_QUEUE").forEach(line -> lines.add(CC.translate(line
+                return config.getStringList("SCOREBOARD.UNRANKED_QUEUE").stream().map(line -> CC.translate(line
                         .replace("<online>", String.valueOf(this.plugin.getServer().getOnlinePlayers().size()))
                         .replace("<in_fights>", String.valueOf(matchManager.getInFights()))
                         .replace("<in_queues>", String.valueOf(queueManager.getInQueues()))
@@ -149,11 +148,11 @@ public class ScoreboardAdapter implements AssembleAdapter {
                         .replace("<global_elo>", String.valueOf(profile.getGlobalElo()))
                         .replace("<queue_kit>", queue.getKit().getDisplayName())
                         .replace("<queue_name>", queue.getQueueName())
-                        .replace("<queue_duration>", TimeUtil.millisToTimer(queueProfile.getPassed())))));
-                break;
+                        .replace("<queue_duration>", TimeUtil.millisToTimer(queueProfile.getPassed()))))
+                        .collect(Collectors.toList());
             }
             case RANKED: {
-                config.getStringList("SCOREBOARD.RANKED_QUEUE").forEach(line -> lines.add(CC.translate(line
+                return config.getStringList("SCOREBOARD.RANKED_QUEUE").stream().map(line -> CC.translate(line
                         .replace("<online>", String.valueOf(this.plugin.getServer().getOnlinePlayers().size()))
                         .replace("<in_fights>", String.valueOf(matchManager.getInFights()))
                         .replace("<in_queues>", String.valueOf(queueManager.getInQueues()))
@@ -162,13 +161,13 @@ public class ScoreboardAdapter implements AssembleAdapter {
                         .replace("<queue_kit>", queue.getKit().getDisplayName())
                         .replace("<queue_duration>", TimeUtil.millisToTimer(queueProfile.getPassed()))
                         .replace("<queue_range>", this.getEloRangeFormat(queueProfile))
-                        .replace("<queue_name>", queue.getQueueName()))));
-                break;
+                        .replace("<queue_name>", queue.getQueueName())))
+                        .collect(Collectors.toList());
             }
             case CLAN: {
                 Clan clan = clanManager.getByUUID(profile.getClan());
                 Profile leaderProfile = profileManager.getProfileByUUID(clan.getLeader().getUniqueId());
-                config.getStringList("SCOREBOARD.CLAN_QUEUE").forEach(line -> lines.add(CC.translate(line
+                return config.getStringList("SCOREBOARD.CLAN_QUEUE").stream().map(line -> CC.translate(line
                         .replace("<online>", String.valueOf(this.plugin.getServer().getOnlinePlayers().size()))
                         .replace("<in_fights>", String.valueOf(matchManager.getInFights()))
                         .replace("<in_queues>", String.valueOf(queueManager.getInQueues()))
@@ -182,11 +181,11 @@ public class ScoreboardAdapter implements AssembleAdapter {
                         .replace("<clan_leader>", leaderProfile.getName())
                         .replace("<clan_members_online>", String.valueOf(clan.getOnlineMembers().size()))
                         .replace("<clan_members_total>", String.valueOf(clan.getAllMembers().size()))
-                        .replace("<clan_elo>",String.valueOf(clan.getElo())))));
-                break;
+                        .replace("<clan_elo>",String.valueOf(clan.getElo()))))
+                        .collect(Collectors.toList());
             }
         }
-        return lines;
+        return new ArrayList<>();
     }
 
     public List<String> getClanLines(Player player) {
@@ -209,9 +208,8 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 .replace("<clan_members_online>", String.valueOf(clan.getOnlineMembers().size()))
                 .replace("<clan_members_total>", String.valueOf(clan.getAllMembers().size()))
                 .replace("<clan_elo>",String.valueOf(clan.getElo()))
-                .replace("<clan_name>", clan.getName())
-                .replace("%splitter%", "┃")
-                .replace("|", "┃"))).collect(Collectors.toList());
+                .replace("<clan_name>", clan.getName())))
+                .collect(Collectors.toList());
     }
 
     public List<String> getPartyLines(Player player) {
@@ -227,9 +225,8 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 .replace("<party_size>", String.valueOf(party.getPlayers().size()))
                 .replace("<party_limit>", String.valueOf(party.getLimit()))
                 .replace("<party_privacy>", party.getPrivacy())
-                .replace("<party_class>", armorClass == null ? "None" : armorClass)
-                .replace("%splitter%", "┃")
-                .replace("|", "┃"))).collect(Collectors.toList());
+                .replace("<party_class>", armorClass == null ? "None" : armorClass)))
+                .collect(Collectors.toList());
     }
 
     public List<String> getTournamentLines(Player player) {
@@ -262,9 +259,8 @@ public class ScoreboardAdapter implements AssembleAdapter {
                     .replace("<tournament_kit>", tournament.getKitName())
                     .replace("<tournament_team_size>", String.valueOf(tournament.getTeamSize()))
                     .replace("<tournament_max_players>", String.valueOf(tournament.getSize()))
-                    .replace("<tournament_players>", String.valueOf(tournament.getPlayers().size()))
-                    .replace("%splitter%", "┃")
-                    .replace("|", "┃"))).collect(Collectors.toList());
+                    .replace("<tournament_players>", String.valueOf(tournament.getPlayers().size()))))
+                    .collect(Collectors.toList());
 
         return config.getStringList("SCOREBOARD.TOURNAMENT").stream().map(line -> CC.translate(line
                 .replace("<online>", String.valueOf(this.plugin.getServer().getOnlinePlayers().size()))
@@ -276,9 +272,8 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 .replace("<tournament_kit>", tournament.getKitName())
                 .replace("<tournament_team_size>", String.valueOf(tournament.getTeamSize()))
                 .replace("<tournament_max_players>", String.valueOf(tournament.getSize()))
-                .replace("<tournament_players>", String.valueOf(tournament.getPlayers().size()))
-                .replace("%splitter%", "┃")
-                .replace("|", "┃"))).collect(Collectors.toList());
+                .replace("<tournament_players>", String.valueOf(tournament.getPlayers().size()))))
+                .collect(Collectors.toList());
     }
 
     public List<String> getFightLines(Player player) {
