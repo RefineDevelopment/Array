@@ -91,7 +91,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 .collect(Collectors.toList());
     }
 
-    public List<String> fetchLines(Player player, Profile profile) {
+    private List<String> fetchLines(Player player, Profile profile) {
         switch (profile.getState()) {
             case IN_LOBBY: {
                 if (profile.isInTournament()) return this.getTournamentLines(player);
@@ -110,7 +110,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         return new ArrayList<>();
     }
 
-    public List<String> getLobbyLines(Player player) {
+    private List<String> getLobbyLines(Player player) {
         ProfileManager profileManager = this.plugin.getProfileManager();
         QueueManager queueManager = this.plugin.getQueueManager();
         MatchManager matchManager = this.plugin.getMatchManager();
@@ -127,7 +127,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 .collect(Collectors.toList());
     }
 
-    public List<String> getQueueLines(Player player) {
+    private List<String> getQueueLines(Player player) {
         ProfileManager profileManager = this.plugin.getProfileManager();
         ClanManager clanManager = this.plugin.getClanManager();
         QueueManager queueManager = this.plugin.getQueueManager();
@@ -188,7 +188,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         return new ArrayList<>();
     }
 
-    public List<String> getClanLines(Player player) {
+    private List<String> getClanLines(Player player) {
         ProfileManager profileManager = this.plugin.getProfileManager();
         ClanManager clanManager = this.plugin.getClanManager();
         QueueManager queueManager = this.plugin.getQueueManager();
@@ -212,7 +212,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 .collect(Collectors.toList());
     }
 
-    public List<String> getPartyLines(Player player) {
+    private List<String> getPartyLines(Player player) {
         ProfileManager profileManager = this.plugin.getProfileManager();
         PartyManager partyManager = this.plugin.getPartyManager();
 
@@ -229,7 +229,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 .collect(Collectors.toList());
     }
 
-    public List<String> getTournamentLines(Player player) {
+    private List<String> getTournamentLines(Player player) {
         ProfileManager profileManager = this.plugin.getProfileManager();
         MatchManager matchManager = this.plugin.getMatchManager();
         TournamentManager tournamentManager = this.plugin.getTournamentManager();
@@ -276,7 +276,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 .collect(Collectors.toList());
     }
 
-    public List<String> getFightLines(Player player) {
+    private List<String> getFightLines(Player player) {
         List<String> lines = new ArrayList<>();
         ProfileManager profileManager = this.plugin.getProfileManager();
         TimerHandler timerHandler = this.plugin.getTimerHandler();
@@ -486,7 +486,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         return lines;
     }
 
-    public List<String> getSpectateLines(Player player) {
+    private List<String> getSpectateLines(Player player) {
         List<String> lines = new ArrayList<>();
         ProfileManager profileManager = this.plugin.getProfileManager();
         TimerHandler timerHandler = this.plugin.getTimerHandler();
@@ -638,7 +638,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         return lines;
     }
 
-    public List<String> getEventLines(Player player) {
+    private List<String> getEventLines(Player player) {
         List<String> lines = new ArrayList<>();
 
         ProfileManager profileManager = this.plugin.getProfileManager();
@@ -758,7 +758,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         return lines;
     }
 
-    public String getFormattedPoints(Player player) {
+    private String getFormattedPoints(Player player) {
         Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
         Match match = profile.getMatch();
         int points = 0;
@@ -792,13 +792,13 @@ public class ScoreboardAdapter implements AssembleAdapter {
         return CC.translate("&7\u2b24\u2b24\u2b24");
     }
 
-    public String getEloRangeFormat(QueueProfile profile) {
+    private String getEloRangeFormat(QueueProfile profile) {
         return config.getStringOrDefault("SCOREBOARD.ELO_RANGE_FORMAT", "<min_range> -> <max_range>")
                 .replace("<min_range>", String.valueOf(profile.getMinRange()))
                 .replace("<max_range>", String.valueOf(profile.getMaxRange()));
     }
 
-    public String getHitDifference(int own, int opp) {
+    private String getHitDifference(int own, int opp) {
         String hits = "&e(" + (opp - own) + ")";
 
         if (own < opp) {
