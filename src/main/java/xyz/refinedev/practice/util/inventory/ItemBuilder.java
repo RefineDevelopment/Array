@@ -66,6 +66,7 @@ public class ItemBuilder implements Listener {
     }
 
     public ItemBuilder lore(List<String> lore) {
+        if (lore == null || lore.isEmpty()) return this;
         List<String> toSet = new ArrayList<>();
         ItemMeta meta = is.getItemMeta();
 
@@ -80,6 +81,7 @@ public class ItemBuilder implements Listener {
     }
 
     public ItemBuilder durability(int durability) {
+        if (durability == 0) return this;
         is.setDurability((short) durability);
         return this;
     }

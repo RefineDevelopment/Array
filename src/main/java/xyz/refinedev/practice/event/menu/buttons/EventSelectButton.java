@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.event.menu.buttons;
 
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -13,6 +14,7 @@ import xyz.refinedev.practice.event.menu.EventSizeMenu;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.ButtonUtil;
 import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.util.ArrayList;
@@ -27,15 +29,16 @@ import java.util.List;
  * Project: Array
  */
 
+@Getter
 public class EventSelectButton extends Button {
 
-    private final Array plugin;
     private final FoldersConfigurationFile config;
     private final EventType eventType;
 
     public EventSelectButton(Array plugin, EventType eventType) {
-        this.plugin = plugin;
-        this.config = plugin.getMenuHandler().getConfigByName("event_host");
+        super(plugin);
+
+        this.config = this.getPlugin().getMenuHandler().getConfigByName("event_host");
         this.eventType = eventType;
     }
 
@@ -49,11 +52,13 @@ public class EventSelectButton extends Button {
     public ItemStack getButtonItem(Player player) {
         String path = "BUTTONS." + eventType.name() + ".";
 
-        Material material = Material.valueOf(config.getString(path + "MATERIAL"));
+        Material material = ButtonUtil.getMaterial(config, path + "MATERIAL");
+        if (material == null) player.closeInventory();
+
         ItemBuilder itemBuilder = new ItemBuilder(material);
         itemBuilder.name(config.getString(path + "NAME"));
 
-        Event event = plugin.getEventManager().getActiveEvent();
+        Event event = this.getPlugin().getEventManager().getActiveEvent();
 
         if (event == null || !event.getType().equals(eventType)) {
             itemBuilder.lore(config.getStringList(path + "IDLE_LORE"));
@@ -121,32 +126,20 @@ public class EventSelectButton extends Button {
         player.closeInventory();
 
         if (eventType.equals(EventType.LMS) || eventType.equals(EventType.BRACKETS)) {
-            EventKitMenu kitMenu = new EventKitMenu(plugin, eventType);
+            EventKitMenu kitMenu = new EventKitMenu(this.getPlugin(), eventType);
             kitMenu.openMenu(player);
             Button.playSuccess(player);
             return;
         }
 
         if (eventType.equals(EventType.SUMO) || eventType.equals(EventType.GULAG)) {
-            EventSizeMenu menu = new EventSizeMenu(plugin, eventType);
+            EventSizeMenu menu = new EventSizeMenu(this.getPlugin(), eventType);
             menu.openMenu(player);
             Button.playSuccess(player);
             return;
         }
-        if (!plugin.getEventManager().hostByType(player, eventType, EventTeamSize.SOLO)) {
+        if (!this.getPlugin().getEventManager().hostByType(player, eventType, EventTeamSize.SOLO)) {
             Button.playFail(player);
         }
-    }
-
-    public Array getPlugin() {
-        return this.plugin;
-    }
-
-    public FoldersConfigurationFile getConfig() {
-        return this.config;
-    }
-
-    public EventType getEventType() {
-        return this.eventType;
     }
 }

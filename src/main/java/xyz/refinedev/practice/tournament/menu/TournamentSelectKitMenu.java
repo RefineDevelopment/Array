@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.tournament.menu;
 
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.tournament.menu.buttons.TournamentKitButton;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
@@ -21,7 +22,11 @@ import java.util.Map;
 
 public class TournamentSelectKitMenu extends Menu {
 
-    private final FoldersConfigurationFile config = this.getPlugin().getMenuManager().getConfigByName("general");
+    private final FoldersConfigurationFile config = this.getPlugin().getMenuHandler().getConfigByName("general");
+
+    public TournamentSelectKitMenu(Array plugin) {
+        super(plugin);
+    }
 
     /**
      * Get menu's title

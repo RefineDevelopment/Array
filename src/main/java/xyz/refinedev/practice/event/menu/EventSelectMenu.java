@@ -22,14 +22,13 @@ import java.util.Map;
 
 public class EventSelectMenu extends Menu {
 
-    private final Array plugin;
     private final FoldersConfigurationFile config;
 
     public EventSelectMenu(Array plugin) {
-        this.plugin = plugin;
+        super(plugin);
         this.config = plugin.getMenuHandler().getConfigByName("event_host");
 
-        this.loadMenu(plugin, config);
+        this.loadMenu(config);
         this.setAutoUpdate(true);
     }
 
@@ -66,7 +65,8 @@ public class EventSelectMenu extends Menu {
 
         for ( EventType eventType : EventType.values() ) {
             String path = "BUTTONS." + eventType.name() + ".";
-            buttons.put(config.getInteger(path + "SLOT"), new EventSelectButton(plugin, eventType));
+            Button button = new EventSelectButton(this.getPlugin(), eventType);
+            buttons.put(config.getInteger(path + "SLOT"), button);
         }
         return buttons;
     }

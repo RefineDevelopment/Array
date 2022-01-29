@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.event.Event;
@@ -76,19 +77,15 @@ public class MenuHandler {
             menu.setPlaceholder(menuConfig.getBoolean("PLACEHOLDER"));
 
             if (menu.isPlaceholder()) {
-                Material material;
-
-                try {
-                    material = Material.valueOf(menuConfig.getString("PLACEHOLDER_BUTTON.MATERIAL"));
-                } catch (Exception e) {
-                    plugin.logger("Invalid Placeholder Button on Menu " + menu.getName() + ", turning off placeholder mode.");
+                Material material = ButtonUtil.getPlaceholderMaterial(menuConfig, menu.getName());
+                if (material == null) {
                     menu.setPlaceholder(false);
                     return;
                 }
 
                 ItemBuilder itemBuilder = new ItemBuilder(material);
                 itemBuilder.name(menuConfig.getString("PLACEHOLDER_BUTTON.NAME"));
-                if (menuConfig.getInteger("PLACEHOLDER_BUTTON.DATA") != 0) itemBuilder.durability(menuConfig.getInteger("PLACEHOLDER_BUTTON.DATA"));
+                itemBuilder.durability(menuConfig.getInteger("PLACEHOLDER_BUTTON.DATA"));
                 itemBuilder.lore(menuConfig.getStringList("PLACEHOLDER_BUTTON.LORE"));
                 itemBuilder.clearFlags();
 
@@ -96,19 +93,18 @@ public class MenuHandler {
             }
 
             menu.setButtons(this.loadCustomButtons(menuConfig));
-
-            menuData.add(menu);
+            this.menuData.add(menu);
         }
 
         //Async cuz yknow we don't wanna diturb the main thread and besides this stuff gets updated way too often
-        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new MenuUpdateTask(plugin), 5L, 5L);
+        this.plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new MenuUpdateTask(plugin), 5L, 5L);
     }
 
     /**
      * Generate the default configs inside our jar
      */
     public void generateDefaultMenus() {
-        for ( String config : configNames ) {
+        for ( String config : this.configNames ) {
             FoldersConfigurationFile loadedConfig = new FoldersConfigurationFile(plugin,"menu", config);
             this.configs.put(config, loadedConfig);
         }
@@ -166,22 +162,15 @@ public class MenuHandler {
         for ( String key : section.getKeys(false) ){
             ButtonData buttonData = new ButtonData();
 
-            Material material;
-            try {
-                material = Material.valueOf(section.getString(key + ".MATERIAL"));
-            } catch (Exception e) {
-                System.out.println("Button " + key + "'s Material is invalid, ignoring button...");
-                continue;
-            }
+            Material material = ButtonUtil.getMaterial(config, key + ".MATERIAL", key);;
+            if (material == null) continue;
+
             ItemBuilder itemBuilder = new ItemBuilder(material);
             itemBuilder.name(section.getString(key + ".NAME"));
+            itemBuilder.durability(section.getInt(key + ".DATA"));
+            itemBuilder.lore(section.getStringList(key + ".LORE"));
             itemBuilder.clearFlags();
-            if (section.getInt(key + ".DATA") != 0) {
-                itemBuilder.durability(section.getInt(key + ".DATA"));
-            }
-            if (section.getStringList(key + ".LORE") != null && !section.getStringList(key + ".LORE").isEmpty()) {
-                itemBuilder.lore(section.getStringList(key + ".LORE"));
-            }
+
             ItemStack itemStack = itemBuilder.build();
             buttonData.setItem(itemStack);
             buttonData.setSlot(section.getInt(key + ".SLOT"));
@@ -189,7 +178,6 @@ public class MenuHandler {
 
             customButtons.add(buttonData);
         }
-
         return customButtons;
     }
 
@@ -208,15 +196,13 @@ public class MenuHandler {
 
         for ( String key : configurationSection.getKeys(false) ) {
             String path = "CUSTOM_BUTTONS." + buttonKey + ".ACTIONS." + key;
+            String clickType = config.getString(path + ".CLICK_TYPE");
+            String action = config.getString(path + ".ACTION");
 
-            ActionType actionType;
-            try {
-                actionType = ActionType.valueOf(config.getString(path + ".ACTION_TYPE"));
-            } catch (Exception e) {
-                plugin.getLogger().info("Button " + buttonKey + "'s Action Type is invalid, ignoring action...");
-                continue;
-            }
-            ActionData data = new ActionData(actionType, config.getString(path + ".CLICK_TYPE"), config.getString(path + ".ACTION"));
+            ActionType actionType = ButtonUtil.getAction(config, config.getString(path + ".ACTION_TYPE"), buttonKey);
+            if (actionType == null) continue;
+
+            ActionData data = new ActionData(actionType, clickType, action);
             actionData.add(data);
         }
         return actionData;

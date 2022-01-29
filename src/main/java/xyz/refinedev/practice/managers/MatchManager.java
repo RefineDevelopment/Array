@@ -36,9 +36,7 @@ import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
-import xyz.refinedev.practice.task.match.MatchBowCooldownTask;
 import xyz.refinedev.practice.task.match.MatchCooldownTask;
-import xyz.refinedev.practice.task.match.MatchPearlCooldownTask;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
 import xyz.refinedev.practice.util.chat.ChatHelper;
@@ -161,8 +159,6 @@ public class MatchManager {
             if (kit.getGameRules().isParkour()) {
                 profile.getParkourCheckpoints().clear();
             }
-
-            match.removePearl(profile, true);
         }
 
         for ( TeamPlayer gamePlayer : match.getTeamPlayers()) {
@@ -442,16 +438,7 @@ public class MatchManager {
      * @param match {@link Match} being cleaned up
      */
     public void cleanup(Match match) {
-        plugin.getServer().getScheduler().runTask(plugin, () -> {
-            if (match.getKit().getGameRules().isBuild() && match.getPlacedBlocks().size() > 0) {
-                match.getPlacedBlocks().forEach(l -> l.getBlock().setType(Material.AIR));
-                match.getPlacedBlocks().clear();
-            }
-            if (match.getKit().getGameRules().isBuild() && match.getChangedBlocks().size() > 0) {
-                match.getChangedBlocks().forEach(blockState -> blockState.getLocation().getBlock().setType(blockState.getType()));
-                match.getChangedBlocks().clear();
-            }
-        });
+        if (match.getArena().isStandalone()) match.getArena().restoreSnapshot();
     }
 
     /**

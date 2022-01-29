@@ -32,6 +32,7 @@ public class ViewInvCommand {
             return;
         }
 
-        new MatchDetailsMenu(cachedInventory, null).openMenu(player);
+        MatchDetailsMenu menu = new MatchDetailsMenu(plugin, cachedInventory, null);
+        menu.openMenu(player);
     }
 }

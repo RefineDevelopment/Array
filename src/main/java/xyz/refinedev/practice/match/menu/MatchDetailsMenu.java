@@ -1,7 +1,6 @@
 package xyz.refinedev.practice.match.menu;
 
 import com.google.common.base.Preconditions;
-import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -11,28 +10,38 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.match.MatchSnapshot;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.util.chat.CC;
+import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.inventory.InventoryUtil;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.ButtonUtil;
 import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.menu.button.DisplayButton;
 import xyz.refinedev.practice.util.other.PotionUtil;
 import xyz.refinedev.practice.util.other.TimeUtil;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
-//TODO: Recode this
-@AllArgsConstructor
 public class MatchDetailsMenu extends Menu {
     
-    private final Array plugin = Array.getInstance();
+    private final FoldersConfigurationFile config;
 
     private final MatchSnapshot snapshot;
     private final MatchSnapshot opponent;
 
+    public MatchDetailsMenu(Array plugin, MatchSnapshot snapshot, @Nullable MatchSnapshot opponent) {
+        super(plugin);
+
+        this.config = this.getPlugin().getMenuHandler().getConfigByName("general");
+        this.snapshot = snapshot;
+        this.opponent = opponent;
+    }
+
     @Override
     public String getTitle(Player player) {
-        return "&7&lInventory of &c" + snapshot.getTeamPlayer().getUsername();
+        return config.getString("MATCH_DETAILS_MENU.TITLE")
+                .replace("<snapshot_name>", snapshot.getTeamPlayer().getUsername());
     }
 
     @Override
@@ -58,7 +67,6 @@ public class MatchDetailsMenu extends Menu {
             }
         }
 
-
         buttons.put(48, new HealthButton(snapshot.getHealth()));
         buttons.put(49, new HungerButton(snapshot.getHunger()));
         buttons.put(50, new EffectsButton(snapshot.getEffects()));
@@ -77,36 +85,43 @@ public class MatchDetailsMenu extends Menu {
         return buttons;
     }
 
-    @AllArgsConstructor
     private class SwitchInventoryButton extends Button {
 
         private final TeamPlayer switchTo;
 
+        public SwitchInventoryButton(TeamPlayer switchTo) {
+            super(MatchDetailsMenu.this.getPlugin());
+            this.switchTo = switchTo;
+        }
+
         @Override
         public ItemStack getButtonItem(Player player) {
-            if (opponent != null) {
-                return new ItemBuilder(Material.LEVER)
-                        .name("&c&lNext Inventory")
-                        .lore("&7Switch to &c" + opponent.getTeamPlayer().getUsername() + "&7's inventory")
-                        .build();
-            }
+            String path = "MATCH_DETAILS_MENU.SWITCH_INVENTORY_BUTTON";
+            int data = config.getInteger(path + ".DATA");
+            Material material = ButtonUtil.getMaterial(config, path + ".MATERIAL");
+            if (material == null) player.closeInventory();
 
-            return new ItemBuilder(Material.LEVER)
-                    .name("&c&lNext Inventory")
-                    .lore("&7Switch to &c" + switchTo.getUsername() + "&7's inventory")
-                    .build();
+            ItemBuilder itemBuilder  = new ItemBuilder(material);
+            itemBuilder.durability(data);
+            itemBuilder.name(config.getString(path + ".NAME")
+                    .replace("<snapshot_next_name>", opponent == null ?
+                    switchTo.getUsername() :
+                    opponent.getTeamPlayer().getUsername()));
+
+            return itemBuilder.build();
         }
 
         @Override
         public void clicked(Player player, ClickType clickType) {
             if (opponent != null) {
-                new MatchDetailsMenu(opponent, snapshot).openMenu(player);
+                MatchDetailsMenu menu = new MatchDetailsMenu(this.getPlugin(), opponent, snapshot);
+                menu.openMenu(player);
             }
 
             MatchSnapshot cachedInventory;
             if (opponent == null) {
                 try {
-                    cachedInventory = plugin.getMatchManager().getByString(switchTo.getUniqueId().toString());
+                    cachedInventory = this.getPlugin().getMatchManager().getByString(switchTo.getUniqueId().toString());
                 } catch (Exception e) {
                     player.sendMessage(CC.RED + "Couldn't find an inventory for that ID.");
                     return;
@@ -116,16 +131,22 @@ public class MatchDetailsMenu extends Menu {
                     player.sendMessage(CC.RED + "Couldn't find an inventory for that ID.");
                     return;
                 }
-                new MatchDetailsMenu(cachedInventory, snapshot).openMenu(player);
+
+                MatchDetailsMenu menu = new MatchDetailsMenu(this.getPlugin(), cachedInventory, snapshot);
+                menu.openMenu(player);
             }
         }
 
     }
 
-    @AllArgsConstructor
-    private static class HealthButton extends Button {
+    private class HealthButton extends Button {
 
         private final int health;
+
+        public HealthButton(int health) {
+            super(MatchDetailsMenu.this.getPlugin());
+            this.health = health;
+        }
 
         @Override
         public ItemStack getButtonItem(Player player) {
@@ -137,10 +158,14 @@ public class MatchDetailsMenu extends Menu {
 
     }
 
-    @AllArgsConstructor
-    private static class HungerButton extends Button {
+    private class HungerButton extends Button {
 
         private final int hunger;
+
+        public HungerButton(int hunger) {
+            super(MatchDetailsMenu.this.getPlugin());
+            this.hunger = hunger;
+        }
 
         @Override
         public ItemStack getButtonItem(Player player) {
@@ -152,39 +177,45 @@ public class MatchDetailsMenu extends Menu {
 
     }
 
-    @AllArgsConstructor
-    private static class EffectsButton extends Button {
+    private class EffectsButton extends Button {
 
         private final Collection<PotionEffect> effects;
 
+        public EffectsButton(Collection<PotionEffect> effects) {
+            super(MatchDetailsMenu.this.getPlugin());
+            this.effects = effects;
+        }
+
         @Override
         public ItemStack getButtonItem(Player player) {
-            ItemBuilder builder=new ItemBuilder(Material.POTION).name("&c&lPotion Effects");
+            ItemBuilder builder = new ItemBuilder(Material.POTION);
+            builder.name("&c&lPotion Effects");
 
             if (effects.isEmpty()) {
                 builder.lore("&cNo potion effects");
             } else {
-                List<String> lore=new ArrayList<>();
-
-                effects.forEach(effect -> {
+                List<String> lore = new ArrayList<>();
+                for ( PotionEffect effect : effects ) {
                     String name = PotionUtil.getName(effect.getType()) + " " + (effect.getAmplifier() + 1);
                     String duration = " (" + TimeUtil.millisToTimer((effect.getDuration() / 20) * 1000L) + ")";
                     lore.add("&c" + name + "&f" + duration);
-                });
-
+                }
                 builder.lore(lore);
             }
-
             return builder.build();
         }
-
     }
 
-    @AllArgsConstructor
-    private static class PotionsButton extends Button {
+    private class PotionsButton extends Button {
 
         private final String name;
         private final int potions;
+
+        public PotionsButton(String name, int potions) {
+            super(MatchDetailsMenu.this.getPlugin());
+            this.name = name;
+            this.potions = potions;
+        }
 
         @Override
         public ItemStack getButtonItem(Player player) {
@@ -198,10 +229,14 @@ public class MatchDetailsMenu extends Menu {
 
     }
 
-    @AllArgsConstructor
-    private static class StatisticsButton extends Button {
+    private class StatisticsButton extends Button {
 
         private final TeamPlayer teamPlayer;
+
+        public StatisticsButton(TeamPlayer teamPlayer) {
+            super(MatchDetailsMenu.this.getPlugin());
+            this.teamPlayer = teamPlayer;
+        }
 
         @Override
         public ItemStack getButtonItem(Player player) {
