@@ -23,7 +23,9 @@ import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.Clickable;
-import xyz.refinedev.practice.util.other.*;
+import xyz.refinedev.practice.util.other.Cooldown;
+import xyz.refinedev.practice.util.other.TaskUtil;
+import xyz.refinedev.practice.util.other.TimeUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -213,8 +215,7 @@ public abstract class Event {
 
 		for ( Map.Entry<UUID, Event> keySet : plugin.getEventManager().getSpectators().entrySet() ) {
 			if (!keySet.getValue().getEventId().equals(eventId)) continue;
-
-			plugin.getEventManager().removeSpectator(this, keySet.getKey());
+			plugin.getEventManager().removeSpectator(keySet.getKey());
 		}
 		this.getPlayers().stream().map(plugin.getProfileManager()::getProfileByPlayer).forEach(plugin.getProfileManager()::handleVisibility);
 	}

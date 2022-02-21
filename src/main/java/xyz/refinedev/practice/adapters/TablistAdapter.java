@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
@@ -27,7 +25,6 @@ import xyz.refinedev.tablist.util.Skin;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -53,7 +50,7 @@ public class TablistAdapter implements TabAdapter {
      */
     @Override
     public String getHeader(Player player) {
-        return Strings.join(config.getStringList("TABLIST.HEADER"), "\n");
+        return String.join("\n", config.getStringList("TABLIST.HEADER"));
     }
 
     /**
@@ -64,7 +61,7 @@ public class TablistAdapter implements TabAdapter {
      */
     @Override
     public String getFooter(Player player) {
-        return Strings.join(config.getStringList("TABLIST.FOOTER"), "\n");
+        return String.join( "\n", config.getStringList("TABLIST.FOOTER"));
     }
 
     /**
@@ -371,7 +368,7 @@ public class TablistAdapter implements TabAdapter {
                 }
             }
             //TODO: Complete Event Tablist
-        } else if (profile.isInEvent() && !profile.isSpectating()) {
+        }/* else if (profile.isInEvent() && !profile.isSpectating()) {
             UUID uuid = profile.getEvent();
             Event event = this.plugin.getEventManager().getEventByUUID(uuid);
             if (event.isWaiting()) {
@@ -379,7 +376,7 @@ public class TablistAdapter implements TabAdapter {
             } else if (event.isFighting()) {
 
             }
-        }
+        }*/
         return entries;
     }
     
@@ -405,14 +402,8 @@ public class TablistAdapter implements TabAdapter {
             }
         }
 
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            return PlaceholderAPI.setPlaceholders(player, toReplace
-                    .replace("<profile_global_elo>", String.valueOf(profile.getGlobalElo())
-                    .replace("<profile_wins>", String.valueOf(profile.getTotalWins()))
-                    .replace("<profile_losses>", String.valueOf(profile.getTotalLost()))
-                    .replace("<profile_name>", profile.getName()))
-                    .replace("<profile_wlr>", plugin.getProfileManager().getWLR(profile))
-                    .replace("<profile_division>", plugin.getProfileManager().getDivision(profile).getDisplayName()));
+        if (plugin.isPlaceholderAPI()) {
+            toReplace = PlaceholderAPI.setPlaceholders(player, toReplace);
         }
         return toReplace
                 .replace("<profile_global_elo>", String.valueOf(profile.getGlobalElo())
@@ -479,29 +470,13 @@ public class TablistAdapter implements TabAdapter {
         //Your Team Replacement
         for ( int i = 0; i < 30; i++ ) {
             String member = "<team_" + ((i + 1)) + ">";
-            if (team.getPlayers().size() <= i) {
-                toReplace = toReplace.replace(member, "&7");
-            } else {
-                TeamPlayer teamPlayer = team.getTeamPlayers().get(i);
-                String name = teamPlayer.getUsername();
-                if (toReplace.contains(member)) {
-                    toReplace = toReplace.replace(member, name == null ? CC.translate("&7") : !teamPlayer.isAlive() ? CC.GRAY + CC.STRIKE_THROUGH + name : match.getRelationColor(player, teamPlayer.getPlayer()) + name);
-                }
-            }
+            toReplace = getFormattedName(player, toReplace, match, team, i, member);
         }
 
         //Opponent Team Replacement
         for ( int i = 0; i < 30; i++ ) {
             String member = "<opponent_" + ((i + 1)) + ">";
-            if (opponent.getPlayers().size() <= i) {
-                toReplace = toReplace.replace(member, "&7");
-            } else {
-                TeamPlayer teamPlayer = opponent.getTeamPlayers().get(i);
-                String name = teamPlayer.getUsername();
-                if (toReplace.contains(member)) {
-                    toReplace = toReplace.replace(member, name == null ? CC.translate("&7") : !teamPlayer.isAlive() ? CC.GRAY + CC.STRIKE_THROUGH + name : match.getRelationColor(player, teamPlayer.getPlayer()) + name);
-                }
-            }
+            toReplace = getFormattedName(player, toReplace, match, opponent, i, member);
         }
 
         return replaceTeamPlayer(player, replaceLobby(player, toReplace))
@@ -547,47 +522,16 @@ public class TablistAdapter implements TabAdapter {
         //Your Team Replacement
         for ( int i = 0; i < 30; i++ ) {
             String member = "<team_" + ((i + 1)) + ">";
-            if (team.getPlayers().size() <= i) {
-                toReplace = toReplace.replace(member, "&7");
-            } else {
-                TeamPlayer teamPlayer = opponentTeam.getTeamPlayers().get(i);
-                String name = teamPlayer.getUsername();
-
-                String pvPClass = party.getKits().get(teamPlayer.getUniqueId());
-                String displayName = pvPClass == null ? name : getClassColor(pvPClass) + name;
-
-                if (toReplace.contains(member)) {
-                    toReplace = toReplace.replace(member, name == null ? CC.translate("&7") : !teamPlayer.isAlive() ? CC.GRAY + CC.STRIKE_THROUGH + name : displayName);
-                }
-            }
+            toReplace = getArmorFormattedName(toReplace, party, team, opponentTeam, i, member);
         }
 
         //Opponent Team Replacement
         for ( int i = 0; i < 30; i++ ) {
             String member = "<opponent_" + ((i + 1)) + ">";
-            if (opponentTeam.getPlayers().size() <= i) {
-                toReplace = toReplace.replace(member, "&7");
-            } else {
-                TeamPlayer teamPlayer = opponentTeam.getTeamPlayers().get(i);
-                String name = teamPlayer.getUsername();
-
-                String pvPClass = party.getKits().get(teamPlayer.getUniqueId());
-                String displayName = pvPClass == null ? name : getClassColor(pvPClass) + name;
-
-                if (toReplace.contains(member)) {
-                    toReplace = toReplace.replace(member, name == null ? CC.translate("&7") : !teamPlayer.isAlive() ? CC.GRAY + CC.STRIKE_THROUGH + name : displayName);
-                }
-            }
+            toReplace = getArmorFormattedName(toReplace, party, opponentTeam, opponentTeam, i, member);
         }
 
-        if (pvpClass instanceof Bard) {
-            Bard bard = (Bard) pvpClass;
-            toReplace = toReplace
-                    .replace("<bard_energy>", String.valueOf(bard.getEnergy(player)));
-        } else {
-            toReplace = toReplace
-                    .replace("<bard_energy>", "None");
-        }
+        toReplace = toReplace.replace("<bard_energy>", pvpClass instanceof Bard ? String.valueOf(((Bard)pvpClass).getEnergy(player)) : "None");
 
         return toReplace
                 .replace("<match_duration>", match.getDuration())
@@ -605,18 +549,6 @@ public class TablistAdapter implements TabAdapter {
                 .replace("|", "┃");
     }
 
-    public ChatColor getClassColor(String pvPClass) {
-        switch (pvPClass) {
-            case "Bard":
-                return ChatColor.YELLOW;
-            case "Rogue":
-                return ChatColor.RED;
-            case "Archer":
-                return ChatColor.DARK_PURPLE;
-            default:
-                return ChatColor.AQUA;
-        }
-    }
 
     public String replaceFFAMatch(Player player, String toReplace) {
         Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
@@ -628,16 +560,7 @@ public class TablistAdapter implements TabAdapter {
 
         for ( int i = 0; i < 30; i++ ) {
             String member = "<opponent_" + ((i + 1)) + ">";
-            if (fixedPlayers.size() <= i) {
-                toReplace = toReplace.replace(member, "&7");
-            } else {
-                TeamPlayer teamPlayer = fixedPlayers.get(i);
-                String name = teamPlayer.getUsername();
-
-                if (toReplace.contains(member)) {
-                    toReplace = toReplace.replace(member, name == null ? CC.translate("&7") : !teamPlayer.isAlive() ? CC.GRAY + CC.STRIKE_THROUGH + name : match.getRelationColor(player, teamPlayer.getPlayer()) + name);
-                }
-            }
+            toReplace = this.getFFAFormattedName(player, toReplace, match, fixedPlayers, i, member);
         }
 
         return replaceTeamPlayer(player, replaceLobby(player, toReplace))
@@ -654,6 +577,51 @@ public class TablistAdapter implements TabAdapter {
     //TODO: Complete Event Tablist
     public void replaceEvent(Player player, String toReplace) {
 
+    }
+
+    private String getFormattedName(Player player, String toReplace, Match match, Team opponent, int i, String member) {
+        if (opponent.getPlayers().size() <= i) return toReplace.replace(member, "&7");
+
+        TeamPlayer teamPlayer = opponent.getTeamPlayers().get(i);
+        String name = teamPlayer.getUsername();
+
+        if (toReplace.contains(member)) {
+            toReplace = toReplace
+                    .replace(member, name == null ?
+                            CC.translate("&7") : !teamPlayer.isAlive() ?
+                            CC.GRAY + CC.STRIKE_THROUGH + name :  match.getRelationColor(player, teamPlayer.getPlayer()) + name);
+        }
+        return toReplace;
+    }
+
+    private String getArmorFormattedName(String toReplace, Party party, Team team, Team opponentTeam, int i, String member) {
+        if (team.getPlayers().size() <= i) return toReplace.replace(member, "&7");
+
+        TeamPlayer teamPlayer = opponentTeam.getTeamPlayers().get(i);
+        String name = teamPlayer.getUsername();
+
+        String pvPClass = party.getKits().get(teamPlayer.getUniqueId());
+        String displayName = pvPClass == null ? name : getClassColor(pvPClass) + name;
+
+        if (toReplace.contains(member)) {
+            toReplace = toReplace.replace(member, name == null ? CC.translate("&7") : !teamPlayer.isAlive() ? CC.GRAY + CC.STRIKE_THROUGH + name : displayName);
+        }
+
+        return toReplace;
+    }
+
+    private String getFFAFormattedName(Player player, String toReplace, Match match, List<TeamPlayer> fixedPlayers, int i, String member) {
+        if (fixedPlayers.size() <= i) return toReplace.replace(member, "&7");
+
+        TeamPlayer teamPlayer = fixedPlayers.get(i);
+        String name = teamPlayer.getUsername();
+
+        if (toReplace.contains(member)) {
+            toReplace = toReplace.replace(member, name == null ?
+                    CC.translate("&7") : !teamPlayer.isAlive() ?
+                    CC.GRAY + CC.STRIKE_THROUGH + name : match.getRelationColor(player, teamPlayer.getPlayer()) + name);
+        }
+        return toReplace;
     }
     
     public TabEntry checkSkin(Player player, TabEntry entry) {
@@ -688,6 +656,19 @@ public class TablistAdapter implements TabAdapter {
         }
         entry.setText(text);
         return entry;
+    }
+
+    public ChatColor getClassColor(String pvPClass) {
+        switch (pvPClass) {
+            case "Bard":
+                return ChatColor.YELLOW;
+            case "Rogue":
+                return ChatColor.RED;
+            case "Archer":
+                return ChatColor.DARK_PURPLE;
+            default:
+                return ChatColor.AQUA;
+        }
     }
 
     public TabEntry checkDot(TabEntry entry) {

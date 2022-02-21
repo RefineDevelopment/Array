@@ -6,7 +6,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.util.chat.CC;

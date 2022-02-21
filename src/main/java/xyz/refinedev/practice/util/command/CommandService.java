@@ -53,6 +53,8 @@ public interface CommandService {
      */
     void registerCommands();
 
+    void registerPermissions();
+
     /**
      * Start binding a class type to a {@link DrinkProvider} or instance.
      * @param type The Class type to bind to

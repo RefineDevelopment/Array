@@ -1,16 +1,15 @@
 package xyz.refinedev.practice.util.timer;
 
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.timer.event.TimerExpireEvent;
+
+import java.util.UUID;
 
 @Getter @Setter
 public class TimerCooldown {

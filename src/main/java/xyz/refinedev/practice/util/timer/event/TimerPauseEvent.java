@@ -1,11 +1,11 @@
 package xyz.refinedev.practice.util.timer.event;
 
-import java.util.Optional;
-import java.util.UUID;
-
 import lombok.Getter;
 import xyz.refinedev.practice.util.events.BaseEvent;
 import xyz.refinedev.practice.util.timer.Timer;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Getter
 public class TimerPauseEvent extends BaseEvent {

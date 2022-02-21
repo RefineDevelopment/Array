@@ -2,10 +2,11 @@ package xyz.refinedev.practice.util.command.command;
 
 import com.google.common.base.Preconditions;
 import lombok.Getter;
-import xyz.refinedev.practice.util.other.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.refinedev.practice.util.command.CommandService;
 import xyz.refinedev.practice.util.command.annotation.Duration;
@@ -25,6 +26,7 @@ import xyz.refinedev.practice.util.command.provider.*;
 import xyz.refinedev.practice.util.command.provider.spigot.CommandSenderProvider;
 import xyz.refinedev.practice.util.command.provider.spigot.PlayerProvider;
 import xyz.refinedev.practice.util.command.provider.spigot.PlayerSenderProvider;
+import xyz.refinedev.practice.util.other.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -98,6 +100,17 @@ public class DrinkCommandService implements CommandService {
         commands.values().forEach(cmd -> {
             spigotRegistry.register(cmd, cmd.isOverrideExistingCommands());
         });
+    }
+
+    @Override
+    public void registerPermissions() {
+        for ( DrinkCommandContainer container : this.commands.values() ) {
+            container.getCommands().values().forEach(cmd -> {
+                if (cmd.getPermission() != null) {
+                    plugin.getServer().getPluginManager().addPermission(new Permission(cmd.getPermission(), PermissionDefault.OP));
+                }
+            });
+        }
     }
 
     @Override

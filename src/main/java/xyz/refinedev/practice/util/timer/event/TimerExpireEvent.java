@@ -1,13 +1,13 @@
 package xyz.refinedev.practice.util.timer.event;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.util.events.BaseEvent;
 import xyz.refinedev.practice.util.timer.Timer;
+
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 @Getter
 public class TimerExpireEvent extends BaseEvent {

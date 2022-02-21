@@ -1,12 +1,12 @@
 package xyz.refinedev.practice.util.command.command;
 
 import com.google.common.base.Preconditions;
-import xyz.refinedev.practice.util.other.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginIdentifiableCommand;
 import org.bukkit.plugin.Plugin;
+import xyz.refinedev.practice.util.other.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

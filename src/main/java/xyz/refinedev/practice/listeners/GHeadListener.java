@@ -9,13 +9,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.match.Match;
-import xyz.refinedev.practice.match.types.kit.solo.SoloBridgeMatch;
-import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
 
 @RequiredArgsConstructor

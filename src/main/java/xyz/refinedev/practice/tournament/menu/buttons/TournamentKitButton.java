@@ -10,8 +10,6 @@ import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 
-import java.util.Arrays;
-
 /**
  * This Project is property of Refine Development © 2021
  * Redistribution of this Project is not allowed

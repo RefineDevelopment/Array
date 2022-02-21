@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.profile.history.menu;
 
-import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;

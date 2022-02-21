@@ -1,10 +1,5 @@
 package xyz.refinedev.practice.util.timer;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Predicate;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,6 +7,12 @@ import xyz.refinedev.practice.util.timer.event.TimerClearEvent;
 import xyz.refinedev.practice.util.timer.event.TimerExtendEvent;
 import xyz.refinedev.practice.util.timer.event.TimerPauseEvent;
 import xyz.refinedev.practice.util.timer.event.TimerStartEvent;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 
 public abstract class PlayerTimer extends Timer {
 

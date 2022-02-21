@@ -1,8 +1,6 @@
 package xyz.refinedev.practice.util.menu.pagination;
 
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.menu.Button;

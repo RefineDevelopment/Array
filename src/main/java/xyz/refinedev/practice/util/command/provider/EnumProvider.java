@@ -1,10 +1,10 @@
 package xyz.refinedev.practice.util.command.provider;
 
 import com.google.common.collect.Lists;
-import xyz.refinedev.practice.util.other.StringUtils;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
+import xyz.refinedev.practice.util.other.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;

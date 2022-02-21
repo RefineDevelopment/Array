@@ -1,12 +1,12 @@
 package xyz.refinedev.practice.util.timer;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
 import lombok.Data;
 import lombok.Getter;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
 import xyz.refinedev.practice.Array;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Data
 public class TimerHandler implements Listener {

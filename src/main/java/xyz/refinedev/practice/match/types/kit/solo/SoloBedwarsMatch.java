@@ -1,7 +1,9 @@
 package xyz.refinedev.practice.match.types.kit.solo;
 
 import lombok.Getter;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import xyz.refinedev.practice.Array;

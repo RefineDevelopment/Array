@@ -10,9 +10,7 @@ import xyz.refinedev.practice.profile.rank.TablistRank;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.inventory.InventoryUtil;
 import xyz.refinedev.practice.util.location.LocationUtil;
-import xyz.refinedev.practice.util.menu.MenuUpdateTask;
 import xyz.refinedev.practice.util.other.Description;
-import xyz.refinedev.practice.util.other.PiracyMeta;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.ArrayList;

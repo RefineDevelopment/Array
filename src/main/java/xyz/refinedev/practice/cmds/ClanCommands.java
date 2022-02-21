@@ -1,7 +1,6 @@
 package xyz.refinedev.practice.cmds;
 
 import lombok.RequiredArgsConstructor;
-import xyz.refinedev.practice.util.other.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
@@ -17,6 +16,7 @@ import xyz.refinedev.practice.util.command.annotation.OptArg;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 import xyz.refinedev.practice.util.command.annotation.Text;
 import xyz.refinedev.practice.util.other.PlayerUtil;
+import xyz.refinedev.practice.util.other.StringUtils;
 
 import java.util.UUID;
 

@@ -1,12 +1,9 @@
 package xyz.refinedev.practice.util.storage;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import org.bukkit.Bukkit;
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Elb1to

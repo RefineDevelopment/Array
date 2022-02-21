@@ -7,7 +7,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Getter @Setter
 public class TeamPlayer {

@@ -28,8 +28,8 @@ public class MatchCooldownTask extends BukkitRunnable {
         int seconds;
 
         EnderpearlTimer enderpearlTimer = this.plugin.getTimerHandler().getTimer(EnderpearlTimer.class);
-        for ( UUID uUID : enderpearlTimer.getCooldowns().keySet()) {
-            Player player = this.plugin.getServer().getPlayer(uUID);
+        for ( UUID uuid : enderpearlTimer.getCooldowns().keySet()) {
+            Player player = this.plugin.getServer().getPlayer(uuid);
             if (player == null) continue;
 
             long time = enderpearlTimer.getRemaining(player);

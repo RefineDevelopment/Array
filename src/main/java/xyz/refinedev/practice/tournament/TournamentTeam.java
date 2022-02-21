@@ -2,11 +2,8 @@ package xyz.refinedev.practice.tournament;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.match.team.Team;
-import xyz.refinedev.practice.match.team.TeamPlayer;
 
 import java.util.*;
 import java.util.stream.Stream;

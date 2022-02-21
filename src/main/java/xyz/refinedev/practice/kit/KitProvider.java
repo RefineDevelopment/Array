@@ -1,11 +1,11 @@
 package xyz.refinedev.practice.kit;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Objects;

@@ -3,17 +3,13 @@ package xyz.refinedev.practice.util.other;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import net.minecraft.server.v1_8_R3.*;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import xyz.refinedev.practice.Array;
@@ -21,8 +17,9 @@ import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 
 import java.lang.reflect.Field;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @UtilityClass
 public class PlayerUtil {

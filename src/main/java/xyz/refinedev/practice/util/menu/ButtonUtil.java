@@ -4,7 +4,6 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import xyz.refinedev.practice.util.config.AbstractConfigurationFile;
-import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.menu.custom.action.ActionType;
 
 import java.util.logging.Level;

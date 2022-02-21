@@ -9,6 +9,8 @@ import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.event.Event;
@@ -29,7 +31,9 @@ import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.other.Cooldown;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Getter @Setter
 @RequiredArgsConstructor
@@ -78,6 +82,10 @@ public class EventManager {
 			this.eventWorld.getEntities().stream().filter(entity -> !(entity instanceof Player)).forEach(Entity::remove);
 			plugin.logger("&7Successfully finished &csetting up &7event world!");
 		}
+
+		for ( EventType event : EventType.values()) {
+			plugin.getServer().getPluginManager().addPermission(new Permission("array.event." + event.name(), PermissionDefault.OP));
+		}
 	}
 
 	/**
@@ -101,8 +109,6 @@ public class EventManager {
 	}
 
     public void setActiveEvent(Event event) {
-		this.plugin.getServer().getOnlinePlayers().stream().map(plugin.getProfileManager()::getProfileByPlayer).filter(profile -> profile.isInLobby() && !profile.getKitEditor().isActive()).forEach(plugin.getProfileManager()::refreshHotbar);
-
 		if (this.activeEvent != null) {
 			this.activeEvent.setEventTask(null);
 		}
@@ -214,7 +220,7 @@ public class EventManager {
 		player.teleport(event.isFreeForAll() ? helper.getSpawn(event) : helper.getSpectator(event));
 	}
 
-	public void removeSpectator(Event event, UUID uuid) {
+	public void removeSpectator(UUID uuid) {
 		this.getSpectators().remove(uuid);
 
 		Profile profile = this.plugin.getProfileManager().getProfileByUUID(uuid);
@@ -222,5 +228,12 @@ public class EventManager {
 		profile.setEvent(null);
 
 		this.plugin.getProfileManager().teleportToSpawn(profile);
+	}
+
+	public void refreshHotbar() {
+		this.plugin.getServer().getOnlinePlayers().stream()
+				.map(plugin.getProfileManager()::getProfileByPlayer)
+				.filter(profile -> profile.isInLobby() && !profile.getKitEditor().isActive())
+				.forEach(plugin.getProfileManager()::refreshHotbar);
 	}
 }

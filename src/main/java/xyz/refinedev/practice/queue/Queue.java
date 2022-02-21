@@ -6,7 +6,6 @@ import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.match.Match;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 

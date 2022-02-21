@@ -3,7 +3,6 @@ package xyz.refinedev.practice.match.types.kit;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import xyz.refinedev.practice.Array;
@@ -20,10 +19,8 @@ import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.task.match.MatchBattleRushTask;
 import xyz.refinedev.practice.task.match.MatchRespawnTask;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.location.LocationUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
-import xyz.refinedev.practice.util.other.TaskUtil;
 
 import java.util.ArrayList;
 import java.util.List;

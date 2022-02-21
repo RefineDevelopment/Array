@@ -263,6 +263,7 @@ public class Array extends JavaPlugin {
         this.timerHandler.registerTimer(new BridgeArrowTimer(this));
 
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            this.placeholderAPI = true;
             this.logger("&7Found &cPlaceholderAPI&7, Registering Expansions....");
             LeaderboardPlaceholders placeholders = new LeaderboardPlaceholders(this);
             placeholders.register();
@@ -275,24 +276,8 @@ public class Array extends JavaPlugin {
         }
 
         this.logger("&7Registering permissions");
-        this.registerPermissions();
+        drink.registerPermissions();
         this.logger("&7Registered &cpermissions &7successfully!");
-    }
-
-    /**
-     * Register the permissions so if you have
-     * OP, you can have basically all the permission already given to you.
-     */
-    public void registerPermissions() {
-        PluginManager pluginManager = this.getServer().getPluginManager();
-
-        pluginManager.addPermission(new Permission("array.arena.admin", PermissionDefault.OP));
-        pluginManager.addPermission(new Permission("array.kit.admin", PermissionDefault.OP));
-        pluginManager.addPermission(new Permission("array.event.admin", PermissionDefault.OP));
-
-        for ( EventType event : EventType.values()) {
-            pluginManager.addPermission(new Permission("array.event." + event.name(), PermissionDefault.OP));
-        }
     }
 
     /**

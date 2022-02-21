@@ -11,7 +11,6 @@ import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
-import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.menu.pagination.PaginatedMenu;
 
 import java.util.HashMap;

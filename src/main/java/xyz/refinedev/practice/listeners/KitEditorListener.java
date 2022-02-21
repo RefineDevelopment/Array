@@ -1,8 +1,6 @@
 package xyz.refinedev.practice.listeners;
 
 import lombok.RequiredArgsConstructor;
-import xyz.refinedev.practice.kit.kiteditor.KitEditor;
-import xyz.refinedev.practice.util.other.StringUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,9 +13,11 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.kit.kiteditor.KitEditor;
 import xyz.refinedev.practice.kit.kiteditor.menu.KitManagementMenu;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
+import xyz.refinedev.practice.util.other.StringUtils;
 
 @RequiredArgsConstructor
 public class KitEditorListener implements Listener {

@@ -1,12 +1,12 @@
 package xyz.refinedev.practice.profile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import xyz.refinedev.practice.util.command.argument.CommandArg;
 import xyz.refinedev.practice.util.command.exception.CommandExitMessage;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.UUID;

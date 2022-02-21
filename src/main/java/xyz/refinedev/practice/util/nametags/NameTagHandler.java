@@ -1,12 +1,10 @@
 package xyz.refinedev.practice.util.nametags;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.adapters.NameTagAdapter;
 import xyz.refinedev.practice.util.nametags.construct.NameTagComparator;
 import xyz.refinedev.practice.util.nametags.construct.NameTagInfo;
 import xyz.refinedev.practice.util.nametags.construct.NametagUpdate;

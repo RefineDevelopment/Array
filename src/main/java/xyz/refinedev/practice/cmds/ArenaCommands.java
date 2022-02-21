@@ -14,7 +14,6 @@ import xyz.refinedev.practice.arena.impl.StandaloneArena;
 import xyz.refinedev.practice.arena.rating.Rating;
 import xyz.refinedev.practice.arena.runnables.StandalonePasteRunnable;
 import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Require;
