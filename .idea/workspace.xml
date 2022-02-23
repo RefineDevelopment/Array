@@ -4,29 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c41a8b3-4728-4d1b-a454-565d875f3ead" name="Default Changelist" comment="[/] Removed Events | I am officially an idiot">
-      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/EffectCallable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Array.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Array.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Locale.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Locale.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/ArenaManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/ArenaManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/CommandsManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/CommandsManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/KillEffectManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/LeaderboardsManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/LeaderboardsManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/MatchManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/ProfileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/ProfileManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/KillEffect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/KillEffect.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/KillEffectProvider.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/KillEffectSound.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/menu/KEMenu.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/menu/KEPaginatedMenu.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/menu/buttons/KEButton.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/command/CommandService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/command/command/CommandService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/command/Drink.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/command/Drink.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/command/command/DrinkCommandService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/command/command/DrinkCommandService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/scoreboard.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/scoreboard.yml" afterDir="false" />
-    </list>
+    <list default="true" id="3c41a8b3-4728-4d1b-a454-565d875f3ead" name="Default Changelist" comment="[+] Hardcoded Kill Effects, will do them config later" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -191,7 +169,7 @@
       <workItem from="1644042891229" duration="551000" />
       <workItem from="1645465082504" duration="2290000" />
       <workItem from="1645540056102" duration="1771000" />
-      <workItem from="1645599183269" duration="7982000" />
+      <workItem from="1645599183269" duration="8880000" />
     </task>
     <task id="LOCAL-00001" summary="[+] Match Recode&#10;[/] Fixed Tournament Bugs &#10;[/] Kill Effects Done &#10;[+] Kill Effects Menu">
       <created>1628600992379</created>
@@ -494,7 +472,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645602156317</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="[+] Hardcoded Kill Effects, will do them config later">
+      <created>1645614349061</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1645614349061</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -514,7 +499,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="[+] Silent and Build Mode" />
     <MESSAGE value="[+] Silent and Build Mode, Visibility Cooldown" />
     <MESSAGE value="[/] Fixed Arena Setup and Saving errors.&#10;[/] Fixed Startup noSuchMethod errors. (Thanks to @Astonic &amp; @mozart )&#10;[+] Added Save location for kit gamerules &quot;boxing&quot; and &quot;battlerush. (Thanks to @Scyes )&#10;[+] Added /arena setbuildheight and /arena setfalldeathheight commands &#10;[/] Fixed Java/Yeet Class not found errors." />
     <MESSAGE value="[+] LMS Event&#10;[+] Completely Recoded Tournaments" />
@@ -539,7 +523,8 @@
     <MESSAGE value="[/] Locked Scoreboard from any API Changes" />
     <MESSAGE value="[/] More Menu Work" />
     <MESSAGE value="[/] Removed Events | I am officially an idiot" />
-    <option name="LAST_COMMIT_MESSAGE" value="[/] Removed Events | I am officially an idiot" />
+    <MESSAGE value="[+] Hardcoded Kill Effects, will do them config later" />
+    <option name="LAST_COMMIT_MESSAGE" value="[+] Hardcoded Kill Effects, will do them config later" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
