@@ -248,7 +248,8 @@ public class Array extends JavaPlugin {
         this.nameTagHandler.registerAdapter(nameTagAdapter);
 
         if (this.configHandler.isTAB_ENABLED()) {
-            this.tablistHandler = new TablistHandler(tablistAdapter, this, tablistConfig.getInteger("TABLIST.UPDATE_TICKS") * 20L);
+            long tickTime = tablistConfig.getInteger("TABLIST.UPDATE_TICKS") * 20L;
+            this.tablistHandler = new TablistHandler(tablistAdapter, this, tickTime);
         }
 
         this.timerHandler = new TimerHandler(this);

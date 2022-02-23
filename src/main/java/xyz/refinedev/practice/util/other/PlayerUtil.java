@@ -10,6 +10,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import xyz.refinedev.practice.Array;
@@ -62,6 +63,7 @@ public class PlayerUtil {
         player.setFlySpeed(0.0F);
         player.setFoodLevel(0);
         player.setSprinting(false);
+        player.setMetadata("denyMove", new FixedMetadataValue(Array.getInstance(), true));
         player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 200));
     }
 
@@ -75,6 +77,7 @@ public class PlayerUtil {
         player.setFoodLevel(20);
         player.setSprinting(true);
         player.removePotionEffect(PotionEffectType.JUMP);
+        player.removeMetadata("denyMove", Array.getInstance());
     }
 
     public void lockPos(Array plugin, Player player, int seconds) {

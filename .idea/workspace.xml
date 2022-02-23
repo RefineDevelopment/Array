@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c41a8b3-4728-4d1b-a454-565d875f3ead" name="Default Changelist" comment="[+] Hardcoded Kill Effects, will do them config later" />
+    <list default="true" id="3c41a8b3-4728-4d1b-a454-565d875f3ead" name="Default Changelist" comment="[/] Remove this too">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Array.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Array.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/kit/TeamFightMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/kit/TeamFightMatch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/PlayerUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/PlayerUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/timer/impl/EnderpearlTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/timer/impl/EnderpearlTimer.java" afterDir="false" />
+    </list>
+    <list id="98af5f59-0eb8-4224-8bcc-2672b4b8c7c4" name="[/] Remove this too" comment="[/] Remove this too" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -153,6 +160,7 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="3c41a8b3-4728-4d1b-a454-565d875f3ead" name="Default Changelist" comment="" />
+      <changelist id="98af5f59-0eb8-4224-8bcc-2672b4b8c7c4" name="[+] Hardcoded Kill Effects, will do them config later" comment="" />
       <created>1626972481924</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -169,7 +177,7 @@
       <workItem from="1644042891229" duration="551000" />
       <workItem from="1645465082504" duration="2290000" />
       <workItem from="1645540056102" duration="1771000" />
-      <workItem from="1645599183269" duration="8880000" />
+      <workItem from="1645599183269" duration="10699000" />
     </task>
     <task id="LOCAL-00001" summary="[+] Match Recode&#10;[/] Fixed Tournament Bugs &#10;[/] Kill Effects Done &#10;[+] Kill Effects Menu">
       <created>1628600992379</created>
@@ -479,7 +487,21 @@
       <option name="project" value="LOCAL" />
       <updated>1645614349061</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="[+] Hardcoded Kill Effects, will do them config later">
+      <created>1645614486816</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1645614486817</updated>
+    </task>
+    <task id="LOCAL-00046" summary="[/] Remove this too">
+      <created>1645614532917</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1645614532917</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -499,7 +521,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="[+] Silent and Build Mode, Visibility Cooldown" />
     <MESSAGE value="[/] Fixed Arena Setup and Saving errors.&#10;[/] Fixed Startup noSuchMethod errors. (Thanks to @Astonic &amp; @mozart )&#10;[+] Added Save location for kit gamerules &quot;boxing&quot; and &quot;battlerush. (Thanks to @Scyes )&#10;[+] Added /arena setbuildheight and /arena setfalldeathheight commands &#10;[/] Fixed Java/Yeet Class not found errors." />
     <MESSAGE value="[+] LMS Event&#10;[+] Completely Recoded Tournaments" />
     <MESSAGE value="[/] Changes to how things are stored" />
@@ -524,7 +545,8 @@
     <MESSAGE value="[/] More Menu Work" />
     <MESSAGE value="[/] Removed Events | I am officially an idiot" />
     <MESSAGE value="[+] Hardcoded Kill Effects, will do them config later" />
-    <option name="LAST_COMMIT_MESSAGE" value="[+] Hardcoded Kill Effects, will do them config later" />
+    <MESSAGE value="[/] Remove this too" />
+    <option name="LAST_COMMIT_MESSAGE" value="[/] Remove this too" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

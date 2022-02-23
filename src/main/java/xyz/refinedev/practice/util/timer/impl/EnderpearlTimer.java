@@ -76,7 +76,7 @@ public class EnderpearlTimer extends PlayerTimer implements Listener {
 			return;
 		}
 		Player player = event.getPlayer();
-		if (player.hasPotionEffect(PotionEffectType.WEAKNESS)) {
+		if (player.hasPotionEffect(PotionEffectType.WEAKNESS) || player.hasMetadata("denyMove")) {
 			event.setCancelled(true);
 			return;
 		}

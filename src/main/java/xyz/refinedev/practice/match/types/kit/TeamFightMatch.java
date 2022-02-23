@@ -46,7 +46,7 @@ public class TeamFightMatch extends TeamMatch {
         teamPlayer.setPlayerSpawn(spawn);
 
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-        Party party = plugin.getPartyManager().getPartyByUUID(player.getUniqueId());
+        Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
         String kit = party.getKits().get(player.getUniqueId());
 
         switch (kit) {
