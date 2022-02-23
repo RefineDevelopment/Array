@@ -16,10 +16,11 @@ import xyz.refinedev.practice.util.menu.Menu;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 public class KitEditorSelectKitMenu extends Menu {
 
-    private final Array plugin;
+    public KitEditorSelectKitMenu(Array plugin) {
+        super(plugin);
+    }
 
     @Override
     public String getTitle(Player player) {
@@ -30,7 +31,7 @@ public class KitEditorSelectKitMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        List<Kit> kits = plugin.getKitManager().getKits().stream()
+        List<Kit> kits = this.getPlugin().getKitManager().getKits().stream()
                 .filter(Kit::isEnabled)
                 .sorted(Comparator.comparing(k -> k.getGameRules().isEditable(), Comparator.reverseOrder()))
                 .collect(Collectors.toList());
@@ -65,11 +66,11 @@ public class KitEditorSelectKitMenu extends Menu {
                 return;
             }
 
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
             profile.getKitEditor().setSelectedKit(kit);
             profile.getKitEditor().setPreviousState(profile.getState());
 
-            new KitManagementMenu(plugin, kit).openMenu(player);
+            new KitManagementMenu(this.getPlugin(), kit).openMenu(player);
         }
 
     }

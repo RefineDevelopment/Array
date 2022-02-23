@@ -673,7 +673,7 @@ public class MatchListener implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+   /*@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
         Projectile projectile = event.getEntity();
         if (projectile instanceof Arrow) {
@@ -699,7 +699,7 @@ public class MatchListener implements Listener {
                 }
             }
         }
-    }
+    }*/
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerTeleportPearl(PlayerTeleportEvent event) {

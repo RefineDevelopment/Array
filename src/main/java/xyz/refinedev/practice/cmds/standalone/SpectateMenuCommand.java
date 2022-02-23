@@ -30,6 +30,7 @@ public class SpectateMenuCommand {
             player.sendMessage(Locale.MATCH_NOT_IN_SELF.toString());
             return;
         }
-        new MatchSpectateMenu(profile.getMatch()).openMenu(player);
+        MatchSpectateMenu menu = new MatchSpectateMenu(plugin, profile.getMatch());
+        menu.openMenu(player);
     }
 }

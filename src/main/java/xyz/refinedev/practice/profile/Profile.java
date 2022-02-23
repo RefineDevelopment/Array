@@ -43,7 +43,7 @@ public class Profile {
     private int kills, deaths, experience;
     private ProfileState state = ProfileState.IN_LOBBY;
 
-    private transient UUID tournament, party, event;//, match, queue;
+    private transient UUID tournament, party; //, event, match, queue;
     private UUID clan, queue;
     //TODO turn into uniqueId
     private Match match;
@@ -146,7 +146,7 @@ public class Profile {
     }
 
     public boolean isInEvent() {
-        return event != null;
+        return false;
     }
 
     public boolean isInTournament() {

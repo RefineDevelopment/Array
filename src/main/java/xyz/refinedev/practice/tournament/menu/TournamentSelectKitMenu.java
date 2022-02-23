@@ -22,10 +22,12 @@ import java.util.Map;
 
 public class TournamentSelectKitMenu extends Menu {
 
-    private final FoldersConfigurationFile config = this.getPlugin().getMenuHandler().getConfigByName("general");
+    private final FoldersConfigurationFile config;
 
     public TournamentSelectKitMenu(Array plugin) {
         super(plugin);
+
+        this.config = this.getPlugin().getMenuHandler().getConfigByName("general");
     }
 
     /**
@@ -49,7 +51,7 @@ public class TournamentSelectKitMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
         for ( Kit kit : this.getPlugin().getKitManager().getKits() ) {
-            buttons.put(buttons.size(), new TournamentKitButton(kit));
+            buttons.put(buttons.size(), new TournamentKitButton(this.getPlugin(), kit));
         }
         return buttons;
     }

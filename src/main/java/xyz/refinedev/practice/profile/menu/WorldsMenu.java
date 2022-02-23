@@ -3,6 +3,7 @@ package xyz.refinedev.practice.profile.menu;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.menu.buttons.WorldButton;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.menu.Button;
@@ -21,6 +22,10 @@ import java.util.Map;
  */
 
 public class WorldsMenu extends Menu {
+
+    public WorldsMenu(Array plugin) {
+        super(plugin);
+    }
 
     @Override
     public String getTitle(Player player) {

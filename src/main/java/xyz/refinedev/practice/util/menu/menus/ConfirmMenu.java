@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.util.menu.menus;
 
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.menu.TypeCallback;
@@ -16,7 +17,9 @@ public class ConfirmMenu extends Menu {
 	private boolean closeAfterResponse;
 	private Button[] centerButtons;
 
-	public ConfirmMenu(String title, TypeCallback<Boolean> response, boolean closeAfter, Button... centerButtons) {
+	public ConfirmMenu(Array plugin, String title, TypeCallback<Boolean> response, boolean closeAfter, Button... centerButtons) {
+		super(plugin);
+
 		this.title = title;
 		this.response = response;
 		this.closeAfterResponse = closeAfter;
@@ -28,8 +31,8 @@ public class ConfirmMenu extends Menu {
 		HashMap<Integer, Button> buttons = new HashMap<>();
 		for (int x = 0; x < 3; x++) {
 			for (int y = 0; y < 3; y++) {
-				buttons.put(getSlot(x, y), new ConfirmationButton(true, response, closeAfterResponse));
-				buttons.put(getSlot(8 - x, y), new ConfirmationButton(false, response, closeAfterResponse));
+				buttons.put(getSlot(x, y), new ConfirmationButton(this.getPlugin(), true, response, closeAfterResponse));
+				buttons.put(getSlot(8 - x, y), new ConfirmationButton(this.getPlugin(), false, response, closeAfterResponse));
 			}
 		}
 		if (centerButtons != null) {

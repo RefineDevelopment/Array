@@ -2,6 +2,7 @@ package xyz.refinedev.practice.profile.settings.menu;
 
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.config.ConfigHandler;
 import xyz.refinedev.practice.profile.settings.ProfileSettingsType;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.menu.Button;
@@ -21,12 +22,12 @@ import java.util.Map;
 
 public class ProfileSettingsMenu extends Menu {
 
-    private final Array plugin;
     private final FoldersConfigurationFile config;
 
     public ProfileSettingsMenu(Array plugin) {
-        this.plugin = plugin;
-        this.config = plugin.getMenuHandler().getConfigByName("profile_settings");
+        super(plugin);
+                
+        this.config = this.getPlugin().getMenuHandler().getConfigByName("profile_settings");
     }
 
     /**
@@ -59,12 +60,13 @@ public class ProfileSettingsMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
+        ConfigHandler configHandler = this.getPlugin().getConfigHandler();
         String key = "BUTTONS.";
 
         for ( ProfileSettingsType type : ProfileSettingsType.values() ) {
-            if (type.equals(ProfileSettingsType.TOGGLETABSTYLE) && !plugin.getConfigHandler().isTAB_ENABLED()) continue;
-            if (type.equals(ProfileSettingsType.TOGGLECPSONSCOREBOARD) && !plugin.getConfigHandler().isCPS_SCOREBOARD_SETTING()) continue;
-            if (type.equals(ProfileSettingsType.TOGGLEPINGONSCOREBOARD) && !plugin.getConfigHandler().isPING_SCOREBOARD_SETTING()) continue;
+            if (type.equals(ProfileSettingsType.TOGGLETABSTYLE) && !configHandler.isTAB_ENABLED()) continue;
+            if (type.equals(ProfileSettingsType.TOGGLECPSONSCOREBOARD) && !configHandler.isCPS_SCOREBOARD_SETTING()) continue;
+            if (type.equals(ProfileSettingsType.TOGGLEPINGONSCOREBOARD) && !configHandler.isPING_SCOREBOARD_SETTING()) continue;
 
             buttons.put(config.getInteger(key + type.name() + ".SLOT"), new SettingsButton(type));
         }

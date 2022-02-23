@@ -195,7 +195,8 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
-        new PartyDuelMenu().openMenu(player);
+        PartyDuelMenu menu = new PartyDuelMenu(plugin);
+        menu.openMenu(player);
     }
 
     @Command(name = "join", aliases = "accept" ,desc = "Join a party using its invitation", usage = "<leader>")

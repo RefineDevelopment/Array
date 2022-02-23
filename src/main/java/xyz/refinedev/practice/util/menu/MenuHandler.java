@@ -7,9 +7,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.event.Event;
-import xyz.refinedev.practice.event.menu.EventSelectMenu;
-import xyz.refinedev.practice.event.menu.EventTeamMenu;
 import xyz.refinedev.practice.party.menu.PartyEventMenu;
 import xyz.refinedev.practice.party.menu.PartySettingsMenu;
 import xyz.refinedev.practice.profile.Profile;
@@ -240,21 +237,12 @@ public class MenuHandler {
     public Menu findMenu(Player player, String name) {
         Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         switch (name) {
-            case "event_team": {
-                if (profile.isInEvent()) {
-                    Event event = this.plugin.getEventManager().getEventByUUID(profile.getEvent());
-                    return new EventTeamMenu(event);
-                }
-                break;
-            }
             case "kill_effects": {
                 if (this.getConfigByName("kill_effects").getBoolean("PAGINATED")) {
                     return new KEPaginatedMenu(plugin);
-                } else {
-                    return new KEMenu(plugin);
                 }
+                return new KEMenu(plugin);
             }
-            case "event_host": return new EventSelectMenu(plugin);
             case "party_events": return new PartyEventMenu(plugin);
             case "party_settings": return new PartySettingsMenu(plugin);
             case "profile_menu": return new ProfileMenu(plugin, player);
@@ -263,13 +251,12 @@ public class MenuHandler {
                 MenuData menuData = getMenuDataByName(name);
                 if (menuData == null) return null;
                 if (menuData.isPaginated()) {
-                    return new CustomPaginatedMenu(menuData);
+                    return new CustomPaginatedMenu(plugin, menuData);
                 } else {
-                    return new CustomMenu(menuData);
+                    return new CustomMenu(plugin, menuData);
                 }
             }
         }
-        return null;
     }
 
 }

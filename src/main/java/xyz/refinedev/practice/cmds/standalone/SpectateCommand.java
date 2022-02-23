@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
@@ -66,10 +65,10 @@ public class SpectateCommand {
         if (targetProfile.isInFight() || targetProfile.isInTournament()) {
             Match match = profile.getMatch();
             this.plugin.getMatchManager().addSpectator(match, player, target);
-        } else if (targetProfile.isInEvent()) {
+        }/* else if (targetProfile.isInEvent()) {
             Event event = this.plugin.getEventManager().getEventByUUID(profile.getEvent());
             this.plugin.getEventManager().addSpectator(event, player.getUniqueId());
-        }
+        }*/
     }
 
     @Command(name = "show", aliases = "view", desc = "Show spectators")

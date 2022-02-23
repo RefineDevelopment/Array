@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.duel.menu.buttons;
 
-import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -27,12 +26,16 @@ import java.util.List;
  */
 
 //TODO: Configure
-@RequiredArgsConstructor
 public class DuelKitButton extends Button {
 
-    private final Array plugin;
     private final DuelSelectKitMenu menu;
     private final Kit kit;
+
+    public DuelKitButton(Array plugin, DuelSelectKitMenu menu, Kit kit) {
+        super(plugin);
+        this.menu = menu;
+        this.kit = kit;
+    }
 
     @Override
     public ItemStack getButtonItem(Player player) {
@@ -40,30 +43,31 @@ public class DuelKitButton extends Button {
         lore.add("");
         lore.add("&cClick to send a duel with this kit.");
         return new ItemBuilder(kit.getDisplayIcon())
-                .name(kit.getDisplayName()).lore(lore)
+                .name(kit.getDisplayName())
+                .lore(lore)
                 .clearFlags()
                 .build();
     }
 
     @Override
     public void clicked(Player player, ClickType clickType) {
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
 
         if (profile.getDuelProcedure() == null) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
         }
 
-        Arena arena = plugin.getArenaManager().getByKit(kit);
+        Arena arena = this.getPlugin().getArenaManager().getByKit(kit);
 
         profile.getDuelProcedure().setKit(kit);
         profile.getDuelProcedure().setArena(arena);
 
-        menu.setClosedByMenu(true);
+        this.menu.setClosedByMenu(true);
         player.closeInventory();
 
         if (player.hasPermission("array.duel.arena")) {
-            new DuelSelectArenaMenu(plugin).openMenu(player);
+            new DuelSelectArenaMenu(this.getPlugin()).openMenu(player);
         } else {
             profile.getDuelProcedure().send();
         }

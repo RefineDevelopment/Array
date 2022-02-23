@@ -5,9 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.event.Event;
-import xyz.refinedev.practice.event.meta.player.EventPlayer;
-import xyz.refinedev.practice.event.meta.player.EventPlayerState;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.hotbar.HotbarItem;
@@ -125,7 +122,7 @@ public class HotbarManager {
                 boolean partyCreateEnabled = partyCreate.isEnabled();
 
                 boolean activeRematch = profile.getRematchData() != null && rematchEnabled;
-                boolean activeEvent = plugin.getEventManager().getActiveEvent() != null && eventJoinEnabled;
+                boolean activeEvent = false; //plugin.getEventManager().getActiveEvent() != null && eventJoinEnabled;
 
                 int eventRematchAddSlot = config.getInteger("HOTBAR_ITEMS.EVENT_JOIN.MOVE_SLOT_TO.REMATCH_ADDED");
                 int partyEventSlot = config.getInteger("HOTBAR_ITEMS.PARTY_CREATE.MOVE_SLOT_TO.EVENT_JOIN_ADDED");
@@ -184,7 +181,7 @@ public class HotbarManager {
 
                 break;
             }
-            case EVENT: {
+            /*case EVENT: {
                 Collection<HotbarItem> eventItems = items.stream().filter(HotbarItem::isEnabled).filter(item -> (item.getLayout().equals(HotbarLayout.EVENT) || item.getLayout().equals(HotbarLayout.EVENT_SPECTATE) || item.getLayout().equals(HotbarLayout.EVENT_WAITING))).collect(Collectors.toList());
                 eventItems.addAll(getCustomItems().stream().filter(item -> item.getLayout().equals(HotbarLayout.EVENT) || item.getLayout().equals(HotbarLayout.EVENT_SPECTATE) || item.getLayout().equals(HotbarLayout.EVENT_WAITING)).collect(Collectors.toList()));
 
@@ -218,7 +215,7 @@ public class HotbarManager {
                     }
                 }
                 if (profile.isSpectating()) PlayerUtil.spectator(profile.getPlayer());
-            }
+            }*/
             case MATCH_SPECTATE: {
                 Collection<HotbarItem> matchItems = items.stream().filter(HotbarItem::isEnabled).filter(item -> item.getLayout().equals(HotbarLayout.MATCH_SPECTATE)).collect(Collectors.toList());
                 matchItems.addAll(getCustomItems().stream().filter(item -> item.getLayout().equals(HotbarLayout.MATCH_SPECTATE)).collect(Collectors.toList()));

@@ -12,11 +12,15 @@ import xyz.refinedev.practice.util.menu.Menu;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequiredArgsConstructor
 public class PartyKitMenu extends Menu {
 
-    private final Array plugin = this.getPlugin();
     private final PartyEventType partyEventType;
+
+    public PartyKitMenu(Array plugin, PartyEventType type) {
+        super(plugin);
+        
+        this.partyEventType = type;
+    }
 
     /**
      * Get menu's title
@@ -38,7 +42,7 @@ public class PartyKitMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        for (Kit kit : plugin.getKitManager().getKits()) {
+        for (Kit kit : this.getPlugin().getKitManager().getKits()) {
             if (!kit.isEnabled() || !kit.isParty() || !this.valid(partyEventType, kit)) continue;
 
             buttons.put(buttons.size(), new PartyKitButton(this.partyEventType, kit));

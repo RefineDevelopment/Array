@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.leaderboards.menu;
 
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.leaderboards.menu.buttons.ClanLeaderboardsButton;
 import xyz.refinedev.practice.leaderboards.menu.buttons.GlobalLeaderboardsButton;
@@ -14,7 +15,9 @@ import java.util.Map;
 
 public class LeaderboardsMenu extends Menu {
 
-    public LeaderboardsMenu() {
+    public LeaderboardsMenu(Array plugin) {
+        super(plugin);
+
         this.setAutoUpdate(true);
         this.setPlaceholder(true);
     }
@@ -37,7 +40,7 @@ public class LeaderboardsMenu extends Menu {
 
         for ( Kit kit : this.getPlugin().getKitManager().getKits()) {
             if (kit.getGameRules().isRanked() && kit.isEnabled() && !kit.equals(this.getPlugin().getKitManager().getTeamFight())) {
-                buttons.put(getSlot(x++, y), new KitLeaderboardsButton(kit));
+                buttons.put(getSlot(x++, y), new KitLeaderboardsButton(this.getPlugin(), kit));
                 if (x == 8) {
                     y++;
                     x=1;

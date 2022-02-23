@@ -11,10 +11,10 @@ import xyz.refinedev.practice.util.menu.pagination.PaginatedMenu;
 import java.util.*;
 
 public class PartyDuelMenu extends PaginatedMenu {
-
-    private final Array plugin = this.getPlugin();
-
-    public PartyDuelMenu() {
+    
+    public PartyDuelMenu(Array plugin) {
+        super(plugin);
+        
         this.setPlaceholder(true);
         this.setAutoUpdate(true);
     }
@@ -28,13 +28,13 @@ public class PartyDuelMenu extends PaginatedMenu {
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        List<Party> parties = new ArrayList<>(plugin.getPartyManager().getParties().values());
+        List<Party> parties = new ArrayList<>(this.getPlugin().getPartyManager().getParties().values());
         int index = 0;
 
         parties.sort(Comparator.comparing(p -> p.getPlayers().size()));
 
         for (Party party : parties) {
-            Profile profile = plugin.getProfileManager().getProfileByUUID(party.getLeader().getUniqueId());
+            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(party.getLeader().getUniqueId());
             if (party.isMember(player.getUniqueId()) || !profile.getSettings().isReceiveDuelRequests()) continue;
 
             buttons.put(index++, new PartyDuelButton(party));

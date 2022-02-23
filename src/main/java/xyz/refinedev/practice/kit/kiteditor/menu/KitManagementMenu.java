@@ -22,13 +22,12 @@ import java.util.Map;
 
 public class KitManagementMenu extends Menu {
 
-    private final Array plugin;
     private final Button PLACEHOLDER = Button.placeholder(Material.STAINED_GLASS_PANE, (byte) 7, " ");
 
     private final Kit kit;
 
     public KitManagementMenu(Array plugin, Kit kit) {
-        this.plugin = plugin;
+        super(plugin);
         this.kit = kit;
 
         this.setPlaceholder(true);
@@ -43,7 +42,7 @@ public class KitManagementMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
         KitInventory[] kitInventories= profile.getStatisticsData().get(kit).getKitInventories();
 
         if (kitInventories == null) {
@@ -62,7 +61,7 @@ public class KitManagementMenu extends Menu {
             buttons.put(startPos + 36, kitInventory == null ? PLACEHOLDER : new DeleteKitButton(kitInventory));
         }
 
-        buttons.put(36, new BackButton(new KitEditorSelectKitMenu()));
+        buttons.put(36, new BackButton(new KitEditorSelectKitMenu(this.getPlugin())));
 
         return buttons;
     }
@@ -70,7 +69,7 @@ public class KitManagementMenu extends Menu {
     @Override
     public void onClose(Player player) {
         if (!isClosedByMenu()) {
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
             profile.setState(profile.getKitEditor().getPreviousState());
             profile.getKitEditor().setSelectedKit(null);
         }
@@ -97,10 +96,10 @@ public class KitManagementMenu extends Menu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
             profile.getStatisticsData().get(kit).deleteKit(kitInventory);
 
-            new KitManagementMenu(plugin, profile.getKitEditor().getSelectedKit()).openMenu(player);
+            new KitManagementMenu(this.getPlugin(), profile.getKitEditor().getSelectedKit()).openMenu(player);
         }
 
     }
@@ -119,7 +118,7 @@ public class KitManagementMenu extends Menu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
             Kit kit = profile.getKitEditor().getSelectedKit();
 
             if (kit == null) {
@@ -127,7 +126,7 @@ public class KitManagementMenu extends Menu {
                 return;
             }
 
-            KitInventory kitInventory= new KitInventory(CC.RED + "Kit " + (index + 1));
+            KitInventory kitInventory = new KitInventory(CC.RED + "Kit " + (index + 1));
 
             if (kit.getKitInventory() != null) {
                 if (kit.getKitInventory().getArmor() != null) {
@@ -141,7 +140,7 @@ public class KitManagementMenu extends Menu {
 
             profile.getStatisticsData().get(kit).replaceKit(index, kitInventory);
             profile.getKitEditor().setSelectedKitInventory(kitInventory);
-            new KitEditorMenu(plugin).openMenu(player);
+            new KitEditorMenu(this.getPlugin()).openMenu(player);
         }
 
     }
@@ -166,7 +165,7 @@ public class KitManagementMenu extends Menu {
         public void clicked(Player player, int slot, ClickType clickType, int hotbarSlot) {
             setClosedByMenu(true);
 
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
             profile.getKitEditor().setActive(true);
             profile.getKitEditor().setRename(true);
             profile.getKitEditor().setSelectedKitInventory(kitInventory);
@@ -195,7 +194,7 @@ public class KitManagementMenu extends Menu {
 
         @Override
         public void clicked(Player player, int slot, ClickType clickType, int hotbarSlot) {
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
 
             if (profile.getKitEditor().getSelectedKit() == null) {
                 player.closeInventory();
@@ -213,7 +212,7 @@ public class KitManagementMenu extends Menu {
 
             profile.getKitEditor().setSelectedKitInventory(kit);
 
-            new KitEditorMenu(plugin).openMenu(player);
+            new KitEditorMenu(this.getPlugin()).openMenu(player);
         }
 
     }

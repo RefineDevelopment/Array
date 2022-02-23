@@ -22,9 +22,6 @@ import xyz.refinedev.practice.api.events.profile.ProfileSaveEvent;
 import xyz.refinedev.practice.api.events.profile.SpawnTeleportEvent;
 import xyz.refinedev.practice.duel.DuelRequest;
 import xyz.refinedev.practice.duel.RematchProcedure;
-import xyz.refinedev.practice.event.Event;
-import xyz.refinedev.practice.event.meta.player.EventPlayer;
-import xyz.refinedev.practice.event.meta.player.EventPlayerState;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.match.Match;
@@ -326,12 +323,12 @@ public class ProfileManager {
             }
         } else if (profile.isInQueue()) {
             player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.QUEUE, profile));
-        } else if (profile.isInEvent()) {
+        /*} else if (profile.isInEvent()) {
             Event event = this.plugin.getEventManager().getEventByUUID(profile.getEvent());
             if (event.getEventPlayer(profile.getUniqueId()).getState().equals(EventPlayerState.ELIMINATED)) {
                 PlayerUtil.spectator(player);
             }
-            player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.EVENT, profile));
+            player.getInventory().setContents(plugin.getHotbarManager().getLayout(HotbarLayout.EVENT, profile));*/
         } else if (profile.isInMatch()) {
             Match match = profile.getMatch();
             if (match.getTeamPlayer(player) != null && !match.getTeamPlayer(player).isAlive() && match.isTeamMatch()) {
@@ -357,7 +354,7 @@ public class ProfileManager {
         if (profile.isInLobby() && !profile.getKitEditor().isActive()) {
             boolean update = this.refreshRematch(profile);
 
-            boolean activeEvent = plugin.getEventManager().getActiveEvent() != null && plugin.getEventManager().getActiveEvent().isWaiting();
+            boolean activeEvent = false; //plugin.getEventManager().getActiveEvent() != null && plugin.getEventManager().getActiveEvent().isWaiting();
             int eventSlot = player.getInventory().first(plugin.getHotbarManager().getHotbarItem(HotbarType.EVENT_JOIN).getItem());
 
             if (eventSlot == -1 && activeEvent) {
@@ -511,13 +508,13 @@ public class ProfileManager {
                 hide = false;
             }
         } else if (profile.isSpectating()) {
-            if (profile.isInEvent()) {
+            /*if (profile.isInEvent()) {
                 Event event = plugin.getEventManager().getEventByUUID(profile.getEvent());
                 EventPlayer eventPlayer = event.getEventPlayer(otherPlayer.getUniqueId());
                 if (eventPlayer != null && eventPlayer.getState() == EventPlayerState.WAITING) {
                     hide = false;
                 }
-            } else {
+            } else*/ {
                 Match match = profile.getMatch();
                 TeamPlayer teamPlayer = match.getTeamPlayer(otherPlayer);
                 if (teamPlayer != null && teamPlayer.isAlive()) {
@@ -528,7 +525,7 @@ public class ProfileManager {
                     }
                 }
             }
-        } else if (profile.isInEvent()) {
+        }/* else if (profile.isInEvent()) {
             Event event = plugin.getEventManager().getEventByUUID(profile.getEvent());
             if (!event.isSpectating(otherPlayer.getUniqueId())) {
                 EventPlayer eventPlayer = event.getEventPlayer(otherPlayer.getUniqueId());
@@ -536,7 +533,7 @@ public class ProfileManager {
                     hide = false;
                 }
             }
-        }
+        }*/
 
         if (plugin.getConfigHandler().isNAMETAGS_ENABLED()) {
             plugin.getNameTagHandler().reloadPlayer(player, otherPlayer);
@@ -562,34 +559,6 @@ public class ProfileManager {
             return plugin.getDivisionsManager().getDivisionByXP(profile.getExperience());
         }
         return plugin.getDivisionsManager().getDivisionByELO(profile.getGlobalElo());
-    }
-
-    /**
-     * Apply the Enderpearl cooldown to the profile
-     * and send it to LunarAPI if they are on Lunar
-     *
-     * @param cooldown {@link Cooldown}
-     */
-    public void setEnderpearlCooldown(Profile profile, Cooldown cooldown) {
-        profile.setEnderpearlCooldown(cooldown);
-        Player player = profile.getPlayer();
-
-        if (plugin.getServer().getPluginManager().isPluginEnabled("LunarClient-API"))
-            LunarClientAPICooldown.sendCooldown(player, "Enderpearl");
-    }
-
-    /**
-     * Apply the Bow cooldown to the profile
-     * and send it to LunarAPI if they are on Lunar
-     *
-     * @param cooldown {@link Cooldown}
-     */
-    public void setBowCooldown(Profile profile, Cooldown cooldown) {
-        profile.setBowCooldown(cooldown);
-        Player player = profile.getPlayer();
-
-        if (plugin.getServer().getPluginManager().isPluginEnabled("LunarClient-API"))
-            LunarClientAPICooldown.sendCooldown(player, "Bow");
     }
 
     /**

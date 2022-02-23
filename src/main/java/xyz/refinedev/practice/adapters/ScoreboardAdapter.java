@@ -5,7 +5,6 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.clan.Clan;
-import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.managers.*;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
@@ -641,7 +640,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
     private List<String> getEventLines(Player player) {
         List<String> lines = new ArrayList<>();
 
-        ProfileManager profileManager = this.plugin.getProfileManager();
+        /*ProfileManager profileManager = this.plugin.getProfileManager();
         EventManager eventManager = this.plugin.getEventManager();
 
         Profile profile = profileManager.getProfileByUUID(player.getUniqueId());
@@ -753,7 +752,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                             .replace("<event_duration>", event.getDuration())));
                 }
             }
-        }
+        }*/
 
         return lines;
     }

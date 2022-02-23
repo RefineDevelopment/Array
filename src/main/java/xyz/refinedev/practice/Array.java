@@ -9,9 +9,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.refinedev.practice.adapters.NameTagAdapter;
 import xyz.refinedev.practice.adapters.ScoreboardAdapter;
@@ -19,7 +16,6 @@ import xyz.refinedev.practice.adapters.TablistAdapter;
 import xyz.refinedev.practice.api.API;
 import xyz.refinedev.practice.api.ArrayAPI;
 import xyz.refinedev.practice.config.ConfigHandler;
-import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.hook.core.CoreHandler;
 import xyz.refinedev.practice.hook.hologram.HologramHandler;
 import xyz.refinedev.practice.hook.placeholderapi.LeaderboardPlaceholders;
@@ -46,6 +42,8 @@ import xyz.refinedev.tablist.TablistHandler;
 import java.util.Random;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
+
+//import xyz.refinedev.practice.event.EventType;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -80,7 +78,7 @@ public class Array extends JavaPlugin {
 
     private KitManager kitManager;
     private ClanManager clanManager;
-    private EventManager eventManager;
+    //private EventManager eventManager;
     private MatchManager matchManager;
     private ArenaManager arenaManager;
     private PartyManager partyManager;
@@ -175,8 +173,8 @@ public class Array extends JavaPlugin {
         this.partyManager = new PartyManager(this);
         this.partyManager.init();
 
-        this.eventManager = new EventManager(this, eventsConfig);
-        this.eventManager.init();
+        /*this.eventManager = new EventManager(this, eventsConfig);
+        this.eventManager.init();*/
 
         this.tournamentManager = new TournamentManager(this);
 
@@ -223,7 +221,7 @@ public class Array extends JavaPlugin {
         this.configHandler.save();
         this.killEffectManager.exportConfig();
         this.pvpClassManager.shutdown();
-        this.eventManager.shutdown();
+        //this.eventManager.shutdown();
         this.leaderboardsManager.shutdown();
         this.queueManager.shutdown();
 

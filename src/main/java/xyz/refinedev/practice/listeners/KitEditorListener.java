@@ -26,7 +26,8 @@ public class KitEditorListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
-        Profile profile = plugin.getProfileManager().getProfileByUUID(event.getPlayer().getUniqueId());
+        Player player = event.getPlayer();
+        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
         KitEditor kitEditor = profile.getKitEditor();
         if (kitEditor.isRenaming()) {
             event.setCancelled(true);
@@ -47,10 +48,11 @@ public class KitEditorListener implements Listener {
             kitEditor.setRename(false);
 
             if (!profile.isInFight()) {
-                new KitManagementMenu(plugin, kitEditor.getSelectedKit()).openMenu(plugin, event.getPlayer());
+                KitManagementMenu menu = new KitManagementMenu(plugin, kitEditor.getSelectedKit());
+                menu.openMenu(player);
             }
 
-            event.getPlayer().sendMessage(Locale.KITEDITOR_RENAMED.toString().replace("<custom_name>", customName));
+            player.sendMessage(Locale.KITEDITOR_RENAMED.toString().replace("<custom_name>", customName));
         }
     }
 

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.kit.kiteditor.KitEditor;
 import xyz.refinedev.practice.kit.kiteditor.menu.KitEditorSelectKitMenu;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.command.annotation.Command;
@@ -31,6 +32,7 @@ public class KitEditorCMD {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
         }
-         new KitEditorSelectKitMenu().openMenu(player);
+        KitEditorSelectKitMenu menu = new KitEditorSelectKitMenu(plugin);
+        menu.openMenu(player);
     }
 }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
-import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.command.annotation.Command;
@@ -38,7 +37,7 @@ public class StopSpecCommand {
             Match match = profile.getMatch();
             this.plugin.getMatchManager().removeSpectator(match, player);
         } else if (profile.isInEvent()) {
-            this.plugin.getEventManager().removeSpectator(player.getUniqueId());
+            //this.plugin.getEventManager().removeSpectator(player.getUniqueId());
         }
 
     }

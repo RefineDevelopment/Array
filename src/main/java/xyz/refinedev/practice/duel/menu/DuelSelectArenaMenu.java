@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.ArenaType;
+import xyz.refinedev.practice.duel.menu.buttons.DuelArenaButton;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
@@ -18,10 +19,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 public class DuelSelectArenaMenu extends PaginatedMenu {
 
-    private final Array plugin;
+    public DuelSelectArenaMenu(Array plugin) {
+        super(plugin);
+    }
 
     @Override
     public String getPrePaginatedTitle(Player player) {
@@ -31,9 +33,9 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
     @Override
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
 
-        List<Arena> arenas = plugin.getArenaManager().getArenas().stream().filter(arena -> {
+        List<Arena> arenas = this.getPlugin().getArenaManager().getArenas().stream().filter(arena -> {
             if (!arena.isSetup()) return false;
             if (arena.isDuplicate()) return false;
             if (!arena.getKits().contains(profile.getDuelProcedure().getKit())) return false;
@@ -42,7 +44,7 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
         }).collect(Collectors.toList());
 
         for ( Arena arena : arenas) {
-            buttons.put(buttons.size(), new SelectArenaButton(arena));
+            buttons.put(buttons.size(), new DuelArenaButton(this.getPlugin(), this, arena));
         }
 
         return buttons;
@@ -52,33 +54,8 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
     public void onClose(Player player) {
         if (this.isClosedByMenu()) return;
 
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
         profile.setDuelProcedure(null);
-    }
-
-    @AllArgsConstructor
-    private class SelectArenaButton extends Button {
-
-        private final Arena arena;
-
-        @Override
-        public ItemStack getButtonItem(Player player) {
-            return new ItemBuilder(arena.getDisplayIcon())
-                    .name(arena.getDisplayName())
-                    .build();
-        }
-
-        @Override
-        public void clicked(Player player, ClickType clickType) {
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-
-            profile.getDuelProcedure().setArena(arena);
-            profile.getDuelProcedure().send();
-
-            setClosedByMenu(true);
-            player.closeInventory();
-        }
-
     }
 
 }

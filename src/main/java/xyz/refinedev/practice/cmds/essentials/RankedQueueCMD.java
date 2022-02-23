@@ -49,7 +49,8 @@ public class RankedQueueCMD {
             }
         }
         if (!profile.isBusy()) {
-            new QueueSelectKitMenu(QueueType.RANKED).openMenu(player);
+            QueueSelectKitMenu menu = new QueueSelectKitMenu(plugin, QueueType.RANKED);
+            menu.openMenu(player);
         } else {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
         }

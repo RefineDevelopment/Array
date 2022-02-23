@@ -22,11 +22,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 public class QueueSelectKitMenu extends Menu {
 
-    private final Array plugin = this.getPlugin();
     private final QueueType queueType;
+
+    public QueueSelectKitMenu(Array plugin, QueueType queueType) {
+        super(plugin);
+        
+        this.queueType = queueType;
+    }
+
 
     @Override
     public String getTitle(Player player) {
@@ -37,7 +42,7 @@ public class QueueSelectKitMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
         
-        for (Queue queue : this.plugin.getQueueManager().getQueues().values()) {
+        for (Queue queue : this.getPlugin().getQueueManager().getQueues().values()) {
             if (queue.getType() == this.queueType) {
                 buttons.put(buttons.size(), new SelectKitButton(queue));
             }
@@ -52,7 +57,7 @@ public class QueueSelectKitMenu extends Menu {
 
         @Override
         public ItemStack getButtonItem(Player player) {
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
 
             List<String> lore = new ArrayList<>();
             this.getLore().forEach(lines -> lore.add(CC.translate(this.replace(profile, lines))));
@@ -76,17 +81,17 @@ public class QueueSelectKitMenu extends Menu {
 
             switch (queueType) {
                 case UNRANKED: {
-                    plugin.getQueueManager().addPlayer(queue, player, 0);
+                    this.getPlugin().getQueueManager().addPlayer(queue, player, 0);
                     break;
                 }
                 case RANKED: {
                     ProfileStatistics stats = profile.getStatisticsData().get(this.queue.getKit());
-                    plugin.getQueueManager().addPlayer(queue, player, stats.getElo());
+                    this.getPlugin().getQueueManager().addPlayer(queue, player, stats.getElo());
                     break;
                 }
                 case CLAN: {
-                    Clan clan = plugin.getClanManager().getByUUID(profile.getClan());
-                    plugin.getQueueManager().addPlayer(queue, player, clan.getElo());
+                    Clan clan = this.getPlugin().getClanManager().getByUUID(profile.getClan());
+                    this.getPlugin().getQueueManager().addPlayer(queue, player, clan.getElo());
                     break;
                 }
             }
@@ -94,7 +99,7 @@ public class QueueSelectKitMenu extends Menu {
 
         public String replace(Profile profile, String input) {
             ProfileStatistics stats = profile.getStatisticsData().get(this.queue.getKit());
-            Clan clan = plugin.getClanManager().getByUUID(profile.getClan());
+            Clan clan = this.getPlugin().getClanManager().getByUUID(profile.getClan());
 
             input = input.replace("<in_queue>", String.valueOf(this.queue.getPlayers().size()))
                          .replace("<queue_elo>", String.valueOf(queueType == QueueType.RANKED ?
@@ -106,7 +111,7 @@ public class QueueSelectKitMenu extends Menu {
         public List<String> getLore() {
             List<String> lore = new ArrayList<>();
 
-           for ( String line : plugin.getConfigHandler().getQUEUE_LORE()) {
+           for ( String line : this.getPlugin().getConfigHandler().getQUEUE_LORE()) {
                if (line.contains("<description>")) {
                    line = line.replace("<description>", "");
                    lore.addAll(this.queue.getKit().getKitDescription().stream().map(CC::translate).collect(Collectors.toList()));

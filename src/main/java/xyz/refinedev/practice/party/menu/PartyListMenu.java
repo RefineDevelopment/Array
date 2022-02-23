@@ -12,10 +12,12 @@ import xyz.refinedev.practice.util.menu.Menu;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequiredArgsConstructor
 public class PartyListMenu extends Menu {
 
-    private final Array plugin;
+
+    public PartyListMenu(Array plugin) {
+        super(plugin);
+    }
 
     /**
      * Get menu's title
@@ -37,8 +39,8 @@ public class PartyListMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-        Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
+        Party party = this.getPlugin().getPartyManager().getPartyByUUID(profile.getParty());
         party.getPlayers().forEach(pplayer -> buttons.put(buttons.size(), new PartyListButton(pplayer)));
         return buttons;
     }

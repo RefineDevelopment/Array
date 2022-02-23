@@ -21,10 +21,11 @@ import java.util.Map;
  * Project: Array
  */
 
-@RequiredArgsConstructor
 public class DuelSelectKitMenu extends Menu {
 
-    private final Array plugin;
+    public DuelSelectKitMenu(Array plugin) {
+        super(plugin);
+    }
 
     /**
      * Get menu's title
@@ -45,20 +46,17 @@ public class DuelSelectKitMenu extends Menu {
      */
     @Override
     public Map<Integer, Button> getButtons(Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
         Map<Integer, Button> buttons = new HashMap<>();
 
-        if (profile.hasParty() && plugin.getConfigHandler().isHCF_ENABLED()) {
-            for ( Kit kit : plugin.getKitManager().getKits()) {
-                buttons.put(buttons.size(), new DuelKitButton(plugin, this, kit));
+        for ( Kit kit : this.getPlugin().getKitManager().getKits() ) {
+            if (profile.hasParty() && this.getPlugin().getConfigHandler().isHCF_ENABLED()) {
+                if (kit.equals(this.getPlugin().getKitManager().getTeamFight())) continue;
             }
-        } else {
-            for ( Kit kit : plugin.getKitManager().getKits() ) {
-                if (kit.equals(plugin.getKitManager().getTeamFight())) continue;
 
-                buttons.put(buttons.size(), new DuelKitButton(plugin, this, kit));
-            }
+            buttons.put(buttons.size(), new DuelKitButton(this.getPlugin(), this, kit));
         }
+
         return buttons;
     }
 
@@ -71,7 +69,7 @@ public class DuelSelectKitMenu extends Menu {
     public void onClose(Player player) {
         if (this.isClosedByMenu()) return;
 
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
         profile.setDuelProcedure(null);
     }
 }

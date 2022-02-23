@@ -88,7 +88,7 @@ public class NameTagAdapter extends NameTagProvider {
     public NameTagInfo getEventColor(Profile viewerProfile, Profile targetProfile) {
         Player viewer = viewerProfile.getPlayer();
         Player target = targetProfile.getPlayer();
-        UUID event = targetProfile.getEvent();
+        //UUID event = targetProfile.getEvent();
 
         if (targetProfile.isInEvent()) {
             return createNameTag(plugin.getConfigHandler().getEventColor().toString(), "");

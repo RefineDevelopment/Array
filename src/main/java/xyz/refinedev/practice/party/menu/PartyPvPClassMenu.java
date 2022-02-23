@@ -21,10 +21,8 @@ import java.util.Map;
 
 public class PartyPvPClassMenu extends PaginatedMenu {
 
-    private final Array plugin;
-
     public PartyPvPClassMenu(Array plugin) {
-        this.plugin = plugin;
+        super(plugin);
 
         this.setAutoUpdate(true);
     }
@@ -38,11 +36,11 @@ public class PartyPvPClassMenu extends PaginatedMenu {
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        Party party = plugin.getPartyManager().getPartyByUUID(player.getUniqueId());
+        Party party = this.getPlugin().getPartyManager().getPartyByUUID(player.getUniqueId());
         party.getKits().keySet().removeIf(party::containsPlayer);
 
         if (!party.getPlayers().isEmpty()) {
-            party.getPlayers().forEach(target -> buttons.put(buttons.size(), new PartyHCFButton(plugin, target.getUniqueId())));
+            party.getPlayers().forEach(target -> buttons.put(buttons.size(), new PartyHCFButton(this.getPlugin(), target.getUniqueId())));
         }
         return buttons;
     }

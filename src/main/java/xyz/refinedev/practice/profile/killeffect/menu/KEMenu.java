@@ -21,11 +21,10 @@ import java.util.*;
 
 public class KEMenu extends Menu {
 
-    private final Array plugin;
     private final FoldersConfigurationFile config;
 
     public KEMenu(Array plugin) {
-        this.plugin = plugin;
+        super(plugin);
         this.config = plugin.getMenuHandler().getConfigByName("profile_killeffects");
     }
 
@@ -59,11 +58,11 @@ public class KEMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        List<KillEffect> killEffects = new ArrayList<>(plugin.getKillEffectManager().getKillEffects());
+        List<KillEffect> killEffects = new ArrayList<>(this.getPlugin().getKillEffectManager().getKillEffects());
         killEffects.sort(Comparator.comparing(KillEffect::getPriority));
 
         for ( KillEffect killEffect : killEffects) {
-            buttons.put(buttons.size(), new KEButton(plugin, killEffect));
+            buttons.put(buttons.size(), new KEButton(this.getPlugin(), killEffect));
         }
         return buttons;
     }

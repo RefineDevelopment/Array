@@ -13,13 +13,13 @@ import java.util.Map;
 
 public class PartyEventMenu extends Menu {
 
-    private final Array plugin;
     private final FoldersConfigurationFile config;
 
     public PartyEventMenu(Array plugin) {
-        this.plugin = plugin;
+        super(plugin);
+
         this.config = plugin.getMenuHandler().getConfigByName("party_events");
-        this.loadMenu(plugin, config);
+        this.loadMenu(config);
     }
 
     /**
@@ -52,7 +52,7 @@ public class PartyEventMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        if (plugin.getConfigHandler().isHCF_ENABLED()) {
+        if (this.getPlugin().getConfigHandler().isHCF_ENABLED()) {
             for ( PartyEventType type : PartyEventType.values() ) {
                 buttons.put(config.getInteger("BUTTONS." + type.name() + ".SLOT"), new PartyEventButton(config, type));
             }

@@ -12,14 +12,8 @@ import xyz.refinedev.practice.clan.ClanProfileProvider;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
 import xyz.refinedev.practice.cmds.*;
 import xyz.refinedev.practice.cmds.essentials.*;
-import xyz.refinedev.practice.cmds.event.EventCommands;
-import xyz.refinedev.practice.cmds.event.ParkourCommands;
-import xyz.refinedev.practice.cmds.event.SpleefCommands;
-import xyz.refinedev.practice.cmds.event.SumoCommands;
 import xyz.refinedev.practice.cmds.settings.*;
 import xyz.refinedev.practice.cmds.standalone.*;
-import xyz.refinedev.practice.event.EventProvider;
-import xyz.refinedev.practice.event.EventType;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitProvider;
 import xyz.refinedev.practice.profile.Profile;
@@ -55,10 +49,10 @@ public class CommandsManager {
         drink.register(new PartyCommands(plugin), "party", "p");
         drink.register(new TournamentCommands(plugin), "tournament", "tourney");
         drink.register(new ClanCommands(plugin), "clan", "c");
-        drink.register(new EventCommands(plugin, plugin.getEventManager()), "event", "events");
+        /*drink.register(new EventCommands(plugin, plugin.getEventManager()), "event", "events");
         drink.register(new SumoCommands(plugin), "sumo");
         drink.register(new SpleefCommands(plugin, plugin.getEventManager()), "spleef");
-        drink.register(new ParkourCommands(plugin, plugin.getEventManager()), "parkour");
+        drink.register(new ParkourCommands(plugin, plugin.getEventManager()), "parkour");*/
         drink.register(new KillEffectCommands(plugin), "killeffect", "killeffects", "ke");
 
         //These are standalone cmds which cannot have sub cmds
@@ -67,10 +61,10 @@ public class CommandsManager {
         drink.register(new StopSpecCommand(plugin), "stopspec", "leavespec", "leave spec", "leave spectator", "stop spectating", "stopspectating");
         drink.register(new LeaveMatchCommand(plugin), "forfeit", "abort", "abortmatch", "match abort", "match forfeit", "leave", "suicide");
         drink.register(new AbortMatchCommand(plugin), "cancelmatch", "forfeitmatch", "abortmatch");
-        drink.register(new SettingsCommand(), "settings", "preferences", "practicesettings", "pracsettings");
+        drink.register(new SettingsCommand(plugin), "settings", "preferences", "practicesettings", "pracsettings");
         drink.register(new MapCommand(plugin), "map");
         drink.register(new FlyCommand(plugin), "fly", "flight");
-        drink.register(new LeaderboardsCommand(), "leaderboards", "lb", "leaderboard");
+        drink.register(new LeaderboardsCommand(plugin), "leaderboards", "lb", "leaderboard");
         drink.register(new OpenMenuCMD(plugin), "openmenu", "menu", "menus");
         drink.register(new StatsCommand(), "stats", "elo", "statistics");
         drink.register(new SpectateMenuCommand(plugin), "specmenu", "spectatemenu");
@@ -109,7 +103,7 @@ public class CommandsManager {
         drink.bind(ArenaType.class).toProvider(new ArenaTypeProvider());
         drink.bind(Kit.class).toProvider(new KitProvider());
         drink.bind(Profile.class).toProvider(new ProfileProvider());
-        drink.bind(EventType.class).toProvider(new EventProvider());
+        //drink.bind(EventType.class).toProvider(new EventProvider());
         drink.bind(KillEffect.class).toProvider(new KillEffectProvider());
         drink.bind(RatingType.class).toProvider(new RatingTypeProvider());
     }

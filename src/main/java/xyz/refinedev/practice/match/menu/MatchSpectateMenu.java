@@ -23,14 +23,17 @@ import java.util.Map;
  * Project: Array
  */
 
-@RequiredArgsConstructor
 public class MatchSpectateMenu extends Menu {
 
-
-    private final Array plugin = Array.getInstance();
-    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("general");
-
+    private final FoldersConfigurationFile config;
     private final Match match;
+
+    public MatchSpectateMenu(Array plugin, Match match) {
+        super(plugin);
+        
+        this.match = match;
+        this.config = this.getPlugin().getMenuHandler().getConfigByName("general");
+    }
 
     /**
      * Get menu's title

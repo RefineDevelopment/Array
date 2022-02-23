@@ -15,14 +15,13 @@ import java.util.Map;
 //TODO: config
 public class PartySettingsMenu extends Menu {
 
-    private final Array plugin;
     private final FoldersConfigurationFile config;
 
     public PartySettingsMenu(Array plugin) {
-        this.plugin = plugin;
+        super(plugin);
         this.config = plugin.getMenuHandler().getConfigByName("party_settings");
 
-        this.loadMenu(plugin, config);
+        this.loadMenu(config);
 
         this.setAutoUpdate(true);
         this.setUpdateAfterClick(true);
@@ -52,7 +51,8 @@ public class PartySettingsMenu extends Menu {
         Map<Integer, Button> buttons = new HashMap<>();
 
         for ( PartyManageType type : PartyManageType.values() ) {
-            buttons.put(config.getInteger("BUTTONS." + type.name() + ".SLOT"), new PartySettingsButton(plugin, config, type));
+            Button button = new PartySettingsButton(this.getPlugin(), config, type);
+            buttons.put(config.getInteger("BUTTONS." + type.name() + ".SLOT"), button);
         }
 
         return buttons;

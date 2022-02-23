@@ -20,7 +20,6 @@ import org.bukkit.event.player.*;
 import org.bukkit.material.TrapDoor;
 import org.bukkit.projectiles.ProjectileSource;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.event.Event;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
@@ -174,11 +173,11 @@ public class ProfileListener implements Listener {
             event.setCancelled(true);
         }
 
-        if (profile.isInEvent()) {
+        /*if (profile.isInEvent()) {
             Event profileEvent = plugin.getEventManager().getEventByUUID(profile.getEvent());
             if (profileEvent.isBracketsSolo() || profileEvent.isBracketsTeam() || profileEvent.isLMS()) return;
             event.setCancelled(true);
-        }
+        }*/
 
         if (profile.isInMatch()) {
             if (profile.getMatch().isStarting()) {
@@ -225,10 +224,10 @@ public class ProfileListener implements Listener {
         Player player = event.getPlayer();
         Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
 
-        if (profile.isInEvent()) {
+        /*if (profile.isInEvent()) {
             Event profileEvent = plugin.getEventManager().getEventByUUID(profile.getEvent());
             profileEvent.handleLeave(player);
-        }
+        }*/
 
         plugin.getProfileManager().handleLeave(profile);
     }

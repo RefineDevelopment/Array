@@ -3,6 +3,7 @@ package xyz.refinedev.practice.profile.divisions.menu;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.profile.divisions.ProfileDivision;
 import xyz.refinedev.practice.profile.divisions.menu.buttons.ProfileELODivisionsButton;
 import xyz.refinedev.practice.profile.divisions.menu.buttons.ProfileXPDivisionsButton;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
@@ -24,8 +25,13 @@ import java.util.Map;
 //TODO: Include a back button in each and every profile menu button
 public class ProfileDivisionsMenu extends PaginatedMenu {
 
-    private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_divisions");
+    private final FoldersConfigurationFile config;
+
+    public ProfileDivisionsMenu(Array plugin) {
+        super(plugin);
+        
+        this.config = this.getPlugin().getMenuHandler().getConfigByName("profile_divisions");
+    }
 
     /**
      * @param player player viewing the inventory
@@ -53,11 +59,13 @@ public class ProfileDivisionsMenu extends PaginatedMenu {
     @Override
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-        if (plugin.getDivisionsManager().isXPBased()) {
-            buttons.put(buttons.size(), new ProfileXPDivisionsButton(profile, plugin.getDivisionsManager().getDivisionByXP(profile.getExperience())));
+        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
+        if (this.getPlugin().getDivisionsManager().isXPBased()) {
+            ProfileDivision division = this.getPlugin().getDivisionsManager().getDivisionByELO(profile.getExperience());
+            buttons.put(buttons.size(), new ProfileXPDivisionsButton(profile, division));
         } else {
-            buttons.put(buttons.size(), new ProfileELODivisionsButton(profile, plugin.getDivisionsManager().getDivisionByELO(profile.getGlobalElo())));
+            ProfileDivision division = this.getPlugin().getDivisionsManager().getDivisionByELO(profile.getGlobalElo());
+            buttons.put(buttons.size(), new ProfileELODivisionsButton(profile, division));
         }
         return buttons;
     }

@@ -24,11 +24,11 @@ import java.util.Map;
 
 public class KEPaginatedMenu extends PaginatedMenu {
 
-    private final Array plugin;
     private final FoldersConfigurationFile config;
 
     public KEPaginatedMenu(Array plugin) {
-        this.plugin = plugin;
+        super(plugin);
+        
         this.config = plugin.getMenuHandler().getConfigByName("profile_killeffects");
     }
 
@@ -58,10 +58,10 @@ public class KEPaginatedMenu extends PaginatedMenu {
     @Override
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        List<KillEffect> effects = plugin.getKillEffectManager().getKillEffects();
+        List<KillEffect> effects = this.getPlugin().getKillEffectManager().getKillEffects();
         Comparator.comparingInt(KillEffect::getPriority).reversed();
         for ( KillEffect killEffect : effects) {
-            buttons.put(buttons.size(), new KEButton(plugin, killEffect));
+            buttons.put(buttons.size(), new KEButton(this.getPlugin(), killEffect));
         }
         return buttons;
     }

@@ -2,6 +2,7 @@ package xyz.refinedev.practice.util.menu.custom;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.custom.button.CustomButton;
 import xyz.refinedev.practice.util.menu.pagination.PaginatedMenu;
@@ -22,7 +23,9 @@ public class CustomPaginatedMenu extends PaginatedMenu {
 
     private final MenuData menuData;
 
-    public CustomPaginatedMenu(MenuData menuData) {
+    public CustomPaginatedMenu(Array plugin, MenuData menuData) {
+        super(plugin);
+
         this.menuData = menuData;
 
         this.setPlaceholder(menuData.isPlaceholder());

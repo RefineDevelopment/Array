@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.util.timer.impl;
 
+import com.lunarclient.bukkitapi.cooldown.LunarClientAPICooldown;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -59,6 +60,8 @@ public class BridgeArrowTimer extends PlayerTimer implements Listener {
                 return;
             }
             this.setCooldown(player, player.getUniqueId());
+            if (plugin.getServer().getPluginManager().isPluginEnabled("LunarClient-API"))
+                LunarClientAPICooldown.sendCooldown(player, "Bow");
         }
     }
 }

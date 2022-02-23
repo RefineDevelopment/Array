@@ -10,8 +10,7 @@ import xyz.refinedev.practice.profile.ProfileState;
 @Getter
 public class KitEditor {
 
-    private boolean active;
-    private boolean rename;
+    private boolean active, rename;
     private ProfileState previousState;
     private Kit selectedKit;
     private KitInventory selectedKitInventory;

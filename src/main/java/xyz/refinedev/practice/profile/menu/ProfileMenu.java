@@ -24,12 +24,12 @@ public class ProfileMenu extends Menu {
     //TODO: Display the clan, the player is in and if he's in a party then show it and if he's in a match show it and have an option to go and spectate it
     //TODO: Same goes for events and tournaments
 
-    private final Array plugin;
     private final Player player;
     private final FoldersConfigurationFile config;
 
     public ProfileMenu(Array plugin, Player player) {
-        this.plugin = plugin;
+        super(plugin);
+
         this.player = player;
         this.config = plugin.getMenuHandler().getConfigByName("profile_menu");
     }

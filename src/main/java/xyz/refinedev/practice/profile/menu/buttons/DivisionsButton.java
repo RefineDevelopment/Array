@@ -42,7 +42,8 @@ public class DivisionsButton extends Button {
      */
     @Override
     public void clicked(Player player, ClickType clickType) {
-        new ProfileDivisionsMenu().openMenu(player);
+        ProfileDivisionsMenu menu = new ProfileDivisionsMenu(this.getPlugin());
+        menu.openMenu(player);
     }
 
 }
