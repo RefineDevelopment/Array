@@ -2,6 +2,7 @@ package xyz.refinedev.practice.util.command;
 
 import com.google.common.base.Preconditions;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.refinedev.practice.util.command.command.CommandService;
 import xyz.refinedev.practice.util.command.command.DrinkCommandService;
 
 import javax.annotation.Nonnull;

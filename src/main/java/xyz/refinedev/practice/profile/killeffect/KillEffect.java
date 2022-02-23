@@ -1,48 +1,66 @@
 package xyz.refinedev.practice.profile.killeffect;
 
-import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.bukkit.Effect;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.Material;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
+import xyz.refinedev.practice.util.location.LightningUtil;
+import xyz.refinedev.practice.util.other.PlayerUtil;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 
 /**
- * This Project is property of Refine Development © 2021
+ * This Project is property of Refine Development © 2021 - 2022
  * Redistribution of this Project is not allowed
  *
  * @author Drizzy
- * Created: 8/3/2021
+ * Created: 2/23/2022
  * Project: Array
  */
 
-@Getter @Setter
+@Getter
 @RequiredArgsConstructor
-public class KillEffect {
+public enum KillEffect {
 
-    private final List<KillEffectSound> killEffectSounds = new ArrayList<>();
-    private final List<String> description = Arrays.asList(" &fThis is the default", " &fdescription for kill", " &feffects, you can change", " &fthem in killeffects.yml");
+    NONE(Material.AIR, "none", "&7None", null, (player, watchers, drops) -> {
+    }),
+    SPLASH(Material.WATER_BUCKET, "splash", "&9Splash", "array.effect.splash", (player, watchers, drops) -> {
+        drops.forEach(Item::remove);
+    }),
+    FLAME(Material.FLINT_AND_STEEL, "flame", "&eFlame","array.effect.flame", (player, watchers, drops) -> {
+        drops.forEach(Item::remove);
+    }),
+    EXPLOSION(Material.TNT, "explosion", "&cExplosion","array.effect.explosion", (player, watchers, drops) -> {
+        drops.forEach(Item::remove);
+    }),
+    ENDER(Material.ENDER_PEARL, "ender", "&aEnder", "array.effect.ender", (player, watchers, drops) -> {
+        drops.forEach(Item::remove);
+    }),
+    LIGHTNING(Material.BLAZE_ROD, "lightning", "&bLightning","array.effect.firework", (player, watchers, drops) -> {
+        watchers.forEach(watcher -> LightningUtil.spawnLightning(watcher, player.getLocation()));
+        PlayerUtil.animateDeath(player);
+    }),
+    FIREWORK(Material.FIREWORK, "firework", "&bFirework Spark","array.effect.firework", (player, watchers, drops) -> {
+        drops.forEach(Item::remove);
+    });
 
-    @SerializedName("_id")
-    private final UUID uniqueId;
-    private final String name;
+    private final Material icon;
+    private final String name, displayName, permission;
+    private final EffectCallable callable;
 
-    private String displayName;
-    private String permission;
-    private Effect effect;
-    private ItemStack itemStack;
-    private int data, priority;
+    /**
+     * Does the player have the permission to play this effect
+     * 
+     * @param player {@link Player player} the player triggering the effect
+     * @return       {@link Boolean}
+     */
+    public boolean hasPermission(Player player) {
+        return permission == null || player.hasPermission(permission);
+    }
 
-    private boolean enabled;
-    private boolean defaultEffect;
-
-    private boolean animateDeath;
-    private boolean permissionEnabled;
-    private boolean dropsClear;
-    private boolean lightning;
+    public static KillEffect getByName(String input) {
+        return Arrays.stream(KillEffect.values()).filter(type -> type.name().equalsIgnoreCase(input) || type.getName().equalsIgnoreCase(input)).findFirst().orElse(null);
+    }
 }

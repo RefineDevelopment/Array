@@ -1,10 +1,9 @@
-package xyz.refinedev.practice.util.command;
+package xyz.refinedev.practice.util.command.command;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.refinedev.practice.util.command.Drink;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Modifier;
-import xyz.refinedev.practice.util.command.command.DrinkAuthorizer;
-import xyz.refinedev.practice.util.command.command.DrinkCommandContainer;
 import xyz.refinedev.practice.util.command.modifier.DrinkModifier;
 import xyz.refinedev.practice.util.command.parametric.DrinkProvider;
 import xyz.refinedev.practice.util.command.parametric.binder.DrinkBinder;
@@ -53,6 +52,9 @@ public interface CommandService {
      */
     void registerCommands();
 
+    /**
+     * This registers all the permissions utilized in the commands
+     */
     void registerPermissions();
 
     /**

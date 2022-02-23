@@ -52,7 +52,10 @@ public class ArenaManager {
 
     public void init() {
         ConfigurationSection section = config.getConfigurationSection("arenas");
-        if (section == null || section.getKeys(false).isEmpty()) return;
+        if (section == null || section.getKeys(false).isEmpty()) {
+            plugin.logger("&7Loaded &c0 &7Arena(s)!");
+            return;
+        }
 
         for ( String name : section.getKeys(false) ) {
             String path = name + ".";

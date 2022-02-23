@@ -4,7 +4,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Sorts;
 import lombok.Getter;
 import org.bson.Document;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
@@ -79,7 +78,7 @@ public class LeaderboardsManager {
      */
     public void loadGlobalLeaderboards() {
         GlobalLeaderboardsUpdateEvent event = new GlobalLeaderboardsUpdateEvent();
-        Bukkit.getPluginManager().callEvent(event);
+        plugin.getServer().getPluginManager().callEvent(event);
 
         if (event.isCancelled()) return;
         if (!this.globalLeaderboards.isEmpty()) this.globalLeaderboards.clear();
@@ -105,7 +104,7 @@ public class LeaderboardsManager {
      */
     public void loadKitLeaderboards(Kit kit) {
         KitLeaderboardsUpdateEvent event = new KitLeaderboardsUpdateEvent();
-        Bukkit.getPluginManager().callEvent(event);
+        plugin.getServer().getPluginManager().callEvent(event);
 
         if (event.isCancelled()) return;
 

@@ -399,7 +399,7 @@ public enum Locale {
      * this works with both strings and lists
      */
     public static void init(Array plugin) {
-        configFile = plugin.getConfigHandler().getConfig();
+        configFile = plugin.getMessagesConfig();
 
         Arrays.stream(values()).forEach(language -> {
             if (configFile.getString(language.getPath()) == null || configFile.getStringList(language.getPath()) == null) {

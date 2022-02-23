@@ -23,7 +23,7 @@ import xyz.refinedev.practice.hook.spigot.SpigotHandler;
 import xyz.refinedev.practice.managers.*;
 import xyz.refinedev.practice.pvpclasses.bard.EffectRestorer;
 import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.command.CommandService;
+import xyz.refinedev.practice.util.command.command.CommandService;
 import xyz.refinedev.practice.util.command.Drink;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.menu.MenuHandler;
@@ -63,8 +63,8 @@ public class Array extends JavaPlugin {
     public static Gson GSON;
     public static Random RANDOM;
 
-    private BasicConfigurationFile mainConfig, arenasConfig, kitsConfig, eventsConfig, killEffectsConfig,
-                                   messagesConfig, scoreboardConfig, tablistConfig,  hotbarConfig;
+    private BasicConfigurationFile mainConfig, arenasConfig, kitsConfig, eventsConfig, tablistConfig,
+                                   messagesConfig, scoreboardConfig,  hotbarConfig;
 
     private MenuHandler menuHandler;
     private CoreHandler coreHandler;
@@ -89,7 +89,6 @@ public class Array extends JavaPlugin {
     private ProfileManager profileManager;
     private PvPClassManager pvpClassManager;
     private DivisionsManager divisionsManager;
-    private KillEffectManager killEffectManager;
     private TournamentManager tournamentManager;
     private LeaderboardsManager leaderboardsManager;
 
@@ -110,7 +109,6 @@ public class Array extends JavaPlugin {
         tablistConfig = new BasicConfigurationFile(this, "tablist", false);
         messagesConfig = new BasicConfigurationFile(this, "lang", false);
         scoreboardConfig = new BasicConfigurationFile(this, "scoreboard", false);
-        killEffectsConfig = new BasicConfigurationFile(this, "killeffects", false);
     }
 
     @Override
@@ -119,6 +117,8 @@ public class Array extends JavaPlugin {
         RANDOM = new Random();
         GSON = GsonFactory.getPrettyGson();
         drink = Drink.get(this);
+
+        this.consoleLog("&c------------------------------------------------");
 
         this.configHandler = new ConfigHandler(this);
         this.configHandler.init();
@@ -151,9 +151,6 @@ public class Array extends JavaPlugin {
 
         this.coreHandler = new CoreHandler(this);
         this.coreHandler.init();
-
-        this.killEffectManager = new KillEffectManager(this);
-        this.killEffectManager.init();
 
         this.queueManager = new QueueManager(this);
         this.queueManager.init();
@@ -210,7 +207,6 @@ public class Array extends JavaPlugin {
         this.kitManager.getKits().forEach(kitManager::save);
         this.clanManager.getClans().values().forEach(clanManager::save);
         this.profileManager.getProfiles().values().forEach(profileManager::save);
-        this.killEffectManager.getKillEffects().forEach(killEffectManager::save);
 
         World world = this.getServer().getWorld("world");
         for ( Entity entity : world.getEntities()) {
@@ -219,7 +215,6 @@ public class Array extends JavaPlugin {
         }
 
         this.configHandler.save();
-        this.killEffectManager.exportConfig();
         this.pvpClassManager.shutdown();
         //this.eventManager.shutdown();
         this.leaderboardsManager.shutdown();

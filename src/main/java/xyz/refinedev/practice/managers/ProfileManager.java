@@ -33,6 +33,7 @@ import xyz.refinedev.practice.profile.divisions.ProfileDivision;
 import xyz.refinedev.practice.profile.history.ProfileHistory;
 import xyz.refinedev.practice.profile.hotbar.HotbarLayout;
 import xyz.refinedev.practice.profile.hotbar.HotbarType;
+import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.profile.rank.TablistRank;
 import xyz.refinedev.practice.profile.settings.ProfileSettings;
 import xyz.refinedev.practice.profile.statistics.ProfileStatistics;
@@ -116,7 +117,7 @@ public class ProfileManager {
 
             String killEffectString = document.getString("killEffect");
             if (killEffectString != null) {
-                profile.setKillEffect(UUID.fromString(killEffectString));
+                profile.setKillEffect(KillEffect.getByName(killEffectString));
             }
 
             String clanString = document.getString("clan");
@@ -201,7 +202,7 @@ public class ProfileManager {
         document.put("kills", profile.getKills());
         document.put("deaths", profile.getDeaths());
 
-        if (profile.getKillEffect() != null) document.put("killEffect", profile.getKillEffect().toString());
+        if (profile.getKillEffect() != null) document.put("killEffect", profile.getKillEffect().name());
         if (profile.hasClan()) document.put("clan", profile.getClan().toString());
 
         document.put("settings", Array.GSON.toJson(profile.getSettings()));

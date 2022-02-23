@@ -38,7 +38,7 @@ public class Profile {
     @SerializedName("_id")
     private final UUID uniqueId;
     private String name;
-    private UUID killEffect;
+    private KillEffect killEffect = KillEffect.NONE;
     private int globalElo = 1000;
     private int kills, deaths, experience;
     private ProfileState state = ProfileState.IN_LOBBY;
@@ -79,7 +79,7 @@ public class Profile {
      * @param killEffect {@link KillEffect}
      */
     public boolean isSelected(KillEffect killEffect) {
-        return this.killEffect != null && this.killEffect.equals(killEffect.getUniqueId());
+        return this.killEffect != null && this.killEffect.equals(killEffect);
     }
 
     /**

@@ -19,8 +19,7 @@ import xyz.refinedev.practice.kit.KitProvider;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileProvider;
 import xyz.refinedev.practice.profile.killeffect.KillEffect;
-import xyz.refinedev.practice.profile.killeffect.KillEffectProvider;
-import xyz.refinedev.practice.util.command.CommandService;
+import xyz.refinedev.practice.util.command.command.CommandService;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -104,7 +103,6 @@ public class CommandsManager {
         drink.bind(Kit.class).toProvider(new KitProvider());
         drink.bind(Profile.class).toProvider(new ProfileProvider());
         //drink.bind(EventType.class).toProvider(new EventProvider());
-        drink.bind(KillEffect.class).toProvider(new KillEffectProvider());
         drink.bind(RatingType.class).toProvider(new RatingTypeProvider());
     }
 }

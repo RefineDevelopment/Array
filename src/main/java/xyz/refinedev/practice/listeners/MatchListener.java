@@ -314,11 +314,10 @@ public class MatchListener implements Listener {
 
         List<Item> entities = new ArrayList<>();
 
-        event.getDrops().forEach(itemStack -> {
-            if (itemStack.getType() != Material.BOOK && itemStack.getType() != Material.ENCHANTED_BOOK && itemStack.getType() != Material.BLAZE_POWDER && itemStack.getType() != Material.GOLD_BARDING && itemStack.getType() != Material.DIAMOND_BARDING) {
-                entities.add(event.getEntity().getLocation().getWorld().dropItemNaturally(event.getEntity().getLocation(), itemStack));
-            }
-        });
+        for ( ItemStack itemStack : event.getDrops() ) {
+            if (itemStack.getType().equals(Material.BOOK) || itemStack.getType().equals(Material.ENCHANTED_BOOK)) continue;
+            entities.add(event.getEntity().getLocation().getWorld().dropItemNaturally(event.getEntity().getLocation(), itemStack));
+        }
 
         if (match.isTheBridgeMatch() || match.isBattleRushMatch() || match.isBedwarsMatch()) {
             if (PlayerUtil.getLastAttacker(player) instanceof CraftPlayer) {
@@ -327,8 +326,8 @@ public class MatchListener implements Listener {
             }
         }
 
-        event.getDrops().clear();
         match.getEntities().addAll(entities);
+        event.getDrops().clear();
         this.plugin.getMatchManager().handleDeath(match, player);
     }
 

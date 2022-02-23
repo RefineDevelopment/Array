@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -29,23 +30,19 @@ import xyz.refinedev.practice.match.types.kit.team.TeamBridgeMatch;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.ProfileState;
 import xyz.refinedev.practice.profile.killeffect.KillEffect;
-import xyz.refinedev.practice.profile.killeffect.KillEffectSound;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.task.match.MatchCooldownTask;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.chat.ChatComponentBuilder;
 import xyz.refinedev.practice.util.chat.ChatHelper;
-import xyz.refinedev.practice.util.location.LightningUtil;
 import xyz.refinedev.practice.util.other.Cooldown;
-import xyz.refinedev.practice.util.other.EffectUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TimeUtil;
 import xyz.refinedev.practice.util.storage.TimerHashMap;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -219,13 +216,24 @@ public class MatchManager {
      * @param player {@link Player} The player dying
      */
     public void handleDeath(Match match, Player player) {
+        this.handleDeath(match, player, null);
+    }
+
+    /**
+     * Handle the player's death, this method auto detects
+     * any killer if preset or if the player disconnected or not
+     *
+     * @param match  {@link Match} The match of the player dying
+     * @param player {@link Player} The player dying
+     */
+    public void handleDeath(Match match, Player player, List<Item> droppedItems) {
         if (PlayerUtil.getLastAttacker(player) instanceof CraftPlayer) {
             Player killer = (Player) PlayerUtil.getLastAttacker(player);
-            this.handleDeath(match, player, killer, false);
+            this.handleDeath(match, player, killer, false, droppedItems);
         } else if (player.getKiller() != null) {
-            this.handleDeath(match, player, player.getKiller(), false);
+            this.handleDeath(match, player, player.getKiller(), false, droppedItems);
         } else {
-            this.handleDeath(match, player, null, false);
+            this.handleDeath(match, player, null, false, droppedItems);
         }
     }
 
@@ -237,8 +245,9 @@ public class MatchManager {
      * @param deadPlayer {@link Player} the player that died or disconnected
      * @param killerPlayer {@link Player} the killer of the player if there is one or else null
      * @param disconnected {@link Boolean} disconnected
+     * @param droppedItems {@link List<Item>} the dropped items after the player is dead
      */
-    public void handleDeath(Match match, Player deadPlayer, Player killerPlayer, boolean disconnected) {
+    public void handleDeath(Match match, Player deadPlayer, Player killerPlayer, boolean disconnected, @Nullable List<Item> droppedItems) {
         TeamPlayer teamPlayer = match.getTeamPlayer(deadPlayer);
 
         if (teamPlayer == null) return;
@@ -277,8 +286,21 @@ public class MatchManager {
             }
         }
 
-        this.handleKillEffect(match, deadPlayer, killerPlayer);
+        this.handleKillEffect(match, deadPlayer, killerPlayer, droppedItems);
         match.onDeath(plugin, deadPlayer, killerPlayer);
+    }
+
+    /**
+     * Main method for handling a player's death while in match
+     * or a player disconnecting while in match
+     *
+     * @param match  {@link Match} the match of player dying
+     * @param deadPlayer {@link Player} the player that died or disconnected
+     * @param killerPlayer {@link Player} the killer of the player if there is one or else null
+     * @param disconnected {@link Boolean} disconnected
+     */
+    public void handleDeath(Match match, Player deadPlayer, Player killerPlayer, boolean disconnected) {
+        this.handleDeath(match, deadPlayer, killerPlayer, disconnected, new ArrayList<>());
     }
 
     /**
@@ -287,42 +309,11 @@ public class MatchManager {
      * @param deadPlayer {@link Player} the player being killed
      * @param killerPlayer {@link Player} the player killing
      */
-    public void handleKillEffect(Match match, Player deadPlayer, Player killerPlayer) {
-        if (killerPlayer == null) return;
+    public void handleKillEffect(Match match, Player deadPlayer, Player killerPlayer, List<Item> droppedItems) {
+        if (killerPlayer == null || deadPlayer == null || !deadPlayer.isOnline()) return;
         Profile profile = plugin.getProfileManager().getProfileByPlayer(killerPlayer);
-        KillEffect killEffect = plugin.getKillEffectManager().getByUUID(profile.getKillEffect());
-
-        deadPlayer.teleport(deadPlayer.getLocation().add(0.0, 1.0, 0.0));
-
-        if (killEffect == null) {
-            killEffect = plugin.getKillEffectManager().getDefault();
-        }
-
-        if (killEffect.getEffect() != null) {
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 0.0f);
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 1.0f, 0.0f);
-            EffectUtil.sendEffect(killEffect.getEffect(), deadPlayer.getLocation(), killEffect.getData(), 0.0f, 1.0f);
-        }
-
-        if (killEffect.isLightning() && !(match.isTheBridgeMatch() || match.isBedwarsMatch() || match.isMLGRushMatch() || match.isBattleRushMatch())) {
-            for ( Player player : match.getPlayers() ) {
-                LightningUtil.spawnLightning(player, deadPlayer.getLocation());
-            }
-        }
-
-        if (killEffect.isDropsClear()) {
-            match.getEntities().forEach(Entity::remove);
-        }
-
-        if (killEffect.isAnimateDeath())
-            PlayerUtil.animateDeath(deadPlayer);
-
-        if (!killEffect.getKillEffectSounds().isEmpty()) {
-            float randomPitch = 0.5f + ThreadLocalRandom.current().nextFloat() * 0.2f;
-            for ( KillEffectSound killEffectSound : killEffect.getKillEffectSounds()) {
-                match.getPlayers().forEach(player -> player.playSound(deadPlayer.getLocation(), killEffectSound.getSound(), killEffectSound.getPitch(), randomPitch));
-            }
-        }
+        KillEffect killEffect = profile.getKillEffect();
+        if (!killEffect.equals(KillEffect.NONE)) killEffect.getCallable().call(deadPlayer,  match.getPlayers(), droppedItems);
     }
 
     /**
