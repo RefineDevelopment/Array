@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c41a8b3-4728-4d1b-a454-565d875f3ead" name="Default Changelist" comment="[/] Remove this too">
+    <list default="true" id="3c41a8b3-4728-4d1b-a454-565d875f3ead" name="Default Changelist" comment="[/] Better detection for no pearl zones">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Array.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Array.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/kit/TeamFightMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/match/types/kit/TeamFightMatch.java" afterDir="false" />
@@ -111,17 +111,6 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Array [clean, install]" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -178,6 +167,7 @@
       <workItem from="1645465082504" duration="2290000" />
       <workItem from="1645540056102" duration="1771000" />
       <workItem from="1645599183269" duration="10699000" />
+      <workItem from="1645630664387" duration="923000" />
     </task>
     <task id="LOCAL-00001" summary="[+] Match Recode&#10;[/] Fixed Tournament Bugs &#10;[/] Kill Effects Done &#10;[+] Kill Effects Menu">
       <created>1628600992379</created>
@@ -501,7 +491,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645614532917</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="[/] Better detection for no pearl zones">
+      <created>1645640207817</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1645640207817</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -521,7 +518,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="[/] Fixed Arena Setup and Saving errors.&#10;[/] Fixed Startup noSuchMethod errors. (Thanks to @Astonic &amp; @mozart )&#10;[+] Added Save location for kit gamerules &quot;boxing&quot; and &quot;battlerush. (Thanks to @Scyes )&#10;[+] Added /arena setbuildheight and /arena setfalldeathheight commands &#10;[/] Fixed Java/Yeet Class not found errors." />
     <MESSAGE value="[+] LMS Event&#10;[+] Completely Recoded Tournaments" />
     <MESSAGE value="[/] Changes to how things are stored" />
     <MESSAGE value="[/] Changes to how things are stored&#10;[+] Added KoTH&#10;[/] Cleaned Up Code" />
@@ -546,7 +542,8 @@
     <MESSAGE value="[/] Removed Events | I am officially an idiot" />
     <MESSAGE value="[+] Hardcoded Kill Effects, will do them config later" />
     <MESSAGE value="[/] Remove this too" />
-    <option name="LAST_COMMIT_MESSAGE" value="[/] Remove this too" />
+    <MESSAGE value="[/] Better detection for no pearl zones" />
+    <option name="LAST_COMMIT_MESSAGE" value="[/] Better detection for no pearl zones" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
