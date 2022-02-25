@@ -26,7 +26,7 @@ public class SilentCMD {
     @Command(name = "", desc = "Toggle silent mode for your profile")
     @Require("array.profile.silent")
     public void build(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         profile.setSilent(!profile.isSilent());
 
         player.sendMessage(CC.translate(profile.isBuild() ? "&aEnabled Silent-Mode for your profile." : "&cDisabled Silent-Mode for your profile."));

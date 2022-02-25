@@ -25,22 +25,26 @@ import java.util.Arrays;
 public enum KillEffect {
 
     NONE(Material.AIR, "none", "&7None", null, (player, watchers, drops) -> {
-    }),
-    SPLASH(Material.WATER_BUCKET, "splash", "&9Splash", "array.effect.splash", (player, watchers, drops) -> {
         drops.forEach(Item::remove);
     }),
-    FLAME(Material.FLINT_AND_STEEL, "flame", "&eFlame","array.effect.flame", (player, watchers, drops) -> {
+    SPLASH(Material.WATER_BUCKET, "Splash", "&9Splash", "array.effect.splash", (player, watchers, drops) -> {
         drops.forEach(Item::remove);
     }),
-    EXPLOSION(Material.TNT, "explosion", "&cExplosion","array.effect.explosion", (player, watchers, drops) -> {
+    FLAME(Material.FLINT_AND_STEEL, "Flame", "&eFlame","array.effect.flame", (player, watchers, drops) -> {
         drops.forEach(Item::remove);
     }),
-    ENDER(Material.ENDER_PEARL, "ender", "&aEnder", "array.effect.ender", (player, watchers, drops) -> {
+    EXPLOSION(Material.TNT, "Explosion", "&cExplosion","array.effect.explosion", (player, watchers, drops) -> {
         drops.forEach(Item::remove);
     }),
-    LIGHTNING(Material.BLAZE_ROD, "lightning", "&bLightning","array.effect.firework", (player, watchers, drops) -> {
+    ENDER(Material.ENDER_PEARL, "Ender", "&aEnder", "array.effect.ender", (player, watchers, drops) -> {
+        drops.forEach(Item::remove);
+    }),
+    LIGHTNING(Material.BLAZE_ROD, "Lightning", "&bLightning","array.effect.firework", (player, watchers, drops) -> {
         watchers.forEach(watcher -> LightningUtil.spawnLightning(watcher, player.getLocation()));
         PlayerUtil.animateDeath(player);
+    }),
+    HEART(Material.REDSTONE_LAMP_ON, "Hearts", "&4Hearts", "array.effect.hearts", (player, watchers, drops) -> {
+        drops.forEach(Item::remove);
     }),
     FIREWORK(Material.FIREWORK, "firework", "&bFirework Spark","array.effect.firework", (player, watchers, drops) -> {
         drops.forEach(Item::remove);

@@ -73,7 +73,7 @@ public class TablistAdapter implements TabAdapter {
     @Override
     public List<TabEntry> getLines(Player player) {
         List<TabEntry> entries = new ArrayList<>();
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
 
         if (profile.getSettings().isVanillaTab()) {
             List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
@@ -388,7 +388,7 @@ public class TablistAdapter implements TabAdapter {
     }
 
     public String replaceStats(Player player, String toReplace) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         String eloFormat = config.getString("TABLIST.ELO_FORMAT");
 
         if (toReplace == null) return "";
@@ -415,7 +415,7 @@ public class TablistAdapter implements TabAdapter {
     }
 
     public String replaceParty(Player player, String toReplace) {
-        Profile profile = this.plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = this.plugin.getProfileManager().getProfile(player);
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
 
         String armorClass = party.getKits().get(player.getUniqueId());
@@ -442,7 +442,7 @@ public class TablistAdapter implements TabAdapter {
     }
 
     public String replaceSoloMatch(Player player, String toReplace) {
-        Profile profile = this.plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = this.plugin.getProfileManager().getProfile(player);
         Match match = profile.getMatch();
 
         int playerAPing = PlayerUtil.getPing(match.getTeamPlayerA().getPlayer());
@@ -461,7 +461,7 @@ public class TablistAdapter implements TabAdapter {
     }
 
     public String replaceTeamMatch(Player player, String toReplace) {
-        Profile profile = this.plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = this.plugin.getProfileManager().getProfile(player);
         Match match = profile.getMatch();
 
         Team team = match.getTeam(player);
@@ -493,7 +493,7 @@ public class TablistAdapter implements TabAdapter {
     }
 
     public String replaceTeamPlayer(Player player, String toReplace) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
 
         Match match = profile.getMatch();
         if (match == null) return toReplace;
@@ -511,7 +511,7 @@ public class TablistAdapter implements TabAdapter {
     }
 
     public String replaceHCFMatch(Player player, String toReplace) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
         Match match = profile.getMatch();
         PvPClass pvpClass = plugin.getPvpClassManager().getEquippedClass(player);
@@ -551,7 +551,7 @@ public class TablistAdapter implements TabAdapter {
 
 
     public String replaceFFAMatch(Player player, String toReplace) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         FFAMatch match = (FFAMatch) profile.getMatch();
         Team team = match.getTeam(player);
         List<TeamPlayer> fixedPlayers = team.getTeamPlayers().stream().filter(teamPlayer -> !teamPlayer.getUniqueId().equals(player.getUniqueId())).collect(Collectors.toList());
@@ -628,7 +628,7 @@ public class TablistAdapter implements TabAdapter {
         String text = entry.getText();
 
         if (text.contains("<opponent_player>")) {
-            Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+            Profile profile = plugin.getProfileManager().getProfile(player);
             if (profile.getMatch() != null) {
                 entry.setSkin(Skin.getPlayer(profile.getMatch().getOpponentPlayer(player)));
                 text = text.replace("<opponent_player>", profile.getMatch().getOpponentPlayer(player).getName());
@@ -695,8 +695,8 @@ public class TablistAdapter implements TabAdapter {
 
         @Override
         public int compare(Player o1, Player o2) {
-            Profile profile1 = plugin.getProfileManager().getProfileByPlayer(o2);
-            Profile profile2 = plugin.getProfileManager().getProfileByPlayer(o1);
+            Profile profile1 = plugin.getProfileManager().getProfile(o2);
+            Profile profile2 = plugin.getProfileManager().getProfile(o1);
             return profile1.getTabPriority() - profile2.getTabPriority();
         }
     }

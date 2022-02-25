@@ -1,16 +1,11 @@
 package xyz.refinedev.practice.duel.menu;
 
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.arena.ArenaType;
 import xyz.refinedev.practice.duel.menu.buttons.DuelArenaButton;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.pagination.PaginatedMenu;
 
@@ -33,7 +28,7 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
     @Override
     public Map<Integer, Button> getAllPagesButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
 
         List<Arena> arenas = this.getPlugin().getArenaManager().getArenas().stream().filter(arena -> {
             if (!arena.isSetup()) return false;
@@ -54,7 +49,7 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
     public void onClose(Player player) {
         if (this.isClosedByMenu()) return;
 
-        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
         profile.setDuelProcedure(null);
     }
 

@@ -10,8 +10,6 @@ import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.nametags.construct.NameTagInfo;
 import xyz.refinedev.practice.util.nametags.provider.NameTagProvider;
 
-import java.util.UUID;
-
 /**
  * This Project is the property of Refine Development © 2021
  * Redistribution of this Project is not allowed
@@ -40,8 +38,8 @@ public class NameTagAdapter extends NameTagProvider {
      */
     @Override
     public NameTagInfo fetchNameTag(Player target, Player viewer) {
-            Profile targetProfile = plugin.getProfileManager().getProfileByPlayer(target);
-            Profile viewerProfile = plugin.getProfileManager().getProfileByPlayer(viewer);
+            Profile targetProfile = plugin.getProfileManager().getProfile(target);
+            Profile viewerProfile = plugin.getProfileManager().getProfile(viewer);
 
             if ((plugin.getConfigHandler().isNAMETAGS_ENABLED()) && viewerProfile.isInLobby() || viewerProfile.isInQueue()) {
                 return this.getNormalColor(viewerProfile, targetProfile);

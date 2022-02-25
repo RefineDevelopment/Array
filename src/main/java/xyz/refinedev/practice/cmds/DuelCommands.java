@@ -45,8 +45,8 @@ public class DuelCommands {
 
     @Command(name = "", desc = "Duel a player", usage = "<player>")
     public void duel(@Sender Player player, Player target) {
-        Profile senderProfile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-        Profile receiverProfile = plugin.getProfileManager().getProfileByUUID(target.getUniqueId());
+        Profile senderProfile = plugin.getProfileManager().getProfile(player.getUniqueId());
+        Profile receiverProfile = plugin.getProfileManager().getProfile(target.getUniqueId());
 
         if (player.getUniqueId().equals(target.getUniqueId())) {
             player.sendMessage(CC.RED + "You cannot duel yourself.");
@@ -80,8 +80,8 @@ public class DuelCommands {
 
     @Command(name = "accept", usage = "<player> <target>", desc = "Accept a duel pending request")
     public void duelAccept(@Sender Player player, Player target) {
-        Profile senderProfile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
-        Profile receiverProfile = plugin.getProfileManager().getProfileByUUID(target.getUniqueId());
+        Profile senderProfile = plugin.getProfileManager().getProfile(player.getUniqueId());
+        Profile receiverProfile = plugin.getProfileManager().getProfile(target.getUniqueId());
 
         if (senderProfile.isBusy()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());

@@ -27,7 +27,7 @@ public class KitEditorListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         KitEditor kitEditor = profile.getKitEditor();
         if (kitEditor.isRenaming()) {
             event.setCancelled(true);
@@ -60,7 +60,7 @@ public class KitEditorListener implements Listener {
     public void onInventoryClickEvent(InventoryClickEvent event) {
         if (event.getWhoClicked() instanceof Player) {
             Player player = (Player) event.getWhoClicked();
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
 
             if (event.getClickedInventory() != null && event.getClickedInventory() instanceof CraftingInventory) {
                 if (player.getGameMode() != GameMode.CREATIVE) {

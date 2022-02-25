@@ -24,7 +24,7 @@ public class TogglePingScoreboardCMD {
 
     @Command(name = "", desc = "Toggle Ping on Scoreboard for your Profile")
     public void toggle(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         ProfileSettings settings = profile.getSettings();
 
         settings.setPingScoreboard(!settings.isPingScoreboard());

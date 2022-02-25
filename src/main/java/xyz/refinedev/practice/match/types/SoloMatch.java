@@ -101,7 +101,7 @@ public class SoloMatch extends Match {
         if (this.getKit().getGameRules().isStrength()) player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(500000000, 0));
 
         if (!this.getKit().getGameRules().isNoItems() || !this.getKit().getGameRules().isSumo()) {
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
             TaskUtil.runLater(() -> profile.getStatisticsData().get(this.getKit()).getKitItems().forEach((integer, itemStack) -> player.getInventory().setItem(integer, itemStack)), 10L);
         }
 
@@ -170,7 +170,7 @@ public class SoloMatch extends Match {
 
                     plugin.getSpigotHandler().resetKnockback(player);
 
-                    Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+                    Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
                     profile.setState(ProfileState.IN_LOBBY);
                     profile.setMatch(null);
 
@@ -190,8 +190,8 @@ public class SoloMatch extends Match {
         TeamPlayer winningTeamPlayer = getTeamPlayer(winningPlayer);
         TeamPlayer losingTeamPlayer = getTeamPlayer(losingPlayer);
 
-        Profile winningProfile = plugin.getProfileManager().getProfileByUUID(winningPlayer.getUniqueId());
-        Profile losingProfile = plugin.getProfileManager().getProfileByUUID(losingPlayer.getUniqueId());
+        Profile winningProfile = plugin.getProfileManager().getProfile(winningPlayer.getUniqueId());
+        Profile losingProfile = plugin.getProfileManager().getProfile(losingPlayer.getUniqueId());
 
         if (getQueueType() == QueueType.UNRANKED) {
             ProfileHistory winnerProfileMatchHistory = new ProfileHistory(plugin, System.currentTimeMillis(), this.getSnapshotOfPlayer(winningPlayer), this.getSnapshotOfPlayer(losingPlayer), this.getKit());
@@ -470,7 +470,7 @@ public class SoloMatch extends Match {
         TitleAPI.sendMatchLoser(deadPlayer);
 
         for ( Player otherPlayer : getPlayers() ) {
-            Profile profile = plugin.getProfileManager().getProfileByUUID(otherPlayer.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfile(otherPlayer.getUniqueId());
             TaskUtil.runLater(() -> plugin.getProfileManager().handleVisibility(profile, deadPlayer), 4L);
         }
 
@@ -480,7 +480,7 @@ public class SoloMatch extends Match {
             if (!roundLoser.isDisconnected()) {
                 deadPlayer.teleport(getMidSpawn());
 
-                Profile profile = plugin.getProfileManager().getProfileByUUID(deadPlayer.getUniqueId());
+                Profile profile = plugin.getProfileManager().getProfile(deadPlayer.getUniqueId());
                 profile.setState(ProfileState.SPECTATING);
                 plugin.getProfileManager().refreshHotbar(profile);
                 plugin.getProfileManager().handleVisibility(profile);
@@ -490,7 +490,7 @@ public class SoloMatch extends Match {
 
     @Override
     public void onRespawn(Array plugin, Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         plugin.getProfileManager().teleportToSpawn(profile);
     }
 

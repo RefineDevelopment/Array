@@ -64,7 +64,7 @@ public class QueueManager {
         QueueProfile queueProfile = new QueueProfile(player.getUniqueId());
         queueProfile.setElo(elo);
 
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         profile.setQueue(queue.getUniqueId());
         profile.setState(ProfileState.IN_QUEUE);
 
@@ -110,7 +110,7 @@ public class QueueManager {
             player.sendMessage(Locale.QUEUE_LEAVE.toString().replace("<queue_name>", queue.getQueueName()));
         }
 
-        Profile profile = this.plugin.getProfileManager().getProfileByUUID(queueProfile.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfile(queueProfile.getUniqueId());
         profile.setQueue(null);
         profile.setState(ProfileState.IN_LOBBY);
 

@@ -36,7 +36,7 @@ public class ProfileListener implements Listener {
     public void onCommand(PlayerCommandPreprocessEvent event) {
         String command = event.getMessage().split(" ")[0];
         Player player = event.getPlayer();
-        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfile(player.getUniqueId());
 
         if (profile.getKitEditor().isRenaming()) {
             event.getPlayer().sendMessage(ChatColor.RED + "A kit name cannot start with \"/\".");
@@ -53,7 +53,7 @@ public class ProfileListener implements Listener {
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
 
         Player player = event.getPlayer();
-        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfile(player.getUniqueId());
 
         if ((player.getGameMode() == GameMode.CREATIVE && !profile.isSpectating()) || profile.isBuild()) return;
         if (event.getAction().name().endsWith("_BLOCK")
@@ -80,7 +80,7 @@ public class ProfileListener implements Listener {
     @EventHandler
     public void onPlayerPickupItemEvent(PlayerPickupItemEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (profile.isInSomeSortOfFight()) return;
 
         if (player.getGameMode() != GameMode.CREATIVE && !profile.isBuild()) {
@@ -91,7 +91,7 @@ public class ProfileListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (profile.isInSomeSortOfFight()) return;
 
         if (player.getGameMode() != GameMode.CREATIVE && !profile.isBuild()) {
@@ -102,7 +102,7 @@ public class ProfileListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (profile.isInSomeSortOfFight()) return;
 
         if (player.getGameMode() != GameMode.CREATIVE && !profile.isBuild()) {
@@ -113,7 +113,7 @@ public class ProfileListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (profile.isInSomeSortOfFight()) return;
 
         if (player.getGameMode() != GameMode.CREATIVE && !profile.isBuild()) {
@@ -131,7 +131,7 @@ public class ProfileListener implements Listener {
     @EventHandler
     public void onBucket(PlayerBucketEmptyEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (profile.isInSomeSortOfFight()) return;
 
         if (player.getGameMode() != GameMode.CREATIVE && !profile.isBuild()) {
@@ -142,7 +142,7 @@ public class ProfileListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPlayerItemDamageEvent(PlayerItemDamageEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (!profile.isInLobby()) return;
 
         event.setCancelled(true);
@@ -153,7 +153,7 @@ public class ProfileListener implements Listener {
         if (!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (!profile.isInLobby() && !profile.isInQueue()) return;
 
         event.setCancelled(true);
@@ -167,7 +167,7 @@ public class ProfileListener implements Listener {
         if (!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
 
         if (profile.isInLobby() || profile.isInQueue()) {
             event.setCancelled(true);
@@ -213,7 +213,7 @@ public class ProfileListener implements Listener {
         event.setJoinMessage(null);
 
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
 
         plugin.getProfileManager().handleJoin(profile);
     }
@@ -222,7 +222,7 @@ public class ProfileListener implements Listener {
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         event.setQuitMessage(null);
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
 
         /*if (profile.isInEvent()) {
             Event profileEvent = plugin.getEventManager().getEventByUUID(profile.getEvent());
@@ -234,7 +234,7 @@ public class ProfileListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerKickEvent(PlayerKickEvent event) {
-        Profile profile = plugin.getProfileManager().getProfileByUUID(event.getPlayer().getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(event.getPlayer().getUniqueId());
         plugin.getProfileManager().handleLeave(profile);
     }
 
@@ -256,7 +256,7 @@ public class ProfileListener implements Listener {
         Player killer = player.getKiller();
         if (killer == null) return;
 
-        Profile profile = plugin.getProfileManager().getProfileByUUID(killer.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(killer.getUniqueId());
         if (!profile.isInFight() && !profile.isInEvent()) return;
 
         profile.setKills(profile.getKills() + 1);
@@ -274,7 +274,7 @@ public class ProfileListener implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
 
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (!profile.isInFight() && !profile.isInEvent()) return;
 
         profile.setDeaths(profile.getDeaths() + 1);
@@ -292,7 +292,7 @@ public class ProfileListener implements Listener {
         if (!(source instanceof Player)) return;
 
         Player shooter = (Player) source;
-        Profile profile = plugin.getProfileManager().getProfileByUUID(shooter.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(shooter.getUniqueId());
         if (!profile.isInLobby() && !profile.isInQueue()) return;
 
         event.setCancelled(true);
@@ -309,7 +309,7 @@ public class ProfileListener implements Listener {
     @EventHandler
     public void onUse(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (!profile.isInLobby() || !profile.getKitEditor().isActive()) return;
 
         event.setCancelled(true);

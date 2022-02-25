@@ -21,7 +21,7 @@ public class QueueListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
 
         if (profile.getQueue() == null) return;
         if (!profile.isInQueue()) return;

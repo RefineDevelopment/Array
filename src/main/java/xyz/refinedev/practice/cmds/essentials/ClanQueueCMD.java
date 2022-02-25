@@ -26,7 +26,7 @@ public class ClanQueueCMD {
 
     @Command(name = "", desc = "Open Clan Queue Menu")
     public void queue(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         if (!profile.hasClan()) {
             player.sendMessage(Locale.CLAN_DONOTHAVE.toString());
             return;

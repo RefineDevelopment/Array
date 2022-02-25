@@ -23,7 +23,7 @@ public class GHeadListener implements Listener {
 	@EventHandler
 	public void onConsume(PlayerItemConsumeEvent event){
 		Player player = event.getPlayer();
-		Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+		Profile profile = plugin.getProfileManager().getProfile(player);
 
 		if (event.getItem() == null || !event.getItem().hasItemMeta() || !event.getItem().getItemMeta().hasDisplayName()) return;
 		if (!event.getItem().getItemMeta().getDisplayName().toLowerCase().replace(" ", "").contains("goldenhead")) return;

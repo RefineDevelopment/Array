@@ -41,7 +41,7 @@ public class PartySettingsButton extends Button {
      */
     @Override
     public ItemStack getButtonItem(Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
 
         String key = "BUTTONS." + partyManageType.name();
@@ -76,7 +76,7 @@ public class PartySettingsButton extends Button {
      */
     @Override
     public void clicked(Player player, ClickType clickType) {
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (!profile.hasParty()) {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
             player.closeInventory();

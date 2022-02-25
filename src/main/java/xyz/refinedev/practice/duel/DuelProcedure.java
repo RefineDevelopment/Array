@@ -37,7 +37,7 @@ public class DuelProcedure {
         request.setKit(kit);
         request.setArena(arena);
 
-        Profile senderProfile = plugin.getProfileManager().getProfileByPlayer(sender);
+        Profile senderProfile = plugin.getProfileManager().getProfile(sender);
 
         senderProfile.setDuelProcedure(null);
         senderProfile.getDuelRequests().put(target.getUniqueId(), request);

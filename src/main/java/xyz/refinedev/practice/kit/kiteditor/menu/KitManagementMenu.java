@@ -42,7 +42,7 @@ public class KitManagementMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
         KitInventory[] kitInventories= profile.getStatisticsData().get(kit).getKitInventories();
 
         if (kitInventories == null) {
@@ -69,7 +69,7 @@ public class KitManagementMenu extends Menu {
     @Override
     public void onClose(Player player) {
         if (!isClosedByMenu()) {
-            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
             profile.setState(profile.getKitEditor().getPreviousState());
             profile.getKitEditor().setSelectedKit(null);
         }
@@ -96,7 +96,7 @@ public class KitManagementMenu extends Menu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
-            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
             profile.getStatisticsData().get(kit).deleteKit(kitInventory);
 
             new KitManagementMenu(this.getPlugin(), profile.getKitEditor().getSelectedKit()).openMenu(player);
@@ -118,7 +118,7 @@ public class KitManagementMenu extends Menu {
 
         @Override
         public void clicked(Player player, ClickType clickType) {
-            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
             Kit kit = profile.getKitEditor().getSelectedKit();
 
             if (kit == null) {
@@ -165,7 +165,7 @@ public class KitManagementMenu extends Menu {
         public void clicked(Player player, int slot, ClickType clickType, int hotbarSlot) {
             setClosedByMenu(true);
 
-            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
             profile.getKitEditor().setActive(true);
             profile.getKitEditor().setRename(true);
             profile.getKitEditor().setSelectedKitInventory(kitInventory);
@@ -194,7 +194,7 @@ public class KitManagementMenu extends Menu {
 
         @Override
         public void clicked(Player player, int slot, ClickType clickType, int hotbarSlot) {
-            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
 
             if (profile.getKitEditor().getSelectedKit() == null) {
                 player.closeInventory();

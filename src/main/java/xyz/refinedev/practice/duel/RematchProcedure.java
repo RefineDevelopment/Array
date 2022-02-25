@@ -43,8 +43,8 @@ public class RematchProcedure {
 
         if (!sender.isOnline() || !target.isOnline()) return;
 
-        Profile senderProfile = plugin.getProfileManager().getProfileByUUID(sender.getUniqueId());
-        Profile targetProfile = plugin.getProfileManager().getProfileByUUID(target.getUniqueId());
+        Profile senderProfile = plugin.getProfileManager().getProfile(sender.getUniqueId());
+        Profile targetProfile = plugin.getProfileManager().getProfile(target.getUniqueId());
 
         if (senderProfile.getRematchData() == null || targetProfile.getRematchData() == null || !senderProfile.getRematchData().getKey().equals(targetProfile.getRematchData().getKey())) {
             return;
@@ -90,8 +90,8 @@ public class RematchProcedure {
             return;
         }
 
-        Profile senderProfile = plugin.getProfileManager().getProfileByUUID(sender.getUniqueId());
-        Profile targetProfile = plugin.getProfileManager().getProfileByUUID(target.getUniqueId());
+        Profile senderProfile = plugin.getProfileManager().getProfile(sender.getUniqueId());
+        Profile targetProfile = plugin.getProfileManager().getProfile(target.getUniqueId());
 
         if (senderProfile.getRematchData() == null || targetProfile.getRematchData() == null || !senderProfile.getRematchData().getKey().equals(targetProfile.getRematchData().getKey())) {
             return;
@@ -133,8 +133,8 @@ public class RematchProcedure {
     }
 
     private String formatMessages(String string, Player sender, Player target) {
-        Profile senderProfile = plugin.getProfileManager().getProfileByUUID(sender.getUniqueId());
-        Profile targetProfile = plugin.getProfileManager().getProfileByUUID(target.getUniqueId());
+        Profile senderProfile = plugin.getProfileManager().getProfile(sender.getUniqueId());
+        Profile targetProfile = plugin.getProfileManager().getProfile(target.getUniqueId());
 
         return string
                 .replace("<ranked>","&cFalse")

@@ -160,7 +160,7 @@ public class PlayerUtil {
         STATUS_PACKET_ID_FIELD.set(statusPacket, entityId);
         STATUS_PACKET_STATUS_FIELD.set(statusPacket, (byte) 3);
 
-        final int radius = MinecraftServer.getServer().getPlayerList().d();
+        final int radius = MinecraftServer.getServer().getPlayerList().d(); //Furthest viewable block
         final Set<Player> sentTo = new HashSet<>();
 
         for ( Entity entity : player.getNearbyEntities(radius, radius, radius) ) {

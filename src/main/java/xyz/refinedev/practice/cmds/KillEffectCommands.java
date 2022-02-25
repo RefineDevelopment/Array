@@ -63,7 +63,7 @@ public class KillEffectCommands {
 
     @Command(name = "menu", aliases = "openmenu", desc = "Open Kill Efects Menu")
     public void menu(@Sender Player sender) {
-        plugin.getMenuHandler().findMenu(sender,"profile_killeffects").openMenu(sender);
+        plugin.getMenuHandler().findMenu(sender,"kill_effects").openMenu(sender);
         Button.playSuccess(sender);
     }
 

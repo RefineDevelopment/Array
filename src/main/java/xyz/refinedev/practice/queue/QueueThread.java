@@ -45,13 +45,13 @@ public class QueueThread extends Thread {
                         Player firstPlayer = Bukkit.getPlayer(firstQueueProfile.getUniqueId());
                         if (firstPlayer == null) continue;
 
-                        Profile firstProfile = profileManager.getProfileByUUID(firstQueueProfile.getUniqueId());
+                        Profile firstProfile = profileManager.getProfile(firstQueueProfile.getUniqueId());
 
                         for (QueueProfile secondQueueProfile : queue.getPlayers()) {
                             if (firstQueueProfile.equals(secondQueueProfile)) continue;
 
                             Player secondPlayer = Bukkit.getPlayer(secondQueueProfile.getUniqueId());
-                            Profile secondProfile = profileManager.getProfileByUUID(secondQueueProfile.getUniqueId());
+                            Profile secondProfile = profileManager.getProfile(secondQueueProfile.getUniqueId());
 
                             if (secondPlayer == null) continue;
 
@@ -143,8 +143,8 @@ public class QueueThread extends Thread {
     private String formatMessages(String string, Player sender, Player target, QueueType type) {
         ProfileManager profileManager = this.plugin.getProfileManager();
 
-        Profile senderProfile = profileManager.getProfileByUUID(sender.getUniqueId());
-        Profile targetProfile = profileManager.getProfileByUUID(target.getUniqueId());
+        Profile senderProfile = profileManager.getProfile(sender.getUniqueId());
+        Profile targetProfile = profileManager.getProfile(target.getUniqueId());
 
         int senderELO = senderProfile.getStatisticsData().get(kit).getElo();
         int targetELO = targetProfile.getStatisticsData().get(kit).getElo();

@@ -3,11 +3,10 @@ package xyz.refinedev.practice.managers;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
@@ -26,9 +25,7 @@ import xyz.refinedev.practice.util.chat.ProgressBar;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.location.LocationUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -227,6 +224,25 @@ public class ArenaManager {
     }
 
     /**
+     * Clears dropped ground items from each world
+     */
+    public void clearGroundItems() {
+        Set<World> resetWorlds = new HashSet<>();
+        for ( Arena arena : arenas ) {
+            if (arena.getSpawn1() == null && arena.getSpawn2() == null) continue;
+
+            World world = arena.getSpawn1() == null ? arena.getSpawn2().getWorld() : arena.getSpawn1().getWorld();
+            if (resetWorlds.contains(world)) continue;
+
+            for ( Entity entity : world.getEntities() ) {
+                if (entity.getType() != EntityType.DROPPED_ITEM) continue;
+                entity.remove();
+            }
+            resetWorlds.add(world);
+        }
+    }
+
+    /**
      * Get an {@link Arena} by its name
      *
      * @param name {@link String} name of the arena
@@ -323,7 +339,7 @@ public class ArenaManager {
      * @param arena {@link Arena} the arena being rated
      */
     public void sendRatingMessage(Player player, Arena arena) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         profile.setIssueRating(true);
 
         String key = "&7Click to rate &a" + arena.getDisplayName();

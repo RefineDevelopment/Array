@@ -26,7 +26,7 @@ public class ToggleDropProtectCMD {
     @Command(name = "", desc = "Toggle Drop Protect for your Profile")
     @Require("array.profile.dropprotect")
     public void toggle(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         ProfileSettings settings = profile.getSettings();
 
         settings.setDropProtect(!settings.isDropProtect());

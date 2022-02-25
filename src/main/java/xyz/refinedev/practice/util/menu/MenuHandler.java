@@ -7,11 +7,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.party.menu.PartyEventMenu;
 import xyz.refinedev.practice.party.menu.PartySettingsMenu;
 import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.killeffect.menu.KEMenu;
-import xyz.refinedev.practice.profile.killeffect.menu.KEPaginatedMenu;
+import xyz.refinedev.practice.profile.killeffect.menu.KillEffectMenu;
 import xyz.refinedev.practice.profile.menu.ProfileMenu;
 import xyz.refinedev.practice.profile.settings.menu.ProfileSettingsMenu;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
@@ -70,9 +71,8 @@ public class MenuHandler {
             menu.setTitle(menuConfig.getString("TITLE"));
             menu.setSize(menuConfig.getInteger("SIZE"));
             menu.setPaginated(menuConfig.getBoolean("PAGINATED"));
-            menu.setPlaceholder(menuConfig.getBoolean("PLACEHOLDER"));
 
-            if (menu.isPlaceholder()) {
+            if (menuConfig.getBoolean("PLACEHOLDER")) {
                 Material material = ButtonUtil.getPlaceholderMaterial(menuConfig, menu.getName());
                 if (material == null) {
                     menu.setPlaceholder(false);
@@ -86,6 +86,7 @@ public class MenuHandler {
                 itemBuilder.clearFlags();
 
                 menu.setPlaceholderItem(itemBuilder.build());
+                menu.setPlaceholder(true);
             }
 
             menu.setButtons(this.loadCustomButtons(menuConfig));
@@ -235,26 +236,21 @@ public class MenuHandler {
      * @return {@link Menu}
      */
     public Menu findMenu(Player player, String name) {
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        ProfileManager profileManager = this.plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(player.getUniqueId());
         switch (name) {
-            case "kill_effects": {
-                if (this.getConfigByName("kill_effects").getBoolean("PAGINATED")) {
-                    return new KEPaginatedMenu(plugin);
-                }
-                return new KEMenu(plugin);
-            }
+            case "kill_effects": return new KillEffectMenu(plugin);
             case "party_events": return new PartyEventMenu(plugin);
             case "party_settings": return new PartySettingsMenu(plugin);
             case "profile_menu": return new ProfileMenu(plugin, player);
             case "profile_settings": return new ProfileSettingsMenu(plugin);
             default: {
-                MenuData menuData = getMenuDataByName(name);
-                if (menuData == null) return null;
-                if (menuData.isPaginated()) {
-                    return new CustomPaginatedMenu(plugin, menuData);
-                } else {
-                    return new CustomMenu(plugin, menuData);
+                MenuData menuData = this.getMenuDataByName(name);
+                if (menuData == null) {
+                    player.sendMessage(Locale.ERROR_MENU.toString());
+                    return null;
                 }
+                return menuData.isPaginated() ?  new CustomPaginatedMenu(plugin, menuData) : new CustomMenu(plugin, menuData);
             }
         }
     }

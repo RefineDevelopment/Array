@@ -28,7 +28,7 @@ public class TogglePlayersCMD {
 
     @Command(name = "", desc = "Toggle Player Visibility for your Profile")
     public void toggle(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         ProfileSettings settings = profile.getSettings();
 
         if (!profile.getVisibilityCooldown().hasExpired()) {

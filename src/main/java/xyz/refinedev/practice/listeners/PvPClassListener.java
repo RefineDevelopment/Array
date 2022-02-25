@@ -28,7 +28,7 @@ public class PvPClassListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (!profile.isInFight()) return;
 
         Match match = profile.getMatch();
@@ -40,7 +40,7 @@ public class PvPClassListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onArmorChange(ArmorEquipEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (!profile.isInFight()) return;
 
         Match match = profile.getMatch();

@@ -90,7 +90,7 @@ public class ClanManager {
         for ( ClanProfile member : clan.getAllMembers() ) {
             Player player = this.plugin.getServer().getPlayer(member.getUniqueId());
 
-            Profile profile = this.plugin.getProfileManager().getProfileByUUID(member.getUniqueId());
+            Profile profile = this.plugin.getProfileManager().getProfile(member.getUniqueId());
             profile.setClan(null);
 
             if (player != null && player.isOnline()) {
@@ -246,7 +246,7 @@ public class ClanManager {
      * @param joiner The player joining the clan
      */
     public void join(Clan clan, Player joiner, ClanInvite clanInvite) {
-        Profile profile = this.plugin.getProfileManager().getProfileByPlayer(joiner);
+        Profile profile = this.plugin.getProfileManager().getProfile(joiner);
 
         if (clanInvite != null && !clan.getInvites().containsKey(joiner.getUniqueId())) {
             joiner.sendMessage(CC.translate("&7You are not invited to this clan or your invite expired!"));
@@ -283,7 +283,7 @@ public class ClanManager {
     public void leave(Clan clan, Player leaver) {
         Preconditions.checkNotNull(leaver, "Player can not be null!");
 
-        Profile profile = this.plugin.getProfileManager().getProfileByPlayer(leaver);
+        Profile profile = this.plugin.getProfileManager().getProfile(leaver);
         ClanProfile clanProfile = this.profileMap.get(leaver.getUniqueId());
 
         if (clanProfile.getType() == ClanRoleType.LEADER) {
@@ -314,7 +314,7 @@ public class ClanManager {
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
         Preconditions.checkNotNull(player, "Player can not be null!");
 
-        Profile profile = this.plugin.getProfileManager().getProfileByUUID(uuid);
+        Profile profile = this.plugin.getProfileManager().getProfile(uuid);
         ClanProfile clanProfile = this.profileMap.get(uuid);
 
         if (clanProfile.getType() == ClanRoleType.LEADER) {
@@ -345,7 +345,7 @@ public class ClanManager {
         OfflinePlayer player = this.plugin.getServer().getOfflinePlayer(uuid);
         Preconditions.checkNotNull(player, "Player can not be null!");
 
-        Profile profile = this.plugin.getProfileManager().getProfileByUUID(uuid);
+        Profile profile = this.plugin.getProfileManager().getProfile(uuid);
         ClanProfile clanProfile = this.profileMap.get(uuid);
 
         if (clanProfile.getType() == ClanRoleType.LEADER) {
@@ -430,7 +430,7 @@ public class ClanManager {
         return clan.getAllMembers()
                 .stream()
                 .map(ClanProfile::getUniqueId)
-                .map(this.plugin.getProfileManager()::getProfileByUUID)
+                .map(this.plugin.getProfileManager()::getProfile)
                 .filter(Objects::nonNull)
                 .anyMatch(profile -> profile.isInFight() && profile.getMatch().getQueueType().equals(QueueType.CLAN));
     }

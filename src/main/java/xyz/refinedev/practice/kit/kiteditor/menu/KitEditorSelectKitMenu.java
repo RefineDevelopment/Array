@@ -1,7 +1,6 @@
 package xyz.refinedev.practice.kit.kiteditor.menu;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -66,7 +65,7 @@ public class KitEditorSelectKitMenu extends Menu {
                 return;
             }
 
-            Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
             profile.getKitEditor().setSelectedKit(kit);
             profile.getKitEditor().setPreviousState(profile.getState());
 

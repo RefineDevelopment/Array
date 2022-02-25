@@ -72,7 +72,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         List<String> lines = new ArrayList<>();
 
         ProfileManager profileManager = this.plugin.getProfileManager();
-        Profile profile = profileManager.getProfileByUUID(player.getUniqueId());
+        Profile profile = profileManager.getProfile(player.getUniqueId());
         if (!profile.getSettings().isScoreboardEnabled()) return lines;
 
         lines.addAll(this.fetchLines(player, profile));
@@ -114,7 +114,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         QueueManager queueManager = this.plugin.getQueueManager();
         MatchManager matchManager = this.plugin.getMatchManager();
 
-        Profile profile = profileManager.getProfileByUUID(player.getUniqueId());
+        Profile profile = profileManager.getProfile(player.getUniqueId());
         ProfileDivision division = profileManager.getDivision(profile);
 
         return config.getStringList("SCOREBOARD.LOBBY").stream().map(line -> CC.translate(line
@@ -132,7 +132,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         QueueManager queueManager = this.plugin.getQueueManager();
         MatchManager matchManager = this.plugin.getMatchManager();
 
-        Profile profile = profileManager.getProfileByUUID(player.getUniqueId());
+        Profile profile = profileManager.getProfile(player.getUniqueId());
         Queue queue = queueManager.getByUUID(profile.getQueue());
         QueueProfile queueProfile = queueManager.getProfileByUUID(player.getUniqueId());
         ProfileDivision division = profileManager.getDivision(profile);
@@ -165,7 +165,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
             }
             case CLAN: {
                 Clan clan = clanManager.getByUUID(profile.getClan());
-                Profile leaderProfile = profileManager.getProfileByUUID(clan.getLeader().getUniqueId());
+                Profile leaderProfile = profileManager.getProfile(clan.getLeader().getUniqueId());
                 return config.getStringList("SCOREBOARD.CLAN_QUEUE").stream().map(line -> CC.translate(line
                         .replace("<online>", String.valueOf(this.plugin.getServer().getOnlinePlayers().size()))
                         .replace("<in_fights>", String.valueOf(matchManager.getInFights()))
@@ -193,7 +193,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         QueueManager queueManager = this.plugin.getQueueManager();
         MatchManager matchManager = this.plugin.getMatchManager();
 
-        Profile profile = profileManager.getProfileByUUID(player.getUniqueId());
+        Profile profile = profileManager.getProfile(player.getUniqueId());
         Clan clan = clanManager.getByUUID(profile.getClan());
         ProfileDivision division = profileManager.getDivision(profile);
 
@@ -203,7 +203,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                 .replace("<in_queues>", String.valueOf(queueManager.getInQueues()))
                 .replace("<elo_league>", division.getDisplayName())
                 .replace("<global_elo>", String.valueOf(profile.getGlobalElo()))
-                .replace("<clan_leader>", plugin.getProfileManager().getProfileByUUID(clan.getLeader().getUniqueId()).getName())
+                .replace("<clan_leader>", plugin.getProfileManager().getProfile(clan.getLeader().getUniqueId()).getName())
                 .replace("<clan_members_online>", String.valueOf(clan.getOnlineMembers().size()))
                 .replace("<clan_members_total>", String.valueOf(clan.getAllMembers().size()))
                 .replace("<clan_elo>",String.valueOf(clan.getElo()))
@@ -215,7 +215,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         ProfileManager profileManager = this.plugin.getProfileManager();
         PartyManager partyManager = this.plugin.getPartyManager();
 
-        Profile profile = profileManager.getProfileByUUID(player.getUniqueId());
+        Profile profile = profileManager.getProfile(player.getUniqueId());
         Party party = partyManager.getPartyByUUID(profile.getParty());
         String armorClass = party.getKits().get(player.getUniqueId());
 
@@ -235,7 +235,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         PartyManager partyManager = this.plugin.getPartyManager();
         QueueManager queueManager = this.plugin.getQueueManager();
 
-        Profile profile = profileManager.getProfileByUUID(player.getUniqueId());
+        Profile profile = profileManager.getProfile(player.getUniqueId());
         Party party = partyManager.getPartyByUUID(profile.getParty());
         Tournament tournament = tournamentManager.getTournamentById(profile.getTournament());
         ProfileDivision division = profileManager.getDivision(profile);
@@ -281,7 +281,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         TimerHandler timerHandler = this.plugin.getTimerHandler();
 
         PlayerTimer bridgeTimer = timerHandler.getTimer(BridgeArrowTimer.class);
-        Profile profile = profileManager.getProfileByUUID(player.getUniqueId());
+        Profile profile = profileManager.getProfile(player.getUniqueId());
         Match match = profile.getMatch();
 
         if (match.isEnding()) {
@@ -491,7 +491,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         TimerHandler timerHandler = this.plugin.getTimerHandler();
 
         PlayerTimer timer = timerHandler.getTimer(BridgeArrowTimer.class);
-        Profile profile = profileManager.getProfileByUUID(player.getUniqueId());
+        Profile profile = profileManager.getProfile(player.getUniqueId());
         Match match = profile.getMatch();
 
         if (match.isEnding()) {
@@ -643,7 +643,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
         /*ProfileManager profileManager = this.plugin.getProfileManager();
         EventManager eventManager = this.plugin.getEventManager();
 
-        Profile profile = profileManager.getProfileByUUID(player.getUniqueId());
+        Profile profile = profileManager.getProfile(player.getUniqueId());
         Event event = eventManager.getEventByUUID(profile.getEvent());
 
         if (!event.isTeam()) {
@@ -758,7 +758,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
     }
 
     private String getFormattedPoints(Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         Match match = profile.getMatch();
         int points = 0;
         String color = "&a";

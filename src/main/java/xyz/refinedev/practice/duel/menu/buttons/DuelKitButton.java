@@ -51,7 +51,7 @@ public class DuelKitButton extends Button {
 
     @Override
     public void clicked(Player player, ClickType clickType) {
-        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
 
         if (profile.getDuelProcedure() == null) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());

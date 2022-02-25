@@ -21,38 +21,38 @@ public class ArrayAPI implements API {
 
     @Override
     public boolean isInLobby(Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (profile.isInLobby() || profile.isInQueue()) return true;
         return !profile.isInFight() && !profile.isInEvent() && !profile.isSpectating() && !profile.isInTournament();
     }
 
     @Override
     public boolean isInParty(Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         return profile.hasParty();
     }
 
     @Override
     public boolean isInFight(Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         return profile.isInFight();
     }
 
     @Override
     public boolean isInTournament(Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         return profile.isInTournament();
     }
 
     @Override
     public boolean isInEvent(Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         return profile.isInEvent();
     }
 
     @Override
     public void handleVisibility(Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         plugin.getProfileManager().handleVisibility(profile);
     }
 
@@ -63,7 +63,7 @@ public class ArrayAPI implements API {
 
     @Override
     public Profile getProfile(Player player) {
-        return plugin.getProfileManager().getProfileByPlayer(player);
+        return plugin.getProfileManager().getProfile(player);
     }
 
 }

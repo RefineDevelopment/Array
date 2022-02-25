@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.lunarclient.bukkitapi.cooldown.LunarClientAPICooldown;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
@@ -41,7 +40,6 @@ import xyz.refinedev.practice.task.profile.ProfileHotbarTask;
 import xyz.refinedev.practice.task.profile.ProfileQueryTask;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.InventoryUtil;
-import xyz.refinedev.practice.util.other.Cooldown;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
@@ -436,7 +434,7 @@ public class ProfileManager {
                 profile.setRematchData(null);
                 return true;
             } else {
-                Profile targetProfile = this.getProfileByUUID(target.getUniqueId());
+                Profile targetProfile = this.getProfile(target.getUniqueId());
                 if (!(targetProfile.isInLobby() || targetProfile.isInQueue())) {
                     profile.setRematchData(null);
                     return true;
@@ -568,7 +566,7 @@ public class ProfileManager {
      * @param uuid {@link UUID} the uniqueId of the profile
      * @return {@link Profile} the profile requested
      */
-    public Profile getProfileByUUID(UUID uuid) {
+    public Profile getProfile(UUID uuid) {
         return profiles.get(uuid);
     }
 
@@ -578,7 +576,7 @@ public class ProfileManager {
      * @param player {@link Player} the player of the profile
      * @return {@link Profile} the profile requested
      */
-    public Profile getProfileByPlayer(Player player) {
+    public Profile getProfile(Player player) {
        return profiles.get(player.getUniqueId());
     }
 

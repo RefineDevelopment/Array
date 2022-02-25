@@ -24,7 +24,7 @@ public class ToggleSpectatorsCMD {
 
     @Command(name = "", desc = "Toggle Spectators for your Profile")
     public void toggle(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         ProfileSettings settings = profile.getSettings();
 
         settings.setAllowSpectators(!settings.isAllowSpectators());

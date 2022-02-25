@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.party.menu;
 
-import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.party.Party;
@@ -39,7 +38,7 @@ public class PartyListMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
         Party party = this.getPlugin().getPartyManager().getPartyByUUID(profile.getParty());
         party.getPlayers().forEach(pplayer -> buttons.put(buttons.size(), new PartyListButton(pplayer)));
         return buttons;

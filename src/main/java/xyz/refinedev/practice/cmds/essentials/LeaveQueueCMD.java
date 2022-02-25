@@ -26,7 +26,7 @@ public class LeaveQueueCMD {
 
     @Command(name = "", desc = "Leave your current queue.")
     public void leave(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         Queue queue = plugin.getQueueManager().getByUUID(player.getUniqueId());
         QueueProfile queueProfile = plugin.getQueueManager().getProfileByUUID(player.getUniqueId());
 

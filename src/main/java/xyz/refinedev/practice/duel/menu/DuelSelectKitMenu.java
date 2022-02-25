@@ -1,6 +1,5 @@
 package xyz.refinedev.practice.duel.menu;
 
-import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.duel.menu.buttons.DuelKitButton;
@@ -46,7 +45,7 @@ public class DuelSelectKitMenu extends Menu {
      */
     @Override
     public Map<Integer, Button> getButtons(Player player) {
-        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
         Map<Integer, Button> buttons = new HashMap<>();
 
         for ( Kit kit : this.getPlugin().getKitManager().getKits() ) {
@@ -69,7 +68,7 @@ public class DuelSelectKitMenu extends Menu {
     public void onClose(Player player) {
         if (this.isClosedByMenu()) return;
 
-        Profile profile = this.getPlugin().getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
         profile.setDuelProcedure(null);
     }
 }

@@ -46,7 +46,7 @@ public class PartyKitButton extends Button {
 
     @Override
     public void clicked(Player player, ClickType clickType) {
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (!profile.hasParty()) {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
             return;

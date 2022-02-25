@@ -26,7 +26,7 @@ public class UnrankedQueueCMD {
 
     @Command(name = "", desc = "Open unranked queue menu")
     public void queue(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         if (!profile.isBusy()) {
             QueueSelectKitMenu menu = new QueueSelectKitMenu(plugin, QueueType.UNRANKED);
             menu.openMenu(player);

@@ -28,7 +28,7 @@ public class RateCommand {
 
     @Command(name = "", desc = "Rate an Arena", usage = "<arena> <rating>")
     public void rate(@Sender Player player, Arena arena, RatingType ratingType) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
 
         if (!profile.isIssueRating()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());

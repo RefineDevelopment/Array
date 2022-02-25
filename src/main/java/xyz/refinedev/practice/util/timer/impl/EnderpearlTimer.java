@@ -38,7 +38,7 @@ public class EnderpearlTimer extends PlayerTimer implements Listener {
 			return;
 		}
 
-		Profile profile = plugin.getProfileManager().getProfileByUUID(playerUUID);
+		Profile profile = plugin.getProfileManager().getProfile(playerUUID);
 		if (profile.isInSomeSortOfFight()) player.sendMessage(Locale.MATCH_EPEARL_EXPIRE.toString());
 	}
 
@@ -47,7 +47,7 @@ public class EnderpearlTimer extends PlayerTimer implements Listener {
 		if (event.getEntity().getShooter() instanceof Player) {
 			if (event.getEntity() instanceof EnderPearl) {
 				Player player = (Player) event.getEntity().getShooter();
-				Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+				Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
 				if (!profile.isInSomeSortOfFight()) {
 					this.clearCooldown(player);
 					return;

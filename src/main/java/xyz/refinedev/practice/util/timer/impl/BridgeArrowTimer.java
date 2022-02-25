@@ -43,7 +43,7 @@ public class BridgeArrowTimer extends PlayerTimer implements Listener {
     public void onArrowShoot(ProjectileLaunchEvent event) {
         if (event.getEntity().getShooter() instanceof Player && event.getEntity() instanceof Arrow) {
             Player player = (Player)event.getEntity().getShooter();
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
             if (!profile.isInMatch() && !profile.getMatch().isTheBridgeMatch()) {
                 this.clearCooldown(player);
                 return;

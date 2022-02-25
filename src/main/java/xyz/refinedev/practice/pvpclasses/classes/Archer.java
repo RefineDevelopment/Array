@@ -72,7 +72,7 @@ public class Archer extends PvPClass implements Listener {
                 Player damaged = (Player) event.getEntity();
                 Player shooter = (Player) source;
 
-                if (!plugin.getProfileManager().getProfileByUUID(damaged.getUniqueId()).getMatch().isHCFMatch()) {
+                if (!plugin.getProfileManager().getProfile(damaged.getUniqueId()).getMatch().isHCFMatch()) {
                     return;
                 }
 
@@ -143,7 +143,7 @@ public class Archer extends PvPClass implements Listener {
         UUID uuid = player.getUniqueId();
         Action action = event.getAction();
 
-        if (plugin.getProfileManager().getProfileByUUID(uuid).getMatch() != null && !plugin.getProfileManager().getProfileByUUID(uuid).getMatch().isHCFMatch()) {
+        if (plugin.getProfileManager().getProfile(uuid).getMatch() != null && !plugin.getProfileManager().getProfile(uuid).getMatch().isHCFMatch()) {
             return;
         }
 

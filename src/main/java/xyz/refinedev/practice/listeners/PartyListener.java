@@ -22,7 +22,7 @@ public class PartyListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
 
         Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
         if (party == null) return;

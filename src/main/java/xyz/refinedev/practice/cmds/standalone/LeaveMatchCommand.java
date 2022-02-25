@@ -29,7 +29,7 @@ public class LeaveMatchCommand {
     @Require("array.profile.forfeit")
     public void forfeitMatch(@Sender Player player, @OptArg() Player target) {
 
-        Profile profile = plugin.getProfileManager().getProfileByUUID(target == null ? player.getUniqueId() : target.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(target == null ? player.getUniqueId() : target.getUniqueId());
         if (!profile.isInFight()) {
             player.sendMessage(target == null ? Locale.ERROR_NOTMATCH.toString() : Locale.ERROR_TARGET_NOTMATCH.toString());
             return;

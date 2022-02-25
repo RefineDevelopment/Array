@@ -27,7 +27,7 @@ public class RankedQueueCMD {
 
     @Command(name = "", desc = "Open ranked queue menu")
     public void queue(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
 
         if (!plugin.getConfigHandler().isRANKED_ENABLED()) {
             player.sendMessage(Locale.RANKED_DISABLED.toString());

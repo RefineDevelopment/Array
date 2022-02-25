@@ -84,7 +84,7 @@ public class MatchManager {
      */
     public void start(Match match) {
         for (Player player : match.getPlayers()) {
-            Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+            Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
             profile.setState(ProfileState.IN_FIGHT);
             profile.setMatch(match);
 
@@ -144,7 +144,7 @@ public class MatchManager {
         }
 
         for ( Player player : match.getPlayers() ) {
-            Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+            Profile profile = plugin.getProfileManager().getProfile(player);
 
             plugin.getSpigotHandler().resetKnockback(player);
             player.setMaximumNoDamageTicks(20);
@@ -173,7 +173,7 @@ public class MatchManager {
 
         if (plugin.getConfigHandler().isRATINGS_ENABLED()) {
             for ( Player player : match.getPlayers() ) {
-                Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+                Profile profile = this.plugin.getProfileManager().getProfile(player.getUniqueId());
 
                 profile.setIssueRating(true);
                 profile.setRatingArena(arena);
@@ -311,7 +311,7 @@ public class MatchManager {
      */
     public void handleKillEffect(Match match, Player deadPlayer, Player killerPlayer, List<Item> droppedItems) {
         if (killerPlayer == null || deadPlayer == null || !deadPlayer.isOnline()) return;
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(killerPlayer);
+        Profile profile = plugin.getProfileManager().getProfile(killerPlayer);
         KillEffect killEffect = profile.getKillEffect();
         if (!killEffect.equals(KillEffect.NONE)) killEffect.getCallable().call(deadPlayer,  match.getPlayers(), droppedItems);
     }
@@ -336,7 +336,7 @@ public class MatchManager {
 
         PlayerUtil.spectator(player);
 
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         profile.setMatch(match);
         profile.setSpectating(target);
         profile.setState(ProfileState.SPECTATING);
@@ -349,7 +349,7 @@ public class MatchManager {
         player.updateInventory();
 
         for ( Player matchPlayer : match.getAllPlayers() ) {
-            Profile matchProfile = plugin.getProfileManager().getProfileByPlayer(matchPlayer);
+            Profile matchProfile = plugin.getProfileManager().getProfile(matchPlayer);
             plugin.getProfileManager().handleVisibility(matchProfile, player);
         }
 
@@ -372,7 +372,7 @@ public class MatchManager {
         MatchSpectatorLeaveEvent event = new MatchSpectatorLeaveEvent(player, match);
         plugin.getServer().getPluginManager().callEvent(event);
 
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         profile.setState(ProfileState.IN_LOBBY);
         profile.setMatch(null);
         profile.setSpectating(null);
@@ -397,7 +397,7 @@ public class MatchManager {
      * @param player {@link Player} for whom we are toggling
      */
     public void toggleSpectators(Match match, Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
 
         profile.setVisibilityCooldown(new Cooldown(TimeUtil.parseTime("5s")));
 

@@ -37,7 +37,7 @@ public class PvPClassManager {
 
         TaskUtil.runTimer(() -> {
             for (Player player : this.plugin.getServer().getOnlinePlayers()) {
-                Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+                Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
                 if (!profile.isInFight()) continue;
 
                 Match match = profile.getMatch();
@@ -116,7 +116,7 @@ public class PvPClassManager {
      * @param pvpClass the class to equip or null to un-equip active
      */
     public void setEquippedClass(Player player, PvPClass pvpClass) {
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (!profile.isInFight()) return;
 
         Match match = profile.getMatch();

@@ -207,12 +207,7 @@ public class Array extends JavaPlugin {
         this.kitManager.getKits().forEach(kitManager::save);
         this.clanManager.getClans().values().forEach(clanManager::save);
         this.profileManager.getProfiles().values().forEach(profileManager::save);
-
-        World world = this.getServer().getWorld("world");
-        for ( Entity entity : world.getEntities()) {
-            if (entity.getType() != EntityType.DROPPED_ITEM) continue;
-            entity.remove();
-        }
+        this.arenaManager.clearGroundItems();
 
         this.configHandler.save();
         this.pvpClassManager.shutdown();

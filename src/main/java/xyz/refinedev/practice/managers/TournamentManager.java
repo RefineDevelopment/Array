@@ -68,7 +68,7 @@ public class TournamentManager {
      * @param player {@link Player} the leader of the party
      */
     public void joinTournament(UUID id, Player player) {
-        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfile(player.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
         Tournament tournament = this.getTournamentById(id);
         if (tournament == null) return;
@@ -131,7 +131,7 @@ public class TournamentManager {
      * @param player {@link Player} the player joining
      */
     private void handleJoin(Tournament tournament, Player player) {
-        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfile(player.getUniqueId());
         profile.setTournament(tournament.getUniqueId());
 
         tournament.addPlayer(player.getUniqueId());
@@ -147,7 +147,7 @@ public class TournamentManager {
      * @param player {@link Player} the player leaving
      */
     private void handleLeave(Tournament tournament, Player player) {
-        Profile profile = this.plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = this.plugin.getProfileManager().getProfile(player.getUniqueId());
         profile.setTournament(null);
 
         TournamentTeam team = tournament.getPlayerTeam(player.getUniqueId());
@@ -177,7 +177,7 @@ public class TournamentManager {
             this.plugin.getServer().broadcastMessage("names won the tournament");
 
             for ( UUID playerUUID : tournamentTeam.getAlivePlayers() ) {
-                Profile tournamentProfile = this.plugin.getProfileManager().getProfileByUUID(playerUUID);
+                Profile tournamentProfile = this.plugin.getProfileManager().getProfile(playerUUID);
                 tournamentProfile.setTournament(null);
 
                 this.plugin.getProfileManager().teleportToSpawn(tournamentProfile);
@@ -197,7 +197,7 @@ public class TournamentManager {
      */
     private void handleElimination(Tournament tournament, TournamentTeam winnerTeam, TournamentTeam losingTeam) {
         for (UUID playerUUID : losingTeam.getAlivePlayers()) {
-            Profile profile = this.plugin.getProfileManager().getProfileByUUID(playerUUID);
+            Profile profile = this.plugin.getProfileManager().getProfile(playerUUID);
             Player player = this.plugin.getServer().getPlayer(playerUUID);
 
             tournament.removePlayer(player.getUniqueId());
@@ -249,7 +249,7 @@ public class TournamentManager {
         this.plugin.getServer().broadcastMessage("names won the Tournament !");
 
         for ( UUID playerUUID : winningTournamentTeam.getAlivePlayers() ) {
-            Profile tournamentPlayer = this.plugin.getProfileManager().getProfileByUUID(playerUUID);
+            Profile tournamentPlayer = this.plugin.getProfileManager().getProfile(playerUUID);
             tournamentPlayer.setTournament(null);
 
             this.plugin.getProfileManager().teleportToSpawn(tournamentPlayer);
@@ -267,7 +267,7 @@ public class TournamentManager {
         this.plugin.getServer().broadcastMessage(Locale.TOURNAMENT_CANCELLED.toString());
 
         for (UUID uuid : tournament.getPlayers()) {
-            Profile profile = this.plugin.getProfileManager().getProfileByUUID(uuid);
+            Profile profile = this.plugin.getProfileManager().getProfile(uuid);
             if (profile.isInFight()) {
                 Match match = profile.getMatch();
                 this.plugin.getMatchManager().end(match);
@@ -302,7 +302,7 @@ public class TournamentManager {
      * @return {@link Tournament} queried tournament
      */
     public Tournament getTournamentByUUID(UUID uuid) {
-        Profile profile = this.plugin.getProfileManager().getProfileByUUID(uuid);
+        Profile profile = this.plugin.getProfileManager().getProfile(uuid);
         UUID id = profile.getTournament();
         if (id == null) return null;
 

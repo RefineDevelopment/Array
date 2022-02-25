@@ -26,7 +26,7 @@ public class SpectateCommand {
 
     @Command(name = "", desc = "Spectate a target player", usage = "<target>")
     public void spectate(@Sender Player player, Player target) {
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
 
         if (profile.isBusy()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
@@ -38,7 +38,7 @@ public class SpectateCommand {
             return;
         }
 
-        Profile targetProfile = plugin.getProfileManager().getProfileByUUID(target.getUniqueId());
+        Profile targetProfile = plugin.getProfileManager().getProfile(target.getUniqueId());
 
         if (!targetProfile.getSettings().isAllowSpectators() && !player.hasPermission("array.profile.silent")) {
             player.sendMessage(Locale.ERROR_NOSPEC.toString());
@@ -53,7 +53,7 @@ public class SpectateCommand {
         if (targetProfile.getMatch() != null && !targetProfile.getMatch().isFreeForAllMatch()) {
             for ( TeamPlayer teamPlayer : targetProfile.getMatch().getTeamPlayers() ) {
                 Player inMatchPlayer = teamPlayer.getPlayer();
-                Profile inMatchProfile = plugin.getProfileManager().getProfileByUUID(inMatchPlayer.getUniqueId());
+                Profile inMatchProfile = plugin.getProfileManager().getProfile(inMatchPlayer.getUniqueId());
 
                 if (!inMatchProfile.getSettings().isAllowSpectators() && !profile.isSilent()) {
                     player.sendMessage(Locale.ERROR_MATCHNOSPEC.toString());
@@ -73,7 +73,7 @@ public class SpectateCommand {
 
     @Command(name = "show", aliases = "view", desc = "Show spectators")
     public void show(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         if (!profile.isInMatch()) {
             player.sendMessage(Locale.MATCH_NOT_IN.toString());
             return;
@@ -86,7 +86,7 @@ public class SpectateCommand {
 
     @Command(name = "hide", aliases = "disable", desc = "Hide spectators")
     public void hide(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         if (!profile.isInMatch()) {
             player.sendMessage(Locale.MATCH_NOT_IN.toString());
             return;

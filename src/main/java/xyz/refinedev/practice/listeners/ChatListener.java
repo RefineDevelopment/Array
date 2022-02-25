@@ -31,7 +31,7 @@ public class ChatListener implements Listener {
         Player player = event.getPlayer();
         String chatMessage = event.getMessage();
         
-        Profile profile = plugin.getProfileManager().getProfileByPlayer(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
         if (!profile.getSettings().isClanChat() && !chatMessage.startsWith("$") && !chatMessage.startsWith(".")) return;
         if (!profile.hasClan()) return;
         
@@ -50,7 +50,7 @@ public class ChatListener implements Listener {
         Player player = event.getPlayer();
         String chatMessage = event.getMessage();
         
-        Profile profile = plugin.getProfileManager().getProfileByUUID(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (!chatMessage.startsWith("@") && !profile.getSettings().isPartyChat()) return;
         if (!profile.hasParty()) return;
         
