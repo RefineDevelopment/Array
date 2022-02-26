@@ -34,9 +34,9 @@ public class ProfileListener implements Listener {
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
-        String command = event.getMessage().split(" ")[0];
         Player player = event.getPlayer();
-        Profile profile = this.plugin.getProfileManager().getProfile(player.getUniqueId());
+        ProfileManager profileManager = this.plugin.getProfileManager();
+     Profile profile = profileManager.getProfile(player.getUniqueId());
 
         if (profile.getKitEditor().isRenaming()) {
             event.getPlayer().sendMessage(ChatColor.RED + "A kit name cannot start with \"/\".");
@@ -53,7 +53,8 @@ public class ProfileListener implements Listener {
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
 
         Player player = event.getPlayer();
-        Profile profile = this.plugin.getProfileManager().getProfile(player.getUniqueId());
+        ProfileManager profileManager = this.plugin.getProfileManager();
+     Profile profile = profileManager.getProfile(player.getUniqueId());
 
         if ((player.getGameMode() == GameMode.CREATIVE && !profile.isSpectating()) || profile.isBuild()) return;
         if (event.getAction().name().endsWith("_BLOCK")
@@ -189,10 +190,11 @@ public class ProfileListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void AsyncPlayerLoginEvent(AsyncPlayerPreLoginEvent event) {
         if (!plugin.getConfigHandler().isLoaded()) {
-            event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
+            event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_FULL);
             event.setKickMessage(CC.RED + "The server is still loading, please wait for it to load!");
             return;
         }
+
 
         UUID uuid = event.getUniqueId();
         Profile profile = new Profile(uuid);

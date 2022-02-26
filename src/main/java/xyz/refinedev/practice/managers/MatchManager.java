@@ -173,7 +173,8 @@ public class MatchManager {
 
         if (plugin.getConfigHandler().isRATINGS_ENABLED()) {
             for ( Player player : match.getPlayers() ) {
-                Profile profile = this.plugin.getProfileManager().getProfile(player.getUniqueId());
+                ProfileManager profileManager = this.plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(player.getUniqueId());
 
                 profile.setIssueRating(true);
                 profile.setRatingArena(arena);

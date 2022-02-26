@@ -25,6 +25,7 @@ public class MatchCooldownTask extends BukkitRunnable {
 
     @Override
     public void run() {
+        if (plugin.getServer().getOnlinePlayers().size() == 0) return;
         int seconds;
 
         EnderpearlTimer enderpearlTimer = this.plugin.getTimerHandler().getTimer(EnderpearlTimer.class);

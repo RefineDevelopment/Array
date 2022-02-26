@@ -185,7 +185,7 @@ SCOREBOARD:
       - " &cBlue: &r<bedwars_blue_formatted>"
       - ""
       - " &fDuration: &c<match_duration>"
-      - " &fKills: &c<your_kills>".
+      - " &fKills: &c<your_kills>"
       - ""
       - "&7&odemo.refinedev.xyz"
       - "&7&m----------------------"
@@ -224,7 +224,7 @@ SCOREBOARD:
     MATCH:
       SOLO:
         - "&7&m----------------------"
-      - "&c&lFight"
+        - "&c&lFight"
         - " &fArena: &c<match_arena>"
         - " &fKit: &c<match_kit>"
         - ""
@@ -236,7 +236,7 @@ SCOREBOARD:
         - "&7&m----------------------"
       SOLO_BOXING:
         - "&7&m----------------------"
-      - "&c&lFight"
+        - "&c&lFight"
         - " &fArena: &c<match_arena>"
         - " &fKit: &c<match_kit>"
         - ""
@@ -248,7 +248,7 @@ SCOREBOARD:
         - "&7&m----------------------"
       SOLO_BATTLERUSH:
         - "&7&m----------------------"
-      - "&c&lFight"
+        - "&c&lFight"
         - " &fArena: &c<match_arena>"
         - " &fKit: &c<match_kit>"
         - ""
@@ -260,7 +260,7 @@ SCOREBOARD:
         - "&7&m----------------------"
       SOLO_BRIDGE:
         - "&7&m----------------------"
-      - "&c&lFight"
+        - "&c&lFight"
         - " &fArena: &c<match_arena>"
         - " &fKit: &c<match_kit>"
         - ""
@@ -272,7 +272,7 @@ SCOREBOARD:
         - "&7&m----------------------"
       SOLO_BEDWARS:
         - "&7&m----------------------"
-      - "&c&lFight"
+        - "&c&lFight"
         - " &cRed: &r<bedwars_red_formatted>"
         - " &cBlue: &r<bedwars_blue_formatted>"
         - ""
@@ -283,7 +283,7 @@ SCOREBOARD:
         - "&7&m----------------------"
       TEAM:
         - "&7&m----------------------"
-      - "&c&lFight"
+        - "&c&lFight"
         - " &fKit: &c<match_kit>"
         - " &fDuration: &c<match_duration>"
         - ""
@@ -295,7 +295,7 @@ SCOREBOARD:
         - "&7&m----------------------"
       TEAM_BRIDGE:
         - "&7&m----------------------"
-      - "&c&lFight"
+        - "&c&lFight"
         - " &fKit: &c<match_kit>"
         - " &fDuration: &c<match_duration>"
         - ""
@@ -307,7 +307,7 @@ SCOREBOARD:
         - "&7&m----------------------"
       TEAM_BEDWARS:
         - "&7&m----------------------"
-      - "&c&lFight"
+        - "&c&lFight"
         - " &cRed: &r<bedwars_red_formatted>"
         - " &cBlue: &r<bedwars_blue_formatted>"
         - ""
@@ -318,7 +318,7 @@ SCOREBOARD:
         - "&7&m----------------------"
       TEAM_HCF:
         - "&7&m----------------------"
-      - "&c&lFight"
+        - "&c&lFight"
         - " &fKit: &c<match_kit>"
         - " &fDuration: &c<match_duration>"
         - ""
@@ -330,7 +330,7 @@ SCOREBOARD:
         - "&7&m----------------------"
       FFA:
         - "&7&m----------------------"
-      - "&c&lFight"
+        - "&c&lFight"
         - " &fKit: &c<match_kit>"
         - " &fDuration: &c<match_duration>"
         - " &fAlive: &c<players_alive>/<player_count>"
@@ -339,7 +339,7 @@ SCOREBOARD:
         - "&7&m----------------------"
       ENDING:
         - "&7&m----------------------"
-      - "&c&lFight"
+        - "&c&lFight"
         - " &cMatch Status: &fEnded"
         - ""
         - " &7Your match has ended,"

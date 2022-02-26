@@ -68,7 +68,8 @@ public class TournamentManager {
      * @param player {@link Player} the leader of the party
      */
     public void joinTournament(UUID id, Player player) {
-        Profile profile = this.plugin.getProfileManager().getProfile(player.getUniqueId());
+        ProfileManager profileManager = this.plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(player.getUniqueId());
         Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
         Tournament tournament = this.getTournamentById(id);
         if (tournament == null) return;
@@ -131,7 +132,8 @@ public class TournamentManager {
      * @param player {@link Player} the player joining
      */
     private void handleJoin(Tournament tournament, Player player) {
-        Profile profile = this.plugin.getProfileManager().getProfile(player.getUniqueId());
+        ProfileManager profileManager = this.plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(player.getUniqueId());
         profile.setTournament(tournament.getUniqueId());
 
         tournament.addPlayer(player.getUniqueId());
@@ -147,7 +149,8 @@ public class TournamentManager {
      * @param player {@link Player} the player leaving
      */
     private void handleLeave(Tournament tournament, Player player) {
-        Profile profile = this.plugin.getProfileManager().getProfile(player.getUniqueId());
+        ProfileManager profileManager = this.plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(player.getUniqueId());
         profile.setTournament(null);
 
         TournamentTeam team = tournament.getPlayerTeam(player.getUniqueId());

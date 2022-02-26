@@ -1,6 +1,9 @@
 package xyz.refinedev.practice.cmds.standalone;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.profile.menu.ProfileMenu;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.OptArg;
 import xyz.refinedev.practice.util.command.annotation.Sender;
@@ -14,14 +17,17 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class StatsCommand {
+
+    private final Array plugin;
 
     @Command(name = "", desc = "View Statistics of your profile")
     public void stats(@Sender Player player, @OptArg() Player target) {
         if (target == null) {
-            //new StatsMenu(player).openMenu(player);
+            new ProfileMenu(plugin, player).openMenu(player);
             return;
         }
-       // new StatsMenu(target).openMenu(player);
+        new ProfileMenu(plugin, target).openMenu(player);
     }
 }

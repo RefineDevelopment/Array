@@ -80,7 +80,7 @@ public class ClanManager {
      */
     public void save(Clan clan) {
         Document document = new Document("clan", Array.GSON.toJson(clan));
-        plugin.submitToThread(() -> collection.replaceOne(Filters.eq("_id", clan.getUniqueId().toString()), document, new ReplaceOptions().upsert(true)));
+        plugin.submitToThread(() -> collection.replaceOne(Filters.eq("uuid", clan.getUniqueId().toString()), document, new ReplaceOptions().upsert(true)));
     }
 
     /**
@@ -106,7 +106,7 @@ public class ClanManager {
         clan.getCaptains().clear();
 
         this.clans.remove(clan.getUniqueId(), clan);
-        this.plugin.submitToThread(() -> collection.deleteOne(Filters.eq("_id", clan.getUniqueId().toString())));
+        this.plugin.submitToThread(() -> collection.deleteOne(Filters.eq("uuid", clan.getUniqueId().toString())));
     }
 
 

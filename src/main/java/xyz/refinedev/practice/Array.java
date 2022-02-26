@@ -6,9 +6,9 @@ import com.lunarclient.bukkitapi.cooldown.LunarClientAPICooldown;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.refinedev.practice.adapters.NameTagAdapter;
 import xyz.refinedev.practice.adapters.ScoreboardAdapter;
@@ -21,10 +21,11 @@ import xyz.refinedev.practice.hook.hologram.HologramHandler;
 import xyz.refinedev.practice.hook.placeholderapi.LeaderboardPlaceholders;
 import xyz.refinedev.practice.hook.spigot.SpigotHandler;
 import xyz.refinedev.practice.managers.*;
+import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.pvpclasses.bard.EffectRestorer;
 import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.command.command.CommandService;
 import xyz.refinedev.practice.util.command.Drink;
+import xyz.refinedev.practice.util.command.command.CommandService;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.menu.MenuHandler;
 import xyz.refinedev.practice.util.nametags.NameTagHandler;
@@ -243,8 +244,8 @@ public class Array extends JavaPlugin {
         this.nameTagHandler.registerAdapter(nameTagAdapter);
 
         if (this.configHandler.isTAB_ENABLED()) {
-            long tickTime = tablistConfig.getInteger("TABLIST.UPDATE_TICKS") * 20L;
-            this.tablistHandler = new TablistHandler(tablistAdapter, this, tickTime);
+           long tickTime = tablistConfig.getInteger("TABLIST.UPDATE_TICKS") * 20L;
+           this.tablistHandler = new TablistHandler(tablistAdapter, this, tickTime);
         }
 
         this.timerHandler = new TimerHandler(this);
@@ -265,8 +266,17 @@ public class Array extends JavaPlugin {
         }
 
         this.logger("&7Registering permissions");
-        drink.registerPermissions();
+        this.registerPermissions();
         this.logger("&7Registered &cpermissions &7successfully!");
+    }
+
+    /**
+     * Register Array's permissions manually
+     */
+    public void registerPermissions() {
+        PluginManager pluginManager = this.getServer().getPluginManager();
+        pluginManager.addPermission(new Permission("array.profile.fly", PermissionDefault.OP));
+        drink.registerPermissions();
     }
 
     /**

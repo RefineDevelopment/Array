@@ -269,6 +269,9 @@ public class EntityHider {
         return new PacketAdapter(plugin, ENTITY_PACKETS) {
             @Override
             public void onPacketSending(PacketEvent event) {
+                if (event.getPlayer() == null) return;
+                if (event.getPacket() == null) return;
+                
                 int entityID = event.getPacket().getIntegers().read(0);
 
                 // See if this packet should be cancelled

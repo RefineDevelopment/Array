@@ -32,7 +32,7 @@ public class MongoManager {
     private MongoClient client;
     private MongoDatabase database;
 
-    private MongoCollection<Document> profiles, clans, killEffects;
+    private MongoCollection<Document> profiles, clans;
 
     public void init() {
         this.disableLogging();
@@ -67,7 +67,6 @@ public class MongoManager {
     public void loadCollections() {
         profiles = this.database.getCollection("array-profiles");
         clans = this.database.getCollection("array-clans");
-        killEffects = this.database.getCollection("array-killEffects");
     }
 
     public void shutdown() {

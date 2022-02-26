@@ -32,7 +32,7 @@ public class Clan {
     private final List<UUID> bannedPlayers;
     private transient Map<UUID, ClanInvite> invites;
 
-    @SerializedName("_id")
+    @SerializedName("uuid")
     private final UUID uniqueId;
     private final String name;
 

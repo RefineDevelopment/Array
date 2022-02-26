@@ -41,7 +41,8 @@ public class ClanCommands {
 
     @Command(name = "create", aliases = "form", desc = "Create a Clan using a name", usage = "<name>")
     public void create(@Sender Player player, String name) {
-        Profile profile = this.plugin.getProfileManager().getProfile(player.getUniqueId());
+        ProfileManager profileManager = this.plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(player.getUniqueId());
 
         if (name.length() < 2) {
             player.sendMessage(Locale.CLAN_NAME_LENGTH.toString());

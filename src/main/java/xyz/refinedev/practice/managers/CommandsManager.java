@@ -52,7 +52,6 @@ public class CommandsManager {
         drink.register(new SumoCommands(plugin), "sumo");
         drink.register(new SpleefCommands(plugin, plugin.getEventManager()), "spleef");
         drink.register(new ParkourCommands(plugin, plugin.getEventManager()), "parkour");*/
-        drink.register(new KillEffectCommands(plugin), "killeffect", "killeffects", "ke");
 
         //These are standalone cmds which cannot have sub cmds
         drink.register(new ViewInvCommand(plugin), "viewinv", "viewinventory", "inventory");
@@ -65,8 +64,9 @@ public class CommandsManager {
         drink.register(new FlyCommand(plugin), "fly", "flight");
         drink.register(new LeaderboardsCommand(plugin), "leaderboards", "lb", "leaderboard");
         drink.register(new OpenMenuCMD(plugin), "openmenu", "menu", "menus");
-        drink.register(new StatsCommand(), "stats", "elo", "statistics");
+        drink.register(new StatsCommand(plugin), "stats", "elo", "statistics");
         drink.register(new SpectateMenuCommand(plugin), "specmenu", "spectatemenu");
+        drink.register(new TestCommand(), "test");
 
         //Essentials Commands
         drink.register(new UnrankedQueueCMD(plugin), "unrankedqueue", "queue", "queue unranked");

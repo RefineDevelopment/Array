@@ -35,7 +35,7 @@ public class Profile {
     private final List<ProfileHistory> unrankedMatchHistory = new ArrayList<>();
     private final List<ProfileHistory> rankedMatchHistory = new ArrayList<>();
 
-    @SerializedName("_id")
+    @SerializedName("uuid")
     private final UUID uniqueId;
     private String name;
     private KillEffect killEffect = KillEffect.NONE;
@@ -43,8 +43,9 @@ public class Profile {
     private int kills, deaths, experience;
     private ProfileState state = ProfileState.IN_LOBBY;
 
-    private transient UUID tournament, party; //, event, match, queue;
-    private UUID clan, queue;
+    private transient UUID tournament, party, queue; //, event, match, queue;
+    private UUID clan;
+
     //TODO turn into uniqueId
     private Match match;
 
@@ -53,8 +54,10 @@ public class Profile {
     private RematchProcedure rematchData;
 
     private Arena ratingArena;
+
     //TODO: Have a spectating manager for better features
     private Player spectating;
+
     private boolean build, silent, issueRating;
 
     //TODO: Completely Change this shit.

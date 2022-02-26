@@ -97,7 +97,7 @@ public class ProfileManager {
         }
 
         plugin.submitToThread(() -> {
-            Document document = collection.find(Filters.eq("_id", profile.getUniqueId().toString())).first();
+            Document document = collection.find(Filters.eq("uuid", profile.getUniqueId().toString())).first();
 
             if (document == null) {
                 this.save(profile);
@@ -193,7 +193,7 @@ public class ProfileManager {
 
         Document document = new Document();
 
-        document.put("_id", profile.getUniqueId().toString());
+        document.put("uuid", profile.getUniqueId().toString());
         document.put("name", profile.getName());
         document.put("globalElo", profile.getGlobalElo());
         document.put("experience", profile.getExperience());
@@ -256,7 +256,7 @@ public class ProfileManager {
             document.put("rankedHistory", history);
         }
 
-        plugin.submitToThread(() -> collection.replaceOne(Filters.eq("_id", profile.getUniqueId().toString()), document, new ReplaceOptions().upsert(true)));
+        plugin.submitToThread(() -> collection.replaceOne(Filters.eq("uuid", profile.getUniqueId().toString()), document, new ReplaceOptions().upsert(true)));
     }
 
     public void handleJoin(Profile profile) {
@@ -274,6 +274,7 @@ public class ProfileManager {
         if (player.hasPermission("array.profile.fly")) {
             player.setAllowFlight(true);
             player.setFlying(true);
+            player.sendMessage(CC.translate("&aYou are now flying!"));
         }
     }
 
@@ -408,8 +409,7 @@ public class ProfileManager {
         double totalLosses = profile.getTotalLost();
 
         double ratio = totalWins / Math.max(totalLosses, 1);
-        DecimalFormat format = new DecimalFormat("#.##");
-        return format.format(ratio);
+        return String.valueOf(Math.round(ratio));
     }
 
     /**
