@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.lunarclient.bukkitapi.cooldown.LCCooldown;
 import com.lunarclient.bukkitapi.cooldown.LunarClientAPICooldown;
 import lombok.Getter;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.permissions.Permission;
@@ -19,6 +20,7 @@ import xyz.refinedev.practice.config.ConfigHandler;
 import xyz.refinedev.practice.hook.core.CoreHandler;
 import xyz.refinedev.practice.hook.hologram.HologramHandler;
 import xyz.refinedev.practice.hook.placeholderapi.LeaderboardPlaceholders;
+import xyz.refinedev.practice.hook.placeholderapi.PracticePlaceholders;
 import xyz.refinedev.practice.hook.spigot.SpigotHandler;
 import xyz.refinedev.practice.managers.*;
 import xyz.refinedev.practice.profile.killeffect.KillEffect;
@@ -64,8 +66,8 @@ public class Array extends JavaPlugin {
     public static Gson GSON;
     public static Random RANDOM;
 
-    private BasicConfigurationFile mainConfig, arenasConfig, kitsConfig, eventsConfig, tablistConfig,
-                                   messagesConfig, scoreboardConfig,  hotbarConfig;
+    private BasicConfigurationFile mainConfig, arenasConfig, kitsConfig, eventsConfig, tablistConfig, menusConfig,
+                                   messagesConfig, scoreboardConfig,  hotbarConfig, hologramsConfig;
 
     private MenuHandler menuHandler;
     private CoreHandler coreHandler;
@@ -103,12 +105,14 @@ public class Array extends JavaPlugin {
         this.saveDefaultConfig();
 
         mainConfig = new BasicConfigurationFile(this, "config", false);
+        menusConfig = new BasicConfigurationFile(this, "menus", false);
         kitsConfig = new BasicConfigurationFile(this, "kits", false);
         eventsConfig = new BasicConfigurationFile(this, "events", false);
         hotbarConfig = new BasicConfigurationFile(this, "hotbar", false);
         arenasConfig = new BasicConfigurationFile(this, "arenas", false);
         tablistConfig = new BasicConfigurationFile(this, "tablist", false);
         messagesConfig = new BasicConfigurationFile(this, "lang", false);
+        hologramsConfig = new BasicConfigurationFile(this, "holograms", false);
         scoreboardConfig = new BasicConfigurationFile(this, "scoreboard", false);
     }
 
@@ -124,7 +128,7 @@ public class Array extends JavaPlugin {
         this.configHandler = new ConfigHandler(this);
         this.configHandler.init();
 
-        this.menuHandler = new MenuHandler(this);
+        this.menuHandler = new MenuHandler(this, menusConfig);
         this.menuHandler.init();
 
         Locale.init(this);
@@ -142,7 +146,6 @@ public class Array extends JavaPlugin {
 
         this.mongoManager = new MongoManager(this, mainConfig);
         this.mongoManager.init();
-        this.mongoManager.loadCollections();
 
         this.divisionsManager = new DivisionsManager(this, mainConfig);
         this.divisionsManager.init();
@@ -208,6 +211,7 @@ public class Array extends JavaPlugin {
         this.kitManager.getKits().forEach(kitManager::save);
         this.clanManager.getClans().values().forEach(clanManager::save);
         this.profileManager.getProfiles().values().forEach(profileManager::save);
+        this.hologramHandler.getHolograms().forEach(hologramHandler::save);
         this.arenaManager.clearGroundItems();
 
         this.configHandler.save();
@@ -252,22 +256,30 @@ public class Array extends JavaPlugin {
         this.timerHandler.registerTimer(new EnderpearlTimer(this));
         this.timerHandler.registerTimer(new BridgeArrowTimer(this));
 
-        if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+        PluginManager pluginManager = this.getServer().getPluginManager();
+
+        if (pluginManager.isPluginEnabled("PlaceholderAPI")) {
             this.placeholderAPI = true;
             this.logger("&7Found &cPlaceholderAPI&7, Registering Expansions....");
-            LeaderboardPlaceholders placeholders = new LeaderboardPlaceholders(this);
-            placeholders.register();
+            PlaceholderAPI.registerExpansion(new LeaderboardPlaceholders(this));
+            PlaceholderAPI.registerExpansion(new PracticePlaceholders(this));
         }
 
-        if (this.getServer().getPluginManager().isPluginEnabled("LunarClient-API")) {
+        if (pluginManager.isPluginEnabled("LunarClient-API")) {
             this.logger("&7Found &cLunarClient-API&7, Registering Cool-downs....");
             LunarClientAPICooldown.registerCooldown(new LCCooldown("Enderpearl", this.configHandler.getENDERPEARL_COOLDOWN(), TimeUnit.SECONDS, Material.ENDER_PEARL));
             LunarClientAPICooldown.registerCooldown(new LCCooldown("Bow", this.configHandler.getBOW_COOLDOWN(), TimeUnit.SECONDS, Material.BOW));
         }
 
+        if (pluginManager.isPluginEnabled("HolographicDisplays")) {
+            this.logger("&7Found &cHolographicDisplays&7, Hooking holograms....");
+            this.hologramHandler = new HologramHandler(this, hologramsConfig);
+            this.hologramHandler.init();
+        }
+
         this.logger("&7Registering permissions");
         this.registerPermissions();
-        this.logger("&7Registered &cpermissions &7successfully!");
+        this.logger("&7Registered &cPermissions &7successfully!");
     }
 
     /**
@@ -275,7 +287,11 @@ public class Array extends JavaPlugin {
      */
     public void registerPermissions() {
         PluginManager pluginManager = this.getServer().getPluginManager();
-        pluginManager.addPermission(new Permission("array.profile.fly", PermissionDefault.OP));
+        pluginManager.addPermission(new Permission("array.profile.ranked", PermissionDefault.OP));
+        pluginManager.addPermission(new Permission("array.duel.arena", PermissionDefault.OP));
+        pluginManager.addPermission(new Permission("array.party.privacy", PermissionDefault.OP));
+        pluginManager.addPermission(new Permission("array.party.ban", PermissionDefault.OP));
+        pluginManager.addPermission(new Permission("array.party.limit", PermissionDefault.OP));
         drink.registerPermissions();
     }
 
@@ -295,6 +311,6 @@ public class Array extends JavaPlugin {
     }
 
     public void consoleLog(String string) {
-        this.getServer().getConsoleSender().sendMessage(CC.translate( string));
+        this.getServer().getConsoleSender().sendMessage(CC.translate(string));
     }
 }

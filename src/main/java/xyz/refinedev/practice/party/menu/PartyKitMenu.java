@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.managers.KitManager;
 import xyz.refinedev.practice.party.enums.PartyEventType;
 import xyz.refinedev.practice.party.menu.buttons.PartyKitButton;
 import xyz.refinedev.practice.util.menu.Button;
@@ -12,15 +13,10 @@ import xyz.refinedev.practice.util.menu.Menu;
 import java.util.HashMap;
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class PartyKitMenu extends Menu {
 
     private final PartyEventType partyEventType;
-
-    public PartyKitMenu(Array plugin, PartyEventType type) {
-        super(plugin);
-        
-        this.partyEventType = type;
-    }
 
     /**
      * Get menu's title
@@ -29,8 +25,8 @@ public class PartyKitMenu extends Menu {
      * @return {@link String} the title of the menu
      */
     @Override
-    public String getTitle(Player player) {
-        return "&cSelect a kit";
+    public String getTitle(Array plugin, Player player) {
+        return "&7Select a kit";
     }
 
     /**
@@ -40,9 +36,10 @@ public class PartyKitMenu extends Menu {
      * @return {@link Map}
      */
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        for (Kit kit : this.getPlugin().getKitManager().getKits()) {
+        KitManager kitManager = plugin.getKitManager();
+        for (Kit kit : kitManager.getKits()) {
             if (!kit.isEnabled() || !kit.isParty() || !this.valid(partyEventType, kit)) continue;
 
             buttons.put(buttons.size(), new PartyKitButton(this.partyEventType, kit));

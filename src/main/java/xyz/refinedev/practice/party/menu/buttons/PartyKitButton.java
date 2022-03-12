@@ -8,6 +8,10 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.managers.ArenaManager;
+import xyz.refinedev.practice.managers.MatchManager;
+import xyz.refinedev.practice.managers.PartyManager;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
@@ -33,33 +37,49 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PartyKitButton extends Button {
 
-
-
-    private final Array plugin = this.getPlugin();
     private final PartyEventType partyEventType;
     private final Kit kit;
 
+    /**
+     * Get itemStack of the Button
+     *
+     * @param player {@link Player} viewing the menu
+     * @return {@link ItemStack}
+     */
     @Override
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         return kit.getDisplayIcon();
     }
 
+    /**
+     * This method is called upon clicking an
+     * item on the menu
+     *
+     * @param plugin {@link org.bukkit.plugin.Plugin} Array
+     * @param player {@link Player} clicking
+     * @param clickType {@link ClickType}
+     */
     @Override
-    public void clicked(Player player, ClickType clickType) {
-        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
+    public void clicked(Array plugin, Player player, ClickType clickType) {
+        ProfileManager profileManager = plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(player.getUniqueId());
+        MatchManager matchManager = plugin.getMatchManager();
+        PartyManager partyManager = plugin.getPartyManager();
+        ArenaManager arenaManager = plugin.getArenaManager();
+
         if (!profile.hasParty()) {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
             return;
         }
         player.closeInventory();
 
-        Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
         if (party.getTeamPlayers().size() < 2) {
             player.sendMessage(Locale.PARTY_EVENT_NEED.toString());
             return;
         }
 
-        Arena arena = plugin.getArenaManager().getByKit(this.kit);
+        Arena arena = arenaManager.getByKit(this.kit);
         if (arena == null) {
             player.sendMessage(Locale.ERROR_NO_ARENAS.toString());
             return;
@@ -78,7 +98,7 @@ public class PartyKitButton extends Button {
                 }
                 team.getTeamPlayers().add(new TeamPlayer(otherPlayer));
             }
-            plugin.getMatchManager().start(match);
+            matchManager.start(match);
             return;
         }
 
@@ -93,7 +113,7 @@ public class PartyKitButton extends Button {
         Collections.shuffle(players);
         Collections.reverse(players);
 
-        Match match = plugin.getMatchManager().createTeamKitMatch(teamA, teamB, this.kit, arena);
+        Match match = matchManager.createTeamKitMatch(teamA, teamB, this.kit, arena);
 
         for (Player shuffledPlayer : players) {
             if (!teamA.getLeader().getUniqueId().equals(shuffledPlayer.getUniqueId())) {
@@ -107,6 +127,6 @@ public class PartyKitButton extends Button {
                 }
             }
         }
-        plugin.getMatchManager().start(match);
+        matchManager.start(match);
     }
 }

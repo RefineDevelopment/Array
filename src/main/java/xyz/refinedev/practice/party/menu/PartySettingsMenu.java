@@ -5,23 +5,16 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.party.enums.PartyManageType;
 import xyz.refinedev.practice.party.menu.buttons.PartySettingsButton;
-import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
 
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO: config
 public class PartySettingsMenu extends Menu {
-
-    private final FoldersConfigurationFile config;
-
+    
     public PartySettingsMenu(Array plugin) {
-        super(plugin);
-        this.config = plugin.getMenuHandler().getConfigByName("party_settings");
-
-        this.loadMenu(config);
+        plugin.getMenuHandler().loadMenu(this, "PARTY-SETTINGS");
 
         this.setAutoUpdate(true);
         this.setUpdateAfterClick(true);
@@ -36,8 +29,8 @@ public class PartySettingsMenu extends Menu {
      * @return {@link String} the title of the menu
      */
     @Override
-    public String getTitle(Player player) {
-        return config.getString("TITLE");
+    public String getTitle(Array plugin, Player player) {
+        return this.getConfig().getString("PARTY-SETTINGS.TITLE");
     }
 
     /**
@@ -47,12 +40,12 @@ public class PartySettingsMenu extends Menu {
      * @return {@link Map}
      */
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
         for ( PartyManageType type : PartyManageType.values() ) {
-            Button button = new PartySettingsButton(this.getPlugin(), config, type);
-            buttons.put(config.getInteger("BUTTONS." + type.name() + ".SLOT"), button);
+            Button button = new PartySettingsButton(this.getConfig(), type);
+            buttons.put(this.getConfig().getInteger("PARTY-SETTINGS.BUTTONS." + type.name() + ".SLOT"), button);
         }
 
         return buttons;

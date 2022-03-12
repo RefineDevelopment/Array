@@ -48,7 +48,7 @@ public class LeaderboardPlaceholders extends PlaceholderExpansion {
 
             if (leaderboardsAdapter == null) return "&7";
 
-            Profile profile = plugin.getProfileManager().getProfile(leaderboardsAdapter.getUuid());
+            Profile profile = plugin.getProfileManager().getProfile(leaderboardsAdapter.getUniqueId());
 
             return Locale.LEADERBOARDS_GLOBAL_FORMAT.toString()
                     .replace("<leaderboards_pos>", String.valueOf(number + 1))
@@ -76,7 +76,7 @@ public class LeaderboardPlaceholders extends PlaceholderExpansion {
 
             if (leaderboardsAdapter == null) return "&7";
 
-            Profile profile = plugin.getProfileManager().getProfile(leaderboardsAdapter.getUuid());
+            Profile profile = plugin.getProfileManager().getProfile(leaderboardsAdapter.getUniqueId());
 
             return Locale.LEADERBOARDS_KIT_FORMAT.toString()
                     .replace("<leaderboards_pos>", String.valueOf(number + 1))

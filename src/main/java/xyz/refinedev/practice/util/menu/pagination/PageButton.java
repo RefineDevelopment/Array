@@ -8,22 +8,20 @@ import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.Menu;
 
 public class PageButton extends Button {
 
-    private final Array plugin;
     private final int mod;
     private final PaginatedMenu menu;
 
-    public PageButton(Array plugin, int mod, PaginatedMenu menu) {
-        super(plugin);
-        this.plugin = plugin;
+    public PageButton(int mod, PaginatedMenu menu) {
         this.mod = mod;
         this.menu = menu;
     }
 
     @Override
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         ItemBuilder builder = new ItemBuilder(Material.CARPET);
         if (this.hasNext(player)) {
             builder.name(this.mod > 0 ?  "§a⟶" : "§c⟵");
@@ -36,18 +34,21 @@ public class PageButton extends Button {
     }
 
     @Override
-    public void clicked(Player player, ClickType clickType) {
+    public void clicked(Array plugin, Player player, ClickType clickType) {
         if (clickType == ClickType.RIGHT) {
-            new ViewAllPagesMenu(plugin, this.menu).openMenu(player);
-            playNeutral(player);
-        } else {
-            if (hasNext(player)) {
-                this.menu.modPage(player, this.mod);
-                Button.playNeutral(player);
-            } else {
-                Button.playFail(player);
-            }
+            Menu menu = new ViewAllPagesMenu(this.menu);
+            plugin.getMenuHandler().openMenu(menu, player);
+
+            Button.playNeutral(player);
+            return;
         }
+
+        if (this.hasNext(player)) {
+            this.menu.modPage(player, this.mod);
+            Button.playNeutral(player);
+            return;
+        }
+        Button.playFail(player);
     }
 
     private boolean hasNext(Player player) {

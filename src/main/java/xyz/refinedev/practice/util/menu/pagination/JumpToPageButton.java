@@ -19,7 +19,7 @@ public class JumpToPageButton extends Button {
     private final boolean current;
 
     @Override
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         ItemStack itemStack = new ItemStack(this.current ? Material.ENCHANTED_BOOK : Material.BOOK, this.page);
         ItemMeta itemMeta = itemStack.getItemMeta();
 
@@ -38,7 +38,7 @@ public class JumpToPageButton extends Button {
     }
 
     @Override
-    public void clicked(Player player, ClickType clickType) {
+    public void clicked(Array plugin, Player player, ClickType clickType) {
         this.menu.modPage(player, this.page - this.menu.getPage());
         Button.playNeutral(player);
     }

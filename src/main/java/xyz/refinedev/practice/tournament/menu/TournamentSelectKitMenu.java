@@ -1,9 +1,11 @@
 package xyz.refinedev.practice.tournament.menu;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
-import xyz.refinedev.practice.tournament.menu.buttons.TournamentKitButton;
+import xyz.refinedev.practice.managers.KitManager;
+import xyz.refinedev.practice.tournament.menu.buttons.TournamentSelectKitButton;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
@@ -20,15 +22,10 @@ import java.util.Map;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class TournamentSelectKitMenu extends Menu {
 
     private final FoldersConfigurationFile config;
-
-    public TournamentSelectKitMenu(Array plugin) {
-        super(plugin);
-
-        this.config = this.getPlugin().getMenuHandler().getConfigByName("general");
-    }
 
     /**
      * Get menu's title
@@ -37,7 +34,7 @@ public class TournamentSelectKitMenu extends Menu {
      * @return {@link String} the title of the menu
      */
     @Override
-    public String getTitle(Player player) {
+    public String getTitle(Array plugin, Player player) {
         return config.getString("TOURNAMENT_KIT_MENU.TITLE");
     }
 
@@ -48,10 +45,11 @@ public class TournamentSelectKitMenu extends Menu {
      * @return {@link Map}
      */
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        for ( Kit kit : this.getPlugin().getKitManager().getKits() ) {
-            buttons.put(buttons.size(), new TournamentKitButton(this.getPlugin(), kit));
+        KitManager kitManager = plugin.getKitManager();
+        for ( Kit kit : kitManager.getKits() ) {
+            buttons.put(buttons.size(), new TournamentSelectKitButton(config, kit));
         }
         return buttons;
     }

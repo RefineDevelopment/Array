@@ -28,13 +28,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ButtonData {
 
-    private final Array plugin = Array.getInstance();
-
     private final List<ActionData> actions = new ArrayList<>();
     private int slot = 0;
     private ItemStack item;
 
-    public void handleClick(Player player, ClickType clickType) {
+    public void handleClick(Array plugin, Player player, ClickType clickType) {
         for ( ActionData actionData : actions ) {
             if (actionData == null) return;
             if (actionData.getAction() == null || actionData.getClickType() == null) return;
@@ -55,9 +53,9 @@ public class ButtonData {
                     Menu menu = plugin.getMenuHandler().findMenu(player, actionData.getAction());
                     if (menu == null) {
                         player.sendMessage(Locale.ERROR_MENU.toString());
-                    } else {
-                        menu.openMenu(player);
+                        break;
                     }
+                    plugin.getMenuHandler().openMenu(menu, player);
                     break;
             }
         }

@@ -34,7 +34,7 @@ public class KillEffectMenu extends Menu {
      * @return {@link String} the title of the menu
      */
     @Override
-    public String getTitle(Player player) {
+    public String getTitle(Array plugin, Player player) {
         return "&7Select a Kill Effect";
     }
 
@@ -50,7 +50,7 @@ public class KillEffectMenu extends Menu {
      * @return {@link Map}
      */
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
         for ( int i = 10; i < 17; i++) {
             int position = i;

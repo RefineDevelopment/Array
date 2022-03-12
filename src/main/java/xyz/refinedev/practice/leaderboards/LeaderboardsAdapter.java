@@ -11,7 +11,7 @@ import java.util.UUID;
 public class LeaderboardsAdapter {
 
     private String name;
-    private UUID uuid;
+    private UUID uniqueId;
     private int elo;
 
 }

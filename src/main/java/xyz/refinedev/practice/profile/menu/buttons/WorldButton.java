@@ -25,7 +25,7 @@ public class WorldButton extends Button {
     private final World world;
 
     @Override
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         boolean isNether = world.getEnvironment() == World.Environment.NETHER;
         boolean isEnd = world.getEnvironment() == World.Environment.THE_END;
 
@@ -36,7 +36,7 @@ public class WorldButton extends Button {
     }
 
     @Override
-    public void clicked(Player player, ClickType clickType) {
+    public void clicked(Array plugin, Player player, ClickType clickType) {
         player.closeInventory();
         if (player.getWorld() != world) {
             player.teleport(world.getSpawnLocation());

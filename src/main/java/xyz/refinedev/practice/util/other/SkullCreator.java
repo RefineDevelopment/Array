@@ -258,7 +258,7 @@ public class SkullCreator {
 	}
 
 	private static GameProfile makeProfile(String b64) {
-		// RANDOM uuid based on the b64 string
+		// RANDOM uniqueId based on the b64 string
 		UUID id = new UUID(
 				b64.substring(b64.length() - 20).hashCode(),
 				b64.substring(b64.length() - 10).hashCode()

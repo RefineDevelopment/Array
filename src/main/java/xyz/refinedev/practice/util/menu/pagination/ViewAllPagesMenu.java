@@ -13,29 +13,19 @@ import java.util.Map;
 @Getter
 public class ViewAllPagesMenu extends Menu {
 
-    private final Array plugin;
     public PaginatedMenu menu;
 
-    public ViewAllPagesMenu(Array plugin) {
-        super(plugin);
-
-        this.plugin = plugin;
-    }
-
-    public ViewAllPagesMenu(Array plugin, PaginatedMenu menu) {
-        super(plugin);
-
+    public ViewAllPagesMenu(PaginatedMenu menu) {
         this.menu = menu;
-        this.plugin = plugin;
     }
 
     @Override
-    public String getTitle(Player player) {
+    public String getTitle(Array plugin, Player player) {
         return "&cJump to page";
     }
 
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         HashMap<Integer, Button> buttons = new HashMap<>();
 
         buttons.put(0, new BackButton(menu));

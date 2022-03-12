@@ -7,13 +7,16 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.managers.*;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.tournament.Tournament;
 import xyz.refinedev.practice.tournament.TournamentState;
 import xyz.refinedev.practice.tournament.TournamentTeam;
@@ -38,11 +41,20 @@ public class TournamentTask extends BukkitRunnable {
 
     @Override
     public void run() {
+        KitManager kitManager = plugin.getKitManager();
+        ArenaManager arenaManager = plugin.getArenaManager();
+        TournamentManager tournamentManager = plugin.getTournamentManager();
+        MatchManager matchManager = plugin.getMatchManager();
+
         if (this.tournament.getTournamentState() == TournamentState.STARTING) {
             int countdown = this.tournament.decrementCountdown();
 
             if ((countdown % 5 == 0 || countdown < 5) && countdown > 0) {
-                this.tournament.broadcastWithSound("Round " + this.tournament.getCurrentRound() + " is starting in " + countdown + " seconds!", Sound.CLICK);
+                String announce = Locale.TOURNAMENT_ROUND.toString()
+                        .replace("<round>", String.valueOf(tournament.getCurrentRound()))
+                        .replace("<time>", String.valueOf(countdown));
+
+                this.tournament.broadcastWithSound(announce, Sound.CLICK);
             }
 
             if (countdown == 0) {
@@ -106,42 +118,50 @@ public class TournamentTask extends BukkitRunnable {
                         Player teamALeader = this.plugin.getServer().getPlayer(teamA.getLeader());
                         Player teamBLeader = this.plugin.getServer().getPlayer(teamB.getLeader());
 
-                        Team matchTeamA = new Team(new TeamPlayer(teamALeader));
-                        Team matchTeamB = new Team(new TeamPlayer(teamBLeader));
+                        TeamPlayer teamPlayerA = new TeamPlayer(teamALeader);
+                        TeamPlayer teamPlayerB = new TeamPlayer(teamBLeader);
 
-                        Kit kit = this.plugin.getKitManager().getByName(this.tournament.getKitName());
+                        Team matchTeamA = new Team(teamPlayerA);
+                        Team matchTeamB = new Team(teamPlayerB);
+
+                        Kit kit = kitManager.getByName(this.tournament.getKitName());
                         if (kit == null) {
-                            this.plugin.getTournamentManager().cancelTournament(tournament);
+                            tournamentManager.cancelTournament(tournament);
                             this.cancel();
                             return;
                         }
 
-                        Arena arena = this.plugin.getArenaManager().getByKit(kit);
+                        Arena arena = arenaManager.getByKit(kit);
                         if (arena == null) {
-                            this.plugin.getTournamentManager().cancelTournament(tournament);
+                            tournament.broadcast(Locale.ERROR_NO_ARENAS.toString());
+                            tournamentManager.cancelTournament(tournament);
                             this.cancel();
                             return;
                         }
 
-                        Match match = this.plugin.getMatchManager().createTeamKitMatch(matchTeamA, matchTeamB, kit, arena);
+                        Match match = tournament.getTeamSize() >= 2 ? this.plugin.getMatchManager().createTeamKitMatch(matchTeamA, matchTeamB, kit, arena) :
+                                this.plugin.getMatchManager().createSoloKitMatch(null, teamPlayerA, teamPlayerB, kit, arena, QueueType.UNRANKED);
 
                         this.tournament.addMatch(match.getMatchId());
                         this.plugin.getTournamentManager().addTournamentMatch(match.getMatchId(), tournament.getUniqueId());
 
-                        this.plugin.getMatchManager().start(match);
+                        matchManager.start(match);
                     } else {
                         for (UUID playerUUID : teamA.getAlivePlayers()) {
                             Player player = this.plugin.getServer().getPlayer(playerUUID);
-
-                            player.sendMessage("You were not selected this round");
+                            player.sendMessage(Locale.TOURNAMENT_SKIPPED.toString());
                         }
                     }
                 }
 
                 StringBuilder builder = new StringBuilder();
 
-                builder.append("Round round has started\n");
-                builder.append("tournament status");
+                for ( String string : Locale.TOURNAMENT_STARTED.toList() ) {
+                    builder.append(string
+                            .replace("<round>", String.valueOf(tournament.getCurrentRound())
+                            .replace("<kit>", tournament.getKitName()))
+                            .replace("<teamSize>", String.valueOf(tournament.getTeamSize())));
+                }
 
                 this.tournament.broadcastWithSound(builder.toString(), Sound.FIREWORK_BLAST);
                 this.tournament.setTournamentState(TournamentState.FIGHTING);

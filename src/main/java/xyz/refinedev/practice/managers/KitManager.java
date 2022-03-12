@@ -16,6 +16,7 @@ import xyz.refinedev.practice.util.inventory.InventoryUtil;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -54,6 +55,7 @@ public class KitManager {
             this.load(kit);
             this.setupQueue(kit);
         }
+        this.kits.sort(Comparator.comparing(Kit::getPriority));
         plugin.logger("&7Loaded &c" + kits.size() + " &7Kit(s)!");
     }
 
@@ -73,6 +75,10 @@ public class KitManager {
 
         if (config.contains(path + ".display-name")) {
             kit.setDisplayName(CC.translate(config.getString(path + ".display-name")));
+        }
+
+        if (config.contains(path + ".priority")) {
+            kit.setPriority(config.getInteger(path + ".priority"));
         }
 
         kit.setKnockbackProfile(config.getString(path + ".knockback-profile"));
@@ -149,6 +155,7 @@ public class KitManager {
         
         config.set(path + ".enabled", kit.isEnabled());
         config.set(path + ".display-name", kit.getDisplayName());
+        config.set(path + ".priority", kit.getPriority());
         config.set(path + ".knockback-profile", kit.getKnockbackProfile());
         config.set(path + ".description", kit.getKitDescription());
 
@@ -199,11 +206,12 @@ public class KitManager {
      * @param kit The kit being deleted
      */
     public void delete(Kit kit) {
+        QueueManager queueManager = plugin.getQueueManager();
         kits.remove(kit);
 
-        if (kit.isEnabled()) plugin.getQueueManager().getQueues().remove(kit.getUnrankedQueue().getUniqueId());
-        if (kit.getGameRules().isRanked()) plugin.getQueueManager().getQueues().remove(kit.getRankedQueue().getUniqueId());
-        if (kit.getGameRules().isClan()) plugin.getQueueManager().getQueues().remove(kit.getClanQueue().getUniqueId());
+        if (kit.isEnabled()) queueManager.getQueues().remove(kit.getUnrankedQueue().getUniqueId());
+        if (kit.getGameRules().isRanked()) queueManager.getQueues().remove(kit.getRankedQueue().getUniqueId());
+        if (kit.getGameRules().isClan()) queueManager.getQueues().remove(kit.getClanQueue().getUniqueId());
 
         config.set("kits." + kit.getName(), null);
         config.save();
@@ -237,11 +245,6 @@ public class KitManager {
      * @return {@link Kit} Queried kit
      */
     public Kit getByName(String name) {
-        for (Kit kit : kits) {
-            if (kit.getName().equalsIgnoreCase(name)) {
-                return kit;
-            }
-        }
-        return null;
+        return kits.stream().filter(kit -> kit.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 }

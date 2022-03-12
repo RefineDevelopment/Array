@@ -40,7 +40,7 @@ public class KillEffectButton extends Button {
      * @param player {@link Player} viewing the menu
      * @return {@link ItemStack}
      */
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         ProfileManager profileManager = this.getPlugin().getProfileManager();
         Profile profile = profileManager.getProfile(player.getUniqueId());
         ItemBuilder itemBuilder = new ItemBuilder(killEffect.getIcon());
@@ -73,7 +73,7 @@ public class KillEffectButton extends Button {
      * @param player {@link Player} clicking
      * @param clickType {@link ClickType}
      */
-    public void clicked(Player player, ClickType clickType) {
+    public void clicked(Array plugin, Player player, ClickType clickType) {
         ProfileManager profileManager = this.getPlugin().getProfileManager();
         Profile profile = profileManager.getProfile(player.getUniqueId());
 

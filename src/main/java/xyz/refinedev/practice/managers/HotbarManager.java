@@ -69,8 +69,8 @@ public class HotbarManager {
             items.add(hotbarItem);
         }
 
-        if (config.getConfiguration().getConfigurationSection("CUSTOM_ITEMS") == null) return;
-        for ( String key : config.getConfiguration().getConfigurationSection("CUSTOM_ITEMS").getKeys(false) ) {
+        if (config.getConfigurationSection("CUSTOM_ITEMS") == null) return;
+        for ( String key : config.getConfigurationSection("CUSTOM_ITEMS").getKeys(false) ) {
             if (key == null) return;
 
             String path = "CUSTOM_ITEMS." + key + ".";

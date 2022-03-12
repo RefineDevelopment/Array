@@ -14,6 +14,7 @@ import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.listeners.GHeadListener;
 import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.profile.killeffect.KillEffect;
 import xyz.refinedev.practice.profile.menu.WorldsMenu;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
@@ -22,6 +23,7 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
 import xyz.refinedev.practice.util.command.annotation.Text;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
+import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.other.Description;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
@@ -71,7 +73,7 @@ public class ArrayCommands {
 
     @Command(name = "", aliases = "help", desc = "View Array Commands")
     public void help(@Sender CommandSender sender) {
-        if (sender.hasPermission("array.listeners.admin")) {
+        if (sender.hasPermission("array.essentials.admin")) {
             sender.sendMessage(HELP_MESSAGE);
         } else {
             sender.sendMessage(INFO_MESSAGE);
@@ -79,7 +81,7 @@ public class ArrayCommands {
     }
     
     @Command(name = "hcf", aliases = {"teamfight","pvpclasses"}, desc = "View Help on how to setup HCF")
-    @Require("array.listeners.admin")
+    @Require("array.essentials.admin")
     public void HCF(@Sender CommandSender player) {
         if (plugin.getConfigHandler().isHCF_ENABLED()) {
             player.sendMessage(CC.translate("&c&lHow to Setup HCF "));
@@ -89,7 +91,7 @@ public class ArrayCommands {
             player.sendMessage(CC.translate("&7create itself but if it doesn't make sure to use that correct"));
             player.sendMessage(CC.translate("&7capitalization to create it. To setup arenas for HCF, make a shared or standalone"));
             player.sendMessage(CC.translate("&7arena and add the kit HCFTeamFight to it. The PvP Classes are Built-In to the plugin,"));
-            player.sendMessage(CC.translate("&7So you don't need to worry about setting them up as they will be automatically provided"));
+            player.sendMessage(CC.translate("&7so you don't need to worry about setting them up as they will be automatically provided"));
             player.sendMessage(CC.CHAT_BAR);
         } else {
             player.sendMessage(CC.translate("&cHCFTeamFight has been disabled by an Admin."));
@@ -97,7 +99,7 @@ public class ArrayCommands {
     }
     
     @Command(name = "rename", desc = "Rename the Item you are currently holding")
-    @Require("array.listeners.admin")
+    @Require("array.essentials.admin")
     public void rename(@Sender Player player, @Text String name) {
         if (player.getItemInHand() == null || player.getItemInHand().getType().equals(Material.AIR)) {
             player.sendMessage(ChatColor.RED + "Hold something in your hand.");
@@ -115,7 +117,7 @@ public class ArrayCommands {
     }
     
     @Command(name = "reload", aliases = "refresh", desc = "Reload Array's Configurations")
-    @Require("array.listeners.admin")
+    @Require("array.essentials.admin")
     public void reload(@Sender CommandSender player) {
         plugin.getArenasConfig().reload();
         plugin.getKitsConfig().reload();
@@ -131,7 +133,7 @@ public class ArrayCommands {
     }
 
     @Command(name = "update", aliases = "save", desc = "Update and Save all data related to Array")
-    @Require("array.listeners.admin")
+    @Require("array.essentials.admin")
     public void update(@Sender CommandSender player) {
         for ( Profile profile : plugin.getProfileManager().getProfiles().values() ) {
             plugin.getProfileManager().save(profile);
@@ -149,7 +151,7 @@ public class ArrayCommands {
     }
 
     @Command(name = "spawn", aliases = "reset", desc = "Reset your profile and Teleport to Spawn")
-    @Require("array.listeners.admin")
+    @Require("array.essentials.admin")
     public void spawn(@Sender Player player) {
         Profile profile = plugin.getProfileManager().getProfile(player);
         if (profile.isBusy()) {
@@ -165,21 +167,21 @@ public class ArrayCommands {
     }
 
     @Command(name = "worlds", aliases = "world", desc = "Open a Worlds GUI to Teleport to Different Worlds")
-    @Require("array.listeners.admin")
+    @Require("array.essentials.admin")
     public void worlds(@Sender Player player) {
-        WorldsMenu menu = new WorldsMenu(plugin);
-        menu.openMenu(player);
+        Menu menu = new WorldsMenu(plugin);
+        plugin.getMenuHandler().openMenu(menu, player);
     }
 
     @Command(name = "goldenhead", aliases = {"ghead", "goldh", "head"}, desc = "Receive a pre-made Golden Head")
-    @Require("array.listeners.admin")
+    @Require("array.essentials.admin")
     public void goldenHead(@Sender Player player) {
         player.sendMessage(CC.translate("&8[&c&lArray&8] &7You received a &cGolden head&7."));
         player.getInventory().addItem(GHeadListener.getGoldenHeadApple());
     }
 
     @Command(name = "refill", aliases = "cheat", desc = "Refill your Inventory with Soup or Potions Quitely")
-    @Require("array.listeners.admin")
+    @Require("array.essentials.admin")
     public void refill(@Sender Player player) {
         Profile profile = plugin.getProfileManager().getProfile(player);
         if (profile.isInFight()) {
@@ -206,6 +208,9 @@ public class ArrayCommands {
                 stats.setLost(0);
             });
             profile.setGlobalElo(1000);
+            profile.setKillEffect(KillEffect.NONE);
+            profile.setExperience(0);
+
             plugin.getProfileManager().save(profile);
         });
 
@@ -231,7 +236,7 @@ public class ArrayCommands {
      * THIS WILL BE RECODED, SORRY!
      */
     @Command(name = "clearloadouts", aliases = {"clearinventories", "clearkits"}, desc = "Clear Loadouts of a Certain Kit or All", usage = "<kit/all> <profile/global>")
-    @Require("array.listeners.admin")
+    @Require("array.essentials.admin")
     public void clearLoadouts(@Sender CommandSender player, String type, String reach) {
         if (reach.equalsIgnoreCase("global")) {
             Kit kitType = plugin.getKitManager().getByName(type);
@@ -292,7 +297,6 @@ public class ArrayCommands {
             }
         }
     }
-
 
     public ItemStack getPotion() {
         return new ItemBuilder(Material.POTION).durability(16421).build();

@@ -32,7 +32,7 @@ public class ClanQueueCMD {
             return;
         }
         if (!profile.isBusy()) {
-            QueueSelectKitMenu menu = new QueueSelectKitMenu(plugin, QueueType.CLAN);
+            QueueSelectKitMenu menu = new QueueSelectKitMenu(QueueType.CLAN);
             menu.openMenu(player);
         } else {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());

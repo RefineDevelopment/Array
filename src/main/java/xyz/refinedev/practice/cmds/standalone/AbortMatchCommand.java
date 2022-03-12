@@ -5,6 +5,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.managers.MatchManager;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
@@ -29,13 +31,18 @@ public class AbortMatchCommand {
     @Command(name = "", usage = "<target>", desc = "Cancel a player's Match")
     @Require("array.staff.match")
     public void cancelMatch(@Sender CommandSender player, Player target) {
-        Profile profile = plugin.getProfileManager().getProfile(target);
+        ProfileManager profileManager = plugin.getProfileManager();
+        MatchManager matchManager = plugin.getMatchManager();
+        Profile profile = profileManager.getProfile(target);
+
         if (!profile.isInFight()) {
-            player.sendMessage(Locale.MATCH_NOT_IN.toString());
+            player.sendMessage(Locale.ERROR_TARGET_NOT_IN_MATCH.toString());
             return;
         }
+
         Match match = profile.getMatch();
-        this.plugin.getMatchManager().end(match);
+        matchManager.end(match);
+
         player.sendMessage(CC.translate("&7Successfully cancelled &c" + profile.getName() + "'s &7Match!"));
     }
 

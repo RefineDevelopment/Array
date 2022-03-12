@@ -61,7 +61,7 @@ public abstract class Arena {
     }
 
     public void setActive(boolean active) {
-        if (this.getType() != ArenaType.SHARED) this.active = active;
+        if (!this.isShared()) this.active = active;
     }
 
     public boolean isStandalone() {

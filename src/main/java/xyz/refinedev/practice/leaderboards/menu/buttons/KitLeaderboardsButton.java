@@ -27,17 +27,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class KitLeaderboardsButton extends Button {
 
-    private final Array plugin;
     private final Kit kit;
 
     @Override
-    public ItemStack getButtonItem(final Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         List<String> lore = new ArrayList<>();
 
         lore.add(CC.MENU_BAR);
         int position = 1;
         for (LeaderboardsAdapter leaderboardsAdapter : this.kit.getEloLeaderboards()) {
-            Profile profile = plugin.getProfileManager().getProfile(leaderboardsAdapter.getUuid());
+            Profile profile = plugin.getProfileManager().getProfile(leaderboardsAdapter.getUniqueId());
 
             lore.add(Locale.LEADERBOARDS_KIT_FORMAT.toString()
                     .replace("<leaderboards_pos>", String.valueOf(position))

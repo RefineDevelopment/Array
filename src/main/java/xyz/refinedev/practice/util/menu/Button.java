@@ -10,25 +10,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.other.StringUtils;
 
+import java.util.List;
+
 @Getter
 public abstract class Button {
-
-    private final Array plugin;
-
-    public Button(Array plugin) {
-        this.plugin = plugin;
-    }
-
-    public Button() {
-        this.plugin = null;
-    }
 
     /**
      * Create a quick and easy placeholder Button
      */
     public static Button placeholder(Material material, byte data, String... title) {
         return (new Button() {
-            public ItemStack getButtonItem(Player player) {
+            public ItemStack getButtonItem(Array plugin, Player player) {
                 ItemStack it = new ItemStack(material, 1, data);
                 ItemMeta meta = it.getItemMeta();
 
@@ -40,9 +32,24 @@ public abstract class Button {
         });
     }
 
+    public static Button placeholder(Material material, byte data, String title, List<String> lore) {
+        return (new Button() {
+            public ItemStack getButtonItem(Array plugin, Player player) {
+                ItemStack it = new ItemStack(material, 1, data);
+                ItemMeta meta = it.getItemMeta();
+
+                meta.setDisplayName(StringUtils.join(title));
+                meta.setLore(lore);
+                it.setItemMeta(meta);
+
+                return it;
+            }
+        });
+    }
+
     public static Button placeholder(ItemStack itemStack) {
         return (new Button() {
-            public ItemStack getButtonItem(Player player) {
+            public ItemStack getButtonItem(Array plugin, Player player) {
                 return itemStack;
             }
         });
@@ -82,28 +89,30 @@ public abstract class Button {
      * @param player {@link Player} viewing the menu
      * @return {@link ItemStack}
      */
-    public abstract ItemStack getButtonItem(Player player);
+    public abstract ItemStack getButtonItem(Array plugin, Player player);
 
     /**
      * This method is called upon clicking an
      * item on the menu
      *
+     * @param plugin {@link org.bukkit.plugin.Plugin} Array
      * @param player {@link Player} clicking
      * @param clickType {@link ClickType}
      */
-    public void clicked(Player player, ClickType clickType) {
+    public void clicked(Array plugin, Player player, ClickType clickType) {
     }
 
     /**
      * This method is called when the player clicks
      * on an item of a certain slot
      *
+     * @param plugin {@link org.bukkit.plugin.Plugin} Array
      * @param player {@link Player} clicking
      * @param slot {@link Integer} slot
      * @param clickType {@link ClickType} clickType
      * @param hotbarSlot the hotbar slot of the player
      */
-    public void clicked(Player player, int slot, ClickType clickType, int hotbarSlot) {
+    public void clicked(Array plugin, Player player, int slot, ClickType clickType, int hotbarSlot) {
     }
 
     /**

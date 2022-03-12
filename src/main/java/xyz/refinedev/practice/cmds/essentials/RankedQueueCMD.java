@@ -4,11 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.config.ConfigHandler;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.queue.menu.QueueSelectKitMenu;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
+import xyz.refinedev.practice.util.menu.Menu;
+import xyz.refinedev.practice.util.menu.MenuHandler;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 
 /**
@@ -27,30 +31,36 @@ public class RankedQueueCMD {
 
     @Command(name = "", desc = "Open ranked queue menu")
     public void queue(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getProfile(player);
+        ProfileManager profileManager = plugin.getProfileManager();
+        ConfigHandler configHandler = plugin.getConfigHandler();
+        MenuHandler menuHandler = plugin.getMenuHandler();
+        Profile profile = profileManager.getProfile(player);
 
-        if (!plugin.getConfigHandler().isRANKED_ENABLED()) {
+        if (!configHandler.isRANKED_ENABLED()) {
             player.sendMessage(Locale.RANKED_DISABLED.toString());
             return;
         }
-        if (plugin.getConfigHandler().isLIMIT_PING()) {
-            if (PlayerUtil.getPing(player) > plugin.getConfigHandler().getPING_LIMIT()) {
-                player.sendMessage(Locale.ERROR_PING_TOO_HIGH.toString().replace("<ping_limit>", String.valueOf(plugin.getConfigHandler().getPING_LIMIT())));
+
+        if (configHandler.isLIMIT_PING()) {
+            if (PlayerUtil.getPing(player) > configHandler.getPING_LIMIT()) {
+                player.sendMessage(Locale.ERROR_PING_TOO_HIGH.toString().replace("<ping_limit>", String.valueOf(configHandler.getPING_LIMIT())));
                 return;
             }
         }
+
         if (!player.hasPermission("array.profile.ranked")) {
-            if (plugin.getConfigHandler().isREQUIRE_KILLS()) {
-                if (profile.getTotalWins() < plugin.getConfigHandler().getREQUIRED_KILLS()) {
-                    int i = plugin.getConfigHandler().getREQUIRED_KILLS() - profile.getTotalWins();
+            if (configHandler.isREQUIRE_KILLS()) {
+                if (profile.getTotalWins() < configHandler.getREQUIRED_KILLS()) {
+                    int i = configHandler.getREQUIRED_KILLS() - profile.getTotalWins();
                     Locale.RANKED_REQUIRED.toList().forEach(line -> player.sendMessage(line.replace("<match_limit>", String.valueOf(i))));
                     return;
                 }
             }
         }
+
         if (!profile.isBusy()) {
-            QueueSelectKitMenu menu = new QueueSelectKitMenu(plugin, QueueType.RANKED);
-            menu.openMenu(player);
+            Menu menu = new QueueSelectKitMenu(QueueType.RANKED);
+            menuHandler.openMenu(menu, player);
         } else {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
         }

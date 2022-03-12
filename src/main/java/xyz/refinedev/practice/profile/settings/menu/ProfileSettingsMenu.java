@@ -1,10 +1,10 @@
 package xyz.refinedev.practice.profile.settings.menu;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.config.ConfigHandler;
 import xyz.refinedev.practice.profile.settings.ProfileSettingsType;
-import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
 
@@ -20,16 +20,9 @@ import java.util.Map;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class ProfileSettingsMenu extends Menu {
-
-    private final FoldersConfigurationFile config;
-
-    public ProfileSettingsMenu(Array plugin) {
-        super(plugin);
-                
-        this.config = this.getPlugin().getMenuHandler().getConfigByName("profile_settings");
-    }
-
+    
     /**
      * Get menu's title
      *
@@ -37,8 +30,8 @@ public class ProfileSettingsMenu extends Menu {
      * @return {@link String} the title of the menu
      */
     @Override
-    public String getTitle(Player player) {
-        return config.getString("TITLE");
+    public String getTitle(Array plugin, Player player) {
+        return this.getConfig().getString("PROFILE-SETTINGS.TITLE");
     }
 
     /**
@@ -48,7 +41,7 @@ public class ProfileSettingsMenu extends Menu {
      */
     @Override
     public int getSize() {
-        return config.getInteger("SIZE");
+        return this.getConfig().getInteger("PROFILE-SETTINGS.SIZE");
     }
 
     /**
@@ -58,17 +51,17 @@ public class ProfileSettingsMenu extends Menu {
      * @return {@link HashMap}
      */
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        ConfigHandler configHandler = this.getPlugin().getConfigHandler();
-        String key = "BUTTONS.";
+        ConfigHandler configHandler = plugin.getConfigHandler();
+        String key = "PROFILE-SETTINGS.BUTTONS.";
 
         for ( ProfileSettingsType type : ProfileSettingsType.values() ) {
             if (type.equals(ProfileSettingsType.TOGGLETABSTYLE) && !configHandler.isTAB_ENABLED()) continue;
             if (type.equals(ProfileSettingsType.TOGGLECPSONSCOREBOARD) && !configHandler.isCPS_SCOREBOARD_SETTING()) continue;
             if (type.equals(ProfileSettingsType.TOGGLEPINGONSCOREBOARD) && !configHandler.isPING_SCOREBOARD_SETTING()) continue;
 
-            buttons.put(config.getInteger(key + type.name() + ".SLOT"), new SettingsButton(type));
+            buttons.put(this.getConfig().getInteger(key + type.name() + ".SLOT"), new SettingsButton(this.getConfig(), type));
         }
         return buttons;
     }

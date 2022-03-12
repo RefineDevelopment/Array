@@ -22,7 +22,7 @@ public class ConfirmationButton extends Button {
 	private final boolean closeAfterResponse;
 
 	@Override
-	public ItemStack getButtonItem(Player player) {
+	public ItemStack getButtonItem(Array plugin, Player player) {
 		ItemStack itemStack = new ItemStack(Material.WOOL, 1, this.confirm ? ((byte) 5) : ((byte) 14));
 		ItemMeta itemMeta = itemStack.getItemMeta();
 
@@ -33,7 +33,7 @@ public class ConfirmationButton extends Button {
 	}
 
 	@Override
-	public void clicked(Player player, ClickType clickType) {
+	public void clicked(Array plugin, Player player, ClickType clickType) {
 		if (this.confirm) player.playSound(player.getLocation(), Sound.NOTE_PIANO, 20f, 0.1f);
 		else player.playSound(player.getLocation(), Sound.DIG_GRAVEL, 20f, 0.1F);
 		if (this.closeAfterResponse) {

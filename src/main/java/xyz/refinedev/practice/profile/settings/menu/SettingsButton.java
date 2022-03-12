@@ -7,10 +7,11 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.settings.ProfileSettingsType;
 import xyz.refinedev.practice.util.chat.CC;
-import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
+import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 
@@ -29,12 +30,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SettingsButton extends Button {
 
-    private final Array plugin = Array.getInstance();
-    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_settings");
-
+    private final BasicConfigurationFile config;
     private final ProfileSettingsType type;
-
-    private String key = "BUTTONS.";
 
     /**
      * Get itemStack of the Button
@@ -43,11 +40,12 @@ public class SettingsButton extends Button {
      * @return {@link ItemStack}
      */
     @Override
-    public ItemStack getButtonItem(Player player) {
-        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
-        List<String> lines = new ArrayList<>();
+    public ItemStack getButtonItem(Array plugin, Player player) {
+        ProfileManager profileManager = plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(player.getUniqueId());
 
-        key += type.name() + ".";
+        List<String> lines = new ArrayList<>();
+        String key = "BUTTONS." + type.name() + ".";
 
         switch (type) {
             case TOGGLESCOREBOARD:
@@ -92,20 +90,6 @@ public class SettingsButton extends Button {
                         continue;
                     }
                     lines.add(CC.translate(text));
-                }
-                break;
-            case TOGGLELIGHTNING:
-                if (player.hasPermission("array.profile.lightning")) {
-                    for ( String text : config.getStringList(key + "LORE_PERMISSION" )) {
-                        if (text.contains("<options>")) {
-                            lines.add((profile.getSettings().isDeathLightning() ? config.getString(key + "ENABLED.SELECTED") : config.getString(key + "ENABLED.NOT_SELECTED")));
-                            lines.add((!profile.getSettings().isDeathLightning() ?  config.getString(key + "DISABLED.SELECTED") : config.getString(key + "DISABLED.NOT_SELECTED")));
-                            continue;
-                        }
-                        lines.add(CC.translate(text));
-                    }
-                } else {
-                    config.getStringList(key + "LORE_NO_PERM" ).forEach(text -> lines.add(CC.translate(text.replace("<store>", plugin.getConfigHandler().getSTORE()))));
                 }
                 break;
             case TOGGLEPINGONSCOREBOARD:
@@ -190,8 +174,10 @@ public class SettingsButton extends Button {
      * @param clickType {@link ClickType}
      */
     @Override
-    public void clicked(Player player, ClickType clickType) {
-        final Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
+    public void clicked(Array plugin, Player player, ClickType clickType) {
+        ProfileManager profileManager = plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(player.getUniqueId());
+
         switch (type) {
             case TOGGLESCOREBOARD:
                 Button.playSuccess(player);
@@ -208,7 +194,7 @@ public class SettingsButton extends Button {
                 } else {
                     Button.playFail(player);
                     player.closeInventory();
-                    Locale.ERROR_SETTING_NOPERM.toList().forEach(line -> player.sendMessage(line.replace("<store>", plugin.getConfigHandler().getSTORE())));
+                    Locale.SETTING_NOPERM.toList().forEach(line -> player.sendMessage(line.replace("<store>", plugin.getConfigHandler().getSTORE())));
                 }
                 break;
             case TOGGLESPECTATORS:
@@ -218,16 +204,6 @@ public class SettingsButton extends Button {
             case TOGGLECPSONSCOREBOARD:
                 Button.playSuccess(player);
                 profile.getSettings().setCpsScoreboard(!profile.getSettings().isCpsScoreboard());
-                break;
-            case TOGGLELIGHTNING:
-                if (player.hasPermission("array.profile.lightning")) {
-                    Button.playSuccess(player);
-                    profile.getSettings().setDeathLightning(!profile.getSettings().isDeathLightning());
-                } else {
-                    Button.playFail(player);
-                    player.closeInventory();
-                    Locale.ERROR_SETTING_NOPERM.toList().forEach(line -> player.sendMessage(line.replace("<store>", plugin.getConfigHandler().getSTORE())));
-                }
                 break;
             case TOGGLEPINGONSCOREBOARD:
                 Button.playSuccess(player);
@@ -253,9 +229,9 @@ public class SettingsButton extends Button {
                 } else {
                     Button.playFail(player);
                     player.closeInventory();
-                    Locale.ERROR_SETTING_NOPERM.toList().forEach(line -> player.sendMessage(line.replace("<store>", plugin.getConfigHandler().getSTORE())));
+                    Locale.SETTING_NOPERM.toList().forEach(line -> player.sendMessage(line.replace("<store>", plugin.getConfigHandler().getSTORE())));
                 }
-
+                break;
         }
         plugin.getProfileManager().save(profile);
     }

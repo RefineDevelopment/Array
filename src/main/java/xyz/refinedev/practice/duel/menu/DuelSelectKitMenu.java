@@ -4,6 +4,8 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.duel.menu.buttons.DuelKitButton;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.managers.KitManager;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
@@ -22,10 +24,6 @@ import java.util.Map;
 
 public class DuelSelectKitMenu extends Menu {
 
-    public DuelSelectKitMenu(Array plugin) {
-        super(plugin);
-    }
-
     /**
      * Get menu's title
      *
@@ -33,7 +31,7 @@ public class DuelSelectKitMenu extends Menu {
      * @return {@link String} the title of the menu
      */
     @Override
-    public String getTitle(Player player) {
+    public String getTitle(Array plugin, Player player) {
         return "&7Select a kit";
     }
 
@@ -44,16 +42,19 @@ public class DuelSelectKitMenu extends Menu {
      * @return {@link Map}
      */
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
-        Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        for ( Kit kit : this.getPlugin().getKitManager().getKits() ) {
-            if (profile.hasParty() && this.getPlugin().getConfigHandler().isHCF_ENABLED()) {
-                if (kit.equals(this.getPlugin().getKitManager().getTeamFight())) continue;
+        KitManager kitManager = plugin.getKitManager();
+        ProfileManager profileManager = plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(player.getUniqueId());
+
+        for ( Kit kit : kitManager.getKits() ) {
+            if (profile.hasParty() && plugin.getConfigHandler().isHCF_ENABLED()) {
+                if (kit.equals(kitManager.getTeamFight())) continue;
             }
 
-            buttons.put(buttons.size(), new DuelKitButton(this.getPlugin(), this, kit));
+            buttons.put(buttons.size(), new DuelKitButton(this, kit));
         }
 
         return buttons;
@@ -65,10 +66,11 @@ public class DuelSelectKitMenu extends Menu {
      * @param player {@link Player} player viewing the menu
      */
     @Override
-    public void onClose(Player player) {
+    public void onClose(Array plugin, Player player) {
         if (this.isClosedByMenu()) return;
 
-        Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
+        ProfileManager profileManager = plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(player.getUniqueId());
         profile.setDuelProcedure(null);
     }
 }

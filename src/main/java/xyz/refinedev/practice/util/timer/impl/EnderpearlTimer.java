@@ -39,7 +39,7 @@ public class EnderpearlTimer extends PlayerTimer implements Listener {
 		}
 
 		Profile profile = plugin.getProfileManager().getProfile(playerUUID);
-		if (profile.isInSomeSortOfFight()) player.sendMessage(Locale.MATCH_EPEARL_EXPIRE.toString());
+		if (profile.isInSomeSortOfFight()) player.sendMessage(Locale.MATCH_PEARL_COOLDOWN_EXPIRE.toString());
 	}
 
 	@EventHandler

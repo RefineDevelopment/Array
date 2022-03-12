@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.refinedev.practice.util.command.annotation.Duration;
 import xyz.refinedev.practice.util.command.annotation.Sender;
@@ -106,7 +107,12 @@ public class DrinkCommandService implements CommandService {
         for ( DrinkCommandContainer container : this.commands.values() ) {
             container.getCommands().values().forEach(cmd -> {
                 if (cmd.getPermission() != null) {
-                    plugin.getServer().getPluginManager().addPermission(new Permission(cmd.getPermission(), PermissionDefault.OP));
+                    PluginManager pluginManager = plugin.getServer().getPluginManager();
+                    Permission permission = new Permission(cmd.getPermission(), PermissionDefault.OP);
+
+                    if (!pluginManager.getPermissions().contains(permission)) {
+                        pluginManager.addPermission(permission);
+                    }
                 }
             });
         }

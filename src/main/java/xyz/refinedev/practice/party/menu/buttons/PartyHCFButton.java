@@ -7,6 +7,8 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.managers.PartyManager;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
@@ -29,7 +31,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PartyHCFButton extends Button {
 
-    private final Array plugin;
     private final UUID uuid;
 
     /**
@@ -39,11 +40,14 @@ public class PartyHCFButton extends Button {
      * @return {@link ItemStack}
      */
     @Override
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         List<String> lore = new ArrayList<>();
 
-        Profile profile = plugin.getProfileManager().getProfile(uuid);
-        Party party = plugin.getPartyManager().getPartyByUUID(uuid);
+        ProfileManager profileManager = plugin.getProfileManager();
+        PartyManager partyManager = plugin.getPartyManager();
+
+        Profile profile = profileManager.getProfile(uuid);
+        Party party = partyManager.getPartyByUUID(profile.getParty());
         String pvpClass = party.getKits().get(uuid);
 
         lore.add(CC.MENU_BAR);
@@ -53,15 +57,16 @@ public class PartyHCFButton extends Button {
         lore.add(pvpClass.equals("Rogue") ? "&7» &cRogue" : "&7Rogue");
         lore.add(CC.MENU_BAR);
 
-        return new ItemBuilder(
-                pvpClass.equals("Diamond") ? Material.DIAMOND_CHESTPLATE :
-                pvpClass.equals("Bard") ? Material.GOLD_CHESTPLATE :
-                pvpClass.equals("Archer") ? Material.LEATHER_CHESTPLATE :
-                pvpClass.equals("Rogue") ? Material.IRON_CHESTPLATE : null)
-                .name("&a" + profile.getName())
-                .amount(1)
-                .lore(lore)
-                .build();
+        Material material = pvpClass.equals("Diamond") ? Material.DIAMOND_CHESTPLATE :
+                            pvpClass.equals("Bard") ? Material.GOLD_CHESTPLATE :
+                            pvpClass.equals("Archer") ? Material.LEATHER_CHESTPLATE :
+                            pvpClass.equals("Rogue") ? Material.IRON_CHESTPLATE : null;
+
+        ItemBuilder itemBuilder = new ItemBuilder(material);
+        itemBuilder.name("&a" + profile.getName());
+        itemBuilder.amount(1);
+        itemBuilder.lore(lore);
+        return itemBuilder.build();
     }
 
     /**
@@ -72,9 +77,12 @@ public class PartyHCFButton extends Button {
      * @param clickType {@link ClickType}
      */
     @Override
-    public void clicked(Player player, ClickType clickType) {
-        Profile profile = plugin.getProfileManager().getProfile(uuid);
-        Party party = plugin.getPartyManager().getPartyByUUID(uuid);
+    public void clicked(Array plugin, Player player, ClickType clickType) {
+        ProfileManager profileManager = plugin.getProfileManager();
+        PartyManager partyManager = plugin.getPartyManager();
+
+        Profile profile = profileManager.getProfile(uuid);
+        Party party = partyManager.getPartyByUUID(profile.getParty());
 
         if (!party.isLeader(player.getUniqueId())) {
             Button.playFail(player);

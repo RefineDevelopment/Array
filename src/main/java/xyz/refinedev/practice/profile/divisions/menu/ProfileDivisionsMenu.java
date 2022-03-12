@@ -1,7 +1,10 @@
 package xyz.refinedev.practice.profile.divisions.menu;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.managers.DivisionsManager;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.divisions.ProfileDivision;
 import xyz.refinedev.practice.profile.divisions.menu.buttons.ProfileELODivisionsButton;
@@ -23,22 +26,17 @@ import java.util.Map;
  */
 
 //TODO: Include a back button in each and every profile menu button
+@RequiredArgsConstructor
 public class ProfileDivisionsMenu extends PaginatedMenu {
 
     private final FoldersConfigurationFile config;
-
-    public ProfileDivisionsMenu(Array plugin) {
-        super(plugin);
-        
-        this.config = this.getPlugin().getMenuHandler().getConfigByName("profile_divisions");
-    }
 
     /**
      * @param player player viewing the inventory
      * @return title of the inventory before the page number is added
      */
     @Override
-    public String getPrePaginatedTitle(Player player) {
+    public String getPrePaginatedTitle(Array plugin, Player player) {
         return config.getString("TITLE");
     }
 
@@ -57,15 +55,21 @@ public class ProfileDivisionsMenu extends PaginatedMenu {
      * @return a map of button that will be paginated and spread across pages
      */
     @Override
-    public Map<Integer, Button> getAllPagesButtons(Player player) {
+    public Map<Integer, Button> getAllPagesButtons(Array plugin, Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
-        if (this.getPlugin().getDivisionsManager().isXPBased()) {
-            ProfileDivision division = this.getPlugin().getDivisionsManager().getDivisionByELO(profile.getExperience());
-            buttons.put(buttons.size(), new ProfileXPDivisionsButton(profile, division));
+
+        ProfileManager profileManager = plugin.getProfileManager();
+        DivisionsManager divisionManager = plugin.getDivisionsManager();
+
+        Profile profile = profileManager.getProfile(player.getUniqueId());
+        FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_divisions");
+
+        if (divisionManager.isXPBased()) {
+            ProfileDivision division = divisionManager.getDivisionByXP(profile.getExperience());
+            buttons.put(buttons.size(), new ProfileXPDivisionsButton(profile, division, config));
         } else {
-            ProfileDivision division = this.getPlugin().getDivisionsManager().getDivisionByELO(profile.getGlobalElo());
-            buttons.put(buttons.size(), new ProfileELODivisionsButton(profile, division));
+            ProfileDivision division = divisionManager.getDivisionByELO(profile.getGlobalElo());
+            buttons.put(buttons.size(), new ProfileELODivisionsButton(profile, division, config));
         }
         return buttons;
     }

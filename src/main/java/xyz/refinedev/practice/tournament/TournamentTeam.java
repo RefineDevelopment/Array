@@ -2,6 +2,7 @@ package xyz.refinedev.practice.tournament;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 
@@ -44,6 +45,7 @@ public class TournamentTeam {
     public String getPlayerName(UUID playerUUID) {
         return this.playerNames.get(playerUUID);
     }
+
     public void killPlayer(UUID playerUUID) {
         this.alivePlayers.remove(playerUUID);
     }
@@ -54,5 +56,25 @@ public class TournamentTeam {
 
     public Stream<Player> players() {
         return this.players.stream().map(this.plugin.getServer()::getPlayer).filter(Objects::nonNull);
+    }
+
+    public String getLeaderName() {
+        return this.getPlayerName(this.getLeader());
+    }
+
+    public String getNames() {
+        StringBuilder names = new StringBuilder();
+
+        for (int i = 0; i < this.getPlayers().size(); ++i) {
+            UUID teammateUUID = this.getPlayers().get(i);
+            Player teammate = Bukkit.getServer().getPlayer(teammateUUID);
+            String name = teammate == null ? this.getPlayerName(teammateUUID) : teammate.getName();
+            int players = this.getPlayers().size();
+            if (teammate == null) continue;
+
+            names.append(name)
+                 .append(players - 1 == i ? "" : (players - 2 == i ? (players > 2 ? "," : "") + " & " : ", "));
+        }
+        return names.toString();
     }
 }

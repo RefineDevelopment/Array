@@ -23,17 +23,11 @@ import java.util.Map;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class MatchSpectateMenu extends Menu {
 
     private final FoldersConfigurationFile config;
     private final Match match;
-
-    public MatchSpectateMenu(Array plugin, Match match) {
-        super(plugin);
-        
-        this.match = match;
-        this.config = this.getPlugin().getMenuHandler().getConfigByName("general");
-    }
 
     /**
      * Get menu's title
@@ -42,7 +36,7 @@ public class MatchSpectateMenu extends Menu {
      * @return {@link String} the title of the menu
      */
     @Override
-    public String getTitle(Player player) {
+    public String getTitle(Array plugin, Player player) {
         return CC.translate(config.getString("SPECTATING_MENU.TITLE"));
     }
 
@@ -53,7 +47,7 @@ public class MatchSpectateMenu extends Menu {
      * @return {@link Map}
      */
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
         for ( TeamPlayer teamPlayer : match.getTeamPlayers()) {
             buttons.put(buttons.size(), new SpectateButton(match, teamPlayer));

@@ -23,7 +23,7 @@ import java.util.List;
 public class StatisticsButton extends Button {
 
     @Override
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         List<String> lore = new ArrayList<>();
 
         lore.add(CC.MENU_BAR);

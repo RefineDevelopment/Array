@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.match.menu;
 
 import com.google.common.base.Preconditions;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -16,6 +17,7 @@ import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.ButtonUtil;
 import xyz.refinedev.practice.util.menu.Menu;
+import xyz.refinedev.practice.util.menu.MenuHandler;
 import xyz.refinedev.practice.util.menu.button.DisplayButton;
 import xyz.refinedev.practice.util.other.PotionUtil;
 import xyz.refinedev.practice.util.other.TimeUtil;
@@ -23,6 +25,7 @@ import xyz.refinedev.practice.util.other.TimeUtil;
 import javax.annotation.Nullable;
 import java.util.*;
 
+@RequiredArgsConstructor
 public class MatchDetailsMenu extends Menu {
     
     private final FoldersConfigurationFile config;
@@ -30,22 +33,14 @@ public class MatchDetailsMenu extends Menu {
     private final MatchSnapshot snapshot;
     private final MatchSnapshot opponent;
 
-    public MatchDetailsMenu(Array plugin, MatchSnapshot snapshot, @Nullable MatchSnapshot opponent) {
-        super(plugin);
-
-        this.config = this.getPlugin().getMenuHandler().getConfigByName("general");
-        this.snapshot = snapshot;
-        this.opponent = opponent;
-    }
-
     @Override
-    public String getTitle(Player player) {
+    public String getTitle(Array plugin, Player player) {
         return config.getString("MATCH_DETAILS_MENU.TITLE")
                 .replace("<snapshot_name>", snapshot.getTeamPlayer().getUsername());
     }
 
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         Preconditions.checkNotNull(snapshot, "Snapshot can not be null!");
 
         Map<Integer, Button> buttons = new HashMap<>();
@@ -85,18 +80,15 @@ public class MatchDetailsMenu extends Menu {
         return buttons;
     }
 
+    @RequiredArgsConstructor
     private class SwitchInventoryButton extends Button {
 
         private final TeamPlayer switchTo;
 
-        public SwitchInventoryButton(TeamPlayer switchTo) {
-            super(MatchDetailsMenu.this.getPlugin());
-            this.switchTo = switchTo;
-        }
-
         @Override
-        public ItemStack getButtonItem(Player player) {
+        public ItemStack getButtonItem(Array plugin, Player player) {
             String path = "MATCH_DETAILS_MENU.SWITCH_INVENTORY_BUTTON";
+
             int data = config.getInteger(path + ".DATA");
             Material material = ButtonUtil.getMaterial(config, path + ".MATERIAL");
             if (material == null) player.closeInventory();
@@ -104,52 +96,45 @@ public class MatchDetailsMenu extends Menu {
             ItemBuilder itemBuilder  = new ItemBuilder(material);
             itemBuilder.durability(data);
             itemBuilder.name(config.getString(path + ".NAME")
-                    .replace("<snapshot_next_name>", opponent == null ?
-                    switchTo.getUsername() :
-                    opponent.getTeamPlayer().getUsername()));
+                    .replace("<snapshot_next_name>", opponent == null ? switchTo.getUsername() : opponent.getTeamPlayer().getUsername()));
 
             return itemBuilder.build();
         }
 
         @Override
-        public void clicked(Player player, ClickType clickType) {
+        public void clicked(Array plugin, Player player, ClickType clickType) {
             if (opponent != null) {
-                MatchDetailsMenu menu = new MatchDetailsMenu(this.getPlugin(), opponent, snapshot);
-                menu.openMenu(player);
+                Menu menu = new MatchDetailsMenu(config, opponent, snapshot);
+                plugin.getMenuHandler().openMenu(menu, player);
+                return;
             }
 
             MatchSnapshot cachedInventory;
-            if (opponent == null) {
-                try {
-                    cachedInventory = this.getPlugin().getMatchManager().getByString(switchTo.getUniqueId().toString());
-                } catch (Exception e) {
-                    player.sendMessage(CC.RED + "Couldn't find an inventory for that ID.");
-                    return;
-                }
-
-                if (cachedInventory == null) {
-                    player.sendMessage(CC.RED + "Couldn't find an inventory for that ID.");
-                    return;
-                }
-
-                MatchDetailsMenu menu = new MatchDetailsMenu(this.getPlugin(), cachedInventory, snapshot);
-                menu.openMenu(player);
+            try {
+                cachedInventory = plugin.getMatchManager().getByString(switchTo.getUniqueId().toString());
+            } catch (Exception e) {
+                player.sendMessage(CC.RED + "Couldn't find an inventory for that ID.");
+                return;
             }
+
+            if (cachedInventory == null) {
+                player.sendMessage(CC.RED + "Couldn't find an inventory for that ID.");
+                return;
+            }
+
+            MatchDetailsMenu menu = new MatchDetailsMenu(config, cachedInventory, snapshot);
+            plugin.getMenuHandler().openMenu(menu, player);
         }
 
     }
 
+    @RequiredArgsConstructor
     private class HealthButton extends Button {
 
         private final int health;
 
-        public HealthButton(int health) {
-            super(MatchDetailsMenu.this.getPlugin());
-            this.health = health;
-        }
-
         @Override
-        public ItemStack getButtonItem(Player player) {
+        public ItemStack getButtonItem(Array plugin, Player player) {
             return new ItemBuilder(Material.MELON)
                     .name("&cHealth: &7" + health + "/10&c + \u2764")
                     .amount(health == 0 ? 1 : health)
@@ -158,17 +143,13 @@ public class MatchDetailsMenu extends Menu {
 
     }
 
+    @RequiredArgsConstructor
     private class HungerButton extends Button {
 
         private final int hunger;
 
-        public HungerButton(int hunger) {
-            super(MatchDetailsMenu.this.getPlugin());
-            this.hunger = hunger;
-        }
-
         @Override
-        public ItemStack getButtonItem(Player player) {
+        public ItemStack getButtonItem(Array plugin, Player player) {
             return new ItemBuilder(Material.COOKED_BEEF)
                     .name("&cHunger: &7" + hunger + "/20")
                     .amount(hunger == 0 ? 1 : hunger)
@@ -177,17 +158,13 @@ public class MatchDetailsMenu extends Menu {
 
     }
 
+    @RequiredArgsConstructor
     private class EffectsButton extends Button {
 
         private final Collection<PotionEffect> effects;
 
-        public EffectsButton(Collection<PotionEffect> effects) {
-            super(MatchDetailsMenu.this.getPlugin());
-            this.effects = effects;
-        }
-
         @Override
-        public ItemStack getButtonItem(Player player) {
+        public ItemStack getButtonItem(Array plugin, Player player) {
             ItemBuilder builder = new ItemBuilder(Material.POTION);
             builder.name("&c&lPotion Effects");
 
@@ -206,19 +183,14 @@ public class MatchDetailsMenu extends Menu {
         }
     }
 
+    @RequiredArgsConstructor
     private class PotionsButton extends Button {
 
         private final String name;
         private final int potions;
 
-        public PotionsButton(String name, int potions) {
-            super(MatchDetailsMenu.this.getPlugin());
-            this.name = name;
-            this.potions = potions;
-        }
-
         @Override
-        public ItemStack getButtonItem(Player player) {
+        public ItemStack getButtonItem(Array plugin, Player player) {
             return new ItemBuilder(Material.POTION)
                     .durability(16421)
                     .amount(potions == 0 ? 1 : potions)
@@ -229,17 +201,13 @@ public class MatchDetailsMenu extends Menu {
 
     }
 
+    @RequiredArgsConstructor
     private class StatisticsButton extends Button {
 
         private final TeamPlayer teamPlayer;
 
-        public StatisticsButton(TeamPlayer teamPlayer) {
-            super(MatchDetailsMenu.this.getPlugin());
-            this.teamPlayer = teamPlayer;
-        }
-
         @Override
-        public ItemStack getButtonItem(Player player) {
+        public ItemStack getButtonItem(Array plugin, Player player) {
             return new ItemBuilder(Material.PAPER)
                     .name("&aStatistics")
                     .lore(Arrays.asList(

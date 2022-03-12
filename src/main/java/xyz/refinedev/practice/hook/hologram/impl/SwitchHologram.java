@@ -1,5 +1,22 @@
 package xyz.refinedev.practice.hook.hologram.impl;
 
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import com.google.common.base.Preconditions;
+import lombok.RequiredArgsConstructor;
+import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.hook.hologram.PracticeHologram;
+import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
+import xyz.refinedev.practice.managers.KitManager;
+import xyz.refinedev.practice.managers.ProfileManager;
+import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.profile.divisions.ProfileDivision;
+import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * This Project is property of Refine Development © 2021
  * Redistribution of this Project is not allowed
@@ -9,5 +26,93 @@ package xyz.refinedev.practice.hook.hologram.impl;
  * Project: Array
  */
 
-public class SwitchHologram {
+//TODO: ????
+@RequiredArgsConstructor
+public class SwitchHologram extends PracticeHologram {
+
+    private final Array plugin;
+    private Kit kit;
+
+    /**
+     * Spawn the hologram for all players on the server
+     * at the given location in the constructor
+     */
+    public void spawn() {
+        Preconditions.checkNotNull(this.meta, "Hologram Meta can not be null!");
+
+        if (kit == null) {
+            this.findNextKit();
+        }
+
+        BasicConfigurationFile config = plugin.getHologramsConfig();
+        ProfileManager profileManager = plugin.getProfileManager();
+
+        Hologram apiHologram = HologramsAPI.createHologram(plugin, meta.getLocation());
+        apiHologram.clearLines();
+        apiHologram.getVisibilityManager().setVisibleByDefault(true);
+        if (!apiHologram.getLocation().getChunk().isLoaded()) {
+            apiHologram.getLocation().getChunk().load();
+        }
+
+        for ( String line : config.getStringList("SETTINGS.SWITCH.LINES") ) {
+            if (line.contains("<top>")) {
+                int position = 1;
+                for ( LeaderboardsAdapter leaderboardsAdapter : kit.getEloLeaderboards()) {
+                    Profile profile = profileManager.getProfile(leaderboardsAdapter.getUniqueId());
+                    ProfileDivision division = profileManager.getDivision(profile);
+
+                    apiHologram.appendTextLine(config.getString("SETTINGS.SWITCH.FORMAT")
+                            .replace("<number>", String.valueOf(position))
+                            .replace("<value>", String.valueOf(leaderboardsAdapter.getElo()))
+                            .replace("<name>", leaderboardsAdapter.getName())
+                            .replace("<division>", division.getDisplayName()));
+                    position++;
+                }
+                continue;
+            }
+
+            String replace = line
+                    .replace("<kit>", kit.getDisplayName())
+                    .replace("<update>", String.valueOf(updateIn));
+
+            apiHologram.appendTextLine(replace);
+        }
+
+        meta.setHologram(apiHologram);
+    }
+
+    /**
+     * DeSpawn the hologram for all players on the server
+     * This method will only deSpawn the hologram but not delete,
+     * so after a restart it will be back to its original location
+     */
+    public void deSpawn() {
+        Hologram hologram = meta.getHologram();
+        hologram.clearLines();
+        hologram.delete();
+    }
+
+    /**
+     * Update the hologram and its contents
+     * respectively, this will change the hologram's kit
+     * in the {@link SwitchHologram} otherwise it will update
+     * the leaderboard being displayed
+     */
+    public void update() {
+        this.deSpawn();
+        this.findNextKit();
+        this.spawn();
+    }
+
+    public void findNextKit() {
+        KitManager kitManager = plugin.getKitManager();
+        List<Kit> kits = kitManager.getKits().stream().filter(k -> k.getGameRules().isRanked()).collect(Collectors.toList());
+        int index = kits.indexOf(kit);
+
+        if (index + 2 >= kits.size()) {
+            this.kit = kits.get(0);
+        }
+
+        this.kit = kits.get(index + 1);
+    }
 }

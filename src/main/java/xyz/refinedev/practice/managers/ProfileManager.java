@@ -43,7 +43,6 @@ import xyz.refinedev.practice.util.inventory.InventoryUtil;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
-import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -97,7 +96,7 @@ public class ProfileManager {
         }
 
         plugin.submitToThread(() -> {
-            Document document = collection.find(Filters.eq("uuid", profile.getUniqueId().toString())).first();
+            Document document = collection.find(Filters.eq("uniqueId", profile.getUniqueId().toString())).first();
 
             if (document == null) {
                 this.save(profile);
@@ -193,7 +192,7 @@ public class ProfileManager {
 
         Document document = new Document();
 
-        document.put("uuid", profile.getUniqueId().toString());
+        document.put("uniqueId", profile.getUniqueId().toString());
         document.put("name", profile.getName());
         document.put("globalElo", profile.getGlobalElo());
         document.put("experience", profile.getExperience());
@@ -256,7 +255,7 @@ public class ProfileManager {
             document.put("rankedHistory", history);
         }
 
-        plugin.submitToThread(() -> collection.replaceOne(Filters.eq("uuid", profile.getUniqueId().toString()), document, new ReplaceOptions().upsert(true)));
+        plugin.submitToThread(() -> collection.replaceOne(Filters.eq("uniqueId", profile.getUniqueId().toString()), document, new ReplaceOptions().upsert(true)));
     }
 
     public void handleJoin(Profile profile) {
@@ -364,7 +363,6 @@ public class ProfileManager {
             }
 
             if (update) {
-                player.sendMessage(CC.translate("&cRefreshing hotbar"));
                 this.refreshHotbar(profile);
             }
         }
@@ -578,26 +576,6 @@ public class ProfileManager {
      */
     public Profile getProfile(Player player) {
        return profiles.get(player.getUniqueId());
-    }
-
-    /**
-     * Can the profile not send a duel request
-     * to another player
-     *
-     * @param player The player receiving the duel request
-     * @return {@link Boolean}
-     */
-    public boolean cannotSendDuelRequest(Profile profile, Player player) {
-        if (!profile.getDuelRequests().containsKey(player.getUniqueId())) {
-            return false;
-        }
-
-        DuelRequest request = profile.getDuelRequests().get(player.getUniqueId());
-        if (request.isExpired()) {
-            profile.getDuelRequests().remove(player.getUniqueId());
-            return false;
-        }
-        return true;
     }
 
     /**

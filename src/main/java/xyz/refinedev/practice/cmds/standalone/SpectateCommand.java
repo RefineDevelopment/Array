@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.managers.MatchManager;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
@@ -26,7 +28,10 @@ public class SpectateCommand {
 
     @Command(name = "", desc = "Spectate a target player", usage = "<target>")
     public void spectate(@Sender Player player, Player target) {
-        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
+        ProfileManager profileManager = plugin.getProfileManager();
+        MatchManager matchManager = plugin.getMatchManager();
+
+        Profile profile = profileManager.getProfile(player.getUniqueId());
 
         if (profile.isBusy()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
@@ -38,9 +43,9 @@ public class SpectateCommand {
             return;
         }
 
-        Profile targetProfile = plugin.getProfileManager().getProfile(target.getUniqueId());
+        Profile targetProfile = profileManager.getProfile(target.getUniqueId());
 
-        if (!targetProfile.getSettings().isAllowSpectators() && !player.hasPermission("array.profile.silent")) {
+        if (!targetProfile.getSettings().isAllowSpectators() && !profile.isSilent()) {
             player.sendMessage(Locale.ERROR_NOSPEC.toString());
             return;
         }
@@ -53,7 +58,7 @@ public class SpectateCommand {
         if (targetProfile.getMatch() != null && !targetProfile.getMatch().isFreeForAllMatch()) {
             for ( TeamPlayer teamPlayer : targetProfile.getMatch().getTeamPlayers() ) {
                 Player inMatchPlayer = teamPlayer.getPlayer();
-                Profile inMatchProfile = plugin.getProfileManager().getProfile(inMatchPlayer.getUniqueId());
+                Profile inMatchProfile = profileManager.getProfile(inMatchPlayer.getUniqueId());
 
                 if (!inMatchProfile.getSettings().isAllowSpectators() && !profile.isSilent()) {
                     player.sendMessage(Locale.ERROR_MATCHNOSPEC.toString());
@@ -64,7 +69,7 @@ public class SpectateCommand {
 
         if (targetProfile.isInFight() || targetProfile.isInTournament()) {
             Match match = profile.getMatch();
-            this.plugin.getMatchManager().addSpectator(match, player, target);
+            matchManager.addSpectator(match, player, target);
         }/* else if (targetProfile.isInEvent()) {
             Event event = this.plugin.getEventManager().getEventByUUID(profile.getEvent());
             this.plugin.getEventManager().addSpectator(event, player.getUniqueId());
@@ -73,27 +78,33 @@ public class SpectateCommand {
 
     @Command(name = "show", aliases = "view", desc = "Show spectators")
     public void show(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getProfile(player);
+        ProfileManager profileManager = plugin.getProfileManager();
+        MatchManager matchManager = plugin.getMatchManager();
+
+        Profile profile = profileManager.getProfile(player);
         if (!profile.isInMatch()) {
-            player.sendMessage(Locale.MATCH_NOT_IN.toString());
+            player.sendMessage(Locale.ERROR_TARGET_NOT_IN_MATCH.toString());
             return;
         } else if (!profile.isSpectating()) {
             player.sendMessage(Locale.ERROR_NOTSPECTATING.toString());
             return;
         }
-        this.plugin.getMatchManager().toggleSpectators(profile.getMatch(), player);
+        matchManager.toggleSpectators(profile.getMatch(), player);
     }
 
     @Command(name = "hide", aliases = "disable", desc = "Hide spectators")
     public void hide(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getProfile(player);
+        ProfileManager profileManager = plugin.getProfileManager();
+        MatchManager matchManager = plugin.getMatchManager();
+
+        Profile profile = profileManager.getProfile(player);
         if (!profile.isInMatch()) {
-            player.sendMessage(Locale.MATCH_NOT_IN.toString());
+            player.sendMessage(Locale.ERROR_TARGET_NOT_IN_MATCH.toString());
             return;
         } else if (!profile.isSpectating()) {
             player.sendMessage(Locale.ERROR_NOTSPECTATING.toString());
             return;
         }
-        this.plugin.getMatchManager().toggleSpectators(profile.getMatch(), player);
+        matchManager.toggleSpectators(profile.getMatch(), player);
     }
 }

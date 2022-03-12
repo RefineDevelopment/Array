@@ -27,11 +27,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProfileXPDivisionsButton extends Button {
 
-    private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_divisions");
-
     private final Profile profile;
     private final ProfileDivision division;
+    private final FoldersConfigurationFile config;
 
     /**
      * Get itemStack of the Button
@@ -40,32 +38,37 @@ public class ProfileXPDivisionsButton extends Button {
      * @return {@link ItemStack}
      */
     @Override
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         ProfileDivision profileDivision = plugin.getProfileManager().getDivision(profile);
 
         boolean equipped = division.equals(profileDivision);
         boolean unlocked = profileDivision.getExperience() >= division.getExperience();
 
-        String key = "XP.KEY.";
-
         ItemBuilder itemBuilder = new ItemBuilder(Material.PAPER);
 
         if (equipped || unlocked) {
-            itemBuilder.name(config.getString(key + "NAME".replace("KEY", equipped ? "EQUIPPED" : "UNLOCKED")));
+            itemBuilder.name(config.getString("XP.UNLOCKED.NAME"));
+            itemBuilder.lore(config.getStringList("XP.UNLOCKED.LORE")
+                    .stream()
+                    .map(s -> {
+                        s = s.replace("<division_bar>", ProgressBar.getBar(5, 1))
+                             .replace("<division_experience>", String.valueOf(division.getExperience()));
+                        return s;
+            }).collect(Collectors.toList()));
+
             if (equipped) itemBuilder.enchantment(Enchantment.DURABILITY, 10);
-            itemBuilder.lore(config.getStringList(key + "LORE".replace("KEY", equipped ? "EQUIPPED" : "UNLOCKED")).stream().map(s -> {
-                s = s.replace("<division_bar>", ProgressBar.getBar(5, 1))
-                     .replace("<division_experience>", String.valueOf(division.getExperience()));
-                return s;
-            }).collect(Collectors.toList()));
-        } else {
-            itemBuilder.name(config.getString(key + "NAME".replace("KEY", "LOCKED")));
-            itemBuilder.lore(config.getStringList(key + "LORE".replace("KEY", "LOCKED")).stream().map(s -> {
-                s = s.replace("<division_bar>", ProgressBar.getBar(profileDivision.getExperience(), division.getExperience()))
-                     .replace("<division_experience>", String.valueOf(division.getExperience()));
-                return s;
-            }).collect(Collectors.toList()));
+            itemBuilder.clearFlags();
+            return itemBuilder.build();
         }
-        return itemBuilder.clearFlags().build();
+
+        itemBuilder.name(config.getString("XP.LOCKED.NAME"));
+        itemBuilder.lore(config.getStringList("XP.LOCKED.LORE")
+                .stream()
+                .map(s -> {
+                    s = s.replace("<division_bar>", ProgressBar.getBar(profileDivision.getExperience(), division.getExperience()))
+                         .replace("<division_experience>", String.valueOf(division.getExperience()));
+                    return s;
+        }).collect(Collectors.toList()));
+        return itemBuilder.build();
     }
 }

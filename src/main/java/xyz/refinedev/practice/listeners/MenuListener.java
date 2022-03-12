@@ -11,6 +11,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
+import xyz.refinedev.practice.util.menu.MenuHandler;
 import xyz.refinedev.practice.util.other.TaskUtil;
 
 @RequiredArgsConstructor
@@ -20,8 +21,10 @@ public class MenuListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onButtonPress(InventoryClickEvent event) {
+        MenuHandler menuHandler = this.plugin.getMenuHandler();
+
         Player player = (Player) event.getWhoClicked();
-        Menu openMenu = plugin.getMenuHandler().getOpenedMenus().get(player.getUniqueId());
+        Menu openMenu = menuHandler.getOpenedMenus().get(player.getUniqueId());
 
         if (openMenu != null) {
             if (event.getSlot() != event.getRawSlot()) {
@@ -45,23 +48,23 @@ public class MenuListener implements Listener {
                     event.setCancelled(cancel);
                 }
 
-                button.clicked(player, event.getClick());
-                button.clicked(player, event.getSlot(), event.getClick(), event.getHotbarButton());
+                button.clicked(plugin, player, event.getClick());
+                button.clicked(plugin, player, event.getSlot(), event.getClick(), event.getHotbarButton());
 
-                if (plugin.getMenuHandler().getOpenedMenus().containsKey(player.getUniqueId())) {
-                    Menu newMenu = plugin.getMenuHandler().getOpenedMenus().get(player.getUniqueId());
+                if (menuHandler.getOpenedMenus().containsKey(player.getUniqueId())) {
+                    Menu newMenu = menuHandler.getOpenedMenus().get(player.getUniqueId());
 
                     if (newMenu == openMenu) {
                         boolean buttonUpdate = button.shouldUpdate(player, event.getClick());
 
                         if (buttonUpdate) {
                             openMenu.setClosedByMenu(true);
-                            newMenu.openMenu(player);
+                            menuHandler.openMenu(openMenu, player);
                         }
                     }
                 } else if (button.shouldUpdate(player, event.getClick())) {
                     openMenu.setClosedByMenu(true);
-                    openMenu.openMenu(player);
+                    menuHandler.openMenu(openMenu, player);
                 }
 
                 if (event.isCancelled()) {
@@ -81,13 +84,14 @@ public class MenuListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClose(InventoryCloseEvent event) {
+        MenuHandler menuHandler = this.plugin.getMenuHandler();
         Player player = (Player) event.getPlayer();
-        Menu openMenu = plugin.getMenuHandler().getOpenedMenus().get(player.getUniqueId());
+        Menu openMenu = menuHandler.getOpenedMenus().get(player.getUniqueId());
 
         if (openMenu != null) {
-            openMenu.onClose(player);
+            openMenu.onClose(this.plugin, player);
 
-            plugin.getMenuHandler().getOpenedMenus().remove(player.getUniqueId());
+            menuHandler.getOpenedMenus().remove(player.getUniqueId());
         }
     }
 

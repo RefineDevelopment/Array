@@ -25,16 +25,14 @@ import java.util.List;
 
 public class GlobalLeaderboardsButton extends Button {
 
-    private final Array plugin = this.getPlugin();
-
     @Override
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         List<String> lore = new ArrayList<>();
 
         int position = 1;
         lore.add(CC.MENU_BAR);
         for ( LeaderboardsAdapter leaderboardsAdapter : plugin.getLeaderboardsManager().getGlobalLeaderboards()) {
-            Profile profile = plugin.getProfileManager().getProfile(leaderboardsAdapter.getUuid());
+            Profile profile = plugin.getProfileManager().getProfile(leaderboardsAdapter.getUniqueId());
 
             lore.add(Locale.LEADERBOARDS_GLOBAL_FORMAT.toString()
                     .replace("<leaderboards_pos>", String.valueOf(position))

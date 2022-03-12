@@ -31,7 +31,7 @@ public class LeaveMatchCommand {
 
         Profile profile = plugin.getProfileManager().getProfile(target == null ? player.getUniqueId() : target.getUniqueId());
         if (!profile.isInFight()) {
-            player.sendMessage(target == null ? Locale.ERROR_NOTMATCH.toString() : Locale.ERROR_TARGET_NOTMATCH.toString());
+            player.sendMessage(target == null ? Locale.ERROR_SELF_NOT_IN_MATCH.toString() : Locale.ERROR_TARGET_NOT_IN_MATCH.toString());
             return;
         }
 

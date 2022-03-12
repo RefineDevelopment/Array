@@ -24,34 +24,26 @@ import java.util.List;
 
 public class ClanLeaderboardsButton extends Button {
 
-    private final Array plugin = this.getPlugin();
-
     @Override
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         List<String> lore = new ArrayList<>();
 
         if (plugin.getLeaderboardsManager().getClanLeaderboards().isEmpty()) {
             lore.add(CC.MENU_BAR);
             lore.add("&cThere are no clans!");
             lore.add(CC.MENU_BAR);
-
-            return new ItemBuilder(Material.GOLD_SWORD)
-                    .name("&cClan Leaderboards")
-                    .clearFlags()
-                    .lore(lore)
-                    .build();
+        } else {
+            int position = 1;
+            lore.add(CC.MENU_BAR);
+            for ( LeaderboardsAdapter leaderboardsAdapter : plugin.getLeaderboardsManager().getClanLeaderboards() ) {
+                lore.add(Locale.LEADERBOARDS_CLAN_FORMAT.toString()
+                        .replace("<leaderboards_pos>", String.valueOf(position))
+                        .replace("<leaderboards_name>", leaderboardsAdapter.getName())
+                        .replace("<leaderboards_elo>", String.valueOf(leaderboardsAdapter.getElo())));
+                position++;
+            }
+            lore.add(CC.MENU_BAR);
         }
-
-        int position = 1;
-        lore.add(CC.MENU_BAR);
-        for ( LeaderboardsAdapter leaderboardsAdapter : plugin.getLeaderboardsManager().getClanLeaderboards()) {
-            lore.add(Locale.LEADERBOARDS_CLAN_FORMAT.toString()
-                    .replace("<leaderboards_pos>", String.valueOf(position))
-                    .replace("<leaderboards_name>", leaderboardsAdapter.getName())
-                    .replace("<leaderboards_elo>", String.valueOf(leaderboardsAdapter.getElo())));
-            position++;
-        }
-        lore.add(CC.MENU_BAR);
 
         return new ItemBuilder(Material.GOLD_SWORD)
                 .name("&cClan Leaderboards")

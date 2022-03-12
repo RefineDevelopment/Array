@@ -35,7 +35,6 @@ public class Profile {
     private final List<ProfileHistory> unrankedMatchHistory = new ArrayList<>();
     private final List<ProfileHistory> rankedMatchHistory = new ArrayList<>();
 
-    @SerializedName("uuid")
     private final UUID uniqueId;
     private String name;
     private KillEffect killEffect = KillEffect.NONE;
@@ -141,7 +140,7 @@ public class Profile {
     }
 
     public boolean isInSomeSortOfFight() {
-        return (state == ProfileState.IN_FIGHT && match != null) || (state == ProfileState.IN_EVENT);
+        return isInFight() || isInEvent();
     }
 
     public boolean isBusy() {

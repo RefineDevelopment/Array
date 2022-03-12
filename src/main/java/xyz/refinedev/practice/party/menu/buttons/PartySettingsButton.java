@@ -7,13 +7,17 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.managers.PartyManager;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.party.enums.PartyManageType;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
+import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.ButtonUtil;
 
 import java.util.stream.Collectors;
 
@@ -29,8 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PartySettingsButton extends Button {
 
-    private final Array plugin;
-    private final FoldersConfigurationFile config;
+    private final BasicConfigurationFile config;
     private final PartyManageType partyManageType;
 
     /**
@@ -40,31 +43,26 @@ public class PartySettingsButton extends Button {
      * @return {@link ItemStack}
      */
     @Override
-    public ItemStack getButtonItem(Player player) {
-        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
-        Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
+    public ItemStack getButtonItem(Array plugin, Player player) {
+        ProfileManager profileManager = plugin.getProfileManager();
+        PartyManager partyManager = plugin.getPartyManager();
+
+        Profile profile = profileManager.getProfile(player.getUniqueId());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
 
         String key = "BUTTONS." + partyManageType.name();
+        Material material = ButtonUtil.getMaterial(config, key);
 
-        Material material;
-        try {
-            material = Material.valueOf(config.getString(key + ".MATERIAL"));
-        } catch (Exception e) {
-            player.sendMessage(CC.translate("&cAn error occurred, please check console for details!"));
-            plugin.consoleLog("&cPartySettingsMenu invalid Material Set for " + partyManageType.name() + " Button!");
-            player.closeInventory();
-            return null;
-        }
-
-        return new ItemBuilder(material)
-                .name(config.getString(key + ".NAME"))
-                .lore(config.getStringList(key + ".LORE").stream()
-                        .map(string -> string
-                                .replace("<party_limit>", String.valueOf(party.getLimit())
-                                .replace("<party_state>", party.getPrivacy())))
-                        .collect(Collectors.toList()))
-                .clearFlags()
-                .build();
+        ItemBuilder itemBuilder = new ItemBuilder(material);
+        itemBuilder.name(config.getString(key + ".NAME"));
+        itemBuilder.lore(config.getStringList(key + ".LORE")
+                .stream()
+                .map(string -> string
+                        .replace("<party_limit>", String.valueOf(party.getLimit())
+                        .replace("<party_state>", party.getPrivacy())))
+                .collect(Collectors.toList()));
+        itemBuilder.clearFlags();
+        return itemBuilder.build();
     }
 
     /**
@@ -75,15 +73,19 @@ public class PartySettingsButton extends Button {
      * @param clickType {@link ClickType}
      */
     @Override
-    public void clicked(Player player, ClickType clickType) {
-        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
+    public void clicked(Array plugin, Player player, ClickType clickType) {
+        ProfileManager profileManager = plugin.getProfileManager();
+        PartyManager partyManager = plugin.getPartyManager();
+
+        Profile profile = profileManager.getProfile(player.getUniqueId());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
+
         if (!profile.hasParty()) {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
             player.closeInventory();
             return;
         }
 
-        Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
         switch (partyManageType) {
             case LIMIT: {
                 if (!player.hasPermission("array.party.limit")) {
@@ -92,14 +94,10 @@ public class PartySettingsButton extends Button {
                     return;
                 }
                 if (clickType.isLeftClick()) {
-                    if (party.getLimit() < 100) {
-                        party.setLimit(party.getLimit() + 1);
-                    }
+                    if (party.getLimit() < 100) party.setLimit(party.getLimit() + 1);
                 }
                 if (clickType.isRightClick()) {
-                    if (party.getLimit() > 1) {
-                        party.setLimit(party.getLimit() - 1);
-                    }
+                    if (party.getLimit() > 1) party.setLimit(party.getLimit() - 1);
                 }
                 break;
             }

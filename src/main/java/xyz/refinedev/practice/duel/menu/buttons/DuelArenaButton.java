@@ -38,7 +38,7 @@ public class DuelArenaButton extends Button {
      * @return {@link ItemStack}
      */
     @Override
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         return new ItemBuilder(arena.getDisplayIcon())
                 .name(arena.getDisplayName())
                 .build();
@@ -52,7 +52,7 @@ public class DuelArenaButton extends Button {
      * @param clickType {@link ClickType}
      */
     @Override
-    public void clicked(Player player, ClickType clickType) {
+    public void clicked(Array plugin, Player player, ClickType clickType) {
         Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
 
         profile.getDuelProcedure().setArena(arena);

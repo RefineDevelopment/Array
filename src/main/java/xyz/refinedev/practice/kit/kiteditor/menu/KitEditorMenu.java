@@ -1,7 +1,8 @@
 package xyz.refinedev.practice.kit.kiteditor.menu;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -10,13 +11,13 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.kit.Kit;
 import xyz.refinedev.practice.kit.KitInventory;
 import xyz.refinedev.practice.kit.kiteditor.KitEditor;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.menu.button.DisplayButton;
-import xyz.refinedev.practice.util.other.BukkitReflection;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 
 import java.util.Arrays;
@@ -34,35 +35,35 @@ public class KitEditorMenu extends Menu {
     private static final Button BORDER_BUTTON = Button.placeholder(Material.STAINED_GLASS_PANE, (byte) 8, " ");
     
 
-    public KitEditorMenu(Array plugin) {
-        super(plugin);
-        
+    public KitEditorMenu() {
         this.setUpdateAfterClick(false);
     }
 
     @Override
-    public String getTitle(Player player) {
-        Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
+    public String getTitle(Array plugin, Player player) {
+        ProfileManager profileManager = plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(player.getUniqueId());
         return "&cEditing &7(" + profile.getKitEditor().getSelectedKit().getName() + ")";
     }
 
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
+
+        ProfileManager profileManager = plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(player.getUniqueId());
+        Kit kit = profile.getKitEditor().getSelectedKit();
+        KitInventory kitInventory = profile.getKitEditor().getSelectedKitInventory();
 
         for (int border : BORDER_POSITIONS) {
             buttons.put(border, BORDER_BUTTON);
         }
 
-        buttons.put(0, new CurrentKitButton());
+        buttons.put(0, Button.placeholder(Material.NAME_TAG, (byte) 0, getTitle(plugin, player)));
         buttons.put(2, new SaveButton());
         buttons.put(6, new LoadDefaultKitButton());
         buttons.put(7, new ClearInventoryButton());
         buttons.put(8, new CancelButton());
-
-        Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
-        Kit kit = profile.getKitEditor().getSelectedKit();
-        KitInventory kitInventory = profile.getKitEditor().getSelectedKitInventory();
 
         buttons.put(18, new ArmorDisplayButton(kitInventory.getArmor()[3]));
         buttons.put(27, new ArmorDisplayButton(kitInventory.getArmor()[2]));
@@ -81,70 +82,59 @@ public class KitEditorMenu extends Menu {
     }
 
     @Override
-    public void onOpen(Player player) {
-        if (isClosedByMenu()) return;
+    public void onOpen(Array plugin, Player player) {
+        if (this.isClosedByMenu()) return;
         
         PlayerUtil.reset(player);
 
-        Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
-        profile.getKitEditor().setActive(true);
+        ProfileManager profileManager = plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(player.getUniqueId());
+        KitEditor kitEditor = profile.getKitEditor();
 
-        if (profile.getKitEditor().getSelectedKit() != null) {
-            player.getInventory().setContents(profile.getKitEditor().getSelectedKitInventory().getContents());
+        kitEditor.setActive(true);
+
+        if (kitEditor.getSelectedKit() != null) {
+            player.getInventory().setContents(kitEditor.getSelectedKitInventory().getContents());
         }
         player.updateInventory();
     }
 
     @Override
-    public void onClose(Player player) {
-        Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
+    public void onClose(Array plugin, Player player) {
+        ProfileManager profileManager = plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(player.getUniqueId());
         profile.getKitEditor().setActive(false);
 
         if (!profile.isInFight()) {
-           this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(this.getPlugin(), () -> this.getPlugin().getProfileManager().refreshHotbar(profile));
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> profileManager.refreshHotbar(profile));
         }
 
-        setClosedByMenu(false);
+        this.setClosedByMenu(false);
     }
 
-    @AllArgsConstructor
-    private static class ArmorDisplayButton extends Button {
+    @RequiredArgsConstructor
+    private class ArmorDisplayButton extends Button {
 
         private final ItemStack itemStack;
 
         @Override
-        public ItemStack getButtonItem(Player player) {
+        public ItemStack getButtonItem(Array plugin, Player player) {
             if (itemStack == null || itemStack.getType() == Material.AIR) {
                 return new ItemStack(Material.AIR);
             }
 
             return new ItemBuilder(itemStack.clone())
-                    .name(CC.RED + BukkitReflection.getItemStackName(itemStack))
+                    .name(CC.RED + CraftItemStack.asNMSCopy(itemStack).getName())
                     .lore(CC.GREEN + "This is automatically equipped.")
                     .build();
         }
 
     }
 
-    @AllArgsConstructor
-    private class CurrentKitButton extends Button {
+    private class ClearInventoryButton extends Button {
 
         @Override
-        public ItemStack getButtonItem(Player player) {
-            Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
-
-            return new ItemBuilder(Material.NAME_TAG)
-                    .name("&cEditing &r" + profile.getKitEditor().getSelectedKit().getName())
-                    .build();
-        }
-
-    }
-
-    @AllArgsConstructor
-    private static class ClearInventoryButton extends Button {
-
-        @Override
-        public ItemStack getButtonItem(Player player) {
+        public ItemStack getButtonItem(Array plugin, Player player) {
             return new ItemBuilder(Material.STAINED_CLAY)
                     .durability(13)
                     .name("&c&lClear Inventory")
@@ -156,7 +146,7 @@ public class KitEditorMenu extends Menu {
         }
 
         @Override
-        public void clicked(Player player, int i, ClickType clickType, int hb) {
+        public void clicked(Array plugin, Player player, ClickType clickType) {
             Button.playNeutral(player);
             player.getInventory().setContents(new ItemStack[36]);
             player.updateInventory();
@@ -169,11 +159,10 @@ public class KitEditorMenu extends Menu {
 
     }
 
-    @AllArgsConstructor
     private class LoadDefaultKitButton extends Button {
 
         @Override
-        public ItemStack getButtonItem(Player player) {
+        public ItemStack getButtonItem(Array plugin, Player player) {
             return new ItemBuilder(Material.STAINED_CLAY)
                     .durability(7)
                     .name(CC.RED + CC.BOLD + "&cLoad default kit")
@@ -185,13 +174,15 @@ public class KitEditorMenu extends Menu {
         }
 
         @Override
-        public void clicked(Player player, int i, ClickType clickType, int hb) {
+        public void clicked(Array plugin, Player player, ClickType clickType) {
             Button.playNeutral(player);
 
-            Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
+            ProfileManager profileManager = plugin.getProfileManager();
+            Profile profile = profileManager.getProfile(player.getUniqueId());
+            KitInventory kitInventory = profile.getKitEditor().getSelectedKitInventory();
 
             player.setItemOnCursor(null);
-            player.getInventory().setContents(profile.getKitEditor().getSelectedKit().getKitInventory().getContents());
+            player.getInventory().setContents(kitInventory.getContents());
             player.updateInventory();
         }
 
@@ -202,11 +193,10 @@ public class KitEditorMenu extends Menu {
 
     }
 
-    @AllArgsConstructor
     private class SaveButton extends Button {
 
         @Override
-        public ItemStack getButtonItem(Player player) {
+        public ItemStack getButtonItem(Array plugin, Player player) {
             return new ItemBuilder(Material.STAINED_CLAY)
                     .durability(5)
                     .name("&a&lSave")
@@ -215,27 +205,29 @@ public class KitEditorMenu extends Menu {
         }
 
         @Override
-        public void clicked(Player player, int i, ClickType clickType, int hb) {
+        public void clicked(Array plugin, Player player, ClickType clickType) {
             Button.playNeutral(player);
             player.closeInventory();
 
-            Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
+            ProfileManager profileManager = plugin.getProfileManager();
+            Profile profile = profileManager.getProfile(player.getUniqueId());
             KitEditor kitEditor = profile.getKitEditor();
 
             if (kitEditor.getSelectedKitInventory() != null) {
                 kitEditor.getSelectedKitInventory().setContents(player.getInventory().getContents());
             }
 
-            this.getPlugin().getProfileManager().refreshHotbar(profile);
-            new KitManagementMenu(this.getPlugin(), kitEditor.getSelectedKit()).openMenu(player);
+            KitManagementMenu menu = new KitManagementMenu(kitEditor.getSelectedKit());
+            
+            profileManager.refreshHotbar(profile);
+            plugin.getMenuHandler().openMenu(menu, player);
         }
     }
 
-    @AllArgsConstructor
     private class CancelButton extends Button {
 
         @Override
-        public ItemStack getButtonItem(Player player) {
+        public ItemStack getButtonItem(Array plugin, Player player) {
             return new ItemBuilder(Material.STAINED_CLAY)
                     .durability(14)
                     .name("&c&lCancel")
@@ -247,27 +239,29 @@ public class KitEditorMenu extends Menu {
         }
 
         @Override
-        public void clicked(Player player, int i, ClickType clickType, int hb) {
+        public void clicked(Array plugin, Player player, ClickType clickType) {
             Button.playNeutral(player);
 
-            Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
+            ProfileManager profileManager = plugin.getProfileManager();
+            Profile profile = profileManager.getProfile(player.getUniqueId());
             KitEditor kitEditor = profile.getKitEditor();
 
-            if (profile.getKitEditor().getSelectedKit() != null) {
-                new KitManagementMenu(this.getPlugin(), kitEditor.getSelectedKit()).openMenu(player);
+            if (kitEditor.getSelectedKit() != null) {
+                KitManagementMenu menu = new KitManagementMenu(kitEditor.getSelectedKit());
+                plugin.getMenuHandler().openMenu(menu, player);
             }
         }
 
     }
 
-    private static class InfiniteItemButton extends DisplayButton {
+    private class InfiniteItemButton extends DisplayButton {
 
-        InfiniteItemButton(ItemStack itemStack) {
+        public InfiniteItemButton(ItemStack itemStack) {
             super(itemStack, false);
         }
 
         @Override
-        public void clicked(Player player, int slot, ClickType clickType, int hotbar) {
+        public void clicked(Array plugin, Player player, int slot, ClickType clickType, int hotbar) {
             Inventory inventory = player.getOpenInventory().getTopInventory();
             ItemStack itemStack = inventory.getItem(slot);
 

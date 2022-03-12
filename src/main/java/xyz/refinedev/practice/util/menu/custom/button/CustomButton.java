@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.custom.ButtonData;
 
@@ -28,12 +29,12 @@ public class CustomButton extends Button {
      * @return {@link ItemStack}
      */
     @Override
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         return buttonData.getItem();
     }
 
     @Override
-    public void clicked(Player player, ClickType clickType) {
-        buttonData.handleClick(player, clickType);
+    public void clicked(Array plugin, Player player, ClickType clickType) {
+        buttonData.handleClick(plugin, player, clickType);
     }
 }

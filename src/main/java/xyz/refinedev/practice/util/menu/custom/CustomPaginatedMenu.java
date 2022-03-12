@@ -23,8 +23,7 @@ public class CustomPaginatedMenu extends PaginatedMenu {
 
     private final MenuData menuData;
 
-    public CustomPaginatedMenu(Array plugin, MenuData menuData) {
-        super(plugin);
+    public CustomPaginatedMenu(MenuData menuData) {
 
         this.menuData = menuData;
 
@@ -43,7 +42,7 @@ public class CustomPaginatedMenu extends PaginatedMenu {
      * @return {@link String} the title of the menu
      */
     @Override
-    public String getPrePaginatedTitle(Player player) {
+    public String getPrePaginatedTitle(Array plugin, Player player) {
         return menuData.getTitle();
     }
 
@@ -64,7 +63,7 @@ public class CustomPaginatedMenu extends PaginatedMenu {
      * @return {@link HashMap}
      */
     @Override
-    public Map<Integer, Button> getAllPagesButtons(Player player) {
+    public Map<Integer, Button> getAllPagesButtons(Array plugin, Player player) {
         Map<Integer, Button> buttonMap = new HashMap<>();
         for ( ButtonData buttonData : menuData.getButtons() ) {
             buttonMap.put(buttonData.getSlot(), new CustomButton(buttonData));

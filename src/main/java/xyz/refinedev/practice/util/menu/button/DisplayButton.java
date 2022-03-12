@@ -17,7 +17,7 @@ public class DisplayButton extends Button {
     private final boolean cancel;
 
     @Override
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         if (this.itemStack == null) {
             return new ItemStack(Material.AIR);
         } else {

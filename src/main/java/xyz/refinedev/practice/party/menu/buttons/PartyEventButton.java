@@ -1,5 +1,6 @@
 package xyz.refinedev.practice.party.menu.buttons;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -7,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.arena.Arena;
+import xyz.refinedev.practice.managers.*;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
@@ -15,9 +17,12 @@ import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.party.enums.PartyEventType;
 import xyz.refinedev.practice.party.menu.PartyKitMenu;
 import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.ButtonUtil;
+import xyz.refinedev.practice.util.menu.Menu;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,19 +37,11 @@ import java.util.List;
  * Project: Array
  */
 
+@RequiredArgsConstructor
 public class PartyEventButton extends Button {
 
-    private final Array plugin = this.getPlugin();
-
-    private final FoldersConfigurationFile config;
+    private final BasicConfigurationFile config;
     private final PartyEventType partyEventType;
-    private final String key;
-
-    public PartyEventButton(FoldersConfigurationFile config, PartyEventType partyEventType) {
-        this.config = config;
-        this.partyEventType = partyEventType;
-        this.key = "BUTTONS." + partyEventType.name() + ".";
-    }
 
     /**
      * Get itemStack of the Button
@@ -53,12 +50,17 @@ public class PartyEventButton extends Button {
      * @return {@link ItemStack}
      */
     @Override
-    public ItemStack getButtonItem(Player player) {
-        return new ItemBuilder(Material.valueOf(config.getString(key + "MATERIAL")))
-                .name(config.getString(key + "NAME"))
-                .lore(config.getStringList(key + "LORE"))
-                .clearFlags()
-                .build();
+    public ItemStack getButtonItem(Array plugin, Player player) {
+        String key = "BUTTONS." + partyEventType.name() + ".";
+
+        Material material = ButtonUtil.getMaterial(config, key);
+        ItemBuilder itemBuilder = new ItemBuilder(material);
+
+        itemBuilder.name(config.getString(key + "NAME"));
+        itemBuilder.lore(config.getStringList(key + "LORE"));
+        itemBuilder.clearFlags();
+
+        return itemBuilder.build();
     }
 
     /**
@@ -69,9 +71,15 @@ public class PartyEventButton extends Button {
      * @param clickType {@link ClickType}
      */
     @Override
-    public void clicked(Player player, ClickType clickType) {
-        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
-        Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
+    public void clicked(Array plugin, Player player, ClickType clickType) {
+        ProfileManager profileManager = plugin.getProfileManager();
+        MatchManager matchManager = plugin.getMatchManager();
+        PartyManager partyManager = plugin.getPartyManager();
+        ArenaManager arenaManager = plugin.getArenaManager();
+        KitManager kitManager = plugin.getKitManager();
+
+        Profile profile = profileManager.getProfile(player.getUniqueId());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
 
         player.closeInventory();
 
@@ -91,12 +99,12 @@ public class PartyEventButton extends Button {
         }
 
         if (this.partyEventType == PartyEventType.PARTY_FFA || this.partyEventType == PartyEventType.PARTY_SPLIT) {
-            PartyKitMenu menu = new PartyKitMenu(plugin, this.partyEventType);
-            menu.openMenu(player);
+            Menu menu = new PartyKitMenu(this.partyEventType);
+            plugin.getMenuHandler().openMenu(menu, player);
             return;
         }
 
-        Arena arena = plugin.getArenaManager().getByKit(plugin.getKitManager().getTeamFight());
+        Arena arena = arenaManager.getByKit(kitManager.getTeamFight());
 
         if (arena == null) {
             player.sendMessage(Locale.ERROR_NO_ARENAS.toString());
@@ -129,6 +137,6 @@ public class PartyEventButton extends Button {
                 }
             }
         }
-        this.plugin.getMatchManager().start(match);
+        matchManager.start(match);
     }
 }

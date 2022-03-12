@@ -1,0 +1,421 @@
+SPECTATING_MENU:
+  TITLE: "&7Spectator Menu"
+  ALIVE_NAME: "&a<player_name>"
+  DEAD_NAME: "&7<player_name>"
+  HEAD_LORE:
+    - ""
+    - " &c➥ &fStatus&7: &r<player_status>"
+    - ""
+    - " &7&o(( Left-Click to teleport ))"
+    - " &7&o(( Right-Click to view inventory ))"
+TOURNAMENT_MENU:
+  TITLE: ""
+  SIZE: 27
+TOURNAMENT_KIT_MENU:
+  TITLE: "&7Select a Kit"
+  LORE:
+    - ""
+    - "&c[Click to Select this Kit]"
+EVENT_KIT_MENU:
+  TITLE: "&7Select a Kit"
+  LORE:
+    - ""
+    - "&c[Click to Select this Kit]"
+MATCH_DETAILS_MENU:
+  TITLE: "&7&lInventory of &c<snapshot_name>"
+  BUTTONS:
+    SWITCH_INVENTORY_BUTTON_1:
+      NAME: "&c&lNext Inventory"
+      MATERIAL: LEVER
+      DATA: 0
+      SLOT: 45
+      LORE:
+        - "&7Switch to &c<snapshot_next_name> &7's inventory"
+    SWITCH_INVENTORY_BUTTON_2:
+      NAME: "&c&lNext Inventory"
+      MATERIAL: LEVER
+      DATA: 0
+      SLOT: 53
+      LORE:
+        - "&7Switch to &c<snapshot_next_name> &7's inventory"
+PARTY_LIST_MENU:
+  TITLE: "&7Party List"
+  LORE:
+    - ""
+PARTY_EVENTS:
+  TITLE: "&7Select a party event"
+  SIZE: 9
+  BUTTONS:
+    PARTY_SPLIT:
+      NAME: "&c&lParty Split"
+      SLOT: 2
+      HCF_DISABLED_SLOT: 3
+      MATERIAL: LEASH
+      LORE:
+        - " &fSplit your party into"
+        - " &ftwo teams and the last"
+        - " &fteam remaining wins!"
+        - " "
+        - "&7&o(( Click to Start ))"
+    PARTY_FFA:
+      NAME: "&c&lParty FFA"
+      SLOT: 4
+      HCF_DISABLED_SLOT: 5
+      MATERIAL: DIAMOND
+      LORE:
+        - " &fUnleash your party in"
+        - " &fa Free For All Match"
+        - " &fLast player standing wins!"
+        - ""
+        - "&7&o(( Click to Start ))"
+    PARTY_HCF:
+      NAME: "&c&lParty HCF"
+      SLOT: 6
+      MATERIAL: GOLDEN_APPLE
+      LORE:
+        - " &fSplit your party in a"
+        - " &fteam match with HCF kits"
+        - " &fLast player standing wins!"
+        - ""
+        - "&7&o(( Click to Start ))"
+PARTY_SETTINGS:
+  TITLE: "&7Edit Party Settings"
+  SIZE: 27
+  PLACEHOLDER: true
+  PLACEHOLDER_BUTTON:
+    NAME: ""
+    MATERIAL: STAINED_GLASS_PANE
+    DATA: 7
+  BUTTONS:
+    PARTY_LIMIT:
+      NAME: ""
+      MATERIAL: INK_SACK
+      DATA: 2
+      SLOT: 12
+      LORE:
+        - "&c&lCurrent Limit"
+        - "&8 • &fLimit: &c<party_limit>"
+        - ""
+        - "&7&o(( Left-Click to increment ))"
+        - "&7&o(( Right-Click to decrement ))"
+    PARTY_STATE:
+      NAME: ""
+      MATERIAL: CHEST
+      DATA: 0
+      SLOT: 14
+      LORE:
+        - "&c&lCurrent State"
+        - "&8 • &fState: &c<party_state>"
+        - ""
+        - "&7&o(( Click to Change ))"
+PROFILE_DIVISONS:
+  TITLE: "Profile Divisions"
+  SIZE: 54 #Max Items per page as this menu is paginated
+  BUTTONS:
+    XP:
+      LOCKED:
+        TITLE: "&r<division_display_name>"
+        LORE:
+          - "&f Experience Required: &c<division_experience>"
+          - "&f Current Progress: &r<division_bar>"
+      UNLOCKED:
+        TITLE: "&r<division_display_name> &7(UNLOCKED)"
+        LORE:
+          - "&f Experience Required: &c<division_experience>"
+          - "&f Current Progress: &c0/0 &r<division_bar> &7(100%)"
+      EQUIPPED:
+        TITLE: "&r<division_display_name> &7(CURRENT)"
+        LORE:
+          - "&f Experience Required: &c<division_experience>"
+          - "&f Current Progress: &c0/0 &r<division_bar> &7(100%)"
+    ELO:
+      LOCKED:
+        TITLE: "&r<division_display_name>"
+        LORE:
+          - "&f ELO Required: &c<division_min_elo>"
+          - "&f Current Progress: &r<division_bar>"
+      UNLOCKED:
+        TITLE: "&r<division_display_name> &7(UNLOCKED)"
+        LORE:
+          - "&f ELO Required: &c<division_min_elo>"
+          - "&f Current Progress: &c0/0 &r<division_bar> &7(100%)"
+      EQUIPPED:
+        TITLE: "&r<division_display_name> &7(CURRENT)"
+        LORE:
+          - "&f ELO Required: &c<division_min_elo>"
+          - "&f Current Progress: &c0/0 &r<division_bar> &7(100%)"
+PROFILE_HISTORY:
+  TITLE: "&7Match History"
+  SIZE: 27
+  PLACEHOLDER: true
+  PLACEHOLDER_BUTTON:
+    NAME: ""
+    MATERIAL: STAINED_GLASS_PANE
+    DATA: 8
+    LORE: [ ]
+  BUTTONS:
+    UNRANKED:
+      NAME: '&c&Unranked History'
+      SLOT: 11
+      MATERIAL: IRON_SWORD
+      LORE:
+        - ""
+        - "&c&lInformation"
+        - "&7This feature is not"
+        - "&7available for use yet."
+        - ""
+        - "&7&o(( Click to view History ))"
+    RANKED:
+      NAME: '&c&Ranked History'
+      SLOT: 13
+      MATERIAL: DIAMOND_SWORD
+      LORE:
+        - ""
+        - "&c&lInformation"
+        - "&7This feature is not"
+        - "&7available for use yet."
+        - ""
+        - "&7&o(( Click to view History ))"
+    CLAN:
+      NAME: '&c&Clan History'
+      SLOT: 15
+      MATERIAL: GOLD_SWORD
+      LORE:
+        - ""
+        - "&c&lInformation"
+        - "&7This feature is not"
+        - "&7available for use yet."
+        - ""
+        - "&7&o(( Coming Soon ))"
+PROFILE_SETTINGS:
+  #You can edit these but not remove or change their action, however you can always add custom buttons
+
+  TITLE: " &7Profile Settings"
+  SIZE: 27
+  PAGINATED: false
+  BUTTONS:
+    TOGGLESCOREBOARD:
+      SLOT: 0
+      NAME: "&c&lToggle Scoreboard"
+      MATERIAL: PAINTING
+      DATA: 0
+      LORE:
+        - " &fEnable or Disable Scoreboard"
+        - " &fDisplay for your Profile"
+        - ""
+        - "&c&lPreferences"
+        - " <options>"
+        - " "
+        - "&7&o(( Click to Toggle ))"
+      ENABLED:
+        SELECTED: " &c▶ &fShow scoreboard"
+        NOT_SELECTED: " &8&l▶ &fShow scoreboard"
+      DISABLED:
+        SELECTED: " &c▶ &fDon't Show scoreboard"
+        NOT_SELECTED: " &8&l▶ &fDon't Show scoreboard"
+    TOGGLEPINGONSCOREBOARD:
+      SLOT: 1
+      NAME: "&c&lToggle Ping on Scoreboard"
+      MATERIAL: STRING
+      DATA: 0
+      LORE:
+        - " &fEnable or Disable Ping on"
+        - " &fScoreboard for your Profile"
+        - ""
+        - "&c&lPreferences"
+        - " <options>"
+        - " "
+        - "&7&o(( Click to Toggle ))"
+      ENABLED:
+        SELECTED: " &c▶ &fShow Ping on Scoreboard"
+        NOT_SELECTED: " &8&l▶ &fShow Ping on Scoreboard"
+      DISABLED:
+        SELECTED: " &c▶ &fDon't Show Ping on Scoreboard"
+        NOT_SELECTED: " &8&l▶ &fDon't Show Ping on Scoreboard"
+    TOGGLECPSONSCOREBOARD:
+      SLOT: 2
+      NAME: "&c&lToggle CPS on Scoreboard"
+      MATERIAL: BEACON
+      DATA: 0
+      LORE:
+        - " &fEnable or Disable CPS on"
+        - " &fScoreboard for your Profile"
+        - ""
+        - "&c&lPreferences"
+        - " <options>"
+        - " "
+        - "&7&o(( Click to Toggle ))"
+      ENABLED:
+        SELECTED: " &c▶ &fShow CPS on Scoreboard"
+        NOT_SELECTED: " &8&l▶ &fShow CPS on Scoreboard"
+      DISABLED:
+        SELECTED: " &c▶ &fDon't Show CPS on Scoreboard"
+        NOT_SELECTED: " &8&l▶ &fDon't Show CPS on Scoreboard"
+    TOGGLESPECTATORS:
+      SLOT: 3
+      NAME: "&c&lToggle Spectators"
+      MATERIAL: ENDER_PEARL
+      DATA: 0
+      LORE:
+        - " &fEnable or Disable Spectators"
+        - " &fon your Matches for your Profile"
+        - ""
+        - "&c&lPreferences"
+        - " <options>"
+        - " "
+        - "&7&o(( Click to Toggle ))"
+      ENABLED:
+        SELECTED: " &c▶ &fAllow Spectators"
+        NOT_SELECTED: " &8&l▶ &fAllow Spectators"
+      DISABLED:
+        SELECTED: " &c▶ &fDon't Allow Spectators"
+        NOT_SELECTED: " &8&l▶ &fDon't Allow Spectators"
+    TOGGLESHOWPLAYERS:
+      SLOT: 4
+      NAME: "&c&lToggle Player Visibility"
+      MATERIAL: LEVER
+      DATA: 0
+      LORE:
+        - " &fToggle visibility of others"
+        - " &fin the Lobby for your Profile"
+        - ""
+        - "&c&lPreferences"
+        - " <options>"
+        - " "
+        - "&7&o(( Click to Toggle ))"
+      ENABLED:
+        SELECTED: " &c▶ &fShow Players at Lobby"
+        NOT_SELECTED: " &8&l▶ &fShow Players at Lobby"
+      DISABLED:
+        SELECTED: " &c▶ &fDon't Players at Lobby"
+        NOT_SELECTED: " &8&l▶ &fDon't Players at Lobby"
+    TOGGLEDUELREQUESTS:
+      SLOT: 5
+      NAME: "&c&lToggle Duel Requests"
+      MATERIAL: DIAMOND_SWORD
+      DATA: 0
+      LORE:
+        - " &fEnable or Disable Duels from"
+        - " &fother players for your profile."
+        - ""
+        - "&c&lPreferences"
+        - " <options>"
+        - " "
+        - "&7&o(( Click to Toggle ))"
+      ENABLED:
+        SELECTED: " &c▶ &fAllow Duels from others"
+        NOT_SELECTED: " &8&l▶ &fAllow Duels from others"
+      DISABLED:
+        SELECTED: " &c▶ &fDon't Allow Duels from others"
+        NOT_SELECTED: " &8&l▶ &fDon't Allow Duels from others"
+    TOGGLETOURNAMENTMESSAGES:
+      SLOT: 6
+      NAME: "&c&lToggle Tournament Messages"
+      MATERIAL: PAPER
+      DATA: 0
+      LORE:
+        - " &fEnable or Disable Tournament"
+        - " &fMessages for your Profile"
+        - ""
+        - "&c&lPreferences"
+        - " <options>"
+        - " "
+        - "&7&o(( Click to Toggle ))"
+      ENABLED:
+        SELECTED: " &c▶ &fShow Tournament Messages"
+        NOT_SELECTED: " &8&l▶ &fShow Tournament Messages"
+      DISABLED:
+        SELECTED: " &c▶ &fDon't Show Tournament Messages"
+        NOT_SELECTED: " &8&l▶ &fDon't Show Tournament Messages"
+    TOGGLETABSTYLE:
+      SLOT: 7
+      NAME: "&c&lToggle Tablist Style"
+      MATERIAL: REDSTONE_COMPARATOR
+      DATA: 0
+      LORE:
+        - " &fEnable or Disable different"
+        - " &ftypes of tablist for your Profile"
+        - ""
+        - "&c&lPreferences"
+        - " <options>"
+        - " "
+        - "&7&o(( Click to Toggle ))"
+      ENABLED:
+        SELECTED: " &c▶ &fShow vanilla tablist"
+        NOT_SELECTED: " &8&l▶ &fShow vanilla tablist"
+      DISABLED:
+        SELECTED: " &c▶ &fShow default tablist"
+        NOT_SELECTED: " &8&l▶ &fShow default tablist"
+    TOGGLEPINGFACTOR:
+      SLOT: 8
+      NAME: "&c&lToggle Ping Factor"
+      MATERIAL: BOOK
+      DATA: 0
+      LORE_NO_PERM:
+        - " &fEnable or Disable queueing with"
+        - " &fplayers of similar ping as you."
+        - ""
+        - "&cYou do not have permission to use this."
+        - "&7&oVisit: &c<store>"
+      LORE_PERMISSION:
+        - " &fEnable or Disable queueing with"
+        - " &fplayers of similar ping as you."
+        - ""
+        - "&c&lPreferences"
+        - " <options>"
+        - " "
+        - "&7&o(( Click to Toggle ))"
+      ENABLED:
+        SELECTED: " &c▶ &fUse Ping Factor"
+        NOT_SELECTED: " &8&l▶ &fUse Ping Factor"
+      DISABLED:
+        SELECTED: " &c▶ &fDon't Use Ping Factor"
+        NOT_SELECTED: " &8&l▶ &fDon't Use Ping Factor"
+    TOGGLELIGHTNING:
+      SLOT: 9
+      NAME: "&c&lToggle Lightning"
+      MATERIAL: BLAZE_ROD
+      DATA: 0
+      LORE_NO_PERM:
+        - " &fEnable or Disable Lightning"
+        - " &fDeath effect for your Profile."
+        - ""
+        - "&cYou do not have permission to use this."
+      LORE_PERMISSION:
+        - " &fEnable or Disable Lightning"
+        - " &fDeath effect for your Profile."
+        - ""
+        - "&c&lPreferences"
+        - " <options>"
+        - " "
+        - "&7&o(( Click to Toggle ))"
+      ENABLED:
+        SELECTED: " &c▶ &fEnable Lightning Death Effect"
+        NOT_SELECTED: " &8&l▶ &fEnable Lightning Death Effect"
+      DISABLED:
+        SELECTED: " &c▶ &fDisable Lightning Death Effect"
+        NOT_SELECTED: " &8&l▶ &fDisable Lightning Death Effect"
+    TOGGLEDROPPROTECT:
+      SLOT: 10
+      NAME: "&c&lToggle Drop Protect"
+      MATERIAL: GOLD_SWORD
+      DATA: 0
+      LORE_NO_PERM:
+        - " &fEnable or Disable protection to prevent"
+        - " &faccidentally dropping your Sword in 1st Slot"
+        - ""
+        - "&cYou do not have permission to use this."
+      LORE_PERMISSION:
+        - " &fEnable or Disable protection to prevent"
+        - " &faccidentally dropping your Sword in 1st Slot"
+        - ""
+        - "&c&lPreferences"
+        - " <options>"
+        - " "
+        - "&7&o(( Click to Toggle ))"
+      ENABLED:
+        SELECTED: " &c▶ &fEnable Drop Protect"
+        NOT_SELECTED: " &8&l▶ &fEnable Drop Protect"
+      DISABLED:
+        SELECTED: " &c▶ &fDisable Drop Protect"
+        NOT_SELECTED: " &8&l▶ &fDisable Drop Protect"

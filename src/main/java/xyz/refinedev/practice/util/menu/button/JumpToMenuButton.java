@@ -17,12 +17,12 @@ public class JumpToMenuButton extends Button {
 	}
 
 	@Override
-	public ItemStack getButtonItem(Player player) {
+	public ItemStack getButtonItem(Array plugin, Player player) {
 		return itemStack;
 	}
 
 	@Override
-	public void clicked(Player player, ClickType clickType) {
+	public void clicked(Array plugin, Player player, ClickType clickType) {
 		menu.openMenu(player);
 	}
 }

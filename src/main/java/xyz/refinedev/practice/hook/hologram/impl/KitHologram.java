@@ -1,10 +1,19 @@
 package xyz.refinedev.practice.hook.hologram.impl;
 
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import com.google.common.base.Preconditions;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.hook.hologram.HologramMeta;
 import xyz.refinedev.practice.hook.hologram.PracticeHologram;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
+import xyz.refinedev.practice.managers.ProfileManager;
+import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.profile.divisions.ProfileDivision;
+import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -17,7 +26,7 @@ import xyz.refinedev.practice.kit.Kit;
 
 @Getter
 @RequiredArgsConstructor
-public class KitHologram implements PracticeHologram {
+public class KitHologram extends PracticeHologram {
 
     private final Array plugin;
     private final Kit kit;
@@ -26,9 +35,43 @@ public class KitHologram implements PracticeHologram {
      * Spawn the hologram for all players on the server
      * at the given location in the constructor
      */
-    @Override
     public void spawn() {
+        Preconditions.checkNotNull(this.meta, "Hologram Meta can not be null!");
 
+        BasicConfigurationFile config = plugin.getHologramsConfig();
+        ProfileManager profileManager = plugin.getProfileManager();
+
+        Hologram apiHologram = HologramsAPI.createHologram(plugin, meta.getLocation());
+        apiHologram.clearLines();
+        apiHologram.getVisibilityManager().setVisibleByDefault(true);
+        if (!apiHologram.getLocation().getChunk().isLoaded()) {
+            apiHologram.getLocation().getChunk().load();
+        }
+
+        for ( String line : config.getStringList("SETTINGS.KIT.LINES") ) {
+            if (line.contains("<top>")) {
+                int position = 1;
+                for ( LeaderboardsAdapter leaderboardsAdapter : kit.getEloLeaderboards()) {
+                    Profile profile = profileManager.getProfile(leaderboardsAdapter.getUniqueId());
+                    ProfileDivision division = profileManager.getDivision(profile);
+
+                    apiHologram.appendTextLine(config.getString("SETTINGS.KIT.FORMAT")
+                            .replace("<number>", String.valueOf(position))
+                            .replace("<value>", String.valueOf(leaderboardsAdapter.getElo()))
+                            .replace("<name>", leaderboardsAdapter.getName())
+                            .replace("<division>", division.getDisplayName()));
+                    position++;
+                }
+                continue;
+            }
+
+            String replace = line.replace("<kit>", kit.getDisplayName())
+                                 .replace("<update>", String.valueOf(updateIn));
+
+            apiHologram.appendTextLine(replace);
+        }
+
+        meta.setHologram(apiHologram);
     }
 
     /**
@@ -36,25 +79,10 @@ public class KitHologram implements PracticeHologram {
      * This method will only deSpawn the hologram but not delete,
      * so after a restart it will be back to its original location
      */
-    @Override
     public void deSpawn() {
-
-    }
-
-    /**
-     * Save the hologram to config.yml
-     */
-    @Override
-    public void save() {
-
-    }
-
-    /**
-     * Load the hologram from config.yml
-     */
-    @Override
-    public void load() {
-
+        Hologram hologram = meta.getHologram();
+        hologram.clearLines();
+        hologram.delete();
     }
 
     /**
@@ -63,7 +91,6 @@ public class KitHologram implements PracticeHologram {
      * in the {@link SwitchHologram} otherwise it will update
      * the leaderboard being displayed
      */
-    @Override
     public void update() {
         this.deSpawn();
         this.spawn();

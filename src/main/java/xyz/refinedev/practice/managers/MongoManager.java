@@ -61,12 +61,10 @@ public class MongoManager {
         this.client = MongoClients.create(uri);
         this.database = client.getDatabase(config.getString("MONGO.URI.DATABASE"));
 
-        plugin.logger("&7Initialized MongoDB successfully!");
-    }
+        this.profiles = this.database.getCollection("array-profiles");
+        this.clans = this.database.getCollection("array-clans");
 
-    public void loadCollections() {
-        profiles = this.database.getCollection("array-profiles");
-        clans = this.database.getCollection("array-clans");
+        plugin.logger("&7Initialized MongoDB successfully!");
     }
 
     public void shutdown() {

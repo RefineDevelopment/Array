@@ -28,12 +28,12 @@ public class WorldsMenu extends Menu {
     }
 
     @Override
-    public String getTitle(Player player) {
+    public String getTitle(Array plugin, Player player) {
         return CC.translate("&aWorlds");
     }
 
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
         for ( World world : Bukkit.getWorlds() ) {
             buttons.put(buttons.size(), new WorldButton(world));

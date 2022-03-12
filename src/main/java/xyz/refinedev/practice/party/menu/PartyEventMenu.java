@@ -4,7 +4,6 @@ import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.party.enums.PartyEventType;
 import xyz.refinedev.practice.party.menu.buttons.PartyEventButton;
-import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
 
@@ -13,13 +12,8 @@ import java.util.Map;
 
 public class PartyEventMenu extends Menu {
 
-    private final FoldersConfigurationFile config;
-
     public PartyEventMenu(Array plugin) {
-        super(plugin);
-
-        this.config = plugin.getMenuHandler().getConfigByName("party_events");
-        this.loadMenu(config);
+        plugin.getMenuHandler().loadMenu(this, "PARTY-EVENTS");
     }
 
     /**
@@ -29,8 +23,8 @@ public class PartyEventMenu extends Menu {
      * @return {@link String} the title of the menu
      */
     @Override
-    public String getTitle(Player player) {
-        return config.getString("TITLE");
+    public String getTitle(Array plugin, Player player) {
+        return this.getConfig().getString("PARTY-EVENTS.TITLE");
     }
 
     /**
@@ -40,7 +34,7 @@ public class PartyEventMenu extends Menu {
      */
     @Override
     public int getSize() {
-        return config.getInteger("SIZE");
+        return this.getConfig().getInteger("PARTY-EVENTS.SIZE");
     }
 
     /**
@@ -50,15 +44,16 @@ public class PartyEventMenu extends Menu {
      * @return {@link HashMap}
      */
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        if (this.getPlugin().getConfigHandler().isHCF_ENABLED()) {
+        String key = "PARTY-EVENTS.BUTTONS";
+        if (plugin.getConfigHandler().isHCF_ENABLED()) {
             for ( PartyEventType type : PartyEventType.values() ) {
-                buttons.put(config.getInteger("BUTTONS." + type.name() + ".SLOT"), new PartyEventButton(config, type));
+                buttons.put(this.getConfig().getInteger(key + "." + type.name() + ".SLOT"), new PartyEventButton(this.getConfig(), type));
             }
         } else {
-            buttons.put(config.getInteger("BUTTONS.PARTY_SPLIT.HCF_DISABLED_SLOT"), new PartyEventButton(config, PartyEventType.PARTY_SPLIT));
-            buttons.put(config.getInteger("BUTTONS.PARTY_FFA.HCF_DISABLED_SLOT"), new PartyEventButton(config, PartyEventType.PARTY_FFA));
+            buttons.put(this.getConfig().getInteger(key + "PARTY_SPLIT.HCF_DISABLED_SLOT"), new PartyEventButton(this.getConfig(), PartyEventType.PARTY_SPLIT));
+            buttons.put(this.getConfig().getInteger(key + "PARTY_FFA.HCF_DISABLED_SLOT"), new PartyEventButton(this.getConfig(), PartyEventType.PARTY_FFA));
         }
         return buttons;
     }

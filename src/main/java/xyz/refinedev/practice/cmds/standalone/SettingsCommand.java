@@ -6,6 +6,8 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.settings.menu.ProfileSettingsMenu;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
+import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
+import xyz.refinedev.practice.util.menu.Menu;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -23,6 +25,8 @@ public class SettingsCommand {
 
     @Command(name = "", desc = "Open Array Settings Menu")
     public void settings(@Sender Player player) {
-        new ProfileSettingsMenu(plugin).openMenu(player);
+        FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_settings");
+        Menu menu = new ProfileSettingsMenu(config);
+        plugin.getMenuHandler().openMenu(menu, player);
     }
 }

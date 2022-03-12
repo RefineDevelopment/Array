@@ -36,7 +36,7 @@ public class ProfileHistoryMenu extends Menu {
      * @return {@link String} the title of the menu
      */
     @Override
-    public String getTitle(Player player) {
+    public String getTitle(Array plugin, Player player) {
         return config.getString("TITLE");
     }
 
@@ -57,7 +57,7 @@ public class ProfileHistoryMenu extends Menu {
      * @return {@link Map}
      */
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         return null;
     }
 }

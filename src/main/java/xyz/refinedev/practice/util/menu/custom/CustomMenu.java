@@ -23,9 +23,7 @@ public class CustomMenu extends Menu {
 
     private final MenuData menuData;
 
-    public CustomMenu(Array plugin, MenuData menuData) {
-        super(plugin);
-
+    public CustomMenu(MenuData menuData) {
         this.menuData = menuData;
 
         this.setPlaceholder(menuData.isPlaceholder());
@@ -44,7 +42,7 @@ public class CustomMenu extends Menu {
      * @return {@link String} the title of the menu
      */
     @Override
-    public String getTitle(Player player) {
+    public String getTitle(Array plugin, Player player) {
         return menuData.getTitle();
     }
 
@@ -65,7 +63,7 @@ public class CustomMenu extends Menu {
      * @return {@link HashMap}
      */
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         Map<Integer, Button> buttonMap = new HashMap<>();
         for ( ButtonData buttonData : menuData.getButtons() ) {
             buttonMap.put(buttonData.getSlot(), new CustomButton(buttonData));

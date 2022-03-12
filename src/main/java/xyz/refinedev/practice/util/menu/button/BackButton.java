@@ -1,6 +1,6 @@
 package xyz.refinedev.practice.util.menu.button;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -12,13 +12,13 @@ import xyz.refinedev.practice.util.menu.Menu;
 
 import java.util.Arrays;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BackButton extends Button {
 
     private final Menu back;
 
     @Override
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         return new ItemBuilder(Material.REDSTONE)
                 .name(CC.RED + CC.BOLD + "Back")
                 .lore(Arrays.asList(
@@ -29,7 +29,7 @@ public class BackButton extends Button {
     }
 
     @Override
-    public void clicked(Player player, ClickType clickType) {
+    public void clicked(Array plugin, Player player, ClickType clickType) {
         Button.playNeutral(player);
         back.openMenu(player);
     }

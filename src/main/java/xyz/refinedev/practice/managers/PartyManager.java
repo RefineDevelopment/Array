@@ -17,6 +17,7 @@ import xyz.refinedev.practice.util.nametags.NameTagHandler;
 import xyz.refinedev.practice.util.other.PartyHelperUtil;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -90,6 +91,7 @@ public class PartyManager {
      */
     public void join(Player player, Party party) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        MatchManager matchManager = this.plugin.getMatchManager();
         NameTagHandler nameTagHandler = this.plugin.getNameTagHandler();
 
         TeamPlayer teamPlayer = new TeamPlayer(player);
@@ -99,8 +101,8 @@ public class PartyManager {
         party.getTeamPlayers().add(teamPlayer);
         party.getKits().put(player.getUniqueId(), PartyHelperUtil.getRandomClass());
 
-        this.plugin.getNameTagHandler().reloadPlayer(player);
-        this.plugin.getNameTagHandler().reloadOthersFor(player);
+        nameTagHandler.reloadPlayer(player);
+        nameTagHandler.reloadOthersFor(player);
 
         party.getInvites().values().removeIf(invite -> invite.getUniqueId().equals(player.getUniqueId()));
         party.broadcast(Locale.PARTY_PLAYER_JOINED.toString().replace("<joiner>", player.getName()));
@@ -114,7 +116,7 @@ public class PartyManager {
 
         if (this.isFighting(party.getUniqueId())) {
             Match match = this.getMatch(party.getUniqueId());
-            this.plugin.getMatchManager().addSpectator(match, player, null);
+            matchManager.addSpectator(match, player, null);
         }
     }
 
@@ -126,15 +128,18 @@ public class PartyManager {
      */
     public void leave(Player player, Party party) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        MatchManager matchManager = this.plugin.getMatchManager();
+        NameTagHandler nameTagHandler = this.plugin.getNameTagHandler();
+
         Profile profile = profileManager.getProfile(player.getUniqueId());
         profile.setParty(null);
 
         if (profile.isInMatch()) {
             Match match = profile.getMatch();
-            this.plugin.getMatchManager().handleDeath(match, player, null, true);
+            matchManager.handleDeath(match, player, null, true);
 
             if (profile.isSpectating()) {
-                this.plugin.getMatchManager().removeSpectator(match, player);
+                matchManager.removeSpectator(match, player);
             }
         }
 
@@ -152,8 +157,8 @@ public class PartyManager {
         profileManager.handleVisibility(profile);
         profileManager.refreshHotbar(profile);
 
-        this.plugin.getNameTagHandler().reloadPlayer(player);
-        this.plugin.getNameTagHandler().reloadOthersFor(player);
+        nameTagHandler.reloadPlayer(player);
+        nameTagHandler.reloadOthersFor(player);
 
         party.broadcast(Locale.PARTY_PLAYER_LEFT.toString().replace("<leaver>", player.getName()));
     }
@@ -166,15 +171,18 @@ public class PartyManager {
      */
     public void kick(Player player, Party party) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        MatchManager matchManager = this.plugin.getMatchManager();
+        NameTagHandler nameTagHandler = this.plugin.getNameTagHandler();
+
         Profile profile = profileManager.getProfile(player.getUniqueId());
         profile.setParty(null);
 
         if (profile.isInMatch()) {
             Match match = profile.getMatch();
-            this.plugin.getMatchManager().handleDeath(match, player, null, true);
+            matchManager.handleDeath(match, player, null, true);
 
             if (profile.isSpectating()) {
-                this.plugin.getMatchManager().removeSpectator(match, player);
+                matchManager.removeSpectator(match, player);
             }
         }
 
@@ -192,8 +200,8 @@ public class PartyManager {
         profileManager.handleVisibility(profile);
         profileManager.refreshHotbar(profile);
 
-        this.plugin.getNameTagHandler().reloadPlayer(player);
-        this.plugin.getNameTagHandler().reloadOthersFor(player);
+        nameTagHandler.reloadPlayer(player);
+        nameTagHandler.reloadOthersFor(player);
 
         party.broadcast(Locale.PARTY_PLAYER_KICKED.toString().replace("<leaver>", player.getName()));
         player.sendMessage(Locale.PARTY_KICKED.toString());
@@ -207,9 +215,22 @@ public class PartyManager {
      */
     public void leader(Player player, Party party) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+
         Profile profile = profileManager.getProfile(party.getLeader().getUniqueId());
         Profile targetProfile = profileManager.getProfile(player.getUniqueId());
-        TeamPlayer teamPlayer =  party.getTeamPlayers().stream().filter(t -> t.getUniqueId().equals(player.getUniqueId())).findAny().orElse(new TeamPlayer(player));
+        TeamPlayer teamPlayer;
+
+        List<UUID> playerUUIDS = party.getTeamPlayers().stream().map(TeamPlayer::getUniqueId).collect(Collectors.toList());
+
+        if (!playerUUIDS.contains(player.getUniqueId())) {
+            teamPlayer = new TeamPlayer(player);
+            party.getTeamPlayers().add(teamPlayer);
+        } else {
+            teamPlayer = party.getTeamPlayers()
+                    .stream()
+                    .filter(partyPlayer -> partyPlayer.getUniqueId().equals(player.getUniqueId()))
+                    .findAny().get();
+        }
 
         party.setLeader(teamPlayer);
         party.broadcast(Locale.PARTY_PROMOTED.toString().replace("<promoted>", player.getName()));
@@ -225,6 +246,9 @@ public class PartyManager {
      */
     public void disband(Party party) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        MatchManager matchManager = this.plugin.getMatchManager();
+        NameTagHandler nameTagHandler = this.plugin.getNameTagHandler();
+
         Profile leaderProfile = profileManager.getProfile(party.getLeader().getUniqueId());
         leaderProfile.getDuelRequests().values().removeIf(DuelRequest::isParty);
 
@@ -233,15 +257,15 @@ public class PartyManager {
             profile.setParty(null);
 
             if (this.isFighting(party.getUniqueId())) {
-                this.plugin.getMatchManager().handleDeath(this.getMatch(party.getUniqueId()), player, null, true);
+                matchManager.handleDeath(this.getMatch(party.getUniqueId()), player, null, true);
             }
 
             if (profile.isInLobby() || profile.isInQueue()) {
                 profileManager.handleVisibility(profile);
                 profileManager.refreshHotbar(profile);
 
-                this.plugin.getNameTagHandler().reloadPlayer(player);
-                this.plugin.getNameTagHandler().reloadOthersFor(player);
+                nameTagHandler.reloadPlayer(player);
+                nameTagHandler.reloadOthersFor(player);
             }
         }
         party.broadcast(Locale.PARTY_DISBANDED.toString());
@@ -257,6 +281,7 @@ public class PartyManager {
      * @return {@link Party} party
      */
     public Party getPartyByUUID(UUID uuid) {
+        if (uuid == null) return null;
         return this.parties.get(uuid);
     }
 
@@ -269,7 +294,8 @@ public class PartyManager {
     public boolean isFighting(UUID uuid) {
         ProfileManager profileManager = this.plugin.getProfileManager();
         Party party = this.parties.get(uuid);
-        return party.getPlayers().stream()
+        return party.getPlayers()
+                .stream()
                 .map(profileManager::getProfile)
                 .anyMatch(profile -> profile.isInFight() || profile.isInTournament());
     }
@@ -290,6 +316,15 @@ public class PartyManager {
                 .map(Profile::getMatch)
                 .findAny()
                 .orElse(null);
+    }
+
+    /**
+     * Add a party to the list of parties
+     *
+     * @param party {@link Party} party
+     */
+    public void addParty(Party party) {
+        this.parties.put(party.getUniqueId(), party);
     }
 
 }

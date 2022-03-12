@@ -8,6 +8,7 @@ import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
 import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.Menu;
 
 /**
  * This Project is property of Purge Community © 2021
@@ -25,8 +26,8 @@ public class LeaderboardsCommand {
 
     @Command(name = "", desc = "Open Leaderboards Menu")
     public void leaderboard(@Sender Player player) {
-        LeaderboardsMenu menu = new LeaderboardsMenu(plugin);
-        menu.openMenu(player);
+        Menu menu = new LeaderboardsMenu();
+        plugin.getMenuHandler().openMenu(menu, player);
 
         Button.playSuccess(player);
         player.sendMessage(CC.translate("&7&oNow viewing leaderboards menu..."));

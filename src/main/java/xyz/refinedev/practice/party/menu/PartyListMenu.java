@@ -25,7 +25,7 @@ public class PartyListMenu extends Menu {
      * @return {@link String} the title of the menu
      */
     @Override
-    public String getTitle(Player player) {
+    public String getTitle(Array plugin, Player player) {
         return "&7Party List";
     }
 
@@ -36,7 +36,7 @@ public class PartyListMenu extends Menu {
      * @return {@link Map}
      */
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
         Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
         Party party = this.getPlugin().getPartyManager().getPartyByUUID(profile.getParty());

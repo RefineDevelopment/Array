@@ -3,6 +3,8 @@ package xyz.refinedev.practice.managers;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
@@ -45,12 +47,12 @@ public class TournamentManager {
     /**
      * Create a {@link Tournament} with the proper details
      *
-     * @param commandSender {@link CommandSender} the command sender creating the tournament
+     * @param sender {@link CommandSender} the command sender creating the tournament
      * @param teamSize      {@link Integer} the size of total team members
      * @param size          {@link Integer} the max players allowed to play in the tournament
      * @param kitName       {@link String} the kit name which is going to be utilized in the tournament
      */
-    public void createTournament(CommandSender commandSender, int teamSize, int size, String kitName) {
+    public void createTournament(CommandSender sender, int teamSize, int size, String kitName) {
         Tournament tournament = new Tournament(UUID.randomUUID(), teamSize, size, kitName);
         this.tournaments.put(tournament.getUniqueId(), tournament);
 
@@ -58,7 +60,7 @@ public class TournamentManager {
         task.runTaskTimer(this.plugin, 20L, 20L);
         this.tasks.put(tournament, task.getTaskId());
 
-        commandSender.sendMessage("Tournament Created");
+        sender.sendMessage(ChatColor.GREEN + "Successfully created " + teamSize + "v" + teamSize + " " + kitName + " tournament. (Max players: " + size + ")");
     }
 
     /**
@@ -108,7 +110,12 @@ public class TournamentManager {
      * @param player {@link Player} the leader of the party
      */
     public void leaveTournament(Player player) {
-        Party party = this.plugin.getPartyManager().getPartyByUUID(player.getUniqueId());
+        ProfileManager profileManager = this.plugin.getProfileManager();
+        PartyManager partyManager = this.plugin.getPartyManager();
+
+        Profile profile = profileManager.getProfile(player.getUniqueId());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
+
         Tournament tournament = this.getTournamentByUUID(player.getUniqueId());
         if (tournament == null) return;
 
@@ -139,7 +146,7 @@ public class TournamentManager {
         tournament.addPlayer(player.getUniqueId());
         tournament.broadcast("Joined Tournament");
 
-        this.plugin.getProfileManager().teleportToSpawn(profile);
+        profileManager.teleportToSpawn(profile);
     }
 
     /**
@@ -155,11 +162,9 @@ public class TournamentManager {
 
         TournamentTeam team = tournament.getPlayerTeam(player.getUniqueId());
         tournament.removePlayer(player.getUniqueId());
+        profileManager.teleportToSpawn(profile);
 
-        this.plugin.getProfileManager().teleportToSpawn(profile);
-
-        if (PlayerUtil.checkValidity(player)) player.sendMessage("You left the tournament.");
-        tournament.broadcast("Left the tournament");
+        tournament.broadcast(Locale.TOURNAMENT_PLAYER_LEAVE.toString());
 
         if (team == null) return;
         team.killPlayer(player.getUniqueId());
@@ -175,18 +180,19 @@ public class TournamentManager {
         if (tournament.getAliveTeams().size() == 1) {
             TournamentTeam tournamentTeam = tournament.getAliveTeams().get(0);
 
-            //String names = TeamUtil.getNames(tournamentTeam);
-
-            this.plugin.getServer().broadcastMessage("names won the tournament");
+            plugin.getServer().broadcastMessage(CC.translate(Locale.TOURNAMENT_WON.toString())
+                    .replace("<winners>", tournamentTeam.getNames())
+                    .replace("<kit>", tournament.getKitName())
+                    .replace("<teamSize>", String.valueOf(tournament.getTeamSize())));
 
             for ( UUID playerUUID : tournamentTeam.getAlivePlayers() ) {
                 Profile tournamentProfile = this.plugin.getProfileManager().getProfile(playerUUID);
                 tournamentProfile.setTournament(null);
 
-                this.plugin.getProfileManager().teleportToSpawn(tournamentProfile);
+                profileManager.teleportToSpawn(tournamentProfile);
             }
 
-            this.plugin.getTournamentManager().removeTournament(tournament.getUniqueId());
+            this.removeTournament(tournament.getUniqueId());
         }
 
     }
@@ -205,15 +211,24 @@ public class TournamentManager {
 
             tournament.removePlayer(player.getUniqueId());
 
-            player.sendMessage(CC.RED + "You have been eliminated.");
-            player.sendMessage(CC.RED + "Do /tournament status to see who is left in the tournament.");
-
+            player.sendMessage(Locale.TOURNAMENT_ELIMINATED.toString());
             profile.setTournament(null);
         }
 
-        String word = losingTeam.getAlivePlayers().size() > 1 ? "have" : "has";
+        String soloAnnounce = CC.translate(Locale.TOURNAMENT_PLAYER_ELIMINATED.toString())
+                .replace("<playerA>", losingTeam.getLeaderName())
+                .replace("<playerB>", winnerTeam.getLeaderName());
 
-        tournament.broadcast("names eliminated by names");
+        String teamAnnounce = CC.translate(Locale.TOURNAMENT_TEAM_ELIMINATED.toString())
+                .replace("<playerA>", losingTeam.getLeaderName())
+                .replace("<playerB>", winnerTeam.getLeaderName());
+
+        String alive = CC.translate(Locale.TOURNAMENT_REMAINING.toString())
+                .replace("<players>", String.valueOf(tournament.getPlayers().size()))
+                .replace("<maxPlayers>", String.valueOf(tournament.getSize()));
+
+        tournament.broadcast(tournament.getTeamSize() >= 2 ? teamAnnounce : soloAnnounce);
+        tournament.broadcast(alive);
     }
 
     /**
@@ -222,6 +237,9 @@ public class TournamentManager {
      * @param match {@link Match} the match being removed
      */
     public void removeTournamentMatch(Match match) {
+        ProfileManager profileManager = plugin.getProfileManager();
+        TournamentManager tournamentManager = plugin.getTournamentManager();
+
         Tournament tournament = this.getTournamentFromMatch(match.getMatchId());
         if (tournament == null) return;
 
@@ -234,31 +252,32 @@ public class TournamentManager {
         Team winningTeam = match.getWinningTeam();
         TournamentTeam winningTournamentTeam = tournament.getPlayerTeam(winningTeam.getAliveTeamPlayers().get(0).getUniqueId());
 
-        tournament.killTeam(losingTournamentTeam);
-        this.handleElimination(tournament, winningTournamentTeam, losingTournamentTeam);
-
-        winningTournamentTeam.broadcast("tournament status");
+        if (losingTournamentTeam != null) {
+            tournament.killTeam(losingTournamentTeam);
+            this.handleElimination(tournament, winningTournamentTeam, losingTournamentTeam);
+        }
 
         if (tournament.getMatches().size() != 0) return;
         if (tournament.getAliveTeams().size() > 1) {
             tournament.setTournamentState(TournamentState.STARTING);
             tournament.setCurrentRound(tournament.getCurrentRound() + 1);
-            tournament.setCountdown(16);
+            tournament.setCountdown(11);
             return;
         }
 
-        //String names = TeamUtil.getNames(winningTournamentTeam);
-
-        this.plugin.getServer().broadcastMessage("names won the Tournament !");
+        plugin.getServer().broadcastMessage(CC.translate(Locale.TOURNAMENT_WON.toString())
+                .replace("<winners>", winningTournamentTeam.getNames())
+                .replace("<kit>", tournament.getKitName())
+                .replace("<teamSize>", String.valueOf(tournament.getTeamSize())));
 
         for ( UUID playerUUID : winningTournamentTeam.getAlivePlayers() ) {
-            Profile tournamentPlayer = this.plugin.getProfileManager().getProfile(playerUUID);
-            tournamentPlayer.setTournament(null);
+            Profile profile = profileManager.getProfile(playerUUID);
+            profile.setTournament(null);
 
-            this.plugin.getProfileManager().teleportToSpawn(tournamentPlayer);
+            profileManager.teleportToSpawn(profile);
         }
 
-        this.plugin.getTournamentManager().removeTournament(tournament.getUniqueId());
+        tournamentManager.removeTournament(tournament.getUniqueId());
     }
 
     /**
@@ -267,19 +286,23 @@ public class TournamentManager {
      * @param tournament {@link Tournament} the tournament getting cancelled
      */
     public void cancelTournament(Tournament tournament) {
+        ProfileManager profileManager = plugin.getProfileManager();
+        MatchManager matchManager = plugin.getMatchManager();
+
         this.plugin.getServer().broadcastMessage(Locale.TOURNAMENT_CANCELLED.toString());
 
         for (UUID uuid : tournament.getPlayers()) {
-            Profile profile = this.plugin.getProfileManager().getProfile(uuid);
+            Profile profile = profileManager.getProfile(uuid);
             if (profile.isInFight()) {
                 Match match = profile.getMatch();
-                this.plugin.getMatchManager().end(match);
+                matchManager.end(match);
             }
-            this.plugin.getProfileManager().teleportToSpawn(profile);
+            profileManager.teleportToSpawn(profile);
         }
 
         tournament.getPlayers().clear();
         tournament.getMatches().clear();
+
         this.tournaments.remove(tournament.getUniqueId());
 
         Integer id = this.tasks.get(tournament);
@@ -305,7 +328,8 @@ public class TournamentManager {
      * @return {@link Tournament} queried tournament
      */
     public Tournament getTournamentByUUID(UUID uuid) {
-        Profile profile = this.plugin.getProfileManager().getProfile(uuid);
+        ProfileManager profileManager = plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(uuid);
         UUID id = profile.getTournament();
         if (id == null) return null;
 

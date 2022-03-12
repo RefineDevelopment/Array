@@ -27,7 +27,7 @@ public class ConfirmMenu extends Menu {
 	}
 
 	@Override
-	public Map<Integer, Button> getButtons(Player player) {
+	public Map<Integer, Button> getButtons(Array plugin, Player player) {
 		HashMap<Integer, Button> buttons = new HashMap<>();
 		for (int x = 0; x < 3; x++) {
 			for (int y = 0; y < 3; y++) {
@@ -44,7 +44,7 @@ public class ConfirmMenu extends Menu {
 	}
 
 	@Override
-	public String getTitle(Player player) {
+	public String getTitle(Array plugin, Player player) {
 		return title;
 	}
 }

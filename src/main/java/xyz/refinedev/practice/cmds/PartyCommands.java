@@ -5,6 +5,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.managers.PartyManager;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.party.menu.PartyDuelMenu;
 import xyz.refinedev.practice.party.menu.PartyEventMenu;
@@ -14,6 +16,7 @@ import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
+import xyz.refinedev.practice.util.menu.Menu;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -37,6 +40,7 @@ public class PartyCommands {
     @Command(name = "create", desc = "Create a Party")
     public void partyCreate(@Sender Player player) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        PartyManager partyManager = this.plugin.getPartyManager();
         Profile profile = profileManager.getProfile(player.getUniqueId());
 
         if (profile.hasParty()) {
@@ -52,8 +56,8 @@ public class PartyCommands {
         Party party = new Party(player);
         profile.setParty(party.getUniqueId());
 
-        this.plugin.getPartyManager().getParties().put(party.getUniqueId(), party);
-        this.plugin.getProfileManager().refreshHotbar(profile);
+        partyManager.addParty(party);
+        profileManager.refreshHotbar(profile);
 
         player.sendMessage(Locale.PARTY_CREATED.toString());
     }
@@ -61,8 +65,10 @@ public class PartyCommands {
     @Command(name = "disband", desc = "Disband your Party")
     public void partyDisband(@Sender Player player) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        PartyManager partyManager = this.plugin.getPartyManager();
+
         Profile profile = profileManager.getProfile(player.getUniqueId());
-        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
         
         if (party == null) {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
@@ -76,19 +82,21 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
-        if (profile.getMatch() != null) {
+        if (profile.isInMatch()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
         }
-        this.plugin.getPartyManager().disband(party);
+        partyManager.disband(party);
     }
 
     @Command(name = "invite", desc = "Invite a Profile to your Party", usage = "<profile>")
     public void partyInvite(@Sender Player player, Player target) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        PartyManager partyManager = this.plugin.getPartyManager();
+
         Profile profile = profileManager.getProfile(player.getUniqueId());
-        Profile targetData = plugin.getProfileManager().getProfile(target.getUniqueId());
-        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
+        Profile targetProfile = profileManager.getProfile(target.getUniqueId());
 
         if (party == null) {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
@@ -106,23 +114,30 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
-        if (targetData.isBusy()) {
+        if (targetProfile.isBusy()) {
             player.sendMessage(Locale.ERROR_BUSY.toString());
             return;
         }
-        this.plugin.getPartyManager().invite(target, party);
+        if (targetProfile.hasParty()) {
+            player.sendMessage(Locale.ERROR_TARGET_IN_PARTY.toString());
+            return;
+        }
+        partyManager.invite(target, party);
     }
 
     @Command(name = "settings", desc = "Open Party Settings Menu")
     public void partySettings(@Sender Player player) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        PartyManager partyManager = this.plugin.getPartyManager();
+
         Profile profile = profileManager.getProfile(player.getUniqueId());
-        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
         
         if (party == null) {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
             return;
-        } else if (!party.isLeader(player.getUniqueId())) {
+        }
+        if (!party.isLeader(player.getUniqueId())) {
             player.sendMessage(Locale.PARTY_NOTLEADER.toString());
             return;
         }
@@ -130,14 +145,18 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
-        new PartySettingsMenu(plugin).openMenu(player);
+
+        Menu menu = new PartySettingsMenu(plugin);
+        plugin.getMenuHandler().openMenu(menu, player);
     }
 
     @Command(name = "event", aliases = "event", desc = "Open Party Events Menu")
     public void partyEvents(@Sender Player player) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        PartyManager partyManager = this.plugin.getPartyManager();
+
         Profile profile = profileManager.getProfile(player.getUniqueId());
-        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
         
         if (party == null) {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
@@ -150,14 +169,17 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
-        new PartyEventMenu(plugin).openMenu(player);
+        Menu menu = new PartyEventMenu(plugin);
+        plugin.getMenuHandler().openMenu(menu, player);
     }
 
     @Command(name = "classes", aliases = {"hcfkits", "hcfkit", "class"}, desc = "View HCF Class Menu")
     public void partyClasses(@Sender Player player) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        PartyManager partyManager = this.plugin.getPartyManager();
+
         Profile profile = profileManager.getProfile(player.getUniqueId());
-        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
         
         if (party == null) {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
@@ -170,14 +192,17 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
-        new PartyPvPClassMenu(plugin).openMenu(player);
+        Menu menu = new PartyPvPClassMenu();
+        plugin.getMenuHandler().openMenu(menu, player);
     }
 
     @Command(name = "info", aliases = "information", desc = "View Information about your Party")
     public void partyInfo(@Sender Player player) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        PartyManager partyManager = this.plugin.getPartyManager();
+
         Profile profile = profileManager.getProfile(player.getUniqueId());
-        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
         
         if (party == null) {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
@@ -189,8 +214,10 @@ public class PartyCommands {
     @Command(name = "duel", aliases = "otherparties", desc = "Duel other parties")
     public void partyDuel(@Sender Player player) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        PartyManager partyManager = this.plugin.getPartyManager();
+
         Profile profile = profileManager.getProfile(player.getUniqueId());
-        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
         
         if (party == null) {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
@@ -203,18 +230,20 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
-        PartyDuelMenu menu = new PartyDuelMenu(plugin);
-        menu.openMenu(player);
+        Menu menu = new PartyDuelMenu();
+        plugin.getMenuHandler().openMenu(menu, player);
     }
 
     @Command(name = "join", aliases = "accept" ,desc = "Join a party using its invitation", usage = "<leader>")
     public void partyJoin(@Sender Player player, Player target) {
         ProfileManager profileManager = this.plugin.getProfileManager();
-        Profile profile = profileManager.getProfile(player.getUniqueId());
-        Profile targetprofile = this.plugin.getProfileManager().getProfile(target.getUniqueId());
+        PartyManager partyManager = this.plugin.getPartyManager();
         
-        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
-        Party targetParty = this.plugin.getPartyManager().getPartyByUUID(targetprofile.getParty());
+        Profile profile = profileManager.getProfile(player.getUniqueId());
+        Profile targetprofile = profileManager.getProfile(target.getUniqueId());
+        
+        Party party = partyManager.getPartyByUUID(profile.getParty());
+        Party targetParty = partyManager.getPartyByUUID(targetprofile.getParty());
 
         if (profile.isBusy()) {
             player.sendMessage(Locale.ERROR_BUSY.toString());
@@ -245,14 +274,16 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_BANNED.toString());
             return;
         }
-        this.plugin.getPartyManager().join(player, targetParty);
+        partyManager.join(player, targetParty);
     }
 
     @Command(name = "kick", aliases = "remove", desc = "Kick a player from the party", usage = "<target>")
     public void partyKick(@Sender Player player, Player target) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        PartyManager partyManager = this.plugin.getPartyManager();
+
         Profile profile = profileManager.getProfile(player.getUniqueId());
-        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
 
         if (party == null) {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
@@ -281,11 +312,16 @@ public class PartyCommands {
     @Command(name = "open", aliases = "public", desc = "Publicize your party")
     public void partyOpen(@Sender Player player) {
         ProfileManager profileManager = this.plugin.getProfileManager();
-        Profile profile = profileManager.getProfile(player.getUniqueId());
-        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        PartyManager partyManager = this.plugin.getPartyManager();
 
-        if (!player.hasPermission("array.party.privacy") && !player.isOp() && !player.hasPermission("*")) {
-            Locale.PARTY_DONATOR.toList().stream().map(line -> line.replace("<store>", this.plugin.getConfigHandler().getSTORE())).forEach(player::sendMessage);
+        Profile profile = profileManager.getProfile(player.getUniqueId());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
+
+        if (!player.hasPermission("array.party.privacy")) {
+            Locale.PARTY_DONATOR.toList()
+                    .stream()
+                    .map(line -> line.replace("<store>", this.plugin.getConfigHandler().getSTORE()))
+                    .forEach(player::sendMessage);
             return;
         }
         if (party == null) {
@@ -306,8 +342,10 @@ public class PartyCommands {
     @Command(name = "promote", aliases = "leader", desc = "Promote a player to leader in your party", usage = "<target>")
     public void partyPromote(@Sender Player player, Player target) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        PartyManager partyManager = this.plugin.getPartyManager();
+
         Profile profile = profileManager.getProfile(player.getUniqueId());
-        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
 
         if (party == null) {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
@@ -331,11 +369,16 @@ public class PartyCommands {
     @Command(name = "ban", desc = "Ban a player from the party", usage = "<target>")
     public void partyBan(@Sender Player player, Player target) {
         ProfileManager profileManager = this.plugin.getProfileManager();
-        Profile profile = profileManager.getProfile(player.getUniqueId());
-        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        PartyManager partyManager = this.plugin.getPartyManager();
 
-        if (!player.hasPermission("array.party.ban") && !player.isOp() && !player.hasPermission("*")) {
-            Locale.PARTY_DONATOR.toList().stream().map(line -> line.replace("<store>", this.plugin.getConfigHandler().getSTORE())).forEach(player::sendMessage);
+        Profile profile = profileManager.getProfile(player.getUniqueId());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
+
+        if (!player.hasPermission("array.party.ban")) {
+            Locale.PARTY_DONATOR.toList()
+                    .stream()
+                    .map(line -> line.replace("<store>", this.plugin.getConfigHandler().getSTORE()))
+                    .forEach(player::sendMessage);
             return;
         }
         if (party == null) {
@@ -363,17 +406,19 @@ public class PartyCommands {
             return;
         }
         if (party.containsPlayer(target)) {
-            plugin.getPartyManager().leave(target, party);
+            partyManager.leave(target, party);
         }
         player.sendMessage(Locale.PARTY_BAN.toString().replace("<target>", target.getName()));
-        this.plugin.getPartyManager().ban(target, party);
+        partyManager.ban(target, party);
     }
 
     @Command(name = "unban", desc = "Unban a player from your party", usage = "<target>")
     public void partyUnban(@Sender Player player, Player target) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        PartyManager partyManager = this.plugin.getPartyManager();
+
         Profile profile = profileManager.getProfile(player.getUniqueId());
-        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
 
         if (!player.hasPermission("array.party.ban")) {
             Locale.PARTY_DONATOR.toList().forEach(player::sendMessage);
@@ -403,13 +448,16 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_NOT_BANNED.toString());
             return;
         }
-        this.plugin.getPartyManager().unban(target, party);
+        partyManager.unban(target, party);
     }
 
     @Command(name = "chat", desc = "Toggle party chat mode for your profile")
     public void partyChat(@Sender Player player) {
-        Profile profile = this.plugin.getProfileManager().getProfile(player);
-        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        ProfileManager profileManager = this.plugin.getProfileManager();
+        PartyManager partyManager = this.plugin.getPartyManager();
+
+        Profile profile = profileManager.getProfile(player.getUniqueId());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
 
         if (party == null) {
             player.sendMessage(CC.translate(Locale.PARTY_DONOTHAVE.toString()));
@@ -426,8 +474,10 @@ public class PartyCommands {
     @Command(name = "close", desc = "Privatise your party to the public")
     public void partyClose(@Sender Player player) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        PartyManager partyManager = this.plugin.getPartyManager();
+
         Profile profile = profileManager.getProfile(player.getUniqueId());
-        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
 
         if (party == null) {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
@@ -448,8 +498,10 @@ public class PartyCommands {
     @Command(name = "leave", aliases = "resign", desc = "Leave your party")
     public void partyLeave(@Sender Player player) {
         ProfileManager profileManager = this.plugin.getProfileManager();
+        PartyManager partyManager = this.plugin.getPartyManager();
+
         Profile profile = profileManager.getProfile(player.getUniqueId());
-        Party party = this.plugin.getPartyManager().getPartyByUUID(profile.getParty());
+        Party party = partyManager.getPartyByUUID(profile.getParty());
 
         if (party == null) {
             player.sendMessage(Locale.PARTY_DONOTHAVE.toString());
@@ -463,7 +515,7 @@ public class PartyCommands {
             player.sendMessage(Locale.PARTY_IN_TOURNAMENT.toString());
             return;
         }
-        this.plugin.getPartyManager().leave(player, party);
+        partyManager.leave(player, party);
     }
 
 }

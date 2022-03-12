@@ -9,5 +9,5 @@ package xyz.refinedev.practice.tournament.menu.buttons;
  * Project: Array
  */
 
-public class TournamentKitButton {
+public class TournamentTeamButton {
 }

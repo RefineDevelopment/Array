@@ -8,6 +8,8 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
+import xyz.refinedev.practice.managers.PartyManager;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.party.Party;
 import xyz.refinedev.practice.profile.Profile;
@@ -30,12 +32,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PartyDuelButton extends Button {
 
-    private final Array plugin = this.getPlugin();
     private final Party party;
 
     @Override
-    public ItemStack getButtonItem(Player player) {
-        boolean fighting = this.plugin.getPartyManager().isFighting(party.getUniqueId());
+    public ItemStack getButtonItem(Array plugin, Player player) {
+        boolean fighting = plugin.getPartyManager().isFighting(party.getUniqueId());
 
         ItemStack itemStack = SkullCreator.itemFromUuid(party.getLeader().getUniqueId());
         ItemBuilder builder = new ItemBuilder(fighting ? new ItemStack(Material.SKULL) : itemStack);
@@ -59,12 +60,15 @@ public class PartyDuelButton extends Button {
     }
 
     @Override
-    public void clicked(Player player, ClickType clickType) {
-        Profile senderProfile = this.plugin.getProfileManager().getProfile(player.getUniqueId());
-        Profile receiverProfile = this.plugin.getProfileManager().getProfile(this.party.getLeader().getUniqueId());
+    public void clicked(Array plugin, Player player, ClickType clickType) {
+        ProfileManager profileManager = plugin.getProfileManager();
+        PartyManager partyManager = plugin.getPartyManager();
 
-        Party senderParty = this.plugin.getPartyManager().getPartyByUUID(senderProfile.getParty());
-        Party receiverParty = this.plugin.getPartyManager().getPartyByUUID(receiverProfile.getParty());
+        Profile senderProfile = profileManager.getProfile(player.getUniqueId());
+        Profile receiverProfile = profileManager.getProfile(this.party.getLeader().getUniqueId());
+
+        Party senderParty = partyManager.getPartyByUUID(senderProfile.getParty());
+        Party receiverParty = partyManager.getPartyByUUID(receiverProfile.getParty());
 
         player.closeInventory();
 
@@ -72,7 +76,7 @@ public class PartyDuelButton extends Button {
             player.sendMessage(Locale.PARTY_NOTLEADER.toString());
             return;
         }
-        if (this.plugin.getProfileManager().cannotSendDuelRequest(senderProfile, player)) {
+        if (profileManager.isPendingDuelRequest(senderProfile, player)) {
             player.sendMessage(Locale.DUEL_ALREADYSENT.toString());
             return;
         }
@@ -80,6 +84,7 @@ public class PartyDuelButton extends Button {
             player.sendMessage(Locale.DUEL_DISBANDED.toString());
             return;
         }
-        player.chat("/duel " + party.getLeader().getPlayer().getName());
+
+        player.chat("/duel " + party.getLeader().getUsername());
     }
 }

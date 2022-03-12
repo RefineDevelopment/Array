@@ -41,7 +41,7 @@ public class SpectateButton extends Button {
      * @return {@link ItemStack}
      */
     @Override
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         String key = "SPECTATING_MENU.";
 
         ItemBuilder builder = new ItemBuilder(SkullCreator.itemFromUuid(teamPlayer.getUniqueId()));
@@ -67,7 +67,7 @@ public class SpectateButton extends Button {
      * @param clickType {@link ClickType}
      */
     @Override
-    public void clicked(Player player, ClickType clickType) {
+    public void clicked(Array plugin, Player player, ClickType clickType) {
         player.closeInventory();
         Button.playSuccess(player);
 
@@ -84,7 +84,7 @@ public class SpectateButton extends Button {
 
                 if (matchSnapshot == null) matchSnapshot = new MatchSnapshot(teamPlayer);
 
-                MatchDetailsMenu menu = new MatchDetailsMenu(plugin, matchSnapshot, null);
+                MatchDetailsMenu menu = new MatchDetailsMenu(matchSnapshot, null);
                 menu.openMenu(player);
                 break;
             }

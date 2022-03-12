@@ -42,10 +42,32 @@ public class ButtonUtil {
         return material;
     }
 
+    public Material getCustomButton(AbstractConfigurationFile config, String path, String key) {
+        Material material;
+        try {
+            material = Material.valueOf(config.getString(path));
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.WARNING, "Button " + key + "'s Material is invalid, ignoring button...");
+            return null;
+        }
+        return material;
+    }
+
     public Material getPlaceholderMaterial(AbstractConfigurationFile config, String menu) {
         Material material;
         try {
             material = Material.valueOf(config.getString("PLACEHOLDER_BUTTON.MATERIAL"));
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.WARNING, "Invalid Placeholder Button on Menu " + menu + ", turning off placeholder mode.");
+            return null;
+        }
+        return material;
+    }
+
+    public Material getPlaceholderMaterial(AbstractConfigurationFile config, String menu, String key) {
+        Material material;
+        try {
+            material = Material.valueOf(config.getString(key + ".PLACEHOLDER_BUTTON.MATERIAL"));
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.WARNING, "Invalid Placeholder Button on Menu " + menu + ", turning off placeholder mode.");
             return null;

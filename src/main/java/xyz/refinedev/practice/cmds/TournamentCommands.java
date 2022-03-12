@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.cmds;
 
 import lombok.RequiredArgsConstructor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.command.annotation.Command;
@@ -20,6 +21,11 @@ import xyz.refinedev.practice.util.command.annotation.Sender;
 public class TournamentCommands {
 
     private final Array plugin;
+
+    @Command(name = "", desc = "View help message of tournaments")
+    public void help(@Sender CommandSender sender) {
+
+    }
 
     @Command(name = "host", aliases = "start", desc = "Start a tournament")
     @Require("array.tournament.host")

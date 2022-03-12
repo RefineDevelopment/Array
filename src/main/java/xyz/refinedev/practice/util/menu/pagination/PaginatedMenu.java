@@ -13,18 +13,14 @@ public abstract class PaginatedMenu extends Menu {
 
     @Getter
     private int page = 1;
-    private final Array plugin;
 
-    public PaginatedMenu(Array plugin) {
-        super(plugin);
-
-        this.plugin = plugin;
+    public PaginatedMenu() {
         this.setUpdateAfterClick(false);
     }
 
     @Override
-    public String getTitle(Player player) {
-        return getPrePaginatedTitle(player) + " &7(Page " + page + ")";
+    public String getTitle(Array plugin, Player player) {
+        return getPrePaginatedTitle(plugin, player) + " &7(Page " + page + ")";
     }
 
     /**
@@ -33,17 +29,17 @@ public abstract class PaginatedMenu extends Menu {
      * @param player player viewing the inventory
      * @param mod    delta to modify the page number by
      */
-    public final void modPage(Player player, int mod) {
+    public final void modPage(Array plugin, Player player, int mod) {
         page += mod;
         getButtons().clear();
-        openMenu(player);
+        plugin.getMenuHandler().openMenu(this, player);
     }
 
     /**
      * @param player player viewing the inventory
      */
-    public final int getPages(Player player) {
-        int buttonAmount = getAllPagesButtons(player).size();
+    public final int getPages(Array plugin, Player player) {
+        int buttonAmount = getAllPagesButtons(plugin, player).size();
 
         if (buttonAmount == 0) {
             return 1;
@@ -53,16 +49,16 @@ public abstract class PaginatedMenu extends Menu {
     }
 
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         int minIndex = (int) ((double) (page - 1) * getMaxItemsPerPage(player));
         int maxIndex = (int) ((double) (page) * getMaxItemsPerPage(player));
 
         HashMap<Integer, Button> buttons = new HashMap<>();
 
-        buttons.put(0, new PageButton(plugin, -1, this));
-        buttons.put(8, new PageButton(plugin, 1, this));
+        buttons.put(0, new PageButton(-1, this));
+        buttons.put(8, new PageButton(1, this));
 
-        for (Map.Entry<Integer, Button> entry : getAllPagesButtons(player).entrySet()) {
+        for (Map.Entry<Integer, Button> entry : getAllPagesButtons(plugin, player).entrySet()) {
             int ind = entry.getKey();
 
             if (ind >= minIndex && ind < maxIndex) {
@@ -71,7 +67,7 @@ public abstract class PaginatedMenu extends Menu {
             }
         }
 
-        Map<Integer, Button> global = getGlobalButtons(player);
+        Map<Integer, Button> global = getGlobalButtons(plugin, player);
 
         if (global != null) {
             for (Map.Entry<Integer, Button> gent : global.entrySet()) {
@@ -90,7 +86,7 @@ public abstract class PaginatedMenu extends Menu {
      * @param player player viewing the inventory
      * @return a Map of button that returns items which will be present on all pages
      */
-    public Map<Integer, Button> getGlobalButtons(Player player) {
+    public Map<Integer, Button> getGlobalButtons(Array plugin, Player player) {
         return null;
     }
 
@@ -98,12 +94,12 @@ public abstract class PaginatedMenu extends Menu {
      * @param player player viewing the inventory
      * @return title of the inventory before the page number is added
      */
-    public abstract String getPrePaginatedTitle(Player player);
+    public abstract String getPrePaginatedTitle(Array plugin, Player player);
 
     /**
      * @param player player viewing the inventory
      * @return a map of button that will be paginated and spread across pages
      */
-    public abstract Map<Integer, Button> getAllPagesButtons(Player player);
+    public abstract Map<Integer, Button> getAllPagesButtons(Array plugin, Player player);
 
 }

@@ -28,7 +28,7 @@ public class UnrankedQueueCMD {
     public void queue(@Sender Player player) {
         Profile profile = plugin.getProfileManager().getProfile(player);
         if (!profile.isBusy()) {
-            QueueSelectKitMenu menu = new QueueSelectKitMenu(plugin, QueueType.UNRANKED);
+            QueueSelectKitMenu menu = new QueueSelectKitMenu(QueueType.UNRANKED);
             menu.openMenu(player);
         } else {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());

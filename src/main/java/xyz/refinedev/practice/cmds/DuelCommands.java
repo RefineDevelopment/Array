@@ -12,6 +12,9 @@ import xyz.refinedev.practice.duel.DuelRequest;
 import xyz.refinedev.practice.duel.menu.DuelSelectKitMenu;
 import xyz.refinedev.practice.hook.core.CoreHandler;
 import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.managers.MatchManager;
+import xyz.refinedev.practice.managers.PartyManager;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.Team;
 import xyz.refinedev.practice.match.team.TeamPlayer;
@@ -21,6 +24,7 @@ import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
+import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.other.PlayerUtil;
 
 /**
@@ -37,7 +41,6 @@ import xyz.refinedev.practice.util.other.PlayerUtil;
 public class DuelCommands {
 
     private final Array plugin;
-    private final CoreHandler coreAdapter;
 
     private Match match;
     private Arena arena;
@@ -45,8 +48,10 @@ public class DuelCommands {
 
     @Command(name = "", desc = "Duel a player", usage = "<player>")
     public void duel(@Sender Player player, Player target) {
-        Profile senderProfile = plugin.getProfileManager().getProfile(player.getUniqueId());
-        Profile receiverProfile = plugin.getProfileManager().getProfile(target.getUniqueId());
+        ProfileManager profileManager = plugin.getProfileManager();
+
+        Profile senderProfile = profileManager.getProfile(player.getUniqueId());
+        Profile receiverProfile = profileManager.getProfile(target.getUniqueId());
 
         if (player.getUniqueId().equals(target.getUniqueId())) {
             player.sendMessage(CC.RED + "You cannot duel yourself.");
@@ -64,7 +69,7 @@ public class DuelCommands {
             player.sendMessage(CC.RED + "That player is not accepting any duel requests at the moment.");
             return;
         }
-        if (plugin.getProfileManager().cannotSendDuelRequest(senderProfile, player)) {
+        if (profileManager.isPendingDuelRequest(senderProfile, player)) {
             player.sendMessage(CC.RED + "You have already sent that player a duel request.");
             return;
         }
@@ -75,20 +80,27 @@ public class DuelCommands {
 
         DuelProcedure procedure = new DuelProcedure(plugin, player, target, senderProfile.hasParty());
         senderProfile.setDuelProcedure(procedure);
-        new DuelSelectKitMenu(plugin).openMenu(player);
+
+        Menu menu = new DuelSelectKitMenu();
+        plugin.getMenuHandler().openMenu(menu, player);
     }
 
     @Command(name = "accept", usage = "<player> <target>", desc = "Accept a duel pending request")
     public void duelAccept(@Sender Player player, Player target) {
-        Profile senderProfile = plugin.getProfileManager().getProfile(player.getUniqueId());
-        Profile receiverProfile = plugin.getProfileManager().getProfile(target.getUniqueId());
+        ProfileManager profileManager = plugin.getProfileManager();
+        PartyManager partyManager = plugin.getPartyManager();
+        MatchManager matchManager = plugin.getMatchManager();
+        CoreHandler coreHandler = plugin.getCoreHandler();
+
+        Profile senderProfile = profileManager.getProfile(player.getUniqueId());
+        Profile receiverProfile = profileManager.getProfile(target.getUniqueId());
 
         if (senderProfile.isBusy()) {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
         }
 
-        if (!plugin.getProfileManager().isPendingDuelRequest(receiverProfile, player)) {
+        if (!profileManager.isPendingDuelRequest(receiverProfile, player)) {
             player.sendMessage(Locale.DUEL_NOT_PENDING.toString());
             return;
         }
@@ -126,7 +138,7 @@ public class DuelCommands {
         Arena arena = request.getArena();
 
         if (arena == null) {
-            player.sendMessage(CC.RED + "Tried to start a match but the arena was invalid.");
+            player.sendMessage(Locale.ERROR_NO_ARENAS.toString());
             return;
         }
 
@@ -142,16 +154,14 @@ public class DuelCommands {
             }
         }
 
-        if (!arena.getType().equals(ArenaType.SHARED)) {
-            arena.setActive(true);
-        }
+        arena.setActive(true);
 
         this.kit = request.getKit();
         this.arena = arena;
 
         if (request.isParty()) {
-            Party senderParty = this.plugin.getPartyManager().getPartyByUUID(senderProfile.getUniqueId());
-            Party receiverParty = this.plugin.getPartyManager().getPartyByUUID(receiverProfile.getUniqueId());
+            Party senderParty = partyManager.getPartyByUUID(senderProfile.getUniqueId());
+            Party receiverParty = partyManager.getPartyByUUID(receiverProfile.getUniqueId());
 
             Team teamA = new Team(new TeamPlayer(player));
             for ( Player partyMember : senderParty.getPlayers() ) {
@@ -166,30 +176,46 @@ public class DuelCommands {
                     teamB.getTeamPlayers().add(new TeamPlayer(partyMember));
                 }
             }
-            match = plugin.getMatchManager().createTeamKitMatch(teamA, teamB, request.getKit(), arena);
+            this.match = matchManager.createTeamKitMatch(teamA, teamB, kit, arena);
         } else {
-            match = plugin.getMatchManager().createSoloKitMatch(null, new TeamPlayer(player), new TeamPlayer(target), request.getKit(), arena, QueueType.UNRANKED);
+            TeamPlayer firstMatchPlayer = new TeamPlayer(player);
+            TeamPlayer secondMatchPlayer = new TeamPlayer(target);
+
+            this.match = matchManager.createSoloKitMatch(null, firstMatchPlayer, secondMatchPlayer, kit, arena, QueueType.UNRANKED);
+
             for ( String string : Locale.MATCH_SOLO_STARTMESSAGE.toList() ) {
-                String opponentMessages = this.formatMessages(target, player, string, coreAdapter.getFullName(player), coreAdapter.getFullName(target), senderProfile.getStatisticsData().get(request.getKit()).getElo(), receiverProfile.getStatisticsData().get(request.getKit()).getElo(), QueueType.UNRANKED);
+                String opponentMessages = this.formatMessages(string, player, target, QueueType.UNRANKED);
                 player.sendMessage(replaceOpponent(opponentMessages, player));
                 target.sendMessage(replaceOpponent(opponentMessages, target));
             }
         }
-        this.plugin.getServer().getScheduler().runTask(plugin, () -> this.plugin.getMatchManager().start(match));
+        this.plugin.getServer().getScheduler().runTask(plugin, () -> matchManager.start(match));
     }
 
-    private String formatMessages(Player player1P, Player player2P, String string, String player1, String player2, int player1Elo, int player2Elo, QueueType type) {
+    private String formatMessages(String string, Player sender, Player target, QueueType type) {
+        ProfileManager profileManager = this.plugin.getProfileManager();
+
+        Profile senderProfile = profileManager.getProfile(sender.getUniqueId());
+        Profile targetProfile = profileManager.getProfile(target.getUniqueId());
+
+        int senderELO = senderProfile.getStatisticsData().get(kit).getElo();
+        int targetELO = targetProfile.getStatisticsData().get(kit).getElo();
+
+        String senderName = profileManager.getColouredName(senderProfile);
+        String targetName = profileManager.getColouredName(targetProfile);
+
         return string
-                .replace("<player1_ping>", String.valueOf(PlayerUtil.getPing(player1P)))
-                .replace("<player2_ping>", String.valueOf(PlayerUtil.getPing(player2P)))
-                .replace("<player1>", type == QueueType.RANKED ? player1 + CC.GRAY + " (" + player1Elo + ")" : player1)
-                .replace("<player2>", type == QueueType.RANKED ? player2 + CC.GRAY + " (" + player2Elo + ")" : player2);
+                .replace("<ranked>", type == QueueType.RANKED ? "&aTrue" : "&cFalse")
+                .replace("<player1_ping>", String.valueOf(PlayerUtil.getPing(sender)))
+                .replace("<player2_ping>", String.valueOf(PlayerUtil.getPing(target)))
+                .replace("<player1>", type == QueueType.RANKED ? senderName + CC.GRAY + " (" + senderELO + ")" : senderName)
+                .replace("<player2>", type == QueueType.RANKED ? targetName + CC.GRAY + " (" + targetELO + ")" : targetName);
     }
 
     private String replaceOpponent(String opponent, Player player) {
         opponent = opponent
-                .replace("<opponent>", match.getOpponentPlayer(player).getDisplayName())
-                .replace("<opponent_ping>", String.valueOf(PlayerUtil.getPing(match.getOpponentPlayer(player))))
+                .replace("<opponent>", this.match.getOpponentPlayer(player).getDisplayName())
+                .replace("<opponent_ping>", String.valueOf(PlayerUtil.getPing(this.match.getOpponentPlayer(player))))
                 .replace("<player_ping>", String.valueOf(PlayerUtil.getPing(player)))
                 .replace("<arena>", this.arena.getDisplayName())
                 .replace("<kit>", this.kit.getDisplayName())

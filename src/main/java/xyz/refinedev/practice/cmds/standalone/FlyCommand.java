@@ -3,6 +3,7 @@ package xyz.refinedev.practice.cmds.standalone;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;
@@ -26,7 +27,8 @@ public class FlyCommand {
     @Command(name = "", desc = "Allow Donators to Fly")
     @Require("array.profile.fly")
     public void fly(@Sender Player player) {
-        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
+        ProfileManager profileManager = plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(player.getUniqueId());
 
         if (profile.isInLobby() || profile.isInQueue()) {
             if (player.getAllowFlight()) {

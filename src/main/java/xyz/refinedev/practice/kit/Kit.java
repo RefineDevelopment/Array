@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.refinedev.practice.leaderboards.LeaderboardsAdapter;
+import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.queue.Queue;
 import xyz.refinedev.practice.util.chat.CC;
 
@@ -34,6 +35,7 @@ public class Kit {
 
     private final String name;
     private boolean enabled;
+    private int priority;
     private List<String> kitDescription;
     private ItemStack displayIcon;
     private String displayName, knockbackProfile;
@@ -66,6 +68,7 @@ public class Kit {
     }
 
     public void applyToPlayer(Player player) {
+        if (this.getName().equalsIgnoreCase("HCFTeamFight")) return;
         player.getInventory().setArmorContents(kitInventory.getArmor());
         player.getInventory().setContents(kitInventory.getContents());
         player.updateInventory();

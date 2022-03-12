@@ -116,7 +116,7 @@ public class RematchProcedure {
         }
 
         if (arena == null) {
-            sender.sendMessage(CC.RED + "Tried to start a match but there were no available arenas.");
+            sender.sendMessage(Locale.ERROR_NO_ARENAS.toString());
             return;
         }
 
@@ -129,7 +129,7 @@ public class RematchProcedure {
             sender.sendMessage(replaceOpponent(opponentMessages, sender));
             target.sendMessage(replaceOpponent(opponentMessages, target));
         }
-        TaskUtil.run(() -> this.plugin.getMatchManager().start(match));
+        this.plugin.getMatchManager().start(match);
     }
 
     private String formatMessages(String string, Player sender, Player target) {

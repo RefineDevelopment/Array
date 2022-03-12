@@ -48,7 +48,7 @@ public class KitEditorListener implements Listener {
             kitEditor.setRename(false);
 
             if (!profile.isInFight()) {
-                KitManagementMenu menu = new KitManagementMenu(plugin, kitEditor.getSelectedKit());
+                KitManagementMenu menu = new KitManagementMenu(kitEditor.getSelectedKit());
                 menu.openMenu(player);
             }
 

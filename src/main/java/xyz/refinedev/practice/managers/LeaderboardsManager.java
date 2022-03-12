@@ -88,7 +88,7 @@ public class LeaderboardsManager {
             for ( Document document : leaderboard ) {
                 LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
                 leaderboardsAdapter.setName(document.getString("name"));
-                leaderboardsAdapter.setUuid(UUID.fromString(document.getString("uuid")));
+                leaderboardsAdapter.setUniqueId(UUID.fromString(document.getString("uniqueId")));
                 leaderboardsAdapter.setElo(document.getInteger("globalElo"));
 
                 synchronized (this.globalLeaderboards) {
@@ -123,7 +123,7 @@ public class LeaderboardsManager {
 
                     LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
                     leaderboardsAdapter.setName(document.getString("name"));
-                    leaderboardsAdapter.setUuid(UUID.fromString(document.getString("uuid")));
+                    leaderboardsAdapter.setUniqueId(UUID.fromString(document.getString("uniqueId")));
                     leaderboardsAdapter.setElo(kitDocument.getInteger("elo"));
 
                     synchronized (kit.getEloLeaderboards()) {
@@ -139,7 +139,7 @@ public class LeaderboardsManager {
 
                     LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
                     leaderboardsAdapter.setName(document.getString("name"));
-                    leaderboardsAdapter.setUuid(UUID.fromString(document.getString("uuid")));
+                    leaderboardsAdapter.setUniqueId(UUID.fromString(document.getString("uniqueId")));
                     leaderboardsAdapter.setElo(kitDocument.getInteger("won"));
 
                     synchronized (kit.getWinLeaderboards()) {
@@ -160,7 +160,7 @@ public class LeaderboardsManager {
             for ( Document document : leaderboard ) {
                 LeaderboardsAdapter leaderboardsAdapter = new LeaderboardsAdapter();
                 leaderboardsAdapter.setName(document.getString("name"));
-                leaderboardsAdapter.setUuid(UUID.fromString(document.getString("uuid")));
+                leaderboardsAdapter.setUniqueId(UUID.fromString(document.getString("uniqueId")));
                 leaderboardsAdapter.setElo(document.getInteger("elo"));
 
                 synchronized (clanLeaderboards) {

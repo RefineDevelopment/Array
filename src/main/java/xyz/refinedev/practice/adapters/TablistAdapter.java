@@ -369,8 +369,8 @@ public class TablistAdapter implements TabAdapter {
             }
             //TODO: Complete Event Tablist
         }/* else if (profile.isInEvent() && !profile.isSpectating()) {
-            UUID uuid = profile.getEvent();
-            Event event = this.plugin.getEventManager().getEventByUUID(uuid);
+            UUID uniqueId = profile.getEvent();
+            Event event = this.plugin.getEventManager().getEventByUUID(uniqueId);
             if (event.isWaiting()) {
 
             } else if (event.isFighting()) {

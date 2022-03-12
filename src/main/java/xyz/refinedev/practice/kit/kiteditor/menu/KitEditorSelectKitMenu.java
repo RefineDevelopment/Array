@@ -19,26 +19,34 @@ import java.util.stream.Collectors;
 
 public class KitEditorSelectKitMenu extends Menu {
 
-    public KitEditorSelectKitMenu(Array plugin) {
-        super(plugin);
-    }
-
+    /**
+     * Get itemStack of the Button
+     *
+     * @param player {@link Player} viewing the menu
+     * @return {@link ItemStack}
+     */
     @Override
-    public String getTitle(Player player) {
+    public String getTitle(Array plugin, Player player) {
         return "&7Select a kit";
     }
 
+    /**
+     * Map of slots and buttons on that particular slot
+     *
+     * @param player {@link Player} player viewing the menu
+     * @return {@link Map}
+     */
     @Override
-    public Map<Integer, Button> getButtons(Player player) {
+    public Map<Integer, Button> getButtons(Array plugin, Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        KitManager kitManager = this.getPlugin().getKitManager();
+        KitManager kitManager = plugin.getKitManager();
         List<Kit> kits = kitManager.getKits().stream()
                 .filter(Kit::isEnabled)
                 .sorted(Comparator.comparing(k -> k.getGameRules().isEditable(), Comparator.reverseOrder()))
                 .collect(Collectors.toList());
 
         for (Kit kit : kits) {
-            buttons.put(buttons.size(), new KitSelectButton(this.getPlugin(), kit));
+            buttons.put(buttons.size(), new KitSelectButton(kit));
         }
 
         return buttons;

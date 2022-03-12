@@ -3,6 +3,7 @@ package xyz.refinedev.practice.party.menu.buttons;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.other.SkullCreator;
@@ -19,14 +20,14 @@ import xyz.refinedev.practice.util.other.SkullCreator;
 @RequiredArgsConstructor
 public class PartyListButton extends Button {
 
-    private final Player pplayer;
+    private final Player partyPlayer;
 
     @Override
-    public ItemStack getButtonItem(Player player) {
-        ItemStack stack = SkullCreator.itemFromUuid(pplayer.getUniqueId());
-        return new ItemBuilder(stack)
-                .name("&a" + this.pplayer.getName())
-                .durability(3)
-                .build();
+    public ItemStack getButtonItem(Array plugin, Player player) {
+        ItemStack stack = SkullCreator.itemFromUuid(partyPlayer.getUniqueId());
+        ItemBuilder itemBuilder = new ItemBuilder(stack);
+        itemBuilder.name("&a" + this.partyPlayer.getName());
+        itemBuilder.durability(3);
+        return itemBuilder.build();
     }
 }

@@ -53,7 +53,11 @@ public enum SpigotType {
      * {@link KnockbackType} according to the spigot's type
      */
     public static SpigotType get() {
-        return Arrays.stream(SpigotType.values()).filter(kSpigotType -> !kSpigotType.equals(SpigotType.Default) && check(kSpigotType.getPackageName())).findFirst().orElse(SpigotType.Default);
+        return Arrays
+                .stream(SpigotType.values())
+                .filter(kSpigotType -> !kSpigotType.equals(SpigotType.Default) && check(kSpigotType.getPackageName()))
+                .findFirst()
+                .orElse(SpigotType.Default);
     }
 
     /**

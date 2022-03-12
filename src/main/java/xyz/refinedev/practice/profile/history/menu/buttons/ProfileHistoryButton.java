@@ -22,7 +22,7 @@ public class ProfileHistoryButton extends Button {
      * @return {@link ItemStack}
      */
     @Override
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         return null;
     }
 }

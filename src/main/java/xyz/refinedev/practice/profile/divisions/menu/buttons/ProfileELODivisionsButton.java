@@ -23,15 +23,12 @@ import java.util.stream.Collectors;
  * Created: 11/3/2021
  * Project: Array
  */
-
 @RequiredArgsConstructor
 public class ProfileELODivisionsButton extends Button {
 
-    private final Array plugin = this.getPlugin();
-    private final FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_divisions");
-
     private final Profile profile;
     private final ProfileDivision division;
+    private final FoldersConfigurationFile config;
 
     /**
      * Get itemStack of the Button
@@ -40,7 +37,7 @@ public class ProfileELODivisionsButton extends Button {
      * @return {@link ItemStack}
      */
     @Override
-    public ItemStack getButtonItem(Player player) {
+    public ItemStack getButtonItem(Array plugin, Player player) {
         ProfileDivision profileDivision = plugin.getProfileManager().getDivision(profile);
 
         boolean equipped = division.equals(profileDivision);
@@ -52,20 +49,26 @@ public class ProfileELODivisionsButton extends Button {
 
         if (equipped || unlocked) {
             itemBuilder.name(config.getString(key + "NAME".replace("KEY", equipped ? "EQUIPPED" : "UNLOCKED")));
+            itemBuilder.lore(config.getStringList("ELO.UNLOCKED.LORE")
+                    .stream()
+                    .map(s -> {
+                         s = s.replace("<division_bar>", ProgressBar.getBar(5, 1))
+                              .replace("<division_min_elo>", String.valueOf(division.getMinElo()));
+                         return s;
+            }).collect(Collectors.toList()));
             if (equipped) itemBuilder.enchantment(Enchantment.DURABILITY, 10);
-            itemBuilder.lore(config.getStringList(key + "LORE".replace("KEY", equipped ? "EQUIPPED" : "UNLOCKED")).stream().map(s -> {
-                s = s.replace("<division_bar>", ProgressBar.getBar(5, 1))
-                     .replace("<division_min_elo>", String.valueOf(division.getMinElo()));
-                return s;
-            }).collect(Collectors.toList()));
-        } else {
-            itemBuilder.name(config.getString(key + "NAME".replace("KEY", "LOCKED")));
-            itemBuilder.lore(config.getStringList(key + "LORE".replace("KEY", "LOCKED")).stream().map(s -> {
-                s = s.replace("<division_bar>", ProgressBar.getBar(profile.getGlobalElo(), division.getMinElo()))
-                     .replace("<division_min_elo>", String.valueOf(division.getMinElo()));
-                return s;
-            }).collect(Collectors.toList()));
+            itemBuilder.clearFlags();
+            return itemBuilder.build();
         }
-        return itemBuilder.clearFlags().build();
+
+        itemBuilder.name(config.getString("ELO.LOCKED.NAME"));
+        itemBuilder.lore(config.getStringList("ELO.LOCKED.LORE")
+                .stream()
+                .map(s -> {
+                     s = s.replace("<division_bar>", ProgressBar.getBar(profile.getGlobalElo(), division.getMinElo()))
+                          .replace("<division_min_elo>", String.valueOf(division.getMinElo()));
+                     return s;
+        }).collect(Collectors.toList()));
+        return itemBuilder.build();
     }
 }

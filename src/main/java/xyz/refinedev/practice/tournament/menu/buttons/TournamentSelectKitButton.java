@@ -1,29 +1,32 @@
-package xyz.refinedev.practice.profile.menu.buttons;
+package xyz.refinedev.practice.tournament.menu.buttons;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
-import xyz.refinedev.practice.profile.Profile;
-import xyz.refinedev.practice.profile.divisions.menu.ProfileDivisionsMenu;
+import xyz.refinedev.practice.kit.Kit;
+import xyz.refinedev.practice.managers.TournamentManager;
+import xyz.refinedev.practice.tournament.menu.TournamentMenu;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
+import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
-import xyz.refinedev.practice.util.menu.Menu;
 
 /**
  * This Project is property of Refine Development © 2021
  * Redistribution of this Project is not allowed
  *
  * @author Drizzy
- * Created: 10/17/2021
+ * Created: 10/31/2021
  * Project: Array
  */
 
 @RequiredArgsConstructor
-public class DivisionsButton extends Button {
+public class TournamentSelectKitButton extends Button {
 
-    private final Profile profile;
+    private final FoldersConfigurationFile config;
+    private final TournamentMenu tournamentMenu;
+    private final Kit kit;
 
     /**
      * Get itemStack of the Button
@@ -33,7 +36,9 @@ public class DivisionsButton extends Button {
      */
     @Override
     public ItemStack getButtonItem(Array plugin, Player player) {
-        return null;
+        ItemBuilder itemBuilder = new ItemBuilder(kit.getDisplayIcon());
+        itemBuilder.lore(config.getStringList("TOURNAMENT_KIT_MENU.LORE"));
+        return itemBuilder.build();
     }
 
     /**
@@ -45,9 +50,9 @@ public class DivisionsButton extends Button {
      */
     @Override
     public void clicked(Array plugin, Player player, ClickType clickType) {
-        FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_divisions");
-        Menu menu = new ProfileDivisionsMenu(config);
-        plugin.getMenuHandler().openMenu(menu, player);
-    }
+        tournamentMenu.setKit(kit);
+        player.closeInventory();
 
+        plugin.getMenuHandler().openMenu(tournamentMenu, player);
+    }
 }
