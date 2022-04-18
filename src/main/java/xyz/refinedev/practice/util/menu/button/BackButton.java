@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
@@ -31,7 +32,7 @@ public class BackButton extends Button {
     @Override
     public void clicked(Array plugin, Player player, ClickType clickType) {
         Button.playNeutral(player);
-        back.openMenu(player);
+        plugin.getMenuHandler().openMenu(back, player);
     }
 
 }

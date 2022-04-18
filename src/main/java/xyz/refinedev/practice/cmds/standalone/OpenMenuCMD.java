@@ -27,6 +27,6 @@ public class OpenMenuCMD {
     public void openMenu(@Sender Player player, @Text String name) {
         Menu menu = plugin.getMenuHandler().findMenu(player, name);
         if (menu == null) return;
-        menu.openMenu(player);
+        plugin.getMenuHandler().openMenu(menu, player);
     }
 }

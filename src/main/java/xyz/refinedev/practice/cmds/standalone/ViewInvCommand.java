@@ -38,8 +38,7 @@ public class ViewInvCommand {
             return;
         }
 
-        FoldersConfigurationFile config = menuHandler.getConfigByName("general");
-        Menu menu = new MatchDetailsMenu(config, cachedInventory,null);
+        Menu menu = new MatchDetailsMenu(cachedInventory, null);
         menuHandler.openMenu(menu, player);
     }
 }

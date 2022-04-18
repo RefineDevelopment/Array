@@ -27,15 +27,13 @@ import java.util.*;
 
 @RequiredArgsConstructor
 public class MatchDetailsMenu extends Menu {
-    
-    private final FoldersConfigurationFile config;
 
     private final MatchSnapshot snapshot;
     private final MatchSnapshot opponent;
 
     @Override
     public String getTitle(Array plugin, Player player) {
-        return config.getString("MATCH_DETAILS_MENU.TITLE")
+        return this.getConfig().getString("MATCH_DETAILS.TITLE")
                 .replace("<snapshot_name>", snapshot.getTeamPlayer().getUsername());
     }
 
@@ -87,16 +85,19 @@ public class MatchDetailsMenu extends Menu {
 
         @Override
         public ItemStack getButtonItem(Array plugin, Player player) {
-            String path = "MATCH_DETAILS_MENU.SWITCH_INVENTORY_BUTTON";
+            String path = "MATCH_DETAILS.SWITCH_INVENTORY_BUTTON";
 
-            int data = config.getInteger(path + ".DATA");
-            Material material = ButtonUtil.getMaterial(config, path + ".MATERIAL");
+            int data = getConfig().getInteger(path + ".DATA");
+            Material material = ButtonUtil.getMaterial(getConfig(), path + ".MATERIAL");
             if (material == null) player.closeInventory();
 
             ItemBuilder itemBuilder  = new ItemBuilder(material);
             itemBuilder.durability(data);
-            itemBuilder.name(config.getString(path + ".NAME")
-                    .replace("<snapshot_next_name>", opponent == null ? switchTo.getUsername() : opponent.getTeamPlayer().getUsername()));
+            itemBuilder.name(getConfig().getString(path + ".NAME")
+                    .replace("<snapshot_next_name>",
+                            opponent == null ?
+                            switchTo.getUsername() :
+                            opponent.getTeamPlayer().getUsername()));
 
             return itemBuilder.build();
         }
@@ -104,7 +105,7 @@ public class MatchDetailsMenu extends Menu {
         @Override
         public void clicked(Array plugin, Player player, ClickType clickType) {
             if (opponent != null) {
-                Menu menu = new MatchDetailsMenu(config, opponent, snapshot);
+                Menu menu = new MatchDetailsMenu(opponent, snapshot);
                 plugin.getMenuHandler().openMenu(menu, player);
                 return;
             }
@@ -122,7 +123,7 @@ public class MatchDetailsMenu extends Menu {
                 return;
             }
 
-            MatchDetailsMenu menu = new MatchDetailsMenu(config, cachedInventory, snapshot);
+            MatchDetailsMenu menu = new MatchDetailsMenu(cachedInventory, snapshot);
             plugin.getMenuHandler().openMenu(menu, player);
         }
 

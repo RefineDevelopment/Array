@@ -9,6 +9,7 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.divisions.ProfileDivision;
 import xyz.refinedev.practice.util.chat.ProgressBar;
+import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
@@ -26,9 +27,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProfileELODivisionsButton extends Button {
 
+    private static final String KEY = "PROFILE_DIVISIONS.";
+
     private final Profile profile;
     private final ProfileDivision division;
-    private final FoldersConfigurationFile config;
+    private final BasicConfigurationFile config;
 
     /**
      * Get itemStack of the Button
@@ -43,13 +46,13 @@ public class ProfileELODivisionsButton extends Button {
         boolean equipped = division.equals(profileDivision);
         boolean unlocked = division.getMaxElo() < profile.getGlobalElo();
 
-        String key = "ELO.KEY.";
+        String key = KEY + "ELO.KEY.";
 
         ItemBuilder itemBuilder = new ItemBuilder(Material.PAPER);
 
         if (equipped || unlocked) {
             itemBuilder.name(config.getString(key + "NAME".replace("KEY", equipped ? "EQUIPPED" : "UNLOCKED")));
-            itemBuilder.lore(config.getStringList("ELO.UNLOCKED.LORE")
+            itemBuilder.lore(config.getStringList(KEY + "ELO.UNLOCKED.LORE")
                     .stream()
                     .map(s -> {
                          s = s.replace("<division_bar>", ProgressBar.getBar(5, 1))
@@ -61,8 +64,8 @@ public class ProfileELODivisionsButton extends Button {
             return itemBuilder.build();
         }
 
-        itemBuilder.name(config.getString("ELO.LOCKED.NAME"));
-        itemBuilder.lore(config.getStringList("ELO.LOCKED.LORE")
+        itemBuilder.name(config.getString(KEY + "ELO.LOCKED.NAME"));
+        itemBuilder.lore(config.getStringList(KEY + "ELO.LOCKED.LORE")
                 .stream()
                 .map(s -> {
                      s = s.replace("<division_bar>", ProgressBar.getBar(profile.getGlobalElo(), division.getMinElo()))

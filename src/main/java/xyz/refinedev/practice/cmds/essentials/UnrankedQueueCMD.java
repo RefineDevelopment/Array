@@ -9,6 +9,7 @@ import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.queue.menu.QueueSelectKitMenu;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
+import xyz.refinedev.practice.util.menu.Menu;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -28,8 +29,8 @@ public class UnrankedQueueCMD {
     public void queue(@Sender Player player) {
         Profile profile = plugin.getProfileManager().getProfile(player);
         if (!profile.isBusy()) {
-            QueueSelectKitMenu menu = new QueueSelectKitMenu(QueueType.UNRANKED);
-            menu.openMenu(player);
+            Menu menu = new QueueSelectKitMenu(QueueType.UNRANKED);
+            plugin.getMenuHandler().openMenu(menu, player);
         } else {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
         }

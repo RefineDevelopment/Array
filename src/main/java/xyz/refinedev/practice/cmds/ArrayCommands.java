@@ -169,7 +169,7 @@ public class ArrayCommands {
     @Command(name = "worlds", aliases = "world", desc = "Open a Worlds GUI to Teleport to Different Worlds")
     @Require("array.essentials.admin")
     public void worlds(@Sender Player player) {
-        Menu menu = new WorldsMenu(plugin);
+        Menu menu = new WorldsMenu();
         plugin.getMenuHandler().openMenu(menu, player);
     }
 

@@ -43,7 +43,7 @@ public class CommandsManager {
         drink.register(new ArrayCommands(plugin), "array", "practice");
         drink.register(new ArenaCommands(plugin), "arena", "arenas");
         drink.register(new KitCommands(plugin), "kit", "kits");
-        drink.register(new DuelCommands(plugin, plugin.getCoreHandler()), "duel");
+        drink.register(new DuelCommands(plugin), "duel");
         drink.register(new RematchCommand(plugin), "rematch");
         drink.register(new PartyCommands(plugin), "party", "p");
         drink.register(new TournamentCommands(plugin), "tournament", "tourney");
@@ -66,7 +66,6 @@ public class CommandsManager {
         drink.register(new OpenMenuCMD(plugin), "openmenu", "menu", "menus");
         drink.register(new StatsCommand(plugin), "stats", "elo", "statistics");
         drink.register(new SpectateMenuCommand(plugin), "specmenu", "spectatemenu");
-        drink.register(new TestCommand(), "test");
 
         //Essentials Commands
         drink.register(new UnrankedQueueCMD(plugin), "unrankedqueue", "queue", "queue unranked");

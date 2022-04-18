@@ -13,11 +13,6 @@ import java.util.Map;
 
 public class PartyListMenu extends Menu {
 
-
-    public PartyListMenu(Array plugin) {
-        super(plugin);
-    }
-
     /**
      * Get menu's title
      *
@@ -38,8 +33,8 @@ public class PartyListMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(Array plugin, Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
-        Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
-        Party party = this.getPlugin().getPartyManager().getPartyByUUID(profile.getParty());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
+        Party party = plugin.getPartyManager().getPartyByUUID(profile.getParty());
         party.getPlayers().forEach(pplayer -> buttons.put(buttons.size(), new PartyListButton(pplayer)));
         return buttons;
     }

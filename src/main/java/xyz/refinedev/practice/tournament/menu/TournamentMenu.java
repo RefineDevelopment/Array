@@ -21,7 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TournamentMenu extends Menu {
 
-    private Kit kit = this.getKit();
+    private Kit kit;
     private int teamSize = 1;
     private int maxPlayers = 10;
 

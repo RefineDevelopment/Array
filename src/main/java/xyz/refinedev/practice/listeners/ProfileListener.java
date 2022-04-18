@@ -20,6 +20,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.material.TrapDoor;
 import org.bukkit.projectiles.ProjectileSource;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.match.Match;
 import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.profile.Profile;
@@ -36,7 +37,7 @@ public class ProfileListener implements Listener {
     public void onCommand(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         ProfileManager profileManager = this.plugin.getProfileManager();
-     Profile profile = profileManager.getProfile(player.getUniqueId());
+        Profile profile = profileManager.getProfile(player.getUniqueId());
 
         if (profile.getKitEditor().isRenaming()) {
             event.getPlayer().sendMessage(ChatColor.RED + "A kit name cannot start with \"/\".");

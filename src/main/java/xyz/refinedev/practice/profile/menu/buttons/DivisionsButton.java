@@ -1,6 +1,7 @@
 package xyz.refinedev.practice.profile.menu.buttons;
 
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -33,7 +34,7 @@ public class DivisionsButton extends Button {
      */
     @Override
     public ItemStack getButtonItem(Array plugin, Player player) {
-        return null;
+        return new ItemStack(Material.BANNER);
     }
 
     /**
@@ -45,8 +46,7 @@ public class DivisionsButton extends Button {
      */
     @Override
     public void clicked(Array plugin, Player player, ClickType clickType) {
-        FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_divisions");
-        Menu menu = new ProfileDivisionsMenu(config);
+        Menu menu = new ProfileDivisionsMenu(profile);
         plugin.getMenuHandler().openMenu(menu, player);
     }
 

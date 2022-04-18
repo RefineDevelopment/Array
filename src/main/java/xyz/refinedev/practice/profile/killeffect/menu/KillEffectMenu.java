@@ -22,8 +22,7 @@ import java.util.Map;
 
 public class KillEffectMenu extends Menu {
 
-    public KillEffectMenu(Array plugin) {
-        super(plugin);
+    public KillEffectMenu() {
         this.setPlaceholder(true);
     }
 
@@ -54,7 +53,7 @@ public class KillEffectMenu extends Menu {
         Map<Integer, Button> buttons = new HashMap<>();
         for ( int i = 10; i < 17; i++) {
             int position = i;
-            Arrays.stream(KillEffect.values()).forEach(effect -> buttons.put(position, new KillEffectButton(this.getPlugin(), effect)));
+            Arrays.stream(KillEffect.values()).forEach(effect -> buttons.put(position, new KillEffectButton(effect)));
         }
         return buttons;
     }

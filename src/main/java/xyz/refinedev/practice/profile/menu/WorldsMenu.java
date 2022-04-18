@@ -23,10 +23,6 @@ import java.util.Map;
 
 public class WorldsMenu extends Menu {
 
-    public WorldsMenu(Array plugin) {
-        super(plugin);
-    }
-
     @Override
     public String getTitle(Array plugin, Player player) {
         return CC.translate("&aWorlds");

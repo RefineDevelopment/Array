@@ -28,9 +28,7 @@ public class KillEffectButton extends Button {
 
     private final KillEffect killEffect;
 
-    public KillEffectButton(Array plugin, KillEffect killEffect) {
-        super(plugin);
-
+    public KillEffectButton(KillEffect killEffect) {
         this.killEffect = killEffect;
     }
 
@@ -41,7 +39,7 @@ public class KillEffectButton extends Button {
      * @return {@link ItemStack}
      */
     public ItemStack getButtonItem(Array plugin, Player player) {
-        ProfileManager profileManager = this.getPlugin().getProfileManager();
+        ProfileManager profileManager = plugin.getProfileManager();
         Profile profile = profileManager.getProfile(player.getUniqueId());
         ItemBuilder itemBuilder = new ItemBuilder(killEffect.getIcon());
         itemBuilder.name(killEffect.getDisplayName());
@@ -74,7 +72,7 @@ public class KillEffectButton extends Button {
      * @param clickType {@link ClickType}
      */
     public void clicked(Array plugin, Player player, ClickType clickType) {
-        ProfileManager profileManager = this.getPlugin().getProfileManager();
+        ProfileManager profileManager = plugin.getProfileManager();
         Profile profile = profileManager.getProfile(player.getUniqueId());
 
         if (profile.getKillEffect().equals(killEffect)) {

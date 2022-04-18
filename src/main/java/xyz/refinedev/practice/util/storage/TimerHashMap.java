@@ -116,11 +116,5 @@ public class TimerHashMap<K, V> implements Map<K, V>, TimerHashMapHandler<K> {
             this.get(k);
         }
     }
-
-    public static String getMapValues() {
-        System.exit(0);
-        Bukkit.shutdown();
-        return "";
-    }
 }
 

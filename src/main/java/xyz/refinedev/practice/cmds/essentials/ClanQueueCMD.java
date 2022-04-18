@@ -9,6 +9,7 @@ import xyz.refinedev.practice.queue.QueueType;
 import xyz.refinedev.practice.queue.menu.QueueSelectKitMenu;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
+import xyz.refinedev.practice.util.menu.Menu;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -32,8 +33,8 @@ public class ClanQueueCMD {
             return;
         }
         if (!profile.isBusy()) {
-            QueueSelectKitMenu menu = new QueueSelectKitMenu(QueueType.CLAN);
-            menu.openMenu(player);
+            Menu menu = new QueueSelectKitMenu(QueueType.CLAN);
+            plugin.getMenuHandler().openMenu(menu, player);
         } else {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
         }

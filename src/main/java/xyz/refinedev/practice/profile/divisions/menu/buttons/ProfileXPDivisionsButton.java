@@ -9,6 +9,7 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.profile.divisions.ProfileDivision;
 import xyz.refinedev.practice.util.chat.ProgressBar;
+import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
@@ -27,9 +28,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProfileXPDivisionsButton extends Button {
 
+    private static final String KEY = "PROFILE_DIVISIONS.";
+
     private final Profile profile;
     private final ProfileDivision division;
-    private final FoldersConfigurationFile config;
+    private final BasicConfigurationFile config;
 
     /**
      * Get itemStack of the Button
@@ -47,8 +50,8 @@ public class ProfileXPDivisionsButton extends Button {
         ItemBuilder itemBuilder = new ItemBuilder(Material.PAPER);
 
         if (equipped || unlocked) {
-            itemBuilder.name(config.getString("XP.UNLOCKED.NAME"));
-            itemBuilder.lore(config.getStringList("XP.UNLOCKED.LORE")
+            itemBuilder.name(config.getString(KEY + "XP.UNLOCKED.NAME"));
+            itemBuilder.lore(config.getStringList(KEY + "XP.UNLOCKED.LORE")
                     .stream()
                     .map(s -> {
                         s = s.replace("<division_bar>", ProgressBar.getBar(5, 1))
@@ -61,8 +64,8 @@ public class ProfileXPDivisionsButton extends Button {
             return itemBuilder.build();
         }
 
-        itemBuilder.name(config.getString("XP.LOCKED.NAME"));
-        itemBuilder.lore(config.getStringList("XP.LOCKED.LORE")
+        itemBuilder.name(config.getString(KEY + "XP.LOCKED.NAME"));
+        itemBuilder.lore(config.getStringList(KEY + "XP.LOCKED.LORE")
                 .stream()
                 .map(s -> {
                     s = s.replace("<division_bar>", ProgressBar.getBar(profileDivision.getExperience(), division.getExperience()))

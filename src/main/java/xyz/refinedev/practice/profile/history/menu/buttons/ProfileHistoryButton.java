@@ -2,6 +2,7 @@ package xyz.refinedev.practice.profile.history.menu.buttons;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.menu.Button;
 
 /**

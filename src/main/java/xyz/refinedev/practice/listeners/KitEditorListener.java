@@ -17,6 +17,7 @@ import xyz.refinedev.practice.kit.kiteditor.KitEditor;
 import xyz.refinedev.practice.kit.kiteditor.menu.KitManagementMenu;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
+import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.other.StringUtils;
 
 @RequiredArgsConstructor
@@ -48,8 +49,8 @@ public class KitEditorListener implements Listener {
             kitEditor.setRename(false);
 
             if (!profile.isInFight()) {
-                KitManagementMenu menu = new KitManagementMenu(kitEditor.getSelectedKit());
-                menu.openMenu(player);
+                Menu menu = new KitManagementMenu(kitEditor.getSelectedKit());
+                plugin.getMenuHandler().openMenu(menu, player);
             }
 
             player.sendMessage(Locale.KITEDITOR_RENAMED.toString().replace("<custom_name>", customName));

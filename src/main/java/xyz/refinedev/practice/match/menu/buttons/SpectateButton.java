@@ -12,6 +12,7 @@ import xyz.refinedev.practice.match.team.TeamPlayer;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.inventory.ItemBuilder;
 import xyz.refinedev.practice.util.menu.Button;
+import xyz.refinedev.practice.util.menu.Menu;
 import xyz.refinedev.practice.util.other.SkullCreator;
 
 import java.util.stream.Collectors;
@@ -84,9 +85,8 @@ public class SpectateButton extends Button {
 
                 if (matchSnapshot == null) matchSnapshot = new MatchSnapshot(teamPlayer);
 
-                MatchDetailsMenu menu = new MatchDetailsMenu(matchSnapshot, null);
-                menu.openMenu(player);
-                break;
+                Menu menu = new MatchDetailsMenu(matchSnapshot, null);
+                plugin.getMenuHandler().openMenu(menu, player);
             }
         }
     }

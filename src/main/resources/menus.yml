@@ -21,7 +21,7 @@ EVENT_KIT_MENU:
   LORE:
     - ""
     - "&c[Click to Select this Kit]"
-MATCH_DETAILS_MENU:
+MATCH_DETAILS:
   TITLE: "&7&lInventory of &c<snapshot_name>"
   BUTTONS:
     SWITCH_INVENTORY_BUTTON_1:
@@ -108,7 +108,7 @@ PARTY_SETTINGS:
         - "&8 • &fState: &c<party_state>"
         - ""
         - "&7&o(( Click to Change ))"
-PROFILE_DIVISONS:
+PROFILE_DIVISIONS:
   TITLE: "Profile Divisions"
   SIZE: 54 #Max Items per page as this menu is paginated
   BUTTONS:
@@ -419,3 +419,17 @@ PROFILE_SETTINGS:
       DISABLED:
         SELECTED: " &c▶ &fDisable Drop Protect"
         NOT_SELECTED: " &8&l▶ &fDisable Drop Protect"
+    KILLEFFECTS:
+      SLOT: 11
+      NAME: "&c&lView Kill Effect Settings"
+      MATERIAL: SKULL
+      DATA: 0
+      LORE:
+        - ""
+        - "&7&o(( Click to view ))"
+
+PROFILE_MENU:
+  TITLE: "<player_name>'s Profile"
+  SIZE: 54
+  PLACEHOLDER: false
+  BUTTONS:

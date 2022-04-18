@@ -1,8 +1,15 @@
 package xyz.refinedev.practice.profile.menu;
 
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
 import xyz.refinedev.practice.Array;
+import xyz.refinedev.practice.managers.ProfileManager;
+import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.profile.divisions.menu.ProfileDivisionsMenu;
+import xyz.refinedev.practice.profile.menu.buttons.DivisionsButton;
 import xyz.refinedev.practice.util.config.impl.FoldersConfigurationFile;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
@@ -22,6 +29,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ProfileMenu extends Menu {
 
+    private static final String KEY = "PROFILE_MENU.";
+
     //TODO: Add Statistics Button, Divisions Button, History Button, Global Stats being displayed normally in the menu
     //TODO: Display the clan, the player is in and if he's in a party then show it and if he's in a match show it and have an option to go and spectate it
     //TODO: Same goes for events and tournaments
@@ -36,7 +45,7 @@ public class ProfileMenu extends Menu {
      */
     @Override
     public String getTitle(Array plugin, Player player) {
-        return this.getConfig().getString("TITLE");
+        return this.getConfig().getString(KEY + "TITLE");
     }
 
     /**
@@ -45,7 +54,7 @@ public class ProfileMenu extends Menu {
      * @return {@link Integer}
      */
     public int getSize() {
-        return 54;
+        return this.getConfig().getInteger(KEY + "SIZE");
     }
 
     /**
@@ -57,6 +66,10 @@ public class ProfileMenu extends Menu {
     @Override
     public Map<Integer, Button> getButtons(Array plugin, Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
+        ProfileManager profileManager = plugin.getProfileManager();
+        Profile profile = profileManager.getProfile(target.getUniqueId());
+
+        buttons.put(27, new DivisionsButton(profile));
 
         return buttons;
     }

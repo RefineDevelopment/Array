@@ -29,7 +29,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ProfileDivisionsMenu extends PaginatedMenu {
 
-    private final FoldersConfigurationFile config;
+    private static final String KEY = "PROFILE_DIVISIONS.";
+    private final Profile target;
 
     /**
      * @param player player viewing the inventory
@@ -37,7 +38,7 @@ public class ProfileDivisionsMenu extends PaginatedMenu {
      */
     @Override
     public String getPrePaginatedTitle(Array plugin, Player player) {
-        return config.getString("TITLE");
+        return this.getConfig().getString(KEY + "TITLE");
     }
 
     /**
@@ -47,7 +48,7 @@ public class ProfileDivisionsMenu extends PaginatedMenu {
      */
     @Override
     public int getMaxItemsPerPage(Player player) {
-        return config.getInteger("SIZE");
+        return this.getConfig().getInteger(KEY + "SIZE");
     }
 
     /**
@@ -58,18 +59,14 @@ public class ProfileDivisionsMenu extends PaginatedMenu {
     public Map<Integer, Button> getAllPagesButtons(Array plugin, Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        ProfileManager profileManager = plugin.getProfileManager();
         DivisionsManager divisionManager = plugin.getDivisionsManager();
 
-        Profile profile = profileManager.getProfile(player.getUniqueId());
-        FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_divisions");
-
         if (divisionManager.isXPBased()) {
-            ProfileDivision division = divisionManager.getDivisionByXP(profile.getExperience());
-            buttons.put(buttons.size(), new ProfileXPDivisionsButton(profile, division, config));
+            ProfileDivision division = divisionManager.getDivisionByXP(target.getExperience());
+            buttons.put(buttons.size(), new ProfileXPDivisionsButton(target, division, this.getConfig()));
         } else {
-            ProfileDivision division = divisionManager.getDivisionByELO(profile.getGlobalElo());
-            buttons.put(buttons.size(), new ProfileELODivisionsButton(profile, division, config));
+            ProfileDivision division = divisionManager.getDivisionByELO(target.getGlobalElo());
+            buttons.put(buttons.size(), new ProfileELODivisionsButton(target, division, this.getConfig()));
         }
         return buttons;
     }

@@ -23,12 +23,12 @@ public class PageButton extends Button {
     @Override
     public ItemStack getButtonItem(Array plugin, Player player) {
         ItemBuilder builder = new ItemBuilder(Material.CARPET);
-        if (this.hasNext(player)) {
+        if (this.hasNext(plugin, player)) {
             builder.name(this.mod > 0 ?  "§a⟶" : "§c⟵");
         } else {
             builder.name(ChatColor.GRAY + (this.mod > 0 ? "Last page" : "First page"));
         }
-        builder.durability(this.hasNext(player) ? 11 : 7);
+        builder.durability(this.hasNext(plugin, player) ? 11 : 7);
 
         return builder.build();
     }
@@ -43,17 +43,17 @@ public class PageButton extends Button {
             return;
         }
 
-        if (this.hasNext(player)) {
-            this.menu.modPage(player, this.mod);
+        if (this.hasNext(plugin, player)) {
+            this.menu.modPage(plugin, player, this.mod);
             Button.playNeutral(player);
             return;
         }
         Button.playFail(player);
     }
 
-    private boolean hasNext(Player player) {
+    private boolean hasNext(Array plugin, Player player) {
         int pg = this.menu.getPage() + this.mod;
-        return pg > 0 && this.menu.getPages(player) >= pg;
+        return pg > 0 && this.menu.getPages(plugin, player) >= pg;
     }
 
 }

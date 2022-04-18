@@ -26,7 +26,7 @@ public class MenuUpdateTask implements Runnable {
 
             if (player != null) {
                 if (value.isAutoUpdate()) {
-                    value.openMenu(player);
+                    plugin.getMenuHandler().openMenu(value, player);
                 }
             }
         });

@@ -67,6 +67,7 @@ public class MatchManager {
         new MatchCooldownTask(plugin).runTaskTimerAsynchronously(plugin, 1L, 1L);
 
         plugin.getServer().getWorlds().forEach(world -> {
+            world.setGameRuleValue("doDayLightCycle", "false");
             world.setGameRuleValue("doWeatherCycle", "false");
             world.setGameRuleValue("doMobSpawning", "false");
 
@@ -133,25 +134,13 @@ public class MatchManager {
         if (kit.getGameRules().isBuild() || kit.getGameRules().isShowHealth()) {
             for ( Player otherPlayerTeam : match.getPlayers() ) {
                 Objective objective = otherPlayerTeam.getScoreboard().getObjective(DisplaySlot.BELOW_NAME);
-                if (objective != null)
-                    objective.unregister();
+                if (objective != null) objective.unregister();
             }
         }
 
         for ( MatchSnapshot snapshot : match.getSnapshots() ) {
             snapshot.setCreated(System.currentTimeMillis());
             plugin.getMatchManager().getSnapshotMap().put(snapshot.getTeamPlayer().getUniqueId(), snapshot);
-        }
-
-        for ( Player player : match.getPlayers() ) {
-            Profile profile = plugin.getProfileManager().getProfile(player);
-
-            plugin.getSpigotHandler().resetKnockback(player);
-            player.setMaximumNoDamageTicks(20);
-
-            if (kit.getGameRules().isParkour()) {
-                profile.getParkourCheckpoints().clear();
-            }
         }
 
         for ( TeamPlayer gamePlayer : match.getTeamPlayers()) {
@@ -171,11 +160,18 @@ public class MatchManager {
             this.removeSpectator(match, player);
         }
 
-        if (plugin.getConfigHandler().isRATINGS_ENABLED()) {
-            for ( Player player : match.getPlayers() ) {
-                ProfileManager profileManager = this.plugin.getProfileManager();
-        Profile profile = profileManager.getProfile(player.getUniqueId());
+        for ( Player player : match.getPlayers() ) {
+            ProfileManager profileManager = this.plugin.getProfileManager();
+            Profile profile = profileManager.getProfile(player.getUniqueId());
 
+            plugin.getSpigotHandler().resetKnockback(player);
+            player.setMaximumNoDamageTicks(20);
+
+            if (kit.getGameRules().isParkour()) {
+                profile.getParkourCheckpoints().clear();
+            }
+
+            if (plugin.getConfigHandler().isRATINGS_ENABLED()) {
                 profile.setIssueRating(true);
                 profile.setRatingArena(arena);
 
@@ -183,7 +179,9 @@ public class MatchManager {
             }
         }
 
-        if (match.getArena().isStandalone()) match.getArena().restoreSnapshot();
+        if (match.getArena().isStandalone()) {
+            match.getArena().restoreSnapshot();
+        }
         match.getArena().setActive(false);
         match.getEntities().forEach(Entity::remove);
 

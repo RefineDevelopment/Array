@@ -361,21 +361,12 @@ public class MenuHandler {
     public Menu findMenu(Player player, String name) {
         ProfileManager profileManager = this.plugin.getProfileManager();
         Profile profile = profileManager.getProfile(player.getUniqueId());
-        switch (name) {
-            case "kill_effects": return new KillEffectMenu(plugin);
-            case "party_events": return new PartyEventMenu(plugin);
-            case "party_settings": return new PartySettingsMenu(plugin);
-            case "profile_menu": return new ProfileMenu(player);
-            case "profile_settings": return new ProfileSettingsMenu();
-            default: {
-                MenuData menuData = this.getMenuDataByName(name);
-                if (menuData == null) {
-                    player.sendMessage(Locale.ERROR_MENU.toString());
-                    return null;
-                }
-                return menuData.isPaginated() ?  new CustomPaginatedMenu(menuData) : new CustomMenu(menuData);
-            }
+        MenuData menuData = this.getMenuDataByName(name);
+        if (menuData == null) {
+            player.sendMessage(Locale.ERROR_MENU.toString());
+            return null;
         }
+        return menuData.isPaginated() ?  new CustomPaginatedMenu(menuData) : new CustomMenu(menuData);
     }
 
 }

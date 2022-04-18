@@ -3,6 +3,7 @@ package xyz.refinedev.practice.util.menu.button;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.menu.Button;
 import xyz.refinedev.practice.util.menu.Menu;
 
@@ -23,6 +24,6 @@ public class JumpToMenuButton extends Button {
 
 	@Override
 	public void clicked(Array plugin, Player player, ClickType clickType) {
-		menu.openMenu(player);
+		plugin.getMenuHandler().openMenu(menu, player);
 	}
 }

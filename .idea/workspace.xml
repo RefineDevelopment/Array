@@ -4,34 +4,52 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="98af5f59-0eb8-4224-8bcc-2672b4b8c7c4" name="[/] Remove this too" comment="[+] KillEffectMenu and some refactoring">
-      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/TestCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/kit/kiteditor/menu/buttons/KitSelectButton.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/menu/button/QueueKitButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+    <list default="true" id="98af5f59-0eb8-4224-8bcc-2672b4b8c7c4" name="[/] Remove this too" comment="[/] Holograms, Tournaments, Bug Fixes, Menus">
+      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/kit/menu/KitSelectMenu.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/ParticleEffect.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/ReflectionUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Array.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Array.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/clan/Clan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/clan/Clan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ClanCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ClanCommands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/KillEffectCommands.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/PartyCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/PartyCommands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/ClanQueueCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/ClanQueueCMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/KitEditorCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/essentials/KitEditorCMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/MapCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/MapCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/StatsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/standalone/StatsCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/kit/kiteditor/menu/KitEditorSelectKitMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/kit/kiteditor/menu/KitEditorSelectKitMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/duel/menu/buttons/DuelArenaButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/duel/menu/buttons/DuelArenaButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/leaderboards/menu/buttons/StatisticsButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/leaderboards/menu/buttons/StatisticsButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/KitEditorListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/KitEditorListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/ProfileListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/listeners/ProfileListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/ClanManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/ClanManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/CommandsManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/CommandsManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/LeaderboardsManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/LeaderboardsManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/MatchManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/MongoManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/MongoManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/PartyManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/PartyManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/ProfileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/ProfileManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/TournamentManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/TournamentManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/menu/QueueSelectKitMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/queue/menu/QueueSelectKitMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/task/match/MatchCooldownTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/task/match/MatchCooldownTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/EntityHider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/EntityHider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/PlayerUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other/PlayerUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/scoreboard.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/scoreboard.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/divisions/menu/ProfileDivisionsMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/divisions/menu/ProfileDivisionsMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/divisions/menu/buttons/ProfileELODivisionsButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/divisions/menu/buttons/ProfileELODivisionsButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/divisions/menu/buttons/ProfileXPDivisionsButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/divisions/menu/buttons/ProfileXPDivisionsButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/history/menu/ProfileHistoryMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/history/menu/ProfileHistoryMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/history/menu/buttons/ProfileHistoryButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/history/menu/buttons/ProfileHistoryButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/KillEffect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/KillEffect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/menu/KillEffectMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/menu/KillEffectMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/menu/button/KillEffectButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/killeffect/menu/button/KillEffectButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/menu/ProfileMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/menu/ProfileMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/menu/WorldsMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/menu/WorldsMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/menu/buttons/DivisionsButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/menu/buttons/DivisionsButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/menu/buttons/WorldButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/menu/buttons/WorldButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/settings/ProfileSettingsType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/settings/ProfileSettingsType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/settings/menu/SettingsButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/settings/menu/SettingsButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/tournament/menu/TournamentMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/tournament/menu/TournamentMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/tournament/menu/TournamentSelectKitMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/tournament/menu/buttons/TournamentSelectKitButton.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/menu/MenuHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/menu/MenuHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/menu/button/BackButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/menu/button/BackButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/menu/button/DisplayButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/menu/button/DisplayButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/menu/button/JumpToMenuButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/menu/button/JumpToMenuButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/menu/pagination/JumpToPageButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/menu/pagination/JumpToPageButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/menu/pagination/PageButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/menu/pagination/PageButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/storage/TimerHashMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/storage/TimerHashMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/menu/profile_leaderboards.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/menu/profile_menu.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/menu/profile_statistics.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/menu/queue_clan.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/menu/queue_normal.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/menu/queue_ranked.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/menus.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/menus.yml" afterDir="false" />
     </list>
     <list id="3c41a8b3-4728-4d1b-a454-565d875f3ead" name="Default Changelist" comment="I have no idea what I am pushing" />
     <option name="SHOW_DIALOG" value="false" />
@@ -64,14 +82,15 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/settings/ProfileSettingsType.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Locale.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/config/impl/MenuConfigurationFile.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ArenaCommands.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/PartyCommands.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ArrayCommands.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/PartyManager.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ClanCommands.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/menu/MenuHandler.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ArenaCommands.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/Locale.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/ArrayCommands.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/PartyCommands.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/profile/settings/ProfileSettingsType.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/managers/CommandsManager.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/cmds/KitCommands.java" root0="SKIP_INSPECTION" />
   </component>
@@ -105,7 +124,8 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="extract.method.default.visibility" value="private" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../PvP/Practice" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/xyz/refinedev/practice/util/other" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.15174508" />
@@ -113,13 +133,14 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="J:\Minecraft Servers\Source Codes\My Projects\Refine Development\Array\src\main\java\xyz\refinedev\practice\util\other" />
       <recent name="J:\Minecraft Servers\Source Codes\My Projects\Refine Development\Array\src\main\java\xyz\refinedev\practice\util\timer\impl" />
       <recent name="J:\Minecraft Servers\Source Codes\My Projects\Refine Development\Array\src\main\java\xyz\refinedev\practice\util" />
       <recent name="J:\Minecraft Servers\Source Codes\My Projects\Refine Development\Array\src\main\java\xyz\refinedev\practice\util\storage" />
       <recent name="J:\Minecraft Servers\Source Codes\My Projects\Refine Development\Array\src\main\java\xyz\refinedev\practice\event\impl\brackets\solo" />
-      <recent name="J:\Minecraft Servers\Source Codes\My Projects\Refine Development\Array\lib\core" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="J:\Minecraft Servers\Source Codes\My Projects\Refine Development\Array\src\main\resources" />
       <recent name="J:\Minecraft Servers\Source Codes\My Projects\Refine Development\Array\.idea" />
       <recent name="J:\Minecraft Servers\Source Codes\My Projects\Refine Development\Array\lib\core" />
     </key>
@@ -201,20 +222,14 @@
       <workItem from="1645599183269" duration="10699000" />
       <workItem from="1645630664387" duration="923000" />
       <workItem from="1645781210388" duration="15585000" />
-    </task>
-    <task id="LOCAL-00001" summary="[+] Match Recode&#10;[/] Fixed Tournament Bugs &#10;[/] Kill Effects Done &#10;[+] Kill Effects Menu">
-      <created>1628600992379</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1628600992379</updated>
-    </task>
-    <task id="LOCAL-00002" summary="[+] Kill Effect Commands">
-      <created>1629996812722</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1629996812722</updated>
+      <workItem from="1645857403804" duration="167000" />
+      <workItem from="1646064504169" duration="828000" />
+      <workItem from="1646123670273" duration="6615000" />
+      <workItem from="1646809446615" duration="2191000" />
+      <workItem from="1646819409100" duration="26006000" />
+      <workItem from="1647098480293" duration="2269000" />
+      <workItem from="1647150392478" duration="9000" />
+      <workItem from="1650273801198" duration="4198000" />
     </task>
     <task id="LOCAL-00003" summary="[+] Fixed Stupid Performance Issues">
       <created>1630191786710</created>
@@ -545,7 +560,21 @@
       <option name="project" value="LOCAL" />
       <updated>1645795111696</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="[/] Menu Fixes">
+      <created>1645857568581</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1645857568581</updated>
+    </task>
+    <task id="LOCAL-00051" summary="[/] Holograms, Tournaments, Bug Fixes, Menus">
+      <created>1647099300960</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1647099300961</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -565,8 +594,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="[/] Changes to how things are stored&#10;[+] Added KoTH&#10;[/] Cleaned Up Code" />
-    <MESSAGE value="[+] Huge Recode regarding how events works" />
     <MESSAGE value="[/] Semi-Completed my profile recode to adjust to json" />
     <MESSAGE value="[+] Fixed a lot of convention code problems" />
     <MESSAGE value="[/] Bug Fixes" />
@@ -590,7 +617,9 @@
     <MESSAGE value="[/] Better detection for no pearl zones" />
     <MESSAGE value="I have no idea what I am pushing" />
     <MESSAGE value="[+] KillEffectMenu and some refactoring" />
-    <option name="LAST_COMMIT_MESSAGE" value="[+] KillEffectMenu and some refactoring" />
+    <MESSAGE value="[/] Menu Fixes" />
+    <MESSAGE value="[/] Holograms, Tournaments, Bug Fixes, Menus" />
+    <option name="LAST_COMMIT_MESSAGE" value="[/] Holograms, Tournaments, Bug Fixes, Menus" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -9,6 +9,7 @@ import xyz.refinedev.practice.clan.Clan;
 import xyz.refinedev.practice.clan.ClanRoleType;
 import xyz.refinedev.practice.clan.meta.ClanInvite;
 import xyz.refinedev.practice.clan.meta.ClanProfile;
+import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.command.annotation.Command;

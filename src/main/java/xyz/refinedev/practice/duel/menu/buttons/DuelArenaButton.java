@@ -24,9 +24,7 @@ public class DuelArenaButton extends Button {
     private final Menu menu;
     private final Arena arena;
 
-    public DuelArenaButton(Array plugin, Menu menu, Arena arena) {
-        super(plugin);
-
+    public DuelArenaButton(Menu menu, Arena arena) {
         this.menu = menu;
         this.arena = arena;
     }
@@ -53,7 +51,7 @@ public class DuelArenaButton extends Button {
      */
     @Override
     public void clicked(Array plugin, Player player, ClickType clickType) {
-        Profile profile = this.getPlugin().getProfileManager().getProfile(player.getUniqueId());
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
 
         profile.getDuelProcedure().setArena(arena);
         profile.getDuelProcedure().send();

@@ -19,14 +19,10 @@ import java.util.Map;
 
 public class ProfileHistoryMenu extends Menu {
 
-    private final Array plugin;
-    private final FoldersConfigurationFile config;
+    private static final String KEY = "PROFILE_HISTORY";
 
     public ProfileHistoryMenu(Array plugin) {
-        super(plugin);
-
-        this.plugin = plugin;
-        this.config = plugin.getMenuHandler().getConfigByName("profile_history");
+        plugin.getMenuHandler().loadMenu(this, "PROFILE_HISTORY");
     }
 
     /**
@@ -37,7 +33,7 @@ public class ProfileHistoryMenu extends Menu {
      */
     @Override
     public String getTitle(Array plugin, Player player) {
-        return config.getString("TITLE");
+        return this.getConfig().getString(KEY + ".TITLE");
     }
 
     /**
@@ -47,7 +43,7 @@ public class ProfileHistoryMenu extends Menu {
      */
     @Override
     public int getSize() {
-        return config.getInteger("SIZE");
+        return this.getConfig().getInteger(KEY + ".SIZE");
     }
 
     /**

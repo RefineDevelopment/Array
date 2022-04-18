@@ -45,7 +45,7 @@ public class DuelSelectArenaMenu extends PaginatedMenu {
         }).collect(Collectors.toList());
 
         for ( Arena arena : arenas) {
-            buttons.put(buttons.size(), new DuelArenaButton(plugin, this, arena));
+            buttons.put(buttons.size(), new DuelArenaButton(this, arena));
         }
 
         return buttons;

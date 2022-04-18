@@ -7,6 +7,7 @@ import xyz.refinedev.practice.profile.menu.ProfileMenu;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.OptArg;
 import xyz.refinedev.practice.util.command.annotation.Sender;
+import xyz.refinedev.practice.util.menu.Menu;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -25,9 +26,11 @@ public class StatsCommand {
     @Command(name = "", desc = "View Statistics of your profile")
     public void stats(@Sender Player player, @OptArg() Player target) {
         if (target == null) {
-            new ProfileMenu(player).openMenu(player);
+            Menu menu = new ProfileMenu(player);
+            plugin.getMenuHandler().openMenu(menu, player);
             return;
         }
-        new ProfileMenu(target).openMenu(player);
+        Menu menu = new ProfileMenu(target);
+        plugin.getMenuHandler().openMenu(menu, player);
     }
 }

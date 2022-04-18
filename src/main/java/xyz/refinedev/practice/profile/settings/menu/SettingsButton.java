@@ -9,6 +9,7 @@ import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.Locale;
 import xyz.refinedev.practice.managers.ProfileManager;
 import xyz.refinedev.practice.profile.Profile;
+import xyz.refinedev.practice.profile.killeffect.menu.KillEffectMenu;
 import xyz.refinedev.practice.profile.settings.ProfileSettingsType;
 import xyz.refinedev.practice.util.chat.CC;
 import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
@@ -142,6 +143,11 @@ public class SettingsButton extends Button {
                     lines.add(CC.translate(text));
                 }
                 break;
+            case KILLEFFECTS:
+                for ( String text : config.getStringList(key + "LORE" )) {
+                    lines.add(CC.translate(text));
+                }
+                break;
             case TOGGLEDROPPROTECT:
                 if (player.hasPermission("array.profile.dropprotect")) {
                     for ( String text : config.getStringList(key + "LORE_PERMISSION" )) {
@@ -187,16 +193,6 @@ public class SettingsButton extends Button {
                 Button.playSuccess(player);
                 profile.getSettings().setReceiveDuelRequests(!profile.getSettings().isReceiveDuelRequests());
                 break;
-            case TOGGLEPINGFACTOR:
-                if (player.hasPermission("array.profile.pingfactor")) {
-                    Button.playSuccess(player);
-                    profile.getSettings().setPingFactor(!profile.getSettings().isPingFactor());
-                } else {
-                    Button.playFail(player);
-                    player.closeInventory();
-                    Locale.SETTING_NOPERM.toList().forEach(line -> player.sendMessage(line.replace("<store>", plugin.getConfigHandler().getSTORE())));
-                }
-                break;
             case TOGGLESPECTATORS:
                 Button.playSuccess(player);
                 profile.getSettings().setAllowSpectators(!profile.getSettings().isAllowSpectators());
@@ -222,6 +218,16 @@ public class SettingsButton extends Button {
                 profile.getSettings().setShowPlayers(!profile.getSettings().isShowPlayers());
                 plugin.getProfileManager().handleVisibility(profile);
                 break;
+            case TOGGLEPINGFACTOR:
+                if (player.hasPermission("array.profile.pingfactor")) {
+                    Button.playSuccess(player);
+                    profile.getSettings().setPingFactor(!profile.getSettings().isPingFactor());
+                } else {
+                    Button.playFail(player);
+                    player.closeInventory();
+                    Locale.SETTING_NOPERM.toList().forEach(line -> player.sendMessage(line.replace("<store>", plugin.getConfigHandler().getSTORE())));
+                }
+                break;
             case TOGGLEDROPPROTECT:
                 if (player.hasPermission("array.profile.dropprotect")) {
                     Button.playSuccess(player);
@@ -231,6 +237,10 @@ public class SettingsButton extends Button {
                     player.closeInventory();
                     Locale.SETTING_NOPERM.toList().forEach(line -> player.sendMessage(line.replace("<store>", plugin.getConfigHandler().getSTORE())));
                 }
+                break;
+            case KILLEFFECTS:
+                KillEffectMenu menu = new KillEffectMenu();
+                plugin.getMenuHandler().openMenu(menu, player);
                 break;
         }
         plugin.getProfileManager().save(profile);

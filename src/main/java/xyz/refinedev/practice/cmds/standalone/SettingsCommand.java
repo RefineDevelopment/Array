@@ -25,8 +25,7 @@ public class SettingsCommand {
 
     @Command(name = "", desc = "Open Array Settings Menu")
     public void settings(@Sender Player player) {
-        FoldersConfigurationFile config = plugin.getMenuHandler().getConfigByName("profile_settings");
-        Menu menu = new ProfileSettingsMenu(config);
+        Menu menu = new ProfileSettingsMenu();
         plugin.getMenuHandler().openMenu(menu, player);
     }
 }

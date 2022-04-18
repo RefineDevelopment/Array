@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.refinedev.practice.Array;
 import xyz.refinedev.practice.util.menu.Button;
 
 import java.util.Arrays;
@@ -39,7 +40,7 @@ public class JumpToPageButton extends Button {
 
     @Override
     public void clicked(Array plugin, Player player, ClickType clickType) {
-        this.menu.modPage(player, this.page - this.menu.getPage());
+        this.menu.modPage(plugin, player, this.page - this.menu.getPage());
         Button.playNeutral(player);
     }
 

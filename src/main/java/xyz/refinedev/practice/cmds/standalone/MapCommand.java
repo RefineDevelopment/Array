@@ -32,7 +32,7 @@ public class MapCommand {
         if (profile.isInFight()) {
             player.sendMessage(CC.translate("&fMap: &a" + match.getArena().getDisplayName()));
         } else {
-            player.sendMessage(Locale.ERROR_NOTMATCH.toString());
+            player.sendMessage(Locale.ERROR_SELF_NOT_IN_MATCH.toString());
         }
     }
 }

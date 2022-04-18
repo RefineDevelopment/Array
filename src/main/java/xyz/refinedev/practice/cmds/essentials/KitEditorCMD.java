@@ -8,6 +8,7 @@ import xyz.refinedev.practice.kit.kiteditor.menu.KitEditorSelectKitMenu;
 import xyz.refinedev.practice.profile.Profile;
 import xyz.refinedev.practice.util.command.annotation.Command;
 import xyz.refinedev.practice.util.command.annotation.Sender;
+import xyz.refinedev.practice.util.menu.Menu;
 
 /**
  * This Project is property of Refine Development © 2021
@@ -31,7 +32,7 @@ public class KitEditorCMD {
             player.sendMessage(Locale.ERROR_NOTABLE.toString());
             return;
         }
-        KitEditorSelectKitMenu menu = new KitEditorSelectKitMenu(plugin);
-        menu.openMenu(player);
+        Menu menu = new KitEditorSelectKitMenu();
+        plugin.getMenuHandler().openMenu(menu, player);
     }
 }
