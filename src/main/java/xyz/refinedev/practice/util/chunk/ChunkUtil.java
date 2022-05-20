@@ -9,12 +9,8 @@ import net.minecraft.server.v1_8_R3.NibbleArray;
 import java.lang.reflect.Field;
 
 /**
- * This Project is property of Refine Development © 2021
- * Redistribution of this Project is not allowed
- *
- * @author Drizzy
- * Created: 11/4/2021
- * Project: Array
+ * @author GatoGamer
+ * Project: NyaChunk
  */
 
 @UtilityClass
@@ -56,9 +52,6 @@ public class ChunkUtil {
     public void setField(String fieldName, Object clazz, Object value) {
         Field field = clazz.getClass().getDeclaredField(fieldName);
         field.setAccessible(true);
-        Field modifiers = Field.class.getDeclaredField("modifiers");
-        modifiers.setAccessible(true);
-        modifiers.setInt(field, field.getModifiers() & 0xFFFFFFEF);
         field.set(clazz, value);
     }
 

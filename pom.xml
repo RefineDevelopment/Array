@@ -85,14 +85,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--Tablist Handler-->
-        <dependency>
-            <groupId>xyz.refinedev.tablist</groupId>
-            <artifactId>TablistAPI</artifactId>
-            <version>1.6</version>
-            <scope>compile</scope>
-        </dependency>
-
         <!--Hologram Handler-->
         <dependency>
             <groupId>com.gmail.filoghost</groupId>

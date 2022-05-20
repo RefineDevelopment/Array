@@ -1,4 +1,4 @@
-package xyz.refinedev.practice.adapters;
+/*package xyz.refinedev.practice.adapters;
 
 import lombok.RequiredArgsConstructor;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -27,14 +27,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * This Project is the property of Refine Development © 2021
- * Redistribution of this Project is not allowed
- *
- * @author Drizzy
- * Created at 5/20/2021
- * Project: Array
- */
+import javafx.scene.control.Skin;
+import lombok.RequiredArgsConstructor;
+import xyz.refinedev.practice.util.chat.CC;
+import xyz.refinedev.practice.util.config.impl.BasicConfigurationFile;
 
 @RequiredArgsConstructor
 public class TablistAdapter implements TabAdapter {
@@ -42,34 +38,16 @@ public class TablistAdapter implements TabAdapter {
     private final Array plugin;
     private final BasicConfigurationFile config;
 
-    /**
-     * Get the tab header for a player
-     *
-     * @param player the player
-     * @return {@link String}
-     */
     @Override
     public String getHeader(Player player) {
         return String.join("\n", config.getStringList("TABLIST.HEADER"));
     }
 
-    /**
-     * Get the tab footer for a player
-     *
-     * @param player the player
-     * @return {@link String}
-     */
     @Override
     public String getFooter(Player player) {
         return String.join( "\n", config.getStringList("TABLIST.FOOTER"));
     }
 
-    /**
-     * Get the tab lines for a player.
-     *
-     * @param player The player viewing the tablist
-     * @return {@link List<TabEntry>}
-     */
     @Override
     public List<TabEntry> getLines(Player player) {
         List<TabEntry> entries = new ArrayList<>();
@@ -367,16 +345,7 @@ public class TablistAdapter implements TabAdapter {
                     entries.add(finalEntry);
                 }
             }
-            //TODO: Complete Event Tablist
-        }/* else if (profile.isInEvent() && !profile.isSpectating()) {
-            UUID uniqueId = profile.getEvent();
-            Event event = this.plugin.getEventManager().getEventByUUID(uniqueId);
-            if (event.isWaiting()) {
-
-            } else if (event.isFighting()) {
-
-            }
-        }*/
+        }
         return entries;
     }
     
@@ -701,3 +670,5 @@ public class TablistAdapter implements TabAdapter {
         }
     }
 }
+*/
+

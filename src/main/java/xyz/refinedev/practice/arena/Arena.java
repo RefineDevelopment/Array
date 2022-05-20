@@ -80,6 +80,8 @@ public abstract class Arena {
      * improve the restoration speed and fix a lot of bugs regarding
      * resetting the arena, this way whatever you do inside the arena
      * chunks, it always gets reset no matter what.
+     *
+     * @author gatoGamer
      */
     public void takeSnapshot() {
         Cuboid cuboid = new Cuboid(min, max);
@@ -100,6 +102,8 @@ public abstract class Arena {
      * its chunks. This method instead of running a tracker and runnable
      * might be a bit memory excessive but does better in performance
      * as compared to the latter.
+     *
+     * @author gatoGamer
      */
     public void restoreSnapshot() {
         Cuboid cuboid = new Cuboid(min, max);

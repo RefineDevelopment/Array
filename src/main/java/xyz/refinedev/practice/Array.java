@@ -40,13 +40,10 @@ import xyz.refinedev.practice.util.serialize.GsonFactory;
 import xyz.refinedev.practice.util.timer.TimerHandler;
 import xyz.refinedev.practice.util.timer.impl.BridgeArrowTimer;
 import xyz.refinedev.practice.util.timer.impl.EnderpearlTimer;
-import xyz.refinedev.tablist.TablistHandler;
 
 import java.util.Random;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
-
-//import xyz.refinedev.practice.event.EventType;
 
 /**
  * This Project is the property of Refine Development © 2021
@@ -74,7 +71,7 @@ public class Array extends JavaPlugin {
     private TimerHandler timerHandler;
     private ConfigHandler configHandler;
     private SpigotHandler spigotHandler;
-    private TablistHandler tablistHandler;
+    //private TablistHandler tablistHandler;
     private NameTagHandler nameTagHandler;
     private HologramHandler hologramHandler;
     private ScoreboardHandler scoreboardHandler;
@@ -247,10 +244,10 @@ public class Array extends JavaPlugin {
         this.nameTagHandler = new NameTagHandler(this);
         this.nameTagHandler.registerAdapter(nameTagAdapter);
 
-        if (this.configHandler.isTAB_ENABLED()) {
+        /*if (this.configHandler.isTAB_ENABLED()) {
            long tickTime = tablistConfig.getInteger("TABLIST.UPDATE_TICKS") * 20L;
            this.tablistHandler = new TablistHandler(tablistAdapter, this, tickTime);
-        }
+        }*/
 
         this.timerHandler = new TimerHandler(this);
         this.timerHandler.registerTimer(new EnderpearlTimer(this));
